@@ -1,0 +1,25 @@
+{
+    "ad_astra:black_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:blue_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:brown_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:cyan_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:gray_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:green_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:light_blue_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:light_gray_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:lime_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:magenta_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:orange_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:pink_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:purple_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:red_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:white_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:yellow_flag": {"mode": "gui","scale": 0.5},
+    "ad_astra:launch_pad": {"mode": "gui","scale": 0.5},
+    "ad_astra:radio": {"mode": "gui","scale": 0.5},
+    "ad_astra:ti-69": {"mode": "gui","scale": 0.5},
+
+    "ad_astra:cryo_freezer": {"mode": "3d","scale": 0.5, "offset": [0.0, -0.1, 0.0]},
+    "ad_astra:nasa_workbench": {"mode": "3d","scale": 0.5, "offset": [0.0, -0.1, 0.0]},
+    "ad_astra:solar_panel": {"mode": "3d","scale": 0.5, "offset": [0.0, -0.1, 0.0]}
+}

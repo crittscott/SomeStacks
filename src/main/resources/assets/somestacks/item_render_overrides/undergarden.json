@@ -1,0 +1,26 @@
+{
+    "undergarden:forgotten_battleaxe": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "undergarden:cloggrum_battleaxe": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "undergarden:cloggrum_shield": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

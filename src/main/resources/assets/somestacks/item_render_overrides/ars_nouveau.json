@@ -1,0 +1,90 @@
+{
+    "ars_nouveau:archwood_chest": {
+        "mode": "block"
+    },
+    "ars_nouveau:arcane_core": {
+        "mode": "3d",
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ars_nouveau:repository": {
+        "mode": "3d",
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ars_nouveau:lingering_flask_cannon": {
+        "mode": "3d",
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ars_nouveau:splash_flask_cannon": {
+        "mode": "3d",
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ars_nouveau:starbuncle_shades": {
+        "mode": "3d",
+        "scale": 4.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ars_nouveau:basic_spell_turret": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "ars_nouveau:rotating_spell_turret": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "ars_nouveau:spell_turret": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "ars_nouveau:timer_spell_turret": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "ars_nouveau:scribes_table": {
+        "scale": 0.5,
+        "offset": [
+            -0.2,
+            -0.3,
+            0.0
+        ]
+    }
+}

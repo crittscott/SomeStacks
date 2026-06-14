@@ -1,0 +1,5 @@
+{
+    "create_connected:crank_wheel": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.0]},
+    "create_connected:large_crank_wheel": {"mode": "3d", "scale": 0.33, "offset": [0.0, 0.0, 0.0]},
+    "create_connected:linked_transmitter": {"mode": "3d", "scale": 1, "offset": [0.2, -0.05, 0.1]}
+}

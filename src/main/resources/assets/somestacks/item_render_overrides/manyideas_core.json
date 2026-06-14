@@ -1,0 +1,6 @@
+{
+    "manyideas_core:dye_crafting_table": {"mode": "3d", "scale": 0.45, "offset": [0.0, 0.0, 0.0]},
+    "manyideas_core:table_saw_diamond": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]},
+    "manyideas_core:table_saw_iron": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]},
+    "manyideas_core:table_saw_stone": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]}
+}

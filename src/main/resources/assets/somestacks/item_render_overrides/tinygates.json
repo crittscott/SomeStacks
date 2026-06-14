@@ -1,0 +1,11 @@
+{
+    "tinygates:and_gate_item": { "scale": 0.5},
+    "tinygates:clock_item": { "scale": 0.5},
+    "tinygates:counter_item": { "scale": 0.5},
+    "tinygates:edge_detector_item": { "scale": 0.5},
+    "tinygates:not_gate_item": { "scale": 0.5},
+    "tinygates:or_gate_item": { "scale": 0.5},
+    "tinygates:rs_latch_item": { "scale": 0.5},
+    "tinygates:t_flip_flop_item": { "scale": 0.5},
+    "tinygates:xor_gate_item": { "scale": 0.5}
+}

@@ -1,0 +1,146 @@
+{
+    "another_furniture:black_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:blue_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:brown_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:cyan_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:gray_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:green_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:light_blue_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:light_gray_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:lime_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:magenta_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:orange_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:pink_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:purple_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:red_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:white_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    },
+    "another_furniture:yellow_curtain": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.2,
+            0.0
+        ]
+    }
+}

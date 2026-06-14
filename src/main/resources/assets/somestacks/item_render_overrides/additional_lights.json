@@ -1,0 +1,7 @@
+{
+    "additional_lights:fire_for_fire_pit_l": {"scale": 0.5},
+    "additional_lights:fire_for_standing_torch_l": {"scale": 0.5},
+    "additional_lights:soul_fire_for_fire_pit_l": {"scale": 0.5 },
+    "additional_lights:soul_fire_for_standing_torch_l": {"scale": 0.5},
+    "additional_lights:soul_wand": {"scale": 0.5}
+}

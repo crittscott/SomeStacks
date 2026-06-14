@@ -1,0 +1,11 @@
+{
+    "vintagedelight:vinegar_jar": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

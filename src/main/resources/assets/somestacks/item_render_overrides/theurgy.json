@@ -1,0 +1,4 @@
+{
+    "theurgy:liquefaction_cauldron": {"scale": 0.6, "offset": [0.0, -0.1, 0.0]},
+    "theurgy:incubator": {"scale": 0.5, "offset": [0.0, -0.25, 0.0]}
+}

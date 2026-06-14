@@ -1,0 +1,10 @@
+{
+    "colossalchests:uncolossal_chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

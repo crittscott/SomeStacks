@@ -1,0 +1,6 @@
+{
+    "bigreactors:reinforced_turbinerotorblade": {"mode": "3d","scale": 0.5},
+    "bigreactors:reinforced_turbinerotorshaft": {"mode": "3d","scale": 0.5},
+    "bigreactors:basic_turbinerotorblade": {"mode": "3d","scale": 0.5},
+    "bigreactors:basic_turbinerotorshaft": {"mode": "3d","scale": 0.5}
+}

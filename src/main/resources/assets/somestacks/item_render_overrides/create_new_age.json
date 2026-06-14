@@ -1,0 +1,4 @@
+{
+    "create_new_age:generator_coil": {"mode": "3d", "scale": 0.33},
+    "create_new_age:heat_pump": {"scale": 0.5}
+}

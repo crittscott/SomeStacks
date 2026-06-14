@@ -1,0 +1,7 @@
+{
+    "copycats:copycat_door": { "scale": 0.5},
+    "copycats:copycat_iron_door": { "scale": 0.5},
+    "copycats:copycat_ladder": { "scale": 0.5},
+    "copycats:copycat_large_cogwheel": { "scale": 0.5},
+    "copycats:copycat_vertical_stairs": { "scale": 0.5}
+}

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "somestacks:block/bar_stack_block" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "bar_stack_block": {
+    "deposit": "minecraft:block.wood.place",
+    "extract": "minecraft:block.wood.break"
+  },
+  "singles_stack_block": {
+    "deposit": "minecraft:block.wood.place",
+    "extract": "minecraft:block.wood.break"
+  },
+  "storage_stack_block": {
+    "deposit": "minecraft:block.wood.place",
+    "extract": "minecraft:block.wood.break"
+  }
+}

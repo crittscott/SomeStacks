@@ -1,0 +1,4 @@
+{
+    "silentgear:metal_alloyer": {"scale": 0.5, "offset": [0.0, -0.15, 0.0]},
+    "silentgear:metal_press": {"scale": 0.5, "offset": [0.0, -0.1, 0.0]}
+}

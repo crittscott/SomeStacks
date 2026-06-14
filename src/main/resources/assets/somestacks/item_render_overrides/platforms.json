@@ -1,0 +1,11 @@
+{
+    "platforms:wrench": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.05,
+            0.0
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "block.somestacks.storage_stack_block": "Storage Stack",
+  "block.somestacks.singles_stack_block": "Singles Stack",
+  "block.somestacks.bar_stack_block": "Bar Stack",
+  "key.somestacks.stack_mode": "Stack Mode (Hold to Place, Shift+RC to Cycle)",
+
+  "somestacks.mode.storage_stack": "Storage Stack",
+  "somestacks.mode.singles_stack": "Singles Stack",
+  "somestacks.mode.bar_stack": "Bar Stack",
+  "somestacks.mode.toggle_permanent": "Toggle Permanent",
+  "somestacks.message.storage_mode": "Storage Mode: %s"
+}

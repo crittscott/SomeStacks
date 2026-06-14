@@ -1,0 +1,26 @@
+{
+    "the_pillager_legion_:classic_legion_shield": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "the_pillager_legion_:clipeus_legion_shield": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "the_pillager_legion_:parma_legion_shield": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

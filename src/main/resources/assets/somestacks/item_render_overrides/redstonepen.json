@@ -1,0 +1,8 @@
+{
+    "redstonepen:bistable_relay": { "scale": 0.5},
+    "redstonepen:bridge_relay": { "scale": 0.5},
+    "redstonepen:control_box": { "scale": 0.5},
+    "redstonepen:inverted_relay": { "scale": 0.5},
+    "redstonepen:pulse_relay": { "scale": 0.5},
+    "redstonepen:relay": { "scale": 0.5}
+}

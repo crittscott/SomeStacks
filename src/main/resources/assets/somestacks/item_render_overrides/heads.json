@@ -1,0 +1,175 @@
+{
+    "heads:evoker_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "heads:brown_mooshroom_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:red_mooshroom_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:donkey_head": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horses_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "heads:witch_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:goat_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "heads:hoglin_head": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "heads:zoglin_head": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "heads:mule_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_black_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_brown_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_chestnut_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_creamy_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_darkbrown_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_gray_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_skeleton_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_undead_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:horse_white_head": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "heads:bat_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
+    "heads:salmon_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
+    "heads:cod_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
+    "heads:axolotl_blue_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
+    "heads:axolotl_cyan_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
+    "heads:axolotl_gold_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
+    "heads:axolotl_lucy_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
+    "heads:axolotl_wild_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
+    "heads:chicken_head": {"scale": 1, "offset": [0.0, 0.25, 0]},
+    "heads:endermite_head": {"scale": 0.5, "offset": [0.0, 0.1, 0]},
+    "heads:cat_all_black_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_black_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_british_shorthair_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_calico_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_jellie_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_persian_head": {"scale": 0.5, "offset": [0.0, 0.1, 0]},
+    "heads:cat_ragdoll_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_red_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_siamese_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_tabby_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
+    "heads:cat_white_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]}
+}

@@ -1,0 +1,38 @@
+{
+    "more_jellyfish:net_of_coal_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_copper_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_diamond_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_emerald_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_gold_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_honey_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_iron_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_lapis_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_netherite_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_redstone_jellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_skellyfish": {
+        "mode": "2d"
+    },
+    "more_jellyfish:net_of_slime_jellyfish": {
+        "mode": "2d"
+    }
+}

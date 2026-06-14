@@ -1,0 +1,209 @@
+{
+    "iceandfire:podium_acacia": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:podium_birch": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:podium_dark_oak": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:podium_jungle": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:podium_oak": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:podium_spruce": {
+        "mode": "block",
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:lectern": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.05,
+            0.0
+        ]
+    },
+    "iceandfire:ghost_chest": {
+        "mode": "block"
+    },
+    "iceandfire:dread_portal": {
+        "mode": "block"
+    },
+    "iceandfire:troll_weapon_axe": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_column": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_column_forest": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_column_frost": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_hammer": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_trunk": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:troll_weapon_trunk_frost": {
+        "mode": "3d",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "iceandfire:tide_trident": {
+        "mode": "3d"
+    },
+    "iceandfire:pixie_house_birch": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:pixie_house_dark_oak": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:pixie_house_mushroom_brown": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:pixie_house_mushroom_red": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:pixie_house_oak": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:pixie_house_spruce": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:deathworm_gauntlet_white": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:deathworm_gauntlet_red": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "iceandfire:deathworm_gauntlet_yellow": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

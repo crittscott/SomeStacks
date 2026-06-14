@@ -1,0 +1,82 @@
+{
+    "simplyswords:diamond_greathammer": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:gold_greathammer": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:iron_greathammer": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:netherite_greathammer": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:runic_greathammer": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:soulkeeper": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:mjolnir": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:hearthflame": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:frostfall": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "simplyswords:hiveheart": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

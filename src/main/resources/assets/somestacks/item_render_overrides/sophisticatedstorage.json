@@ -1,0 +1,49 @@
+{
+    "sophisticatedstorage:chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "sophisticatedstorage:copper_chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "sophisticatedstorage:diamond_chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "sophisticatedstorage:gold_chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "sophisticatedstorage:iron_chest": {
+        "scale": 2.0,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "sophisticatedstorage:netherite_chest": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:copper_shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:diamond_shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:gold_shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:iron_shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:netherite_shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]},
+    "sophisticatedstorage:shulker_box": {"scale": 2.0, "offset": [0.0, 0.0, 0.0]}
+}

@@ -1,0 +1,114 @@
+{
+    "bushierflowers:grown_allium": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_azure_bluet": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_blue_orchid": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_cornflower": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_dandelion": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_lily": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_orange_tulip": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_oxeye_daisy": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_pink_tulip": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_poppy": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_red_tulip": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_torchflower": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_white_tulip": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "bushierflowers:grown_wither_rose": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

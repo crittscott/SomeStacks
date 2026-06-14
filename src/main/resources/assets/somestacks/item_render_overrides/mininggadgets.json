@@ -1,0 +1,26 @@
+{
+    "mininggadgets:mininggadget": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "mininggadgets:mininggadget_fancy": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "mininggadgets:mininggadget_simple": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

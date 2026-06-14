@@ -1,0 +1,32 @@
+{
+    "solarflux:sp_1": {
+        "mode": "3d"
+    },
+    "solarflux:sp_2": {
+        "mode": "3d"
+    },
+    "solarflux:sp_3": {
+        "mode": "3d"
+    },
+    "solarflux:sp_4": {
+        "mode": "3d"
+    },
+    "solarflux:sp_5": {
+        "mode": "3d"
+    },
+    "solarflux:sp_6": {
+        "mode": "3d"
+    },
+    "solarflux:sp_7": {
+        "mode": "3d"
+    },
+    "solarflux:sp_8": {
+        "mode": "3d"
+    },
+    "solarflux:sp_tf.carminite": {
+        "mode": "3d"
+    },
+    "solarflux:sp_tf.fiery": {
+        "mode": "3d"
+    }
+}

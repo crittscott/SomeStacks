@@ -1,0 +1,18 @@
+{
+    "supplementaries:quiver": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "supplementaries:flute": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

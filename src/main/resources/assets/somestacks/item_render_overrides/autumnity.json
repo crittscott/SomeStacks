@@ -1,0 +1,26 @@
+{
+    "autumnity:turkey": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "autumnity:cooked_turkey": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "autumnity:maple_chest": {
+        "mode": "block"
+    },
+    "autumnity:trapped_maple_chest": {
+        "mode": "block"
+    }
+}

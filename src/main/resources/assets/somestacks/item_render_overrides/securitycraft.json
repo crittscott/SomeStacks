@@ -1,0 +1,6 @@
+{
+    "securitycraft:briefcase": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "securitycraft:display_case": {"mode": "block", "offset": [0.0, 0.0, 0.15]},
+    "securitycraft:motion_activated_light": {"scale": 0.75, "offset": [0.0, 0.1, 0.25]},
+    "securitycraft:keypad_chest": {"scale": 1.5, "offset": [0.0, 0.0, 0.0]}
+}

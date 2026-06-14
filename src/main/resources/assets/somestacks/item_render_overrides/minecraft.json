@@ -1,0 +1,866 @@
+{
+    "minecraft:acacia_button": {
+        "mode": "2d"
+    },
+    "minecraft:acacia_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:allay_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:allium": {
+        "mode": "2d"
+    },
+    "minecraft:axolotl_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:azure_bluet": {
+        "mode": "2d"
+    },
+    "minecraft:bamboo_button": {
+        "mode": "2d"
+    },
+    "minecraft:bamboo_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:bat_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:bee_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:bell": {
+        "mode": "2d"
+    },
+    "minecraft:big_dripleaf": {
+        "mode": "2d"
+    },
+    "minecraft:birch_button": {
+        "mode": "2d"
+    },
+    "minecraft:birch_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:blaze_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:blue_orchid": {
+        "mode": "2d"
+    },
+    "minecraft:brown_mushroom": {
+        "mode": "2d"
+    },
+    "minecraft:camel_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:cat_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:cave_spider_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:cherry_button": {
+        "mode": "2d"
+    },
+    "minecraft:cherry_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:chicken_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:cod_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:cornflower": {
+        "mode": "2d"
+    },
+    "minecraft:cow_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:creeper_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:crimson_button": {
+        "mode": "2d"
+    },
+    "minecraft:crimson_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:crimson_fungus": {
+        "mode": "2d"
+    },
+    "minecraft:crimson_roots": {
+        "mode": "2d"
+    },
+    "minecraft:dandelion": {
+        "mode": "2d"
+    },
+    "minecraft:dark_oak_button": {
+        "mode": "2d"
+    },
+    "minecraft:dark_oak_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:dead_bush": {
+        "mode": "2d"
+    },
+    "minecraft:decorated_pot": {
+        "mode": "3d"
+    },
+    "minecraft:dolphin_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:donkey_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:drowned_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:elder_guardian_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:enderman_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:endermite_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:evoker_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:fern": {
+        "mode": "2d"
+    },
+    "minecraft:fox_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:frog_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:ghast_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:glow_lichen": {
+        "mode": "2d"
+    },
+    "minecraft:glow_squid_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:goat_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:grass": {
+        "mode": "2d"
+    },
+    "minecraft:green_bed": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:guardian_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:hanging_roots": {
+        "mode": "2d"
+    },
+    "minecraft:hoglin_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:horse_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:husk_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:iron_bars": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:iron_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:iron_golem_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:jungle_button": {
+        "mode": "2d"
+    },
+    "minecraft:jungle_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:large_fern": {
+        "mode": "2d"
+    },
+    "minecraft:lever": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            -0.3
+        ]
+    },
+    "minecraft:lantern": {
+        "mode": "block",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            0.2,
+            0.0
+        ]
+    },
+    "minecraft:lilac": {
+        "mode": "2d"
+    },
+    "minecraft:lily_of_the_valley": {
+        "mode": "2d"
+    },
+    "minecraft:lily_pad": {
+        "mode": "2d"
+    },
+    "minecraft:llama_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:magma_cube_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:mangrove_button": {
+        "mode": "2d"
+    },
+    "minecraft:mangrove_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:mooshroom_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:mule_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:oak_button": {
+        "mode": "2d"
+    },
+    "minecraft:oak_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:ocelot_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:orange_tulip": {
+        "mode": "2d"
+    },
+    "minecraft:oxeye_daisy": {
+        "mode": "2d"
+    },
+    "minecraft:panda_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:parrot_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:peony": {
+        "mode": "2d"
+    },
+    "minecraft:phantom_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:pig_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:piglin_brute_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:piglin_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:pillager_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:pink_tulip": {
+        "mode": "2d"
+    },
+    "minecraft:pitcher_plant": {
+        "mode": "2d"
+    },
+    "minecraft:polar_bear_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:polished_blackstone_button": {
+        "mode": "2d"
+    },
+    "minecraft:poppy": {
+        "mode": "2d"
+    },
+    "minecraft:pufferfish_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:rabbit_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:ravager_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:red_mushroom": {
+        "mode": "2d"
+    },
+    "minecraft:red_tulip": {
+        "mode": "2d"
+    },
+    "minecraft:redstone": {
+        "mode": "2d"
+    },
+    "minecraft:redstone_torch": {
+        "mode": "block",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            0.1,
+            0.0
+        ]
+    },
+    "minecraft:rose_bush": {
+        "mode": "2d"
+    },
+    "minecraft:salmon_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:seagrass": {
+        "mode": "2d"
+    },
+    "minecraft:sheep_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:shield": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:shulker_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:silverfish_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:skeleton_horse_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:skeleton_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:slime_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:small_dripleaf": {
+        "mode": "2d"
+    },
+    "minecraft:sniffer_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:snow_golem_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:spider_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:spore_blossom": {
+        "mode": "2d"
+    },
+    "minecraft:spruce_button": {
+        "mode": "2d"
+    },
+    "minecraft:spruce_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:spyglass": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:squid_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:stone_button": {
+        "mode": "2d"
+    },
+    "minecraft:stray_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:strider_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:string": {
+        "mode": "2d"
+    },
+    "minecraft:sunflower": {
+        "mode": "2d"
+    },
+    "minecraft:soul_lantern": {
+        "mode": "block",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            0.2,
+            0.0
+        ]
+    },
+    "minecraft:tadpole_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:tall_grass": {
+        "mode": "2d"
+    },
+    "minecraft:torchflower": {
+        "mode": "2d"
+    },
+    "minecraft:torch": {
+        "mode": "block",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            0.1,
+            0.0
+        ]
+    },
+    "minecraft:soul_torch": {
+        "mode": "block",
+        "scale": 0.8,
+        "offset": [
+            0.0,
+            0.1,
+            0.0
+        ]
+    },
+    "minecraft:trader_llama_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:trident": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:tripwire_hook": {
+        "mode": "2d"
+    },
+    "minecraft:tropical_fish_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:turtle_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:turtle_egg": {
+        "mode": "block",
+        "scale": 1.0,
+        "offset": [
+            0.2,
+            0.3,
+            -0.05
+        ]
+    },
+    "minecraft:twisting_vines": {
+        "mode": "2d"
+    },
+    "minecraft:vex_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:villager_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:vindicator_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:vine": {
+        "mode": "2d"
+    },
+    "minecraft:wandering_trader_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:warden_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:warped_button": {
+        "mode": "2d"
+    },
+    "minecraft:warped_door": {
+        "mode": "3d",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:warped_fungus": {
+        "mode": "2d"
+    },
+    "minecraft:warped_roots": {
+        "mode": "2d"
+    },
+    "minecraft:weeping_vines": {
+        "mode": "2d"
+    },
+    "minecraft:white_tulip": {
+        "mode": "2d"
+    },
+    "minecraft:witch_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:wither_rose": {
+        "mode": "2d"
+    },
+    "minecraft:wither_skeleton_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:wolf_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:zoglin_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:zombie_horse_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:zombie_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:zombie_villager_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:zombified_piglin_spawn_egg": {
+        "mode": "2d"
+    },
+    "minecraft:black_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:black_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:blue_banner": {"scale": 0.5, "offset": [0.0, -0.1, 0.0]},
+    "minecraft:blue_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:brown_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:brown_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:cyan_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:cyan_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:dragon_head": {
+        "scale": 0.4,
+        "offset": [
+            0.0,
+            0.0,
+            0.2
+        ]
+    },
+    "minecraft:gray_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:gray_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:green_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:light_blue_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:light_blue_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:light_gray_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:light_gray_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:lime_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:lime_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:magenta_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:magenta_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:orange_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:orange_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:pink_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:pink_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:purple_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:purple_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:red_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:red_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:white_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:white_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "minecraft:yellow_banner": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            -0.1,
+            0.0
+        ]
+    },
+    "minecraft:yellow_bed": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

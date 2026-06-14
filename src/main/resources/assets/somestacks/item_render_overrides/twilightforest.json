@@ -1,0 +1,15 @@
+{
+    "twilightforest:canopy_chest": { "mode": "block"},
+    "twilightforest:dark_chest": { "mode": "block"},
+    "twilightforest:mangrove_chest": { "mode": "block"},
+    "twilightforest:mining_chest": { "mode": "block"},
+    "twilightforest:sorting_chest": { "mode": "block"},
+    "twilightforest:time_chest": { "mode": "block"},
+    "twilightforest:transformation_chest": { "mode": "block"},
+    "twilightforest:twilight_oak_chest": { "mode": "block"},
+    "twilightforest:giant_cobblestone": { "scale": 0.35},
+    "twilightforest:giant_obsidian": { "scale": 0.35},
+    "twilightforest:giant_leaves": { "scale": 0.35},
+    "twilightforest:giant_log": { "scale": 0.35},
+    "twilightforest:iron_ladder": { "scale": 0.5}
+}

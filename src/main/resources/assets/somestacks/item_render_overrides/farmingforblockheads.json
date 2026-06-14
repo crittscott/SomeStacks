@@ -1,0 +1,10 @@
+{
+    "farmingforblockheads:market": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

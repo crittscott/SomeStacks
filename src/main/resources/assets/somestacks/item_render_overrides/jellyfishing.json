@@ -1,0 +1,38 @@
+{
+    "jellyfishing:karate_glove": {
+        "mode": "2d"
+    },
+    "jellyfishing:master_karate_glove": {
+        "mode": "2d"
+    },
+    "jellyfishing:power_karate_glove": {
+        "mode": "2d"
+    },
+    "jellyfishing:spatula": {
+        "mode": "2d"
+    },
+    "jellyfishing:golden_spatula": {
+        "mode": "2d"
+    },
+    "jellyfishing:jellyfish_net": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_blue_jellyfish": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_bubble_jellyfish": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_cow_jellyfish": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_grease_jellyfish": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_jellyfish": {
+        "mode": "2d"
+    },
+    "jellyfishing:net_of_two_fisted_jumper": {
+        "mode": "2d"
+    }
+}

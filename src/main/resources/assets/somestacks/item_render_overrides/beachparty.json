@@ -1,0 +1,26 @@
+{
+    "beachparty:hammock": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "beachparty:deck_chair": {
+        "scale": 0.3,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "beachparty:beach_chair": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.2
+        ]
+    }
+}

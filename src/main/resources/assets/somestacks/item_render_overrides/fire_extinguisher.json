@@ -1,0 +1,18 @@
+{
+    "fire_extinguisher:exit_sign": { "scale": 0.5},
+    "fire_extinguisher:exit_sign_left": { "scale": 0.5},
+    "fire_extinguisher:exit_sign_left_down": {"scale": 0.5},
+    "fire_extinguisher:exit_sign_left_up": {"scale": 0.5},
+    "fire_extinguisher:exit_sign_right": {"scale": 0.5},
+    "fire_extinguisher:exit_sign_right_down": {"scale": 0.5},
+    "fire_extinguisher:exit_sign_right_up": {"scale": 0.5},
+
+    "fire_extinguisher:fire_alarm_bell": {"scale": 0.5},
+    "fire_extinguisher:fire_alarm_switch": {"scale": 0.5},
+    "fire_extinguisher:fire_extinguisher": {"scale": 0.7, "offset": [0.0, -0.1, 0.0]},
+    "fire_extinguisher:fire_extinguisher_copper": {"scale": 0.7, "offset": [0.0, -0.1, 0.0]},
+    "fire_extinguisher:fire_extinguisher_sign": {"scale": 0.5},
+    "fire_extinguisher:fire_extinguisher_sign_left": {"scale": 0.5},
+    "fire_extinguisher:fire_extinguisher_sign_right": {"scale": 0.5}
+
+}

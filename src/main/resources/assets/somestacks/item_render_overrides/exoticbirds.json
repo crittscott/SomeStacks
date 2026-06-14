@@ -1,0 +1,157 @@
+{
+    "exoticbirds:nest": {
+        "mode": "block",
+        "scale": 2.0,
+        "offset": [
+            -0.2,
+            0.0,
+            -0.2
+        ]
+    },
+    "exoticbirds:hummingbird_feeder": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "exoticbirds:roost_box": {
+        "mode": "block",
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "exoticbirds:white_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:orange_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:magenta_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:light_blue_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:yellow_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:lime_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:pink_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:gray_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:light_gray_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:cyan_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:purple_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:blue_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:brown_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:green_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:red_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    },
+    "exoticbirds:black_birdhouse": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.1
+        ]
+    }
+}

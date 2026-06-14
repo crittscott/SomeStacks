@@ -1,0 +1,20 @@
+{
+    "create:crushing_wheel": { "scale": 0.5},
+    "create:mechanical_pump": { "scale": 0.5},
+    "create:mechanical_roller": { "scale": 0.5},
+    "create:steam_engine": { "scale": 0.5},
+    "create:schematiccannon": { "scale": 0.5},
+    "create:flywheel": { "scale": 0.5},
+    "create:large_cogwheel": { "scale": 0.5},
+    "create:large_water_wheel": { "scale": 0.5},
+    "create:brass_encased_large_cogwheel": { "scale": 0.5},
+    "create:andesite_encased_large_cogwheel": { "scale": 0.5},
+    "create:mechanical_arm": { "scale": 0.5},
+    "create:deployer": { "scale": 0.5},
+    "create:brass_tunnel": { "scale": 0.5},
+    "create:mechanical_plough": { "offset": [0, 0, 0.2]},
+    "create:mechanical_harvester": { "offset": [0, 0, 0.2]},
+
+    "create:water_wheel": { "scale": 0.5},
+    "create:wand_of_symmetry": { "scale": 0.5}
+}

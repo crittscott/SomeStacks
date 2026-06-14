@@ -1,0 +1,14 @@
+{
+  "bar_stack_block": {
+    "deposit": "minecraft:block.slime_block.step",
+    "extract": "somestacks:bar_extract"
+  },
+  "singles_stack_block": {
+    "deposit": "minecraft:block.slime_block.step",
+    "extract": "minecraft:block.wool.place"
+  },
+  "stack_block": {
+    "deposit": "minecraft:block.slime_block.step",
+    "extract": "minecraft:block.wool.place"
+  }
+}

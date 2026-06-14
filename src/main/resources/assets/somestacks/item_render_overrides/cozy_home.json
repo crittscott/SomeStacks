@@ -1,0 +1,20 @@
+{
+    "cozy_home:telescope": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "cozy_home:sofa_black": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_blue": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_brown": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_cyan": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_gray": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_green": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_light_blue": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_light_gray": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_lime": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_magenta": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_orange": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_pink": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_purple": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_quartz": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_red": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_white": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
+    "cozy_home:sofa_yellow": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]}
+}

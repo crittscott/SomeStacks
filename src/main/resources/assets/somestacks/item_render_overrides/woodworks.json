@@ -1,0 +1,62 @@
+{
+    "woodworks:acacia_chest": {
+        "mode": "block"
+    },
+    "woodworks:birch_chest": {
+        "mode": "block"
+    },
+    "woodworks:cherry_chest": {
+        "mode": "block"
+    },
+    "woodworks:crimson_chest": {
+        "mode": "block"
+    },
+    "woodworks:dark_oak_chest": {
+        "mode": "block"
+    },
+    "woodworks:jungle_chest": {
+        "mode": "block"
+    },
+    "woodworks:mangrove_chest": {
+        "mode": "block"
+    },
+    "woodworks:oak_chest": {
+        "mode": "block"
+    },
+    "woodworks:spruce_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_acacia_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_birch_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_cherry_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_crimson_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_dark_oak_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_jungle_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_mangrove_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_oak_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_spruce_chest": {
+        "mode": "block"
+    },
+    "woodworks:trapped_warped_chest": {
+        "mode": "block"
+    },
+    "woodworks:warped_chest": {
+        "mode": "block"
+    }
+}

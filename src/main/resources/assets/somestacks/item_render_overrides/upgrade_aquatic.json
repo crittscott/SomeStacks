@@ -1,0 +1,50 @@
+{
+    "valhelsia_structures:black_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:blue_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:brown_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:cyan_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:gray_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:green_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:light_blue_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:light_gray_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:lime_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:magenta_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:orange_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:pink_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:purple_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:red_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:white_sleeping_bag": {
+        "mode": "2d"
+    },
+    "valhelsia_structures:yellow_sleeping_bag": {
+        "mode": "2d"
+    }
+}

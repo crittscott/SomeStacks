@@ -1,0 +1,26 @@
+{
+    "ricksportalgun:golden_portal_gun": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ricksportalgun:portal_gun": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "ricksportalgun:prime_portal_gun": {
+        "scale": 0.6,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

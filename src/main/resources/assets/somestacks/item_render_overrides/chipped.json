@@ -1,0 +1,9 @@
+{
+    "chipped:alchemy_bench": {"scale": 0.75},
+    "chipped:botanist_workbench": {"scale": 0.75},
+    "chipped:carpenters_table": {"scale": 0.75},
+    "chipped:loom_table": {"scale": 0.75},
+    "chipped:mason_table": {"scale": 0.75},
+    "chipped:tinkering_table": {"scale": 0.75},
+    "chipped:glassblower": {"scale": 0.75}
+}

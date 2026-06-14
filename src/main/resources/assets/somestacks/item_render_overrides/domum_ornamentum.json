@@ -1,0 +1,7 @@
+{
+    "domum_ornamentum:shingle": { "scale": 0.5},
+    "domum_ornamentum:shingle_flat": { "scale": 0.5},
+    "domum_ornamentum:shingle_flat_lower": { "scale": 0.5},
+    "domum_ornamentum:shingle_slab": { "scale": 0.5},
+    "domum_ornamentum:fancy_door": { "scale": 0.5}
+}

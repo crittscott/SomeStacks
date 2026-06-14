@@ -1,0 +1,26 @@
+{
+    "mekanismgenerators:turbine_rotor": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "mekanismgenerators:advanced_solar_generator": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    "mekanismgenerators:wind_generator": {
+        "scale": 0.5,
+        "offset": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

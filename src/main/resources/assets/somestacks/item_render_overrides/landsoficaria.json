@@ -1,0 +1,11 @@
+{
+    "landsoficaria:triple_cypress_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:triple_droughtroot_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:triple_fir_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:triple_laurel_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:triple_olive_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:triple_plane_barrel_rack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
+    "landsoficaria:kettle": {"scale": 0.5},
+    "landsoficaria:kiln": {"scale": 0.5},
+    "landsoficaria:grinder": {"scale": 0.5}
+}
