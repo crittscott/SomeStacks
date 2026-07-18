@@ -1,0 +1,213 @@
+# Some Stacks Living Specification
+
+This document describes the architecture and operating behavior of the current codebase. It is the orientation document for maintainers: update it when a change alters a system boundary, user-visible rule, persistent state, data format, or important extension point. It deliberately omits routine implementation detail.
+
+## Technical baseline
+
+- Mod id: `somestacks`
+- Minecraft 1.20.1, Forge 47.4.0, Java 17, Parchment mappings
+- Both client and server must have the mod and use network protocol `1`.
+- The mod registers three blocks and their block entity types. It does not register block items, recipes, menus, or a conventional inventory UI; stack blocks are created through the interaction system described below.
+
+## Product model
+
+Some Stacks turns items in the player's hand into world storage. Each stack is a block entity whose inventory is also its visible model. Players target the rendered cells directly to deposit or extract items.
+
+The runtime is split into four cooperating parts:
+
+1. Client interaction rules interpret right-clicks and select a cell or placement position.
+2. Network packets carry the requested operation to the server.
+3. Server-side block entities own inventory, validation, persistence, packing, gravity, and world mutation.
+4. Client block entity renderers draw the synchronized contents, using resource-reloadable compatibility data where ordinary item rendering is insufficient.
+
+The normal flow is:
+
+`client click -> first matching interaction rule -> packet -> server validation and mutation -> block entity update -> client renderer`
+
+There is no continuously ticking block entity. Work happens in response to interaction, capability access, configuration events, or resource reloads.
+
+## The three stack types
+
+| Type | Stored contents | Visual/physical arrangement | Distinct behavior |
+| --- | --- | --- | --- |
+| Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | Vertical blocks form a pile. Deposits merge, overflow upward, and may create another Storage Stack. The pile periodically sorts, consolidates, packs downward, and removes empty temporary blocks. |
+| Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below. Removing an item shifts every occupied cell above it down one position in the same column. The whole grid and each individual item have independent quarter-turn rotations. |
+| Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar above the bottom layer must overlap at least one bar beneath it. Extraction repeatedly drops every bar made unsupported by the removal. |
+
+Storage accepts any nonempty item not excluded by the disabled-mod list. Singles uses the same rule but excludes items valid for Bar Stack. Player-driven deposits also reject item ids in the server's disabled-item list.
+
+All three block entities expose Forge's item-handler capability on every side. Storage wraps its local 27 slots in a pile-aware handler: a real insertion uses normal Storage deposit behavior, including upward overflow, regardless of the requested slot. Singles and Bar expose their raw 64-slot handlers. Their player-path support and cascade rules are not imposed on direct capability operations.
+
+## Interaction model
+
+`V` is a held modifier, not an ordinary press-to-cycle key. Client Forge interaction events run through ordered rule lists; the first match wins. World changes occur only after a packet reaches the server.
+
+| Gesture | Result |
+| --- | --- |
+| Hold `V` and right-click air | Cycle Storage, Singles, Bar, and Toggle Permanent modes, showing the selected mode in the action bar. The code does not require Shift. Synced-disabled Singles and Bar modes are skipped. |
+| Hold `V`, hold an item, and right-click an existing stack | Deposit into the clicked stack, irrespective of the currently selected placement mode. |
+| Hold `V`, hold an item, and right-click another block | If the adjacent block on the clicked face is a Singles or Bar Stack, deposit there. Otherwise place the selected stack type in the replaceable adjacent position and make the first deposit. A newly placed block is removed again if that deposit fails. |
+| Right-click a stack without `V` or Shift | Ray-select the nearest occupied rendered cell and extract it. Storage takes as much of the selected item stack as the player's hand can accept; Singles and Bar take one item. The hand must be empty or contain the same item and tags with free capacity. |
+| Select Toggle Permanent, hold `V`, use an empty hand, and right-click a Storage Stack | Toggle whether that Storage Stack may disappear automatically when empty. |
+| Shift-right-click a Storage or Singles Stack with a redstone torch | Rotate the entire stored layout by 90 degrees. Bar layouts have a fixed alternating orientation. |
+| Shift-right-click an item in a Singles Stack with a soul torch | Rotate that individual rendered item by 90 degrees. |
+
+Shift plus `V` is not a general placement gesture. Placement and deposit rules require that Shift not be held.
+
+The torch rules currently also consume their matching clicks on Bar Stack, but the server has no Bar block-rotation or item-rotation operation, so those Bar gestures make no state change.
+
+### Cell targeting and support
+
+Extraction traces only occupied cells and chooses the closest hit. Singles and Bar deposit traces every possible cell along the view ray and chooses the last empty cell before the first occupied cell, or the farthest intersected empty cell when no occupied cell is hit. The server recomputes deposit targeting from the player's current eye position and look direction.
+
+Grounding is enforced for player deposits:
+
+- A Singles item is grounded on the bottom layer or by the same column in the layer immediately below.
+- A Bar is grounded on the bottom layer or when its horizontal footprint overlaps an occupied bar in the immediately lower layer.
+- When a new Singles or Bar block is placed above an existing block of the same kind, its first item must also be supported by the top layer of the lower block.
+
+After successful extraction, the server marks the position for same-tick right-click suppression. This cancels the vanilla use-item-on-block event that can arrive after the custom extraction packet and would otherwise use the newly held item at a position whose stack block may just have disappeared.
+
+## Server-side storage behavior
+
+### Storage piles
+
+A Storage deposit fills compatible partial slots, then empty slots. Any remainder recurses into the Storage Stack directly above. If the space above is replaceable and Storage creation is enabled, the deposit creates another Storage Stack and continues there.
+
+After a successful deposit or extraction, the pile may be repacked. Repacking is throttled by a cooldown stored on the pile's base block and processes at most the configured number of contiguous Storage Stack blocks around the initiating block. Within that window it:
+
+1. Copies all stored stacks.
+2. Sorts primarily by item registry id, damage value, tag presence, and count.
+3. Consolidates stacks only when item and tags match.
+4. Writes the result from lower blocks and lower slot indices upward.
+5. Removes empty, non-permanent blocks from the top of the processed window until it reaches a nonempty or permanent block.
+
+The sort cooldown and maximum window are server-performance controls, not capacity limits. A vertical pile may be taller than one repack window.
+
+Storage Stack is the only type with comparator output. Its signal is the rounded fraction of its 27 local slots' capacity; neighboring Storage blocks are not included in that calculation.
+
+### Singles gravity
+
+Singles removal closes the gap in one vertical column. Every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade.
+
+### Bar gravity
+
+After one bar is extracted, the block repeatedly scans all remaining bars. Any bar without an overlapping support footprint in the layer below is removed and dropped into the world. Scanning repeats because one removal can make higher bars unsupported.
+
+### Empty and broken blocks
+
+- Empty Singles and Bar blocks remove themselves after player extraction.
+- Empty Storage blocks remove themselves unless permanent; pile repacking also removes empty temporary blocks at the processed top.
+- Breaking or replacing any stack block drops every item still in its local item handler.
+
+## World state, collision, light, and persistence
+
+The visible inventories are authoritative block entity state and are included in save NBT and block entity update packets.
+
+- Storage persists items, block rotation, pile-sort time, and the permanent flag.
+- Singles persists items, block rotation, and all 64 per-item rotations.
+- Bar persists items.
+
+Storage retains the normal full-block shape. Singles and Bar compute and cache an outline/collision union from occupied cells, so their physical shapes match their contents. Both still expose a full-block interaction shape so the player can right-click the block reliably through gaps.
+
+Content changes update the client and recalculate emitted light. Each occupied slot containing a `BlockItem` contributes one quarter of that block's default light emission, integer-truncated; contributions are summed and capped at 15. Item count within a Storage slot does not increase that slot's contribution.
+
+## Networking and synchronization
+
+The logical packet directions are:
+
+- Client to server: place-and-deposit, deposit, extract, rotate block, rotate item, and toggle permanent.
+- Server to client: configuration synchronization and the developer render-override command result.
+
+The server owns all inventory and block mutation. Placement checks that the target is loaded and replaceable, checks the player's permission to use the item there, enforces the selected block's enable flag, validates blacklists, and removes a just-created block if its initial deposit fails. Deposit recomputes cell targeting and support. Extraction accepts the client-selected slot index, then validates the block entity, index, contents, and hand compatibility before changing state.
+
+On player login and server-config reload, the server sends clients the three block-enable flags and parsed render overrides. The client uses the flags for mode selection and the overrides for rendering. Blacklists and pile settings stay server-side.
+
+## Rendering architecture
+
+All stack blocks use `ENTITYBLOCK_ANIMATED` and are drawn by block entity renderers rather than ordinary world block models.
+
+- Storage and Singles render each stored item through `CubeRenderHelper` inside the cell selected by their spatial-index utility. Block rotation changes the visual cell coordinates and ray-hit coordinates together. Singles per-item rotation turns the model within its existing cell and does not alter occupancy or collision.
+- Bar does not render the original item model. It emits a fixed six-face cuboid for each bar using the configured texture and tint for that item.
+
+### Item render modes
+
+`CubeRenderHelper` has four modes:
+
+| Mode | Behavior |
+| --- | --- |
+| `2d` | Draw a small `stack_cube` background and project the item's unculled baked quads onto all six faces, applying item tint. |
+| `3d` | Use the normal item renderer in `FIXED` display context. |
+| `gui` | Use the normal item renderer in `GUI` context with counter-rotation to fit the stack cell. |
+| `block` | Render a `BlockItem`'s default block state directly; if block rendering throws, fall back to `3d`. A non-`BlockItem` configured as `block` draws nothing. |
+
+Without an override, `BakedModel.isGui3d()` chooses only between `3d` and `2d`. The `block` and `gui` modes are always authored overrides. Items with a custom `BlockEntityWithoutLevelRenderer` receive an additional half-scale correction in the `3d`, `gui`, and `block` paths.
+
+### Item render overrides
+
+Client resource reload loads all JSON files under `assets/*/item_render_overrides/`. The bundled files are organized by the namespace of the items they correct and form the main cross-mod compatibility corpus.
+
+Each top-level key is an item id. Every field is optional:
+
+```json
+{
+  "modid:item": {
+    "mode": "2d",
+    "scale": 0.8,
+    "offset": [0.0, 0.1, 0.0]
+  }
+}
+```
+
+`mode` is one of `2d`, `3d`, `block`, or `gui`; `scale` must be positive; `offset` has exactly three numbers. For `2d`, only the x and y offset components are used.
+
+Precedence is resolved independently for mode, scale, and offset:
+
+1. A non-null server-synchronized override field.
+2. A non-null resource JSON field.
+3. The computed/default value: automatic mode, scale `1`, and zero offset.
+
+Server entries use the strict six-part format `item_id,mode,scale,x,y,z` and therefore normally supply all fields. Malformed entries are logged and skipped.
+
+### Bar texture data
+
+Client resource reload also loads `assets/*/textures/bars/*.json`. A mapping may be a texture id string or an object with `texture` and optional `tint` fields. A mapped item without an explicit tint is auto-tinted by averaging pixels with alpha greater than 127 from the particle sprite of the item's baked model, then brightening the average ten percent toward white. A mapping with `tint` uses the supplied RGB or ARGB hex color. An unmapped item uses the iron-block fallback texture without auto-tinting.
+
+### Sound data
+
+`assets/*/sounds/*.json` maps each stack type's `deposit` and `extract` actions to registered sound ids. Resource reload replaces the six mutable runtime sound choices. Missing or invalid entries fall back to vanilla wood-place or wool-break sounds. The bundled configuration currently selects vanilla wood sounds.
+
+## Server configuration
+
+The Forge server config contains:
+
+| Setting | Default | Operating effect |
+| --- | --- | --- |
+| Pile sort cooldown | 20 ticks | Minimum elapsed time between repacks, tracked on the Storage pile base. |
+| Maximum stacks per repack | 3 | Limits the contiguous Storage blocks touched by one repack operation. |
+| Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage also stops auto-creating overflow blocks. Existing blocks remain present and their direct deposit/extract paths remain usable. |
+| Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces; existing contents can still be extracted. |
+| Disabled items | empty | Rejects those ids on player packet deposit paths; existing contents can still be extracted. |
+| Render overrides | empty | Supplies server-enforced client render mode, scale, and offset values. |
+
+The client mode cycler skips synced-disabled Singles and Bar modes. Storage remains in the client cycle even when disabled, but the server still refuses its placement.
+
+## Contributor and compatibility tooling
+
+The `/somestacks` commands are available only to creative-mode player command sources:
+
+- `/somestacks item <item> <mode> <scale> <x> <y> <z>` sends a temporary render override to that player's client. It modifies the resource-derived client map, so a resource reload replaces it, and any server-enforced field still has precedence.
+- `/somestacks mod <modid>` selects a mod namespace for the stick-based test helper.
+- Shift-right-clicking a block with a stick generates rows of Storage Stacks containing items from the selected namespace.
+- `/somestacks test` reads `config/somestacks/testmods.json` and generates Storage Stack test rows for loaded, non-disabled namespaces in that list.
+
+These tools are for authoring the render-override compatibility corpus. They do not persist player-facing preferences.
+
+## Main extension points
+
+- Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
+- Stack invariants and persistence: the three block entities in `block/` are authoritative. Keep their NBT, update packet, collision cache, and renderer assumptions aligned.
+- Spatial layout and targeting: `StorageCubeIdx`, `SinglesCubeIdx`, and `BarCubeIdx` are shared geometry contracts between rendering, selection, collision, grounding, and cross-block support.
+- Ordinary item compatibility: prefer an entry in `item_render_overrides/` before changing the global rendering paths.
+- Bar appearance: extend `textures/bars/` and reuse the base ingot/brick textures where tinting is sufficient.
+- Client-visible configuration: extend `ConfigSyncPkt` as well as the server config; purely server-side controls need no client copy.
