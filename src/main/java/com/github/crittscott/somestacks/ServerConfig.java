@@ -20,7 +20,6 @@ public final class ServerConfig {
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RENDER_MODE_OVERRIDES;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -66,26 +65,6 @@ public final class ServerConfig {
                         "Format: \"modid:itemname\"",
                         "Example: \"immersiveengineering:toolupgrade_drill_damage\"")
                 .defineList("disable_items",
-                        Collections.emptyList(),
-                        obj -> obj instanceof String);
-
-        builder.pop();
-
-        builder.comment("Render Mode Override Configuration",
-                        "WARNING: Some items crash or lag the game with certain render settings.",
-                        "This list allows those items to be stored in stacks but disallows",
-                        "setting their render properties to anything but the known good values here.",
-                        "Do not change these unless you know you need to.",
-                        "These overrides take precedence over JSON resource packs.",
-                        "Format: \"modid:item_name,mode,scale,x_offset,y_offset,z_offset\"",
-                        "Mode values: 2d, 3d, block, gui",
-                        "All properties must be specified.",
-                        "Example: \"immersiveengineering:revolver,3d,0.8,0.0,0.0,0.0\"")
-                .push("render_overrides");
-
-        RENDER_MODE_OVERRIDES = builder
-                .comment("Server-enforced render mode overrides for crash-prone items")
-                .defineList("overrides",
                         Collections.emptyList(),
                         obj -> obj instanceof String);
 

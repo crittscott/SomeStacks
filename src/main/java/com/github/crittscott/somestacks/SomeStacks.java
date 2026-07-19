@@ -1,13 +1,9 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.command.ItemCommand;
-import com.github.crittscott.somestacks.command.ModCommand;
-import com.github.crittscott.somestacks.command.TestCommand;
+import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,9 +20,6 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mod(SomeStacks.MODID)
 public class SomeStacks {
@@ -48,68 +41,28 @@ public class SomeStacks {
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        boolean enableStack = ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get();
-        boolean enableSingles = ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get();
-        boolean enableBar = ServerConfig.ENABLE_BAR_STACK_BLOCK.get();
-
-        Map<ResourceLocation, ConfigSyncPkt.RenderConfig> renderOverrides = parseRenderOverrides();
-
-        ConfigSyncPkt packet = new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
-        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), packet);
-    }
-
-    private Map<ResourceLocation, ConfigSyncPkt.RenderConfig> parseRenderOverrides() {
-        Map<ResourceLocation, ConfigSyncPkt.RenderConfig> map = new HashMap<>();
-
-        for (String entry : ServerConfig.RENDER_MODE_OVERRIDES.get()) {
-            try {
-                String[] parts = entry.split(",");
-                if (parts.length != 6) {
-                    LOGGER.warn("Invalid render override entry (expected 6 parts): {}", entry);
-                    continue;
-                }
-
-                ResourceLocation itemId = new ResourceLocation(parts[0].trim());
-                RenderMode mode = RenderMode.fromString(parts[1].trim());
-                if (mode == null) {
-                    LOGGER.warn("Invalid render mode in override entry: {}", entry);
-                    continue;
-                }
-
-                float scale = Float.parseFloat(parts[2].trim());
-                float x = Float.parseFloat(parts[3].trim());
-                float y = Float.parseFloat(parts[4].trim());
-                float z = Float.parseFloat(parts[5].trim());
-
-                map.put(itemId, new ConfigSyncPkt.RenderConfig(mode, scale, new float[]{x, y, z}));
-            } catch (Exception e) {
-                LOGGER.warn("Failed to parse render override entry '{}': {}", entry, e.getMessage());
-            }
-        }
-
-        return map;
+        sendConfigSync((ServerPlayer) event.getEntity());
     }
 
     private void onConfigReload(ModConfigEvent.Reloading event) {
         if (event.getConfig().getType() == ModConfig.Type.SERVER) {
             var server = ServerLifecycleHooks.getCurrentServer();
             if (server != null) {
-                server.getPlayerList().getPlayers().forEach(player -> {
-                    boolean enableStack = ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get();
-                    boolean enableSingles = ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get();
-                    boolean enableBar = ServerConfig.ENABLE_BAR_STACK_BLOCK.get();
-                    Map<ResourceLocation, ConfigSyncPkt.RenderConfig> renderOverrides = parseRenderOverrides();
-
-                    ConfigSyncPkt packet = new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
-                    ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
-                });
+                server.getPlayerList().getPlayers().forEach(this::sendConfigSync);
             }
         }
     }
 
+    private void sendConfigSync(ServerPlayer player) {
+        ConfigSyncPkt packet = new ConfigSyncPkt(
+                ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get(),
+                ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get(),
+                ServerConfig.ENABLE_BAR_STACK_BLOCK.get(),
+                ServerOverridesLoader.load());
+        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+    }
+
     private void onRegisterCommands(RegisterCommandsEvent event) {
-        ItemCommand.register(event.getDispatcher());
-        ModCommand.register(event.getDispatcher());
-        TestCommand.register(event.getDispatcher());
+        SsCommand.register(event.getDispatcher());
     }
 }

@@ -1,52 +1,76 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.client.measure.SessionCorrections;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Server to client: applies or resets one entry in the receiving client's user render
+ * override layer, as directed by the {@code ss item} command.
+ */
 public class RenderOverridePkt {
     private final ResourceLocation itemId;
+    private final boolean reset;
     private final String renderMode;
     private final float scale;
     private final float[] offset;
 
-    public RenderOverridePkt(ResourceLocation itemId, String renderMode, float scale, float[] offset) {
+    private RenderOverridePkt(ResourceLocation itemId, boolean reset, String renderMode, float scale, float[] offset) {
         this.itemId = itemId;
+        this.reset = reset;
         this.renderMode = renderMode;
         this.scale = scale;
         this.offset = offset;
     }
 
+    public static RenderOverridePkt set(ResourceLocation itemId, String renderMode, float scale, float[] offset) {
+        return new RenderOverridePkt(itemId, false, renderMode, scale, offset);
+    }
+
+    public static RenderOverridePkt reset(ResourceLocation itemId) {
+        return new RenderOverridePkt(itemId, true, "", 0.0f, new float[3]);
+    }
+
     public static void encode(RenderOverridePkt msg, FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.itemId);
-        buf.writeUtf(msg.renderMode);
-        buf.writeFloat(msg.scale);
-        buf.writeFloat(msg.offset[0]);
-        buf.writeFloat(msg.offset[1]);
-        buf.writeFloat(msg.offset[2]);
+        buf.writeBoolean(msg.reset);
+        if (!msg.reset) {
+            buf.writeUtf(msg.renderMode);
+            buf.writeFloat(msg.scale);
+            buf.writeFloat(msg.offset[0]);
+            buf.writeFloat(msg.offset[1]);
+            buf.writeFloat(msg.offset[2]);
+        }
     }
 
     public static RenderOverridePkt decode(FriendlyByteBuf buf) {
         ResourceLocation itemId = buf.readResourceLocation();
+        boolean reset = buf.readBoolean();
+        if (reset) {
+            return reset(itemId);
+        }
         String renderMode = buf.readUtf();
         float scale = buf.readFloat();
         float[] offset = new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()};
-        return new RenderOverridePkt(itemId, renderMode, scale, offset);
+        return set(itemId, renderMode, scale, offset);
     }
 
     public static void handle(RenderOverridePkt msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            RenderMode mode = RenderMode.fromString(msg.renderMode);
-            ItemRenderOverrides.ItemRenderConfig config =
-                    new ItemRenderOverrides.ItemRenderConfig(mode, msg.scale, msg.offset);
-            ItemRenderOverrides.CONFIG_MAP.put(msg.itemId, config);
-            SessionCorrections.put(msg.itemId, config);
-        });
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            if (msg.reset) {
+                ItemRenderOverrides.removeUser(msg.itemId);
+            } else {
+                RenderMode mode = RenderMode.fromString(msg.renderMode);
+                ItemRenderOverrides.putUser(msg.itemId, new ItemRenderConfig(mode, msg.scale, msg.offset));
+            }
+        }));
         ctx.get().setPacketHandled(true);
     }
 }

@@ -1,7 +1,5 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.client.measure.AutoRenderProfile;
-import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -30,30 +28,16 @@ public final class CubeRenderHelper {
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation("somestacks", "block/stack_cube");
 
-    private static final float[] ZERO_OFFSET = new float[3];
-
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
-        RenderMode mode = ItemRenderOverrides.getMode(stack);
-        Float scale = ItemRenderOverrides.getScale(stack);
-        float[] offset = ItemRenderOverrides.getOffset(stack);
-
-        if (ItemRenderOverrides.hasEntry(stack)) {
-            // The entry owns the presentation. Only a missing mode is measured, because
-            // scale and offset mean different things from one mode to the next.
-            if (mode == null) {
-                mode = AutoRenderProfiles.get(stack).mode();
-            }
-            if (scale == null) scale = 1.0f;
-            if (offset == null) offset = ZERO_OFFSET;
-        } else {
-            AutoRenderProfile profile = AutoRenderProfiles.get(stack);
-            mode = profile.mode();
-            scale = profile.scale();
-            offset = profile.offset();
+        RenderProfile profile = ItemRenderOverrides.resolve(stack);
+        if (profile == null) {
+            return;
         }
+        float scale = profile.scale();
+        float[] offset = profile.offset();
 
-        switch (mode) {
+        switch (profile.mode()) {
             case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
             case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
             case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);

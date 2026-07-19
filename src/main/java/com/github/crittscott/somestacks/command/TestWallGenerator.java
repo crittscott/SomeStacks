@@ -1,41 +1,36 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber
-public final class ItemTester {
-    private static String targetModId = "minecraft";
+/**
+ * Generates walls of Storage Stacks filled with every item of one or more namespaces,
+ * for reviewing render settings in the world. One column of stacks per mod, rows
+ * running north, over a uniform floor.
+ */
+public final class TestWallGenerator {
+    /** Columns between the rows of adjacent mods. */
+    private static final int MOD_SPACING = 2;
 
-    private ItemTester() {}
+    public static final int ITEMS_PER_STACK = 9;
 
-    public static void setTargetModId(String modId) {
-        targetModId = modId;
-    }
-
-    public static String getTargetModId() {
-        return targetModId;
-    }
+    private TestWallGenerator() {}
 
     public static List<String> getModIdsWithItems() {
         return ForgeRegistries.ITEMS.getEntries().stream()
@@ -43,53 +38,6 @@ public final class ItemTester {
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
-    }
-
-    @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-
-        if (level.isClientSide) {
-            return;
-        }
-
-        if (event.getHand() != InteractionHand.MAIN_HAND) {
-            return;
-        }
-
-        ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!held.is(Items.STICK)) {
-            return;
-        }
-
-        if (!player.isShiftKeyDown()) {
-            return;
-        }
-
-        if (ServerConfig.DISABLE_MODS.get().contains(targetModId)) {
-            player.displayClientMessage(Component.literal("Mod '" + targetModId + "' is disabled in config"), false);
-            event.setCanceled(true);
-            return;
-        }
-
-        List<Item> modItems = collectModItems(targetModId);
-
-        if (modItems.isEmpty()) {
-            player.displayClientMessage(Component.literal("Mod '" + targetModId + "' not loaded or has no items"), false);
-            return;
-        }
-
-        BlockPos startPos = event.getPos().above();
-        int stacksCreated = createStorageStacks(level, startPos, modItems);
-
-        player.displayClientMessage(
-                Component.literal("Created " + stacksCreated + " StorageStacks with " + modItems.size()
-                        + " items from '" + targetModId + "'"),
-                false
-        );
-
-        event.setCanceled(true);
     }
 
     public static List<Item> collectModItems(String modId) {
@@ -104,11 +52,41 @@ public final class ItemTester {
         return items;
     }
 
-    public static final int ITEMS_PER_STACK = 9;
-
     /** Rows a mod's items occupy, one stack per row running north. */
     public static int rowsFor(int itemCount) {
         return (itemCount + ITEMS_PER_STACK - 1) / ITEMS_PER_STACK;
+    }
+
+    public record Result(int totalStacks, int expectedStacks, int totalItems) {}
+
+    public static Result generate(ServerPlayer player, List<String> modIds) {
+        Level level = player.level();
+        BlockPos basePos = player.blockPosition().east();
+
+        Map<String, List<Item>> itemsByMod = new LinkedHashMap<>();
+        int maxRows = 0;
+        for (String modId : modIds) {
+            List<Item> modItems = collectModItems(modId);
+            itemsByMod.put(modId, modItems);
+            maxRows = Math.max(maxRows, rowsFor(modItems.size()));
+        }
+
+        placeFloor(level, basePos, modIds.size(), maxRows);
+
+        int totalStacks = 0;
+        int expectedStacks = 0;
+        int totalItems = 0;
+        int modIndex = 0;
+
+        for (List<Item> modItems : itemsByMod.values()) {
+            BlockPos modStartPos = basePos.offset(modIndex * MOD_SPACING, 0, 0);
+            totalStacks += createStorageStacks(level, modStartPos, modItems);
+            expectedStacks += rowsFor(modItems.size());
+            totalItems += modItems.size();
+            modIndex++;
+        }
+
+        return new Result(totalStacks, expectedStacks, totalItems);
     }
 
     public static int createStorageStacks(Level level, BlockPos startPos, List<Item> items) {
@@ -152,5 +130,30 @@ public final class ItemTester {
             sbe.deposit(new ItemStack(item, 1));
         }
         return true;
+    }
+
+    /**
+     * Lays a smooth sandstone surface one level below the stacks, extending one block
+     * past them on every side so the whole wall can be walked around and viewed against
+     * a uniform background.
+     */
+    private static void placeFloor(Level level, BlockPos basePos, int modCount, int maxRows) {
+        BlockState floor = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
+
+        int minX = basePos.getX() - 1;
+        int maxX = basePos.getX() + (modCount - 1) * MOD_SPACING + 1;
+        // Rows advance north, which is decreasing Z.
+        int minZ = basePos.getZ() - maxRows;
+        int maxZ = basePos.getZ() + 1;
+        int y = basePos.getY() - 1;
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                BlockPos pos = new BlockPos(x, y, z);
+                if (!level.isOutsideBuildHeight(pos)) {
+                    level.setBlock(pos, floor, Block.UPDATE_ALL);
+                }
+            }
+        }
     }
 }

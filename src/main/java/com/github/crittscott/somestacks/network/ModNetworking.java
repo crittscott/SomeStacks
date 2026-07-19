@@ -36,5 +36,7 @@ public final class ModNetworking {
                 RotateItemPkt::decode, RotateItemPkt::handle);
         CHANNEL.registerMessage(id++, ExtractPkt.class, ExtractPkt::encode,
                 ExtractPkt::decode, ExtractPkt::handle);
+        CHANNEL.registerMessage(id++, WriteOverridesPkt.class, WriteOverridesPkt::encode,
+                WriteOverridesPkt::decode, WriteOverridesPkt::handle);
     }
 }

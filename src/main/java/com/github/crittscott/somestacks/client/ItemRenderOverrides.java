@@ -1,29 +1,51 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderOverrides.ItemRenderConfig>> {
+/**
+ * The client's item render configuration, layered by authority. {@link #resolve} walks
+ * the layers and returns the first entry found, whole: server-synced admin overrides,
+ * then the user's own override file, then the bundled resource corpus. An item no layer
+ * mentions takes its complete profile from measurement.
+ */
+public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Path USER_FILE = FMLPaths.CONFIGDIR.get().resolve("somestacks/item_overrides.json");
+    private static final float[] ZERO_OFFSET = new float[3];
+
+    /** Bundled corpus, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
+    /** Admin overrides synced from the server. */
     public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
+    /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
+    private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
+    private static boolean userFileLoaded = false;
 
     @Override
     protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -35,69 +57,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(resource.open(), StandardCharsets.UTF_8))) {
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
-
-                for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                    try {
-                        ResourceLocation itemId = new ResourceLocation(entry.getKey());
-                        JsonObject configJson = entry.getValue().getAsJsonObject();
-
-                        RenderMode mode = null;
-                        Float scale = null;
-                        float[] offset = null;
-
-                        // Parse mode (optional)
-                        if (configJson.has("mode")) {
-                            try {
-                                String modeString = configJson.get("mode").getAsString();
-                                mode = RenderMode.fromString(modeString);
-                                if (mode == null) {
-                                    SomeStacks.LOGGER.warn("Invalid render mode '{}' for item '{}'", modeString, entry.getKey());
-                                }
-                            } catch (Exception e) {
-                                SomeStacks.LOGGER.warn("Failed to parse mode for item '{}': {}", entry.getKey(), e.getMessage());
-                            }
-                        }
-
-                        // Parse scale (optional)
-                        if (configJson.has("scale")) {
-                            try {
-                                scale = configJson.get("scale").getAsFloat();
-                                if (scale <= 0) {
-                                    SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be positive", scale, entry.getKey());
-                                    scale = null;
-                                }
-                            } catch (Exception e) {
-                                SomeStacks.LOGGER.warn("Failed to parse scale for item '{}': {}", entry.getKey(), e.getMessage());
-                            }
-                        }
-
-                        // Parse offset (optional)
-                        if (configJson.has("offset")) {
-                            try {
-                                JsonArray offsetArray = configJson.getAsJsonArray("offset");
-                                if (offsetArray.size() == 3) {
-                                    offset = new float[]{
-                                            offsetArray.get(0).getAsFloat(),
-                                            offsetArray.get(1).getAsFloat(),
-                                            offsetArray.get(2).getAsFloat()
-                                    };
-                                } else {
-                                    SomeStacks.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", entry.getKey());
-                                }
-                            } catch (Exception e) {
-                                SomeStacks.LOGGER.warn("Failed to parse offset for item '{}': {}", entry.getKey(), e.getMessage());
-                            }
-                        }
-
-                        // Only add to map if at least one field was successfully parsed
-                        if (mode != null || scale != null || offset != null) {
-                            ItemRenderConfig config = new ItemRenderConfig(mode, scale, offset);
-                            configMap.put(itemId, config);
-                        }
-                    } catch (Exception e) {
-                        SomeStacks.LOGGER.warn("Failed to parse entry '{}': {}", entry.getKey(), e.getMessage());
-                    }
-                }
+                configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {
                 SomeStacks.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
             }
@@ -117,88 +77,89 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         SERVER_OVERRIDES.putAll(overrides);
     }
 
-    /**
-     * Whether the server or the resource corpus configures this item at all. An entry
-     * defines the item's presentation, so fields it omits take plain defaults rather
-     * than measured ones: a measured scale is only meaningful for the mode it was
-     * measured for.
-     */
-    public static boolean hasEntry(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        return SERVER_OVERRIDES.containsKey(itemId) || CONFIG_MAP.containsKey(itemId);
+    public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
+        ensureUserFileLoaded();
+        USER_OVERRIDES.put(itemId, config);
     }
 
-    @Nullable
-    public static RenderMode getMode(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return null;
-        }
-
-        ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-
-        // Check server overrides first (highest priority)
-        ItemRenderConfig serverConfig = SERVER_OVERRIDES.get(itemId);
-        if (serverConfig != null && serverConfig.mode() != null) {
-            return serverConfig.mode();
-        }
-
-        // Check JSON overrides second
-        ItemRenderConfig config = CONFIG_MAP.get(itemId);
-        return config != null ? config.mode() : null;
+    public static void removeUser(ResourceLocation itemId) {
+        ensureUserFileLoaded();
+        USER_OVERRIDES.remove(itemId);
     }
 
     /**
-     * @return the configured scale, or null when neither the server nor the resource corpus
-     *         supplies one, leaving the caller to measure it.
+     * Resolves the item's presentation through the override layers. The first layer
+     * with an entry owns the presentation: only a missing mode is measured, because
+     * scale and offset mean different things from one mode to the next; missing scale
+     * and offset take plain defaults.
+     *
+     * @return the complete profile, or null for an empty stack.
      */
     @Nullable
-    public static Float getScale(ItemStack stack) {
+    public static RenderProfile resolve(ItemStack stack) {
         if (stack.isEmpty()) {
             return null;
         }
+        ensureUserFileLoaded();
 
         ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-
-        // Check server overrides first (highest priority)
-        ItemRenderConfig serverConfig = SERVER_OVERRIDES.get(itemId);
-        if (serverConfig != null && serverConfig.scale() != null) {
-            return serverConfig.scale();
+        ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
+        if (entry == null) {
+            entry = USER_OVERRIDES.get(itemId);
+        }
+        if (entry == null) {
+            entry = CONFIG_MAP.get(itemId);
+        }
+        if (entry == null) {
+            return AutoRenderProfiles.get(stack);
         }
 
-        // Check JSON overrides second
-        ItemRenderConfig config = CONFIG_MAP.get(itemId);
-        return config != null ? config.scale() : null;
+        RenderMode mode = entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
+        float scale = entry.scale() != null ? entry.scale() : 1.0f;
+        float[] offset = entry.offset() != null ? entry.offset() : ZERO_OFFSET;
+        return new RenderProfile(mode, scale, offset);
     }
 
     /**
-     * @return the configured offset, or null when neither the server nor the resource corpus
-     *         supplies one, leaving the caller to measure it.
+     * Writes the user layer to the user override file and reports the result to the
+     * player. The map contains only entries the user explicitly set, so the file never
+     * accumulates measured or bundled values, and reset entries disappear from it.
      */
-    @Nullable
-    public static float[] getOffset(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return null;
+    public static void handleWriteRequest() {
+        ensureUserFileLoaded();
+
+        String message;
+        try {
+            Files.createDirectories(USER_FILE.getParent());
+            Files.writeString(USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
+            message = "Wrote " + USER_OVERRIDES.size() + " render override(s) to " + USER_FILE;
+        } catch (IOException e) {
+            SomeStacks.LOGGER.error("Failed to write {}", USER_FILE, e);
+            message = "Failed to write " + USER_FILE + ": " + e.getMessage();
         }
 
-        ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
-
-        // Check server overrides first (highest priority)
-        ItemRenderConfig serverConfig = SERVER_OVERRIDES.get(itemId);
-        if (serverConfig != null && serverConfig.offset() != null) {
-            return serverConfig.offset();
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            player.displayClientMessage(Component.literal(message), false);
         }
-
-        // Check JSON overrides second
-        ItemRenderConfig config = CONFIG_MAP.get(itemId);
-        return config != null ? config.offset() : null;
     }
 
-    public record ItemRenderConfig(
-            @Nullable RenderMode mode,
-            @Nullable Float scale,
-            @Nullable float[] offset
-    ) {}
+    private static void ensureUserFileLoaded() {
+        if (userFileLoaded) {
+            return;
+        }
+        userFileLoaded = true;
+
+        if (!Files.exists(USER_FILE)) {
+            return;
+        }
+        try {
+            JsonObject json = GSON.fromJson(Files.readString(USER_FILE), JsonObject.class);
+            if (json != null) {
+                USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, USER_FILE.toString()));
+            }
+        } catch (Exception e) {
+            SomeStacks.LOGGER.error("Failed to read {}", USER_FILE, e);
+        }
+    }
 }

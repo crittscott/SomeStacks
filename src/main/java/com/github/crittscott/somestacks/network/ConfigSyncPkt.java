@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.client.StackState;
@@ -18,10 +19,10 @@ public class ConfigSyncPkt {
     private final boolean enableStack;
     private final boolean enableSingles;
     private final boolean enableBar;
-    private final Map<ResourceLocation, RenderConfig> renderOverrides;
+    private final Map<ResourceLocation, ItemRenderConfig> renderOverrides;
 
     public ConfigSyncPkt(boolean enableStack, boolean enableSingles, boolean enableBar,
-                         Map<ResourceLocation, RenderConfig> renderOverrides) {
+                         Map<ResourceLocation, ItemRenderConfig> renderOverrides) {
         this.enableStack = enableStack;
         this.enableSingles = enableSingles;
         this.enableBar = enableBar;
@@ -34,13 +35,24 @@ public class ConfigSyncPkt {
         buf.writeBoolean(msg.enableBar);
 
         buf.writeInt(msg.renderOverrides.size());
-        for (Map.Entry<ResourceLocation, RenderConfig> entry : msg.renderOverrides.entrySet()) {
+        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : msg.renderOverrides.entrySet()) {
             buf.writeResourceLocation(entry.getKey());
-            buf.writeUtf(entry.getValue().mode().getId());
-            buf.writeFloat(entry.getValue().scale());
-            buf.writeFloat(entry.getValue().offset()[0]);
-            buf.writeFloat(entry.getValue().offset()[1]);
-            buf.writeFloat(entry.getValue().offset()[2]);
+            ItemRenderConfig config = entry.getValue();
+
+            buf.writeBoolean(config.mode() != null);
+            if (config.mode() != null) {
+                buf.writeUtf(config.mode().getId());
+            }
+            buf.writeBoolean(config.scale() != null);
+            if (config.scale() != null) {
+                buf.writeFloat(config.scale());
+            }
+            buf.writeBoolean(config.offset() != null);
+            if (config.offset() != null) {
+                buf.writeFloat(config.offset()[0]);
+                buf.writeFloat(config.offset()[1]);
+                buf.writeFloat(config.offset()[2]);
+            }
         }
     }
 
@@ -50,13 +62,15 @@ public class ConfigSyncPkt {
         boolean enableBar = buf.readBoolean();
 
         int size = buf.readInt();
-        Map<ResourceLocation, RenderConfig> renderOverrides = new HashMap<>();
+        Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>();
         for (int i = 0; i < size; i++) {
             ResourceLocation itemId = buf.readResourceLocation();
-            RenderMode mode = RenderMode.fromString(buf.readUtf());
-            float scale = buf.readFloat();
-            float[] offset = new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()};
-            renderOverrides.put(itemId, new RenderConfig(mode, scale, offset));
+            RenderMode mode = buf.readBoolean() ? RenderMode.fromString(buf.readUtf()) : null;
+            Float scale = buf.readBoolean() ? buf.readFloat() : null;
+            float[] offset = buf.readBoolean()
+                    ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
+                    : null;
+            renderOverrides.put(itemId, new ItemRenderConfig(mode, scale, offset));
         }
 
         return new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
@@ -69,19 +83,9 @@ public class ConfigSyncPkt {
                 StackState.setBlockEnabled(BlockType.SINGLES_STACK, msg.enableSingles);
                 StackState.setBlockEnabled(BlockType.BAR_STACK, msg.enableBar);
 
-                Map<ResourceLocation, ItemRenderOverrides.ItemRenderConfig> converted = new HashMap<>();
-                for (Map.Entry<ResourceLocation, RenderConfig> entry : msg.renderOverrides.entrySet()) {
-                    converted.put(entry.getKey(), entry.getValue().toItemRenderConfig());
-                }
-                ItemRenderOverrides.setSyncedServerOverrides(converted);
+                ItemRenderOverrides.setSyncedServerOverrides(msg.renderOverrides);
             });
         });
         ctx.get().setPacketHandled(true);
-    }
-
-    public record RenderConfig(RenderMode mode, float scale, float[] offset) {
-        public ItemRenderOverrides.ItemRenderConfig toItemRenderConfig() {
-            return new ItemRenderOverrides.ItemRenderConfig(mode, scale, offset);
-        }
     }
 }
