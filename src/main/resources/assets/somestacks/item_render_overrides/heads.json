@@ -1,175 +1,803 @@
 {
-    "heads:evoker_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "heads:brown_mooshroom_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:red_mooshroom_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:donkey_head": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horses_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "heads:witch_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:goat_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "heads:hoglin_head": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "heads:zoglin_head": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "heads:mule_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_black_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_brown_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_chestnut_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_creamy_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_darkbrown_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_gray_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_skeleton_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_undead_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:horse_white_head": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "heads:bat_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
-    "heads:salmon_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
-    "heads:cod_head": {"scale": 1, "offset": [0.0, 0.3, -0.2]},
-    "heads:axolotl_blue_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
-    "heads:axolotl_cyan_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
-    "heads:axolotl_gold_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
-    "heads:axolotl_lucy_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
-    "heads:axolotl_wild_head": {"scale": 1, "offset": [0.0, 0.25, -0.1]},
-    "heads:chicken_head": {"scale": 1, "offset": [0.0, 0.25, 0]},
-    "heads:endermite_head": {"scale": 0.5, "offset": [0.0, 0.1, 0]},
-    "heads:cat_all_black_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_black_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_british_shorthair_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_calico_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_jellie_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_persian_head": {"scale": 0.5, "offset": [0.0, 0.1, 0]},
-    "heads:cat_ragdoll_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_red_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_siamese_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_tabby_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]},
-    "heads:cat_white_head": {"scale": 1, "offset": [0.0, 0.2, -0.1]}
+  "heads:axolotl_blue_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.177
+    ]
+  },
+  "heads:axolotl_cyan_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.177
+    ]
+  },
+  "heads:axolotl_gold_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.177
+    ]
+  },
+  "heads:axolotl_lucy_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.177
+    ]
+  },
+  "heads:axolotl_wild_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.177
+    ]
+  },
+  "heads:bat_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.255,
+      -0.225
+    ]
+  },
+  "heads:bee_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.028,
+      0.028,
+      0.0
+    ]
+  },
+  "heads:black_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:blaze_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:blue_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:brown_mooshroom_head": {
+    "mode": "3d",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      -0.048,
+      -0.045
+    ]
+  },
+  "heads:brown_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:cat_all_black_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_black_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_british_shorthair_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_calico_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_jellie_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_persian_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_ragdoll_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_red_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_siamese_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_tabby_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cat_white_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:cave_spider_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:chicken_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.135,
+      -0.112
+    ]
+  },
+  "heads:cod_head": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.375,
+      -0.281
+    ]
+  },
+  "heads:cow_head": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.022,
+      -0.045
+    ]
+  },
+  "heads:cyan_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:dolphin_head": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.022,
+      0.045
+    ]
+  },
+  "heads:donkey_head": {
+    "mode": "3d",
+    "scale": 0.321,
+    "offset": [
+      0.0,
+      -0.1,
+      0.043
+    ]
+  },
+  "heads:drowned_head": {
+    "mode": "3d",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      0.006,
+      0.0
+    ]
+  },
+  "heads:enderman_head": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      0.013,
+      0.0
+    ]
+  },
+  "heads:endermite_head": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.214,
+      -0.032
+    ]
+  },
+  "heads:evoker_head": {
+    "mode": "3d",
+    "scale": 0.638,
+    "offset": [
+      0.0,
+      -0.02,
+      0.027
+    ]
+  },
+  "heads:fox_head": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.025
+    ]
+  },
+  "heads:fox_snow_head": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.025
+    ]
+  },
+  "heads:ghast_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:glow_squid_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.056
+    ]
+  },
+  "heads:goat_head": {
+    "mode": "3d",
+    "scale": 0.576,
+    "offset": [
+      0.0,
+      -0.076,
+      0.013
+    ]
+  },
+  "heads:gray_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:green_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:hoglin_head": {
+    "mode": "3d",
+    "scale": 0.366,
+    "offset": [
+      0.0,
+      -0.051,
+      0.06
+    ]
+  },
+  "heads:horse_black_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_brown_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_chestnut_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_creamy_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_darkbrown_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_gray_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_skeleton_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_undead_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:horse_white_head": {
+    "mode": "3d",
+    "scale": 0.572,
+    "offset": [
+      0.0,
+      -0.139,
+      0.048
+    ]
+  },
+  "heads:husk_head": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:illusioner_head": {
+    "mode": "3d",
+    "scale": 0.638,
+    "offset": [
+      0.0,
+      -0.02,
+      0.027
+    ]
+  },
+  "heads:iron_golem_head": {
+    "mode": "3d",
+    "scale": 0.748,
+    "offset": [
+      0.0,
+      -0.044,
+      0.041
+    ]
+  },
+  "heads:light_blue_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:light_gray_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:lime_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:magenta_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:magma_cube_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:mule_head": {
+    "mode": "3d",
+    "scale": 0.513,
+    "offset": [
+      0.0,
+      -0.148,
+      0.043
+    ]
+  },
+  "heads:ocelot_head": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.172,
+      -0.075
+    ]
+  },
+  "heads:orange_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:pig_head": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.025
+    ]
+  },
+  "heads:piglin_brute_head": {
+    "mode": "3d",
+    "scale": 0.458,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "heads:piglin_head": {
+    "mode": "3d",
+    "scale": 0.458,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "heads:pillager_head": {
+    "mode": "3d",
+    "scale": 0.638,
+    "offset": [
+      0.0,
+      -0.02,
+      0.027
+    ]
+  },
+  "heads:pink_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:purple_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:red_mooshroom_head": {
+    "mode": "3d",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      -0.048,
+      -0.045
+    ]
+  },
+  "heads:red_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:salmon_head": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.375,
+      -0.281
+    ]
+  },
+  "heads:sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:sheep_shaven_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:silverfish_head": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      -0.023
+    ]
+  },
+  "heads:slime_head": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.0,
+      0.017
+    ]
+  },
+  "heads:snow_golem_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:spider_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "heads:squid_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.056
+    ]
+  },
+  "heads:stray_head": {
+    "mode": "3d",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      0.006,
+      0.0
+    ]
+  },
+  "heads:turtle_head": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.112,
+      -0.075
+    ]
+  },
+  "heads:villager_head": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.037,
+      0.0
+    ]
+  },
+  "heads:vindicator_head": {
+    "mode": "3d",
+    "scale": 0.638,
+    "offset": [
+      0.0,
+      -0.02,
+      0.027
+    ]
+  },
+  "heads:wandering_trader_head": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.037,
+      0.0
+    ]
+  },
+  "heads:witch_head": {
+    "mode": "3d",
+    "scale": 0.555,
+    "offset": [
+      -0.087,
+      -0.169,
+      0.087
+    ]
+  },
+  "heads:wolf_head": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.025,
+      0.0
+    ]
+  },
+  "heads:yellow_sheep_head": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "heads:zoglin_head": {
+    "mode": "3d",
+    "scale": 0.366,
+    "offset": [
+      0.0,
+      -0.051,
+      0.06
+    ]
+  },
+  "heads:zombie_villager_head": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.037,
+      0.0
+    ]
+  },
+  "heads:zombified_piglin_skull": {
+    "mode": "3d",
+    "scale": 0.458,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  }
 }

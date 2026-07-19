@@ -1,0 +1,416 @@
+{
+  "herbalbrews:armor_flask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:armor_flask_big": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:black_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:black_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:cauldron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:coffee": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:coffee_beans": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:copper_tea_kettle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:damage_flask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:damage_flask_big": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:dried_black_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:dried_green_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:dried_green_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:dried_oolong_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:dried_out_green_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:feral_flask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:feral_flask_big": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:green_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:green_tea_leaf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:green_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:herbalbrews_standard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:hibiscus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:hibiscus_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:hibiscus_tea_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:jug": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:lavender": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:lavender_blossom": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:lavender_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:milk_coffee": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:milk_coffee_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:mixed_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:oolong_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:oolong_tea_leaf_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:rooibos_leaf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:rooibos_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:stove": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:tea_blossom": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:tea_kettle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:tea_leaf_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:top_hat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:wild_coffee_plant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:wild_rooibos_plant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:wild_yerba_mate_plant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:witch_hat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:yerba_mate_leaf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "herbalbrews:yerba_mate_tea": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

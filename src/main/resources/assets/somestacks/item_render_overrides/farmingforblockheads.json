@@ -1,10 +1,101 @@
 {
-    "farmingforblockheads:market": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    }
+  "farmingforblockheads:chicken_nest": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.217,
+      0.0
+    ]
+  },
+  "farmingforblockheads:feeding_trough": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.084,
+      0.0
+    ]
+  },
+  "farmingforblockheads:fertilized_farmland_healthy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "farmingforblockheads:fertilized_farmland_healthy_stable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "farmingforblockheads:fertilized_farmland_rich": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "farmingforblockheads:fertilized_farmland_rich_stable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "farmingforblockheads:fertilized_farmland_stable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "farmingforblockheads:green_fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "farmingforblockheads:market": {
+    "mode": "3d",
+    "scale": 0.497,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "farmingforblockheads:red_fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "farmingforblockheads:yellow_fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

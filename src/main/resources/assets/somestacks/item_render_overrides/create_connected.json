@@ -1,5 +1,452 @@
 {
-    "create_connected:crank_wheel": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.0]},
-    "create_connected:large_crank_wheel": {"mode": "3d", "scale": 0.33, "offset": [0.0, 0.0, 0.0]},
-    "create_connected:linked_transmitter": {"mode": "3d", "scale": 1, "offset": [0.2, -0.05, 0.1]}
+  "create_connected:bamboo_window": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:bamboo_window_pane": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:brake": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:brass_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:centrifugal_clutch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:cherry_window": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:cherry_window_pane": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:control_chip": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_board": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_catwalk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.07,
+      0.0
+    ]
+  },
+  "create_connected:copycat_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "create_connected:copycat_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:copycat_vertical_step": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.112,
+      0.0,
+      0.112
+    ]
+  },
+  "create_connected:copycat_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:crank_wheel": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.05
+    ]
+  },
+  "create_connected:creative_fluid_vessel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:empty_fan_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:encased_chain_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_blasting_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_freezing_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_haunting_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_sanding_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_seething_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_smoking_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fan_splashing_catalyst": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:fluid_vessel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:freewheel_clutch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:incomplete_control_chip": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:inventory_access_port": {
+    "mode": "3d",
+    "scale": 0.802,
+    "offset": [
+      0.0,
+      0.0,
+      0.024
+    ]
+  },
+  "create_connected:inventory_bridge": {
+    "mode": "3d",
+    "scale": 0.724,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:inverted_clutch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:inverted_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:item_silo": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:large_crank_wheel": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.0,
+      0.034
+    ]
+  },
+  "create_connected:linked_transmitter": {
+    "mode": "3d",
+    "scale": 0.857,
+    "offset": [
+      0.129,
+      -0.032,
+      0.23
+    ]
+  },
+  "create_connected:music_disc_elevator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:music_disc_interlude": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:overstress_clutch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:parallel_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:sequenced_pulse_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "create_connected:shear_pin": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:six_way_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:vertical_brass_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:vertical_parallel_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "create_connected:vertical_six_way_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

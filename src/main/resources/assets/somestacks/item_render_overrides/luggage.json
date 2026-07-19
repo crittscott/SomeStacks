@@ -1,0 +1,20 @@
+{
+  "luggage:ender_luggage": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.2,
+      0.0
+    ]
+  },
+  "luggage:luggage": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.2,
+      0.0
+    ]
+  }
+}

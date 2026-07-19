@@ -1,0 +1,866 @@
+{
+  "growthcraft_milk:appenzeller_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:appenzeller_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:appenzeller_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:appenzeller_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:appenzeller_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:asiago_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:asiago_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:asiago_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:asiago_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:asiago_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:butter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:butter_milk_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:butter_salted": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:casu_marzu_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:casu_marzu_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:casu_marzu_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:casu_marzu_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:casu_marzu_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheddar_cheese_waxed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheese_base_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheese_cloth": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cheese_press": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "growthcraft_milk:churn": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "growthcraft_milk:condensed_milk_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cream_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:cultured_milk_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:emmentaler_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:emmentaler_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:emmentaler_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:emmentaler_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:emmentaler_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gorgonzola_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gorgonzola_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gorgonzola_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gorgonzola_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gorgonzola_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:gouda_cheese_waxed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_apple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_chocolate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_grape_purple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_grape_red": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_grape_white": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_honey": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_pumpkin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ice_cream_watermelon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:kumis_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:milk_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:milking_bucket_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:mixing_vat": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:monterey_cheese_waxed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:pancheon": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.155,
+      0.0
+    ]
+  },
+  "growthcraft_milk:parmesan_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:parmesan_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:parmesan_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:parmesan_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:parmesan_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese_aged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:provolone_cheese_waxed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:rennet_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ricotta_cheese_curds": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.032,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ricotta_cheese_curds_drained": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:ricotta_cheese_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:skim_milk_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:starter_culture": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:stomach": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:thistle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:thistle_seed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:whey_fluid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_apple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_chocolate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_grape_purple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_grape_red": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_grape_white": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_honey": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_plain": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_pumpkin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "growthcraft_milk:yogurt_watermelon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

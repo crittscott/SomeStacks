@@ -117,6 +117,20 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         SERVER_OVERRIDES.putAll(overrides);
     }
 
+    /**
+     * Whether the server or the resource corpus configures this item at all. An entry
+     * defines the item's presentation, so fields it omits take plain defaults rather
+     * than measured ones: a measured scale is only meaningful for the mode it was
+     * measured for.
+     */
+    public static boolean hasEntry(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        return SERVER_OVERRIDES.containsKey(itemId) || CONFIG_MAP.containsKey(itemId);
+    }
+
     @Nullable
     public static RenderMode getMode(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -136,9 +150,14 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         return config != null ? config.mode() : null;
     }
 
-    public static float getScale(ItemStack stack) {
+    /**
+     * @return the configured scale, or null when neither the server nor the resource corpus
+     *         supplies one, leaving the caller to measure it.
+     */
+    @Nullable
+    public static Float getScale(ItemStack stack) {
         if (stack.isEmpty()) {
-            return 1.0f;
+            return null;
         }
 
         ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
@@ -151,12 +170,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         // Check JSON overrides second
         ItemRenderConfig config = CONFIG_MAP.get(itemId);
-        return (config != null && config.scale() != null) ? config.scale() : 1.0f;
+        return config != null ? config.scale() : null;
     }
 
+    /**
+     * @return the configured offset, or null when neither the server nor the resource corpus
+     *         supplies one, leaving the caller to measure it.
+     */
+    @Nullable
     public static float[] getOffset(ItemStack stack) {
         if (stack.isEmpty()) {
-            return new float[]{0.0f, 0.0f, 0.0f};
+            return null;
         }
 
         ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
@@ -169,7 +193,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         // Check JSON overrides second
         ItemRenderConfig config = CONFIG_MAP.get(itemId);
-        return (config != null && config.offset() != null) ? config.offset() : new float[]{0.0f, 0.0f, 0.0f};
+        return config != null ? config.offset() : null;
     }
 
     public record ItemRenderConfig(

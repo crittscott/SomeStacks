@@ -1,0 +1,884 @@
+{
+  "botanypots:black_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:black_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:black_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:black_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:black_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:black_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:blue_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:blue_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:blue_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:blue_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:blue_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:blue_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:brown_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:brown_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:brown_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:brown_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:brown_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:brown_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:cyan_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:cyan_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:cyan_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:cyan_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:cyan_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:cyan_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:gray_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:gray_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:gray_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:gray_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:gray_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:gray_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:green_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:green_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:green_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:green_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:green_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:green_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_blue_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:light_gray_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:lime_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:lime_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:lime_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:lime_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:lime_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:lime_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:magenta_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:magenta_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:magenta_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:magenta_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:magenta_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:magenta_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:orange_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:orange_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:orange_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:orange_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:orange_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:orange_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:pink_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:pink_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:pink_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:pink_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:pink_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:pink_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:purple_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:purple_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:purple_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:purple_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:purple_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:purple_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:red_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:red_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:red_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:red_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:red_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:red_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:white_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:white_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:white_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:white_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:white_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:white_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:yellow_concrete_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:yellow_concrete_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:yellow_glazed_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:yellow_glazed_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  },
+  "botanypots:yellow_terracotta_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.0
+    ]
+  },
+  "botanypots:yellow_terracotta_hopper_botany_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.152,
+      0.0
+    ]
+  }
+}

@@ -1,90 +1,3620 @@
 {
-    "ars_nouveau:archwood_chest": {
-        "mode": "block"
-    },
-    "ars_nouveau:arcane_core": {
-        "mode": "3d",
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ars_nouveau:repository": {
-        "mode": "3d",
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ars_nouveau:lingering_flask_cannon": {
-        "mode": "3d",
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ars_nouveau:splash_flask_cannon": {
-        "mode": "3d",
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ars_nouveau:starbuncle_shades": {
-        "mode": "3d",
-        "scale": 4.0,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ars_nouveau:basic_spell_turret": {
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "ars_nouveau:rotating_spell_turret": {
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "ars_nouveau:spell_turret": {
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "ars_nouveau:timer_spell_turret": {
-        "scale": 2.0,
-        "offset": [
-            0.0,
-            -0.1,
-            0.0
-        ]
-    },
-    "ars_nouveau:scribes_table": {
-        "scale": 0.5,
-        "offset": [
-            -0.2,
-            -0.3,
-            0.0
-        ]
-    }
+  "ars_nouveau:abjuration_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:agronomic_sourcelink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:air_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:alchemical_sourcelink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:alchemists_crown": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:allow_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:alteration_table": {
+    "mode": "3d",
+    "scale": 0.563,
+    "offset": [
+      -0.002,
+      -0.045,
+      0.062
+    ]
+  },
+  "ars_nouveau:amethyst_golem_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:amplify_arrow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:amulet_of_mana_boost": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:amulet_of_mana_regen": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:annotated_codex": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:apprentice_spell_book": {
+    "mode": "3d",
+    "scale": 0.517,
+    "offset": [
+      -0.066,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcane_core": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcane_pedestal": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.048,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcane_platform": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.177,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcanist_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcanist_hood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcanist_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:arcanist_robes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archmage_spell_book": {
+    "mode": "3d",
+    "scale": 0.475,
+    "offset": [
+      -0.06,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_button": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "ars_nouveau:archwood_door": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.07,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_planks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_pressure_plate": {
+    "mode": "gui",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      0.241,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_sconce": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.135
+    ]
+  },
+  "ars_nouveau:archwood_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:archwood_trapdoor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.183,
+      0.0
+    ]
+  },
+  "ars_nouveau:basic_spell_turret": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      -0.065,
+      0.015
+    ]
+  },
+  "ars_nouveau:bastion_pod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:battlemage_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:battlemage_hood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:battlemage_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:battlemage_robes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:belt_of_levitation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:belt_of_unstable_gifts": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blank_glyph": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blank_parchment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blank_thread": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blue_archwood_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blue_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blue_archwood_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blue_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:blue_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "ars_nouveau:bombegranate_pod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:bookwyrm_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:brazier_relay": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "ars_nouveau:burst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:caster_tome": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:conjuration_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:creative_source_jar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:creative_spell_book": {
+    "mode": "3d",
+    "scale": 0.475,
+    "offset": [
+      -0.06,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:debug": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:deny_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:dominion_wand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:dowsing_rod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:drygmy_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:drygmy_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:drygmy_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:drygmy_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.07,
+      0.0
+    ]
+  },
+  "ars_nouveau:dull_trinket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:earth_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:enchanters_eye": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.025,
+      -0.03
+    ]
+  },
+  "ars_nouveau:enchanters_mirror": {
+    "mode": "3d",
+    "scale": 0.682,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.007
+    ]
+  },
+  "ars_nouveau:enchanters_shield": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.004,
+      -0.049
+    ]
+  },
+  "ars_nouveau:enchanters_sword": {
+    "mode": "3d",
+    "scale": 0.606,
+    "offset": [
+      0.015,
+      -0.002,
+      0.019
+    ]
+  },
+  "ars_nouveau:enchanting_apparatus": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.005,
+      0.0
+    ]
+  },
+  "ars_nouveau:experience_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:falseweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_amethyst_golem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_bookwyrm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_drygmy": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_starbuncle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_whirlisprig": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:familiar_wixie": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:fire_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:frostaya_pod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ghostweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_alternating": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_alternating_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_alternating_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_basketweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_basketweave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_basketweave_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_large_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_large_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_large_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_mosaic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_mosaic_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_mosaic_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_small_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_small_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:gilded_sourcestone_small_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_accelerate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_amplify": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_animate_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_aoe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_blink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_bounce": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_break": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_cold_snap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_conjure_water": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_craft": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_crush": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_cut": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_dampen": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_decelerate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_delay": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_dispel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_duration_down": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_ender_inventory": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_evaporate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_exchange": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_explosion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_extend_time": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_extract": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_fangs": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_fell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_firework": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_flare": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_fortune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_freeze": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_glide": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_gravity": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_grow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_gust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_harm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_harvest": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_heal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_hex": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_ignite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_infuse": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_intangible": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_interact": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_invisibility": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_launch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_leap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_lightning": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_linger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_name": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_orbit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_phantom_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_pickup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_pierce": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_place_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_projectile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_pull": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_randomize": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_redstone_signal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_rotate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_self": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_sense_magic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_sensitive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_slowfall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_smelt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_snare": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_split": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_summon_decoy": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_summon_steed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_summon_undead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_summon_vex": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_summon_wolves": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_toss": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_touch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_underfoot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_wall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_wind_shear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:glyph_wither": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:greater_experience_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:green_archwood_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:green_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:green_archwood_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:green_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:green_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "ars_nouveau:imbuement_chamber": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:item_detector": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.064,
+      0.0
+    ]
+  },
+  "ars_nouveau:jar_of_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:jump_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:lingering_flask_cannon": {
+    "mode": "3d",
+    "scale": 0.839,
+    "offset": [
+      0.017,
+      -0.008,
+      0.026
+    ]
+  },
+  "ars_nouveau:mage_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magebloom": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magebloom_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magebloom_crop": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magebloom_fiber": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magelight_torch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:magic_fire": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:manipulation_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:mendosteen_pod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:mimic_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:mirrorweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:mob_jar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.01,
+      0.0
+    ]
+  },
+  "ars_nouveau:mundane_belt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:music_disc_aria_biblio": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:music_disc_firel_the_wild_hunt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:music_disc_thistle_the_sound_of_glass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:mycelial_sourcelink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:novice_spell_book": {
+    "mode": "3d",
+    "scale": 0.517,
+    "offset": [
+      -0.066,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:orange_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "ars_nouveau:pierce_arrow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:polished_sconce": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.135
+    ]
+  },
+  "ars_nouveau:portal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_diffuser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_flask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_flask_amplify": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_flask_extend_time": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_jar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:potion_melder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:purple_archwood_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:purple_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:purple_archwood_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:purple_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:purple_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "ars_nouveau:red_archwood_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:red_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:red_archwood_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:red_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:red_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "ars_nouveau:redstone_relay": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      -0.23,
+      -0.045
+    ]
+  },
+  "ars_nouveau:relay": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.367,
+      0.0
+    ]
+  },
+  "ars_nouveau:relay_collector": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.367,
+      0.0
+    ]
+  },
+  "ars_nouveau:relay_deposit": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.367,
+      0.0
+    ]
+  },
+  "ars_nouveau:relay_splitter": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.367,
+      0.0
+    ]
+  },
+  "ars_nouveau:relay_warp": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.367,
+      0.0
+    ]
+  },
+  "ars_nouveau:repository": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.004,
+      0.0
+    ]
+  },
+  "ars_nouveau:reset": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:rewind": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ring_of_greater_discount": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ring_of_lesser_discount": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ring_of_potential": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_animal_summon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_awakening": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_binding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_brazier": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_burrowing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_challenge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_cloudshaping": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_conjure_island_desert": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_conjure_island_plains": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_containment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_disintegration": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_fertility": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_flight": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_flowering": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_forestation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_gravity": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_harvest": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_moonfall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_overgrowth": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_restoration": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_sanctuary": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_scrying": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_sunrise": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_warping": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:ritual_wilden_summon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:rotating_spell_turret": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      -0.065,
+      0.015
+    ]
+  },
+  "ars_nouveau:rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:runic_chalk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sconce": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.135
+    ]
+  },
+  "ars_nouveau:scribes_table": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      -0.113,
+      -0.206,
+      0.0
+    ]
+  },
+  "ars_nouveau:scryer_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:scryers_crystal": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.6,
+      0.037
+    ]
+  },
+  "ars_nouveau:scryers_oculus": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      -0.005,
+      0.0
+    ]
+  },
+  "ars_nouveau:shapers_focus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sky_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_alternating": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_alternating_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_alternating_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_basketweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_basketweave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_basketweave_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_large_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_large_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_large_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_mosaic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_mosaic_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_mosaic_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_small_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_small_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_gilded_sourcestone_small_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_alternating": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_alternating_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_alternating_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_basketweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_basketweave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_basketweave_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_large_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_large_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_large_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_mosaic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_mosaic_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_mosaic_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_small_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_small_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_small_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:smooth_sourcestone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sorcerer_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sorcerer_hood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sorcerer_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sorcerer_robes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:source_berry_pie": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:source_berry_roll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:source_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:source_gem_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:source_jar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourceberry_bush": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourceberry_sack": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_alternating": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_alternating_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_alternating_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_basketweave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_basketweave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_basketweave_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_large_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_large_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_large_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_mosaic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_mosaic_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_mosaic_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_sconce": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.135
+    ]
+  },
+  "ars_nouveau:sourcestone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_small_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_small_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_small_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:sourcestone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:spell_bow": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.048,
+      0.031,
+      0.0
+    ]
+  },
+  "ars_nouveau:spell_crossbow": {
+    "mode": "3d",
+    "scale": 0.606,
+    "offset": [
+      0.0,
+      0.007,
+      0.051
+    ]
+  },
+  "ars_nouveau:spell_parchment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:spell_prism": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:spell_sensor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:spell_turret": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      -0.065,
+      0.0
+    ]
+  },
+  "ars_nouveau:splash_flask_cannon": {
+    "mode": "3d",
+    "scale": 0.839,
+    "offset": [
+      -0.017,
+      -0.008,
+      0.0
+    ]
+  },
+  "ars_nouveau:split_arrow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stable_warp_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:starbuncle_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:starbuncle_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:starbuncle_shades": {
+    "mode": "3d",
+    "scale": 2.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:starbuncle_shards": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:starby_gift": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:storage_lectern": {
+    "mode": "3d",
+    "scale": 0.493,
+    "offset": [
+      0.0,
+      -0.02,
+      0.005
+    ]
+  },
+  "ars_nouveau:stripped_blue_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_blue_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_green_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_green_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_purple_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_purple_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_red_archwood_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:stripped_red_archwood_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:summon_focus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_amethyst_golem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_chilling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_depths": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_drygmy": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_feather": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_gliding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_heights": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_high_step": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_immolation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_kindling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_life_drain": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_magic_capacity": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_repairing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_spellpower": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_starbuncle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_undying": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_warding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_whirlisprig": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:thread_wixie": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:timer_spell_turret": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      -0.065,
+      0.0
+    ]
+  },
+  "ars_nouveau:vitalic_sourcelink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:void_jar": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:void_prism": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:volcanic_sourcelink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wand": {
+    "mode": "3d",
+    "scale": 0.727,
+    "offset": [
+      0.0,
+      0.004,
+      0.064
+    ]
+  },
+  "ars_nouveau:warp_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:water_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:whirlisprig_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:whirlisprig_flower": {
+    "mode": "3d",
+    "scale": 0.386,
+    "offset": [
+      0.0,
+      -0.01,
+      0.0
+    ]
+  },
+  "ars_nouveau:whirlisprig_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:whirlisprig_shards": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_guardian_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_horn": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_hunter_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_spike": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_stalker_se": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_tribute": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wilden_wing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wixie_cauldron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wixie_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wixie_hat": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.108
+    ]
+  },
+  "ars_nouveau:wixie_shards": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:wololo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:worn_notebook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ars_nouveau:yellow_sbed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  }
 }

@@ -16,16 +16,6 @@ import net.minecraftforge.items.IItemHandler;
 public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
     private final BlockRenderDispatcher blockRenderer;
 
-    /**
-     * StorageCubeIdx includes a 1-pixel margin in its start positions for visual gaps
-     * and collision detection. However, CubeRenderHelper's centering logic assumes
-     * the cube coordinate system starts at origin. We subtract this margin to align
-     * the rendering coordinate system properly.
-     */
-    //private static final float RENDER_MARGIN_OFFSET = 1.0f / 16.0f;
-    private static final float RENDER_MARGIN_OFFSET = 0.0f / 16.0f;
-    // TODO: this is a band aid, and an unnecessary one.
-
     public StorageStackBER(BlockEntityRendererProvider.Context ctx) {
         this.blockRenderer = ctx.getBlockRenderDispatcher();
     }
@@ -53,7 +43,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
             float sz = StorageCubeIdx.startPixel(visualXYZ[2]) / 16.0f;
 
             pose.pushPose();
-            pose.translate(sx - RENDER_MARGIN_OFFSET, sy - RENDER_MARGIN_OFFSET, sz - RENDER_MARGIN_OFFSET);
+            pose.translate(sx, sy, sz);
             pose.scale(0.5f, 0.5f, 0.5f);
             CubeRenderHelper.renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, be.getLevel());
             pose.popPose();

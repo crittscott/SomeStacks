@@ -1,26 +1,299 @@
 {
-    "mekanismgenerators:turbine_rotor": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanismgenerators:advanced_solar_generator": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanismgenerators:wind_generator": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    }
+  "mekanismgenerators:advanced_solar_generator": {
+    "mode": "3d",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      -0.002,
+      0.016
+    ]
+  },
+  "mekanismgenerators:bio_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:bioethanol_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:control_rod_assembly": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:deuterium_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:electromagnetic_coil": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fission_fuel_assembly": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fission_reactor_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fission_reactor_logic_adapter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fission_reactor_port": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fusion_fuel_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fusion_reactor_controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fusion_reactor_frame": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fusion_reactor_logic_adapter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:fusion_reactor_port": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:gas_burning_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:heat_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:hohlraum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:laser_focus_matrix": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:module_geothermal_generator_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:module_solar_recharging_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:reactor_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:rotational_complex": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:saturating_condenser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:solar_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.056
+    ]
+  },
+  "mekanismgenerators:solar_panel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:tritium_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:turbine_blade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:turbine_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:turbine_rotor": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:turbine_valve": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:turbine_vent": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanismgenerators:wind_generator": {
+    "mode": "3d",
+    "scale": 0.27,
+    "offset": [
+      -0.002,
+      -0.062,
+      0.0
+    ]
+  }
 }

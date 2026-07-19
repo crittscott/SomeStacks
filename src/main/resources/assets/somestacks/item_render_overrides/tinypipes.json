@@ -1,0 +1,128 @@
+{
+  "tinypipes:energy_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:fluid_filter_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:fluid_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_energy_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_fluid_filter_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_fluid_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_item_filter_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_item_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:full_redstone_pipe": {
+    "mode": "3d",
+    "scale": 1.324,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:item_filter_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:item_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:pipe_wrench": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:redstone_pipe": {
+    "mode": "3d",
+    "scale": 2.647,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinypipes:speed_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

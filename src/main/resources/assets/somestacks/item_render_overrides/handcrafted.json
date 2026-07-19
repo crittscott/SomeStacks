@@ -1,46 +1,2567 @@
 {
-    "handcrafted:acacia_chair": {"mode": "3d"},
-    "handcrafted:bamboo_chair": {"mode": "3d"},
-    "handcrafted:birch_chair": {"mode": "3d"},
-    "handcrafted:cherry_chair": {"mode": "3d"},
-    "handcrafted:crimson_chair": {"mode": "3d"},
-    "handcrafted:dark_oak_chair": {"mode": "3d"},
-    "handcrafted:jungle_chair": {"mode": "3d"},
-    "handcrafted:mangrove_chair": {"mode": "3d"},
-    "handcrafted:oak_chair": {"mode": "3d"},
-    "handcrafted:spruce_chair": {"mode": "3d"},
-    "handcrafted:warped_chair": {"mode": "3d"},
-    "handcrafted:acacia_bench": {"mode": "3d"},
-    "handcrafted:bamboo_bench": {"mode": "3d"},
-    "handcrafted:bench": {"mode": "3d"},
-    "handcrafted:birch_bench": {"mode": "3d"},
-    "handcrafted:cherry_bench": {"mode": "3d"},
-    "handcrafted:crimson_bench": {"mode": "3d"},
-    "handcrafted:dark_oak_bench": {"mode": "3d"},
-    "handcrafted:frozen_bench": {"mode": "3d"},
-    "handcrafted:jungle_bench": {"mode": "3d"},
-    "handcrafted:mangrove_bench": {"mode": "3d"},
-    "handcrafted:oak_bench": {"mode": "3d"},
-    "handcrafted:spruce_bench": {"mode": "3d"},
-    "handcrafted:warped_bench": {"mode": "3d"},
-
-    "handcrafted:acacia_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:bamboo_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:birch_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:cherry_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:crimson_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:dark_oak_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:jungle_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:mangrove_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:oak_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:spruce_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-    "handcrafted:warped_fancy_bed": {"mode": "3d", "scale": 0.4, "offset": [0.0, 0.0, 0.1]},
-
-    "handcrafted:evoker_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:skeleton_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:vindicator_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:creeper_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:phantom_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:pillager_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]},
-    "handcrafted:witch_trophy": {"mode": "3d", "scale": 0.5, "offset": [0.0, -0.125, 0.0]}
+  "handcrafted:acacia_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:acacia_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:acacia_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:acacia_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:acacia_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:acacia_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:acacia_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:andesite_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:andesite_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:bamboo_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:bamboo_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:bamboo_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:bamboo_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:bamboo_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:bamboo_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:bamboo_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:bear_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.07
+    ]
+  },
+  "handcrafted:bench": {
+    "mode": "3d",
+    "scale": 0.509,
+    "offset": [
+      0.0,
+      -0.098,
+      -0.014
+    ]
+  },
+  "handcrafted:berry_jam_jar": {
+    "mode": "3d",
+    "scale": 1.6,
+    "offset": [
+      0.0,
+      0.175,
+      0.001
+    ]
+  },
+  "handcrafted:birch_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:birch_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:birch_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:birch_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:birch_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:birch_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:birch_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:birch_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:birch_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:birch_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:birch_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:birch_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:birch_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:birch_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:birch_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:black_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:black_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blackstone_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blackstone_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:blaze_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.023,
+      -0.098
+    ]
+  },
+  "handcrafted:blue_bowl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blue_crockery_combo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blue_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blue_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blue_glazed_medium_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.075,
+      0.0
+    ]
+  },
+  "handcrafted:blue_glazed_thick_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:blue_glazed_thin_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:blue_glazed_wide_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.129,
+      0.0
+    ]
+  },
+  "handcrafted:blue_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:blue_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bricks_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:bricks_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:brown_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:brown_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:calcite_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:calcite_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:cherry_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:cherry_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:cherry_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:cherry_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:cherry_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:cherry_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:cherry_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:creeper_trophy": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.096,
+      0.005
+    ]
+  },
+  "handcrafted:crimson_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:crimson_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:crimson_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:crimson_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:crimson_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:crimson_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:crimson_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:cyan_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:cyan_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:dark_oak_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:dark_oak_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:dark_oak_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:dark_oak_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:deepslate_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:deepslate_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:diorite_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:diorite_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:dripstone_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:dripstone_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:evoker_trophy": {
+    "mode": "3d",
+    "scale": 0.372,
+    "offset": [
+      0.035,
+      -0.111,
+      0.001
+    ]
+  },
+  "handcrafted:fancy_painting": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:fox_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.084
+    ]
+  },
+  "handcrafted:frozen_bench": {
+    "mode": "3d",
+    "scale": 0.509,
+    "offset": [
+      0.0,
+      -0.098,
+      -0.014
+    ]
+  },
+  "handcrafted:goat_trophy": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.012,
+      -0.049
+    ]
+  },
+  "handcrafted:golden_medium_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.075,
+      0.0
+    ]
+  },
+  "handcrafted:golden_thick_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:golden_thin_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:golden_wide_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.129,
+      0.0
+    ]
+  },
+  "handcrafted:granite_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:granite_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:gray_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:gray_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:green_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:green_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:jungle_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:jungle_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:jungle_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:jungle_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:jungle_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:jungle_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:kitchen_hood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:kitchen_hood_pipe": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:light_blue_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:light_blue_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:light_gray_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:light_gray_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:lime_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:lime_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:magenta_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:magenta_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:mangrove_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:mangrove_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:mangrove_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:mangrove_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:mangrove_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:oak_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:oak_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:oak_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oak_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:oak_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oak_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oak_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:oak_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oak_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:oak_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:oak_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:oak_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oak_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:oak_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:orange_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:orange_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:oven": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:phantom_trophy": {
+    "mode": "3d",
+    "scale": 0.352,
+    "offset": [
+      0.005,
+      -0.015,
+      -0.004
+    ]
+  },
+  "handcrafted:pillager_trophy": {
+    "mode": "3d",
+    "scale": 0.429,
+    "offset": [
+      0.0,
+      -0.113,
+      0.045
+    ]
+  },
+  "handcrafted:pink_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:pink_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:pufferfish_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.003,
+      -0.145
+    ]
+  },
+  "handcrafted:purple_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:purple_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:quartz_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:quartz_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:red_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:red_sandstone_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:red_sandstone_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:red_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:salmon_trophy": {
+    "mode": "3d",
+    "scale": 0.576,
+    "offset": [
+      0.027,
+      0.003,
+      -0.108
+    ]
+  },
+  "handcrafted:sandstone_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:sandstone_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:silverfish_trophy": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.013,
+      -0.001,
+      -0.099
+    ]
+  },
+  "handcrafted:skeleton_horse_trophy": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.022,
+      -0.145
+    ]
+  },
+  "handcrafted:skeleton_trophy": {
+    "mode": "3d",
+    "scale": 0.44,
+    "offset": [
+      -0.001,
+      -0.105,
+      0.004
+    ]
+  },
+  "handcrafted:spider_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.017,
+      -0.057
+    ]
+  },
+  "handcrafted:spruce_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:spruce_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:spruce_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:spruce_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:spruce_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:spruce_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:spruce_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:stackable_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:stone_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:stone_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:terracotta_bowl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_crockery_combo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_medium_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.075,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_thick_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_thin_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:terracotta_wide_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.129,
+      0.0
+    ]
+  },
+  "handcrafted:tropical_fish_trophy": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.11
+    ]
+  },
+  "handcrafted:vindicator_trophy": {
+    "mode": "3d",
+    "scale": 0.382,
+    "offset": [
+      0.0,
+      -0.128,
+      0.014
+    ]
+  },
+  "handcrafted:warped_bench": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.016
+    ]
+  },
+  "handcrafted:warped_chair": {
+    "mode": "3d",
+    "scale": 0.515,
+    "offset": [
+      0.0,
+      -0.096,
+      -0.018
+    ]
+  },
+  "handcrafted:warped_corner_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:warped_couch": {
+    "mode": "3d",
+    "scale": 0.711,
+    "offset": [
+      0.0,
+      -0.006,
+      -0.004
+    ]
+  },
+  "handcrafted:warped_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:warped_cupboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:warped_desk": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:warped_dining_bench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.0
+    ]
+  },
+  "handcrafted:warped_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:warped_fancy_bed": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "handcrafted:warped_nightstand": {
+    "mode": "3d",
+    "scale": 0.889,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:warped_pillar_trim": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "handcrafted:warped_shelf": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:warped_side_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:warped_table": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      -0.001,
+      0.0
+    ]
+  },
+  "handcrafted:white_bowl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:white_crockery_combo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:white_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:white_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:white_glazed_medium_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.075,
+      0.0
+    ]
+  },
+  "handcrafted:white_glazed_thick_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:white_glazed_thin_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "handcrafted:white_glazed_wide_pot": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.129,
+      0.0
+    ]
+  },
+  "handcrafted:white_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:white_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:witch_trophy": {
+    "mode": "3d",
+    "scale": 0.336,
+    "offset": [
+      0.081,
+      -0.141,
+      0.037
+    ]
+  },
+  "handcrafted:wither_skeleton_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.005,
+      -0.098
+    ]
+  },
+  "handcrafted:wolf_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.112
+    ]
+  },
+  "handcrafted:wood_bowl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:wood_crockery_combo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:wood_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:wood_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_bowl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_crockery_combo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_cushion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "handcrafted:yellow_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

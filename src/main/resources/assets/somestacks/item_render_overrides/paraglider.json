@@ -1,9 +1,0 @@
-{
-    "paraglider:goddess_statue": {"scale": 0.5, "offset": [0.0, 0.0, 0.2]},
-    "paraglider:goron_goddess_statue": {"scale": 0.5, "offset": [0.0, 0.0, 0.2]},
-    "paraglider:horned_statue": {"scale": 0.5, "offset": [0.0, 0.0, 0.2]},
-    "paraglider:kakariko_goddess_statue": {"scale": 0.5, "offset": [0.0, 0.0, 0.2]},
-    "paraglider:rito_goddess_statue": {"scale": 0.5, "offset": [0.0, 0.0, 0.2]},
-    "paraglider:deku_leaf": {"scale": 0.5, "offset": [0.0, 0.0, 0]},
-    "paraglider:paraglider": {"scale": 0.5, "offset": [0.0, 0.0, 0]}
-}

@@ -1,0 +1,11 @@
+{
+  "disenchanting:disenchanter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  }
+}

@@ -1,26 +1,56 @@
 {
-    "ricksportalgun:golden_portal_gun": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ricksportalgun:portal_gun": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "ricksportalgun:prime_portal_gun": {
-        "scale": 0.6,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    }
+  "ricksportalgun:bootleg_portal_fluid_bottle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ricksportalgun:golden_portal_gun": {
+    "mode": "3d",
+    "scale": 0.492,
+    "offset": [
+      -0.013,
+      -0.013,
+      0.0
+    ]
+  },
+  "ricksportalgun:portal_fluid_bottle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "ricksportalgun:portal_gun": {
+    "mode": "3d",
+    "scale": 0.373,
+    "offset": [
+      0.004,
+      -0.013,
+      -0.023
+    ]
+  },
+  "ricksportalgun:prime_portal_gun": {
+    "mode": "3d",
+    "scale": 0.644,
+    "offset": [
+      0.031,
+      0.017,
+      0.075
+    ]
+  },
+  "ricksportalgun:quantum_leap_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

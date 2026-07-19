@@ -1,11 +1,110 @@
 {
-    "platforms:wrench": {
-        "mode": "3d",
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.05,
-            0.0
-        ]
-    }
+  "platforms:flat": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "platforms:floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.028,
+      0.0
+    ]
+  },
+  "platforms:frame": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "platforms:platformer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "platforms:rail": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "platforms:ramp": {
+    "mode": "3d",
+    "scale": 0.765,
+    "offset": [
+      0.0,
+      0.034,
+      0.0
+    ]
+  },
+  "platforms:rise": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.014
+    ]
+  },
+  "platforms:shingles": {
+    "mode": "3d",
+    "scale": 0.612,
+    "offset": [
+      -0.007,
+      0.072,
+      0.038
+    ]
+  },
+  "platforms:stairs": {
+    "mode": "3d",
+    "scale": 0.765,
+    "offset": [
+      0.0,
+      0.034,
+      0.0
+    ]
+  },
+  "platforms:steps": {
+    "mode": "3d",
+    "scale": 0.765,
+    "offset": [
+      0.0,
+      0.034,
+      0.0
+    ]
+  },
+  "platforms:tiles": {
+    "mode": "3d",
+    "scale": 0.588,
+    "offset": [
+      -0.01,
+      0.06,
+      0.037
+    ]
+  },
+  "platforms:wrench": {
+    "mode": "3d",
+    "scale": 0.46,
+    "offset": [
+      -0.036,
+      0.005,
+      0.0
+    ]
+  }
 }

@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfile;
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.List;
 
@@ -30,64 +30,39 @@ public final class CubeRenderHelper {
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation("somestacks", "block/stack_cube");
 
+    private static final float[] ZERO_OFFSET = new float[3];
+
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
-        RenderMode mode = getRenderMode(stack, level);
-
-        switch (mode) {
-            case TWO_D -> render2DItem(stack, pose, buffers, light, level);
-            case THREE_D -> render3DItem(stack, pose, buffers, light, level);
-            case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level);
-            case GUI -> renderGuiItem(stack, pose, buffers, light, level);
-        }
-    }
-
-    private static RenderMode getRenderMode(ItemStack stack, Level level) {
-        // Check for manual override first
-        RenderMode override = ItemRenderOverrides.getMode(stack);
-        if (override != null) {
-            return override;
-        }
-
-        // Auto-detect: never auto-choose BLOCK, only TWO_D or THREE_D
-        BakedModel model = Minecraft.getInstance()
-                .getItemRenderer()
-                .getModel(stack, level, null, 0);
-        return model.isGui3d() ? RenderMode.THREE_D : RenderMode.TWO_D;
-    }
-
-    private static boolean hasBEWLR(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
-        try {
-            // Get the client extensions for this item
-            var extensions = IClientItemExtensions.of(stack);
-
-            // Get the custom renderer (BEWLR)
-            var customRenderer = extensions.getCustomRenderer();
-
-            // Check if it's using a custom BEWLR (not the default one)
-            // The default is BlockEntityWithoutLevelRenderer itself
-            // Custom implementations will be subclasses
-            return customRenderer.getClass() != BlockEntityWithoutLevelRenderer.class;
-        } catch (Exception e) {
-            // If anything goes wrong, assume no custom BEWLR
-            return false;
-        }
-    }
-
-    private static float getBEWLRScaleCorrection(ItemStack stack) {
-        return hasBEWLR(stack) ? 0.5f : 1.0f;
-    }
-
-    private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level) {
-        float customScale = ItemRenderOverrides.getScale(stack);
-        float bewlrCorrection = getBEWLRScaleCorrection(stack);
-        float finalScale = customScale * bewlrCorrection;
+        RenderMode mode = ItemRenderOverrides.getMode(stack);
+        Float scale = ItemRenderOverrides.getScale(stack);
         float[] offset = ItemRenderOverrides.getOffset(stack);
 
+        if (ItemRenderOverrides.hasEntry(stack)) {
+            // The entry owns the presentation. Only a missing mode is measured, because
+            // scale and offset mean different things from one mode to the next.
+            if (mode == null) {
+                mode = AutoRenderProfiles.get(stack).mode();
+            }
+            if (scale == null) scale = 1.0f;
+            if (offset == null) offset = ZERO_OFFSET;
+        } else {
+            AutoRenderProfile profile = AutoRenderProfiles.get(stack);
+            mode = profile.mode();
+            scale = profile.scale();
+            offset = profile.offset();
+        }
+
+        switch (mode) {
+            case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
+            case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
+            case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);
+            case GUI -> renderGuiItem(stack, pose, buffers, light, level, scale, offset);
+        }
+    }
+
+    private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
+                                     float finalScale, float[] offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
@@ -107,12 +82,8 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level) {
-        float customScale = ItemRenderOverrides.getScale(stack);
-        float bewlrCorrection = getBEWLRScaleCorrection(stack);
-        float finalScale = customScale * bewlrCorrection;
-        float[] offset = ItemRenderOverrides.getOffset(stack);
-
+    private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
+                                      float finalScale, float[] offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
@@ -136,26 +107,24 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level) {
+    private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
+                                     float scale, float[] offset) {
         pose.pushPose();
         pose.scale(0.5f, 0.5f, 0.5f);
         BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-        render2DItemCube(pose, buffers, stack, model, light);
+        render2DItemCube(pose, buffers, stack, model, light, scale, offset);
         pose.popPose();
     }
 
     private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level) {
+                                        BlockRenderDispatcher blockRenderer, Level level,
+                                        float finalScale, float[] offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             // Fallback if someone misconfigured a non-BlockItem as "block" mode
             return;
         }
 
         BlockState blockState = blockItem.getBlock().defaultBlockState();
-        float customScale = ItemRenderOverrides.getScale(stack);
-        float bewlrCorrection = getBEWLRScaleCorrection(stack);
-        float finalScale = customScale * bewlrCorrection;
-        float[] offset = ItemRenderOverrides.getOffset(stack);
 
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
@@ -170,14 +139,15 @@ public final class CubeRenderHelper {
             // Some blocks (like IE multiblocks) have complex models that require level context
             // and will crash when rendered without it. Fall back to item rendering.
             pose.popPose();
-            render3DItem(stack, pose, buffers, light, level);
+            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
             return;
         }
 
         pose.popPose();
     }
 
-    public static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light) {
+    public static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
+                                        float scale, float[] offset) {
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
                 .apply(STACK_CUBE_TEXTURE);
@@ -199,18 +169,15 @@ public final class CubeRenderHelper {
 
             QuadVertex[] vertices = extractQuadVertices(quad);
 
-            float customScale = ItemRenderOverrides.getScale(stack);
-            float[] offset = ItemRenderOverrides.getOffset(stack);
-
             // Shrink 2D texture from 16x16 to 15x15 to leave 1px border, then apply custom scale
-            // Scale around center point: new_coord = (old_coord - 0.5) * 0.875 * customScale + 0.5
+            // Scale around center point: new_coord = (old_coord - 0.5) * 0.875 * scale + 0.5
             for (int i = 0; i < vertices.length; i++) {
                 float x = vertices[i].x;
                 float y = vertices[i].y;
                 float z = vertices[i].z;
 
-                x = (x - 0.5f) * 0.875f * customScale + 0.5f;
-                y = (y - 0.5f) * 0.875f * customScale + 0.5f;
+                x = (x - 0.5f) * 0.875f * scale + 0.5f;
+                y = (y - 0.5f) * 0.875f * scale + 0.5f;
 
                 // Apply offset (x, y only for 2D items)
                 x += offset[0];

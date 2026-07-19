@@ -1,3 +1,443 @@
 {
-    "sophisticatedbackpacks:backpack": {"scale": 1.5, "offset": [0.0, 0.0, 0.1]}
+  "sophisticatedbackpacks:advanced_compacting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_deposit_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_feeding_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_filter_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_magnet_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_pickup_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_pump_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_refill_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_restock_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_tool_swapper_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:advanced_void_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:anvil_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:auto_blasting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:auto_smelting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:auto_smoking_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:battery_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:blasting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:compacting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:copper_backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:crafting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:deposit_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:diamond_backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:everlasting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:feeding_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:filter_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:gold_backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:inception_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:iron_backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:jukebox_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:magnet_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:netherite_backpack": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.023,
+      0.112
+    ]
+  },
+  "sophisticatedbackpacks:pickup_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:pump_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:refill_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:restock_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:smelting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:smoking_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stack_upgrade_starter_tier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stack_upgrade_tier_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stack_upgrade_tier_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stack_upgrade_tier_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stack_upgrade_tier_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:stonecutter_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:tank_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:tool_swapper_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:upgrade_base": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:void_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sophisticatedbackpacks:xp_pump_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

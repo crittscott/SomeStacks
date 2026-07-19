@@ -1,26 +1,263 @@
 {
-    "mininggadgets:mininggadget": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mininggadgets:mininggadget_fancy": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mininggadgets:mininggadget_simple": {
-        "scale": 0.4,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    }
+  "mininggadgets:minerslight": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:mininggadget": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.008,
+      0.025,
+      0.011
+    ]
+  },
+  "mininggadgets:mininggadget_fancy": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      -0.006,
+      -0.003,
+      0.031
+    ]
+  },
+  "mininggadgets:mininggadget_simple": {
+    "mode": "3d",
+    "scale": 0.334,
+    "offset": [
+      -0.025,
+      0.035,
+      0.032
+    ]
+  },
+  "mininggadgets:modificationtable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.083
+    ]
+  },
+  "mininggadgets:upgrade_battery_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_battery_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_battery_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_battery_creative": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_efficiency_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_efficiency_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_efficiency_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_efficiency_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_efficiency_5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_empty": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_fortune_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_fortune_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_fortune_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_freezing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_light_placer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_magnet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_range_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_range_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_range_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_silk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_size_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_size_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_size_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mininggadgets:upgrade_void_junk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

@@ -1,0 +1,245 @@
+{
+  "tinyredstone:block_chopper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:blueprint": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:dark_panel_cover": {
+    "mode": "3d",
+    "scale": 0.692,
+    "offset": [
+      0.026,
+      -0.026,
+      0.104
+    ]
+  },
+  "tinyredstone:light_panel_cover": {
+    "mode": "3d",
+    "scale": 0.692,
+    "offset": [
+      0.026,
+      -0.026,
+      0.104
+    ]
+  },
+  "tinyredstone:redstone_panel": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      -0.013
+    ]
+  },
+  "tinyredstone:redstone_wrench": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:silicon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:silicon_compound": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_button": {
+    "mode": "3d",
+    "scale": 5.455,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_color_selector": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_comparator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_lever": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_note_block": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_observer": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_piston": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_redstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_redstone_block": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_redstone_bridge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_redstone_lamp": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_redstone_torch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_repeater": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_solid_block": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.45,
+      -0.45,
+      -0.45
+    ]
+  },
+  "tinyredstone:tiny_sticky_piston": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_stone_button": {
+    "mode": "3d",
+    "scale": 5.455,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_super_repeater": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinyredstone:tiny_transparent_block": {
+    "mode": "3d",
+    "scale": 2.045,
+    "offset": [
+      0.45,
+      -0.45,
+      -0.45
+    ]
+  },
+  "tinyredstone:trim_panel_cover": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

@@ -1,6 +1,578 @@
 {
-    "manyideas_core:dye_crafting_table": {"mode": "3d", "scale": 0.45, "offset": [0.0, 0.0, 0.0]},
-    "manyideas_core:table_saw_diamond": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]},
-    "manyideas_core:table_saw_iron": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]},
-    "manyideas_core:table_saw_stone": {"mode": "3d", "scale": 0.33, "offset": [0.0, -0.1, 0.0]}
+  "manyideas_core:dye_crafting_table": {
+    "mode": "3d",
+    "scale": 0.436,
+    "offset": [
+      0.0,
+      -0.007,
+      0.0
+    ]
+  },
+  "manyideas_core:dye_rainbow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:end_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_straight_allium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_straight_orchid_blue": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_tall_straight_lilac": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_tall_straight_peony": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_tall_straight_rose_bush": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:flower_tall_straight_sunflower": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_acacia": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_birch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_crimson": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_dark_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_jungle": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_spruce": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:log_stripped_smooth_warped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:mortar": {
+    "mode": "3d",
+    "scale": 0.587,
+    "offset": [
+      0.101,
+      0.068,
+      0.082
+    ]
+  },
+  "manyideas_core:mysterious_shears": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_acacia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_birch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_crimson": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_dark_oak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_jungle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_oak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_spruce": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:panel_warped": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_colored": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_acacia": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_birch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_crimson": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_dark_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_jungle": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_spruce": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:planks_seamless_warped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:plate_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:plate_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:plate_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:plate_quartz": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_carpet": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_stained_glass_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_terracotta_glazed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:rainbow_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:redstone_key": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:saw_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:saw_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:saw_stone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:table_saw_diamond": {
+    "mode": "3d",
+    "scale": 0.313,
+    "offset": [
+      0.0,
+      -0.068,
+      0.0
+    ]
+  },
+  "manyideas_core:table_saw_iron": {
+    "mode": "3d",
+    "scale": 0.313,
+    "offset": [
+      0.0,
+      -0.068,
+      0.0
+    ]
+  },
+  "manyideas_core:table_saw_stone": {
+    "mode": "3d",
+    "scale": 0.313,
+    "offset": [
+      0.0,
+      -0.068,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_colored": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_acacia": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_birch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_crimson": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_dark_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_jungle": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_oak": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_spruce": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "manyideas_core:wood_stripped_smooth_warped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

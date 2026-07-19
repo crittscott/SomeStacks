@@ -1,62 +1,749 @@
 {
-    "woodworks:acacia_chest": {
-        "mode": "block"
-    },
-    "woodworks:birch_chest": {
-        "mode": "block"
-    },
-    "woodworks:cherry_chest": {
-        "mode": "block"
-    },
-    "woodworks:crimson_chest": {
-        "mode": "block"
-    },
-    "woodworks:dark_oak_chest": {
-        "mode": "block"
-    },
-    "woodworks:jungle_chest": {
-        "mode": "block"
-    },
-    "woodworks:mangrove_chest": {
-        "mode": "block"
-    },
-    "woodworks:oak_chest": {
-        "mode": "block"
-    },
-    "woodworks:spruce_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_acacia_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_birch_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_cherry_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_crimson_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_dark_oak_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_jungle_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_mangrove_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_oak_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_spruce_chest": {
-        "mode": "block"
-    },
-    "woodworks:trapped_warped_chest": {
-        "mode": "block"
-    },
-    "woodworks:warped_chest": {
-        "mode": "block"
-    }
+  "woodworks:acacia_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:acacia_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:acacia_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:acacia_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:acacia_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:acacia_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:azalea_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:bamboo_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:bamboo_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:bamboo_closet": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "woodworks:bamboo_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:birch_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:birch_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:birch_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:birch_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:birch_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:birch_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:cherry_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:cherry_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:cherry_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:cherry_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:cherry_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:cherry_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_acacia_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_bamboo_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_birch_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_cherry_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_crimson_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_dark_oak_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_jungle_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_mangrove_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_spruce_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:chiseled_warped_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:crimson_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:crimson_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:crimson_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:crimson_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:crimson_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:dark_oak_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:dark_oak_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:dark_oak_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:dark_oak_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:dark_oak_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:dark_oak_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:flowering_azalea_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:jungle_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:jungle_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:jungle_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:jungle_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:jungle_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:jungle_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:mangrove_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:mangrove_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:mangrove_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:mangrove_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:mangrove_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:mangrove_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:oak_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:oak_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:oak_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:sawmill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:spruce_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:spruce_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:spruce_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:spruce_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:spruce_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:spruce_leaf_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:trapped_acacia_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_bamboo_closet": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "woodworks:trapped_birch_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_cherry_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_crimson_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_dark_oak_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_jungle_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_mangrove_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_oak_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_spruce_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:trapped_warped_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:warped_beehive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:warped_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:warped_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "woodworks:warped_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "woodworks:warped_ladder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

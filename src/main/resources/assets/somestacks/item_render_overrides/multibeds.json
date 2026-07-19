@@ -1,29 +1,326 @@
 {
-    "multibeds:blanket_black": { "scale": 0.5},
-    "multibeds:blanket_blue": { "scale": 0.5},
-    "multibeds:blanket_brown": { "scale": 0.5},
-    "multibeds:blanket_cyan": { "scale": 0.5},
-    "multibeds:blanket_gray": { "scale": 0.5},
-    "multibeds:blanket_green": { "scale": 0.5},
-    "multibeds:blanket_light_blue": { "scale": 0.5},
-    "multibeds:blanket_light_gray": { "scale": 0.5},
-    "multibeds:blanket_lime": { "scale": 0.5},
-    "multibeds:blanket_magenta": { "scale": 0.5},
-    "multibeds:blanket_orange": { "scale": 0.5},
-    "multibeds:blanket_pink": { "scale": 0.5},
-    "multibeds:blanket_purple": { "scale": 0.5},
-    "multibeds:blanket_red": { "scale": 0.5},
-    "multibeds:blanket_white": { "scale": 0.5},
-    "multibeds:blanket_yellow": { "scale": 0.5},
-    "multibeds:classic": { "scale": 0.5},
-    "multibeds:cot": { "scale": 0.5},
-    "multibeds:crew": { "scale": 0.5},
-    "multibeds:custom": { "scale": 0.5},
-    "multibeds:future": { "scale": 0.5},
-    "multibeds:hanger": { "scale": 0.5},
-    "multibeds:ladder": { "scale": 0.5},
-    "multibeds:modern": { "scale": 0.5},
-    "multibeds:rustic": { "scale": 0.5},
-    "multibeds:slab": { "scale": 0.5},
-    "multibeds:vintage": { "scale": 0.5}
+  "multibeds:bed_kit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:bedding_package": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_black": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_blue": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_brown": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_cyan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_gray": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_green": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_light_blue": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_light_gray": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_lime": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_magenta": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_orange": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_pink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_purple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_red": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_white": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:blanket_yellow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:classic": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "multibeds:cot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "multibeds:crew": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "multibeds:custom": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.049
+    ]
+  },
+  "multibeds:embroidery_thread": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:feather_pile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:future": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "multibeds:hanger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:ladder": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:ladder_tools": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:modern": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "multibeds:padding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:pillow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:rustic": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "multibeds:sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "multibeds:slab": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "multibeds:vintage": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "multibeds:woolen_cloth": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

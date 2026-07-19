@@ -1,18 +1,245 @@
 {
-    "fire_extinguisher:exit_sign": { "scale": 0.5},
-    "fire_extinguisher:exit_sign_left": { "scale": 0.5},
-    "fire_extinguisher:exit_sign_left_down": {"scale": 0.5},
-    "fire_extinguisher:exit_sign_left_up": {"scale": 0.5},
-    "fire_extinguisher:exit_sign_right": {"scale": 0.5},
-    "fire_extinguisher:exit_sign_right_down": {"scale": 0.5},
-    "fire_extinguisher:exit_sign_right_up": {"scale": 0.5},
-
-    "fire_extinguisher:fire_alarm_bell": {"scale": 0.5},
-    "fire_extinguisher:fire_alarm_switch": {"scale": 0.5},
-    "fire_extinguisher:fire_extinguisher": {"scale": 0.7, "offset": [0.0, -0.1, 0.0]},
-    "fire_extinguisher:fire_extinguisher_copper": {"scale": 0.7, "offset": [0.0, -0.1, 0.0]},
-    "fire_extinguisher:fire_extinguisher_sign": {"scale": 0.5},
-    "fire_extinguisher:fire_extinguisher_sign_left": {"scale": 0.5},
-    "fire_extinguisher:fire_extinguisher_sign_right": {"scale": 0.5}
-
+  "fire_extinguisher:exit_sign": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_left": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_left_down": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_left_up": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_right": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_right_down": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:exit_sign_right_up": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.032
+    ]
+  },
+  "fire_extinguisher:fire_alarm_bell": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.019
+    ]
+  },
+  "fire_extinguisher:fire_alarm_siren": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.009
+    ]
+  },
+  "fire_extinguisher:fire_alarm_smoke_detector": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "fire_extinguisher:fire_alarm_smoke_detector_silent": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "fire_extinguisher:fire_alarm_switch": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      -0.008,
+      -0.008
+    ]
+  },
+  "fire_extinguisher:fire_axe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_boots_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_chestplate_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_extinguisher": {
+    "mode": "3d",
+    "scale": 0.436,
+    "offset": [
+      -0.011,
+      0.001,
+      0.014
+    ]
+  },
+  "fire_extinguisher:fire_extinguisher_copper": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.024,
+      -0.033,
+      -0.025
+    ]
+  },
+  "fire_extinguisher:fire_extinguisher_sign": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_extinguisher_sign_left": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_extinguisher_sign_right": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_helmet_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_leggings_light": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "fire_extinguisher:fire_sprinkler": {
+    "mode": "3d",
+    "scale": 0.897,
+    "offset": [
+      0.0,
+      -0.027,
+      -0.056
+    ]
+  }
 }

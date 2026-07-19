@@ -1,3 +1,461 @@
 {
-    "cookingforblockheads:fruit_basket": { "size": 0.5}
+  "cookingforblockheads:black_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:black_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:blue_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:blue_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:brown_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:brown_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.028,
+      -0.021
+    ]
+  },
+  "cookingforblockheads:cooking_table": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.007
+    ]
+  },
+  "cookingforblockheads:corner": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.007,
+      -0.013,
+      0.007
+    ]
+  },
+  "cookingforblockheads:counter": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.007
+    ]
+  },
+  "cookingforblockheads:cow_jar": {
+    "mode": "3d",
+    "scale": 0.817,
+    "offset": [
+      0.0,
+      -0.046,
+      0.0
+    ]
+  },
+  "cookingforblockheads:crafting_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:cyan_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:cyan_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:fridge": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.015
+    ]
+  },
+  "cookingforblockheads:fruit_basket": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.009,
+      0.038
+    ]
+  },
+  "cookingforblockheads:gray_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:gray_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:green_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:green_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:hanging_corner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.028,
+      0.0
+    ]
+  },
+  "cookingforblockheads:heating_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:ice_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:light_blue_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:light_blue_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:light_gray_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:light_gray_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:lime_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:lime_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:magenta_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:magenta_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:milk_jar": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.012,
+      0.0
+    ]
+  },
+  "cookingforblockheads:no_filter_edition": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:orange_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:orange_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:pink_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:pink_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:preservation_chamber": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:purple_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:purple_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:recipe_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:red_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:red_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  },
+  "cookingforblockheads:sink": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.007
+    ]
+  },
+  "cookingforblockheads:spice_rack": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      -0.155
+    ]
+  },
+  "cookingforblockheads:toaster": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.015,
+      -0.037,
+      0.0
+    ]
+  },
+  "cookingforblockheads:tool_rack": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.127,
+      -0.197
+    ]
+  },
+  "cookingforblockheads:white_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:yellow_kitchen_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cookingforblockheads:yellow_oven": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.026
+    ]
+  }
 }

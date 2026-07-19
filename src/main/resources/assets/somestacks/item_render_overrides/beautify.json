@@ -1,44 +1,479 @@
 {
-    "beautify:bookstack": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:botanist_workbench": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:acacia_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:acacia_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:birch_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:birch_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:crimson_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:crimson_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:dark_oak_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:dark_oak_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:iron_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:jungle_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:jungle_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:mangrove_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:mangrove_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:oak_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:oak_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:spruce_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:spruce_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:warped_blinds": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "beautify:warped_trellis": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-
-    "beautify:hangingPot": {"scale": 0.5},
-    "beautify:lamp_bamboo": {"scale": 0.5},
-    "beautify:lamp_candelabra": {"scale": 0.5},
-    "beautify:lamp_candelabra_black": {"scale": 0.5},
-    "beautify:lamp_candelabra_blue": {"scale": 0.5},
-    "beautify:lamp_candelabra_brown": {"scale": 0.5},
-    "beautify:lamp_candelabra_cyan": {"scale": 0.5},
-    "beautify:lamp_candelabra_gray": {"scale": 0.5},
-    "beautify:lamp_candelabra_green": {"scale": 0.5},
-    "beautify:lamp_candelabra_light_blue": {"scale": 0.5},
-    "beautify:lamp_candelabra_light_gray": {"scale": 0.5},
-    "beautify:lamp_candelabra_lime": {"scale": 0.5},
-    "beautify:lamp_candelabra_magenta": {"scale": 0.5},
-    "beautify:lamp_candelabra_orange": {"scale": 0.5},
-    "beautify:lamp_candelabra_pink": {"scale": 0.5},
-    "beautify:lamp_candelabra_purple": {"scale": 0.5},
-    "beautify:lamp_candelabra_red": {"scale": 0.5},
-    "beautify:lamp_candelabra_white": {"scale": 0.5},
-    "beautify:lamp_candelabra_yellow": {"scale": 0.5},
-    "beautify:lamp_light_bulb": {"scale": 0.5}
+  "beautify:acacia_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:acacia_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:acacia_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:birch_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:birch_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:birch_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:bookstack": {
+    "mode": "3d",
+    "scale": 0.565,
+    "offset": [
+      -0.013,
+      -0.009,
+      0.0
+    ]
+  },
+  "beautify:botanist_workbench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.034,
+      0.0,
+      -0.077
+    ]
+  },
+  "beautify:crimson_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:crimson_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:crimson_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:dark_oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:dark_oak_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:dark_oak_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:hanging_pot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:iron_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:jungle_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:jungle_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:jungle_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:lamp_bamboo": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      -0.015,
+      0.03
+    ]
+  },
+  "beautify:lamp_candelabra": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_black": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_blue": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_brown": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_cyan": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_gray": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_green": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_light_blue": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_light_gray": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_lime": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_magenta": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_orange": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_pink": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_purple": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_red": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_white": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_candelabra_yellow": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "beautify:lamp_jar": {
+    "mode": "3d",
+    "scale": 0.778,
+    "offset": [
+      0.0,
+      -0.03,
+      0.0
+    ]
+  },
+  "beautify:lamp_light_bulb": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:mangrove_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:mangrove_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:mangrove_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:oak_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:oak_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:quartz_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:rope": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:spruce_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:spruce_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:spruce_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "beautify:warped_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "beautify:warped_picture_frame": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.074
+    ]
+  },
+  "beautify:warped_trellis": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

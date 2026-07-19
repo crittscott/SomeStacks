@@ -1,0 +1,290 @@
+{
+  "crystal_clear:andesite_clear_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_clear_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_clear_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_clear_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_clear_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:andesite_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_clear_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_clear_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_clear_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_clear_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_clear_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:brass_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:copper_clear_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:copper_clear_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:copper_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:copper_glass_scaffolding": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_clear_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_clear_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_clear_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_clear_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_glass_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_glass_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_glass_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "crystal_clear:train_glass_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

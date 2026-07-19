@@ -1,157 +1,1082 @@
 {
-    "exoticbirds:nest": {
-        "mode": "block",
-        "scale": 2.0,
-        "offset": [
-            -0.2,
-            0.0,
-            -0.2
-        ]
-    },
-    "exoticbirds:hummingbird_feeder": {
-        "mode": "block",
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "exoticbirds:roost_box": {
-        "mode": "block",
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "exoticbirds:white_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:orange_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:magenta_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:light_blue_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:yellow_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:lime_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:pink_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:gray_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:light_gray_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:cyan_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:purple_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:blue_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:brown_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:green_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:red_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    },
-    "exoticbirds:black_birdhouse": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.1
-        ]
-    }
+  "exoticbirds:acacia_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:ambrosia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:bamboo_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:birch_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:bird_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:black_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:blue_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:bluejay_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:bluejay_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:booby_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:booby_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:brown_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:budgerigar_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:budgerigar_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cardinal_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cardinal_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cassowary_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cassowary_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cherry_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cloud_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cloud_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cockatoo_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cockatoo_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cooked_birdmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:crane_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:crane_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:crimson_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:cyan_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:dark_oak_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:desert_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:desert_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:duck_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:duck_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:egg_identifier": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:egg_incubator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:eggshell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:ender_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:ender_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:fire_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:fire_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:flamingo_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:flamingo_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:gold_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:gouldianfinch_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:gouldianfinch_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:gray_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:green_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:gull_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:gull_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:heron_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:heron_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:hummingbird_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:hummingbird_feeder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:hummingbird_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:iron_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:jungle_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kingfisher_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kingfisher_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kiwi_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kiwi_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kookaburra_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:kookaburra_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:light_blue_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:light_gray_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:lime_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:lyrebird_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:lyrebird_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:macaw_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:macaw_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:magenta_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:magpie_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:magpie_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:mangrove_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:mystery_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:nest": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:nether_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:nether_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:oak_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:orange_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:ostrich_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:ostrich_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:owl_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:owl_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:peafowl_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:peafowl_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pelican_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pelican_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:penguin_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:penguin_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pigeon_backpack": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pigeon_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pigeon_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:pink_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:purple_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:raw_birdmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:red_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:roadrunner_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:roadrunner_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:robin_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:robin_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:roost_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:skeleton_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:skeleton_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:snowy_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:snowy_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:spruce_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:swan_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:swan_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:toucan_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:toucan_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:twilight_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:twilight_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:warped_birdcage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:water_phoenix_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:water_phoenix_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:white_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  },
+  "exoticbirds:woodpecker_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:woodpecker_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exoticbirds:yellow_birdhouse": {
+    "mode": "3d",
+    "scale": 0.434,
+    "offset": [
+      -0.006,
+      -0.008,
+      0.095
+    ]
+  }
 }

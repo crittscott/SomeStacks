@@ -1,11 +1,164 @@
 {
-    "tinygates:and_gate_item": { "scale": 0.5},
-    "tinygates:clock_item": { "scale": 0.5},
-    "tinygates:counter_item": { "scale": 0.5},
-    "tinygates:edge_detector_item": { "scale": 0.5},
-    "tinygates:not_gate_item": { "scale": 0.5},
-    "tinygates:or_gate_item": { "scale": 0.5},
-    "tinygates:rs_latch_item": { "scale": 0.5},
-    "tinygates:t_flip_flop_item": { "scale": 0.5},
-    "tinygates:xor_gate_item": { "scale": 0.5}
+  "tinygates:and_gate_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:clock_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:counter_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:edge_detector_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:not_gate_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:or_gate_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:rs_latch_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:t_flip_flop_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  },
+  "tinygates:tiny_and_gate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_counter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_edge_detector": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_not_gate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_or_gate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_rs_latch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_t_flip_flop": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:tiny_xor_gate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tinygates:xor_gate_item": {
+    "mode": "3d",
+    "scale": 0.409,
+    "offset": [
+      0.0,
+      0.0,
+      0.008
+    ]
+  }
 }

@@ -1,0 +1,4700 @@
+{
+  "reevesfurniture:acacia_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:acacia_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:acacia_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:acacia_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:acacia_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:acacia_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:acacia_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:acacia_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:acacia_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:acacia_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:air_mattress": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:aquarium_empty": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:aquarium_with_cod": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:aquarium_with_pufferfish": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:aquarium_with_salmon": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:aquarium_with_tropical_fish": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:bamboo_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:bamboo_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:bamboo_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:bamboo_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:bamboo_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:bamboo_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:bamboo_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:bamboo_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bamboo_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:basic_trashcan": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:bath_counter_one": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bath_counter_three": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bath_counter_two": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bath_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:beach_chair": {
+    "mode": "3d",
+    "scale": 0.431,
+    "offset": [
+      0.0,
+      0.01,
+      0.186
+    ]
+  },
+  "reevesfurniture:beach_stool": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:beach_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:beach_towel_cyan_blue": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:beach_towel_lime_white": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:beach_towel_red_white": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bee_nest_trophy": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:birch_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:birch_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:birch_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:birch_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:birch_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:birch_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:birch_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:birch_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_one_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birch_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:birds_fountain": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      0.249
+    ]
+  },
+  "reevesfurniture:black_doorbell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.042
+    ]
+  },
+  "reevesfurniture:black_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:black_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:black_wall_clock": {
+    "mode": "3d",
+    "scale": 0.965,
+    "offset": [
+      0.007,
+      0.006,
+      0.03
+    ]
+  },
+  "reevesfurniture:blue_modern_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:blue_modern_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:blue_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:blue_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:blue_soap": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.292,
+      0.0
+    ]
+  },
+  "reevesfurniture:blue_wooden_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:blue_wooden_night_light_off": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:bread_slice_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:brick_trashcan": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.233
+    ]
+  },
+  "reevesfurniture:brick_trophy": {
+    "mode": "3d",
+    "scale": 0.488,
+    "offset": [
+      -0.047,
+      0.019,
+      0.03
+    ]
+  },
+  "reevesfurniture:brown_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:brown_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:brown_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:bulb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:bunch_of_mangrove_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:cactus_plant": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:ceiling_lamp": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.075,
+      0.0
+    ]
+  },
+  "reevesfurniture:ceiling_lamp_on": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.075,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:cherry_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:cherry_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:cherry_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:cherry_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:cherry_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:cherry_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:cherry_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:cherry_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:cherry_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:cherry_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cherry_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:coffee_machine": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:crimson_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:crimson_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:crimson_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:crimson_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:crimson_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:crimson_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:crimson_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:crimson_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:crimson_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_one_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:crimson_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cup_of_hot_cocoa": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cup_of_hot_cocoa_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.056,
+      0.253,
+      -0.014
+    ]
+  },
+  "reevesfurniture:cup_of_water": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cup_of_water_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.056,
+      0.253,
+      -0.014
+    ]
+  },
+  "reevesfurniture:cut_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cut_board_with_bread": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.231,
+      -0.016
+    ]
+  },
+  "reevesfurniture:cyan_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:cyan_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:dark_oak_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:dark_oak_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:dark_oak_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:dark_oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:dark_oak_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:dark_oak_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:dark_oak_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:dark_oak_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:dark_oak_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:decorative_stone": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.206,
+      0.037
+    ]
+  },
+  "reevesfurniture:decorative_stone_pot": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "reevesfurniture:diorite_counter_corner": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:diorite_counter_main": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:diorite_counter_three": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:diorite_counter_two": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:diorite_sink": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      -0.054,
+      0.0
+    ]
+  },
+  "reevesfurniture:dishwashing_machine": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:electrical_panel": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:empty_aquarium_with_water": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "reevesfurniture:empty_cup": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:empty_cup_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.056,
+      0.253,
+      -0.014
+    ]
+  },
+  "reevesfurniture:empty_glass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:empty_glass_block": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.135,
+      -0.011
+    ]
+  },
+  "reevesfurniture:empty_water_bottle": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:furniture_workbench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:game_trophy": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.135,
+      0.045
+    ]
+  },
+  "reevesfurniture:garden_acacia_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_birch_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.014,
+      0.224
+    ]
+  },
+  "reevesfurniture:garden_crimson_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_jungle_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_lantern": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_mangrove_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_spruce_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:garden_warped_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:glass_of_ice_cocoa": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:glass_of_ice_cocoa_block": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.135,
+      -0.011
+    ]
+  },
+  "reevesfurniture:glass_of_water": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:glass_of_water_block": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.135,
+      -0.011
+    ]
+  },
+  "reevesfurniture:globe": {
+    "mode": "3d",
+    "scale": 0.464,
+    "offset": [
+      0.0,
+      -0.044,
+      -0.045
+    ]
+  },
+  "reevesfurniture:gold_cup_trophy": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.03
+    ]
+  },
+  "reevesfurniture:granite_counter_corner": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:granite_counter_main": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:granite_counter_three": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:granite_counter_two": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:granite_sink": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      -0.054,
+      0.0
+    ]
+  },
+  "reevesfurniture:gray_ceiling_lamp_01": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.135,
+      -0.011
+    ]
+  },
+  "reevesfurniture:gray_ceiling_lamp_01_off": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.281,
+      -0.014
+    ]
+  },
+  "reevesfurniture:gray_ceiling_lamp_02": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.112,
+      -0.007
+    ]
+  },
+  "reevesfurniture:gray_ceiling_lamp_02_off": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.183,
+      -0.007
+    ]
+  },
+  "reevesfurniture:gray_doorbell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.042
+    ]
+  },
+  "reevesfurniture:gray_modern_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:gray_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:green_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:green_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:grill": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.0,
+      0.205
+    ]
+  },
+  "reevesfurniture:grill_empty": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.0,
+      0.205
+    ]
+  },
+  "reevesfurniture:hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:heart_trophy": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.135,
+      0.075
+    ]
+  },
+  "reevesfurniture:ice_cubes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:jungle_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:jungle_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:jungle_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:jungle_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:jungle_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:jungle_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:jungle_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:jungle_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:jungle_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:jungle_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:key": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:kitchen_counter_corner": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_counter_corner_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_counter_main": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_counter_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_counter_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_counter_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:kitchen_hood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:knife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:light_blue_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:light_blue_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:light_blue_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:light_blue_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:light_gray_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:light_gray_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:light_gray_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:lime_modern_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:lime_modern_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:lime_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:lime_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:lime_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:lime_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:lime_wooden_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:lime_wooden_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:lock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:magenta_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:magenta_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:mangrove_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:mangrove_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:mangrove_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:mangrove_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:mangrove_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:mangrove_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:mangrove_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:mangrove_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:mangrove_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:mangrove_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:microwave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.084,
+      0.0
+    ]
+  },
+  "reevesfurniture:mod_trophy_block": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.004,
+      0.0,
+      0.057
+    ]
+  },
+  "reevesfurniture:modern_black_bamboo_plant": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:modern_trashcan_one": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.233
+    ]
+  },
+  "reevesfurniture:modern_white_bamboo_plant": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:modified_acacia_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_bamboo_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_birch_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_cherry_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_crimson_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_dark_oak_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_jungle_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_mangrove_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_oak_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_spruce_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:modified_warped_bench": {
+    "mode": "3d",
+    "scale": 0.417,
+    "offset": [
+      0.0,
+      -0.016,
+      0.192
+    ]
+  },
+  "reevesfurniture:nail": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:nether_trophy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:oak_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:oak_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:oak_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:oak_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:oak_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:oak_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:oak_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_one_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:oak_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:opened_paper_box": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.281
+    ]
+  },
+  "reevesfurniture:orange_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:orange_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:orange_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:orange_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:paper_box": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.15,
+      0.281
+    ]
+  },
+  "reevesfurniture:paper_box_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:party_cake": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:picnic_basket": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:pink_air_mattress": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:pink_modern_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:pink_modern_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:pink_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:pink_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:pink_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:pink_soap": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.292,
+      0.0
+    ]
+  },
+  "reevesfurniture:pink_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:pink_wooden_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:pink_wooden_night_light_off": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:plastic_shelf_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:plastic_shelf_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:plastic_shelf_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:plastic_shelf_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:pot_with_dirt": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.202,
+      0.079
+    ]
+  },
+  "reevesfurniture:pot_with_sand": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.202,
+      0.079
+    ]
+  },
+  "reevesfurniture:purple_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:purple_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:purple_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:purple_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:raw_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:red_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:red_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:red_soap": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.292,
+      0.0
+    ]
+  },
+  "reevesfurniture:rescue_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  },
+  "reevesfurniture:rf_acacia_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_acacia_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_acacia_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_acacia_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_birch_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_birch_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_birch_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_birch_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_acacia_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_birch_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_crimson_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_darkoak_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_jungle_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_oak_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_spruce_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_bunch_of_warped_logs": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_busket_ball": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_crimson_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_crimson_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_dark_oak_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_dark_oak_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_dark_oak_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_floor_block_00": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_floor_block_01": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_floor_block_02": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_foot_ball": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_fridge_bottom": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_fridge_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_jungle_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_jungle_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_jungle_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_lime_ball": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "reevesfurniture:rf_oak_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_oak_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:rf_oak_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_oak_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_plant_pot_five": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_plant_pot_four": {
+    "mode": "3d",
+    "scale": 0.426,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_plant_pot_one": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.03,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_plant_pot_three": {
+    "mode": "3d",
+    "scale": 0.762,
+    "offset": [
+      0.002,
+      0.004,
+      -0.001
+    ]
+  },
+  "reevesfurniture:rf_sand_castle_blue": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_sand_castle_green": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_sand_castle_red": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_sand_castle_yellow": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_spruce_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_spruce_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_warped_stool": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.131,
+      0.0
+    ]
+  },
+  "reevesfurniture:rf_warped_table": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:rocks": {
+    "mode": "3d",
+    "scale": 0.449,
+    "offset": [
+      -0.007,
+      0.168,
+      0.225
+    ]
+  },
+  "reevesfurniture:saw": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:shower_bottom": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:shower_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:soap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:solar_panel": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.086,
+      0.009
+    ]
+  },
+  "reevesfurniture:spruce_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:spruce_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:spruce_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:spruce_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:spruce_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:spruce_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:spruce_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_sapling_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:spruce_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:spruce_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:spruce_sit_log": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:spruce_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_one_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_table_zero": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.197,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:spruce_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:stone_path_one": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:stone_path_two": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:stop_do_it_carpet": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:sugar_cane_pot": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.054,
+      0.037
+    ]
+  },
+  "reevesfurniture:sweet_home_carpet": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:test_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:toasted_bread_slice_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:toaster": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.138,
+      0.017
+    ]
+  },
+  "reevesfurniture:toaster_with_bread": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.097,
+      0.017
+    ]
+  },
+  "reevesfurniture:toilet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.028,
+      0.0,
+      -0.014
+    ]
+  },
+  "reevesfurniture:toilet_closed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.028,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:toilet_paper": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "reevesfurniture:toilet_paper_wall": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      -0.281
+    ]
+  },
+  "reevesfurniture:two_years_trophy": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      0.032
+    ]
+  },
+  "reevesfurniture:version_trophy_block": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      -0.019,
+      0.103,
+      0.034
+    ]
+  },
+  "reevesfurniture:warped_bedside_dresser": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:warped_bench": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.112,
+      0.218
+    ]
+  },
+  "reevesfurniture:warped_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:warped_box_locked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.211
+    ]
+  },
+  "reevesfurniture:warped_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:warped_chair": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:warped_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_large_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_log_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_modern_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_pallets": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_path": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_planks_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_shelf": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.007
+    ]
+  },
+  "reevesfurniture:warped_sill": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.141,
+      0.218
+    ]
+  },
+  "reevesfurniture:warped_table_one_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_one_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_one_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_one_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_two_four": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_two_one": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_two_three": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_table_two_two": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_thin_log": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:warped_tv_stand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:washing_machine": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:waste": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:water_bottle": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:water_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:welcome_carpet": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:white_doorbell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.042
+    ]
+  },
+  "reevesfurniture:white_modern_kitchen_chair": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "reevesfurniture:white_modern_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:white_modern_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:white_plastic_container": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.094,
+      0.0
+    ]
+  },
+  "reevesfurniture:white_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:white_wall_clock": {
+    "mode": "3d",
+    "scale": 0.965,
+    "offset": [
+      0.007,
+      0.006,
+      0.03
+    ]
+  },
+  "reevesfurniture:white_wooden_night_light": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:white_wooden_night_light_on": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.032,
+      -0.008
+    ]
+  },
+  "reevesfurniture:wood_bamboo_plant": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:wood_doorbell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.042
+    ]
+  },
+  "reevesfurniture:wooden_blinds": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.014,
+      0.07
+    ]
+  },
+  "reevesfurniture:wooden_blinds_off": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.141,
+      0.07
+    ]
+  },
+  "reevesfurniture:working_freezer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:working_kitchen_hood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:yellow_plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reevesfurniture:yellow_plastic_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.218
+    ]
+  },
+  "reevesfurniture:yellow_swim_ring": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.013,
+      0.172,
+      0.205
+    ]
+  }
+}

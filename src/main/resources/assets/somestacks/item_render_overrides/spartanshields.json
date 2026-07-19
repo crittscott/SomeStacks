@@ -1,0 +1,578 @@
+{
+  "spartanshields:advanced_mekanists_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:advanced_mekanists_tower_shield": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      -0.065,
+      0.024,
+      0.016
+    ]
+  },
+  "spartanshields:aluminum_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:aluminum_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:basic_mekanists_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:basic_mekanists_tower_shield": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      -0.065,
+      0.024,
+      0.016
+    ]
+  },
+  "spartanshields:bronze_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:bronze_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:constantan_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:constantan_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:copper_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:copper_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:dark_steel_riot_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:dark_steel_riot_tower_shield": {
+    "mode": "3d",
+    "scale": 0.506,
+    "offset": [
+      -0.063,
+      0.008,
+      0.012
+    ]
+  },
+  "spartanshields:diamond_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:diamond_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:electrum_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:electrum_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:elementium_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:elementium_tower_shield": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.075,
+      -0.019,
+      0.009
+    ]
+  },
+  "spartanshields:elite_mekanists_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:elite_mekanists_tower_shield": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      -0.065,
+      0.024,
+      0.016
+    ]
+  },
+  "spartanshields:enderium_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:enderium_tower_shield": {
+    "mode": "3d",
+    "scale": 0.566,
+    "offset": [
+      -0.071,
+      0.0,
+      0.009
+    ]
+  },
+  "spartanshields:golden_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:golden_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:invar_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:invar_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:iron_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:iron_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:lapis_lazuli_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:lead_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:lead_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:lumium_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:lumium_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:manasteel_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:manasteel_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:netherite_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:netherite_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:nickel_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:nickel_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:obsidian_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:obsidian_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:osmium_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:platinum_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:platinum_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:refined_glowstone_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:refined_obsidian_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:signalum_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:signalum_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:silver_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:silver_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:steel_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:steel_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:stone_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:stone_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:terrasteel_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:terrasteel_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:tin_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:tin_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  },
+  "spartanshields:ultimate_mekanists_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:ultimate_mekanists_tower_shield": {
+    "mode": "3d",
+    "scale": 0.516,
+    "offset": [
+      -0.065,
+      0.024,
+      0.016
+    ]
+  },
+  "spartanshields:wooden_basic_shield": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "spartanshields:wooden_tower_shield": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      -0.082,
+      0.0,
+      0.01
+    ]
+  }
+}

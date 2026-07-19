@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -83,7 +84,8 @@ public final class ItemTester {
         int stacksCreated = createStorageStacks(level, startPos, modItems);
 
         player.displayClientMessage(
-                Component.literal("Created " + stacksCreated + " StorageStacks with " + modItems.size() + " items from '" + targetModId + "'"),
+                Component.literal("Created " + stacksCreated + " StorageStacks with " + modItems.size()
+                        + " items from '" + targetModId + "'"),
                 false
         );
 
@@ -102,22 +104,21 @@ public final class ItemTester {
         return items;
     }
 
+    public static final int ITEMS_PER_STACK = 9;
+
+    /** Rows a mod's items occupy, one stack per row running north. */
+    public static int rowsFor(int itemCount) {
+        return (itemCount + ITEMS_PER_STACK - 1) / ITEMS_PER_STACK;
+    }
+
     public static int createStorageStacks(Level level, BlockPos startPos, List<Item> items) {
         int stacksCreated = 0;
         BlockPos currentPos = startPos;
 
-        for (int i = 0; i < items.size(); i += 9) {
-            BlockState stackState = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
-            level.setBlock(currentPos, stackState, Block.UPDATE_ALL);
+        for (int i = 0; i < items.size(); i += ITEMS_PER_STACK) {
+            List<Item> batch = items.subList(i, Math.min(i + ITEMS_PER_STACK, items.size()));
 
-            var blockEntity = level.getBlockEntity(currentPos);
-            if (blockEntity instanceof StorageStackBE sbe) {
-                int endIndex = Math.min(i + 9, items.size());
-                for (int j = i; j < endIndex; j++) {
-                    Item item = items.get(j);
-                    ItemStack stack = new ItemStack(item, 1);
-                    sbe.deposit(stack);
-                }
+            if (fillStack(level, currentPos, batch)) {
                 stacksCreated++;
             }
 
@@ -125,5 +126,31 @@ public final class ItemTester {
         }
 
         return stacksCreated;
+    }
+
+    private static boolean fillStack(Level level, BlockPos pos, List<Item> batch) {
+        if (level.isOutsideBuildHeight(pos)) {
+            SomeStacks.LOGGER.warn("Test stack skipped at {}: outside build height", pos);
+            return false;
+        }
+
+        BlockState stackState = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
+        if (!level.setBlock(pos, stackState, Block.UPDATE_ALL)) {
+            SomeStacks.LOGGER.warn("Test stack placement rejected at {}, block there is {}",
+                    pos, level.getBlockState(pos));
+            return false;
+        }
+
+        var blockEntity = level.getBlockEntity(pos);
+        if (!(blockEntity instanceof StorageStackBE sbe)) {
+            SomeStacks.LOGGER.warn("Test stack at {} has no StorageStackBE after placement (found {})",
+                    pos, blockEntity);
+            return false;
+        }
+
+        for (Item item : batch) {
+            sbe.deposit(new ItemStack(item, 1));
+        }
+        return true;
     }
 }

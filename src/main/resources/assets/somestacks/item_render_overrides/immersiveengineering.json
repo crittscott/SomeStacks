@@ -1,64 +1,4394 @@
 {
-    "immersiveengineering:advanced_blast_furnace": {"mode": "block", "scale": 0.125, "offset": [0, -0.075, 0]},
-    "immersiveengineering:arc_furnace": {"mode": "block", "scale": 0.075, "offset": [0, -0.1, 0]},
-    "immersiveengineering:assembler": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:auto_workbench": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:bottling_machine": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:breaker_switch": {"mode": "block", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:blastfurnace_preheater": {"mode": "3d", "scale": 0.4, "offset": [0, -0.1, 0]},
-    "immersiveengineering:bucket_wheel": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:buzzsaw": {"mode": "3d", "scale": 1.5, "offset": [0.1, -0.125, 0]},
-    "immersiveengineering:circuit_table": {"mode": "block", "scale": 0.25, "offset": [0.1, -0.1, 0]},
-    "immersiveengineering:cloche": {"mode": "block", "scale": 0.15, "offset": [0, -0.15, 0]},
-    "immersiveengineering:connector_hv": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_hv_relay": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_lv": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_lv_relay": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_mv": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_mv_relay": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_probe": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:connector_redstone": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:connector_structural": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:conveyor_basic": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:conveyor_dropper": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:conveyor_extract": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:conveyor_redstone": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:conveyor_splitter": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:conveyor_vertical": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:coresample": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:crusher": {"mode": "block", "scale": 0.1, "offset": [0, 0, -0.1]},
-    "immersiveengineering:current_transformer": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:diesel_generator": {"mode": "block", "scale": 0.1, "offset": [0, 0, 0]},
-    "immersiveengineering:drill": {"mode": "3d", "scale": 1.5, "offset": [0.1, -0.1, 0]},
-    "immersiveengineering:excavator": {"mode": "block", "scale": 0.075, "offset": [0, 0, -0.15]},
-    "immersiveengineering:feedthrough": {"mode": "block", "scale": 1, "offset": [0, 0, 0.25]},
-    "immersiveengineering:fermenter": {"mode": "block", "scale": 0.1, "offset": [0, 0, 0]},
-    "immersiveengineering:floodlight": {"mode": "block", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:fluid_pump": {"mode": "3d", "scale": 0.45, "offset": [0, -0.05, 0]},
-    "immersiveengineering:lightning_rod": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:metal_press": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:mixer": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:powerpack": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:railgun": {"mode": "3d", "scale": 1, "offset": [0, -0.05, 0]},
-    "immersiveengineering:redstone_breaker": {"mode": "3d", "scale": 0.5, "offset": [0, 0.1, 0]},
-    "immersiveengineering:refinery": {"mode": "block", "scale": 0.1, "offset": [0, 0, -0.1]},
-    "immersiveengineering:revolver": {"mode": "3d", "scale": 1, "offset": [0.1, 0, 0]},
-    "immersiveengineering:sample_drill": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:sawmill": {"mode": "block", "scale": 0.1, "offset": [0, -0.1, 0]},
-    "immersiveengineering:silo": {"mode": "block", "scale": 0.075, "offset": [0, -0.22, 0]},
-    "immersiveengineering:squeezer": {"mode": "block", "scale": 0.15, "offset": [0, 0, 0]},
-    "immersiveengineering:tank": {"mode": "block", "scale": 0.1, "offset": [0, -0.2, 0]},
-    "immersiveengineering:watermill": {"mode": "3d", "scale": 0.4, "offset": [0, 0, 0]},
-    "immersiveengineering:transformer": {"mode": "3d", "scale": 0.35, "offset": [0, -0.05, 0]},
-    "immersiveengineering:transformer_hv": {"mode": "3d", "scale": 0.35, "offset": [0, -0.05, 0]},
-    "immersiveengineering:turret_chem": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:turret_gun": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:windmill": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:tesla_coil": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]},
-    "immersiveengineering:voltmeter": {"mode": "3d", "scale": 0.6, "offset": [0, 0, 0]},
-    "immersiveengineering:alu_post": {"mode": "3d", "scale": 0.6, "offset": [0, 0, 0]},
-    "immersiveengineering:post": {"mode": "3d", "scale": 0.6, "offset": [0, 0, 0]},
-    "immersiveengineering:workbench": {"mode": "block", "scale": 0.25, "offset": [0.1, 0, 0]},
-    "immersiveengineering:strip_curtain": {"mode": "3d", "scale": 0.5, "offset": [0, 0.4, 0.25]},
-    "immersiveengineering:toolbox": {"mode": "3d", "scale": 0.5, "offset": [0, 0, 0]}
+  "immersiveengineering:acetaldehyde_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:advanced_blast_furnace": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.0,
+      -0.038,
+      0.016
+    ]
+  },
+  "immersiveengineering:alloy_smelter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.112,
+      0.112,
+      0.112
+    ]
+  },
+  "immersiveengineering:alloybrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_post": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.053,
+      -0.019,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_slope": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:alu_wallmount": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.02,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:arc_furnace": {
+    "mode": "3d",
+    "scale": 0.407,
+    "offset": [
+      0.0,
+      0.003,
+      0.027
+    ]
+  },
+  "immersiveengineering:armor_faraday_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_faraday_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_faraday_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_faraday_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_piercing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_steel_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_steel_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_steel_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:armor_steel_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:assembler": {
+    "mode": "3d",
+    "scale": 0.411,
+    "offset": [
+      0.0,
+      0.016,
+      0.033
+    ]
+  },
+  "immersiveengineering:auto_workbench": {
+    "mode": "3d",
+    "scale": 0.416,
+    "offset": [
+      0.0,
+      0.061,
+      0.036
+    ]
+  },
+  "immersiveengineering:axe_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:balloon": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_bevels": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_ornate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_treated_wood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_windmill": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_wolf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_wolf_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bannerpattern_wolf_r": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:biodiesel_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:blast_furnace": {
+    "mode": "3d",
+    "scale": 0.909,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:blastbrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:blastbrick_reinforced": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:blastfurnace_preheater": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      -0.05,
+      0.037
+    ]
+  },
+  "immersiveengineering:blueprint": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bottling_machine": {
+    "mode": "3d",
+    "scale": 0.483,
+    "offset": [
+      -0.003,
+      0.013,
+      -0.003
+    ]
+  },
+  "immersiveengineering:breaker_switch": {
+    "mode": "3d",
+    "scale": 0.523,
+    "offset": [
+      0.0,
+      0.167,
+      0.0
+    ]
+  },
+  "immersiveengineering:bucket_wheel": {
+    "mode": "3d",
+    "scale": 0.437,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:buckshot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:bulwark_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:buzzsaw": {
+    "mode": "3d",
+    "scale": 0.684,
+    "offset": [
+      0.1,
+      -0.125,
+      0.022
+    ]
+  },
+  "immersiveengineering:capacitor_creative": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:capacitor_hv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:capacitor_lv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:capacitor_mv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:casull": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:charging_station": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:chemthrower": {
+    "mode": "3d",
+    "scale": 0.407,
+    "offset": [
+      0.023,
+      -0.018,
+      0.028
+    ]
+  },
+  "immersiveengineering:chute_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:chute_copper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:chute_iron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:chute_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:circuit_board": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:circuit_table": {
+    "mode": "3d",
+    "scale": 0.405,
+    "offset": [
+      0.004,
+      0.013,
+      0.05
+    ]
+  },
+  "immersiveengineering:clinker_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:clinker_brick_quoin": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:clinker_brick_sill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:cloche": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coal_coke": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coil_hv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coil_lv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coil_mv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coke": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:coke_oven": {
+    "mode": "3d",
+    "scale": 0.909,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:cokebrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:commando_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:component_electronic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:component_electronic_adv": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:component_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:component_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_brick_cracked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_chiseled": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_leaded": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_quarter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_sprayed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_three_quarter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.056,
+      0.0
+    ]
+  },
+  "immersiveengineering:concrete_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_bundled": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.135,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_hv": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.075,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_hv_relay": {
+    "mode": "3d",
+    "scale": 0.518,
+    "offset": [
+      0.0,
+      0.034,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_lv": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_lv_relay": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_mv": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.175,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_mv_relay": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.175,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_probe": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_redstone": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.175,
+      0.0
+    ]
+  },
+  "immersiveengineering:connector_structural": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.18,
+      0.0
+    ]
+  },
+  "immersiveengineering:conveyor_basic": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.183,
+      0.141
+    ]
+  },
+  "immersiveengineering:conveyor_dropper": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.183,
+      0.141
+    ]
+  },
+  "immersiveengineering:conveyor_extract": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.056,
+      0.141
+    ]
+  },
+  "immersiveengineering:conveyor_redstone": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.141
+    ]
+  },
+  "immersiveengineering:conveyor_splitter": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.183,
+      0.141
+    ]
+  },
+  "immersiveengineering:conveyor_vertical": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      -0.042
+    ]
+  },
+  "immersiveengineering:coresample": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:craftingtable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:creosote_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:crusher": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.012,
+      0.013
+    ]
+  },
+  "immersiveengineering:current_transformer": {
+    "mode": "3d",
+    "scale": 0.441,
+    "offset": [
+      0.0,
+      0.065,
+      -0.028
+    ]
+  },
+  "immersiveengineering:cushion": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:deepslate_ore_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:deepslate_ore_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:deepslate_ore_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:deepslate_ore_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:deepslate_ore_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:diesel_generator": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.013,
+      0.013
+    ]
+  },
+  "immersiveengineering:dragons_breath": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:drill": {
+    "mode": "3d",
+    "scale": 0.802,
+    "offset": [
+      0.137,
+      -0.073,
+      0.072
+    ]
+  },
+  "immersiveengineering:drillhead_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:drillhead_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:duroplast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_coke": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_constantan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_hop_graphite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_nickel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_saltpeter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_sulfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dust_wood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:dynamo": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:earmuffs": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:electric_lantern": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:electromagnet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:electron_tube": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:empty_casing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:empty_shell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ersatz_leather": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ethanol_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:excavator": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      -0.016,
+      0.037,
+      -0.101
+    ]
+  },
+  "immersiveengineering:fake_icon_birthday": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fake_icon_bttf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fake_icon_drillbreak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fake_icon_fried": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fake_icon_lucky": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fake_icon_ravenholm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:feedthrough": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.084
+    ]
+  },
+  "immersiveengineering:fermenter": {
+    "mode": "3d",
+    "scale": 0.385,
+    "offset": [
+      0.0,
+      0.001,
+      0.016
+    ]
+  },
+  "immersiveengineering:fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fiberboard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:firework": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:flare": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:floodlight": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.014,
+      -0.019,
+      0.0
+    ]
+  },
+  "immersiveengineering:fluid_pipe": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fluid_placer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fluid_pump": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      -0.012,
+      0.0
+    ]
+  },
+  "immersiveengineering:fluid_sorter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fluorescent_tube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:furnace_heater": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:fusilier_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:glider": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:graphite_electrode": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:grindingdisk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:grit_sand": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:gunpart_barrel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:gunpart_drum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:gunpart_hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:gunpowder_barrel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:he": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:heavy_engineering": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hemp_fabric": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hemp_fiber": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hempcrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hempcrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hempcrete_brick_cracked": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hempcrete_chiseled": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hempcrete_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:herbicide_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:hoe_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:homing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_constantan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_hop_graphite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_nickel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ingot_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:insulating_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:item_batcher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:jerrycan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:lantern": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.017,
+      0.0
+    ]
+  },
+  "immersiveengineering:light_bulb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:light_engineering": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:lightning_rod": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.0,
+      0.021,
+      0.03
+    ]
+  },
+  "immersiveengineering:logic_circuit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:logic_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:maintenance_kit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:manual": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:metal_barrel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:metal_ladder_alu": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:metal_ladder_none": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:metal_ladder_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:metal_press": {
+    "mode": "3d",
+    "scale": 0.526,
+    "offset": [
+      0.0,
+      0.024,
+      0.041
+    ]
+  },
+  "immersiveengineering:minecart_metalbarrel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:minecart_reinforcedcrate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:minecart_woodenbarrel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:minecart_woodencrate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mixer": {
+    "mode": "3d",
+    "scale": 0.385,
+    "offset": [
+      0.0,
+      0.031,
+      0.016
+    ]
+  },
+  "immersiveengineering:mold_bullet_casing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_gear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_packing_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_packing_9": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_rod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_unpacking": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:mold_wire": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_constantan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_nickel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:nugget_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ore_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ore_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ore_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ore_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:ore_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:phenolic_resin_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:pickaxe_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plantoil_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_constantan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_duroplast": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_nickel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:plate_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:potion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:potion_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:powerpack": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.028,
+      -0.028
+    ]
+  },
+  "immersiveengineering:radiator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:railgun": {
+    "mode": "3d",
+    "scale": 0.449,
+    "offset": [
+      -0.014,
+      -0.045,
+      0.005
+    ]
+  },
+  "immersiveengineering:raw_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_block_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_block_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_block_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_block_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_block_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_nickel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:raw_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:razor_wire": {
+    "mode": "3d",
+    "scale": 0.823,
+    "offset": [
+      0.0,
+      0.013,
+      0.0
+    ]
+  },
+  "immersiveengineering:redstone_acid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:redstone_breaker": {
+    "mode": "3d",
+    "scale": 0.552,
+    "offset": [
+      0.0,
+      0.12,
+      0.0
+    ]
+  },
+  "immersiveengineering:refinery": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      -0.003,
+      -0.007,
+      0.063
+    ]
+  },
+  "immersiveengineering:reinforced_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:revolver": {
+    "mode": "3d",
+    "scale": 0.553,
+    "offset": [
+      0.078,
+      0.078,
+      -0.017
+    ]
+  },
+  "immersiveengineering:rockcutter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:rs_engineering": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sample_drill": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sawblade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sawdust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sawmill": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      0.0,
+      0.047,
+      0.034
+    ]
+  },
+  "immersiveengineering:screwdriver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:seed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader_bag_common": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader_bag_epic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader_bag_ie_masterwork": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader_bag_rare": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shader_bag_uncommon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_black": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_brown": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_cyan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_green": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_light_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_light_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_lime": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_magenta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_orange": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_pink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_purple": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_red": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_white": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_colored_yellow": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_constantan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_copper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_electrum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_gold": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_iron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sheetmetal_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:shield": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.019,
+      -0.019
+    ]
+  },
+  "immersiveengineering:shovel_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:silo": {
+    "mode": "3d",
+    "scale": 0.477,
+    "offset": [
+      0.0,
+      -0.034,
+      -0.051
+    ]
+  },
+  "immersiveengineering:silver": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:skyhook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_alloybrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_alu_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_alu_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_alu_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_blastbrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_blastbrick_reinforced": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_clinker_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_coke": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_cokebrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_concrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_concrete_leaded": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_concrete_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_hempcrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_hempcrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_insulating_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_black": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_brown": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_cyan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_green": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_light_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_light_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_lime": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_magenta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_orange": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_pink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_purple": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_red": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_white": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_colored_yellow": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_constantan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_copper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_electrum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_gold": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_iron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_sheetmetal_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_slag_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_steel_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_steel_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_steel_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_constantan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_electrum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_storage_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_treated_wood_horizontal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_treated_wood_packaged": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slab_treated_wood_vertical": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "immersiveengineering:slag": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:slag_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:slag_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:slag_gravel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sorter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:speedloader": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:squeezer": {
+    "mode": "3d",
+    "scale": 0.385,
+    "offset": [
+      0.0,
+      0.022,
+      0.016
+    ]
+  },
+  "immersiveengineering:stairs_alu_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_alu_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_alu_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_clinker_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_concrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_concrete_leaded": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_concrete_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_hempcrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_hempcrete_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_slag_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_steel_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_steel_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_steel_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_treated_wood_horizontal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_treated_wood_packaged": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stairs_treated_wood_vertical": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_post": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.053,
+      -0.019,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_scaffolding_grate_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_scaffolding_standard": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_scaffolding_wooden_top": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_slope": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:steel_wallmount": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.02,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stick_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stick_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stick_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:stick_treated": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_aluminum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_constantan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_electrum": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_nickel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_silver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:storage_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:strip_curtain": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:survey_tools": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:sword_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:tank": {
+    "mode": "3d",
+    "scale": 0.438,
+    "offset": [
+      0.0,
+      -0.032,
+      -0.063
+    ]
+  },
+  "immersiveengineering:tesla_coil": {
+    "mode": "3d",
+    "scale": 0.427,
+    "offset": [
+      0.0,
+      0.002,
+      0.0
+    ]
+  },
+  "immersiveengineering:thermoelectric_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolbox": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.014,
+      -0.004
+    ]
+  },
+  "immersiveengineering:toolupgrade_buzzsaw_spareblades": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_chemthrower_focus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_chemthrower_multitank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_drill_capacity": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_drill_damage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_drill_fortune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_drill_lube": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_drill_waterproof": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_powerpack_antenna": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_powerpack_induction": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_powerpack_magnet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_powerpack_tesla": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_railgun_capacitors": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_railgun_scope": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_revolver_bayonet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_revolver_electro": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_revolver_magazine": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_shield_flash": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_shield_magnet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:toolupgrade_shield_shock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:transformer": {
+    "mode": "3d",
+    "scale": 0.351,
+    "offset": [
+      0.0,
+      -0.049,
+      0.0
+    ]
+  },
+  "immersiveengineering:transformer_hv": {
+    "mode": "3d",
+    "scale": 0.327,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_post": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.053,
+      -0.019,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_scaffold": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_wallmount": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.02,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_wood_horizontal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_wood_packaged": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:treated_wood_vertical": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:turntable": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:turret_chem": {
+    "mode": "3d",
+    "scale": 0.465,
+    "offset": [
+      0.036,
+      0.007,
+      0.0
+    ]
+  },
+  "immersiveengineering:turret_gun": {
+    "mode": "3d",
+    "scale": 0.465,
+    "offset": [
+      0.029,
+      0.007,
+      -0.01
+    ]
+  },
+  "immersiveengineering:voltmeter": {
+    "mode": "3d",
+    "scale": 0.588,
+    "offset": [
+      0.0,
+      -0.037,
+      -0.028
+    ]
+  },
+  "immersiveengineering:wall_clinker_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wall_slag_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:watermill": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:waterwheel_segment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:windmill": {
+    "mode": "3d",
+    "scale": 0.394,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:windmill_blade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:windmill_sail": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wire_aluminum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wire_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wire_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wire_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wire_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_copper_ins": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_electrum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_electrum_ins": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_redstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_structure_rope": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecoil_structure_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wirecutter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wolfpack": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wooden_barrel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:wooden_grip": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "immersiveengineering:workbench": {
+    "mode": "3d",
+    "scale": 0.37,
+    "offset": [
+      0.004,
+      0.02,
+      0.056
+    ]
+  }
 }

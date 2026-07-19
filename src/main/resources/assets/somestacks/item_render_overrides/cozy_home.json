@@ -1,20 +1,1964 @@
 {
-    "cozy_home:telescope": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "cozy_home:sofa_black": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_blue": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_brown": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_cyan": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_gray": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_green": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_light_blue": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_light_gray": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_lime": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_magenta": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_orange": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_pink": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_purple": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_quartz": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_red": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_white": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]},
-    "cozy_home:sofa_yellow": {"scale": 0.5, "offset": [0.0, 0.0, 0.1]}
+  "cozy_home:acacia_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:acacia_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:acacia_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:acacia_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:bamboo_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:bamboo_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:bamboo_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:birch_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:birch_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:birch_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:birch_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:birch_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:black_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:black_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:blue_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:blue_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:brown_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:brown_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:cherry_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:cherry_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cherry_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:chimney_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:chimney_cobblestone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:chimney_netherbrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:chimney_stonebrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:crimson_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:crimson_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:crimson_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:cyan_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:cyan_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:dark_oak_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:dark_oak_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:dark_oak_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:gray_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:gray_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:green_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:green_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:jungle_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:jungle_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:jungle_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_acacia_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_birch_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_cherry_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_crimson_fungus": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_dark_oak_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_jungle_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_mangrove_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_oak_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_spruce_stump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:large_warped_fungus": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:light_blue_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:light_blue_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:light_gray_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:light_gray_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:lime_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:lime_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:magenta_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:magenta_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:mangrove_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:mangrove_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:mangrove_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:oak_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:oak_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_fireplace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.042
+    ]
+  },
+  "cozy_home:oak_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:oak_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:oak_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:oak_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:orange_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:orange_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:pink_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:pink_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:purple_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:purple_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:quartz_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:quartz_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:quartz_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:red_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:red_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:sofa_black": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_blue": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_brown": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_cyan": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_gray": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_green": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_light_blue": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_light_gray": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_lime": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_magenta": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_orange": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_pink": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_purple": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_quartz": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_red": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_white": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:sofa_yellow": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.098
+    ]
+  },
+  "cozy_home:spruce_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:spruce_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:spruce_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:spruce_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:stump_chair": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.012,
+      0.047,
+      -0.036
+    ]
+  },
+  "cozy_home:telescope": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      -0.007,
+      -0.027,
+      0.0
+    ]
+  },
+  "cozy_home:warped_bench": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "cozy_home:warped_chair": {
+    "mode": "3d",
+    "scale": 0.549,
+    "offset": [
+      0.0,
+      -0.049,
+      0.069
+    ]
+  },
+  "cozy_home:warped_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_grandfather_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_mirror": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "cozy_home:warped_mirror_stand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_plank": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_sink_counter": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "cozy_home:warped_storage_counter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_table": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:warped_wall_clock": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:white_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:white_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cozy_home:yellow_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "cozy_home:yellow_tent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

@@ -1,0 +1,911 @@
+{
+  "pottery:base_pot_black": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_blank": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_blue": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_brown": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_cyan": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_gray": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_green": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_light_blue": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_light_gray": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_lime": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_magenta": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_orange": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_pink": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_purple": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_red": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_white": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:base_pot_yellow": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "pottery:default_pot_black": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_blue": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_brown": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_cyan": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_gray": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_green": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_light_blue": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_light_gray": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_lime": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_magenta": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_orange": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_pink": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_purple": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_red": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_white": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:default_pot_yellow": {
+    "mode": "3d",
+    "scale": 0.722,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_black": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_blank": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_blue": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_brown": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_cyan": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_gray": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_green": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_light_blue": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_light_gray": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_lime": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_magenta": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_orange": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_pink": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_purple": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_red": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_white": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:sealed_pot_yellow": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "pottery:small_pot_black": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_blank": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_blue": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_brown": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_cyan": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_gray": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_green": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_light_blue": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_light_gray": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_lime": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_magenta": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_orange": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_pink": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_purple": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_red": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_white": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:small_pot_yellow": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_black": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_blank": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_blue": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_brown": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_cyan": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_gray": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_green": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_light_blue": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_light_gray": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_lime": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_magenta": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_orange": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_pink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_purple": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_red": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_white": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:tall_pot_yellow": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_black": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_blank": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_blue": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_brown": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_cyan": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_gray": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_green": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_light_blue": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_light_gray": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_lime": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_magenta": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_orange": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_pink": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_purple": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_red": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_white": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  },
+  "pottery:wide_pot_yellow": {
+    "mode": "3d",
+    "scale": 1.18,
+    "offset": [
+      0.0,
+      0.092,
+      0.0
+    ]
+  }
+}

@@ -1,53 +1,470 @@
 {
-    "easy_mob_farm:capture_net": {"mode": "2d"},
-    "easy_mob_farm:catch_cage": {"mode": "2d"},
-    "easy_mob_farm:catch_cage_small": {"mode": "2d"},
-    "easy_mob_farm:collar_small": {"mode": "2d"},
-    "easy_mob_farm:copper_animal_plains_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_bee_hive_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_desert_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_jungle_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_mob_farm_template": {"mode": "2d"},
-    "easy_mob_farm:copper_monster_plains_cave_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_nether_fortress_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_ocean_farm": {"mode": "2d"},
-    "easy_mob_farm:copper_swamp_farm": {"mode": "2d"},
-    "easy_mob_farm:creative_mob_catcher": {"mode": "2d"},
-    "easy_mob_farm:creative_mob_farm": {"mode": "2d"},
-    "easy_mob_farm:ender_lasso": {"mode": "2d"},
-    "easy_mob_farm:fishing_bowl": {"mode": "2d"},
-    "easy_mob_farm:fishing_net_small": {"mode": "2d"},
-    "easy_mob_farm:gold_animal_plains_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_bee_hive_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_desert_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_jungle_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_mob_farm_template": {"mode": "2d"},
-    "easy_mob_farm:gold_monster_plains_cave_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_nether_fortress_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_ocean_farm": {"mode": "2d"},
-    "easy_mob_farm:gold_swamp_farm": {"mode": "2d"},
-    "easy_mob_farm:golden_lasso": {"mode": "2d"},
-    "easy_mob_farm:insect_net": {"mode": "2d"},
-    "easy_mob_farm:iron_animal_plains_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_bee_hive_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_desert_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_golem_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_jungle_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_mob_farm_template": {"mode": "2d"},
-    "easy_mob_farm:iron_monster_plains_cave_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_nether_fortress_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_ocean_farm": {"mode": "2d"},
-    "easy_mob_farm:iron_swamp_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_animal_plains_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_bee_hive_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_desert_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_jungle_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_lasso": {"mode": "2d"},
-    "easy_mob_farm:netherite_mob_farm_template": {"mode": "2d"},
-    "easy_mob_farm:netherite_monster_plains_cave_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_nether_fortress_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_ocean_farm": {"mode": "2d"},
-    "easy_mob_farm:netherite_swamp_farm": {"mode": "2d"},
-    "easy_mob_farm:poppy_bouquet": {"mode": "2d"},
-    "easy_mob_farm:urn_small": {"mode": "2d"}
+  "easy_mob_farm:capture_net": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:catch_cage": {
+    "mode": "3d",
+    "scale": 0.642,
+    "offset": [
+      0.03,
+      -0.01,
+      0.02
+    ]
+  },
+  "easy_mob_farm:catch_cage_small": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.03,
+      0.06,
+      0.02
+    ]
+  },
+  "easy_mob_farm:collar_small": {
+    "mode": "3d",
+    "scale": 0.571,
+    "offset": [
+      0.0,
+      0.025,
+      0.075
+    ]
+  },
+  "easy_mob_farm:copper_animal_plains_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_bee_hive_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_desert_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_jungle_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_mob_farm_template": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "easy_mob_farm:copper_monster_plains_cave_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_nether_fortress_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_ocean_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:copper_swamp_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:creative_mob_catcher": {
+    "mode": "3d",
+    "scale": 0.396,
+    "offset": [
+      0.001,
+      0.012,
+      0.049
+    ]
+  },
+  "easy_mob_farm:creative_mob_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:ender_lasso": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:fishing_bowl": {
+    "mode": "3d",
+    "scale": 0.686,
+    "offset": [
+      0.0,
+      0.054,
+      0.064
+    ]
+  },
+  "easy_mob_farm:fishing_net_small": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_animal_plains_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_bee_hive_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_desert_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_jungle_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_mob_farm_template": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "easy_mob_farm:gold_monster_plains_cave_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_nether_fortress_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_ocean_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:gold_swamp_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:golden_lasso": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:insect_net": {
+    "mode": "3d",
+    "scale": 0.386,
+    "offset": [
+      0.001,
+      -0.011,
+      -0.012
+    ]
+  },
+  "easy_mob_farm:iron_animal_plains_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_bee_hive_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_desert_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_golem_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_jungle_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_mob_farm_template": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "easy_mob_farm:iron_monster_plains_cave_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_nether_fortress_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_ocean_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:iron_swamp_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_animal_plains_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_bee_hive_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_desert_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_jungle_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_lasso": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_mob_farm_template": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.112
+    ]
+  },
+  "easy_mob_farm:netherite_monster_plains_cave_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_nether_fortress_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_ocean_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:netherite_swamp_farm": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:poppy_bouquet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "easy_mob_farm:urn_small": {
+    "mode": "3d",
+    "scale": 0.525,
+    "offset": [
+      -0.022,
+      -0.004,
+      0.022
+    ]
+  },
+  "easy_mob_farm:witch_bottle": {
+    "mode": "3d",
+    "scale": 0.563,
+    "offset": [
+      0.0,
+      -0.016,
+      0.026
+    ]
+  }
 }

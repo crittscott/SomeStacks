@@ -1,64 +1,3413 @@
 {
-    "mekanism:chargepad": {
-        "mode": "block",
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanism:industrial_alarm": {
-        "mode": "3d",
-        "scale": 0.75
-    },
-    "mekanism:isotopic_centrifuge": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanism:modification_station": {
-        "scale": 0.5,
-        "offset": [
-            0.2,
-            -0.2,
-            0.0
-        ]
-    },
-    "mekanism:security_desk": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanism:seismic_vibrator": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanism:solar_neutron_activator": {
-        "scale": 0.5,
-        "offset": [
-            0.0,
-            0.0,
-            0.0
-        ]
-    },
-    "mekanism:pigment_mixer": {"scale": 0.5,"offset": [0.0, 0.0, 0.0]},
-    "mekanism:basic_fluid_tank": {"mode": "3d","scale": 1,"offset": [0.0, 0.0, 0.0]},
-    "mekanism:advanced_fluid_tank": {"mode": "3d","scale": 1,"offset": [0.0, 0.0, 0.0]},
-    "mekanism:elite_fluid_tank": {"mode": "3d","scale": 1,"offset": [0.0, 0.0, 0.0]},
-    "mekanism:ultimate_fluid_tank": {"mode": "3d","scale": 1,"offset": [0.0, 0.0, 0.0]},
-    "mekanism:jetpack": {"scale": 0.5},
-    "mekanism:jetpack_armored": {"scale": 0.5},
-    "mekanism:meka_tool": {"mode": "3d", "scale": 0.5},
-    "mekanism:digital_miner": {"mode": "3d", "scale": 0.5}
+  "mekanism:advanced_bin": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_chemical_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_combining_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_compressing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_control_circuit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_crushing_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_energy_cube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_enriching_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_fluid_tank": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_induction_cell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_induction_provider": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_infusing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_injecting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_logistical_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_mechanical_pipe": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_pressurized_tube": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_purifying_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_sawing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_smelting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_thermodynamic_conductor": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_tier_installer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:advanced_universal_cable": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:alloy_atomic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:alloy_infused": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:alloy_reinforced": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:antiprotonic_nucleosynthesizer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:atomic_disassembler": {
+    "mode": "3d",
+    "scale": 0.404,
+    "offset": [
+      -0.006,
+      -0.01,
+      0.016
+    ]
+  },
+  "mekanism:basic_bin": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_chemical_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_combining_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_compressing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_control_circuit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_crushing_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_energy_cube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_enriching_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_fluid_tank": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_induction_cell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_induction_provider": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_infusing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_injecting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_logistical_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_mechanical_pipe": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_pressurized_tube": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_purifying_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_sawing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_smelting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_thermodynamic_conductor": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_tier_installer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:basic_universal_cable": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:bio_fuel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_bronze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_charcoal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_fluorite": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_osmium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_raw_lead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_raw_osmium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_raw_tin": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_raw_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_refined_glowstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_refined_obsidian": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_salt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_steel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_tin": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:block_uranium": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:boiler_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:boiler_valve": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:bounding_block": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:brine_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:canteen": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:cardboard_box": {
+    "mode": "3d",
+    "scale": 0.755,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "mekanism:chargepad": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "mekanism:chemical_crystallizer": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chemical_dissolution_chamber": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chemical_infuser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chemical_injection_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chemical_oxidizer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chemical_washer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:chlorine_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:clump_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:combiner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:configuration_card": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:configurator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crafting_formula": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:creative_bin": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:creative_chemical_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:creative_energy_cube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:creative_fluid_tank": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crusher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:crystal_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:deepslate_fluorite_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:deepslate_lead_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:deepslate_osmium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:deepslate_tin_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:deepslate_uranium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dictionary": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:digital_miner": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.009,
+      -0.029
+    ]
+  },
+  "mekanism:dimensional_stabilizer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_dust_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dirty_netherite_scrap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:diversion_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dosimeter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_bronze": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_charcoal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_coal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_emerald": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_fluorite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_lapis_lazuli": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_lithium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_netherite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_obsidian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_quartz": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_refined_obsidian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_sulfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dust_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dye_base": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dynamic_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:dynamic_valve": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:electric_bow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:electric_pump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "mekanism:electrolytic_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:electrolytic_separator": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_bin": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_chemical_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_combining_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_compressing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_control_circuit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_crushing_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_energy_cube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_enriching_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_fluid_tank": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_induction_cell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_induction_provider": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_infusing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_injecting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_logistical_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_mechanical_pipe": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_pressurized_tube": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_purifying_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_sawing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_smelting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_thermodynamic_conductor": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_tier_installer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:elite_universal_cable": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:energized_smelter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:energy_tablet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_carbon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_redstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_refined_obsidian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enriched_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:enrichment_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ethene_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:flamethrower": {
+    "mode": "3d",
+    "scale": 0.367,
+    "offset": [
+      -0.002,
+      0.011,
+      0.046
+    ]
+  },
+  "mekanism:fluidic_plenisher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "mekanism:fluorite_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:fluorite_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:formulaic_assemblicator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:free_runners": {
+    "mode": "3d",
+    "scale": 0.429,
+    "offset": [
+      0.0,
+      0.048,
+      0.029
+    ]
+  },
+  "mekanism:free_runners_armored": {
+    "mode": "3d",
+    "scale": 0.429,
+    "offset": [
+      0.0,
+      0.032,
+      -0.046
+    ]
+  },
+  "mekanism:fuelwood_heater": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:gauge_dropper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:geiger_counter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hazmat_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hazmat_gown": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hazmat_mask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hazmat_pants": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hdpe_elytra": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hdpe_pellet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hdpe_rod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hdpe_sheet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hdpe_stick": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:heavy_water_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hydrofluoric_acid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hydrogen_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:hydrogen_chloride_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:induction_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:induction_port": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:industrial_alarm": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.012,
+      0.0
+    ]
+  },
+  "mekanism:ingot_bronze": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_refined_glowstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_refined_obsidian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ingot_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:isotopic_centrifuge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.007,
+      0.0
+    ]
+  },
+  "mekanism:jetpack": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      0.0,
+      0.006,
+      0.04
+    ]
+  },
+  "mekanism:jetpack_armored": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      0.0,
+      0.011,
+      -0.004
+    ]
+  },
+  "mekanism:laser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:laser_amplifier": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:laser_tractor_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:lead_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:lithium_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:logistical_sorter": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      0.0,
+      -0.013
+    ]
+  },
+  "mekanism:meka_tool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:mekasuit_bodyarmor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:mekasuit_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:mekasuit_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:mekasuit_pants": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:metallurgic_infuser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:modification_station": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.112,
+      -0.098,
+      0.0
+    ]
+  },
+  "mekanism:module_attack_amplification_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_base": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_blasting_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_charge_distribution_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_color_modulation_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_dosimeter_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_electrolytic_breathing_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_elytra_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_energy_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_excavation_escalation_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_farming_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_fortune_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_frost_walker_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_geiger_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_gravitational_modulating_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_gyroscopic_stabilization_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_hydraulic_propulsion_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_hydrostatic_repulsor_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_inhalation_purification_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_jetpack_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_laser_dissipation_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_locomotive_boosting_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_magnetic_attraction_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_motorized_servo_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_nutritional_injection_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_radiation_shielding_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_shearing_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_silk_touch_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_teleportation_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_vein_mining_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:module_vision_enhancement_unit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:network_reader": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_bronze": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_refined_glowstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_refined_obsidian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_steel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nugget_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nutritional_liquifier": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:nutritional_paste_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:oredictionificator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:osmium_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:osmium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:oxygen_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:painting_machine": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pellet_antimatter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pellet_plutonium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pellet_polonium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:personal_barrel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:personal_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      0.0,
+      0.015,
+      0.015
+    ]
+  },
+  "mekanism:pigment_extractor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pigment_mixer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.112,
+      0.0
+    ]
+  },
+  "mekanism:portable_qio_dashboard": {
+    "mode": "3d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:portable_teleporter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:precision_sawmill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pressure_disperser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:pressurized_reaction_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "mekanism:purification_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_dashboard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_drive_array": {
+    "mode": "3d",
+    "scale": 0.897,
+    "offset": [
+      0.0,
+      0.0,
+      0.001
+    ]
+  },
+  "mekanism:qio_drive_base": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_drive_hyper_dense": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_drive_supermassive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_drive_time_dilating": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:qio_exporter": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.135,
+      0.0
+    ]
+  },
+  "mekanism:qio_importer": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.135,
+      0.0
+    ]
+  },
+  "mekanism:qio_redstone_adapter": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      0.102,
+      0.0
+    ]
+  },
+  "mekanism:quantum_entangloporter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:radioactive_waste_barrel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:raw_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:raw_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:raw_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:raw_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:reprocessed_fissile_fragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:resistive_heater": {
+    "mode": "3d",
+    "scale": 0.894,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:restrictive_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:robit": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "mekanism:rotary_condensentrator": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:salt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sawdust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:scuba_mask": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.04,
+      0.095
+    ]
+  },
+  "mekanism:scuba_tank": {
+    "mode": "3d",
+    "scale": 0.46,
+    "offset": [
+      0.0,
+      0.033,
+      0.091
+    ]
+  },
+  "mekanism:security_desk": {
+    "mode": "3d",
+    "scale": 0.578,
+    "offset": [
+      0.0,
+      -0.081,
+      0.0
+    ]
+  },
+  "mekanism:seismic_reader": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:seismic_vibrator": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_copper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_lead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_osmium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_tin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:shard_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sodium_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:solar_neutron_activator": {
+    "mode": "3d",
+    "scale": 0.462,
+    "offset": [
+      0.0,
+      -0.109,
+      0.0
+    ]
+  },
+  "mekanism:sps_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sps_port": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:steam_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:steel_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:structural_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:substrate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sulfur_dioxide_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sulfur_trioxide_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:sulfuric_acid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:supercharged_coil": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "mekanism:superheated_sodium_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:superheating_element": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:teleportation_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:teleporter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:teleporter_frame": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:thermal_evaporation_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:thermal_evaporation_controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:thermal_evaporation_valve": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:tin_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_bin": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_chemical_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_combining_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_compressing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_control_circuit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_crushing_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_energy_cube": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_enriching_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_fluid_tank": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_induction_cell": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_induction_provider": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_infusing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_injecting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_logistical_transporter": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_mechanical_pipe": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_pressurized_tube": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_purifying_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_sawing_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_smelting_factory": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_thermodynamic_conductor": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_tier_installer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:ultimate_universal_cable": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_anchor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_energy": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_filter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_gas": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_muffling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_speed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:upgrade_stone_generator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:uranium_hexafluoride_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:uranium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:uranium_oxide_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mekanism:yellow_cake_uranium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

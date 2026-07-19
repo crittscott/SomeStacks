@@ -1,0 +1,11 @@
+{
+  "moonlight:placeable_item": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

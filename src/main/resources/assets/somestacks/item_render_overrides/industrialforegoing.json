@@ -1,9 +1,0 @@
-{
-    "industrialforegoing:infinity_backpack": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_drill": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_hammer": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_launcher": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_nuke": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_saw": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]},
-    "industrialforegoing:infinity_trident": {"scale": 0.33, "offset": [0.0, 0.0, 0.15]}
-}

@@ -1,9 +1,13 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+import com.github.crittscott.somestacks.client.measure.DevCommands;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public final class ClientSetup {
@@ -13,6 +17,7 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
+        MinecraftForge.EVENT_BUS.addListener(DevCommands::register);
         ClientEvents.init();
     }
 
@@ -30,5 +35,6 @@ public final class ClientSetup {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
         evt.registerReloadListener(new SoundConfig());
+        evt.registerReloadListener((ResourceManagerReloadListener) manager -> AutoRenderProfiles.clear());
     }
 }

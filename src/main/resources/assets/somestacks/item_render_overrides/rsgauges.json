@@ -1,97 +1,857 @@
 {
-    "rsgauges:arrow_target": { "mode": "2d"},
-    "rsgauges:door_sensor_switch": { "mode": "2d"},
-    "rsgauges:elevator_button": { "mode": "2d"},
-    "rsgauges:glass_button": { "mode": "2d"},
-    "rsgauges:glass_contact_mat": { "mode": "2d"},
-    "rsgauges:glass_day_timer": { "mode": "2d"},
-    "rsgauges:glass_door_contact_mat": { "mode": "2d"},
-    "rsgauges:glass_entity_detector": { "mode": "2d"},
-    "rsgauges:glass_interval_timer": { "mode": "2d"},
-    "rsgauges:glass_linear_entity_detector": { "mode": "2d"},
-    "rsgauges:glass_rotary_switch": { "mode": "2d"},
-    "rsgauges:glass_small_button": { "mode": "2d"},
-    "rsgauges:glass_touch_button": { "mode": "2d"},
-    "rsgauges:glass_touch_switch": { "mode": "2d"},
-    "rsgauges:glass_vertical_bar_gauge": { "mode": "2d"},
-    "rsgauges:industrial_alarm_lamp": { "mode": "2d"},
-    "rsgauges:industrial_alarm_siren": { "mode": "2d"},
-    "rsgauges:industrial_analog_angular_gauge": { "mode": "2d"},
-    "rsgauges:industrial_analog_horizontal_gauge": { "mode": "2d"},
-    "rsgauges:industrial_block_detector": { "mode": "2d"},
-    "rsgauges:industrial_button": { "mode": "2d"},
-    "rsgauges:industrial_comparator_switch": { "mode": "2d"},
-    "rsgauges:industrial_contact_mat": { "mode": "2d"},
-    "rsgauges:industrial_day_timer": { "mode": "2d"},
-    "rsgauges:industrial_dimmer": { "mode": "2d"},
-    "rsgauges:industrial_door_contact_mat": { "mode": "2d"},
-    "rsgauges:industrial_double_pole_button": { "mode": "2d"},
-    "rsgauges:industrial_entity_detector": { "mode": "2d"},
-    "rsgauges:industrial_estop_switch": { "mode": "2d"},
-    "rsgauges:industrial_fallthrough_detector": { "mode": "2d"},
-    "rsgauges:industrial_fenced_button": { "mode": "2d"},
-    "rsgauges:industrial_foot_button": { "mode": "2d"},
-    "rsgauges:industrial_green_blinking_led": { "mode": "2d"},
-    "rsgauges:industrial_green_led": { "mode": "2d"},
-    "rsgauges:industrial_high_sensitive_trapdoor": { "mode": "2d"},
-    "rsgauges:industrial_hopper_switch": { "mode": "2d"},
-    "rsgauges:industrial_interval_timer": { "mode": "2d"},
-    "rsgauges:industrial_knock_button": { "mode": "2d"},
-    "rsgauges:industrial_knock_switch": { "mode": "2d"},
-    "rsgauges:industrial_lever": { "mode": "2d"},
-    "rsgauges:industrial_light_sensor": { "mode": "2d"},
-    "rsgauges:industrial_lightning_sensor": { "mode": "2d"},
-    "rsgauges:industrial_linear_entity_detector": { "mode": "2d"},
-    "rsgauges:industrial_machine_switch": { "mode": "2d"},
-    "rsgauges:industrial_pull_handle": { "mode": "2d"},
-    "rsgauges:industrial_rain_sensor": { "mode": "2d"},
-    "rsgauges:industrial_red_blinking_led": { "mode": "2d"},
-    "rsgauges:industrial_red_led": { "mode": "2d"},
-    "rsgauges:industrial_rotary_lever": { "mode": "2d"},
-    "rsgauges:industrial_rotary_machine_switch": { "mode": "2d"},
-    "rsgauges:industrial_shock_sensitive_contact_mat": { "mode": "2d"},
-    "rsgauges:industrial_shock_sensitive_trapdoor": { "mode": "2d"},
-    "rsgauges:industrial_small_digital_gauge": { "mode": "2d"},
-    "rsgauges:industrial_small_lever": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_cased_pulse_receiver": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_cased_receiver": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_pulse_receiver": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_pulse_relay": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_receiver": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_receiver_analog": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_relay": { "mode": "2d"},
-    "rsgauges:industrial_switchlink_relay_analog": { "mode": "2d"},
-    "rsgauges:industrial_tube_gauge": { "mode": "2d"},
-    "rsgauges:industrial_vertical_bar_gauge": { "mode": "2d"},
-    "rsgauges:industrial_white_blinking_led": { "mode": "2d"},
-    "rsgauges:industrial_white_led": { "mode": "2d"},
-    "rsgauges:industrial_yellow_blinking_led": { "mode": "2d"},
-    "rsgauges:industrial_yellow_led": { "mode": "2d"},
-    "rsgauges:light_switch": { "mode": "2d"},
-    "rsgauges:oldfancy_bistableswitch1": { "mode": "2d"},
-    "rsgauges:oldfancy_bistableswitch2": { "mode": "2d"},
-    "rsgauges:oldfancy_button": { "mode": "2d"},
-    "rsgauges:oldfancy_small_button": { "mode": "2d"},
-    "rsgauges:oldfancy_spring_reset_chain": { "mode": "2d"},
-    "rsgauges:red_power_plant": { "mode": "2d"},
-    "rsgauges:rustic_angular_lever": { "mode": "2d"},
-    "rsgauges:rustic_button": { "mode": "2d"},
-    "rsgauges:rustic_contact_plate": { "mode": "2d"},
-    "rsgauges:rustic_door_contact_plate": { "mode": "2d"},
-    "rsgauges:rustic_fallthrough_detector": { "mode": "2d"},
-    "rsgauges:rustic_high_sensitive_trapdoor": { "mode": "2d"},
-    "rsgauges:rustic_lever": { "mode": "2d"},
-    "rsgauges:rustic_nail_button": { "mode": "2d"},
-    "rsgauges:rustic_nail_lever": { "mode": "2d"},
-    "rsgauges:rustic_semaphore": { "mode": "2d"},
-    "rsgauges:rustic_shock_sensitive_plate": { "mode": "2d"},
-    "rsgauges:rustic_shock_sensitive_trapdoor": { "mode": "2d"},
-    "rsgauges:rustic_small_button": { "mode": "2d"},
-    "rsgauges:rustic_spring_reset_chain": { "mode": "2d"},
-    "rsgauges:rustic_two_hinge_lever": { "mode": "2d"},
-    "rsgauges:sensitive_glass_block": { "mode": "2d"},
-    "rsgauges:stained_sensitiveglass": { "mode": "2d"},
-    "rsgauges:switchlink_pearl": { "mode": "2d"},
-    "rsgauges:valve_wheel_switch": { "mode": "2d"},
-    "rsgauges:yellow_power_plant": { "mode": "2d"}
+  "rsgauges:arrow_target": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:door_sensor_switch": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.047,
+      0.01
+    ]
+  },
+  "rsgauges:elevator_button": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "rsgauges:glass_button": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.051
+    ]
+  },
+  "rsgauges:glass_contact_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_day_timer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_door_contact_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_entity_detector": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_interval_timer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_linear_entity_detector": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_rotary_switch": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.039
+    ]
+  },
+  "rsgauges:glass_small_button": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "rsgauges:glass_touch_button": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:glass_touch_switch": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.011
+    ]
+  },
+  "rsgauges:glass_vertical_bar_gauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_alarm_lamp": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.0,
+      0.18
+    ]
+  },
+  "rsgauges:industrial_alarm_siren": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      -0.039,
+      0.0,
+      0.16
+    ]
+  },
+  "rsgauges:industrial_analog_angular_gauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_analog_horizontal_gauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_block_detector": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_button": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.116
+    ]
+  },
+  "rsgauges:industrial_comparator_switch": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.0,
+      0.028,
+      0.043
+    ]
+  },
+  "rsgauges:industrial_contact_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_day_timer": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.0,
+      0.0,
+      0.043
+    ]
+  },
+  "rsgauges:industrial_dimmer": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.0,
+      0.0,
+      0.066
+    ]
+  },
+  "rsgauges:industrial_door_contact_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_double_pole_button": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.148
+    ]
+  },
+  "rsgauges:industrial_entity_detector": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.087
+    ]
+  },
+  "rsgauges:industrial_estop_switch": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.141
+    ]
+  },
+  "rsgauges:industrial_fallthrough_detector": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.197,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_fenced_button": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.103
+    ]
+  },
+  "rsgauges:industrial_foot_button": {
+    "mode": "3d",
+    "scale": 1.067,
+    "offset": [
+      0.0,
+      -0.125,
+      0.208
+    ]
+  },
+  "rsgauges:industrial_green_blinking_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_green_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_high_sensitive_trapdoor": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_hopper_switch": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.056,
+      0.135
+    ]
+  },
+  "rsgauges:industrial_interval_timer": {
+    "mode": "3d",
+    "scale": 0.75,
+    "offset": [
+      0.0,
+      0.0,
+      0.043
+    ]
+  },
+  "rsgauges:industrial_knock_button": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_knock_switch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_lever": {
+    "mode": "3d",
+    "scale": 0.662,
+    "offset": [
+      0.0,
+      0.033,
+      0.164
+    ]
+  },
+  "rsgauges:industrial_light_sensor": {
+    "mode": "3d",
+    "scale": 0.522,
+    "offset": [
+      0.0,
+      0.068,
+      0.03
+    ]
+  },
+  "rsgauges:industrial_lightning_sensor": {
+    "mode": "3d",
+    "scale": 0.444,
+    "offset": [
+      0.021,
+      0.0,
+      0.04
+    ]
+  },
+  "rsgauges:industrial_linear_entity_detector": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.087
+    ]
+  },
+  "rsgauges:industrial_machine_switch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.07
+    ]
+  },
+  "rsgauges:industrial_pull_handle": {
+    "mode": "3d",
+    "scale": 0.873,
+    "offset": [
+      0.007,
+      0.0,
+      0.143
+    ]
+  },
+  "rsgauges:industrial_rain_sensor": {
+    "mode": "3d",
+    "scale": 0.511,
+    "offset": [
+      -0.072,
+      -0.038,
+      0.056
+    ]
+  },
+  "rsgauges:industrial_red_blinking_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_red_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_rotary_lever": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.075,
+      0.037,
+      0.094
+    ]
+  },
+  "rsgauges:industrial_rotary_machine_switch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "rsgauges:industrial_shock_sensitive_contact_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_shock_sensitive_trapdoor": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_small_digital_gauge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.014
+    ]
+  },
+  "rsgauges:industrial_small_lever": {
+    "mode": "3d",
+    "scale": 0.612,
+    "offset": [
+      0.0,
+      -0.034,
+      0.114
+    ]
+  },
+  "rsgauges:industrial_switchlink_cased_pulse_receiver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_switchlink_cased_receiver": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_switchlink_pulse_receiver": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_switchlink_pulse_relay": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_switchlink_receiver": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_switchlink_receiver_analog": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_switchlink_relay": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_switchlink_relay_analog": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      0.0,
+      0.068
+    ]
+  },
+  "rsgauges:industrial_tube_gauge": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.061
+    ]
+  },
+  "rsgauges:industrial_vertical_bar_gauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:industrial_white_blinking_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_white_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_yellow_blinking_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:industrial_yellow_led": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.022
+    ]
+  },
+  "rsgauges:light_switch": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.076
+    ]
+  },
+  "rsgauges:oldfancy_bistableswitch1": {
+    "mode": "3d",
+    "scale": 0.951,
+    "offset": [
+      0.0,
+      -0.1,
+      0.185
+    ]
+  },
+  "rsgauges:oldfancy_bistableswitch2": {
+    "mode": "3d",
+    "scale": 0.774,
+    "offset": [
+      -0.152,
+      0.0,
+      0.09
+    ]
+  },
+  "rsgauges:oldfancy_button": {
+    "mode": "3d",
+    "scale": 1.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.089
+    ]
+  },
+  "rsgauges:oldfancy_small_button": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.075
+    ]
+  },
+  "rsgauges:oldfancy_spring_reset_chain": {
+    "mode": "3d",
+    "scale": 0.828,
+    "offset": [
+      0.0,
+      -0.07,
+      0.096
+    ]
+  },
+  "rsgauges:red_power_plant": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_angular_lever": {
+    "mode": "3d",
+    "scale": 0.543,
+    "offset": [
+      -0.004,
+      -0.076,
+      0.068
+    ]
+  },
+  "rsgauges:rustic_button": {
+    "mode": "3d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.134
+    ]
+  },
+  "rsgauges:rustic_contact_plate": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_door_contact_plate": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_fallthrough_detector": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_high_sensitive_trapdoor": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_lever": {
+    "mode": "3d",
+    "scale": 0.937,
+    "offset": [
+      0.0,
+      -0.108,
+      0.193
+    ]
+  },
+  "rsgauges:rustic_nail_button": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      -0.056,
+      0.225
+    ]
+  },
+  "rsgauges:rustic_nail_lever": {
+    "mode": "3d",
+    "scale": 1.919,
+    "offset": [
+      0.0,
+      -0.094,
+      0.125
+    ]
+  },
+  "rsgauges:rustic_semaphore": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.028,
+      0.062
+    ]
+  },
+  "rsgauges:rustic_shock_sensitive_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_shock_sensitive_trapdoor": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:rustic_small_button": {
+    "mode": "3d",
+    "scale": 1.333,
+    "offset": [
+      0.0,
+      0.0,
+      0.117
+    ]
+  },
+  "rsgauges:rustic_spring_reset_chain": {
+    "mode": "3d",
+    "scale": 0.511,
+    "offset": [
+      0.0,
+      0.014,
+      0.088
+    ]
+  },
+  "rsgauges:rustic_two_hinge_lever": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.036,
+      0.092
+    ]
+  },
+  "rsgauges:sensitive_glass_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:stained_sensitiveglass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:switchlink_pearl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "rsgauges:valve_wheel_switch": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.098
+    ]
+  },
+  "rsgauges:yellow_power_plant": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

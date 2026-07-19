@@ -1,0 +1,6698 @@
+{
+  "butcher:bat_corpse_item": {
+    "mode": "3d",
+    "scale": 0.469,
+    "offset": [
+      0.007,
+      0.028,
+      0.016
+    ]
+  },
+  "butcher:bat_headless": {
+    "mode": "3d",
+    "scale": 0.648,
+    "offset": [
+      0.01,
+      0.104,
+      0.022
+    ]
+  },
+  "butcher:bat_left_wing": {
+    "mode": "3d",
+    "scale": 0.503,
+    "offset": [
+      0.008,
+      0.03,
+      0.017
+    ]
+  },
+  "butcher:bat_skeleton": {
+    "mode": "3d",
+    "scale": 0.469,
+    "offset": [
+      0.007,
+      0.028,
+      0.016
+    ]
+  },
+  "butcher:batcorpse": {
+    "mode": "3d",
+    "scale": 0.469,
+    "offset": [
+      0.007,
+      0.028,
+      0.016
+    ]
+  },
+  "butcher:bathead": {
+    "mode": "3d",
+    "scale": 2.0,
+    "offset": [
+      0.031,
+      -0.013,
+      -0.091
+    ]
+  },
+  "butcher:batmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:batrightwing": {
+    "mode": "3d",
+    "scale": 0.503,
+    "offset": [
+      -0.081,
+      0.03,
+      0.017
+    ]
+  },
+  "butcher:batskeletonitem": {
+    "mode": "3d",
+    "scale": 0.469,
+    "offset": [
+      0.007,
+      0.028,
+      0.016
+    ]
+  },
+  "butcher:batwing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bearmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bearrug": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.038,
+      -0.002
+    ]
+  },
+  "butcher:beef_meat_grinder": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.009,
+      -0.109,
+      0.0
+    ]
+  },
+  "butcher:bismuthbronzechainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:blackbronze_chain_hook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:blacksteelchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:blood_12": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.155,
+      0.0
+    ]
+  },
+  "butcher:blood_34": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.084,
+      0.0
+    ]
+  },
+  "butcher:blood_liquid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:blood_particle": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:blood_soaked_sponge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodcauldron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodgrate": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:bloodpuddle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodpuddle_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodpuddlesmall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_10": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_6": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_7": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_8": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloodsplatter_9": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bloody_butchers_table": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "butcher:bloodybutchersapron_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bluesteelchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:bonebarrel": {
+    "mode": "3d",
+    "scale": 0.332,
+    "offset": [
+      0.023,
+      -0.058,
+      0.0
+    ]
+  },
+  "butcher:bonebutchersknife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:boneskinningknife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bottledcrushedflowers": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bottleof_acid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:brainjar": {
+    "mode": "3d",
+    "scale": 1.516,
+    "offset": [
+      0.0,
+      -0.237,
+      0.0
+    ]
+  },
+  "butcher:brokenwishbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:bronzechainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:brown_llama": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:brown_llama_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:brown_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:brownllamahead": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.001,
+      0.065,
+      0.054
+    ]
+  },
+  "butcher:brownllamaheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.09
+    ]
+  },
+  "butcher:butchers_knife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:butchersapron_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:butchersguidebook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:butcherspapers": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:butcherstable": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "butcher:calamari": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:camelcarasscut_1": {
+    "mode": "3d",
+    "scale": 0.143,
+    "offset": [
+      0.0,
+      -0.086,
+      0.035
+    ]
+  },
+  "butcher:camelcarasscut_2": {
+    "mode": "3d",
+    "scale": 0.143,
+    "offset": [
+      0.0,
+      -0.086,
+      0.035
+    ]
+  },
+  "butcher:camelcarasscut_3": {
+    "mode": "3d",
+    "scale": 0.169,
+    "offset": [
+      0.0,
+      -0.142,
+      0.014
+    ]
+  },
+  "butcher:camelcarcass": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:camelcarcassheadless": {
+    "mode": "3d",
+    "scale": 0.143,
+    "offset": [
+      0.0,
+      -0.109,
+      0.035
+    ]
+  },
+  "butcher:camelcarcasshumpless": {
+    "mode": "3d",
+    "scale": 0.143,
+    "offset": [
+      0.0,
+      -0.086,
+      0.035
+    ]
+  },
+  "butcher:camelcarcassitem": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:camelfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:camelheadmount": {
+    "mode": "3d",
+    "scale": 0.12,
+    "offset": [
+      0.0,
+      0.021,
+      0.094
+    ]
+  },
+  "butcher:camelmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:camelshead": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      -0.002,
+      0.032,
+      0.016
+    ]
+  },
+  "butcher:camelskeleton": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:camelskeletonitem": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:camelskinrack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:chicken_corpse": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.003,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_0_leg": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      0.0,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_1leg": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      0.0,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_beakless": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      0.0,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_headless": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.003,
+      0.039
+    ]
+  },
+  "butcher:chicken_corpse_headless_wish": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.003,
+      0.039
+    ]
+  },
+  "butcher:chicken_corpse_item": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.003,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_skeleton": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_corpse_skinned": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.003,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_drained_corpse": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.003,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_drained_corpse_item": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.003,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chicken_head": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.076,
+      0.039
+    ]
+  },
+  "butcher:chicken_head_beakless": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.076,
+      0.001
+    ]
+  },
+  "butcher:chicken_skeleton_item": {
+    "mode": "3d",
+    "scale": 0.641,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.105
+    ]
+  },
+  "butcher:chickenbeak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:chickenfoot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:chuck_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cod": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.022,
+      0.208,
+      0.03
+    ]
+  },
+  "butcher:cod_corpse": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.022,
+      0.208,
+      0.03
+    ]
+  },
+  "butcher:codbarrel": {
+    "mode": "3d",
+    "scale": 0.329,
+    "offset": [
+      0.0,
+      -0.061,
+      0.0
+    ]
+  },
+  "butcher:codfillet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:colored_hanging_squid": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:colored_squid": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:colored_squid_floor": {
+    "mode": "3d",
+    "scale": 0.209,
+    "offset": [
+      -0.003,
+      -0.119,
+      0.134
+    ]
+  },
+  "butcher:colored_squid_head": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.003,
+      0.138
+    ]
+  },
+  "butcher:cooked_cow_spitroast": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cooked_dragon_meat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cooked_gray_frog_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cooked_green_frogs_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cooked_lamb_rib": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cooked_orange_frog_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cooked_pig_spit_roast": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:cooked_villager_meat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedbatmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_1": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_2": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_3": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_4": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_5": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedcowcut_6": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:cookedhoglinmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedmincebeef": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedmincedlamb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedsalmon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cookedturtlemeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:copperchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:cow_0leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_1_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_2leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_3_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_bones": {
+    "mode": "3d",
+    "scale": 0.371,
+    "offset": [
+      -0.003,
+      -0.041,
+      0.004
+    ]
+  },
+  "butcher:cow_chuck": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_headf": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.155,
+      0.0
+    ]
+  },
+  "butcher:cow_headless": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_ribsteak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_rump": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_shortplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_sirloin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cow_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:cow_tbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cowcorpse": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cowcorpseitem": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.041,
+      0.035,
+      0.033
+    ]
+  },
+  "butcher:cowheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.046
+    ]
+  },
+  "butcher:cowhoof": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:cowspitroast": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "butcher:creamy_llama": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:creamy_llama_head": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.001,
+      0.065,
+      0.054
+    ]
+  },
+  "butcher:creamy_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:creamyllamaheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.09
+    ]
+  },
+  "butcher:creamyllamaskin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:crushedflowers": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:display": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.002,
+      -0.227,
+      0.015
+    ]
+  },
+  "butcher:displayleft": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.151,
+      -0.059,
+      0.015
+    ]
+  },
+  "butcher:displayright": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.133,
+      -0.059,
+      0.015
+    ]
+  },
+  "butcher:dolphincorpse": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:dolphincorpsedrained": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:dolphincorpseitem": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:dolphincut_1": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.045,
+      0.075,
+      -0.06
+    ]
+  },
+  "butcher:dolphincut_2": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.045,
+      0.135,
+      -0.06
+    ]
+  },
+  "butcher:dolphincut_3": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.045,
+      0.135,
+      -0.06
+    ]
+  },
+  "butcher:dolphinfin": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      -0.045,
+      0.54,
+      0.0
+    ]
+  },
+  "butcher:dolphinfinarmor_chestplate": {
+    "mode": "3d",
+    "scale": 0.595,
+    "offset": [
+      -0.001,
+      -0.371,
+      -0.072
+    ]
+  },
+  "butcher:dolphinhead": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      0.184,
+      -0.019
+    ]
+  },
+  "butcher:dolphinheadless": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      0.069,
+      0.043,
+      0.019
+    ]
+  },
+  "butcher:dolphinheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.076
+    ]
+  },
+  "butcher:dolphinmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dolphinskeleton": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:dolphinskeletonitem": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:dolphintailless": {
+    "mode": "3d",
+    "scale": 0.432,
+    "offset": [
+      -0.041,
+      0.068,
+      0.001
+    ]
+  },
+  "butcher:dragonbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscale": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscalearmor_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscalearmor_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscalearmor_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscalearmor_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscaleblock": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonscaleingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:dragonsmithingtemplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:drained_brown_llama": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:drained_creamy_llama": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:drained_fox_corpse_item": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:drained_goat_corpse": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:drained_goat_corpse_item": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:drained_gray_llama": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:drained_hanging_cow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:drained_headless_brown_llama": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:drained_headless_creamy_llama": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:drained_headless_gray_llama": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:drained_headless_white_llama": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:drained_panda": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.014,
+      0.057
+    ]
+  },
+  "butcher:drained_panda_corpse": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.014,
+      0.057
+    ]
+  },
+  "butcher:drained_pig_corpse_item": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:drained_polar_bear_corpse_item": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.095,
+      0.026
+    ]
+  },
+  "butcher:drained_rabbit_corpse": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:drained_rabbit_corpse_item": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:drained_sheep_corpse_item": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:drained_skinned_hanging_pig": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.022,
+      -0.032,
+      -0.089
+    ]
+  },
+  "butcher:drained_turtle_corpse": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:drained_turtle_corpse_item": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:drained_villager_corpse": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:drained_villager_corpse_item": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:drained_white_llama": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:drainedcamelcarcass": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:drainedcamelcarcassitem": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:draineddolphincorpseitem": {
+    "mode": "3d",
+    "scale": 0.218,
+    "offset": [
+      0.006,
+      0.034,
+      0.015
+    ]
+  },
+  "butcher:elder_meat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:elder_spike": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:eldereye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:elderguardiancorpse": {
+    "mode": "3d",
+    "scale": 0.07,
+    "offset": [
+      0.0,
+      -0.075,
+      -0.125
+    ]
+  },
+  "butcher:elderguardiancorpsespineless": {
+    "mode": "3d",
+    "scale": 0.072,
+    "offset": [
+      0.0,
+      -0.077,
+      -0.135
+    ]
+  },
+  "butcher:elderguardiancorpsetailless": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.164,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_1": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.164,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_2": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.164,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_3": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.164,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_4": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.14,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_5": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      0.0,
+      -0.14,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_6": {
+    "mode": "3d",
+    "scale": 0.153,
+    "offset": [
+      -0.024,
+      -0.14,
+      -0.034
+    ]
+  },
+  "butcher:elderguardiancut_7": {
+    "mode": "3d",
+    "scale": 0.172,
+    "offset": [
+      -0.027,
+      -0.157,
+      -0.065
+    ]
+  },
+  "butcher:elderguardiancut_8": {
+    "mode": "3d",
+    "scale": 0.172,
+    "offset": [
+      0.0,
+      -0.185,
+      -0.065
+    ]
+  },
+  "butcher:elderguardianeye_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:elderguardianeyeless": {
+    "mode": "3d",
+    "scale": 0.07,
+    "offset": [
+      0.0,
+      -0.075,
+      -0.125
+    ]
+  },
+  "butcher:empty_meat_grinder": {
+    "mode": "3d",
+    "scale": 0.497,
+    "offset": [
+      0.179,
+      -0.173,
+      -0.001
+    ]
+  },
+  "butcher:emptyheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.012
+    ]
+  },
+  "butcher:emptyskinrack": {
+    "mode": "3d",
+    "scale": 0.786,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:end_dragon_corpse": {
+    "mode": "3d",
+    "scale": 0.03,
+    "offset": [
+      0.003,
+      -0.026,
+      0.0
+    ]
+  },
+  "butcher:ender_dragon_cut_1": {
+    "mode": "3d",
+    "scale": 0.043,
+    "offset": [
+      0.032,
+      -0.038,
+      0.009
+    ]
+  },
+  "butcher:ender_dragon_cut_2": {
+    "mode": "3d",
+    "scale": 0.054,
+    "offset": [
+      0.104,
+      -0.049,
+      0.012
+    ]
+  },
+  "butcher:ender_dragon_cut_3": {
+    "mode": "3d",
+    "scale": 0.106,
+    "offset": [
+      -0.011,
+      -0.104,
+      0.001
+    ]
+  },
+  "butcher:ender_dragon_headless": {
+    "mode": "3d",
+    "scale": 0.03,
+    "offset": [
+      0.017,
+      -0.026,
+      0.0
+    ]
+  },
+  "butcher:ender_dragon_neckless": {
+    "mode": "3d",
+    "scale": 0.03,
+    "offset": [
+      0.022,
+      -0.026,
+      0.0
+    ]
+  },
+  "butcher:ender_dragon_tailless": {
+    "mode": "3d",
+    "scale": 0.043,
+    "offset": [
+      0.032,
+      -0.038,
+      0.009
+    ]
+  },
+  "butcher:ender_dragon_wingless": {
+    "mode": "3d",
+    "scale": 0.042,
+    "offset": [
+      0.032,
+      -0.038,
+      0.049
+    ]
+  },
+  "butcher:enderdragoncorpse": {
+    "mode": "3d",
+    "scale": 0.03,
+    "offset": [
+      0.003,
+      -0.026,
+      0.0
+    ]
+  },
+  "butcher:filled_jar": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.009,
+      -0.187
+    ]
+  },
+  "butcher:fired_cleaver_mold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:firedpliermould": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:firedskinningknifemold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:fox_head_mount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.068
+    ]
+  },
+  "butcher:fox_skeleton": {
+    "mode": "3d",
+    "scale": 0.378,
+    "offset": [
+      -0.048,
+      0.086,
+      -0.031
+    ]
+  },
+  "butcher:fox_skeleton_item": {
+    "mode": "3d",
+    "scale": 0.378,
+    "offset": [
+      -0.048,
+      0.086,
+      -0.031
+    ]
+  },
+  "butcher:fox_skinned": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:fox_skinned_corpse": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:fox_skinned_head": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      -0.012,
+      0.199,
+      0.028
+    ]
+  },
+  "butcher:foxcorpse": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:foxcorpseitem": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:foxcut_1": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.025,
+      0.17,
+      0.022
+    ]
+  },
+  "butcher:foxcut_2": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.025,
+      0.17,
+      0.022
+    ]
+  },
+  "butcher:foxcut_3": {
+    "mode": "3d",
+    "scale": 0.554,
+    "offset": [
+      0.035,
+      0.177,
+      0.023
+    ]
+  },
+  "butcher:foxcut_4": {
+    "mode": "3d",
+    "scale": 0.646,
+    "offset": [
+      0.003,
+      0.201,
+      -0.083
+    ]
+  },
+  "butcher:foxdrainedcorpse": {
+    "mode": "3d",
+    "scale": 0.326,
+    "offset": [
+      -0.011,
+      0.075,
+      -0.016
+    ]
+  },
+  "butcher:foxfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:foxhead": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      -0.012,
+      0.199,
+      0.028
+    ]
+  },
+  "butcher:foxheadless": {
+    "mode": "3d",
+    "scale": 0.387,
+    "offset": [
+      0.029,
+      0.099,
+      -0.019
+    ]
+  },
+  "butcher:foxlegless": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.025,
+      0.17,
+      0.022
+    ]
+  },
+  "butcher:foxmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:freezer": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.001,
+      0.006,
+      -0.013
+    ]
+  },
+  "butcher:freezerleft": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.001,
+      0.006,
+      -0.013
+    ]
+  },
+  "butcher:freezerright": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.001,
+      0.006,
+      -0.013
+    ]
+  },
+  "butcher:frog": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:frog_1leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:frog_2_leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:frog_corpse": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:frog_heart": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:frog_heart_removed": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:frogcutopen": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:frogpinned": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:frogsleg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:goat_0_leg": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.066,
+      0.013
+    ]
+  },
+  "butcher:goat_1_leg": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.063,
+      0.04,
+      -0.066
+    ]
+  },
+  "butcher:goat_2_leg": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.04,
+      -0.066
+    ]
+  },
+  "butcher:goat_3leg": {
+    "mode": "3d",
+    "scale": 0.348,
+    "offset": [
+      -0.021,
+      0.038,
+      -0.014
+    ]
+  },
+  "butcher:goat_corpse_item": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:goat_corpse_skeleton": {
+    "mode": "3d",
+    "scale": 0.305,
+    "offset": [
+      -0.021,
+      -0.035,
+      0.027
+    ]
+  },
+  "butcher:goat_corpse_skeleton_item": {
+    "mode": "3d",
+    "scale": 0.305,
+    "offset": [
+      -0.021,
+      -0.035,
+      0.027
+    ]
+  },
+  "butcher:goat_head_mount": {
+    "mode": "3d",
+    "scale": 0.133,
+    "offset": [
+      0.0,
+      0.021,
+      0.098
+    ]
+  },
+  "butcher:goat_loin": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.066,
+      0.013
+    ]
+  },
+  "butcher:goat_meat": {
+    "mode": "3d",
+    "scale": 0.438,
+    "offset": [
+      -0.027,
+      0.081,
+      0.022
+    ]
+  },
+  "butcher:goat_rib": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.066,
+      0.013
+    ]
+  },
+  "butcher:goat_right_left": {
+    "mode": "3d",
+    "scale": 0.259,
+    "offset": [
+      0.0,
+      0.029,
+      -0.047
+    ]
+  },
+  "butcher:goat_shank": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.079,
+      0.013
+    ]
+  },
+  "butcher:goat_shoulder": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.079,
+      0.013
+    ]
+  },
+  "butcher:goatbones": {
+    "mode": "3d",
+    "scale": 0.438,
+    "offset": [
+      0.018,
+      0.081,
+      -0.003
+    ]
+  },
+  "butcher:goatcorpse": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:goatfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:goathead": {
+    "mode": "3d",
+    "scale": 0.407,
+    "offset": [
+      0.0,
+      0.109,
+      0.011
+    ]
+  },
+  "butcher:goatheadless": {
+    "mode": "3d",
+    "scale": 0.348,
+    "offset": [
+      -0.021,
+      0.038,
+      -0.014
+    ]
+  },
+  "butcher:goatrug": {
+    "mode": "3d",
+    "scale": 0.139,
+    "offset": [
+      0.016,
+      0.041,
+      -0.002
+    ]
+  },
+  "butcher:gray_frog": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:gray_frog_1leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:gray_frog_2_leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:gray_frog_balloon": {
+    "mode": "3d",
+    "scale": 0.152,
+    "offset": [
+      0.001,
+      0.004,
+      -0.044
+    ]
+  },
+  "butcher:gray_frog_corpse": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:gray_frog_cut_open": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:gray_frog_heart_remove": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:gray_frog_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:gray_frog_pinned": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:gray_hanging_frog": {
+    "mode": "3d",
+    "scale": 0.289,
+    "offset": [
+      -0.001,
+      -0.067,
+      0.055
+    ]
+  },
+  "butcher:gray_llama": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:gray_llama_head": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.001,
+      0.065,
+      0.054
+    ]
+  },
+  "butcher:gray_llama_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:gray_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:grayllamaheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.09
+    ]
+  },
+  "butcher:greenfrogballoon": {
+    "mode": "3d",
+    "scale": 0.152,
+    "offset": [
+      0.001,
+      0.004,
+      -0.044
+    ]
+  },
+  "butcher:ham": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hammer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hanging_bat_corpse": {
+    "mode": "3d",
+    "scale": 0.718,
+    "offset": [
+      -0.011,
+      0.089,
+      -0.322
+    ]
+  },
+  "butcher:hanging_bat_skeleton": {
+    "mode": "3d",
+    "scale": 0.718,
+    "offset": [
+      -0.011,
+      0.089,
+      -0.322
+    ]
+  },
+  "butcher:hanging_chicken_corpse": {
+    "mode": "3d",
+    "scale": 0.437,
+    "offset": [
+      -0.001,
+      -0.181,
+      0.114
+    ]
+  },
+  "butcher:hanging_chicken_skeleton": {
+    "mode": "3d",
+    "scale": 0.437,
+    "offset": [
+      -0.001,
+      -0.181,
+      0.114
+    ]
+  },
+  "butcher:hanging_chicken_skinned_corpse": {
+    "mode": "3d",
+    "scale": 0.437,
+    "offset": [
+      -0.001,
+      -0.181,
+      0.114
+    ]
+  },
+  "butcher:hanging_cow_corpse": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hanging_cow_right": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hanging_cow_right_left": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hanging_cow_right_left_middle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hanging_dolphinskeleton": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      0.003,
+      0.043,
+      0.043
+    ]
+  },
+  "butcher:hanging_drained_fox_corpse": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.009,
+      0.009,
+      -0.036
+    ]
+  },
+  "butcher:hanging_drained_panda_corpse": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      -0.003,
+      -0.009,
+      0.042
+    ]
+  },
+  "butcher:hanging_drained_rabbit_corpse": {
+    "mode": "3d",
+    "scale": 0.325,
+    "offset": [
+      0.012,
+      -0.023,
+      -0.002
+    ]
+  },
+  "butcher:hanging_drained_sheep_corpse": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.096
+    ]
+  },
+  "butcher:hanging_drained_turtle_corpse": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      -0.001,
+      0.012,
+      0.014
+    ]
+  },
+  "butcher:hanging_drained_villager": {
+    "mode": "3d",
+    "scale": 0.23,
+    "offset": [
+      0.0,
+      0.071,
+      0.123
+    ]
+  },
+  "butcher:hanging_fox_cut_2": {
+    "mode": "3d",
+    "scale": 0.361,
+    "offset": [
+      0.012,
+      -0.03,
+      -0.03
+    ]
+  },
+  "butcher:hanging_fox_cut_3": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.011,
+      -0.053,
+      -0.036
+    ]
+  },
+  "butcher:hanging_fox_cut_4": {
+    "mode": "3d",
+    "scale": 0.433,
+    "offset": [
+      0.014,
+      -0.035,
+      -0.042
+    ]
+  },
+  "butcher:hanging_fox_headless": {
+    "mode": "3d",
+    "scale": 0.361,
+    "offset": [
+      0.012,
+      -0.03,
+      -0.03
+    ]
+  },
+  "butcher:hanging_fox_skeleton": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.009,
+      0.009,
+      -0.041
+    ]
+  },
+  "butcher:hanging_foxcorpse": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.009,
+      0.009,
+      -0.036
+    ]
+  },
+  "butcher:hanging_frog_corpse": {
+    "mode": "3d",
+    "scale": 0.289,
+    "offset": [
+      -0.001,
+      -0.067,
+      0.055
+    ]
+  },
+  "butcher:hanging_goat_cut": {
+    "mode": "3d",
+    "scale": 0.212,
+    "offset": [
+      0.0,
+      0.065,
+      -0.09
+    ]
+  },
+  "butcher:hanging_goat_skeleton": {
+    "mode": "3d",
+    "scale": 0.214,
+    "offset": [
+      0.0,
+      0.068,
+      -0.098
+    ]
+  },
+  "butcher:hanging_hoglin": {
+    "mode": "3d",
+    "scale": 0.165,
+    "offset": [
+      0.035,
+      0.063,
+      0.029
+    ]
+  },
+  "butcher:hanging_hoglin_3": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      0.013,
+      0.082,
+      0.029
+    ]
+  },
+  "butcher:hanging_hoglin_cut_1": {
+    "mode": "3d",
+    "scale": 0.227,
+    "offset": [
+      0.013,
+      0.082,
+      0.032
+    ]
+  },
+  "butcher:hanging_hoglin_cut_2": {
+    "mode": "3d",
+    "scale": 0.232,
+    "offset": [
+      0.015,
+      0.079,
+      0.028
+    ]
+  },
+  "butcher:hanging_hoglin_drained": {
+    "mode": "3d",
+    "scale": 0.165,
+    "offset": [
+      0.035,
+      0.063,
+      0.029
+    ]
+  },
+  "butcher:hanging_hoglin_headless": {
+    "mode": "3d",
+    "scale": 0.187,
+    "offset": [
+      0.014,
+      0.102,
+      0.021
+    ]
+  },
+  "butcher:hanging_hoglin_legless": {
+    "mode": "3d",
+    "scale": 0.223,
+    "offset": [
+      0.013,
+      0.078,
+      0.028
+    ]
+  },
+  "butcher:hanging_hoglin_skeleton": {
+    "mode": "3d",
+    "scale": 0.165,
+    "offset": [
+      0.049,
+      0.063,
+      0.029
+    ]
+  },
+  "butcher:hanging_llama_brown": {
+    "mode": "3d",
+    "scale": 0.186,
+    "offset": [
+      0.007,
+      0.05,
+      -0.049
+    ]
+  },
+  "butcher:hanging_llama_brown_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_creamy": {
+    "mode": "3d",
+    "scale": 0.186,
+    "offset": [
+      0.007,
+      0.05,
+      -0.049
+    ]
+  },
+  "butcher:hanging_llama_creamy_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_cut_1": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_cut_2": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_cut_3": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_cut_4": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.042
+    ]
+  },
+  "butcher:hanging_llama_gray": {
+    "mode": "3d",
+    "scale": 0.186,
+    "offset": [
+      0.007,
+      0.05,
+      -0.049
+    ]
+  },
+  "butcher:hanging_llama_gray_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_llama_skeleton": {
+    "mode": "3d",
+    "scale": 0.186,
+    "offset": [
+      0.007,
+      0.05,
+      -0.049
+    ]
+  },
+  "butcher:hanging_llama_white": {
+    "mode": "3d",
+    "scale": 0.186,
+    "offset": [
+      0.007,
+      0.05,
+      -0.049
+    ]
+  },
+  "butcher:hanging_llama_white_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_panda_legless": {
+    "mode": "3d",
+    "scale": 0.248,
+    "offset": [
+      -0.003,
+      0.001,
+      0.007
+    ]
+  },
+  "butcher:hanging_pandacut_1": {
+    "mode": "3d",
+    "scale": 0.248,
+    "offset": [
+      -0.003,
+      0.001,
+      0.007
+    ]
+  },
+  "butcher:hanging_pandacut_2": {
+    "mode": "3d",
+    "scale": 0.248,
+    "offset": [
+      -0.003,
+      0.001,
+      0.007
+    ]
+  },
+  "butcher:hanging_pandacut_3": {
+    "mode": "3d",
+    "scale": 0.254,
+    "offset": [
+      -0.004,
+      0.006,
+      0.003
+    ]
+  },
+  "butcher:hanging_pandacut_4": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      -0.004,
+      0.001,
+      0.01
+    ]
+  },
+  "butcher:hanging_pandaskeleton": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      -0.003,
+      -0.009,
+      0.047
+    ]
+  },
+  "butcher:hanging_pig_headless": {
+    "mode": "3d",
+    "scale": 0.312,
+    "offset": [
+      0.069,
+      -0.038,
+      -0.097
+    ]
+  },
+  "butcher:hanging_pig_right": {
+    "mode": "3d",
+    "scale": 0.312,
+    "offset": [
+      0.069,
+      -0.038,
+      -0.096
+    ]
+  },
+  "butcher:hanging_pig_right_left": {
+    "mode": "3d",
+    "scale": 0.314,
+    "offset": [
+      0.071,
+      -0.038,
+      -0.097
+    ]
+  },
+  "butcher:hanging_pig_right_left_middle": {
+    "mode": "3d",
+    "scale": 0.314,
+    "offset": [
+      0.071,
+      -0.038,
+      -0.097
+    ]
+  },
+  "butcher:hanging_pig_skeleton": {
+    "mode": "3d",
+    "scale": 0.259,
+    "offset": [
+      0.019,
+      -0.031,
+      -0.09
+    ]
+  },
+  "butcher:hanging_polar_bear_corpse": {
+    "mode": "3d",
+    "scale": 0.191,
+    "offset": [
+      0.0,
+      0.026,
+      0.054
+    ]
+  },
+  "butcher:hanging_polarbear_drained": {
+    "mode": "3d",
+    "scale": 0.191,
+    "offset": [
+      0.0,
+      0.026,
+      0.054
+    ]
+  },
+  "butcher:hanging_rabbit_corpse": {
+    "mode": "3d",
+    "scale": 0.325,
+    "offset": [
+      0.012,
+      -0.023,
+      -0.002
+    ]
+  },
+  "butcher:hanging_rabbit_skeleton": {
+    "mode": "3d",
+    "scale": 0.314,
+    "offset": [
+      0.011,
+      -0.015,
+      -0.001
+    ]
+  },
+  "butcher:hanging_sheep_corpse": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.096
+    ]
+  },
+  "butcher:hanging_sheep_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.069
+    ]
+  },
+  "butcher:hanging_sheep_right": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.069
+    ]
+  },
+  "butcher:hanging_sheep_right_left": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.069
+    ]
+  },
+  "butcher:hanging_sheep_right_left_middle": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.069
+    ]
+  },
+  "butcher:hanging_sheep_skeleton": {
+    "mode": "3d",
+    "scale": 0.217,
+    "offset": [
+      -0.001,
+      0.01,
+      -0.111
+    ]
+  },
+  "butcher:hanging_skinned_drained_sheep": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.096
+    ]
+  },
+  "butcher:hanging_skinned_fox": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.009,
+      0.009,
+      -0.036
+    ]
+  },
+  "butcher:hanging_skinned_llama": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:hanging_skinned_panda": {
+    "mode": "3d",
+    "scale": 0.223,
+    "offset": [
+      -0.003,
+      0.023,
+      0.017
+    ]
+  },
+  "butcher:hanging_skinned_sheep_corpse": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.096
+    ]
+  },
+  "butcher:hanging_squid_2_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squid_3_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squid_4_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squid_5_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squid_6_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squid_7_leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hanging_squidlegless": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.34,
+      0.177
+    ]
+  },
+  "butcher:hanging_turtle_corpse": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      -0.001,
+      0.012,
+      0.014
+    ]
+  },
+  "butcher:hanging_villager_carcass": {
+    "mode": "3d",
+    "scale": 0.517,
+    "offset": [
+      0.0,
+      0.106,
+      0.157
+    ]
+  },
+  "butcher:hanging_villager_right_arm": {
+    "mode": "3d",
+    "scale": 0.23,
+    "offset": [
+      0.022,
+      0.071,
+      0.123
+    ]
+  },
+  "butcher:hanging_villager_right_left_arm": {
+    "mode": "3d",
+    "scale": 0.23,
+    "offset": [
+      0.0,
+      0.071,
+      0.123
+    ]
+  },
+  "butcher:hanging_villager_right_left_leg": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      0.0,
+      -0.005,
+      0.183
+    ]
+  },
+  "butcher:hanging_villager_right_leg": {
+    "mode": "3d",
+    "scale": 0.23,
+    "offset": [
+      0.0,
+      0.07,
+      0.123
+    ]
+  },
+  "butcher:hanging_villager_skeleton": {
+    "mode": "3d",
+    "scale": 0.222,
+    "offset": [
+      0.0,
+      0.056,
+      0.12
+    ]
+  },
+  "butcher:hangingcamelcarcass": {
+    "mode": "3d",
+    "scale": 0.169,
+    "offset": [
+      0.0,
+      -0.007,
+      0.101
+    ]
+  },
+  "butcher:hangingcamelcut_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingcamelcut_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingcamelcut_3": {
+    "mode": "3d",
+    "scale": 0.171,
+    "offset": [
+      0.001,
+      -0.004,
+      0.067
+    ]
+  },
+  "butcher:hangingcamelheadless": {
+    "mode": "3d",
+    "scale": 0.171,
+    "offset": [
+      0.0,
+      -0.004,
+      0.045
+    ]
+  },
+  "butcher:hangingcamelhumpless": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingcamelskeleton": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingcod_1": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.011,
+      -0.114,
+      0.038
+    ]
+  },
+  "butcher:hangingcod_2": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.046,
+      -0.114,
+      0.047
+    ]
+  },
+  "butcher:hangingcod_3": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      -0.038,
+      -0.043,
+      0.014
+    ]
+  },
+  "butcher:hangingcod_4": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      0.009,
+      -0.043,
+      0.014
+    ]
+  },
+  "butcher:hangingcod_5": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      0.009,
+      -0.043,
+      0.002
+    ]
+  },
+  "butcher:hangingcowheadless": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingdolphincorpse": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      0.003,
+      0.043,
+      0.043
+    ]
+  },
+  "butcher:hangingdrainedcamelcarcass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingdraineddolphin": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      0.003,
+      0.043,
+      0.043
+    ]
+  },
+  "butcher:hangingfoxcut_1": {
+    "mode": "3d",
+    "scale": 0.361,
+    "offset": [
+      0.012,
+      -0.03,
+      -0.03
+    ]
+  },
+  "butcher:hanginggoat": {
+    "mode": "3d",
+    "scale": 0.212,
+    "offset": [
+      0.0,
+      0.065,
+      -0.09
+    ]
+  },
+  "butcher:hanginggoatcorpse_1": {
+    "mode": "3d",
+    "scale": 0.212,
+    "offset": [
+      0.0,
+      0.065,
+      -0.09
+    ]
+  },
+  "butcher:hanginggoatdrained": {
+    "mode": "3d",
+    "scale": 0.212,
+    "offset": [
+      0.0,
+      0.065,
+      -0.09
+    ]
+  },
+  "butcher:hanginggoatheadless": {
+    "mode": "3d",
+    "scale": 0.259,
+    "offset": [
+      0.0,
+      0.029,
+      -0.047
+    ]
+  },
+  "butcher:hanginggoatright": {
+    "mode": "3d",
+    "scale": 0.259,
+    "offset": [
+      0.001,
+      0.029,
+      -0.047
+    ]
+  },
+  "butcher:hanginggoatrightleftmiddle": {
+    "mode": "3d",
+    "scale": 0.259,
+    "offset": [
+      0.0,
+      0.029,
+      -0.044
+    ]
+  },
+  "butcher:hangingpandacorpse": {
+    "mode": "3d",
+    "scale": 0.195,
+    "offset": [
+      -0.003,
+      -0.009,
+      0.042
+    ]
+  },
+  "butcher:hangingpandaheadless": {
+    "mode": "3d",
+    "scale": 0.223,
+    "offset": [
+      -0.003,
+      0.023,
+      0.017
+    ]
+  },
+  "butcher:hangingpolarbearcut_1": {
+    "mode": "3d",
+    "scale": 0.286,
+    "offset": [
+      0.0,
+      -0.011,
+      0.034
+    ]
+  },
+  "butcher:hangingpolarbearcut_2": {
+    "mode": "3d",
+    "scale": 0.286,
+    "offset": [
+      0.0,
+      -0.011,
+      0.034
+    ]
+  },
+  "butcher:hangingpolarbearcut_3": {
+    "mode": "3d",
+    "scale": 0.286,
+    "offset": [
+      0.0,
+      -0.011,
+      0.034
+    ]
+  },
+  "butcher:hangingpolarbearcut_4": {
+    "mode": "3d",
+    "scale": 0.286,
+    "offset": [
+      0.0,
+      -0.011,
+      0.039
+    ]
+  },
+  "butcher:hangingpolarbearcut_5": {
+    "mode": "3d",
+    "scale": 0.296,
+    "offset": [
+      0.0,
+      -0.004,
+      0.033
+    ]
+  },
+  "butcher:hangingpolarbearheadless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.0,
+      0.052,
+      0.06
+    ]
+  },
+  "butcher:hangingpolarbearheadlessskinned": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.0,
+      0.052,
+      0.06
+    ]
+  },
+  "butcher:hangingpolarbearlegless": {
+    "mode": "3d",
+    "scale": 0.286,
+    "offset": [
+      0.0,
+      -0.011,
+      0.034
+    ]
+  },
+  "butcher:hangingpolarbearskeleton": {
+    "mode": "3d",
+    "scale": 0.191,
+    "offset": [
+      0.0,
+      0.025,
+      0.057
+    ]
+  },
+  "butcher:hangingsalmon_1": {
+    "mode": "3d",
+    "scale": 0.296,
+    "offset": [
+      -0.017,
+      0.007,
+      0.023
+    ]
+  },
+  "butcher:hangingsalmon_2": {
+    "mode": "3d",
+    "scale": 0.296,
+    "offset": [
+      -0.032,
+      0.007,
+      0.018
+    ]
+  },
+  "butcher:hangingsalmon_3": {
+    "mode": "3d",
+    "scale": 0.294,
+    "offset": [
+      0.001,
+      0.005,
+      0.011
+    ]
+  },
+  "butcher:hangingsalmon_4": {
+    "mode": "3d",
+    "scale": 0.244,
+    "offset": [
+      0.0,
+      0.042,
+      -0.008
+    ]
+  },
+  "butcher:hangingsalmon_5": {
+    "mode": "3d",
+    "scale": 0.244,
+    "offset": [
+      0.005,
+      0.042,
+      0.006
+    ]
+  },
+  "butcher:hangingshavedcamelcarcass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hangingsquid": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hangingsquid_1leg": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:hangingvillagercorpse": {
+    "mode": "3d",
+    "scale": 0.23,
+    "offset": [
+      0.0,
+      0.071,
+      0.123
+    ]
+  },
+  "butcher:hoglin": {
+    "mode": "3d",
+    "scale": 0.17,
+    "offset": [
+      -0.002,
+      -0.002,
+      0.05
+    ]
+  },
+  "butcher:hoglin_cut_1": {
+    "mode": "3d",
+    "scale": 0.239,
+    "offset": [
+      0.0,
+      0.072,
+      0.035
+    ]
+  },
+  "butcher:hoglin_cut_2": {
+    "mode": "3d",
+    "scale": 0.239,
+    "offset": [
+      0.0,
+      0.072,
+      0.035
+    ]
+  },
+  "butcher:hoglin_cut_3": {
+    "mode": "3d",
+    "scale": 0.239,
+    "offset": [
+      0.0,
+      0.072,
+      0.035
+    ]
+  },
+  "butcher:hoglin_cut_4": {
+    "mode": "3d",
+    "scale": 0.239,
+    "offset": [
+      0.004,
+      0.067,
+      0.035
+    ]
+  },
+  "butcher:hoglin_cut_5": {
+    "mode": "3d",
+    "scale": 0.243,
+    "offset": [
+      0.0,
+      0.08,
+      0.037
+    ]
+  },
+  "butcher:hoglin_drained_corpse_item": {
+    "mode": "3d",
+    "scale": 0.17,
+    "offset": [
+      -0.002,
+      -0.002,
+      0.05
+    ]
+  },
+  "butcher:hoglin_legless": {
+    "mode": "3d",
+    "scale": 0.239,
+    "offset": [
+      0.0,
+      0.072,
+      0.035
+    ]
+  },
+  "butcher:hoglin_skeleton": {
+    "mode": "3d",
+    "scale": 0.172,
+    "offset": [
+      -0.002,
+      -0.003,
+      0.053
+    ]
+  },
+  "butcher:hoglin_skeleton_corpse_item": {
+    "mode": "3d",
+    "scale": 0.172,
+    "offset": [
+      -0.002,
+      -0.003,
+      0.053
+    ]
+  },
+  "butcher:hoglincorpseitem": {
+    "mode": "3d",
+    "scale": 0.17,
+    "offset": [
+      -0.002,
+      -0.002,
+      0.05
+    ]
+  },
+  "butcher:hoglindrained": {
+    "mode": "3d",
+    "scale": 0.17,
+    "offset": [
+      -0.002,
+      -0.002,
+      0.05
+    ]
+  },
+  "butcher:hoglinhead": {
+    "mode": "3d",
+    "scale": 0.386,
+    "offset": [
+      0.0,
+      -0.001,
+      0.075
+    ]
+  },
+  "butcher:hoglinheadless": {
+    "mode": "3d",
+    "scale": 0.22,
+    "offset": [
+      -0.002,
+      0.028,
+      -0.001
+    ]
+  },
+  "butcher:hoglinheadmount": {
+    "mode": "3d",
+    "scale": 0.12,
+    "offset": [
+      -0.001,
+      0.021,
+      0.109
+    ]
+  },
+  "butcher:hoglinmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:hook_block": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:hook_block_indestructible": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:ironcleaverblade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:jar": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.009,
+      -0.187
+    ]
+  },
+  "butcher:lamb_loin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:lamb_meat_grinder": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.009,
+      -0.109,
+      0.0
+    ]
+  },
+  "butcher:lamb_shoulder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:lamb_sirloin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:lambrib": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:largeemptyheadmount": {
+    "mode": "3d",
+    "scale": 0.12,
+    "offset": [
+      0.0,
+      0.021,
+      0.01
+    ]
+  },
+  "butcher:leather_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:leg_of_lamb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:llama_corpse_brown_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:llama_corpse_creamy": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:llama_corpse_creamy_headless": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llama_corpse_gray": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:llama_corpse_gray_headless": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:llama_corpse_white_headless": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llama_corpsedrainedbrown": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:llama_corpsedrainedcreamy": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llama_corpsedrainedgray": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      0.007,
+      0.027,
+      -0.055
+    ]
+  },
+  "butcher:llama_corpsedrainedwhite": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llama_cut_2": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llama_cut_3": {
+    "mode": "3d",
+    "scale": 0.283,
+    "offset": [
+      -0.019,
+      0.007,
+      0.037
+    ]
+  },
+  "butcher:llama_cut_4": {
+    "mode": "3d",
+    "scale": 0.283,
+    "offset": [
+      -0.019,
+      0.008,
+      0.04
+    ]
+  },
+  "butcher:llama_cut_5": {
+    "mode": "3d",
+    "scale": 0.34,
+    "offset": [
+      -0.046,
+      0.055,
+      0.001
+    ]
+  },
+  "butcher:llama_skeleton": {
+    "mode": "3d",
+    "scale": 0.231,
+    "offset": [
+      -0.048,
+      -0.012,
+      0.03
+    ]
+  },
+  "butcher:llama_skeleton_item": {
+    "mode": "3d",
+    "scale": 0.231,
+    "offset": [
+      -0.048,
+      -0.012,
+      0.03
+    ]
+  },
+  "butcher:llamacorpsebrown": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:llamacorpsesheared": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llamacorpsewhite": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:llamacut_1": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:llamameat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:magic_wishbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:metal_tray": {
+    "mode": "3d",
+    "scale": 0.379,
+    "offset": [
+      -0.002,
+      0.166,
+      0.0
+    ]
+  },
+  "butcher:mincedbeef": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:mincedlamb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:netherite_butchers_knife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:oil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:orange_frog": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:orange_frog_1_leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:orange_frog_2_leg": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:orange_frog_balloon": {
+    "mode": "3d",
+    "scale": 0.152,
+    "offset": [
+      0.001,
+      0.004,
+      -0.044
+    ]
+  },
+  "butcher:orange_frog_corpse": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      0.0,
+      0.103,
+      0.012
+    ]
+  },
+  "butcher:orange_frog_cut_open": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:orange_frog_heart_remove": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      -0.002
+    ]
+  },
+  "butcher:orange_frog_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:orange_frog_pinned": {
+    "mode": "3d",
+    "scale": 0.324,
+    "offset": [
+      -0.006,
+      0.101,
+      0.013
+    ]
+  },
+  "butcher:orange_hanging_frog_corpse": {
+    "mode": "3d",
+    "scale": 0.289,
+    "offset": [
+      -0.001,
+      -0.067,
+      0.055
+    ]
+  },
+  "butcher:panda": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.014,
+      0.057
+    ]
+  },
+  "butcher:panda_head_mount": {
+    "mode": "3d",
+    "scale": 0.12,
+    "offset": [
+      0.0,
+      0.021,
+      0.027
+    ]
+  },
+  "butcher:panda_skeletal": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.011,
+      0.061
+    ]
+  },
+  "butcher:pandacorpse": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.014,
+      0.057
+    ]
+  },
+  "butcher:pandacut_1": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.021,
+      -0.025,
+      0.02
+    ]
+  },
+  "butcher:pandacut_2": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.021,
+      -0.025,
+      0.02
+    ]
+  },
+  "butcher:pandacut_3": {
+    "mode": "3d",
+    "scale": 0.267,
+    "offset": [
+      -0.026,
+      -0.026,
+      0.021
+    ]
+  },
+  "butcher:pandacut_4": {
+    "mode": "3d",
+    "scale": 0.267,
+    "offset": [
+      -0.026,
+      -0.026,
+      0.026
+    ]
+  },
+  "butcher:pandafur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pandahead": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      0.001,
+      0.051,
+      0.002
+    ]
+  },
+  "butcher:pandaheadless": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.013,
+      -0.025,
+      0.076
+    ]
+  },
+  "butcher:pandalegless": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.021,
+      -0.025,
+      0.02
+    ]
+  },
+  "butcher:pandameat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pandarug": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pandaskeleton": {
+    "mode": "3d",
+    "scale": 0.197,
+    "offset": [
+      -0.066,
+      -0.011,
+      0.061
+    ]
+  },
+  "butcher:pandaskinned": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.013,
+      -0.025,
+      0.076
+    ]
+  },
+  "butcher:particle": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pestleandmortarblock": {
+    "mode": "3d",
+    "scale": 0.514,
+    "offset": [
+      0.001,
+      -0.085,
+      0.0
+    ]
+  },
+  "butcher:pig_bones": {
+    "mode": "3d",
+    "scale": 0.364,
+    "offset": [
+      0.031,
+      0.003,
+      -0.106
+    ]
+  },
+  "butcher:pig_corpse_0_leg": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.028,
+      -0.014,
+      -0.039
+    ]
+  },
+  "butcher:pig_corpse_2_leg": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.028,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pig_corpse_3_leg": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pig_corpse_drained": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pig_corpse_headless": {
+    "mode": "3d",
+    "scale": 0.369,
+    "offset": [
+      0.049,
+      -0.011,
+      -0.102
+    ]
+  },
+  "butcher:pig_corpse_item": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pig_corpse_skeleton": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.049,
+      0.025,
+      -0.038
+    ]
+  },
+  "butcher:pig_ham": {
+    "mode": "3d",
+    "scale": 0.374,
+    "offset": [
+      0.049,
+      -0.009,
+      -0.103
+    ]
+  },
+  "butcher:pig_hanging": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.022,
+      -0.032,
+      -0.089
+    ]
+  },
+  "butcher:pig_hanging_drained": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.022,
+      -0.032,
+      -0.089
+    ]
+  },
+  "butcher:pig_head_mount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.059
+    ]
+  },
+  "butcher:pig_pork_loin": {
+    "mode": "3d",
+    "scale": 0.369,
+    "offset": [
+      0.049,
+      -0.011,
+      -0.102
+    ]
+  },
+  "butcher:pig_pork_shoulder": {
+    "mode": "3d",
+    "scale": 0.371,
+    "offset": [
+      0.051,
+      -0.009,
+      -0.104
+    ]
+  },
+  "butcher:pig_skeleton": {
+    "mode": "3d",
+    "scale": 0.374,
+    "offset": [
+      0.049,
+      -0.009,
+      -0.103
+    ]
+  },
+  "butcher:pig_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pig_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:pigcorpse": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pigcorpse_1leg": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.028,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:pighead": {
+    "mode": "3d",
+    "scale": 0.534,
+    "offset": [
+      0.067,
+      0.026,
+      -0.149
+    ]
+  },
+  "butcher:pigporkbelly": {
+    "mode": "3d",
+    "scale": 0.369,
+    "offset": [
+      0.049,
+      -0.011,
+      -0.102
+    ]
+  },
+  "butcher:pigspitroast": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      -0.009,
+      0.0
+    ]
+  },
+  "butcher:plierjaw": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pliers": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:polar_bear_skeleton_corpse_item": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.096,
+      0.03
+    ]
+  },
+  "butcher:polarbear_corpse_item": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.095,
+      0.026
+    ]
+  },
+  "butcher:polarbear_head_mount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.059
+    ]
+  },
+  "butcher:polarbear_headless_skinned": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      0.03
+    ]
+  },
+  "butcher:polarbearcorpse": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.095,
+      0.026
+    ]
+  },
+  "butcher:polarbearcut_1": {
+    "mode": "3d",
+    "scale": 0.308,
+    "offset": [
+      0.0,
+      -0.071,
+      -0.029
+    ]
+  },
+  "butcher:polarbearcut_2": {
+    "mode": "3d",
+    "scale": 0.308,
+    "offset": [
+      0.0,
+      -0.071,
+      -0.029
+    ]
+  },
+  "butcher:polarbearcut_3": {
+    "mode": "3d",
+    "scale": 0.308,
+    "offset": [
+      0.0,
+      -0.071,
+      -0.029
+    ]
+  },
+  "butcher:polarbearcut_4": {
+    "mode": "3d",
+    "scale": 0.308,
+    "offset": [
+      0.0,
+      -0.071,
+      -0.029
+    ]
+  },
+  "butcher:polarbearcut_5": {
+    "mode": "3d",
+    "scale": 0.309,
+    "offset": [
+      0.0,
+      -0.072,
+      -0.024
+    ]
+  },
+  "butcher:polarbeardrainedcorpse": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.095,
+      0.026
+    ]
+  },
+  "butcher:polarbearfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:polarbearhead": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:polarbearheadless": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      0.03
+    ]
+  },
+  "butcher:polarbearleg_1": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      0.03
+    ]
+  },
+  "butcher:polarbearleg_2": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      0.03
+    ]
+  },
+  "butcher:polarbearleg_3": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.02,
+      -0.076,
+      0.03
+    ]
+  },
+  "butcher:polarbearleg_4": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      -0.02
+    ]
+  },
+  "butcher:polarbearskeleton": {
+    "mode": "3d",
+    "scale": 0.26,
+    "offset": [
+      0.0,
+      -0.096,
+      0.03
+    ]
+  },
+  "butcher:pork_belly": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pork_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pork_loin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:pork_shoulder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:porkscratchings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:puffercorpse": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      0.0,
+      -0.028,
+      -0.003
+    ]
+  },
+  "butcher:rabbit_corpse_item": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:rabbit_cut_2": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.026,
+      0.247,
+      0.037
+    ]
+  },
+  "butcher:rabbit_cut_3": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.026,
+      0.27,
+      0.037
+    ]
+  },
+  "butcher:rabbit_headless": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.025,
+      0.15,
+      0.025
+    ]
+  },
+  "butcher:rabbit_legless": {
+    "mode": "3d",
+    "scale": 0.605,
+    "offset": [
+      -0.014,
+      0.208,
+      0.031
+    ]
+  },
+  "butcher:rabbit_skeleton": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:rabbit_skinned": {
+    "mode": "3d",
+    "scale": 0.692,
+    "offset": [
+      0.016,
+      0.238,
+      0.036
+    ]
+  },
+  "butcher:rabbitcorpse": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:rabbitcut_1": {
+    "mode": "3d",
+    "scale": 0.692,
+    "offset": [
+      0.016,
+      0.238,
+      0.036
+    ]
+  },
+  "butcher:rabbithead": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.002,
+      0.176,
+      -0.002
+    ]
+  },
+  "butcher:rag": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_chuck_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_lamb_shoulder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_lamb_sirloin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_leg_of_lamb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_pork_belly": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_pork_ham": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_pork_leg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_pork_loin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_pork_shoulder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_ribeye_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_rump_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_sirloin_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raw_tbone_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawbearmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawcamelmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawcodfillet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawdolphinmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawdragonmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:raweldermeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawfoxmeat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawlambloin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawllamameat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawpandameat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:rawsalmon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:redsteelchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:rib_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:roachemitter": {
+    "mode": "3d",
+    "scale": 0.448,
+    "offset": [
+      0.0,
+      -0.228,
+      -0.252
+    ]
+  },
+  "butcher:rope": {
+    "mode": "3d",
+    "scale": 0.89,
+    "offset": [
+      -0.001,
+      0.0,
+      0.075
+    ]
+  },
+  "butcher:rope_2": {
+    "mode": "3d",
+    "scale": 0.89,
+    "offset": [
+      -0.001,
+      0.0,
+      0.08
+    ]
+  },
+  "butcher:rope_3": {
+    "mode": "3d",
+    "scale": 0.89,
+    "offset": [
+      -0.001,
+      0.0,
+      0.08
+    ]
+  },
+  "butcher:rope_4": {
+    "mode": "3d",
+    "scale": 0.89,
+    "offset": [
+      -0.001,
+      0.0,
+      0.075
+    ]
+  },
+  "butcher:rump_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:salmon": {
+    "mode": "3d",
+    "scale": 0.099,
+    "offset": [
+      0.025,
+      -0.027,
+      0.009
+    ]
+  },
+  "butcher:salmonbarrel": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.0,
+      -0.076,
+      0.036
+    ]
+  },
+  "butcher:salmoncorpse": {
+    "mode": "3d",
+    "scale": 0.099,
+    "offset": [
+      0.025,
+      -0.027,
+      0.009
+    ]
+  },
+  "butcher:salmonmount": {
+    "mode": "3d",
+    "scale": 0.083,
+    "offset": [
+      0.008,
+      0.009,
+      0.019
+    ]
+  },
+  "butcher:salt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:saltblock": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:salted_brown_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_cow_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_creamy_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_gray_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_pig_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_sheep_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:salted_white_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:saltedcamelskinrack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:shavedcamelcarcass": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:shavedcamelcarcassitem": {
+    "mode": "3d",
+    "scale": 0.134,
+    "offset": [
+      0.0,
+      -0.102,
+      0.048
+    ]
+  },
+  "butcher:sheared_goat_corpse": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:sheared_goat_corpse_item": {
+    "mode": "3d",
+    "scale": 0.297,
+    "offset": [
+      -0.018,
+      -0.034,
+      0.021
+    ]
+  },
+  "butcher:sheared_llama": {
+    "mode": "3d",
+    "scale": 0.277,
+    "offset": [
+      -0.013,
+      0.006,
+      0.036
+    ]
+  },
+  "butcher:sheep_0_legs": {
+    "mode": "3d",
+    "scale": 0.317,
+    "offset": [
+      -0.099,
+      -0.004,
+      -0.033
+    ]
+  },
+  "butcher:sheep_1_legs": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.008,
+      -0.004,
+      -0.04
+    ]
+  },
+  "butcher:sheep_2_legs": {
+    "mode": "3d",
+    "scale": 0.306,
+    "offset": [
+      0.01,
+      -0.004,
+      -0.04
+    ]
+  },
+  "butcher:sheep_3legs": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:sheep_corpse_drained": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:sheep_corpse_item": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:sheep_head_mount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.035
+    ]
+  },
+  "butcher:sheep_headless": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.079,
+      -0.02,
+      -0.119
+    ]
+  },
+  "butcher:sheep_loin": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.08,
+      -0.021,
+      -0.119
+    ]
+  },
+  "butcher:sheep_meat": {
+    "mode": "3d",
+    "scale": 0.426,
+    "offset": [
+      -0.081,
+      -0.021,
+      -0.118
+    ]
+  },
+  "butcher:sheep_rib": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.08,
+      -0.022,
+      -0.119
+    ]
+  },
+  "butcher:sheep_shoulder": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.08,
+      -0.022,
+      -0.119
+    ]
+  },
+  "butcher:sheep_sirloin": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.08,
+      -0.02,
+      -0.119
+    ]
+  },
+  "butcher:sheep_skeleton_corpse": {
+    "mode": "3d",
+    "scale": 0.317,
+    "offset": [
+      0.016,
+      -0.006,
+      -0.033
+    ]
+  },
+  "butcher:sheep_skeleton_corpse_item": {
+    "mode": "3d",
+    "scale": 0.317,
+    "offset": [
+      0.016,
+      -0.006,
+      -0.033
+    ]
+  },
+  "butcher:sheep_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:sheep_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:sheepbones": {
+    "mode": "3d",
+    "scale": 0.43,
+    "offset": [
+      0.015,
+      0.006,
+      -0.18
+    ]
+  },
+  "butcher:sheepcorpse": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:sheephead": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.001
+    ]
+  },
+  "butcher:shell_boat_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:sirloin_steak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:skeleton_cow_corpse": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.041,
+      0.036,
+      0.035
+    ]
+  },
+  "butcher:skeleton_cow_corpse_item": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.041,
+      0.036,
+      0.035
+    ]
+  },
+  "butcher:skeleton_hanging_cow": {
+    "mode": "3d",
+    "scale": 0.209,
+    "offset": [
+      0.013,
+      0.076,
+      -0.054
+    ]
+  },
+  "butcher:skeleton_pig_corpse": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.049,
+      0.025,
+      -0.038
+    ]
+  },
+  "butcher:skeleton_rabbit_item": {
+    "mode": "3d",
+    "scale": 0.406,
+    "offset": [
+      0.014,
+      0.108,
+      0.021
+    ]
+  },
+  "butcher:skinned_cow_corpse": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:skinned_cow_corpse_item": {
+    "mode": "3d",
+    "scale": 0.288,
+    "offset": [
+      0.041,
+      0.035,
+      0.033
+    ]
+  },
+  "butcher:skinned_drained_pig_corpse": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:skinned_drained_sheep_corpse": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:skinned_drained_sheep_corpse_item": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:skinned_hanging_cow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:skinned_pig_corpse": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:skinned_sheep_corpse": {
+    "mode": "3d",
+    "scale": 0.304,
+    "offset": [
+      0.009,
+      -0.012,
+      -0.041
+    ]
+  },
+  "butcher:skinned_sheep_corpse_item": {
+    "mode": "3d",
+    "scale": 0.211,
+    "offset": [
+      -0.001,
+      -0.003,
+      -0.096
+    ]
+  },
+  "butcher:skinnedhangingpig": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.022,
+      -0.032,
+      -0.089
+    ]
+  },
+  "butcher:skinning_knife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:skinningknifeblade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:spikeddragonbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:spiketrap": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.084,
+      0.0
+    ]
+  },
+  "butcher:spiroastpigcut_1": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:spiroastpigcut_2": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:spiroastpigcut_3": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:spiroastpigcut_4": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:spiroastpigcut_5": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.068,
+      0.0
+    ]
+  },
+  "butcher:spitroast": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      -0.009,
+      0.0
+    ]
+  },
+  "butcher:sponge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:squid_1_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.13
+    ]
+  },
+  "butcher:squid_2_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.13
+    ]
+  },
+  "butcher:squid_3_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.116
+    ]
+  },
+  "butcher:squid_4_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.104
+    ]
+  },
+  "butcher:squid_5_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.0,
+      0.028,
+      0.104
+    ]
+  },
+  "butcher:squid_6_leg": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      0.0,
+      0.028,
+      0.104
+    ]
+  },
+  "butcher:squid_7_leg": {
+    "mode": "3d",
+    "scale": 0.283,
+    "offset": [
+      0.0,
+      0.012,
+      0.113
+    ]
+  },
+  "butcher:squid_8_leg": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.17,
+      0.151
+    ]
+  },
+  "butcher:squid_floor": {
+    "mode": "3d",
+    "scale": 0.209,
+    "offset": [
+      -0.003,
+      -0.119,
+      0.134
+    ]
+  },
+  "butcher:squid_head": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.003,
+      0.138
+    ]
+  },
+  "butcher:squid_table_w_sides": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.13
+    ]
+  },
+  "butcher:squidcorpse": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      0.0,
+      -0.058,
+      0.089
+    ]
+  },
+  "butcher:squidtable": {
+    "mode": "3d",
+    "scale": 0.262,
+    "offset": [
+      -0.001,
+      0.028,
+      0.13
+    ]
+  },
+  "butcher:steelchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  },
+  "butcher:sulfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:sulfuricacid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:sulfurore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:tbonesteak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:tentacle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:testcarcass": {
+    "mode": "3d",
+    "scale": 0.298,
+    "offset": [
+      0.048,
+      0.025,
+      -0.039
+    ]
+  },
+  "butcher:turtle_corpse_crack_1": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_crack_2": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_crack_3": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_crack_4": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_crack_5": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_crack_6": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_headless": {
+    "mode": "3d",
+    "scale": 0.244,
+    "offset": [
+      -0.011,
+      -0.006,
+      -0.091
+    ]
+  },
+  "butcher:turtle_corpse_item": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtle_corpse_legless": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      -0.002,
+      -0.021,
+      -0.04
+    ]
+  },
+  "butcher:turtle_corpse_shell": {
+    "mode": "3d",
+    "scale": 0.337,
+    "offset": [
+      -0.002,
+      -0.021,
+      -0.04
+    ]
+  },
+  "butcher:turtle_empty_shell": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      -0.002,
+      -0.022,
+      -0.045
+    ]
+  },
+  "butcher:turtle_meat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:turtle_shell": {
+    "mode": "3d",
+    "scale": 0.343,
+    "offset": [
+      -0.002,
+      -0.022,
+      -0.045
+    ]
+  },
+  "butcher:turtle_shell_fragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:turtlecorpse": {
+    "mode": "3d",
+    "scale": 0.216,
+    "offset": [
+      -0.01,
+      0.006,
+      -0.055
+    ]
+  },
+  "butcher:turtlehead": {
+    "mode": "3d",
+    "scale": 0.967,
+    "offset": [
+      -0.006,
+      0.029,
+      -0.257
+    ]
+  },
+  "butcher:unfiredcleavermold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:unfiredpliermould": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:unfiredskinningknifeblademold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:villager_corpse_item": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:villager_corpse_skeleton_item": {
+    "mode": "3d",
+    "scale": 0.321,
+    "offset": [
+      0.0,
+      0.101,
+      0.121
+    ]
+  },
+  "butcher:villager_head": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.171
+    ]
+  },
+  "butcher:villager_head_brain_remove": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.171
+    ]
+  },
+  "butcher:villager_head_mount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.058
+    ]
+  },
+  "butcher:villager_head_nose_remove": {
+    "mode": "3d",
+    "scale": 0.358,
+    "offset": [
+      0.0,
+      0.001,
+      -0.134
+    ]
+  },
+  "butcher:villager_meat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:villager_skeleton": {
+    "mode": "3d",
+    "scale": 0.321,
+    "offset": [
+      0.0,
+      0.101,
+      0.121
+    ]
+  },
+  "butcher:villagerbrain": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:villagercarcass": {
+    "mode": "3d",
+    "scale": 0.509,
+    "offset": [
+      0.011,
+      0.037,
+      0.093
+    ]
+  },
+  "butcher:villagercorpse": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.0,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:villagerheadless": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.001,
+      0.232,
+      0.088
+    ]
+  },
+  "butcher:villagerheadscalped": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.171
+    ]
+  },
+  "butcher:villagernose_helmet": {
+    "mode": "3d",
+    "scale": 0.615,
+    "offset": [
+      0.001,
+      0.008,
+      0.022
+    ]
+  },
+  "butcher:villagerrightarm": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.005,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:villagerrightleftarm": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.001,
+      0.08,
+      0.067
+    ]
+  },
+  "butcher:wet_brown_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_cow_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_creamy_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_gray_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_pig_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_rag": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:wet_sheep_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wet_sponge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:wet_white_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:wetcamelskinrack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:white_llama": {
+    "mode": "3d",
+    "scale": 0.234,
+    "offset": [
+      -0.046,
+      -0.019,
+      0.03
+    ]
+  },
+  "butcher:white_llama_head": {
+    "mode": "3d",
+    "scale": 0.6,
+    "offset": [
+      -0.001,
+      0.065,
+      0.054
+    ]
+  },
+  "butcher:white_llama_skin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:white_llama_skin_rack": {
+    "mode": "3d",
+    "scale": 0.393,
+    "offset": [
+      0.0,
+      -0.008,
+      0.005
+    ]
+  },
+  "butcher:whitellamaheadmount": {
+    "mode": "3d",
+    "scale": 0.15,
+    "offset": [
+      0.0,
+      0.002,
+      0.09
+    ]
+  },
+  "butcher:wishbone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:withercorpse": {
+    "mode": "3d",
+    "scale": 0.099,
+    "offset": [
+      -0.013,
+      -0.055,
+      0.006
+    ]
+  },
+  "butcher:witheredheart": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "butcher:wroughtironchainhook": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.088,
+      -0.003
+    ]
+  }
+}

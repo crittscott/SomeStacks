@@ -1,36 +1,956 @@
 {
-    "simplycats:acacia_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:birch_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:crimson_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:dark_oak_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:jungle_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:oak_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:spruce_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:warped_scratching_post": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-
-    "simplycats:acacia_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:birch_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:crimson_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:dark_oak_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:jungle_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:oak_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:spruce_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "simplycats:warped_window_perch": {"mode": "3d", "scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-
-    "simplycats:black_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:blue_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:brown_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:cyan_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:gray_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:green_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:light_blue_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:light_gray_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:lime_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:magenta_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:orange_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:pink_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:purple_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:red_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:white_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]},
-    "simplycats:yellow_litter_box": {"scale": 0.5, "offset": [0.0, 0.1, 0.0]}
+  "simplycats:acacia_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:acacia_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:adopt_certificate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:birch_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:birch_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:black_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:black_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:black_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:black_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:black_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:blue_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:blue_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:blue_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:blue_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:blue_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:brown_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:brown_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:brown_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:brown_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:brown_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:cat_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:catnip": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:catnip_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:crimson_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:crimson_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:cyan_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:cyan_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:cyan_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:cyan_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:cyan_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:dark_oak_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:dark_oak_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:gray_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:gray_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:gray_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:gray_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:gray_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:green_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:green_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:green_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:green_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:green_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:jungle_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:jungle_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:laser_pointer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:light_blue_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:light_blue_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:light_blue_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:light_blue_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:light_blue_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:light_gray_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:light_gray_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:light_gray_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:light_gray_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:light_gray_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:lime_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:lime_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:lime_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:lime_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:lime_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:magenta_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:magenta_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:magenta_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:magenta_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:magenta_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:oak_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:oak_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:orange_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:orange_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:orange_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:orange_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:orange_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:pet_carrier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:pink_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:pink_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:pink_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:pink_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:pink_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:purple_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:purple_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:purple_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:purple_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:purple_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:red_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:red_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:red_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:red_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:red_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:release_certificate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:shelter_book": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.225,
+      0.0
+    ]
+  },
+  "simplycats:spruce_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:spruce_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:sterilization_potion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:treat_bag": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:warped_scratching_post": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:warped_window_perch": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.121,
+      0.016
+    ]
+  },
+  "simplycats:white_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:white_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:white_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:white_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:white_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  },
+  "simplycats:yellow_cat_bowl": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.63,
+      0.0
+    ]
+  },
+  "simplycats:yellow_cat_tree_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.141,
+      0.0
+    ]
+  },
+  "simplycats:yellow_cat_tree_box": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:yellow_cat_tree_post": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "simplycats:yellow_litter_box": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.0
+    ]
+  }
 }

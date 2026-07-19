@@ -1,4 +1,38 @@
 {
-    "extendedgears:large_half_shaft_cogwheel": { "size": 0.5},
-    "extendedgears:large_shaftless_cogwheel": { "size": 0.5}
+  "extendedgears:half_shaft_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      -0.075
+    ]
+  },
+  "extendedgears:large_half_shaft_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      -0.045
+    ]
+  },
+  "extendedgears:large_shaftless_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "extendedgears:shaftless_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

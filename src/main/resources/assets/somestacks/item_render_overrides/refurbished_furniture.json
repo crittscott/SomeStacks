@@ -1,181 +1,4232 @@
 {
-    "refurbished_furniture:acacia_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:acacia_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:birch_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:birch_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:cherry_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:cherry_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:crimson_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:crimson_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:jungle_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:jungle_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:mangrove_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:mangrove_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:oak_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:oak_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:spruce_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:spruce_light_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:warped_dark_ceiling_fan": { "scale": 0.5},
-    "refurbished_furniture:warped_light_ceiling_fan": { "scale": 0.5},
-
-    "refurbished_furniture:acacia_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:acacia_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:acacia_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:birch_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:birch_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:birch_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:black_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:black_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:blue_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:blue_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:brown_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:brown_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:cherry_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:cherry_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:cherry_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:crimson_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:crimson_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:crimson_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:cyan_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:cyan_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:gray_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:gray_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:green_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:green_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:jungle_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:jungle_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:jungle_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:light_blue_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:light_blue_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:light_gray_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:light_gray_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:lime_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:lime_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:magenta_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:magenta_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:mangrove_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:mangrove_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:mangrove_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:oak_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:oak_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:oak_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:orange_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:orange_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:pink_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:pink_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:purple_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:purple_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:red_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:red_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:spruce_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:spruce_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:spruce_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:warped_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:warped_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:warped_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:white_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:white_kitchen_storage_cabinet": { "scale": 0.5},
-    "refurbished_furniture:yellow_kitchen_cabinetry": { "scale": 0.5},
-    "refurbished_furniture:yellow_kitchen_storage_cabinet": { "scale": 0.5},
-
-    "refurbished_furniture:acacia_drawer": { "scale": 0.5},
-    "refurbished_furniture:acacia_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:birch_drawer": { "scale": 0.5},
-    "refurbished_furniture:birch_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:black_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:blue_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:brown_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:cherry_drawer": { "scale": 0.5},
-    "refurbished_furniture:cherry_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:crimson_drawer": { "scale": 0.5},
-    "refurbished_furniture:crimson_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:cyan_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_drawer": { "scale": 0.5},
-    "refurbished_furniture:dark_oak_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:gray_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:green_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:jungle_drawer": { "scale": 0.5},
-    "refurbished_furniture:jungle_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:light_blue_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:light_gray_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:lime_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:magenta_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:mangrove_drawer": { "scale": 0.5},
-    "refurbished_furniture:mangrove_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:oak_drawer": { "scale": 0.5},
-    "refurbished_furniture:oak_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:orange_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:pink_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:purple_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:red_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:spruce_drawer": { "scale": 0.5},
-    "refurbished_furniture:spruce_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:warped_drawer": { "scale": 0.5},
-    "refurbished_furniture:warped_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:white_kitchen_drawer": { "scale": 0.5},
-    "refurbished_furniture:yellow_kitchen_drawer": { "scale": 0.5},
-
-    "refurbished_furniture:acacia_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:birch_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:black_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:blue_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:brown_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:cherry_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:crimson_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:cyan_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:dark_oak_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:gray_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:green_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:jungle_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:light_blue_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:light_gray_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:lime_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:magenta_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:mangrove_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:oak_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:orange_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:pink_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:purple_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:red_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:spruce_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:warped_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:white_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-    "refurbished_furniture:yellow_bath": { "scale": 0.5, "offset": [0, 0, 0.125]},
-
-    "refurbished_furniture:acacia_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:birch_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:cherry_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:cooked_vegetable_pizza": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:crimson_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:dark_oak_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:jungle_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:mangrove_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:oak_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:raw_vegetable_pizza": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:spruce_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:vegetable_pizza_slice": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-    "refurbished_furniture:warped_table": { "scale": 0.4, "offset": [0.1, 0, 0.15]},
-
-    "refurbished_furniture:black_sofa": { "scale": 0.4},
-    "refurbished_furniture:blue_sofa": { "scale": 0.4},
-    "refurbished_furniture:brown_sofa": { "scale": 0.4},
-    "refurbished_furniture:cyan_sofa": { "scale": 0.4},
-    "refurbished_furniture:gray_sofa": { "scale": 0.4},
-    "refurbished_furniture:green_sofa": { "scale": 0.4},
-    "refurbished_furniture:light_blue_sofa": { "scale": 0.4},
-    "refurbished_furniture:light_gray_sofa": { "scale": 0.4},
-    "refurbished_furniture:lime_sofa": { "scale": 0.4},
-    "refurbished_furniture:magenta_sofa": { "scale": 0.4},
-    "refurbished_furniture:orange_sofa": { "scale": 0.4},
-    "refurbished_furniture:pink_sofa": { "scale": 0.4},
-    "refurbished_furniture:purple_sofa": { "scale": 0.4},
-    "refurbished_furniture:red_sofa": { "scale": 0.4},
-    "refurbished_furniture:white_sofa": { "scale": 0.4},
-    "refurbished_furniture:yellow_sofa": { "scale": 0.4}
-
+  "refurbished_furniture:acacia_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:acacia_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:acacia_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:acacia_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:acacia_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:acacia_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:andesite_stepping_stones": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:azalea_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:birch_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:birch_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:birch_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:birch_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:birch_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:black_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:black_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:black_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:black_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:black_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:black_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:blue_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:blue_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:blue_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:blue_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:blue_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:bread_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:brown_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:brown_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:brown_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:brown_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:brown_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cheese": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cheese_sandwich": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cheese_toastie": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:cherry_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:cherry_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:cherry_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cherry_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:cherry_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:computer": {
+    "mode": "3d",
+    "scale": 1.027,
+    "offset": [
+      0.0,
+      0.064,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cooked_meatlovers_pizza": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cooked_vegetable_pizza": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:crimson_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:crimson_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:crimson_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:crimson_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:crimson_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:cyan_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:cyan_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:cyan_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:cyan_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:cyan_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:cyan_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_ceiling_light": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_electricity_generator": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_fridge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.007
+    ]
+  },
+  "refurbished_furniture:dark_lightswitch": {
+    "mode": "3d",
+    "scale": 1.286,
+    "offset": [
+      0.0,
+      0.0,
+      -0.072
+    ]
+  },
+  "refurbished_furniture:dark_microwave": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.016
+    ]
+  },
+  "refurbished_furniture:dark_oak_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:dark_oak_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:dark_oak_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:dark_oak_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:dark_range_hood": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.014,
+      0.0
+    ]
+  },
+  "refurbished_furniture:dark_stove": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.013
+    ]
+  },
+  "refurbished_furniture:dark_toaster": {
+    "mode": "3d",
+    "scale": 1.252,
+    "offset": [
+      0.01,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:deepslate_stepping_stones": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:diorite_stepping_stones": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:door_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:doorbell": {
+    "mode": "3d",
+    "scale": 1.286,
+    "offset": [
+      0.0,
+      0.0,
+      -0.072
+    ]
+  },
+  "refurbished_furniture:dough": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:frying_pan": {
+    "mode": "3d",
+    "scale": 0.759,
+    "offset": [
+      0.094,
+      0.12,
+      0.0
+    ]
+  },
+  "refurbished_furniture:glow_berry_jam": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:glow_berry_jam_toast": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:granite_stepping_stones": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:gray_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:gray_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:gray_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:gray_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:gray_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:green_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:green_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:green_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:green_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:green_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:jungle_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:jungle_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:jungle_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:jungle_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:jungle_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:knife": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:light_blue_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:light_blue_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:light_blue_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_blue_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:light_blue_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_ceiling_light": {
+    "mode": "3d",
+    "scale": 2.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_electricity_generator": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_fridge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.007
+    ]
+  },
+  "refurbished_furniture:light_gray_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:light_gray_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:light_gray_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:light_gray_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_gray_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:light_gray_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_lightswitch": {
+    "mode": "3d",
+    "scale": 1.286,
+    "offset": [
+      0.0,
+      0.0,
+      -0.072
+    ]
+  },
+  "refurbished_furniture:light_microwave": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.016
+    ]
+  },
+  "refurbished_furniture:light_range_hood": {
+    "mode": "3d",
+    "scale": 0.899,
+    "offset": [
+      0.0,
+      -0.014,
+      0.0
+    ]
+  },
+  "refurbished_furniture:light_stove": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.013
+    ]
+  },
+  "refurbished_furniture:light_toaster": {
+    "mode": "3d",
+    "scale": 1.252,
+    "offset": [
+      0.01,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:lime_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:lime_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:lime_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:lime_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:lime_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:magenta_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:magenta_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:magenta_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:magenta_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:magenta_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:mangrove_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:mangrove_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:mangrove_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:mangrove_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:meatlovers_pizza_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:oak_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:oak_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:oak_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:oak_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:oak_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:orange_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:orange_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:orange_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:orange_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:orange_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:orange_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:package": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:pink_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:pink_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:pink_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:pink_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:pink_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:plate": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.022,
+      0.0
+    ]
+  },
+  "refurbished_furniture:post_box": {
+    "mode": "3d",
+    "scale": 0.655,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:purple_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:purple_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:purple_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:purple_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:purple_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:raw_meatlovers_pizza": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:raw_vegetable_pizza": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:recycle_bin": {
+    "mode": "3d",
+    "scale": 1.067,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:red_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:red_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:red_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:red_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:red_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:sea_salt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spatula": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:spruce_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:spruce_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_hedge": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      -0.003,
+      -0.013,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:spruce_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:spruce_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:spruce_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:stone_stepping_stones": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:sweet_berry_jam": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:sweet_berry_jam_toast": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:television": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:television_remote": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:toast": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:vegetable_pizza_slice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:warped_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:warped_chair": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_crate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_cutting_board": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_dark_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_desk": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_drawer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:warped_lattice_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_lattice_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_light_ceiling_fan": {
+    "mode": "3d",
+    "scale": 0.389,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_mail_box": {
+    "mode": "3d",
+    "scale": 0.729,
+    "offset": [
+      0.0,
+      -0.043,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_storage_jar": {
+    "mode": "3d",
+    "scale": 1.309,
+    "offset": [
+      0.0,
+      -0.041,
+      0.0
+    ]
+  },
+  "refurbished_furniture:warped_table": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.05,
+      0.137
+    ]
+  },
+  "refurbished_furniture:warped_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:wheat_flour": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:white_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:white_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:white_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:white_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:white_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "refurbished_furniture:workbench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.014,
+      0.0
+    ]
+  },
+  "refurbished_furniture:wrench": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_basin": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      -0.024
+    ]
+  },
+  "refurbished_furniture:yellow_bath": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      -0.021,
+      0.112
+    ]
+  },
+  "refurbished_furniture:yellow_cooler": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      -0.016,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_grill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_kitchen_cabinetry": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      -0.036,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_kitchen_storage_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.028
+    ]
+  },
+  "refurbished_furniture:yellow_lamp": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_sofa": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_stool": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      0.0,
+      0.019,
+      0.0
+    ]
+  },
+  "refurbished_furniture:yellow_toilet": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.0,
+      0.071
+    ]
+  },
+  "refurbished_furniture:yellow_trampoline": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  }
 }

@@ -1,0 +1,344 @@
+{
+  "mowziesmobs:blowgun": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:captured_grottol": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:clawed_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:dart": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:earth_talisman": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:earthbore_gauntlet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:foliaath_seed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:foliaath_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:frostmaw_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:glowing_jelly": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:grant_suns_blessing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:grottol_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:ice_crystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:lantern_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:logo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:mob_remover": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:music_disc_petiole": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:naga_fang": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:naga_fang_dagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:naga_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:painted_acacia": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:painted_acacia_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mowziesmobs:sol_visage": {
+    "mode": "3d",
+    "scale": 0.191,
+    "offset": [
+      0.0,
+      -0.068,
+      0.054
+    ]
+  },
+  "mowziesmobs:spear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:thatch_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:umvuthana_crane_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_bliss": {
+    "mode": "3d",
+    "scale": 0.284,
+    "offset": [
+      0.0,
+      0.001,
+      0.053
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_faith": {
+    "mode": "3d",
+    "scale": 0.221,
+    "offset": [
+      0.0,
+      -0.06,
+      0.058
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_fear": {
+    "mode": "3d",
+    "scale": 0.25,
+    "offset": [
+      0.0,
+      -0.111,
+      0.057
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_fury": {
+    "mode": "3d",
+    "scale": 0.332,
+    "offset": [
+      0.0,
+      -0.089,
+      0.076
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_misery": {
+    "mode": "3d",
+    "scale": 0.295,
+    "offset": [
+      0.0,
+      0.01,
+      0.036
+    ]
+  },
+  "mowziesmobs:umvuthana_mask_rage": {
+    "mode": "3d",
+    "scale": 0.252,
+    "offset": [
+      0.0,
+      -0.051,
+      0.024
+    ]
+  },
+  "mowziesmobs:umvuthana_raptor_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:umvuthana_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:umvuthi_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:wrought_axe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:wrought_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mowziesmobs:wroughtnaut_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

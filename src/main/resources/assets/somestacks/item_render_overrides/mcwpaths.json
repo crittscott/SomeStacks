@@ -1,157 +1,2324 @@
 {
-    "mcwpaths:andesite_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:andesite_clover_paving": { "scale": 0.5},
-    "mcwpaths:andesite_diamond_paving": { "scale": 0.5},
-    "mcwpaths:andesite_dumble_paving": { "scale": 0.5},
-    "mcwpaths:andesite_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:andesite_square_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_clover_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_diamond_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_dumble_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:blackstone_square_paving": { "scale": 0.5},
-    "mcwpaths:brick_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:brick_clover_paving": { "scale": 0.5},
-    "mcwpaths:brick_diamond_paving": { "scale": 0.5},
-    "mcwpaths:brick_dumble_paving": { "scale": 0.5},
-    "mcwpaths:brick_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:brick_square_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_clover_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_diamond_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_dumble_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_square_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_clover_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_diamond_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_dumble_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:cobblestone_square_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_clover_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_diamond_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_dumble_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_square_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_clover_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_diamond_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_dumble_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:deepslate_square_paving": { "scale": 0.5},
-    "mcwpaths:diorite_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:diorite_clover_paving": { "scale": 0.5},
-    "mcwpaths:diorite_diamond_paving": { "scale": 0.5},
-    "mcwpaths:diorite_dumble_paving": { "scale": 0.5},
-    "mcwpaths:diorite_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:diorite_square_paving": { "scale": 0.5},
-    "mcwpaths:granite_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:granite_clover_paving": { "scale": 0.5},
-    "mcwpaths:granite_diamond_paving": { "scale": 0.5},
-    "mcwpaths:granite_dumble_paving": { "scale": 0.5},
-    "mcwpaths:granite_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:granite_square_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_clover_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_diamond_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_dumble_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:mossy_cobblestone_square_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_clover_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_diamond_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_dumble_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:mud_brick_square_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_clover_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_diamond_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_dumble_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:red_sandstone_square_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_basket_weave_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_clover_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_diamond_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_dumble_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_honeycomb_paving": { "scale": 0.5},
-    "mcwpaths:sandstone_square_paving": { "scale": 0.5},
-
-    "mcwpaths:acacia_planks_path": { "scale": 0.5},
-    "mcwpaths:andesite_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:andesite_flagstone_path": { "scale": 0.5},
-    "mcwpaths:andesite_running_bond_path": { "scale": 0.5},
-    "mcwpaths:andesite_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:andesite_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:bamboo_planks_path": { "scale": 0.5},
-    "mcwpaths:birch_planks_path": { "scale": 0.5},
-    "mcwpaths:blackstone_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:blackstone_flagstone_path": { "scale": 0.5},
-    "mcwpaths:blackstone_running_bond_path": { "scale": 0.5},
-    "mcwpaths:blackstone_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:blackstone_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:brick_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:brick_flagstone_path": { "scale": 0.5},
-    "mcwpaths:brick_running_bond_path": { "scale": 0.5},
-    "mcwpaths:brick_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:brick_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:cherry_planks_path": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_flagstone_path": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_running_bond_path": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:cobbled_deepslate_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:crimson_planks_path": { "scale": 0.5},
-    "mcwpaths:dark_oak_planks_path": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_flagstone_path": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_running_bond_path": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:dark_prismarine_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:deepslate_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:deepslate_flagstone_path": { "scale": 0.5},
-    "mcwpaths:deepslate_running_bond_path": { "scale": 0.5},
-    "mcwpaths:deepslate_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:deepslate_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:diorite_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:diorite_flagstone_path": { "scale": 0.5},
-    "mcwpaths:diorite_running_bond_path": { "scale": 0.5},
-    "mcwpaths:diorite_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:diorite_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:granite_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:granite_flagstone_path": { "scale": 0.5},
-    "mcwpaths:granite_running_bond_path": { "scale": 0.5},
-    "mcwpaths:granite_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:granite_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:jungle_planks_path": { "scale": 0.5},
-    "mcwpaths:mangrove_planks_path": { "scale": 0.5},
-    "mcwpaths:mossy_stone_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:mossy_stone_flagstone_path": { "scale": 0.5},
-    "mcwpaths:mossy_stone_running_bond_path": { "scale": 0.5},
-    "mcwpaths:mossy_stone_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:mossy_stone_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:mud_brick_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:mud_brick_flagstone_path": { "scale": 0.5},
-    "mcwpaths:mud_brick_running_bond_path": { "scale": 0.5},
-    "mcwpaths:mud_brick_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:mud_brick_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:oak_planks_path": { "scale": 0.5},
-    "mcwpaths:red_sandstone_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:red_sandstone_flagstone_path": { "scale": 0.5},
-    "mcwpaths:red_sandstone_running_bond_path": { "scale": 0.5},
-    "mcwpaths:red_sandstone_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:red_sandstone_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:sandstone_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:sandstone_flagstone_path": { "scale": 0.5},
-    "mcwpaths:sandstone_running_bond_path": { "scale": 0.5},
-    "mcwpaths:sandstone_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:sandstone_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:spruce_planks_path": { "scale": 0.5},
-    "mcwpaths:stone_crystal_floor_path": { "scale": 0.5},
-    "mcwpaths:stone_flagstone_path": { "scale": 0.5},
-    "mcwpaths:stone_running_bond_path": { "scale": 0.5},
-    "mcwpaths:stone_strewn_rocky_path": { "scale": 0.5},
-    "mcwpaths:stone_windmill_weave_path": { "scale": 0.5},
-    "mcwpaths:warped_planks_path": { "scale": 0.5}
+  "mcwpaths:acacia_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:andesite_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:andesite_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:andesite_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:andesite_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:andesite_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:andesite_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:andesite_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:andesite_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:andesite_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:bamboo_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:birch_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:blackstone_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:blackstone_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:blackstone_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:blackstone_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:blackstone_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:blackstone_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:blackstone_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:blackstone_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:blackstone_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:brick_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:brick_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:brick_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:brick_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:brick_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:brick_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:brick_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:brick_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:cherry_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:cobbled_deepslate_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:cobblestone_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:cobblestone_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:cobblestone_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:cobblestone_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:cobblestone_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:cobblestone_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:crimson_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:dark_oak_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:dark_prismarine_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:dark_prismarine_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:dark_prismarine_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:dark_prismarine_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:dark_prismarine_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:dark_prismarine_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:dark_prismarine_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:dark_prismarine_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:dark_prismarine_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:deepslate_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:deepslate_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:deepslate_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:deepslate_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:deepslate_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:deepslate_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:deepslate_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:deepslate_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:diorite_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:diorite_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:diorite_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:diorite_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:diorite_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:diorite_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:diorite_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:diorite_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:granite_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:granite_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:granite_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:granite_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:granite_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:granite_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:granite_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:granite_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:jungle_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:mangrove_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:mossy_cobblestone_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:mossy_stone_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:mossy_stone_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mossy_stone_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:mud_brick_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:mud_brick_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:mud_brick_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:mud_brick_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:mud_brick_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:mud_brick_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:mud_brick_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:mud_brick_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:oak_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:red_sandstone_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:red_sandstone_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:red_sandstone_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:red_sandstone_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:red_sandstone_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:red_sandstone_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:red_sandstone_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:red_sandstone_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:red_sandstone_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_basket_weave_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.118,
+      0.091,
+      0.118
+    ]
+  },
+  "mcwpaths:sandstone_clover_paving": {
+    "mode": "gui",
+    "scale": 0.695,
+    "offset": [
+      -0.099,
+      0.093,
+      0.099
+    ]
+  },
+  "mcwpaths:sandstone_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_diamond_paving": {
+    "mode": "gui",
+    "scale": 0.687,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:sandstone_dumble_paving": {
+    "mode": "gui",
+    "scale": 0.688,
+    "offset": [
+      -0.1,
+      0.089,
+      0.098
+    ]
+  },
+  "mcwpaths:sandstone_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_honeycomb_paving": {
+    "mode": "gui",
+    "scale": 0.692,
+    "offset": [
+      -0.099,
+      0.092,
+      0.099
+    ]
+  },
+  "mcwpaths:sandstone_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_square_paving": {
+    "mode": "gui",
+    "scale": 0.733,
+    "offset": [
+      -0.09,
+      0.105,
+      0.09
+    ]
+  },
+  "mcwpaths:sandstone_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:sandstone_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:sandstone_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:spruce_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  },
+  "mcwpaths:stone_crystal_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_crystal_floor_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_crystal_floor_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_flagstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_flagstone_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_flagstone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_running_bond": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_running_bond_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_running_bond_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_strewn_rocky_path": {
+    "mode": "gui",
+    "scale": 0.659,
+    "offset": [
+      -0.061,
+      0.069,
+      0.068
+    ]
+  },
+  "mcwpaths:stone_windmill_weave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_windmill_weave_path": {
+    "mode": "gui",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.211,
+      0.0
+    ]
+  },
+  "mcwpaths:stone_windmill_weave_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "mcwpaths:warped_planks_path": {
+    "mode": "gui",
+    "scale": 0.69,
+    "offset": [
+      -0.098,
+      0.092,
+      0.098
+    ]
+  }
 }

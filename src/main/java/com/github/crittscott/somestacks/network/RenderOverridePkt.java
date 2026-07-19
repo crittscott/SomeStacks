@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderMode;
+import com.github.crittscott.somestacks.client.measure.SessionCorrections;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
@@ -44,6 +45,7 @@ public class RenderOverridePkt {
             ItemRenderOverrides.ItemRenderConfig config =
                     new ItemRenderOverrides.ItemRenderConfig(mode, msg.scale, msg.offset);
             ItemRenderOverrides.CONFIG_MAP.put(msg.itemId, config);
+            SessionCorrections.put(msg.itemId, config);
         });
         ctx.get().setPacketHandled(true);
     }

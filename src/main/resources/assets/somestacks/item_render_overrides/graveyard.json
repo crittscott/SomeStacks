@@ -1,77 +1,1370 @@
 {
-    "graveyard:acacia_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:bamboo_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:birch_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:cherry_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:crimson_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:dark_oak_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:jungle_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:mangrove_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:oak_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:spruce_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:warped_coffin": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-
-    "graveyard:acacia_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:acacia_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:bamboo_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:bamboo_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:birch_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:birch_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:cherry_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:cherry_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:crimson_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:crimson_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:dark_oak_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:dark_oak_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:jungle_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:jungle_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:mangrove_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:mangrove_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:oak_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:oak_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:spruce_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:spruce_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:warped_coffin_base": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-    "graveyard:warped_coffin_lid": {"mode": "3d", "scale": 0.3, "offset": [0, 0, -0.1]},
-
-    "graveyard:black_urn": { "scale": 0.5},
-    "graveyard:blue_urn": { "scale": 0.5},
-    "graveyard:brown_urn": { "scale": 0.5},
-    "graveyard:cyan_urn": { "scale": 0.5},
-    "graveyard:gray_urn": { "scale": 0.5},
-    "graveyard:green_urn": { "scale": 0.5},
-    "graveyard:light_blue_urn": { "scale": 0.5},
-    "graveyard:light_gray_urn": { "scale": 0.5},
-    "graveyard:lime_urn": { "scale": 0.5},
-    "graveyard:magenta_urn": { "scale": 0.5},
-    "graveyard:orange_urn": { "scale": 0.5},
-    "graveyard:pink_urn": { "scale": 0.5},
-    "graveyard:purple_urn": { "scale": 0.5},
-    "graveyard:red_urn": { "scale": 0.5},
-    "graveyard:white_urn": { "scale": 0.5},
-    "graveyard:yellow_urn": { "scale": 0.5},
-
-    "graveyard:blackstone_gravestone": { "scale": 0.5},
-    "graveyard:bricks_gravestone": { "scale": 0.5},
-    "graveyard:cobblestone_gravestone": { "scale": 0.5},
-    "graveyard:cracked_blackstone_gravestone": { "scale": 0.5},
-    "graveyard:deepslate_gravestone": { "scale": 0.5},
-    "graveyard:gilded_blackstone_gravestone": { "scale": 0.5},
-    "graveyard:gravestone": { "scale": 0.5},
-    "graveyard:mossy_cobblestone_gravestone": { "scale": 0.5},
-    "graveyard:mossy_stone_bricks_gravestone": { "scale": 0.5},
-    "graveyard:quartz_bricks_gravestone": { "scale": 0.5},
-    "graveyard:red_sandstone_gravestone": { "scale": 0.5},
-    "graveyard:sandstone_gravestone": { "scale": 0.5},
-    "graveyard:stone_bricks_gravestone": { "scale": 0.5},
-
-    "graveyard:creeper_skeleton": { "scale": 0.5},
-    "graveyard:hanged_skeleton": { "scale": 0.5},
-    "graveyard:hanged_wither_skeleton": { "scale": 0.5},
-    "graveyard:laterally_lying_skeleton": { "scale": 0.5},
-    "graveyard:laterally_lying_wither_skeleton": { "scale": 0.5},
-    "graveyard:leaning_skeleton": { "scale": 0.5},
-    "graveyard:leaning_wither_skeleton": { "scale": 0.5},
-    "graveyard:lying_skeleton": { "scale": 0.5},
-    "graveyard:lying_wither_skeleton": { "scale": 0.5}
+  "graveyard:acacia_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:acacia_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:acacia_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:acolyte_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:altar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:altar_center": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:altar_corner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:altar_side": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:bamboo_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:bamboo_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:bamboo_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:birch_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:birch_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:birch_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:black_bone_staff": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "graveyard:black_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:blackstone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:blue_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:bone_dagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:bone_remains": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.013,
+      0.073
+    ]
+  },
+  "graveyard:bricks_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:brown_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:candle_holder": {
+    "mode": "3d",
+    "scale": 0.544,
+    "offset": [
+      0.0,
+      -0.047,
+      0.221
+    ]
+  },
+  "graveyard:cherry_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:cherry_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:cherry_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:cobblestone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:corrupted_pillager_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:corrupted_vindicator_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:corruption": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:cracked_blackstone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:creeper_skeleton": {
+    "mode": "3d",
+    "scale": 0.415,
+    "offset": [
+      0.0,
+      -0.018,
+      0.071
+    ]
+  },
+  "graveyard:crimson_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:crimson_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:crimson_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:cyan_bone_staff": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "graveyard:cyan_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:dark_iron_bars": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:dark_iron_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:dark_iron_door": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:dark_iron_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:dark_iron_trapdoor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.183,
+      0.0
+    ]
+  },
+  "graveyard:dark_oak_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:dark_oak_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:dark_oak_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:deepslate_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:fire_brazier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:ghoul_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:gilded_blackstone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:gray_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:green_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:hanged_skeleton": {
+    "mode": "3d",
+    "scale": 0.232,
+    "offset": [
+      0.004,
+      -0.073,
+      -0.018
+    ]
+  },
+  "graveyard:hanged_wither_skeleton": {
+    "mode": "3d",
+    "scale": 0.232,
+    "offset": [
+      0.004,
+      -0.073,
+      -0.018
+    ]
+  },
+  "graveyard:incarnated_evil_music_disc": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:jungle_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:jungle_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:jungle_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:laterally_lying_skeleton": {
+    "mode": "3d",
+    "scale": 0.402,
+    "offset": [
+      -0.035,
+      0.024,
+      0.054
+    ]
+  },
+  "graveyard:laterally_lying_wither_skeleton": {
+    "mode": "3d",
+    "scale": 0.402,
+    "offset": [
+      -0.035,
+      0.024,
+      0.054
+    ]
+  },
+  "graveyard:leaning_skeleton": {
+    "mode": "3d",
+    "scale": 0.377,
+    "offset": [
+      0.001,
+      -0.01,
+      0.138
+    ]
+  },
+  "graveyard:leaning_wither_skeleton": {
+    "mode": "3d",
+    "scale": 0.377,
+    "offset": [
+      0.001,
+      -0.01,
+      0.138
+    ]
+  },
+  "graveyard:lich_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:light_blue_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:light_gray_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:lime_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:lower_bone_staff": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.045,
+      0.019
+    ]
+  },
+  "graveyard:lying_skeleton": {
+    "mode": "3d",
+    "scale": 0.405,
+    "offset": [
+      -0.002,
+      0.006,
+      0.003
+    ]
+  },
+  "graveyard:lying_wither_skeleton": {
+    "mode": "3d",
+    "scale": 0.405,
+    "offset": [
+      -0.002,
+      0.006,
+      0.003
+    ]
+  },
+  "graveyard:magenta_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:mangrove_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:mangrove_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:mangrove_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:middle_bone_staff": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.043,
+      0.06
+    ]
+  },
+  "graveyard:mossy_cobblestone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:mossy_stone_bricks_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:nameless_hanged_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:nightmare_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:oak_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:oak_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:oak_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:orange_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:ossuary": {
+    "mode": "3d",
+    "scale": 0.436,
+    "offset": [
+      0.0,
+      -0.007,
+      0.0
+    ]
+  },
+  "graveyard:pedestal": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:pink_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:purple_bone_staff": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "graveyard:purple_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:quartz_bricks_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:reaper_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:red_bone_staff": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "graveyard:red_sandstone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:red_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:revenant_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:sandstone_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:sarcophagus": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "graveyard:sarcophagus_base": {
+    "mode": "3d",
+    "scale": 0.321,
+    "offset": [
+      0.0,
+      0.002,
+      -0.035
+    ]
+  },
+  "graveyard:sarcophagus_lid": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      -0.077,
+      0.112
+    ]
+  },
+  "graveyard:skeleton_creeper_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:skeleton_hand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.023,
+      0.0,
+      0.043
+    ]
+  },
+  "graveyard:skull_on_pike": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.005,
+      -0.052,
+      0.056
+    ]
+  },
+  "graveyard:skull_pile": {
+    "mode": "3d",
+    "scale": 0.363,
+    "offset": [
+      -0.021,
+      0.0,
+      0.002
+    ]
+  },
+  "graveyard:skull_with_rib_cage": {
+    "mode": "3d",
+    "scale": 0.44,
+    "offset": [
+      0.015,
+      0.014,
+      0.148
+    ]
+  },
+  "graveyard:small_black_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_blue_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_brown_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_cyan_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_gray_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_green_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_light_blue_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_light_gray_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_lime_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_magenta_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_orange_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_pink_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_purple_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_red_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_white_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:small_yellow_urn": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:soul_fire_brazier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:spruce_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:spruce_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:spruce_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:stone_bricks_gravestone": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "graveyard:tg_andesite": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_coarse_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_deepslate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_diorite": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_granite": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_grass_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_moss_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_podzol": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_rooted_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:tg_tuff": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:torso_pile": {
+    "mode": "3d",
+    "scale": 0.394,
+    "offset": [
+      -0.008,
+      -0.001,
+      0.1
+    ]
+  },
+  "graveyard:upper_bone_staff": {
+    "mode": "3d",
+    "scale": 0.282,
+    "offset": [
+      0.0,
+      -0.036,
+      0.032
+    ]
+  },
+  "graveyard:vase_block": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.015
+    ]
+  },
+  "graveyard:vial_of_blood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:warped_coffin": {
+    "mode": "3d",
+    "scale": 0.281,
+    "offset": [
+      0.0,
+      0.014,
+      -0.112
+    ]
+  },
+  "graveyard:warped_coffin_base": {
+    "mode": "3d",
+    "scale": 0.24,
+    "offset": [
+      0.0,
+      0.037,
+      -0.165
+    ]
+  },
+  "graveyard:warped_coffin_lid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:white_bone_staff": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "graveyard:white_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:wither_bone_remains": {
+    "mode": "3d",
+    "scale": 0.424,
+    "offset": [
+      -0.026,
+      0.013,
+      0.073
+    ]
+  },
+  "graveyard:wither_skeleton_hand": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.023,
+      0.0,
+      0.043
+    ]
+  },
+  "graveyard:wither_skull_on_pike": {
+    "mode": "3d",
+    "scale": 0.3,
+    "offset": [
+      0.005,
+      -0.052,
+      0.056
+    ]
+  },
+  "graveyard:wither_skull_pile": {
+    "mode": "3d",
+    "scale": 0.363,
+    "offset": [
+      -0.021,
+      0.0,
+      0.002
+    ]
+  },
+  "graveyard:wither_skull_with_rib_cage": {
+    "mode": "3d",
+    "scale": 0.44,
+    "offset": [
+      0.015,
+      0.014,
+      0.148
+    ]
+  },
+  "graveyard:wither_torso_pile": {
+    "mode": "3d",
+    "scale": 0.394,
+    "offset": [
+      -0.008,
+      -0.001,
+      0.1
+    ]
+  },
+  "graveyard:wraith_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "graveyard:yellow_urn": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

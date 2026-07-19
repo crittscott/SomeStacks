@@ -1,108 +1,3197 @@
 {
-    "createcasing:acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:andesite_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:copper_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:creative_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:industrial_iron_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:railway_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:refined_radiance_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_acacia_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_bamboo_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_birch_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_cherry_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_crimson_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_dark_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_jungle_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_mangrove_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_oak_large_cogwheel": {"scale": 0.5},
-    "createcasing:shadow_steel_encased_warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:warped_large_cogwheel": {"scale": 0.5},
-    "createcasing:brass_press": {"scale": 0.5},
-    "createcasing:copper_press": {"scale": 0.5},
-    "createcasing:creative_press": {"scale": 0.5},
-    "createcasing:industrial_iron_press": {"scale": 0.5},
-    "createcasing:railway_press": {"scale": 0.5},
-    "createcasing:brass_mixer": {"scale": 0.5},
-    "createcasing:copper_mixer": {"scale": 0.5},
-    "createcasing:creative_mixer": {"scale": 0.5},
-    "createcasing:industrial_iron_mixer": {"scale": 0.5},
-    "createcasing:railway_mixer": {"scale": 0.5}
+  "createcasing:acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:andesite_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_adjustable_chain_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_depot": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_chain_drive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_mixer": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:brass_press": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.002
+    ]
+  },
+  "createcasing:brass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:chorium_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_adjustable_chain_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_depot": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_chain_drive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_mixer": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:copper_press": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.002
+    ]
+  },
+  "createcasing:creative_adjustable_chain_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_casing": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_depot": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_chain_drive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_mixer": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:creative_press": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.002
+    ]
+  },
+  "createcasing:crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_adjustable_chain_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_depot": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_chain_drive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_mixer": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:industrial_iron_press": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.002
+    ]
+  },
+  "createcasing:jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:processing_chorium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_adjustable_chain_gearshift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_depot": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_chain_drive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_mixer": {
+    "mode": "3d",
+    "scale": 0.4,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:railway_press": {
+    "mode": "3d",
+    "scale": 0.533,
+    "offset": [
+      0.0,
+      0.0,
+      0.002
+    ]
+  },
+  "createcasing:refined_radiance_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:refined_radiance_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_acacia_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_acacia_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_acacia_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_bamboo_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_bamboo_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_bamboo_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_birch_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_birch_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_birch_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_cherry_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_cherry_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_cherry_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_crimson_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_crimson_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_crimson_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_dark_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_dark_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_dark_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_glass_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_jungle_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_jungle_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_jungle_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_mangrove_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_mangrove_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_mangrove_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_mldeg_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_oak_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_oak_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_oak_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.81,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:shadow_steel_encased_warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:spruce_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:vertical_brass_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:vertical_copper_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:vertical_creative_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:vertical_industrial_iron_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:vertical_railway_gearbox": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:warped_cogwheel": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:warped_large_cogwheel": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createcasing:warped_shaft": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
 }

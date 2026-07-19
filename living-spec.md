@@ -141,7 +141,7 @@ All stack blocks use `ENTITYBLOCK_ANIMATED` and are drawn by block entity render
 | `gui` | Use the normal item renderer in `GUI` context with counter-rotation to fit the stack cell. |
 | `block` | Render a `BlockItem`'s default block state directly; if block rendering throws, fall back to `3d`. A non-`BlockItem` configured as `block` draws nothing. |
 
-Without an override, `BakedModel.isGui3d()` chooses only between `3d` and `2d`. The `block` and `gui` modes are always authored overrides. Items with a custom `BlockEntityWithoutLevelRenderer` receive an additional half-scale correction in the `3d`, `gui`, and `block` paths.
+Any field the override corpus does not supply is measured (see the measurement pipeline below). The bundled corpus specifies mode, scale, and offset for every item it covers, so items it covers are never measured at render time. The `block` and `gui` modes are only ever authored; measurement never selects them.
 
 ### Item render overrides
 
@@ -161,11 +161,9 @@ Each top-level key is an item id. Every field is optional:
 
 `mode` is one of `2d`, `3d`, `block`, or `gui`; `scale` must be positive; `offset` has exactly three numbers. For `2d`, only the x and y offset components are used.
 
-Precedence is resolved independently for mode, scale, and offset:
+An entry, from either source, owns the item's presentation. Within an entry a server field outranks a resource JSON field. Fields the entry omits take plain defaults — scale `1` and zero offset — rather than measured values, because scale and offset mean different things from one mode to the next and a measured scale is only valid for the mode it was measured for. An omitted mode is the sole exception and is measured.
 
-1. A non-null server-synchronized override field.
-2. A non-null resource JSON field.
-3. The computed/default value: automatic mode, scale `1`, and zero offset.
+An item that neither source mentions takes its whole profile from measurement.
 
 Server entries use the strict six-part format `item_id,mode,scale,x,y,z` and therefore normally supply all fields. Malformed entries are logged and skipped.
 
@@ -192,6 +190,19 @@ The Forge server config contains:
 
 The client mode cycler skips synced-disabled Singles and Bar modes. Storage remains in the client cycle even when disabled, but the server still refuses its placement.
 
+## Render measurement
+
+The client can measure the geometry an item actually renders in the `FIXED` display context and derive a render configuration in the standard override vocabulary (`mode`, `scale`, `offset`). Measurement serves two purposes: it fills any field the override corpus does not supply, and it generates the corpus itself through the dump command.
+
+- Non-custom baked models are measured by resolving item overrides, applying the `FIXED` display transform (honoring model substitution) and the item renderer's origin shift, then accumulating the bounds of every render-pass quad. Flatness is decided by the model's own `isGui3d()`: a generated item sprite reports false and yields `2d`. Geometry whose thinnest axis is a small fraction of its longest also yields `2d`, catching models that claim depth but draw none. Volumetric models yield `3d` with a uniform scale fitting the configured fill fraction of a stack cell and an offset that recenters the measured bounds. Fitting sizes every model to the same cell regardless of its real-world size, so block families that read too large against their neighbours carry a per-family scale factor applied on top of the fit; blocks deriving from `ButtonBlock` are fitted to three quarters. That factor list is an extension point alongside the presentation list below.
+- Blocks deriving from `BasePressurePlateBlock` or `CarpetBlock` carry their art on the horizontal plane, which a flat projection reduces to a one-pixel edge. They are measured in the `GUI` display context behind that path's counter-rotation and yield `gui`, the inventory-slot presentation. This is the only case where measurement selects `gui`, and the list is the extension point for other horizontal-art block types.
+- Custom-renderer (BEWLR) items are probed once by running their renderer against a vertex-capturing buffer. A thrown exception or an empty capture falls back to `2d` and records the failure. Because measured scales describe true drawn size, no custom-renderer scale correction is applied anywhere in the render path.
+- Profiles are cached per item and invalidated by resource reload or a fill-fraction change. An item fully covered by the corpus is never measured.
+- `/somestacks item` values are recorded as session corrections, which outrank measurements in dumps.
+- Client-only commands under `/somestacksdev`: `dump <mod|all>` writes per-namespace override JSON — every item, all three fields, corrections over measurements — to `config/somestacks/generated_overrides/`; `diff <mod|all>` writes a CSV comparing measurements against the loaded corpus, useful for spotting drift after a mod or resource-pack update; `fill <fraction>` retunes the target cell-fill fraction and recomputes; `info <item>` prints one item's measurement diagnostics.
+
+The bundled `item_render_overrides/` corpus is generated by dumping every namespace and is then hand-corrected in place. Because dumped entries are complete, editing one field of an entry leaves the others as dumped rather than reverting them to measurement.
+
 ## Contributor and compatibility tooling
 
 The `/somestacks` commands are available only to creative-mode player command sources:
@@ -199,7 +210,7 @@ The `/somestacks` commands are available only to creative-mode player command so
 - `/somestacks item <item> <mode> <scale> <x> <y> <z>` sends a temporary render override to that player's client. It modifies the resource-derived client map, so a resource reload replaces it, and any server-enforced field still has precedence.
 - `/somestacks mod <modid>` selects a mod namespace for the stick-based test helper.
 - Shift-right-clicking a block with a stick generates rows of Storage Stacks containing items from the selected namespace.
-- `/somestacks test` reads `config/somestacks/testmods.json` and generates Storage Stack test rows for loaded, non-disabled namespaces in that list.
+- `/somestacks test` reads `config/somestacks/testmods.json` and generates Storage Stack test rows for loaded, non-disabled namespaces in that list. `/somestacks test <modid>` generates rows for that one namespace instead, for reviewing a single mod without the render cost of a full corpus wall.
 
 These tools are for authoring the render-override compatibility corpus. They do not persist player-facing preferences.
 
@@ -208,6 +219,6 @@ These tools are for authoring the render-override compatibility corpus. They do 
 - Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
 - Stack invariants and persistence: the three block entities in `block/` are authoritative. Keep their NBT, update packet, collision cache, and renderer assumptions aligned.
 - Spatial layout and targeting: `StorageCubeIdx`, `SinglesCubeIdx`, and `BarCubeIdx` are shared geometry contracts between rendering, selection, collision, grounding, and cross-block support.
-- Ordinary item compatibility: prefer an entry in `item_render_overrides/` before changing the global rendering paths.
+- Ordinary item compatibility: prefer an entry in `item_render_overrides/`, generated by `/somestacksdev dump` and hand-corrected, before changing the global rendering paths.
 - Bar appearance: extend `textures/bars/` and reuse the base ingot/brick textures where tinting is sufficient.
 - Client-visible configuration: extend `ConfigSyncPkt` as well as the server config; purely server-side controls need no client copy.

@@ -1,0 +1,3260 @@
+{
+  "dawnoftimebuilder:acacia_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:acacia_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:acacia_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:acacia_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:acacia_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:acacia_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:acacia_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:acacia_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ancientarchi": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:bamboo_drying_tray": {
+    "mode": "3d",
+    "scale": 0.497,
+    "offset": [
+      0.0,
+      0.0,
+      0.031
+    ]
+  },
+  "dawnoftimebuilder:big_flower_pot": {
+    "mode": "3d",
+    "scale": 0.847,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:birch_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:birch_couch": {
+    "mode": "3d",
+    "scale": 0.445,
+    "offset": [
+      0.0,
+      -0.032,
+      0.069
+    ]
+  },
+  "dawnoftimebuilder:birch_fancy_fence": {
+    "mode": "3d",
+    "scale": 0.636,
+    "offset": [
+      0.0,
+      -0.01,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:birch_footstool": {
+    "mode": "3d",
+    "scale": 0.643,
+    "offset": [
+      0.0,
+      0.0,
+      0.123
+    ]
+  },
+  "dawnoftimebuilder:birch_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:birch_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:birch_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:birch_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:birch_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:birch_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:birch_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:black_wrought_iron_baluster": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      -0.014
+    ]
+  },
+  "dawnoftimebuilder:black_wrought_iron_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.084,
+      0.014
+    ]
+  },
+  "dawnoftimebuilder:boxwood_bush": {
+    "mode": "3d",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:boxwood_small_hedge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:boxwood_tall_hedge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:camellia_flower_pot": {
+    "mode": "3d",
+    "scale": 0.436,
+    "offset": [
+      0.0,
+      -0.007,
+      0.082
+    ]
+  },
+  "dawnoftimebuilder:camellia_leaves": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:camellia_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:candlestick": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      0.0,
+      0.015,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teacup_decorated": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.09,
+      0.045
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teacup_gray": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.09,
+      0.045
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teacup_green": {
+    "mode": "3d",
+    "scale": 1.44,
+    "offset": [
+      0.0,
+      0.09,
+      0.045
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teapot_decorated": {
+    "mode": "3d",
+    "scale": 0.573,
+    "offset": [
+      -0.046,
+      -0.09,
+      0.018
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teapot_gray": {
+    "mode": "3d",
+    "scale": 0.446,
+    "offset": [
+      -0.048,
+      -0.042,
+      0.014
+    ]
+  },
+  "dawnoftimebuilder:cast_iron_teapot_green": {
+    "mode": "3d",
+    "scale": 0.554,
+    "offset": [
+      -0.035,
+      -0.104,
+      0.017
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_boards": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_door": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_fancy_railing": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.07,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_foundation": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_foundation_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_log_stripped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_planks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_planks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_planks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_railing": {
+    "mode": "3d",
+    "scale": 0.576,
+    "offset": [
+      0.018,
+      -0.081,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_roof_support": {
+    "mode": "3d",
+    "scale": 0.901,
+    "offset": [
+      0.0,
+      -0.189,
+      0.142
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_shutters": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_tall_shutters": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_timber_frame": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_timber_frame_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_trapdoor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.183,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:charred_spruce_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:chiseled_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:clay_tile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:clay_tile_black": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:clay_tile_blue": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:clay_tile_cyan": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:clay_tile_orange": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:clay_tile_white": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:cobbled_limestone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:commelina": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:commelina_flower_pot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.084
+    ]
+  },
+  "dawnoftimebuilder:covered_sandstone_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:crimson_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:crimson_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:crimson_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:crimson_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:crimson_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:crimson_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:crimson_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:crimson_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:curved_raked_gravel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:cut_sandstone_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:cut_sandstone_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:cut_sandstone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:cypress": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:cypress_flower_pot": {
+    "mode": "3d",
+    "scale": 0.381,
+    "offset": [
+      0.0,
+      -0.006,
+      0.071
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:dark_oak_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:feathered_serpent_sculpture": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.141
+    ]
+  },
+  "dawnoftimebuilder:fireplace": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.028,
+      0.084
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:flat_roof_tiles_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:geranium_pink": {
+    "mode": "3d",
+    "scale": 0.597,
+    "offset": [
+      0.0,
+      0.055,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:geranium_pink_flower_pot": {
+    "mode": "3d",
+    "scale": 0.554,
+    "offset": [
+      0.0,
+      0.052,
+      0.104
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gold_plated_smooth_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:grape": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:grape_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:grape_seeds_flower_pot": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      -0.045,
+      0.067
+    ]
+  },
+  "dawnoftimebuilder:gray_clay_roof_tile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:gray_roof_tiles_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:green_chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:green_ornamented_chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:green_ornamented_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:green_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:green_sculpted_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:green_small_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:ikebana_flower_pot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.06,
+      0.0,
+      0.06
+    ]
+  },
+  "dawnoftimebuilder:iron_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:iron_fancy_lantern": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.032,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:iron_portcullis": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:irori_fireplace": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ivy": {
+    "mode": "3d",
+    "scale": 0.401,
+    "offset": [
+      0.0,
+      0.024,
+      0.062
+    ]
+  },
+  "dawnoftimebuilder:ivy_flower_pot": {
+    "mode": "3d",
+    "scale": 0.38,
+    "offset": [
+      0.0,
+      0.182,
+      0.071
+    ]
+  },
+  "dawnoftimebuilder:jungle_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:jungle_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:jungle_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:jungle_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:jungle_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:jungle_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:jungle_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:jungle_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:lattice_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:lattice_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:lattice_stone_bricks_window": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:lattice_waxed_oak_window": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:light_gray_futon": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.035
+    ]
+  },
+  "dawnoftimebuilder:limestone_baluster": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:limestone_bricks_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:limestone_chimney": {
+    "mode": "3d",
+    "scale": 0.849,
+    "offset": [
+      0.0,
+      0.0,
+      0.159
+    ]
+  },
+  "dawnoftimebuilder:limestone_fireplace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.052
+    ]
+  },
+  "dawnoftimebuilder:limestone_gargoyle": {
+    "mode": "3d",
+    "scale": 0.418,
+    "offset": [
+      0.0,
+      -0.004,
+      0.225
+    ]
+  },
+  "dawnoftimebuilder:limestone_sided_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.084
+    ]
+  },
+  "dawnoftimebuilder:maize": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:maize_flower_pot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.003,
+      0.0,
+      0.087
+    ]
+  },
+  "dawnoftimebuilder:maple_red_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:maple_red_sapling_flower_pot": {
+    "mode": "3d",
+    "scale": 0.421,
+    "offset": [
+      0.0,
+      0.017,
+      0.079
+    ]
+  },
+  "dawnoftimebuilder:marble_big_flower_pot": {
+    "mode": "3d",
+    "scale": 0.848,
+    "offset": [
+      0.0,
+      -0.013,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:marble_coffer": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:marble_coffer_slab": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:marble_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:marble_fancy_fence": {
+    "mode": "3d",
+    "scale": 0.566,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:marble_sided_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:marble_statue_mars": {
+    "mode": "3d",
+    "scale": 0.353,
+    "offset": [
+      0.002,
+      -0.004,
+      0.034
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_border": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_delicate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_geometric": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_pattern": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_recess": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.113
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_relief": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:moraq_mosaic_traditional": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:mosaic_floor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:mosaic_floor_delicate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:mosaic_floor_rosette": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:mulberry": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:mulberry_flower_pot": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.084
+    ]
+  },
+  "dawnoftimebuilder:mulberry_leaves": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:oak_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:oak_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:oak_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:oak_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:oak_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:oak_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:oak_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:oak_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ochre_roof_tiles_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:ornamented_chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_door": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_folding_screen": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_lamp": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.0,
+      0.052,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_wall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_wall_flat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_wall_flowery": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:paper_wall_window": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:persian_carpet_delicate_red": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:persian_carpet_red": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:planter_geranium_pink": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      0.047,
+      0.086
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_cresset": {
+    "mode": "3d",
+    "scale": 0.402,
+    "offset": [
+      0.0,
+      -0.024,
+      0.075
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:plastered_stone_window": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:rammed_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_ornamented_chiseled_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_ornamented_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_ornamented_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:red_painted_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:red_paper_lantern": {
+    "mode": "3d",
+    "scale": 0.758,
+    "offset": [
+      0.0,
+      0.036,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_plastered_stone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:red_sculpted_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.042,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:red_small_plastered_stone_frieze": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:reinforced_black_wrought_iron_fence": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.084
+    ]
+  },
+  "dawnoftimebuilder:reinforced_golden_wrought_iron_fence": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.084
+    ]
+  },
+  "dawnoftimebuilder:rice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roman_fresco_black": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roman_fresco_red": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:roofing_slates_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sake_bottle": {
+    "mode": "3d",
+    "scale": 0.554,
+    "offset": [
+      -0.013,
+      0.0,
+      0.017
+    ]
+  },
+  "dawnoftimebuilder:sake_cup": {
+    "mode": "3d",
+    "scale": 1.399,
+    "offset": [
+      0.0,
+      0.215,
+      0.044
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_turquoise_pattern_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_bricks_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:sandstone_crenelation": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:sandstone_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:sandstone_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:sandstone_sculpted_relief": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:sandstone_sided_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:serpent_sculpted_column": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.097,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:silk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:silk_cocoons": {
+    "mode": "3d",
+    "scale": 0.588,
+    "offset": [
+      0.032,
+      0.007,
+      0.11
+    ]
+  },
+  "dawnoftimebuilder:silk_worm_eggs": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:silk_worm_hatchery": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:silk_worms": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:silkmoth_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:small_tatami_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:smooth_sandstone_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:smooth_sandstone_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:spruce_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:spruce_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:spruce_legless_chair": {
+    "mode": "3d",
+    "scale": 0.893,
+    "offset": [
+      0.0,
+      0.067,
+      0.165
+    ]
+  },
+  "dawnoftimebuilder:spruce_low_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:spruce_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:spruce_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:spruce_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:spruce_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:spruce_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:spruce_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stepping_stones": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stepping_stones_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stick_bundle": {
+    "mode": "3d",
+    "scale": 0.284,
+    "offset": [
+      0.0,
+      0.0,
+      0.018
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_arrowslit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.124
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_chimney": {
+    "mode": "3d",
+    "scale": 1.029,
+    "offset": [
+      0.0,
+      0.08,
+      0.193
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_faucet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.169,
+      0.035
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_fireplace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.052
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_machicolation": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_masonry_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_pool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_small_pool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:stone_bricks_water_jet": {
+    "mode": "3d",
+    "scale": 0.36,
+    "offset": [
+      0.0,
+      0.075,
+      0.191
+    ]
+  },
+  "dawnoftimebuilder:stone_lantern": {
+    "mode": "3d",
+    "scale": 1.108,
+    "offset": [
+      0.001,
+      0.052,
+      0.001
+    ]
+  },
+  "dawnoftimebuilder:straight_raked_gravel": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:tatami_mat": {
+    "mode": "block",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:tea_leaves": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:terracotta_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_bamboo": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_bamboo_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:thatch_bamboo_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:thatch_bamboo_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_bamboo_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_wheat": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_wheat_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:thatch_wheat_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:thatch_wheat_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:thatch_wheat_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:unfired_clay_roof_tile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:unfired_clay_tile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:warped_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:warped_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:warped_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:warped_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:warped_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:warped_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:warped_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:warped_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:water_source_trickle": {
+    "mode": "3d",
+    "scale": 0.319,
+    "offset": [
+      0.0,
+      -0.013,
+      -0.076
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_baluster": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_chair": {
+    "mode": "3d",
+    "scale": 0.396,
+    "offset": [
+      0.0,
+      0.0,
+      0.087
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_chandelier": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.0,
+      0.028
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_door": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_fence": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.07,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_framed_rammed_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_framed_rammed_dirt_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_lattice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_log_stripped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_pergola": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_planks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_planks_edge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      -0.112
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_planks_plate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.056
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_planks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.112,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_planks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_shutters": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_small_shutters": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_support_beam": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.056,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_support_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      -0.169,
+      0.169
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_table": {
+    "mode": "3d",
+    "scale": 0.8,
+    "offset": [
+      0.0,
+      -0.025,
+      0.15
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_timber_frame": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_timber_frame_corner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_timber_frame_crossed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_timber_frame_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_timber_frame_squared": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_trapdoor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.183,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:waxed_oak_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:white_little_flag": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dawnoftimebuilder:wild_grape": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      0.023,
+      0.023
+    ]
+  },
+  "dawnoftimebuilder:wild_maize": {
+    "mode": "3d",
+    "scale": 0.375,
+    "offset": [
+      0.0,
+      -0.007,
+      0.023
+    ]
+  },
+  "dawnoftimebuilder:wrought_iron_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      0.0,
+      0.084,
+      0.014
+    ]
+  }
+}

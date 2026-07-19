@@ -1,0 +1,20 @@
+{
+  "refinedstorageaddons:creative_wireless_crafting_grid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "refinedstorageaddons:wireless_crafting_grid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

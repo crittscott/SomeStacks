@@ -1,9 +1,0 @@
-{
-    "player_transmitter_basic": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_blazing": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_hardened": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_niotic": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_nitro": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_spirited": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]},
-    "player_transmitter_starter": {"scale": 0.5, "offset": [0.0, 0.0, 0.0]}
-}
