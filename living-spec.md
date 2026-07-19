@@ -40,7 +40,7 @@ All three block entities expose Forge's item-handler capability on every side. S
 
 ## Interaction model
 
-`V` is a held modifier, not an ordinary press-to-cycle key. Client Forge interaction events run through ordered rule lists; the first match wins. World changes occur only after a packet reaches the server.
+`V` is the default binding of the stack-modifier key, rebindable under its own Some Stacks category in the controls screen. It is a held modifier, not an ordinary press-to-cycle key. Client Forge interaction events run through ordered rule lists; the first match wins. World changes occur only after a packet reaches the server.
 
 | Gesture | Result |
 | --- | --- |
@@ -209,7 +209,7 @@ The `ss` command is available only to creative-mode player command sources. It i
 
 - `ss item <item> <mode> <scale> <x> <y> <z>` sets the entry for that item in the issuing player's user override layer. The change renders immediately but lives only in memory until written.
 - `ss item <item> reset` removes that entry; the item returns to server, built-in, or measured behavior. Because the layers below are never modified, reset always restores original behavior, not a previous tweak.
-- `ss test <modid>` generates rows of Storage Stacks containing every item of that namespace, over a sandstone floor, for reviewing render settings in the world. `ss test all` does the same for every loaded, non-disabled namespace at once; in a large modpack that is thousands of rendered block entities and is meant for deliberate review sessions.
+- `ss test <modid>` generates rows of Storage Stacks containing every item of that namespace, over a sandstone floor, for reviewing render settings in the world. `ss test all` does the same for every loaded, non-disabled namespace at once; in a large modpack that is thousands of rendered block entities and is meant for deliberate review sessions. Generation writes directly into the world east of the player and replaces whatever blocks occupy the floor and stack positions.
 - `ss write` makes the issuing player's client write its user override layer to `config/somestacks/item_overrides.json`. Only explicitly set entries are ever written; measured values never enter the file.
 
 ## Main extension points

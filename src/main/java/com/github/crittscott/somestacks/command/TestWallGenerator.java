@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.TreeMap;
 
 /**
  * Generates walls of Storage Stacks filled with every item of one or more namespaces,
@@ -32,24 +32,31 @@ public final class TestWallGenerator {
 
     private TestWallGenerator() {}
 
+    /**
+     * Item registry contents grouped by namespace. The registry is frozen before any
+     * command or suggestion request can arrive, so one pass serves every later query;
+     * without this cache, every suggestion keystroke rescans the full registry on the
+     * server thread.
+     */
+    private static Map<String, List<Item>> itemsByNamespace;
+
+    private static Map<String, List<Item>> itemsByNamespace() {
+        if (itemsByNamespace == null) {
+            Map<String, List<Item>> map = new TreeMap<>();
+            ForgeRegistries.ITEMS.getEntries().forEach(entry -> map
+                    .computeIfAbsent(entry.getKey().location().getNamespace(), ns -> new ArrayList<>())
+                    .add(entry.getValue()));
+            itemsByNamespace = map;
+        }
+        return itemsByNamespace;
+    }
+
     public static List<String> getModIdsWithItems() {
-        return ForgeRegistries.ITEMS.getEntries().stream()
-                .map(entry -> entry.getKey().location().getNamespace())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        return List.copyOf(itemsByNamespace().keySet());
     }
 
     public static List<Item> collectModItems(String modId) {
-        List<Item> items = new ArrayList<>();
-
-        ForgeRegistries.ITEMS.getEntries().forEach(entry -> {
-            if (entry.getKey().location().getNamespace().equals(modId)) {
-                items.add(entry.getValue());
-            }
-        });
-
-        return items;
+        return itemsByNamespace().getOrDefault(modId, List.of());
     }
 
     /** Rows a mod's items occupy, one stack per row running north. */
