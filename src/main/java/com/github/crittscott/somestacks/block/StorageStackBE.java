@@ -122,6 +122,10 @@ public class StorageStackBE extends BlockEntity {
             return 0;
         }
 
+        if (!isValidStorageItem(fromHand)) {
+            return 0;
+        }
+
         int moved = mergeIntoHandler(items, fromHand);
 
         if (!fromHand.isEmpty() && level != null && !level.isClientSide) {
@@ -151,6 +155,82 @@ public class StorageStackBE extends BlockEntity {
         }
 
         return moved;
+    }
+
+    /**
+     * Read-only twin of {@link #deposit}: how many of {@code fromHand} that same call
+     * would move, walking local slots and then overflowing up the pile exactly as
+     * deposit does, without mutating anything. Kept beside deposit so the two stay in
+     * step.
+     */
+    public int simulateDeposit(ItemStack fromHand) {
+        if (fromHand.isEmpty()) {
+            return 0;
+        }
+        if (!isValidStorageItem(fromHand)) {
+            return 0;
+        }
+        return simulateAbsorb(fromHand.getCount(), fromHand);
+    }
+
+    private int simulateAbsorb(int count, ItemStack ref) {
+        int remaining = count - fillLocally(count, ref);
+
+        if (remaining > 0 && level != null && !level.isClientSide) {
+            BlockPos above = getBlockPos().above();
+            BlockState aboveState = level.getBlockState(above);
+
+            if (aboveState.getBlock() == ModRegistry.STORAGE_STACK_BLOCK.get()) {
+                if (level.getBlockEntity(above) instanceof StorageStackBE sbeAbove) {
+                    remaining -= sbeAbove.simulateAbsorb(remaining, ref);
+                }
+            } else if (aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()
+                    && !level.isOutsideBuildHeight(above)) {
+                // deposit would create an empty block here and fill it, chaining further
+                // up if needed, so it absorbs whatever is left.
+                remaining = 0;
+            }
+        }
+
+        return count - remaining;
+    }
+
+    private int fillLocally(int count, ItemStack ref) {
+        int remaining = count;
+        // Compatible partials first, then empty slots: the order mergeIntoHandler uses.
+        for (int i = 0; i < items.getSlots() && remaining > 0; i++) {
+            ItemStack slot = items.getStackInSlot(i);
+            if (!slot.isEmpty() && ItemStack.isSameItemSameTags(slot, ref)) {
+                remaining -= Math.min(remaining, slot.getMaxStackSize() - slot.getCount());
+            }
+        }
+        for (int i = 0; i < items.getSlots() && remaining > 0; i++) {
+            if (items.getStackInSlot(i).isEmpty()) {
+                remaining -= Math.min(remaining, ref.getMaxStackSize());
+            }
+        }
+        return count - remaining;
+    }
+
+    /**
+     * Whether a deposit into this block could spill past its local slots: either a
+     * Storage block already sits above, or the space above is replaceable, within build
+     * height, and Storage creation is enabled. The pile handler uses this to advertise
+     * overflow headroom to automation that gauges capacity by reading slots.
+     */
+    public boolean canOverflowUpward() {
+        if (level == null || level.isClientSide) {
+            return false;
+        }
+        BlockPos above = getBlockPos().above();
+        if (level.isOutsideBuildHeight(above)) {
+            return false;
+        }
+        BlockState aboveState = level.getBlockState(above);
+        if (aboveState.getBlock() == ModRegistry.STORAGE_STACK_BLOCK.get()) {
+            return true;
+        }
+        return aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get();
     }
 
     public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand) {
@@ -385,12 +465,12 @@ public class StorageStackBE extends BlockEntity {
             if (canMerge(slot, from)) {
                 int can = Math.min(from.getCount(), slot.getMaxStackSize() - slot.getCount());
                 if (can > 0) {
-                    ItemStack sim = slot.copy();
-                    sim.grow(can);
-                    handler.extractItem(i, 0, true); // no-op: ensure valid slot
-                    handler.insertItem(i, from.copy().split(can), false);
-                    from.shrink(can);
-                    moved += can;
+                    ItemStack toInsert = from.copy();
+                    toInsert.setCount(can);
+                    ItemStack rem = handler.insertItem(i, toInsert, false);
+                    int used = can - rem.getCount();
+                    from.shrink(used);
+                    moved += used;
                 }
             }
         }

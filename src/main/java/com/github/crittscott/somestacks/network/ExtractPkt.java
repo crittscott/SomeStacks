@@ -62,21 +62,11 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
     }
 
     private static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
-        ItemStack cubeStack = sbe.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .map(h -> h.getStackInSlot(index)).orElse(ItemStack.EMPTY);
-
-        if (cubeStack.isEmpty()) return;
-
         ItemStack handStack = player.getItemInHand(hand);
 
-        if (!ItemOps.canTakeIntoHand(handStack, cubeStack)) return;
-
-        int maxCanTake;
-        if (handStack.isEmpty()) {
-            maxCanTake = cubeStack.getMaxStackSize();
-        } else {
-            maxCanTake = handStack.getMaxStackSize() - handStack.getCount();
-        }
+        int maxCanTake = handStack.isEmpty()
+                ? Integer.MAX_VALUE
+                : handStack.getMaxStackSize() - handStack.getCount();
 
         ItemStack taken = sbe.extractAt(index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack);
 
