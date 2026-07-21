@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,21 +27,15 @@ import javax.annotation.Nullable;
 
 public class BarStackBE extends BlockEntity {
     private VoxelShape cachedShape = null;
+    private boolean suppressSync = false;
 
     private final ItemStackHandler items = new ItemStackHandler(64) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
             cachedShape = null;
-            if (level != null && !level.isClientSide) {
-                syncToClients();
-
-                int newLight = ItemOps.calculateLightLevelFromItems(this);
-                BlockState state = getBlockState();
-                int currentLight = state.getValue(BarStackBlock.LIGHT_LEVEL);
-                if (newLight != currentLight) {
-                    level.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-                }
+            if (!suppressSync) {
+                finalizeAfterBatch();
             }
         }
 
@@ -138,35 +133,47 @@ public class BarStackBE extends BlockEntity {
             return ItemStack.EMPTY;
         }
 
-        ItemStack extracted = items.extractItem(index, 1, false);
-
-        if (!extracted.isEmpty()) {
+        ItemStack extracted;
+        suppressSync = true;
+        try {
+            extracted = items.extractItem(index, 1, false);
+            if (extracted.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
             removeUnsupportedBlocks();
+        } finally {
+            suppressSync = false;
         }
 
+        setChanged();
+        finalizeAfterBatch();
         return extracted;
     }
 
+    /**
+     * Drops every bar left without support. Slot index is layer-major and a bar is supported only
+     * by the layer directly beneath it, so one ascending pass settles the whole block: by the time
+     * a layer is reached, the layer it rests on is final.
+     */
     private void removeUnsupportedBlocks() {
-        boolean anyRemoved;
-        do {
-            anyRemoved = false;
-            for (int i = 0; i < 64; i++) {
-                if (!items.getStackInSlot(i).isEmpty()) {
-                    if (!BarCubeIdx.isGrounded(i, items)) {
-                        ItemStack removed = items.extractItem(i, 1, false);
-                        if (!removed.isEmpty() && level != null && !level.isClientSide) {
-                            net.minecraft.world.Containers.dropItemStack(level,
-                                    getBlockPos().getX() + 0.5,
-                                    getBlockPos().getY() + 0.5,
-                                    getBlockPos().getZ() + 0.5,
-                                    removed);
-                            anyRemoved = true;
-                        }
-                    }
-                }
+        if (level == null || level.isClientSide) {
+            return;
+        }
+
+        for (int i = 0; i < 64; i++) {
+            if (items.getStackInSlot(i).isEmpty() || BarCubeIdx.isGrounded(i, items)) {
+                continue;
             }
-        } while (anyRemoved);
+
+            ItemStack removed = items.extractItem(i, 1, false);
+            if (!removed.isEmpty()) {
+                Containers.dropItemStack(level,
+                        getBlockPos().getX() + 0.5,
+                        getBlockPos().getY() + 0.5,
+                        getBlockPos().getZ() + 0.5,
+                        removed);
+            }
+        }
     }
 
     public boolean isEmpty() {
@@ -177,6 +184,25 @@ public class BarStackBE extends BlockEntity {
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
+        }
+    }
+
+    /**
+     * Settles the derived state a content edit leaves behind: pushes contents to clients and
+     * recomputes the emitted light level. Callers mark the block changed; this reproduces the rest
+     * of the per-edit path as one pass, so a batch that suppresses per-slot sync can finalize once
+     * when it finishes.
+     */
+    private void finalizeAfterBatch() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        syncToClients();
+
+        int newLight = ItemOps.calculateLightLevelFromItems(items);
+        BlockState state = getBlockState();
+        if (state.getValue(BarStackBlock.LIGHT_LEVEL) != newLight) {
+            level.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
         }
     }
 

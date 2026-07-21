@@ -27,21 +27,15 @@ public class SinglesStackBE extends BlockEntity {
     private VoxelShape cachedShape = null;
     private int rotation = 0;
     private int[] cubeRotations = new int[64];
+    private boolean suppressSync = false;
 
     private final ItemStackHandler items = new ItemStackHandler(64) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
             cachedShape = null;
-            if (level != null && !level.isClientSide) {
-                syncToClients();
-
-                int newLight = ItemOps.calculateLightLevelFromItems(this);
-                BlockState state = getBlockState();
-                int currentLight = state.getValue(SinglesStackBlock.LIGHT_LEVEL);
-                if (newLight != currentLight) {
-                    level.setBlock(getBlockPos(), state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-                }
+            if (!suppressSync) {
+                finalizeAfterBatch();
             }
         }
 
@@ -79,7 +73,9 @@ public class SinglesStackBE extends BlockEntity {
         this.rotation = rotation % 4;
         setChanged();
         cachedShape = null;
-        syncToClients();
+        if (!suppressSync) {
+            syncToClients();
+        }
     }
 
     public int getCubeRotation(int index) {
@@ -95,7 +91,9 @@ public class SinglesStackBE extends BlockEntity {
         }
         cubeRotations[index] = cubeRot % 4;
         setChanged();
-        syncToClients();
+        if (!suppressSync) {
+            syncToClients();
+        }
     }
 
     public VoxelShape computeShape() {
@@ -164,12 +162,20 @@ public class SinglesStackBE extends BlockEntity {
             return ItemStack.EMPTY;
         }
 
-        ItemStack extracted = items.extractItem(index, 1, false);
-
-        if (!extracted.isEmpty()) {
+        ItemStack extracted;
+        suppressSync = true;
+        try {
+            extracted = items.extractItem(index, 1, false);
+            if (extracted.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
             cascadeUnsupportedBlocks(index);
+        } finally {
+            suppressSync = false;
         }
 
+        setChanged();
+        finalizeAfterBatch();
         return extracted;
     }
 
@@ -189,7 +195,20 @@ public class SinglesStackBE extends BlockEntity {
                 items.insertItem(targetIndex, extracted, false);
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
-                cubeRotations[sourceIndex] = 0;
+            }
+        }
+
+        clearEmptyCubeRotations();
+    }
+
+    /**
+     * An empty cell carries no orientation, so the next item deposited into it cannot inherit
+     * the previous occupant's rotation.
+     */
+    private void clearEmptyCubeRotations() {
+        for (int i = 0; i < cubeRotations.length; i++) {
+            if (items.getStackInSlot(i).isEmpty()) {
+                cubeRotations[i] = 0;
             }
         }
     }
@@ -205,6 +224,25 @@ public class SinglesStackBE extends BlockEntity {
         }
     }
 
+    /**
+     * Settles the derived state a content edit leaves behind: pushes contents to clients and
+     * recomputes the emitted light level. Callers mark the block changed; this reproduces the rest
+     * of the per-edit path as one pass, so a batch that suppresses per-slot sync can finalize once
+     * when it finishes.
+     */
+    private void finalizeAfterBatch() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        syncToClients();
+
+        int newLight = ItemOps.calculateLightLevelFromItems(items);
+        BlockState state = getBlockState();
+        if (state.getValue(SinglesStackBlock.LIGHT_LEVEL) != newLight) {
+            level.setBlock(getBlockPos(), state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
+        }
+    }
+
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
@@ -217,7 +255,7 @@ public class SinglesStackBE extends BlockEntity {
         if (tag.contains("CubeRotations")) {
             int[] loaded = tag.getIntArray("CubeRotations");
             if (loaded.length == 64) {
-                cubeRotations = loaded;
+                cubeRotations = loaded.clone();
             }
         }
         cachedShape = null;
@@ -228,7 +266,10 @@ public class SinglesStackBE extends BlockEntity {
         super.saveAdditional(tag);
         tag.put("Items", items.serializeNBT());
         tag.putInt("Rotation", rotation);
-        tag.putIntArray("CubeRotations", cubeRotations);
+        // IntArrayTag holds the array it is given, and an integrated server hands its update
+        // packets to the client unserialized: both sides must get their own copy, or the client
+        // renders the server's in-progress rotations against its own not-yet-updated items.
+        tag.putIntArray("CubeRotations", cubeRotations.clone());
     }
 
     @Nonnull

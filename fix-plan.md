@@ -8,8 +8,11 @@ re-deriving context. Read this together with the companion files in the repo roo
 - `claude-code-review.md` — the independent, line-verified review; **full detail for every
   finding below lives there**. This document condenses it and adds a staged plan + status.
 
-Reviewed against `main` @ f8c5f71. Line numbers below may have drifted after the Stage 1
-edits; treat them as starting points, not exact anchors.
+Reviewed against `main` @ f8c5f71. **Stages 1, 2, and 3 are done and committed** (Stage 1
+`08070ce`, Stage 2 `9f784cb`, Stage 3 `0ea58c8`); **Stage 4 is done and uncommitted**. Because of
+those edits, line numbers below have drifted; treat every line reference as a starting
+point, not an exact anchor, and re-locate against current code. The per-stage "COMPLETE" sections
+lower down record exactly what changed. Stages 5–7 are not started.
 
 ## Project constraints (from CLAUDE.md — obey these)
 
@@ -120,13 +123,15 @@ on internal violations. Adopt this framing everywhere.
 ## Seven-stage fix order
 
 1. **Storage deposit rejection, moved-count accounting, capability sim/exec coherence; ExtractPkt
-   crash.** (Findings 1, 2.) — **DONE, see below.**
+   crash.** (Findings 1, 2.) — **DONE (see "Stage 1 — COMPLETE").**
 2. **C2S boundary:** explicit packet directions, isLoaded-before-BE-access, reach, gesture
-   prerequisites, Forge placement/protection hooks. (Finding 3.)
+   prerequisites, Forge placement/protection hooks. (Finding 3.) — **DONE (see "Stage 2 —
+   COMPLETE"). Protection consult = E1 (spawn protection + world border); E2 is the noted
+   upgrade path.**
 3. **`.dynamicShape()`; prevent limited-window pile splitting; Storage batch finalization
-   (light/comparator).** (Findings 4, 5, 6.)
-4. **Singles cascade rotation/state batching; Bar collapse single pass.** (Findings 7, 12, and
-   16 if convenient.)
+   (light/comparator).** (Findings 4, 5, 6.) — **DONE (see "Stage 3 — COMPLETE").**
+4. **Singles cascade rotation/state batching; Bar collapse single pass.** (Findings 7, 12, 16.)
+   — **DONE (see "Stage 4 — COMPLETE").**
 5. **Dedicated-server sound ownership + delete dead sound system; config-reload bus + operator
    reload command.** (Findings 8, 9.)
 6. **Face-independent cross-block support (+ Singles rotation bug); `ss` permissions + case
@@ -343,17 +348,108 @@ Fix stale shapes, pile severing, and stale light after repack
 
 ---
 
+## Stage 4 — COMPLETE (verified by reading; not yet built/run)
+
+Goal: fix finding 7, the cascade half of finding 12, and finding 16 — mid-mutation publication and
+rotation mismanagement in the Singles/Bar cascades, the quadratic repack walk on Storage overflow,
+and unreliable consolidation.
+
+### Files changed
+
+**`block/SinglesStackBE.java`** (findings 7, 12) — added `suppressSync` + a private
+`finalizeAfterBatch()` (sync + light recompute; no `updateNeighborsAt`, since only Storage has
+comparator output). `onContentsChanged` keeps `setChanged()` and the `cachedShape` invalidation
+unconditional and delegates the rest to `finalizeAfterBatch()` when not suppressed. `extractAt`
+now wraps the extraction and the column cascade in one suppressed batch and finalizes once — which
+also publishes the rotations the cascade moves, previously written after the last sync and
+therefore never sent. `cascadeUnsupportedBlocks` ends with a new `clearEmptyCubeRotations()` sweep,
+so every empty cell — including the extracted one, which was never cleared — holds rotation 0 and
+the next deposit cannot inherit an orientation. `setRotation`/`setCubeRotation` respect the
+suppression flag.
+
+Also fixed here, found by in-world testing of the above: `saveAdditional`/`load` passed the
+`cubeRotations` array to and from NBT **by reference** (`IntArrayTag` keeps the array it is given,
+`getIntArray` hands it back). An integrated server does not serialize its block entity update
+packets, so the client's `SinglesStackBE` shared the server's array. Rotations therefore changed on
+the client the instant the server wrote them, while its items waited for the end-of-tick packet —
+a frame drawn in that window showed the pre-cascade item layout with post-cascade rotations, seen
+in testing as a one-frame unrotated top item. Both directions now clone. This is the only array
+stored in NBT in the mod.
+
+**`block/BarStackBE.java`** (findings 7, 12) — same `suppressSync` + `finalizeAfterBatch()` and the
+same batched `extractAt`. `removeUnsupportedBlocks` is now a single ascending pass: slot index is
+layer-major (`index / 8` is the layer) and `BarCubeIdx.isGrounded` consults only the layer below,
+which the pass has already settled, so the `do/while` rescan could never find work. The method also
+returns early off-server, fixing a client path that deleted bars without dropping them (the old
+`anyRemoved` flag was set inside the server-only branch, so it was already dead).
+
+**`block/StorageStackBE.java`** (findings 12, 16):
+- `deposit` split into the public entry and a private `deposit(ItemStack, boolean ownsRepack)`.
+  Overflow frames pass `false`, so a deposit that spills up a tall pile runs `findPileBase()` once
+  instead of once per block touched (the cooldown previously rejected the extra calls only *after*
+  each had walked to the base).
+- `consolidate` rewritten to total the input by an exact `StackKey(item, damage, tag)` and re-cut
+  each total into whole stacks plus one remainder. The old version merged only into the previous
+  output element, so compatible stacks the comparator happened to separate stayed separate.
+- Dropped the pre-sort in `resortAndPackPile`; `consolidate` sorts its output once, and with a key
+  map the input order is irrelevant.
+
+**`util/StackSort.java`** (finding 16) — the comparator now orders output only. Tag *presence* was
+replaced by a deterministic comparison of tag contents (untagged first, then tagged in stable
+order), and "partials first" — which existed to help the old adjacent merge — became "fullest
+first", so each item's run ends on its single partial stack. `StorageStackBE` is its only consumer.
+
+**`living-spec.md`, `REPORT.md`** — repack steps 2-3 now describe identity-based consolidation,
+Bar gravity is a single pass, Singles gravity clears rotations on emptied cells, and a new
+"Cascade publication" note records the settle-once rule.
+
+### Design decision
+Singles and Bar each carry their own `finalizeAfterBatch()` rather than sharing one with Storage:
+each references its own block class's `LIGHT_LEVEL` property, and Storage additionally notifies
+neighbors for its comparator output. Three short methods with one shape beat one method
+parameterized over a property and a comparator flag.
+
+### Not in Stage 4
+The repack window (`PILE_SORT_MAX_STACKS`) still bounds how much of a tall pile one repack touches;
+that is a server-performance control, not a defect, and it is the cause of the "only draws from the
+bottom three" observation below. `ss test all` burst generation remains Stage 7.
+
+### Suggested commit message for Stage 4 (code only)
+
+```
+Batch Singles/Bar cascades and consolidate by exact item identity
+
+- Suppress per-slot sync during Singles and Bar gravity and settle once,
+  so cascaded item rotations reach clients and light is recomputed once
+- Clear the rotation of every emptied Singles cell so the next deposit
+  does not inherit the previous occupant's orientation
+- Collapse unsupported bars in one ascending pass and stop deleting bars
+  client-side without dropping them
+- Walk to the pile base once per deposit instead of once per overflowed
+  block
+- Consolidate a repack by exact item/damage/tag identity rather than by
+  adjacency in a sorted list, and sort the result once
+- Copy the Singles rotation array in and out of NBT, so an integrated
+  server and its client stop sharing one array
+```
+
+---
+
 ## In-world observations from testing (map to later stages — NOT Stage 1 regressions)
 
 - **Removing from a 4-high pile only draws from the bottom three.** Repack window
   (`PILE_SORT_MAX_STACKS`, default 3) plus downward packing concentrates items in the bottom of
-  the window; the 4th block falls outside it. Findings 5 + 16 → **Stage 3**. Diagnostic: raise
-  `max_stacks_per_resort` above the pile height.
+  the window; the 4th block falls outside it. The pile-severing half (finding 5) was fixed in
+  Stage 3 and consolidation (finding 16) in Stage 4; what remains is the window itself, a
+  deliberate performance control. Diagnostic: raise `max_stacks_per_resort` above the pile height.
 - **Pipe removing the last item leaves the empty block regardless of permanent status.**
   Capability extract (`extractFromSlot`) deliberately does not do the player-path block removal;
-  the only cleanup is repack removing empty non-permanent blocks at the window top, which fails
-  when the block isn't at the top or the cooldown blocks it. Permanent staying is correct;
-  non-permanent staying is the bug. Finding 5 → **Stage 3**.
+  the only cleanup is repack removing empty non-permanent blocks at the window top. Finding 5
+  (never-remove-under-a-stack) is fixed in Stage 3, but the underlying gap remains: a
+  non-permanent block emptied by capability extract at the window top can still linger when the
+  cooldown throttles the repack, because capability extract has no player-path removal of its own.
+  If this still bites in testing, revisit as its own item (add a post-extract cleanup on the
+  capability path).
 - **Singles/Bar cannot grow beyond the first layer by hand.** Interaction-rule ordering:
   `DepositIntoClickedStackRule` precedes `PlaceAdjacentGenericRule`, so V-right-clicking the top
   of a stack always deposits into it (fails when the column is full) and never falls through to
@@ -369,10 +465,17 @@ Fix stale shapes, pile severing, and stale light after repack
 ## Status summary
 
 - Stage 1: **done**, pipe auto-expand confirmed working in-game, committed as `08070ce`.
-- Stage 2: **done** (finding 3), verified by reading; not yet built/run or committed. Protection
-  option E1 chosen. See the Stage 2 section above.
-- Stage 3: **done** (findings 4, 5, 6), verified by reading; not yet built/run or committed. See
+- Stage 2: **done** (finding 3, protection option E1), confirmed working in-game, committed as
+  `9f784cb`. See the Stage 2 section above.
+- Stage 3: **done** (findings 4, 5, 6), confirmed working in-game, committed as `0ea58c8`. See
   the Stage 3 section above.
-- Stages 4–7: not started.
-- Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign).
-- Nothing has been built or run in this environment.
+- Stage 4: **done** (finding 7, the cascade half of finding 12, and finding 16) plus the
+  Singles rotation-array aliasing bug that in-world testing surfaced. See the Stage 4 section
+  above. Retest the rotated-column extraction to confirm the one-frame flash is gone.
+- Stages 5–7: not started. **Stage 5 is next** (findings 8, 9): dedicated-server sound ownership
+  and the config-reload bus.
+- Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign, related to
+  finding 10 / Stage 6).
+- Verification to date is by reading + the user's in-world testing. Nothing has been built or run
+  in this environment. `living-spec.md` was updated alongside Stages 2 and 3; `fix-plan.md` is the
+  progress log and is tracked but conceptually separate from the code commits.

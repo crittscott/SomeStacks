@@ -74,11 +74,13 @@ After successful extraction, the server marks the position for same-tick right-c
 
 A Storage deposit fills compatible partial slots, then empty slots. Any remainder recurses into the Storage Stack directly above. If the space above is replaceable and Storage creation is enabled, the deposit creates another Storage Stack and continues there.
 
+A deposit that overflows upward repacks once, from the block the deposit entered, rather than once per block it passed through.
+
 After a successful deposit or extraction, the pile may be repacked. Repacking is throttled by a cooldown stored on the pile's base block and processes at most the configured number of contiguous Storage Stack blocks around the initiating block. Within that window it:
 
 1. Copies all stored stacks.
-2. Sorts primarily by item registry id, damage value, tag presence, and count.
-3. Consolidates stacks only when item and tags match.
+2. Totals them by exact identity — item, damage value, and tags — so compatible stacks always merge no matter where in the window they sat.
+3. Re-cuts each total into whole stacks plus at most one partial, then orders the result by item registry id, damage value, tags, and count with the fullest stack first.
 4. Writes the result from lower blocks and lower slot indices upward.
 5. Removes empty, non-permanent blocks from the top of the processed window until it reaches a nonempty block, a permanent block, or a block that still has a Storage Stack directly above it. An empty block is never removed while another Storage Stack sits directly above, so a pile taller than the window is not severed.
 
@@ -88,11 +90,15 @@ Storage Stack is the only type with comparator output. Its signal is the rounded
 
 ### Singles gravity
 
-Singles removal closes the gap in one vertical column. Every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade.
+Singles removal closes the gap in one vertical column. Every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade. A cell left empty carries no rotation, so the next item deposited into it starts unrotated.
 
 ### Bar gravity
 
-After one bar is extracted, the block repeatedly scans all remaining bars. Any bar without an overlapping support footprint in the layer below is removed and dropped into the world. Scanning repeats because one removal can make higher bars unsupported.
+After one bar is extracted, the block scans the remaining bars from the bottom layer up. Any bar without an overlapping support footprint in the layer below is removed and dropped into the world. One pass suffices: a layer is only ever supported by the layer beneath it, which the pass has already settled.
+
+### Cascade publication
+
+Singles and Bar gravity, like Storage repacking, suppress per-slot client sync while they run and settle once at the end: one content update to clients and one light-level recomputation for the whole cascade.
 
 ### Empty and broken blocks
 

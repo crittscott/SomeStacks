@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,11 +24,18 @@ public final class StackSort {
         c = Integer.compare(a.getDamageValue(), b.getDamageValue());
         if (c != 0) return c;
 
-        boolean anbt = a.hasTag();
-        boolean bnbt = b.hasTag();
-        if (anbt != bnbt) return anbt ? 1 : -1;
+        // Untagged variants of an item come first; tagged ones follow in a stable order, so a
+        // repacked pile lays its stacks out the same way every time.
+        CompoundTag aTag = a.getTag();
+        CompoundTag bTag = b.getTag();
+        if (aTag == null || bTag == null) {
+            if (aTag != bTag) return aTag != null ? 1 : -1;
+        } else {
+            c = aTag.toString().compareTo(bTag.toString());
+            if (c != 0) return c;
+        }
 
-        // Prefer partials first so they get filled before full stacks
-        return Integer.compare(a.getCount(), b.getCount());
+        // Fullest first, so a run of one item ends on its single partial stack.
+        return Integer.compare(b.getCount(), a.getCount());
     };
 }

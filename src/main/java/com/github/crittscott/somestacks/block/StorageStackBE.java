@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -23,7 +24,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StorageStackBE extends BlockEntity {
     private boolean suppressSync = false;
@@ -110,6 +113,15 @@ public class StorageStackBE extends BlockEntity {
     }
 
     public int deposit(ItemStack fromHand) {
+        return deposit(fromHand, true);
+    }
+
+    /**
+     * @param ownsRepack whether this call is responsible for the post-deposit repack. Overflow
+     *                   frames pass false, so a deposit that spills up a tall pile walks to the
+     *                   pile base once instead of once per block it touched.
+     */
+    private int deposit(ItemStack fromHand, boolean ownsRepack) {
         if (fromHand.isEmpty()) {
             return 0;
         }
@@ -127,7 +139,7 @@ public class StorageStackBE extends BlockEntity {
             if (aboveState.getBlock() == ModRegistry.STORAGE_STACK_BLOCK.get()) {
                 var beAbove = level.getBlockEntity(above);
                 if (beAbove instanceof StorageStackBE sbeAbove) {
-                    int movedAbove = sbeAbove.deposit(fromHand);
+                    int movedAbove = sbeAbove.deposit(fromHand, false);
                     moved += movedAbove;
                 }
             } else if (aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()) {
@@ -135,14 +147,14 @@ public class StorageStackBE extends BlockEntity {
                 if (level.setBlock(above, newStack, Block.UPDATE_ALL)) {
                     var beAbove = level.getBlockEntity(above);
                     if (beAbove instanceof StorageStackBE sbeAbove) {
-                        int movedAbove = sbeAbove.deposit(fromHand);
+                        int movedAbove = sbeAbove.deposit(fromHand, false);
                         moved += movedAbove;
                     }
                 }
             }
         }
 
-        if (moved > 0 && level != null && !level.isClientSide) {
+        if (ownsRepack && moved > 0 && level != null && !level.isClientSide) {
             resortAndPackPile();
         }
 
@@ -439,7 +451,6 @@ public class StorageStackBE extends BlockEntity {
                 }
             }
 
-            allItems.sort(StackSort.COMPARATOR);
             List<ItemStack> consolidated = consolidate(allItems);
 
             for (StorageStackBE sbe : pileStacks) {
@@ -515,39 +526,43 @@ public class StorageStackBE extends BlockEntity {
         return into.getCount() < into.getMaxStackSize();
     }
 
+    /**
+     * Totals the input by exact item identity, then re-cuts each total into whole stacks plus at
+     * most one remainder. Grouping by identity rather than by adjacency means two compatible
+     * stacks always merge, wherever they sat in the pile. The result is returned in pile order.
+     */
     private List<ItemStack> consolidate(List<ItemStack> stacks) {
-        stacks.removeIf(ItemStack::isEmpty);
-        stacks.sort(StackSort.COMPARATOR);
+        Map<StackKey, ItemStack> models = new LinkedHashMap<>();
+        Map<StackKey, Integer> totals = new LinkedHashMap<>();
+
+        for (ItemStack stack : stacks) {
+            if (stack.isEmpty()) continue;
+
+            StackKey key = new StackKey(stack.getItem(), stack.getDamageValue(), stack.getTag());
+            models.putIfAbsent(key, stack);
+            totals.merge(key, stack.getCount(), Integer::sum);
+        }
 
         List<ItemStack> out = new ArrayList<>();
 
-        for (ItemStack current : stacks) {
-            if (current.isEmpty()) continue;
+        for (Map.Entry<StackKey, Integer> entry : totals.entrySet()) {
+            ItemStack model = models.get(entry.getKey());
+            int max = Math.max(1, model.getMaxStackSize());
+            int remaining = entry.getValue();
 
-            if (out.isEmpty()) {
-                // First item, just add it
-                out.add(current.copy());
-            } else {
-                ItemStack last = out.get(out.size() - 1);
-
-                if (canMerge(last, current)) {
-                    // Merge as much as possible into the last stack
-                    int space = last.getMaxStackSize() - last.getCount();
-                    int toMerge = Math.min(current.getCount(), space);
-                    last.grow(toMerge);
-                    current.shrink(toMerge);
-
-                    // If there's leftover, add it as a new stack
-                    if (!current.isEmpty()) {
-                        out.add(current.copy());
-                    }
-                } else {
-                    // Different item type, add as new stack
-                    out.add(current.copy());
-                }
+            while (remaining > 0) {
+                ItemStack piece = model.copy();
+                piece.setCount(Math.min(remaining, max));
+                out.add(piece);
+                remaining -= piece.getCount();
             }
         }
 
+        out.sort(StackSort.COMPARATOR);
         return out;
+    }
+
+    /** Exact stack identity: two stacks merge if and only if their keys are equal. */
+    private record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
     }
 }

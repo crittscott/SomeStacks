@@ -40,7 +40,7 @@ Two `SimplePreparableReloadListener`s load per-mod JSON from `assets/somestacks/
 2. **[BarTextureStore](src/main/java/com/github/crittscott/somestacks/client/BarTextureStore.java)** ← [textures/bars/*.json](src/main/resources/assets/somestacks/textures/bars/default.json). Maps each ingot to a base bar texture + tint. Notable: if tint is omitted it **auto-computes** one by loading the item's actual sprite via `NativeImage`, averaging opaque pixels, and brightening 10% — so unconfigured modded ingots still get a sensible bar color.
 
 ## Utilities & commands
-- [util/](src/main/java/com/github/crittscott/somestacks/util/): `*CubeIdx` (index↔xyz + rotation/grounding math per block type), [ItemOps](src/main/java/com/github/crittscott/somestacks/util/ItemOps.java) (merge/drop/disabled-mod checks), [StackSort](src/main/java/com/github/crittscott/somestacks/util/StackSort.java) (sort by registry id → damage → NBT → count, partials first).
+- [util/](src/main/java/com/github/crittscott/somestacks/util/): `*CubeIdx` (index↔xyz + rotation/grounding math per block type), [ItemOps](src/main/java/com/github/crittscott/somestacks/util/ItemOps.java) (merge/drop/disabled-mod checks), [StackSort](src/main/java/com/github/crittscott/somestacks/util/StackSort.java) (sort by registry id → damage → NBT → count, fullest first).
 - `command/`: `ItemCommand`, `ModCommand`, `TestCommand` + `ItemTester`/`TestModsConfig` — dev tooling for batch-testing items across mods.
 
 ## Observations
