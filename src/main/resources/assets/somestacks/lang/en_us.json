@@ -9,5 +9,12 @@
   "somestacks.mode.singles_stack": "Singles Stack",
   "somestacks.mode.bar_stack": "Bar Stack",
   "somestacks.mode.toggle_permanent": "Toggle Permanent",
-  "somestacks.message.storage_mode": "Storage Mode: %s"
+  "somestacks.message.storage_mode": "Storage Mode: %s",
+
+  "subtitles.somestacks.bar_deposit": "Bar stacked",
+  "subtitles.somestacks.bar_extract": "Bar taken",
+  "subtitles.somestacks.singles_deposit": "Item stacked",
+  "subtitles.somestacks.singles_extract": "Item taken",
+  "subtitles.somestacks.stack_deposit": "Items stored",
+  "subtitles.somestacks.stack_extract": "Items taken"
 }

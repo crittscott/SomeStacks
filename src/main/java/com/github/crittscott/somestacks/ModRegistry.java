@@ -65,5 +65,6 @@ public final class ModRegistry {
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        ModSounds.SOUND_EVENTS.register(modBus);
     }
 }

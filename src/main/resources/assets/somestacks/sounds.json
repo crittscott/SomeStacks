@@ -1,0 +1,44 @@
+{
+  "bar_deposit": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.bar_deposit",
+    "sounds": [
+      "somestacks:bar_deposit"
+    ]
+  },
+  "bar_extract": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.bar_extract",
+    "sounds": [
+      "somestacks:bar_extract"
+    ]
+  },
+  "singles_deposit": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.singles_deposit",
+    "sounds": [
+      "somestacks:singles_deposit"
+    ]
+  },
+  "singles_extract": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.singles_extract",
+    "sounds": [
+      "somestacks:singles_extract"
+    ]
+  },
+  "stack_deposit": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.stack_deposit",
+    "sounds": [
+      "somestacks:stack_deposit"
+    ]
+  },
+  "stack_extract": {
+    "category": "block",
+    "subtitle": "subtitles.somestacks.stack_extract",
+    "sounds": [
+      "somestacks:stack_extract"
+    ]
+  }
+}

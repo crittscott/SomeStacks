@@ -348,7 +348,7 @@ Fix stale shapes, pile severing, and stale light after repack
 
 ---
 
-## Stage 4 — COMPLETE (verified by reading; not yet built/run)
+## Stage 4 — COMPLETE and confirmed working in-game
 
 Goal: fix finding 7, the cascade half of finding 12, and finding 16 — mid-mutation publication and
 rotation mismanagement in the Singles/Bar cascades, the quadratic repack walk on Storage overflow,
@@ -360,9 +360,8 @@ and unreliable consolidation.
 `finalizeAfterBatch()` (sync + light recompute; no `updateNeighborsAt`, since only Storage has
 comparator output). `onContentsChanged` keeps `setChanged()` and the `cachedShape` invalidation
 unconditional and delegates the rest to `finalizeAfterBatch()` when not suppressed. `extractAt`
-now wraps the extraction and the column cascade in one suppressed batch and finalizes once — which
-also publishes the rotations the cascade moves, previously written after the last sync and
-therefore never sent. `cascadeUnsupportedBlocks` ends with a new `clearEmptyCubeRotations()` sweep,
+now wraps the extraction and the column cascade in one suppressed batch and finalizes once.
+`cascadeUnsupportedBlocks` ends with a new `clearEmptyCubeRotations()` sweep,
 so every empty cell — including the extracted one, which was never cleared — holds rotation 0 and
 the next deposit cannot inherit an orientation. `setRotation`/`setCubeRotation` respect the
 suppression flag.
@@ -409,6 +408,14 @@ each references its own block class's `LIGHT_LEVEL` property, and Storage additi
 neighbors for its comparator output. Three short methods with one shape beat one method
 parameterized over a property and a comparator flag.
 
+### Correction to finding 7
+The review's claim that the cascade's relocated rotations "never reach clients" does not hold.
+`sendBlockUpdated` only marks the position dirty; `ChunkHolder` broadcasts at end of tick and reads
+the block entity then, so every mid-mutation sync collapses into one packet carrying the final
+state. What per-slot syncing actually cost was redundant dirty-marking and light recomputation, not
+correctness. The visible rotation bug had a different cause — the shared `cubeRotations` array
+described above.
+
 ### Not in Stage 4
 The repack window (`PILE_SORT_MAX_STACKS`) still bounds how much of a tall pile one repack touches;
 that is a server-performance control, not a defect, and it is the cause of the "only draws from the
@@ -420,17 +427,18 @@ bottom three" observation below. `ss test all` burst generation remains Stage 7.
 Batch Singles/Bar cascades and consolidate by exact item identity
 
 - Suppress per-slot sync during Singles and Bar gravity and settle once,
-  so cascaded item rotations reach clients and light is recomputed once
+  so a cascade recomputes light and publishes to clients one time
 - Clear the rotation of every emptied Singles cell so the next deposit
   does not inherit the previous occupant's orientation
-- Collapse unsupported bars in one ascending pass and stop deleting bars
+- Copy the Singles rotation array in and out of NBT, so an integrated
+  server and its client no longer share one array and render items and
+  rotations from different ticks
+- Collapse unsupported bars in one ascending pass, and stop deleting bars
   client-side without dropping them
-- Walk to the pile base once per deposit instead of once per overflowed
-  block
+- Walk to the pile base once per deposit instead of once per block an
+  overflowing deposit passes through
 - Consolidate a repack by exact item/damage/tag identity rather than by
   adjacency in a sorted list, and sort the result once
-- Copy the Singles rotation array in and out of NBT, so an integrated
-  server and its client stop sharing one array
 ```
 
 ---
@@ -469,9 +477,9 @@ Batch Singles/Bar cascades and consolidate by exact item identity
   `9f784cb`. See the Stage 2 section above.
 - Stage 3: **done** (findings 4, 5, 6), confirmed working in-game, committed as `0ea58c8`. See
   the Stage 3 section above.
-- Stage 4: **done** (finding 7, the cascade half of finding 12, and finding 16) plus the
-  Singles rotation-array aliasing bug that in-world testing surfaced. See the Stage 4 section
-  above. Retest the rotated-column extraction to confirm the one-frame flash is gone.
+- Stage 4: **done** (finding 7, the cascade half of finding 12, and finding 16) plus the Singles
+  rotation-array aliasing bug that in-world testing surfaced, confirmed working in-game,
+  uncommitted. See the Stage 4 section above.
 - Stages 5–7: not started. **Stage 5 is next** (findings 8, 9): dedicated-server sound ownership
   and the config-reload bus.
 - Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign, related to

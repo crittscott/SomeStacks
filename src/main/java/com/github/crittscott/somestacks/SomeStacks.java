@@ -4,9 +4,11 @@ import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
+import com.github.crittscott.somestacks.server.StackSoundData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,7 +39,12 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onConfigReload);
+        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
+    }
+
+    private void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new StackSoundData());
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

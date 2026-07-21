@@ -36,7 +36,6 @@ public final class ClientSetup {
     private static void onRegisterReloadListeners(RegisterClientReloadListenersEvent evt) {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
-        evt.registerReloadListener(new SoundConfig());
         evt.registerReloadListener((ResourceManagerReloadListener) manager -> AutoRenderProfiles.onResourceReload());
     }
 }

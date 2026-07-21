@@ -33,7 +33,8 @@ public final class ModSounds {
             SOUND_EVENTS.register("stack_extract",
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(SomeStacks.MODID, "stack_extract")));
 
-    // The actual sounds used (defaults to vanilla, overridden by SoundConfig)
+    // The sounds the blocks play, resolved on the logical server by StackSoundData.
+    // These values hold until the first data pack load.
     public static SoundEvent BAR_DEPOSIT = SoundEvents.WOOD_PLACE;
     public static SoundEvent BAR_EXTRACT = SoundEvents.WOOL_BREAK;
     public static SoundEvent SINGLES_DEPOSIT = SoundEvents.WOOD_PLACE;
