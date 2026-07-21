@@ -77,8 +77,8 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
 
             level.playSound(null, pos, ModSounds.STORAGE_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
 
-            boolean shouldRemove = sbe.isEmpty();
-            if (shouldRemove && !sbe.isPermanent()) {
+            boolean shouldRemove = sbe.isEmpty() && !sbe.isPermanent() && !sbe.hasStorageBlockAbove();
+            if (shouldRemove) {
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             }
 

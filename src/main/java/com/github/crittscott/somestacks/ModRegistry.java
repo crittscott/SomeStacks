@@ -38,6 +38,7 @@ public final class ModRegistry {
                     .strength(0.5F, 6.0F)
                     .pushReaction(PushReaction.NORMAL)
                     .noOcclusion()
+                    .dynamicShape()
             ));
 
     public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
@@ -46,6 +47,7 @@ public final class ModRegistry {
                     .strength(0.5F, 6.0F)
                     .pushReaction(PushReaction.NORMAL)
                     .noOcclusion()
+                    .dynamicShape()
             ));
 
     public static final RegistryObject<BlockEntityType<StorageStackBE>> STACK_BE =

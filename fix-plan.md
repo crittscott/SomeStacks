@@ -291,6 +291,58 @@ Harden C2S packet boundary
 
 ---
 
+## Stage 3 — COMPLETE (verified by reading; not yet built/run)
+
+Goal: fix findings 4, 5, 6 — stale collision shapes, pile-severing block removal, and stale
+light/comparator state after repack.
+
+### Files changed
+
+**`ModRegistry.java`** (finding 4) — added `.dynamicShape()` to the Singles and Bar block
+`Properties`. Without it, `BlockStateBase.initCache` bakes a per-blockstate collision shape once
+against `EmptyBlockGetter` (no BE → `getShape` returns `Shapes.empty()`), and since contents
+change only the `LIGHT_LEVEL` property the cache never rebuilds. With the flag, vanilla always
+calls `getShape` live and hits the per-BE lazy `cachedShape` (kept as-is — nulled on content
+change, recomputed on demand). Storage is untouched (it keeps the vanilla full-block shape).
+
+**`block/StorageStackBE.java`** (findings 5, 6):
+- New private `finalizeAfterBatch()`: pushes contents to clients, `updateNeighborsAt` (comparator
+  refresh), and recomputes `LIGHT_LEVEL`, setting it only when it changed. `onContentsChanged`'s
+  non-suppressed path now delegates to it, so the per-edit settle logic lives in exactly one
+  place. The repack `finally` calls `setChanged()` + `finalizeAfterBatch()` per window block
+  instead of the old bare `setChanged()` + `syncToClients()`, so a sort that relocates glowstone
+  or changes a block's fill re-lights and re-notifies comparators (finding 6).
+- New `hasStorageBlockAbove()`: true when a Storage Stack sits directly above. The repack
+  removal loop now breaks on `!isEmpty || isPermanent || hasStorageBlockAbove`, so it never
+  deletes a window-top empty block that still has occupied Storage above it (finding 5, site A).
+
+**`network/ExtractPkt.java`** (finding 5, site B) — `handleStorageExtract`'s `shouldRemove` now
+also requires `!sbe.hasStorageBlockAbove()`, so pulling the last local item from a mid-pile block
+(while the repack cooldown throttles consolidation) no longer severs the pile.
+
+**`living-spec.md`** — repack step 5 and the empty/broken-blocks bullet now state the
+never-remove-under-a-stack rule instead of describing the old severing behavior as intended.
+
+### Design decision
+Consolidated the light/comparator/sync logic into `finalizeAfterBatch()` and pointed both the
+normal per-edit path and the repack at it (rather than duplicating it), so the two cannot drift.
+The review flags this same finalize pattern for reuse in the Stage 4 Singles/Bar cascade fixes.
+
+### Suggested commit message for Stage 3 (code only)
+
+```
+Fix stale shapes, pile severing, and stale light after repack
+
+- Mark Singles and Bar blocks dynamicShape so collision is served live
+  from block-entity contents instead of a stale per-state cache
+- Add finalizeAfterBatch and route both the per-edit path and pile repack
+  through it, so repack refreshes light and comparators, not just sync
+- Never remove an empty Storage block while a Storage block sits directly
+  above it, at both the repack and player-extract removal sites
+```
+
+---
+
 ## In-world observations from testing (map to later stages — NOT Stage 1 regressions)
 
 - **Removing from a 4-high pile only draws from the bottom three.** Repack window
@@ -319,6 +371,8 @@ Harden C2S packet boundary
 - Stage 1: **done**, pipe auto-expand confirmed working in-game, committed as `08070ce`.
 - Stage 2: **done** (finding 3), verified by reading; not yet built/run or committed. Protection
   option E1 chosen. See the Stage 2 section above.
-- Stages 3–7: not started.
+- Stage 3: **done** (findings 4, 5, 6), verified by reading; not yet built/run or committed. See
+  the Stage 3 section above.
+- Stages 4–7: not started.
 - Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign).
 - Nothing has been built or run in this environment.

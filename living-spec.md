@@ -80,7 +80,7 @@ After a successful deposit or extraction, the pile may be repacked. Repacking is
 2. Sorts primarily by item registry id, damage value, tag presence, and count.
 3. Consolidates stacks only when item and tags match.
 4. Writes the result from lower blocks and lower slot indices upward.
-5. Removes empty, non-permanent blocks from the top of the processed window until it reaches a nonempty or permanent block.
+5. Removes empty, non-permanent blocks from the top of the processed window until it reaches a nonempty block, a permanent block, or a block that still has a Storage Stack directly above it. An empty block is never removed while another Storage Stack sits directly above, so a pile taller than the window is not severed.
 
 The sort cooldown and maximum window are server-performance controls, not capacity limits. A vertical pile may be taller than one repack window.
 
@@ -97,7 +97,7 @@ After one bar is extracted, the block repeatedly scans all remaining bars. Any b
 ### Empty and broken blocks
 
 - Empty Singles and Bar blocks remove themselves after player extraction.
-- Empty Storage blocks remove themselves unless permanent; pile repacking also removes empty temporary blocks at the processed top.
+- Empty Storage blocks remove themselves unless permanent or another Storage Stack sits directly above them; pile repacking removes empty temporary blocks from the processed top under the same never-remove-under-a-stack rule.
 - Breaking or replacing any stack block drops every item still in its local item handler.
 
 ## World state, collision, light, and persistence

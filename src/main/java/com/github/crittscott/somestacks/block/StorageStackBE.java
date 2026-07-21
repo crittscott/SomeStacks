@@ -32,16 +32,8 @@ public class StorageStackBE extends BlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
-            if (level != null && !level.isClientSide && !suppressSync) {
-                syncToClients();
-                level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
-
-                int newLight = ItemOps.calculateLightLevelFromItems(this);
-                BlockState state = getBlockState();
-                int currentLight = state.getValue(StorageStackBlock.LIGHT_LEVEL);
-                if (newLight != currentLight) {
-                    level.setBlock(getBlockPos(), state.setValue(StorageStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-                }
+            if (!suppressSync) {
+                finalizeAfterBatch();
             }
         }
 
@@ -233,6 +225,15 @@ public class StorageStackBE extends BlockEntity {
         return aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get();
     }
 
+    /**
+     * Whether a Storage Stack sits directly above this one. An empty block with a Storage block
+     * above it must never be removed, or the pile above would be severed from its base.
+     */
+    public boolean hasStorageBlockAbove() {
+        return level != null
+                && level.getBlockState(getBlockPos().above()).is(ModRegistry.STORAGE_STACK_BLOCK.get());
+    }
+
     public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand) {
         if (index < 0 || index >= items.getSlots()) {
             return ItemStack.EMPTY;
@@ -281,6 +282,26 @@ public class StorageStackBE extends BlockEntity {
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, 3);
+        }
+    }
+
+    /**
+     * Settles the derived state a content edit leaves behind: pushes contents to clients,
+     * refreshes comparators and neighbors, and recomputes the emitted light level. Callers mark
+     * the block changed; this reproduces the rest of the per-edit path as one pass, so a batch
+     * that suppresses per-slot sync can finalize each block exactly once when it finishes.
+     */
+    private void finalizeAfterBatch() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        syncToClients();
+        level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
+
+        int newLight = ItemOps.calculateLightLevelFromItems(items);
+        BlockState state = getBlockState();
+        if (state.getValue(StorageStackBlock.LIGHT_LEVEL) != newLight) {
+            level.setBlock(getBlockPos(), state.setValue(StorageStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
         }
     }
 
@@ -438,18 +459,16 @@ public class StorageStackBE extends BlockEntity {
             for (StorageStackBE sbe : pileStacks) {
                 sbe.suppressSync = false;
                 sbe.setChanged();
-                sbe.syncToClients();
+                sbe.finalizeAfterBatch();
             }
         }
 
         for (int i = pileStacks.size() - 1; i >= 0; i--) {
             StorageStackBE sbe = pileStacks.get(i);
-            if (sbe.isEmpty() && !sbe.isPermanent()) {
-                BlockPos pos = sbe.getBlockPos();
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            } else {
+            if (!sbe.isEmpty() || sbe.isPermanent() || sbe.hasStorageBlockAbove()) {
                 break;
             }
+            level.setBlock(sbe.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
         }
     }
 
