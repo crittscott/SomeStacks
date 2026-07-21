@@ -54,16 +54,16 @@ public class PlaceAndDepositPkt {
 
     public static void handle(PlaceAndDepositPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer sp = ctx.get().getSender();
+            ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) {
                 return;
             }
 
-            Level level = sp.level();
-            if (!level.isLoaded(msg.pos)) {
+            if (PacketBoundary.isProtected(sp, msg.pos)) {
                 return;
             }
 
+            Level level = sp.level();
             if (!level.getBlockState(msg.pos).canBeReplaced()) {
                 return;
             }
@@ -165,7 +165,7 @@ public class PlaceAndDepositPkt {
 
             BlockState state = msg.blockType.getBlock().defaultBlockState();
 
-            if (!level.setBlock(msg.pos, state, 3)) {
+            if (!PacketBoundary.placeBlockChecked(sp, msg.pos, state, msg.face)) {
                 return;
             }
 

@@ -44,16 +44,16 @@ public class DepositPkt {
 
     public static void handle(DepositPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer sp = ctx.get().getSender();
+            ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) {
                 return;
             }
 
-            Level level = sp.level();
-            if (!level.isLoaded(msg.pos)) {
+            if (PacketBoundary.isProtected(sp, msg.pos)) {
                 return;
             }
 
+            Level level = sp.level();
             Block block = level.getBlockState(msg.pos).getBlock();
             ItemStack handStack = sp.getItemInHand(msg.hand);
 

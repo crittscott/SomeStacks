@@ -28,12 +28,12 @@ public class TogglePermanentPkt {
 
     public static void handle(TogglePermanentPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer sp = ctx.get().getSender();
+            ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            Level level = sp.level();
-            if (!level.isLoaded(msg.pos)) return;
+            if (!PacketBoundary.mainHandEmpty(sp)) return;
 
+            Level level = sp.level();
             if (level.getBlockState(msg.pos).getBlock() != ModRegistry.STORAGE_STACK_BLOCK.get()) {
                 return;
             }

@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -39,16 +40,16 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
 
     public static void handle(ExtractPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Player player = ctx.get().getSender();
+            ServerPlayer player = PacketBoundary.validate(ctx, msg.pos);
             if (player == null) return;
 
-            Level level = player.level();
-            if (level.isClientSide) return;
+            if (msg.index < 0 || msg.index >= 64) return;
 
+            if (PacketBoundary.isProtected(player, msg.pos)) return;
+
+            Level level = player.level();
             BlockEntity be = level.getBlockEntity(msg.pos);
             if (be == null) return;
-
-            if (msg.index < 0 || msg.index >= 64) return;
 
             if (be instanceof StorageStackBE sbe) {
                 handleStorageExtract(level, msg.pos, player, msg.hand, sbe, msg.index);

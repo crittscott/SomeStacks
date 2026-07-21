@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.network.NetworkEvent;
@@ -32,12 +33,12 @@ public class RotateItemPkt {
 
     public static void handle(RotateItemPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer sp = ctx.get().getSender();
+            ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            Level level = sp.level();
-            if (!level.isLoaded(msg.pos)) return;
+            if (!PacketBoundary.holdsInMainHand(sp, Items.SOUL_TORCH)) return;
 
+            Level level = sp.level();
             Block block = level.getBlockState(msg.pos).getBlock();
             var be = level.getBlockEntity(msg.pos);
 
