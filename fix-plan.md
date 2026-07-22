@@ -8,11 +8,11 @@ re-deriving context. Read this together with the companion files in the repo roo
 - `claude-code-review.md` — the independent, line-verified review; **full detail for every
   finding below lives there**. This document condenses it and adds a staged plan + status.
 
-Reviewed against `main` @ f8c5f71. **Stages 1, 2, and 3 are done and committed** (Stage 1
-`08070ce`, Stage 2 `9f784cb`, Stage 3 `0ea58c8`); **Stage 4 is done and uncommitted**. Because of
-those edits, line numbers below have drifted; treat every line reference as a starting
-point, not an exact anchor, and re-locate against current code. The per-stage "COMPLETE" sections
-lower down record exactly what changed. Stages 5–7 are not started.
+Reviewed against `main` @ f8c5f71. **Stages 1–5 are done** (Stage 1 `08070ce`, Stage 2 `9f784cb`,
+Stage 3 `0ea58c8`, Stage 4 `02e169f`; Stage 5 lands as two commits, the sound half and the
+config-reload half). Because of those edits, line numbers below have drifted; treat every line
+reference as a starting point, not an exact anchor, and re-locate against current code. The
+per-stage "COMPLETE" sections lower down record exactly what changed. Stages 6–7 are not started.
 
 ## Project constraints (from CLAUDE.md — obey these)
 
@@ -68,12 +68,12 @@ on internal violations. Adopt this framing everywhere.
 8. **Sounds: logical server consumes client-owned resource data.** `SoundConfig` is a
    client-only reload listener but writes static `ModSounds` fields the server reads → dedicated
    servers play Java defaults. Also a fully dead second sound system (`ModSounds.SOUND_EVENTS`
-   `DeferredRegister` never registered; orphan `bar_extract.ogg`). Pick one owner; delete the
-   other. **Stage 5.**
+   `DeferredRegister` never registered; orphan `bar_extract.ogg`). **FIXED in Stage 5** — the
+   server owns selection via a data pack; the custom events were kept and made real.
 9. **Config-reload sync is on the wrong bus.** `ModConfigEvent.Reloading` is a mod-bus event but
    `onConfigReload` is on `MinecraftForge.EVENT_BUS` → never fires. `sendConfigSync` reparses the
    override dir per-player. No operator reload command. Also `MinecraftForge.EVENT_BUS.register(this)`
-   registers zero handlers. **Stage 5.**
+   registers zero handlers. **FIXED in Stage 5** — plus an off-thread hazard the review missed.
 
 ### Medium
 10. **Cross-block support depends on client-supplied face.** `PlaceAndDepositPkt` checks the
@@ -81,10 +81,12 @@ on internal violations. Adopt this framing everywhere.
     pre-check traces with the lower block's rotation while the real deposit traces with rotation
     0 → tests a different cell when rotated. Bar re-implements footprint overlap inline instead
     of using `BarCubeIdx`. **Stage 6.**
-11. **`ss` permissions + disabled-mod case mismatch.** Whole `ss` tree is creative-only (no
+11. **`ss` permissions + disabled-mod case mismatch.** Whole `ss` tree was creative-only (no
     operator/console); runtime uses `equalsIgnoreCase` while `ss test` uses case-sensitive
     `contains`. With finding 1, a wrong-case config entry made every deposit build empty towers.
-    Split permissions; normalize namespaces at load. **Stage 6.**
+    Split permissions; normalize namespaces at load. **Stage 6** — but the permission split is
+    already half done: Stage 5 moved the creative gate off the root onto `item`/`test`/`write` so
+    the new operator `reload` could exist, so Stage 6 only has to retune the three.
 12. **Event-driven bursts undercut the no-ticker design.** Storage overflow recursion re-walks to
     base each frame (O(depth²)); Singles/Bar cascades publish per cell; Bar `do/while` rescan is
     unnecessary (index order = layer order); `ss test all` ~30k deposits in one tick. Batch /
@@ -132,8 +134,8 @@ on internal violations. Adopt this framing everywhere.
    (light/comparator).** (Findings 4, 5, 6.) — **DONE (see "Stage 3 — COMPLETE").**
 4. **Singles cascade rotation/state batching; Bar collapse single pass.** (Findings 7, 12, 16.)
    — **DONE (see "Stage 4 — COMPLETE").**
-5. **Dedicated-server sound ownership + delete dead sound system; config-reload bus + operator
-   reload command.** (Findings 8, 9.)
+5. **Dedicated-server sound ownership; config-reload bus + operator reload command.**
+   (Findings 8, 9.) — **DONE (see "Stage 5 — COMPLETE").**
 6. **Face-independent cross-block support (+ Singles rotation bug); `ss` permissions + case
    normalization; remove rotation-triggered repack.** (Findings 10, 11, 13.)
 7. **Rendering (14, 15), consolidation (16), capability lifecycle (17), metadata (18), logging,
@@ -443,6 +445,136 @@ Batch Singles/Bar cascades and consolidate by exact item identity
 
 ---
 
+## Stage 5 — COMPLETE
+
+Goal: fix findings 8 and 9 — server ownership of sound selection, and config reload actually
+reaching clients. Two independent halves, landing as two commits.
+
+---
+
+### Part 1 (finding 8) — sounds. Confirmed working in-game.
+
+Make the logical server the owner of stack sound selection, since the server is what plays and
+broadcasts them.
+
+#### Why the bug existed
+`level.playSound(null, …)` already broadcasts a `ClientboundSoundPacket` carrying the event's
+registry holder, so the client is told what to play and needs no configuration of its own. The
+only defect was the source of the server's answer: `ModSounds`' six fields were written solely by
+a listener on `RegisterClientReloadListenersEvent` reading `assets/somestacks/sounds/default.json`.
+`assets/` is the client resource-pack root, so a dedicated server never ran the listener and kept
+the Java-default `WOOD_PLACE`/`WOOL_BREAK`.
+
+#### Design decisions
+- **Data pack, not config TOML.** Sound choice stays a resource-shaped, pack-mergeable concern and
+  refreshes on `/reload`; it needs no operator command of its own. The finding 9 reload command
+  remains about the server TOML.
+- **Custom sound events kept, not deleted.** The review's "pick one owner, delete the other" is
+  satisfied by having one *selection* owner (the server data pack); the mod's own `SoundEvent`
+  registry is the sound *supply* and was made functional rather than dropped.
+
+#### Files changed
+
+**`data/somestacks/somestacks_sounds/default.json`** (moved from
+`assets/somestacks/sounds/default.json`, contents unchanged) — the data-pack root is loaded by the
+server. `bar_extract.ogg` stays under `assets/`, where audio belongs.
+
+**`server/StackSoundData.java`** (new; replaces `client/SoundConfig.java`) — a
+`SimpleJsonResourceReloadListener` on directory `somestacks_sounds`, which supplies the listing,
+parsing, and pack-override resolution the old class hand-rolled. `apply` overlays block-type keys
+across all contributing files in `ResourceLocation` order (deterministic when several packs
+contribute), then resolves each name through `ForgeRegistries.SOUND_EVENTS` into the six
+`ModSounds` fields. A missing key, unparseable id, or unregistered sound warns and falls back to
+the vanilla default — this is the untrusted-input boundary, so the packet call sites may treat
+`ModSounds.*` as a non-null invariant.
+
+**`SomeStacks.java`** — registers the listener on the Forge bus via `AddReloadListenerEvent`, so it
+runs at data-pack load (including dedicated-server startup, the broken case) and again on
+`/reload`. **`ClientSetup.java`** — the `SoundConfig` registration is gone.
+
+**`ModRegistry.init`** — `ModSounds.SOUND_EVENTS.register(modBus)`. Without it none of the six
+events existed, so any `somestacks:*` name resolved to null and silently fell back.
+
+**`assets/somestacks/sounds.json`** (new) + `subtitles.somestacks.*` in `en_us.json` — the vanilla
+sound-definition file the custom events need. Only `bar_extract` has an `.ogg`; the other five are
+declared and inert until audio is supplied, and clients log a missing-file warning for them on each
+resource reload.
+
+The nine `level.playSound` call sites are unchanged. `BlockType.getDepositSound/getExtractSound`
+stay unused — the call sites branch on block identity, not `BlockType` — and remain on the Stage 7
+dead-code list.
+
+#### Threading
+The six `ModSounds` fields are still mutable statics: written on the server thread in reload
+`apply`, read on the server thread in packet handlers. On an integrated server the client half
+never reads them; the only readers are the three packet classes and the dead `BlockType` methods.
+
+#### Commit message, part 1 (code only)
+
+```
+Resolve stack sounds on the server from a data pack
+
+- Move the sound definitions from assets/somestacks/sounds/default.json to
+  data/somestacks/somestacks_sounds/default.json, and load them with a
+  server-side reload listener instead of a client resource listener, so a
+  dedicated server no longer plays the hardcoded Java defaults
+- Register the mod's sound events and add the sounds.json and subtitles
+  they need, so somestacks: names resolve instead of falling back
+```
+
+---
+
+### Part 2 (finding 9) — config reload. Verified by reading; not yet run.
+
+Make a server config reload reach clients, stop re-reading the override directory once per player,
+and give operators a reload command.
+
+#### Files changed
+
+**`SomeStacks.java`**
+- `onConfigReload` moved from `MinecraftForge.EVENT_BUS` to the mod bus, where
+  `ModConfigEvent.Reloading` is actually fired. It had never run.
+- The handler now hops through `server.execute(...)` before touching the player list. Forge fires
+  config events from the config file-watcher thread, so the old body would have walked
+  `getPlayerList()` off the server thread had it ever fired — not in the review, found while moving
+  it.
+- `sendConfigSync` split into `buildConfigSync()` (builds the packet, including the single
+  `ServerOverridesLoader.load()`) and `syncAllPlayers(server)`, which builds once and broadcasts via
+  `PacketDistributor.ALL.noArg()`. Login keeps the per-player send, which is correct there.
+- `MinecraftForge.EVENT_BUS.register(this)` deleted. The class has no `@SubscribeEvent` methods —
+  every listener is added explicitly — so it registered nothing.
+
+**`command/SsCommand.java`** — new `ss reload`, permission level 2, which re-reads the override
+directory and resyncs every player. Registering it forced part of finding 11 early: the creative
+gate was a `.requires` on the *root* `ss` literal, which would have made an operator subcommand
+unreachable from console, so it moved down onto `item`, `test`, and `write` unchanged. Stage 6 now
+only has to retune those three.
+
+#### Known limit
+`ss reload` re-reads the override JSON and rebroadcasts current config values; it does **not** force
+Forge to re-parse `somestacks-server.toml`, for which 1.20.1 exposes no public API. Forge's own file
+watcher already reloads the TOML on save, and that now triggers the sync. So: edit the TOML and it
+syncs itself; edit override JSON and run `ss reload`.
+
+#### Commit message, part 2 (code only)
+
+```
+Deliver server config reloads to clients
+
+- Move the config reload handler to the mod bus, where ModConfigEvent is
+  fired, and marshal it onto the server thread before touching the player
+  list
+- Build the sync packet once per broadcast instead of re-reading the
+  server override directory for every player
+- Add ss reload, an operator-level command that re-reads the override
+  directory and resyncs all players
+- Move the creative-mode gate from the ss root onto its creative
+  subcommands so operator subcommands are reachable from the console
+- Drop an event bus registration that registered no handlers
+```
+
+---
+
 ## In-world observations from testing (map to later stages — NOT Stage 1 regressions)
 
 - **Removing from a 4-high pile only draws from the bottom three.** Repack window
@@ -478,10 +610,12 @@ Batch Singles/Bar cascades and consolidate by exact item identity
 - Stage 3: **done** (findings 4, 5, 6), confirmed working in-game, committed as `0ea58c8`. See
   the Stage 3 section above.
 - Stage 4: **done** (finding 7, the cascade half of finding 12, and finding 16) plus the Singles
-  rotation-array aliasing bug that in-world testing surfaced, confirmed working in-game,
-  uncommitted. See the Stage 4 section above.
-- Stages 5–7: not started. **Stage 5 is next** (findings 8, 9): dedicated-server sound ownership
-  and the config-reload bus.
+  rotation-array aliasing bug that in-world testing surfaced, confirmed working in-game, committed
+  as `02e169f`. See the Stage 4 section above.
+- Stage 5: **done** (findings 8 and 9), as two commits. The sound half is confirmed working
+  in-game; the config-reload half is verified by reading only. See the Stage 5 section above.
+- Stages 6–7: not started. **Stage 6 is next** (findings 10, 11, 13), and its `ss` permission split
+  is already half done — see finding 11.
 - Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign, related to
   finding 10 / Stage 6).
 - Verification to date is by reading + the user's in-world testing. Nothing has been built or run

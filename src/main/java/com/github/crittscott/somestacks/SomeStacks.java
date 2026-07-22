@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.StackSoundData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -35,10 +36,9 @@ public class SomeStacks {
 
         ModRegistry.init(modBus);
         ModNetworking.init();
-        MinecraftForge.EVENT_BUS.register(this);
+        modBus.addListener(this::onConfigReload);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
-        MinecraftForge.EVENT_BUS.addListener(this::onConfigReload);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }
@@ -52,21 +52,39 @@ public class SomeStacks {
     }
 
     private void onConfigReload(ModConfigEvent.Reloading event) {
-        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
-            var server = ServerLifecycleHooks.getCurrentServer();
-            if (server != null) {
-                server.getPlayerList().getPlayers().forEach(this::sendConfigSync);
-            }
+        if (event.getConfig().getType() != ModConfig.Type.SERVER) {
+            return;
+        }
+
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null) {
+            // Config events fire on the file-watcher thread; touch the player list on the server thread.
+            server.execute(() -> syncAllPlayers(server));
         }
     }
 
     private void sendConfigSync(ServerPlayer player) {
-        ConfigSyncPkt packet = new ConfigSyncPkt(
+        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), buildConfigSync());
+    }
+
+    /**
+     * Sends the current server config to every player, reading the override directory once
+     * for the whole broadcast.
+     *
+     * @return the number of players synced
+     */
+    public static int syncAllPlayers(MinecraftServer server) {
+        ConfigSyncPkt packet = buildConfigSync();
+        ModNetworking.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+        return server.getPlayerList().getPlayerCount();
+    }
+
+    private static ConfigSyncPkt buildConfigSync() {
+        return new ConfigSyncPkt(
                 ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get(),
                 ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get(),
                 ServerConfig.ENABLE_BAR_STACK_BLOCK.get(),
                 ServerOverridesLoader.load());
-        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {

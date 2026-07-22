@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
@@ -29,8 +30,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * The {@code ss} command: render override authoring and test wall generation, for
- * creative-mode players.
+ * The {@code ss} command: render override authoring and test wall generation for creative-mode
+ * players, plus server administration for operators.
  *
  * <ul>
  *   <li>{@code ss item <item> <mode> <scale> <x> <y> <z>} sets an entry in the issuing
@@ -41,7 +42,12 @@ import java.util.stream.Collectors;
  *       given namespace, or in all loaded namespaces.</li>
  *   <li>{@code ss write} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
+ *   <li>{@code ss reload} re-reads the server override directory and pushes the current
+ *       server config to every player. Permission level 2, so console and operators can
+ *       run it.</li>
  * </ul>
+ *
+ * <p>The first three require creative mode; {@code reload} requires operator permission.
  */
 public final class SsCommand {
     private SsCommand() {}
@@ -49,8 +55,8 @@ public final class SsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("ss")
-                        .requires(source -> source.getEntity() instanceof ServerPlayer player && player.isCreative())
                         .then(Commands.literal("item")
+                                .requires(SsCommand::isCreativePlayer)
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .then(Commands.literal("reset")
@@ -68,6 +74,7 @@ public final class SsCommand {
                                                                         .then(Commands.argument("z", FloatArgumentType.floatArg())
                                                                                 .executes(SsCommand::setItem))))))))
                         .then(Commands.literal("test")
+                                .requires(SsCommand::isCreativePlayer)
                                 .then(Commands.literal("all")
                                         .executes(SsCommand::testAll))
                                 .then(Commands.argument("modid", StringArgumentType.word())
@@ -75,8 +82,16 @@ public final class SsCommand {
                                                 TestWallGenerator.getModIdsWithItems(), builder))
                                         .executes(SsCommand::testSingle)))
                         .then(Commands.literal("write")
+                                .requires(SsCommand::isCreativePlayer)
                                 .executes(SsCommand::write))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(SsCommand::reload))
         );
+    }
+
+    private static boolean isCreativePlayer(CommandSourceStack source) {
+        return source.getEntity() instanceof ServerPlayer player && player.isCreative();
     }
 
     private static CompletableFuture<Suggestions> suggestItems(
@@ -209,6 +224,13 @@ public final class SsCommand {
         final String finalMessage = message.toString();
         ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), true);
         return 1;
+    }
+
+    private static int reload(CommandContext<CommandSourceStack> ctx) {
+        int synced = SomeStacks.syncAllPlayers(ctx.getSource().getServer());
+        ctx.getSource().sendSuccess(() -> Component.literal(
+                "Reloaded Some Stacks server overrides and synced " + synced + " player(s)"), true);
+        return synced;
     }
 
     private static int write(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
