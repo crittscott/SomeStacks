@@ -30,8 +30,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * The {@code ss} command: render override authoring and test wall generation for creative-mode
- * players, plus server administration for operators.
+ * The {@code ss} command: render override authoring, test wall generation, and override
+ * reloading.
  *
  * <ul>
  *   <li>{@code ss item <item> <mode> <scale> <x> <y> <z>} sets an entry in the issuing
@@ -43,11 +43,11 @@ import java.util.stream.Collectors;
  *   <li>{@code ss write} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
  *   <li>{@code ss reload} re-reads the server override directory and pushes the current
- *       server config to every player. Permission level 2, so console and operators can
- *       run it.</li>
+ *       server config to every player.</li>
  * </ul>
  *
- * <p>The first three require creative mode; {@code reload} requires operator permission.
+ * <p>Every subcommand adjusts how stacks look and is issued against the sender's own view,
+ * so the whole tree requires a creative-mode player and is unavailable from the console.
  */
 public final class SsCommand {
     private SsCommand() {}
@@ -55,8 +55,8 @@ public final class SsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("ss")
+                        .requires(SsCommand::isCreativePlayer)
                         .then(Commands.literal("item")
-                                .requires(SsCommand::isCreativePlayer)
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .then(Commands.literal("reset")
@@ -74,7 +74,6 @@ public final class SsCommand {
                                                                         .then(Commands.argument("z", FloatArgumentType.floatArg())
                                                                                 .executes(SsCommand::setItem))))))))
                         .then(Commands.literal("test")
-                                .requires(SsCommand::isCreativePlayer)
                                 .then(Commands.literal("all")
                                         .executes(SsCommand::testAll))
                                 .then(Commands.argument("modid", StringArgumentType.word())
@@ -82,10 +81,8 @@ public final class SsCommand {
                                                 TestWallGenerator.getModIdsWithItems(), builder))
                                         .executes(SsCommand::testSingle)))
                         .then(Commands.literal("write")
-                                .requires(SsCommand::isCreativePlayer)
                                 .executes(SsCommand::write))
                         .then(Commands.literal("reload")
-                                .requires(source -> source.hasPermission(2))
                                 .executes(SsCommand::reload))
         );
     }
@@ -169,7 +166,7 @@ public final class SsCommand {
             return 0;
         }
 
-        if (ServerConfig.DISABLE_MODS.get().contains(modId)) {
+        if (ServerConfig.isModDisabled(modId)) {
             ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
             return 0;
         }
@@ -183,10 +180,9 @@ public final class SsCommand {
         List<String> modIds = new ArrayList<>(TestWallGenerator.getModIdsWithItems());
         Collections.sort(modIds);
 
-        List<String> disabledMods = new ArrayList<>(ServerConfig.DISABLE_MODS.get());
         List<String> skippedMods = new ArrayList<>();
         modIds.removeIf(modId -> {
-            if (disabledMods.contains(modId)) {
+            if (ServerConfig.isModDisabled(modId)) {
                 skippedMods.add(modId);
                 return true;
             }

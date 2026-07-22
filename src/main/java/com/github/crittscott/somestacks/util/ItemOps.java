@@ -94,16 +94,7 @@ public final class ItemOps {
             return false;
         }
 
-        String modId = itemId.getNamespace();
-
-        java.util.List<? extends String> disabledMods = ServerConfig.DISABLE_MODS.get();
-        for (String disabledMod : disabledMods) {
-            if (disabledMod.equalsIgnoreCase(modId)) {
-                return true;
-            }
-        }
-
-        return false;
+        return ServerConfig.isModDisabled(itemId.getNamespace());
     }
 
     /**
@@ -146,19 +137,7 @@ public final class ItemOps {
             return false;
         }
 
-        java.util.List<? extends String> disabledItems = ServerConfig.DISABLE_ITEMS.get();
-        for (String disabledItem : disabledItems) {
-            try {
-                ResourceLocation disabledId = new ResourceLocation(disabledItem);
-                if (itemId.equals(disabledId)) {
-                    return true;
-                }
-            } catch (Exception e) {
-                // Invalid resource location in config, skip it
-            }
-        }
-
-        return false;
+        return ServerConfig.isItemDisabled(itemId);
     }
 
     /**

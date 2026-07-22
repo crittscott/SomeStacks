@@ -1,10 +1,14 @@
 package com.github.crittscott.somestacks;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public final class ServerConfig {
     private ServerConfig() {}
@@ -20,6 +24,9 @@ public final class ServerConfig {
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
+
+    private static volatile Set<String> disabledMods = Set.of();
+    private static volatile Set<ResourceLocation> disabledItems = Set.of();
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -71,5 +78,54 @@ public final class ServerConfig {
         builder.pop();
 
         SERVER_CONFIG = builder.build();
+    }
+
+    /**
+     * Resolves the compatibility lists into lookup sets. Config entries are free-form text, so
+     * mod ids are lowercased to match the namespace of a {@link ResourceLocation} and item ids are
+     * parsed once here; a malformed item id is reported and dropped rather than being re-parsed and
+     * swallowed on every deposit.
+     *
+     * <p>Called from the config load and reload events, which fire on Forge's file-watcher thread.
+     * Each list is published as an immutable set through a volatile field, so a server thread
+     * lookup sees either the old lists or the new ones.
+     */
+    public static void bakeCompatibilityLists() {
+        Set<String> mods = new HashSet<>();
+        for (String entry : DISABLE_MODS.get()) {
+            String modId = entry.trim().toLowerCase(Locale.ROOT);
+            if (!modId.isEmpty()) {
+                mods.add(modId);
+            }
+        }
+
+        Set<ResourceLocation> items = new HashSet<>();
+        for (String entry : DISABLE_ITEMS.get()) {
+            ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
+            if (itemId == null) {
+                SomeStacks.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);
+                continue;
+            }
+            items.add(itemId);
+        }
+
+        disabledMods = Set.copyOf(mods);
+        disabledItems = Set.copyOf(items);
+    }
+
+    /**
+     * @param namespace a mod id, in any case
+     * @return whether items from that mod are barred from stacks
+     */
+    public static boolean isModDisabled(String namespace) {
+        return disabledMods.contains(namespace.toLowerCase(Locale.ROOT));
+    }
+
+    /**
+     * @param itemId a registry name
+     * @return whether that item is barred from stacks
+     */
+    public static boolean isItemDisabled(ResourceLocation itemId) {
+        return disabledItems.contains(itemId);
     }
 }

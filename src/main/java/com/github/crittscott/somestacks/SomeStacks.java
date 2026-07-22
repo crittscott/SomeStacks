@@ -36,6 +36,7 @@ public class SomeStacks {
 
         ModRegistry.init(modBus);
         ModNetworking.init();
+        modBus.addListener(this::onConfigLoad);
         modBus.addListener(this::onConfigReload);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
@@ -51,10 +52,18 @@ public class SomeStacks {
         sendConfigSync((ServerPlayer) event.getEntity());
     }
 
+    private void onConfigLoad(ModConfigEvent.Loading event) {
+        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
+            ServerConfig.bakeCompatibilityLists();
+        }
+    }
+
     private void onConfigReload(ModConfigEvent.Reloading event) {
         if (event.getConfig().getType() != ModConfig.Type.SERVER) {
             return;
         }
+
+        ServerConfig.bakeCompatibilityLists();
 
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {

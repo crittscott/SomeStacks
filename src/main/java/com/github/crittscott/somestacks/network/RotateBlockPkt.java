@@ -50,7 +50,6 @@ public class RotateBlockPkt {
                 int newRotation = (currentRotation + 1) % 4;
                 sbe.setRotation(newRotation);
                 sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
-                sbe.resortAndPackPile();
             }
         });
         ctx.get().setPacketHandled(true);

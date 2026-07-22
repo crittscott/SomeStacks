@@ -8,11 +8,11 @@ re-deriving context. Read this together with the companion files in the repo roo
 - `claude-code-review.md` — the independent, line-verified review; **full detail for every
   finding below lives there**. This document condenses it and adds a staged plan + status.
 
-Reviewed against `main` @ f8c5f71. **Stages 1–5 are done** (Stage 1 `08070ce`, Stage 2 `9f784cb`,
+Reviewed against `main` @ f8c5f71. **Stages 1–6 are done** (Stage 1 `08070ce`, Stage 2 `9f784cb`,
 Stage 3 `0ea58c8`, Stage 4 `02e169f`; Stage 5 lands as two commits, the sound half and the
 config-reload half). Because of those edits, line numbers below have drifted; treat every line
 reference as a starting point, not an exact anchor, and re-locate against current code. The
-per-stage "COMPLETE" sections lower down record exactly what changed. Stages 6–7 are not started.
+per-stage "COMPLETE" sections lower down record exactly what changed. Stage 7 is not started.
 
 ## Project constraints (from CLAUDE.md — obey these)
 
@@ -76,23 +76,23 @@ on internal violations. Adopt this framing everywhere.
    registers zero handlers. **FIXED in Stage 5** — plus an off-thread hazard the review missed.
 
 ### Medium
-10. **Cross-block support depends on client-supplied face.** `PlaceAndDepositPkt` checks the
-    lower block only when `msg.face == UP`. Also (found here, not in merged review) the Singles
-    pre-check traces with the lower block's rotation while the real deposit traces with rotation
-    0 → tests a different cell when rotated. Bar re-implements footprint overlap inline instead
-    of using `BarCubeIdx`. **Stage 6.**
-11. **`ss` permissions + disabled-mod case mismatch.** Whole `ss` tree was creative-only (no
-    operator/console); runtime uses `equalsIgnoreCase` while `ss test` uses case-sensitive
-    `contains`. With finding 1, a wrong-case config entry made every deposit build empty towers.
-    Split permissions; normalize namespaces at load. **Stage 6** — but the permission split is
-    already half done: Stage 5 moved the creative gate off the root onto `item`/`test`/`write` so
-    the new operator `reload` could exist, so Stage 6 only has to retune the three.
+10. **Cross-block support depends on client-supplied face.** ~~`PlaceAndDepositPkt` checks the
+    lower block only when `msg.face == UP`.~~ **REJECTED — not fixing.** Every consequential
+    check (reach, protection, `mayUseItemAt`, `EntityPlaceEvent`, the deposit's own `isGrounded`,
+    and block removal on failed deposit) runs regardless of face, so forging the face buys a
+    modified client one floating item and nothing else. The rotation-mismatch and Bar-overlap
+    sub-items were theoretical: extended play has produced no such misbehavior, and the path is
+    largely unreachable anyway (see the interaction-ordering note below).
+11. **Disabled-mod case mismatch.** Runtime used `equalsIgnoreCase` while `ss test` used
+    case-sensitive `contains`. With finding 1, a wrong-case config entry made every deposit build
+    empty towers. Normalize namespaces at load. **FIXED in Stage 6.** The permission half was
+    rejected: `ss` is entirely visual and stays creative-only.
 12. **Event-driven bursts undercut the no-ticker design.** Storage overflow recursion re-walks to
     base each frame (O(depth²)); Singles/Bar cascades publish per cell; Bar `do/while` rescan is
     unnecessary (index order = layer order); `ss test all` ~30k deposits in one tick. Batch /
     schedule. **Stage 4 (cascade) + Stage 7 (test gen).**
 13. **Rotating Storage triggers a pile repack** (`RotateBlockPkt:52`) — rotation is visual-only;
-    delete the call. **Stage 6.**
+    delete the call. **FIXED in Stage 6.**
 14. **2D renderer ignores Forge render passes.** Measurement iterates `getRenderPasses`; the draw
     path reads only the root model → multi-pass items render with missing layers. **Stage 7.**
 15. **Odd Bar layers apply side/end UV regions backwards** (`BarStackBER.emitBar`) — rotated
@@ -110,7 +110,6 @@ on internal violations. Adopt this framing everywhere.
 ### Low / cleanup (Stage 7)
 - `ModelMeasurer` reads `isGui3d` before model substitution; hard-coded `true` fabulous flag.
 - `OverrideJsonCodec` accepts non-finite scale/offset (`NaN` evades `scale <= 0`).
-- Blacklist ids reparsed and swallowed on every deposit (`ItemOps.isItemDisabled`).
 - Mode cycler favors Storage regardless of its synced enable flag.
 - `BarTextureStore` logs thousands of INFO lines per reload.
 - `RightClickBlockSuppressor` stores a same-tick marker in persistent player NBT.
@@ -136,8 +135,8 @@ on internal violations. Adopt this framing everywhere.
    — **DONE (see "Stage 4 — COMPLETE").**
 5. **Dedicated-server sound ownership; config-reload bus + operator reload command.**
    (Findings 8, 9.) — **DONE (see "Stage 5 — COMPLETE").**
-6. **Face-independent cross-block support (+ Singles rotation bug); `ss` permissions + case
-   normalization; remove rotation-triggered repack.** (Findings 10, 11, 13.)
+6. **Disabled-list case normalization; remove rotation-triggered repack.** (Findings 11, 13;
+   finding 10 rejected.) — **DONE (see "Stage 6 — COMPLETE").**
 7. **Rendering (14, 15), consolidation (16), capability lifecycle (17), metadata (18), logging,
    and dead-code cleanup.**
 
@@ -575,6 +574,74 @@ Deliver server config reloads to clients
 
 ---
 
+## Stage 6 — COMPLETE (verified by reading; not yet built/run)
+
+Goal: fix findings 11 and 13. Finding 10 was rejected outright, and the permission half of
+finding 11 was rejected in favor of the opposite change.
+
+### Scope decisions
+
+**Finding 10 — rejected.** The face is client-supplied, but nothing consequential hangs off it:
+`PacketBoundary.validate`, `isProtected`, `canBeReplaced`, `mayUseItemAt`, the disabled-item
+checks, `placeBlockChecked`'s `EntityPlaceEvent`, the deposit's own in-block `isGrounded`, and the
+`removeBlock` on failed deposit all run for every face. Forging it yields one item floating over an
+empty cell. The two sub-items (Singles pre-check tracing with the lower block's rotation while the
+deposit traces with rotation 0; Bar's inline footprint overlap) were derived by reading, never
+observed in extended play, and sit on a path that interaction-rule ordering makes largely
+unreachable — see the Singles/Bar vertical-growth note below. Not worth the churn.
+
+**Finding 11, permissions — rejected, and reversed.** `ss` authors render overrides, generates test
+walls, and pushes overrides to a client. Every subcommand is visual and acts on the sender's own
+view; none is meaningful from the console. The Stage 5 per-subcommand split existed only to let
+`ss reload` carry `hasPermission(2)`. That gate is gone and the single
+`.requires(SsCommand::isCreativePlayer)` is back on the `ss` root, covering `reload` too. The mod
+has no operator-only surface.
+
+### Files changed
+
+**`ServerConfig.java`** (finding 11) — added `bakeCompatibilityLists()`, which lowercases each
+`disable_mods` entry and parses each `disable_items` entry through `ResourceLocation.tryParse`
+once, publishing both as immutable sets in volatile fields. Lookups go through the new
+`isModDisabled(String)` (lowercases its argument, so a command-typed mod id matches too) and
+`isItemDisabled(ResourceLocation)`. A malformed item id is now logged once at bake time instead of
+being re-parsed and its exception swallowed on every deposit — which also clears that Stage 7
+cleanup item.
+
+**`SomeStacks.java`** — new `onConfigLoad(ModConfigEvent.Loading)` bakes at load; `onConfigReload`
+bakes before syncing players. Both are mod-bus events fired on Forge's file-watcher thread; the
+bake publishes by volatile reference swap, so a concurrent server-thread lookup sees either the
+whole old pair of sets or the whole new pair.
+
+**`ItemOps.java`** — `isItemFromDisabledMod` and `isItemDisabled` now delegate to the baked sets.
+The `equalsIgnoreCase` scan and the per-call `new ResourceLocation(...)` + `catch (Exception)` are
+gone.
+
+**`SsCommand.java`** — creative gate back on the root literal, removed from `item`/`test`/`write`,
+and the `hasPermission(2)` gate removed from `reload`. `testSingle`/`testAll` call
+`ServerConfig.isModDisabled` instead of `List.contains`, so `ss test` and the deposit path now
+agree on case. Class javadoc updated.
+
+**`RotateBlockPkt.java`** (finding 13) — deleted the `sbe.resortAndPackPile()` call on the Storage
+branch. Rotation is visual; `setRotation` already marks and syncs the block entity. The Singles
+branch never had the call.
+
+### Suggested commit message for Stage 6 (code only)
+
+```
+Normalize disabled-item config and stop repacking on rotation
+
+- Resolve disable_mods and disable_items once when the config loads,
+  lowercasing mod ids and parsing item ids up front, so ss test and the
+  deposit path agree on case and a malformed id is reported once instead
+  of throwing and being swallowed on every deposit
+- Restore the creative gate on the ss root; every subcommand is visual and
+  acts on the sender's own view, so none is reachable from the console
+- Drop the pile repack triggered by rotating a Storage Stack, which is a
+  visual change that consumed the base cooldown
+```
+
+---
+
 ## In-world observations from testing (map to later stages — NOT Stage 1 regressions)
 
 - **Removing from a 4-high pile only draws from the bottom three.** Repack window
@@ -595,10 +662,10 @@ Deliver server config reloads to clients
   of a stack always deposits into it (fails when the column is full) and never falls through to
   placing a block above. Singles/Bar don't overflow upward, so there's no fallback — and the
   `PlaceAndDepositPkt` `msg.face == UP` cross-block-support code is therefore effectively
-  unreachable for the "place above an existing stack" case. **Pre-existing, not in the original
-  7 stages.** This is an interaction/packet redesign (let a full-column deposit fall through to
-  place-above), related to finding 10. **Recommend adding to Stage 6** (or its own stage) if
-  vertical hand-growth of Singles/Bar is desired.
+  unreachable for the "place above an existing stack" case — part of why finding 10 was rejected.
+  **Pre-existing, not in the original 7 stages.** This is an interaction/packet redesign (let a
+  full-column deposit fall through to place-above), and needs its own stage if vertical
+  hand-growth of Singles/Bar is desired.
 
 ---
 
@@ -614,10 +681,10 @@ Deliver server config reloads to clients
   as `02e169f`. See the Stage 4 section above.
 - Stage 5: **done** (findings 8 and 9), as two commits. The sound half is confirmed working
   in-game; the config-reload half is verified by reading only. See the Stage 5 section above.
-- Stages 6–7: not started. **Stage 6 is next** (findings 10, 11, 13), and its `ss` permission split
-  is already half done — see finding 11.
-- Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign, related to
-  finding 10 / Stage 6).
+- Stage 6: **done** (findings 11 and 13; finding 10 and the finding 11 permission split both
+  rejected), verified by reading only. See the Stage 6 section above.
+- Stage 7: not started. **Stage 7 is next.**
+- Open addition to consider: Singles/Bar vertical hand-growth (interaction redesign).
 - Verification to date is by reading + the user's in-world testing. Nothing has been built or run
   in this environment. `living-spec.md` was updated alongside Stages 2 and 3; `fix-plan.md` is the
   progress log and is tracked but conceptually separate from the code commits.
