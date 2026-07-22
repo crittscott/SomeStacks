@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -103,9 +103,7 @@ public class PlaceAndDepositPkt {
                         int z = xyz[2];
                         int lowerIndex = 3 * 16 + z * 4 + x;
 
-                        boolean isGrounded = ssbeBelow.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                                .map(lowerHandler -> !lowerHandler.getStackInSlot(lowerIndex).isEmpty())
-                                .orElse(false);
+                        boolean isGrounded = !ssbeBelow.getItems().getStackInSlot(lowerIndex).isEmpty();
 
                         if (!isGrounded) {
                             return;
@@ -134,27 +132,8 @@ public class PlaceAndDepositPkt {
                         double newMaxX = newMinX + BarCubeIdx.barWidth(y);
                         double newMaxZ = newMinZ + BarCubeIdx.barDepth(y);
 
-                        boolean hasSupport = barBeBelow.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                                .map(lowerHandler -> {
-                                    for (int i = 56; i < 64; i++) {
-                                        if (!lowerHandler.getStackInSlot(i).isEmpty()) {
-                                            int[] lowerXYZ = BarCubeIdx.xyzFromIndex(i);
-                                            double lowerMinX = BarCubeIdx.startPixelX(lowerXYZ[0], lowerXYZ[1]);
-                                            double lowerMinZ = BarCubeIdx.startPixelZ(lowerXYZ[2], lowerXYZ[1]);
-                                            double lowerMaxX = lowerMinX + BarCubeIdx.barWidth(lowerXYZ[1]);
-                                            double lowerMaxZ = lowerMinZ + BarCubeIdx.barDepth(lowerXYZ[1]);
-
-                                            boolean overlaps = !(newMaxX <= lowerMinX || newMinX >= lowerMaxX ||
-                                                    newMaxZ <= lowerMinZ || newMinZ >= lowerMaxZ);
-
-                                            if (overlaps) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    return false;
-                                })
-                                .orElse(false);
+                        boolean hasSupport = topLayerSupports(barBeBelow.getItems(),
+                                newMinX, newMinZ, newMaxX, newMaxZ);
 
                         if (!hasSupport) {
                             return;
@@ -182,59 +161,9 @@ public class PlaceAndDepositPkt {
                     depositSucceeded = true;
                 }
             } else if (be instanceof SinglesStackBE ssbe) {
-                boolean[] deposited = new boolean[1];
-                ssbe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-                    int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, 0);
-
-                    if (index < 0) {
-                        return;
-                    }
-
-                    if (!handler.getStackInSlot(index).isEmpty()) {
-                        return;
-                    }
-
-                    if (!SinglesCubeIdx.isGrounded(index, handler)) {
-                        return;
-                    }
-
-                    deposited[0] = ssbe.depositAt(index, handStack);
-                    sp.setItemInHand(msg.hand, handStack);
-
-                    if (deposited[0]) {
-                        level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-                    }
-                });
-                depositSucceeded = deposited[0];
+                depositSucceeded = depositIntoSingles(ssbe, sp, msg, handStack, level);
             } else if (be instanceof BarStackBE barbe) {
-                boolean[] deposited = new boolean[1];
-                barbe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-                    int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
-
-                    if (index < 0) {
-                        return;
-                    }
-
-                    if (!handler.getStackInSlot(index).isEmpty()) {
-                        return;
-                    }
-
-                    if (!BarCubeIdx.isGrounded(index, handler)) {
-                        return;
-                    }
-
-                    deposited[0] = barbe.depositAt(index, handStack);
-                    sp.setItemInHand(msg.hand, handStack);
-
-                    if (deposited[0]) {
-                        level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-                    }
-                });
-                depositSucceeded = deposited[0];
+                depositSucceeded = depositIntoBar(barbe, sp, msg, handStack, level);
             }
 
             if (!depositSucceeded) {
@@ -242,5 +171,65 @@ public class PlaceAndDepositPkt {
             }
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    /** Whether an occupied bar in the top layer below covers the footprint the new bar would take. */
+    private static boolean topLayerSupports(IItemHandler lower, double minX, double minZ, double maxX, double maxZ) {
+        for (int i = 56; i < 64; i++) {
+            if (lower.getStackInSlot(i).isEmpty()) {
+                continue;
+            }
+
+            int[] lowerXYZ = BarCubeIdx.xyzFromIndex(i);
+            double lowerMinX = BarCubeIdx.startPixelX(lowerXYZ[0], lowerXYZ[1]);
+            double lowerMinZ = BarCubeIdx.startPixelZ(lowerXYZ[2], lowerXYZ[1]);
+            double lowerMaxX = lowerMinX + BarCubeIdx.barWidth(lowerXYZ[1]);
+            double lowerMaxZ = lowerMinZ + BarCubeIdx.barDepth(lowerXYZ[1]);
+
+            if (!(maxX <= lowerMinX || minX >= lowerMaxX || maxZ <= lowerMinZ || minZ >= lowerMaxZ)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean depositIntoSingles(SinglesStackBE ssbe, ServerPlayer sp, PlaceAndDepositPkt msg,
+                                              ItemStack handStack, Level level) {
+        IItemHandler handler = ssbe.getItems();
+        Vec3 eyePos = sp.getEyePosition(1.0f);
+        Vec3 lookDir = sp.getLookAngle();
+        int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, 0);
+
+        if (index < 0 || !handler.getStackInSlot(index).isEmpty() || !SinglesCubeIdx.isGrounded(index, handler)) {
+            return false;
+        }
+
+        boolean deposited = ssbe.depositAt(index, handStack);
+        sp.setItemInHand(msg.hand, handStack);
+
+        if (deposited) {
+            level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+        }
+        return deposited;
+    }
+
+    private static boolean depositIntoBar(BarStackBE barbe, ServerPlayer sp, PlaceAndDepositPkt msg,
+                                          ItemStack handStack, Level level) {
+        IItemHandler handler = barbe.getItems();
+        Vec3 eyePos = sp.getEyePosition(1.0f);
+        Vec3 lookDir = sp.getLookAngle();
+        int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
+
+        if (index < 0 || !handler.getStackInSlot(index).isEmpty() || !BarCubeIdx.isGrounded(index, handler)) {
+            return false;
+        }
+
+        boolean deposited = barbe.depositAt(index, handStack);
+        sp.setItemInHand(msg.hand, handStack);
+
+        if (deposited) {
+            level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+        }
+        return deposited;
     }
 }

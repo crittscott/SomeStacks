@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -81,55 +81,53 @@ public class DepositPkt {
                     level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
                 }
             } else if (block == ModRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
-                ssbe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-                    int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, ssbe.getRotation());
+                IItemHandler handler = ssbe.getItems();
+                Vec3 eyePos = sp.getEyePosition(1.0f);
+                Vec3 lookDir = sp.getLookAngle();
+                int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, ssbe.getRotation());
 
-                    if (index < 0) {
-                        return;
-                    }
+                if (index < 0) {
+                    return;
+                }
 
-                    if (!handler.getStackInSlot(index).isEmpty()) {
-                        return;
-                    }
+                if (!handler.getStackInSlot(index).isEmpty()) {
+                    return;
+                }
 
-                    if (!SinglesCubeIdx.isGrounded(index, handler)) {
-                        return;
-                    }
+                if (!SinglesCubeIdx.isGrounded(index, handler)) {
+                    return;
+                }
 
-                    boolean deposited = ssbe.depositAt(index, handStack);
-                    sp.setItemInHand(msg.hand, handStack);
+                boolean deposited = ssbe.depositAt(index, handStack);
+                sp.setItemInHand(msg.hand, handStack);
 
-                    if (deposited) {
-                        level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-                    }
-                });
+                if (deposited) {
+                    level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+                }
             } else if (block == ModRegistry.BAR_STACK_BLOCK.get() && be instanceof BarStackBE barbe) {
-                barbe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-                    int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
+                IItemHandler handler = barbe.getItems();
+                Vec3 eyePos = sp.getEyePosition(1.0f);
+                Vec3 lookDir = sp.getLookAngle();
+                int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
 
-                    if (index < 0) {
-                        return;
-                    }
+                if (index < 0) {
+                    return;
+                }
 
-                    if (!handler.getStackInSlot(index).isEmpty()) {
-                        return;
-                    }
+                if (!handler.getStackInSlot(index).isEmpty()) {
+                    return;
+                }
 
-                    if (!BarCubeIdx.isGrounded(index, handler)) {
-                        return;
-                    }
+                if (!BarCubeIdx.isGrounded(index, handler)) {
+                    return;
+                }
 
-                    boolean deposited = barbe.depositAt(index, handStack);
-                    sp.setItemInHand(msg.hand, handStack);
+                boolean deposited = barbe.depositAt(index, handStack);
+                sp.setItemInHand(msg.hand, handStack);
 
-                    if (deposited) {
-                        level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-                    }
-                });
+                if (deposited) {
+                    level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+                }
             }
         });
         ctx.get().setPacketHandled(true);

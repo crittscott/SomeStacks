@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
@@ -23,8 +22,7 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
 
     @Override
     public void render(SinglesStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return;
+        IItemHandler handler = be.getItems();
 
         if (be.getLevel() == null) return;
 

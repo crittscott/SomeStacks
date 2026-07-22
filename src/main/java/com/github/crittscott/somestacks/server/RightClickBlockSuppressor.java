@@ -2,20 +2,32 @@ package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Cancels the vanilla right-click that follows a stack interaction within the same tick, so
+ * the held item is not also placed or used against the position the interaction just changed.
+ *
+ * <p>The mark lives for one tick and is held in memory, keyed by player: it describes an
+ * in-flight interaction, not player state worth saving.
+ */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class RightClickBlockSuppressor {
 
-    private static final String NBT_TICK = "somestacks_suppress_rcb_tick";
-    private static final String NBT_POS = "somestacks_suppress_rcb_pos";
+    private record Mark(long tick, long pos) {}
+
+    private static final Map<UUID, Mark> marks = new HashMap<>();
 
     private RightClickBlockSuppressor() {
     }
@@ -23,9 +35,7 @@ public final class RightClickBlockSuppressor {
     public static void suppress(Player player, BlockPos pos, Level level) {
         if (level.isClientSide) return;
 
-        CompoundTag tag = player.getPersistentData();
-        tag.putLong(NBT_TICK, level.getGameTime());
-        tag.putLong(NBT_POS, pos.asLong());
+        marks.put(player.getUUID(), new Mark(level.getGameTime(), pos.asLong()));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -33,23 +43,23 @@ public final class RightClickBlockSuppressor {
         if (event.getLevel().isClientSide()) return;
 
         Player player = event.getEntity();
-        Level level = event.getLevel();
+        Mark mark = marks.get(player.getUUID());
+        if (mark == null) return;
 
-        CompoundTag tag = player.getPersistentData();
-        if (!tag.contains(NBT_TICK) || !tag.contains(NBT_POS)) return;
-
-        long tick = tag.getLong(NBT_TICK);
-        if (tick != level.getGameTime()) {
-            tag.remove(NBT_TICK);
-            tag.remove(NBT_POS);
+        if (mark.tick() != event.getLevel().getGameTime()) {
+            marks.remove(player.getUUID());
             return;
         }
 
-        long suppressedPos = tag.getLong(NBT_POS);
-        if (suppressedPos != event.getPos().asLong()) return;
+        if (mark.pos() != event.getPos().asLong()) return;
 
         event.setCanceled(true);
         event.setUseBlock(Event.Result.DENY);
         event.setUseItem(Event.Result.DENY);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        marks.remove(event.getEntity().getUUID());
     }
 }

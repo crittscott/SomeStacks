@@ -49,7 +49,7 @@ public class BarStackBE extends BlockEntity {
             return isValidBarItem(stack);
         }
     };
-    private final LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> items);
+    private LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> items);
 
     public BarStackBE(BlockPos pos, BlockState state) {
         super(ModRegistry.BAR_STACK_BE.get(), pos, state);
@@ -228,10 +228,21 @@ public class BarStackBE extends BlockEntity {
         return super.getCapability(cap, side);
     }
 
+    /** This block's 64 slots, for callers that already hold the block entity. */
+    public IItemHandler getItems() {
+        return items;
+    }
+
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void invalidateCaps() {
+        super.invalidateCaps();
         itemsCap.invalidate();
+    }
+
+    @Override
+    public void reviveCaps() {
+        super.reviveCaps();
+        itemsCap = LazyOptional.of(() -> items);
     }
 
     @Override

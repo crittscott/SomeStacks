@@ -10,7 +10,7 @@ public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
         return ctx.isShift()
                 && ctx.hasItemInHand()
                 && ctx.getPlayer().getMainHandItem().is(Items.REDSTONE_TORCH)
-                && ctx.isAnyStackBlock();
+                && ctx.isRotatableStack();
     }
 
     @Override

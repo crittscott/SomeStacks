@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
  *   <li>{@code ss item <item> reset} removes that entry, restoring built-in or measured
  *       behavior.</li>
  *   <li>{@code ss test <modid|all>} generates Storage Stack walls of every item in the
- *       given namespace, or in all loaded namespaces.</li>
+ *       given namespace, or in all loaded namespaces. The wall is built over the following
+ *       ticks and reports again when it finishes.</li>
  *   <li>{@code ss write} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
  *   <li>{@code ss reload} re-reads the server override directory and pushes the current
@@ -199,22 +200,29 @@ public final class SsCommand {
 
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
                                 List<String> modIds, List<String> skippedMods) {
-        TestWallGenerator.Result result = TestWallGenerator.generate(player, modIds);
+        String subject = modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
 
-        StringBuilder message = new StringBuilder("Created ")
-                .append(result.totalStacks()).append(" StorageStacks (")
-                .append(result.totalItems()).append(" items) for ");
-        message.append(modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods");
-        message.append(". Rows run north.");
+        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, modIds, result -> {
+            StringBuilder done = new StringBuilder("Created ")
+                    .append(result.totalStacks()).append(" StorageStacks (")
+                    .append(result.totalItems()).append(" items) for ").append(subject)
+                    .append(". Rows run north.");
+
+            if (result.totalStacks() < result.expectedStacks()) {
+                done.append(" WARNING: ").append(result.expectedStacks() - result.totalStacks()).append(" of ")
+                        .append(result.expectedStacks()).append(" placements failed; see log for positions and reasons.");
+            }
+
+            player.sendSystemMessage(Component.literal(done.toString()));
+        });
+
+        StringBuilder message = new StringBuilder("Building ")
+                .append(plan.expectedStacks()).append(" StorageStacks (")
+                .append(plan.totalItems()).append(" items) for ").append(subject).append('.');
 
         if (!skippedMods.isEmpty()) {
             message.append(" Skipped ").append(skippedMods.size())
                     .append(" disabled: ").append(String.join(", ", skippedMods)).append('.');
-        }
-
-        if (result.totalStacks() < result.expectedStacks()) {
-            message.append(" WARNING: ").append(result.expectedStacks() - result.totalStacks()).append(" of ")
-                    .append(result.expectedStacks()).append(" placements failed; see log for positions and reasons.");
         }
 
         final String finalMessage = message.toString();

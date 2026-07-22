@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
@@ -11,18 +12,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 /**
  * Generates walls of Storage Stacks filled with every item of one or more namespaces,
  * for reviewing render settings in the world. One column of stacks per mod, rows
  * running north, over a uniform floor.
+ *
+ * <p>A wall spanning every loaded mod runs to tens of thousands of placements, so a
+ * request is queued and drained a bounded number of placements per server tick rather
+ * than built inside the command call.
  */
 public final class TestWallGenerator {
     /** Columns between the rows of adjacent mods. */
@@ -39,6 +48,9 @@ public final class TestWallGenerator {
      * server thread.
      */
     private static Map<String, List<Item>> itemsByNamespace;
+
+    /** Queued walls. Server thread only: appended by the command, drained by the tick handler. */
+    private static final Deque<Job> jobs = new ArrayDeque<>();
 
     private static Map<String, List<Item>> itemsByNamespace() {
         if (itemsByNamespace == null) {
@@ -64,53 +76,148 @@ public final class TestWallGenerator {
         return (itemCount + ITEMS_PER_STACK - 1) / ITEMS_PER_STACK;
     }
 
+    /** What a queued wall will consist of, known before any of it is placed. */
+    public record Plan(int expectedStacks, int totalItems) {}
+
+    /** What a finished wall actually consists of. */
     public record Result(int totalStacks, int expectedStacks, int totalItems) {}
 
-    public static Result generate(ServerPlayer player, List<String> modIds) {
+    /**
+     * Queues a wall for the given namespaces and returns what it will contain. The wall is
+     * built over the following ticks; {@code onComplete} runs on the server thread once the
+     * last stack is placed, and not at all if the player disconnects first.
+     */
+    public static Plan enqueue(ServerPlayer player, List<String> modIds, Consumer<Result> onComplete) {
         Level level = player.level();
         BlockPos basePos = player.blockPosition().east();
 
         Map<String, List<Item>> itemsByMod = new LinkedHashMap<>();
         int maxRows = 0;
+        int totalItems = 0;
         for (String modId : modIds) {
             List<Item> modItems = collectModItems(modId);
             itemsByMod.put(modId, modItems);
             maxRows = Math.max(maxRows, rowsFor(modItems.size()));
+            totalItems += modItems.size();
         }
 
-        placeFloor(level, basePos, modIds.size(), maxRows);
-
-        int totalStacks = 0;
-        int expectedStacks = 0;
-        int totalItems = 0;
+        Deque<PendingStack> stacks = new ArrayDeque<>();
         int modIndex = 0;
-
         for (List<Item> modItems : itemsByMod.values()) {
-            BlockPos modStartPos = basePos.offset(modIndex * MOD_SPACING, 0, 0);
-            totalStacks += createStorageStacks(level, modStartPos, modItems);
-            expectedStacks += rowsFor(modItems.size());
-            totalItems += modItems.size();
+            BlockPos currentPos = basePos.offset(modIndex * MOD_SPACING, 0, 0);
+            for (int i = 0; i < modItems.size(); i += ITEMS_PER_STACK) {
+                stacks.add(new PendingStack(currentPos,
+                        modItems.subList(i, Math.min(i + ITEMS_PER_STACK, modItems.size()))));
+                currentPos = currentPos.north();
+            }
             modIndex++;
         }
 
-        return new Result(totalStacks, expectedStacks, totalItems);
+        jobs.add(new Job(player, level, basePos, modIds.size(), maxRows, stacks, totalItems, onComplete));
+        return new Plan(stacks.size(), totalItems);
     }
 
-    public static int createStorageStacks(Level level, BlockPos startPos, List<Item> items) {
-        int stacksCreated = 0;
-        BlockPos currentPos = startPos;
-
-        for (int i = 0; i < items.size(); i += ITEMS_PER_STACK) {
-            List<Item> batch = items.subList(i, Math.min(i + ITEMS_PER_STACK, items.size()));
-
-            if (fillStack(level, currentPos, batch)) {
-                stacksCreated++;
-            }
-
-            currentPos = currentPos.north();
+    /** Drains the queued walls, bounded by {@code test_wall.placements_per_tick}. */
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END || jobs.isEmpty()) {
+            return;
         }
 
-        return stacksCreated;
+        int budget = ServerConfig.TEST_WALL_PLACEMENTS_PER_TICK.get();
+        while (budget > 0 && !jobs.isEmpty()) {
+            Job job = jobs.peek();
+
+            if (job.player.hasDisconnected()) {
+                jobs.poll();
+                continue;
+            }
+
+            budget = job.advance(budget);
+
+            if (job.isDone()) {
+                jobs.poll();
+                job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
+            }
+        }
+    }
+
+    private record PendingStack(BlockPos pos, List<Item> batch) {}
+
+    /**
+     * One queued wall: a floor laid out by a cursor over its extent, then the stacks. Both
+     * draw from the same per-tick budget, since a floor spanning every loaded mod is itself
+     * far larger than the wall standing on it.
+     */
+    private static final class Job {
+        private final ServerPlayer player;
+        private final Level level;
+        private final Deque<PendingStack> stacks;
+        private final int expectedStacks;
+        private final int totalItems;
+        private final Consumer<Result> onComplete;
+
+        private final int floorMinX;
+        private final int floorMaxX;
+        private final int floorMinZ;
+        private final int floorMaxZ;
+        private final int floorY;
+        private int floorX;
+        private int floorZ;
+
+        private int placedStacks;
+
+        private Job(ServerPlayer player, Level level, BlockPos basePos, int modCount, int maxRows,
+                    Deque<PendingStack> stacks, int totalItems, Consumer<Result> onComplete) {
+            this.player = player;
+            this.level = level;
+            this.stacks = stacks;
+            this.expectedStacks = stacks.size();
+            this.totalItems = totalItems;
+            this.onComplete = onComplete;
+
+            // The floor extends one block past the stacks on every side, so the whole wall can be
+            // walked around and viewed against a uniform background. Rows advance north, which is
+            // decreasing Z.
+            this.floorMinX = basePos.getX() - 1;
+            this.floorMaxX = basePos.getX() + (modCount - 1) * MOD_SPACING + 1;
+            this.floorMinZ = basePos.getZ() - maxRows;
+            this.floorMaxZ = basePos.getZ() + 1;
+            this.floorY = basePos.getY() - 1;
+            this.floorX = floorMinX;
+            this.floorZ = floorMinZ;
+        }
+
+        /** Places at most {@code budget} blocks and returns the unspent remainder. */
+        private int advance(int budget) {
+            BlockState floor = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
+
+            while (budget > 0 && floorX <= floorMaxX) {
+                BlockPos pos = new BlockPos(floorX, floorY, floorZ);
+                if (!level.isOutsideBuildHeight(pos)) {
+                    level.setBlock(pos, floor, Block.UPDATE_ALL);
+                }
+                budget--;
+
+                if (++floorZ > floorMaxZ) {
+                    floorZ = floorMinZ;
+                    floorX++;
+                }
+            }
+
+            while (budget > 0 && !stacks.isEmpty()) {
+                PendingStack next = stacks.poll();
+                if (fillStack(level, next.pos(), next.batch())) {
+                    placedStacks++;
+                }
+                budget--;
+            }
+
+            return budget;
+        }
+
+        private boolean isDone() {
+            return floorX > floorMaxX && stacks.isEmpty();
+        }
     }
 
     private static boolean fillStack(Level level, BlockPos pos, List<Item> batch) {
@@ -137,30 +244,5 @@ public final class TestWallGenerator {
             sbe.deposit(new ItemStack(item, 1));
         }
         return true;
-    }
-
-    /**
-     * Lays a smooth sandstone surface one level below the stacks, extending one block
-     * past them on every side so the whole wall can be walked around and viewed against
-     * a uniform background.
-     */
-    private static void placeFloor(Level level, BlockPos basePos, int modCount, int maxRows) {
-        BlockState floor = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
-
-        int minX = basePos.getX() - 1;
-        int maxX = basePos.getX() + (modCount - 1) * MOD_SPACING + 1;
-        // Rows advance north, which is decreasing Z.
-        int minZ = basePos.getZ() - maxRows;
-        int maxZ = basePos.getZ() + 1;
-        int y = basePos.getY() - 1;
-
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                BlockPos pos = new BlockPos(x, y, z);
-                if (!level.isOutsideBuildHeight(pos)) {
-                    level.setBlock(pos, floor, Block.UPDATE_ALL);
-                }
-            }
-        }
     }
 }

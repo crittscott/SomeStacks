@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -51,8 +50,7 @@ public final class SinglesCubeIdx {
     }
 
     public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, SinglesStackBE be) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return -1;
+        IItemHandler handler = be.getItems();
 
         int blockRotation = be.getRotation();
         Vec3 farPoint = eyePos.add(lookDir.scale(10.0));

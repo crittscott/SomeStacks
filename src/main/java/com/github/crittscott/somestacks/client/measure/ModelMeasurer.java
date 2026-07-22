@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -57,7 +58,6 @@ public final class ModelMeasurer {
         boolean gui3d = true;
         try {
             BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0);
-            gui3d = model.isGui3d();
 
             PoseStack pose = new PoseStack();
             pose.pushPose();
@@ -67,22 +67,25 @@ public final class ModelMeasurer {
             }
             model = ForgeHooksClient.handleCameraTransforms(pose, model, context, false);
             pose.translate(-0.5f, -0.5f, -0.5f);
+            // Read the flag off the substituted model, which is the one that gets drawn.
+            gui3d = model.isGui3d();
 
             if (model.isCustomRenderer()) {
                 return probeCustomRenderer(stack, gui3d, context, pose);
             }
-            return measureQuads(stack, model, gui3d, pose);
+            return measureQuads(stack, model, gui3d, context, pose);
         } catch (Exception e) {
             return new Result(false, gui3d, null, "measurement threw: " + e);
         }
     }
 
-    private static Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d, PoseStack pose) {
+    private static Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d,
+                                       ItemDisplayContext context, PoseStack pose) {
         BoundsCollector collector = new BoundsCollector();
         Matrix4f matrix = pose.last().pose();
         RandomSource random = RandomSource.create();
 
-        for (BakedModel pass : model.getRenderPasses(stack, true)) {
+        for (BakedModel pass : model.getRenderPasses(stack, CubeRenderHelper.fabulousFlag(stack, context))) {
             for (Direction direction : Direction.values()) {
                 // Seed 42 per group matches ItemRenderer.renderModelLists.
                 random.setSeed(42L);

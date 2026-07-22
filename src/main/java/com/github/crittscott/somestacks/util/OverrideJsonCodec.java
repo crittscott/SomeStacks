@@ -67,8 +67,10 @@ public final class OverrideJsonCodec {
         if (json.has("scale")) {
             try {
                 scale = json.get("scale").getAsFloat();
-                if (scale <= 0) {
-                    SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be positive", scale, itemKey);
+                // NaN compares false against every bound, so test for finiteness rather than
+                // letting it through to poison the render transform silently.
+                if (!Float.isFinite(scale) || scale <= 0) {
+                    SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be finite and positive", scale, itemKey);
                     scale = null;
                 }
             } catch (Exception e) {
@@ -79,14 +81,19 @@ public final class OverrideJsonCodec {
         if (json.has("offset")) {
             try {
                 JsonArray offsetArray = json.getAsJsonArray("offset");
-                if (offsetArray.size() == 3) {
-                    offset = new float[]{
+                if (offsetArray.size() != 3) {
+                    SomeStacks.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
+                } else {
+                    float[] parsed = new float[]{
                             offsetArray.get(0).getAsFloat(),
                             offsetArray.get(1).getAsFloat(),
                             offsetArray.get(2).getAsFloat()
                     };
-                } else {
-                    SomeStacks.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
+                    if (Float.isFinite(parsed[0]) && Float.isFinite(parsed[1]) && Float.isFinite(parsed[2])) {
+                        offset = parsed;
+                    } else {
+                        SomeStacks.LOGGER.warn("Non-finite offset for item '{}', ignoring it", itemKey);
+                    }
                 }
             } catch (Exception e) {
                 SomeStacks.LOGGER.warn("Failed to parse offset for item '{}': {}", itemKey, e.getMessage());

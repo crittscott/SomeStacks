@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public final class StorageCubeIdx {
@@ -37,8 +36,7 @@ public final class StorageCubeIdx {
     }
 
     public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, StorageStackBE be, int rotation) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return -1;
+        IItemHandler handler = be.getItems();
 
         Vec3 farPoint = eyePos.add(lookDir.scale(10.0)); // extend ray far past block
         double closestDist = Double.MAX_VALUE;

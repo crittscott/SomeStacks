@@ -20,7 +20,6 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
         MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut evt) -> AutoRenderProfiles.saveCache());
         MinecraftForge.EVENT_BUS.addListener((GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
-        ClientEvents.init();
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {

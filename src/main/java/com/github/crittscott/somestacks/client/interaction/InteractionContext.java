@@ -119,17 +119,22 @@ public final class InteractionContext {
         return clickedBlock == ModRegistry.STORAGE_STACK_BLOCK.get();
     }
 
+    /** The stacks that rotate as a whole block; a Bar Stack's bars are fixed to their layer. */
+    public boolean isRotatableStack() {
+        if (clickedBlock == null) {
+            return false;
+        }
+        return clickedBlock == ModRegistry.STORAGE_STACK_BLOCK.get()
+                || clickedBlock == ModRegistry.SINGLES_STACK_BLOCK.get();
+    }
+
+    public boolean isSinglesStack() {
+        return clickedBlock != null && clickedBlock == ModRegistry.SINGLES_STACK_BLOCK.get();
+    }
+
     public boolean isSinglesOrBarStack(Block block) {
         return block == ModRegistry.SINGLES_STACK_BLOCK.get()
                 || block == ModRegistry.BAR_STACK_BLOCK.get();
-    }
-
-    public boolean isSinglesOrBarStackAbove() {
-        if (clickedPos == null) {
-            return false;
-        }
-        Block aboveBlock = level.getBlockState(clickedPos.above()).getBlock();
-        return isSinglesOrBarStack(aboveBlock);
     }
 
     public boolean canPlaceOrDeposit() {
@@ -142,10 +147,6 @@ public final class InteractionContext {
 
     public BlockPos getClickedPos() {
         return clickedPos;
-    }
-
-    public BlockPos getAbovePos() {
-        return clickedPos != null ? clickedPos.above() : null;
     }
 
     public Direction getFace() {

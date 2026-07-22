@@ -25,6 +25,8 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
 
+    public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
+
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
 
@@ -74,6 +76,16 @@ public final class ServerConfig {
                 .defineList("disable_items",
                         Collections.emptyList(),
                         obj -> obj instanceof String);
+
+        builder.pop();
+
+        builder.comment("Test Wall Configuration").push("test_wall");
+
+        TEST_WALL_PLACEMENTS_PER_TICK = builder
+                .comment("Blocks the 'ss test' command places per tick, counting both stacks and floor.",
+                        "A wall spanning every loaded mod is tens of thousands of placements; lower",
+                        "values spread it over more ticks.")
+                .defineInRange("placements_per_tick", 64, 1, Integer.MAX_VALUE);
 
         builder.pop();
 

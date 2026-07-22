@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
@@ -22,8 +21,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
 
     @Override
     public void render(StorageStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return;
+        IItemHandler handler = be.getItems();
 
         if (be.getLevel() == null) return;
 

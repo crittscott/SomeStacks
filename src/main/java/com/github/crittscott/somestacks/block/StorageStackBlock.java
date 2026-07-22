@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.Nullable;
 
@@ -90,8 +89,7 @@ public class StorageStackBlock extends Block implements EntityBlock {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof StorageStackBE sbe) {
-                sbe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler ->
-                        ItemOps.dropAllItems(handler, level, pos));
+                ItemOps.dropAllItems(sbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
         }

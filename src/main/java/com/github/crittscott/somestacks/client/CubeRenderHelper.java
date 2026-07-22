@@ -19,6 +19,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -130,17 +133,47 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    public static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
-                                        float scale, float[] offset) {
+    /**
+     * The flag {@code ItemRenderer.render} passes to {@link BakedModel#getRenderPasses}, which
+     * selects a model's passes and their render types: false only for the translucent blocks
+     * vanilla draws through the indirect buffers outside GUI and first-person contexts.
+     */
+    public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
+        if (context == ItemDisplayContext.GUI || context.firstPerson()
+                || !(stack.getItem() instanceof BlockItem blockItem)) {
+            return true;
+        }
+        Block block = blockItem.getBlock();
+        return !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
+    }
+
+    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
+                                         float scale, float[] offset) {
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
                 .apply(STACK_CUBE_TEXTURE);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         emitCube(pose, solidVc, backgroundSprite, light);
 
-        List<BakedQuad> quads = model.getQuads(null, null, RandomSource.create(0));
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
+        RandomSource random = RandomSource.create();
+        boolean fabulous = fabulousFlag(stack, ItemDisplayContext.FIXED);
 
+        // Walk the model as ItemRenderer.renderModelLists does: every render pass, each
+        // culled direction group and then the unculled group, reseeding per group. Reading
+        // only the root model's unculled quads drops the layers of a multi-pass item.
+        for (BakedModel pass : model.getRenderPasses(stack, fabulous)) {
+            for (Direction direction : Direction.values()) {
+                random.setSeed(42L);
+                emitQuadsOnAllFaces(pose, vc, stack, pass.getQuads(null, direction, random), light, scale, offset);
+            }
+            random.setSeed(42L);
+            emitQuadsOnAllFaces(pose, vc, stack, pass.getQuads(null, null, random), light, scale, offset);
+        }
+    }
+
+    private static void emitQuadsOnAllFaces(PoseStack pose, VertexConsumer vc, ItemStack stack, List<BakedQuad> quads,
+                                            int light, float scale, float[] offset) {
         for (BakedQuad quad : quads) {
             int tintIndex = quad.getTintIndex();
             int color = tintIndex >= 0

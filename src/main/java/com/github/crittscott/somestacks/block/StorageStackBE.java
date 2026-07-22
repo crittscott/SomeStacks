@@ -45,7 +45,7 @@ public class StorageStackBE extends BlockEntity {
             return isValidStorageItem(stack);
         }
     };
-    private final LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> new PileItemHandler(this));
+    private LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> new PileItemHandler(this));
 
     private int rotation = 0;
     private long lastSortTime = 0L;
@@ -342,10 +342,21 @@ public class StorageStackBE extends BlockEntity {
         return super.getCapability(cap, side);
     }
 
+    /** This block's own 27 slots, for callers that hold the block entity and need no pile-wide view. */
+    public IItemHandler getItems() {
+        return items;
+    }
+
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void invalidateCaps() {
+        super.invalidateCaps();
         itemsCap.invalidate();
+    }
+
+    @Override
+    public void reviveCaps() {
+        super.reviveCaps();
+        itemsCap = LazyOptional.of(() -> new PileItemHandler(this));
     }
 
     @Override

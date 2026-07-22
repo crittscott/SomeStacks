@@ -29,9 +29,6 @@ public final class ClientEvents {
 
     private static StackMode stackMode = StackMode.STORAGE_STACK;
 
-    public static void init() {
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         SomeStacks.LOGGER.debug("RightClickEmpty fired");
@@ -83,7 +80,6 @@ public final class ClientEvents {
         do {
             stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % 4);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode == StackMode.STORAGE_STACK) break;
             if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;
         } while (true);

@@ -114,75 +114,72 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             }
         });
 
-        SomeStacks.LOGGER.info("Loaded {} bar texture mappings", configMap.size());
+        SomeStacks.LOGGER.debug("Read {} bar texture mappings", configMap.size());
         return configMap;
     }
 
     @Override
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
+        int autoTinted = 0;
 
         for (Map.Entry<ResourceLocation, BarTextureData> entry : prepared.entrySet()) {
             ResourceLocation itemLoc = entry.getKey();
             BarTextureData data = entry.getValue();
 
             if (data.needsAutoTint()) {
-                int calculatedTint = calculateTintFromItemTexture(itemLoc, resourceManager);
-                BarTextureData finalData = new BarTextureData(data.texture(), calculatedTint);
-                textureMap.put(itemLoc, finalData);
-            } else {
-                textureMap.put(itemLoc, data);
+                data = new BarTextureData(data.texture(), calculateTintFromItemTexture(itemLoc, resourceManager));
+                autoTinted++;
             }
+
+            textureMap.put(itemLoc, data);
+            SomeStacks.LOGGER.debug("  {} -> texture: {}, tint: #{}",
+                    itemLoc, data.texture(), String.format("%08X", data.color()));
         }
 
-        SomeStacks.LOGGER.info("Applied {} bar texture mappings:", textureMap.size());
-        for (Map.Entry<ResourceLocation, BarTextureData> entry : textureMap.entrySet()) {
-            BarTextureData data = entry.getValue();
-            String colorHex = String.format("#%08X", data.color());
-            SomeStacks.LOGGER.info("  {} -> texture: {}, tint: {}",
-                    entry.getKey(), data.texture(), colorHex);
-        }
+        SomeStacks.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
+                textureMap.size(), autoTinted);
     }
 
     private static int calculateTintFromItemTexture(ResourceLocation itemLoc, ResourceManager resourceManager) {
-        SomeStacks.LOGGER.info("=== Auto-calculating tint for {} ===", itemLoc);
+        SomeStacks.LOGGER.debug("Auto-calculating tint for {}", itemLoc);
         try {
             Item item = ForgeRegistries.ITEMS.getValue(itemLoc);
             if (item == null) {
-                SomeStacks.LOGGER.info("  Item not found in registry, returning WHITE");
+                SomeStacks.LOGGER.debug("  Item not found in registry, returning WHITE");
                 return BarTextureData.WHITE;
             }
-            SomeStacks.LOGGER.info("  Found item: {}", item.getClass().getSimpleName());
+            SomeStacks.LOGGER.debug("  Found item: {}", item.getClass().getSimpleName());
 
             ItemStack stack = new ItemStack(item);
-            SomeStacks.LOGGER.info("  Created ItemStack: {}", stack);
+            SomeStacks.LOGGER.debug("  Created ItemStack: {}", stack);
 
             Minecraft mc = Minecraft.getInstance();
             BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
-            SomeStacks.LOGGER.info("  Got BakedModel: {}", model.getClass().getSimpleName());
+            SomeStacks.LOGGER.debug("  Got BakedModel: {}", model.getClass().getSimpleName());
 
             TextureAtlasSprite sprite = model.getParticleIcon();
             if (sprite == null) {
-                SomeStacks.LOGGER.info("  Particle icon is null, returning WHITE");
+                SomeStacks.LOGGER.debug("  Particle icon is null, returning WHITE");
                 return BarTextureData.WHITE;
             }
-            SomeStacks.LOGGER.info("  Got sprite: {}", sprite);
+            SomeStacks.LOGGER.debug("  Got sprite: {}", sprite);
 
             ResourceLocation spriteName = sprite.contents().name();
-            SomeStacks.LOGGER.info("  Sprite name: {}", spriteName);
+            SomeStacks.LOGGER.debug("  Sprite name: {}", spriteName);
 
             ResourceLocation texturePath = getTextureResourceLocation(spriteName);
-            SomeStacks.LOGGER.info("  Texture path: {}", texturePath);
+            SomeStacks.LOGGER.debug("  Texture path: {}", texturePath);
 
             NativeImage image = loadTextureImage(texturePath, resourceManager);
             if (image == null) {
-                SomeStacks.LOGGER.info("  Failed to load texture image, returning WHITE");
+                SomeStacks.LOGGER.debug("  Failed to load texture image, returning WHITE");
                 return BarTextureData.WHITE;
             }
 
             try {
                 int tint = analyzePixelsForTint(image);
-                SomeStacks.LOGGER.info("  Calculated tint: #{}", String.format("%08X", tint));
+                SomeStacks.LOGGER.debug("  Calculated tint: #{}", String.format("%08X", tint));
                 return tint;
             } finally {
                 image.close();
@@ -209,7 +206,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
             try (var inputStream = resource.get().open()) {
                 NativeImage image = NativeImage.read(inputStream);
-                SomeStacks.LOGGER.info("  Loaded texture: {}x{}", image.getWidth(), image.getHeight());
+                SomeStacks.LOGGER.debug("  Loaded texture: {}x{}", image.getWidth(), image.getHeight());
                 return image;
             }
         } catch (Exception e) {
@@ -219,7 +216,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     private static int analyzePixelsForTint(NativeImage image) {
-        SomeStacks.LOGGER.info("  Analyzing pixels from image: {}x{}", image.getWidth(), image.getHeight());
+        SomeStacks.LOGGER.debug("  Analyzing pixels from image: {}x{}", image.getWidth(), image.getHeight());
         try {
             long sumR = 0, sumG = 0, sumB = 0;
             int count = 0;
@@ -242,10 +239,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 }
             }
 
-            SomeStacks.LOGGER.info("    Analyzed {} opaque pixels", count);
+            SomeStacks.LOGGER.debug("    Analyzed {} opaque pixels", count);
 
             if (count == 0) {
-                SomeStacks.LOGGER.info("    No opaque pixels found, returning WHITE");
+                SomeStacks.LOGGER.debug("    No opaque pixels found, returning WHITE");
                 return BarTextureData.WHITE;
             }
 
@@ -253,17 +250,17 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             int avgG = (int) (sumG / count);
             int avgB = (int) (sumB / count);
 
-            SomeStacks.LOGGER.info("    Average RGB (raw): R={}, G={}, B={}", avgR, avgG, avgB);
+            SomeStacks.LOGGER.debug("    Average RGB (raw): R={}, G={}, B={}", avgR, avgG, avgB);
 
             // Brighten to compensate for dark outlines in ingot textures
             int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
             int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
             int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
 
-            SomeStacks.LOGGER.info("    Average RGB (brightened): R={}, G={}, B={}", brightR, brightG, brightB);
+            SomeStacks.LOGGER.debug("    Average RGB (brightened): R={}, G={}, B={}", brightR, brightG, brightB);
 
             int result = 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
-            SomeStacks.LOGGER.info("    Final color: #{}", String.format("%08X", result));
+            SomeStacks.LOGGER.debug("    Final color: #{}", String.format("%08X", result));
             return result;
         } catch (Exception e) {
             SomeStacks.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);

@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -98,8 +97,7 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
     }
 
     private static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
-        ItemStack cubeStack = ssbe.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .map(h -> h.getStackInSlot(index)).orElse(ItemStack.EMPTY);
+        ItemStack cubeStack = ssbe.getItems().getStackInSlot(index);
 
         if (cubeStack.isEmpty()) return;
 
@@ -124,8 +122,7 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
     }
 
     private static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
-        ItemStack barStack = barbe.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .map(h -> h.getStackInSlot(index)).orElse(ItemStack.EMPTY);
+        ItemStack barStack = barbe.getItems().getStackInSlot(index);
 
         if (barStack.isEmpty()) return;
 

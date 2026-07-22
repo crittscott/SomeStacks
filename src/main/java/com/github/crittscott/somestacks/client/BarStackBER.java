@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -26,8 +25,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
     @Override
     public void render(BarStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return;
+        IItemHandler handler = be.getItems();
 
         if (be.getLevel() == null) return;
 
@@ -72,51 +70,17 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
         float uRange = u1 - u0;
         float vRange = v1 - v0;
 
+        // The sprite stacks three regions down a 32-unit grid: the 24x12 top/bottom face
+        // at the origin, the 24x8 long side below it, and the 12x8 end cap below that.
+        UvRegion top = region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f);
+        UvRegion longSide = region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f);
+        UvRegion endCap = region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f);
+
+        // Even layers lay their bars along X (6x2x3), so the Z faces are the long sides and
+        // the X faces the end caps. Odd layers lay them along Z (3x2x6) and the two trade places.
         boolean rotated = (layer % 2) == 1;
-
-        float topU0, topU1, topV0, topV1;
-        float longU0, longU1, longV0, longV1;
-        float endU0, endU1, endV0, endV1;
-
-        if (rotated) {
-            // Odd layers: bars rotated 90°, dimensions are 3×2×6 (X×Y×Z)
-            // Top/Bottom faces: Use the 6×3 region, rotation happens in the quads
-            topU0 = u0 + uRange * (0f / 32f);
-            topU1 = u0 + uRange * (24f / 32f);
-            topV0 = v0 + vRange * (0f / 32f);
-            topV1 = v0 + vRange * (12f / 32f);
-
-            // Z faces are now ends: 3×2 pixels from (0,5) to (3,7)
-            endU0 = u0 + uRange * (0f / 32f);
-            endU1 = u0 + uRange * (12f / 32f);
-            endV0 = v0 + vRange * (20f / 32f);
-            endV1 = v0 + vRange * (28f / 32f);
-
-            // X faces are now long sides: 6×2 pixels from (0,3) to (6,5)
-            longU0 = u0 + uRange * (0f / 32f);
-            longU1 = u0 + uRange * (24f / 32f);
-            longV0 = v0 + vRange * (12f / 32f);
-            longV1 = v0 + vRange * (20f / 32f);
-        } else {
-            // Even layers: bars normal orientation, dimensions are 6×2×3 (X×Y×Z)
-            // Top/Bottom faces: 6×3 pixels from (0,0) to (6,3)
-            topU0 = u0 + uRange * (0f / 32f);
-            topU1 = u0 + uRange * (24f / 32f);
-            topV0 = v0 + vRange * (0f / 32f);
-            topV1 = v0 + vRange * (12f / 32f);
-
-            // Z faces (long sides): 6×2 pixels from (0,3) to (6,5)
-            longU0 = u0 + uRange * (0f / 32f);
-            longU1 = u0 + uRange * (24f / 32f);
-            longV0 = v0 + vRange * (12f / 32f);
-            longV1 = v0 + vRange * (20f / 32f);
-
-            // X faces (ends): 3×2 pixels from (0,5) to (3,7)
-            endU0 = u0 + uRange * (0f / 32f);
-            endU1 = u0 + uRange * (12f / 32f);
-            endV0 = v0 + vRange * (20f / 32f);
-            endV1 = v0 + vRange * (28f / 32f);
-        }
+        UvRegion zFace = rotated ? endCap : longSide;
+        UvRegion xFace = rotated ? longSide : endCap;
 
         int r = textureData.red();
         int g = textureData.green();
@@ -124,25 +88,38 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
         int a = textureData.alpha();
 
         // +Z face
-        quad(pose, vc, light, overlay, 0,0,1, 1,0,1, 1,1,1, 0,1,1, longU0,longV1,longU1,longV0, 0,0,1, r,g,b,a);
+        quad(pose, vc, light, overlay, 0,0,1, 1,0,1, 1,1,1, 0,1,1, zFace.u0(),zFace.v1(),zFace.u1(),zFace.v0(), 0,0,1, r,g,b,a);
         // -Z face
-        quad(pose, vc, light, overlay, 1,0,0, 0,0,0, 0,1,0, 1,1,0, longU0,longV1,longU1,longV0, 0,0,-1, r,g,b,a);
+        quad(pose, vc, light, overlay, 1,0,0, 0,0,0, 0,1,0, 1,1,0, zFace.u0(),zFace.v1(),zFace.u1(),zFace.v0(), 0,0,-1, r,g,b,a);
         // +X face
-        quad(pose, vc, light, overlay, 1,0,1, 1,0,0, 1,1,0, 1,1,1, endU0,endV1,endU1,endV0, 1,0,0, r,g,b,a);
+        quad(pose, vc, light, overlay, 1,0,1, 1,0,0, 1,1,0, 1,1,1, xFace.u0(),xFace.v1(),xFace.u1(),xFace.v0(), 1,0,0, r,g,b,a);
         // -X face
-        quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 0,1,1, 0,1,0, endU0,endV1,endU1,endV0, -1,0,0, r,g,b,a);
+        quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 0,1,1, 0,1,0, xFace.u0(),xFace.v1(),xFace.u1(),xFace.v0(), -1,0,0, r,g,b,a);
 
         if (rotated) {
             // +Y face (top) - reordered vertices to rotate texture 90°
-            quad(pose, vc, light, overlay, 0,1,0, 0,1,1, 1,1,1, 1,1,0, topU0,topV0,topU1,topV1, 0,1,0, r,g,b,a);
+            quad(pose, vc, light, overlay, 0,1,0, 0,1,1, 1,1,1, 1,1,0, top.u0(),top.v0(),top.u1(),top.v1(), 0,1,0, r,g,b,a);
             // -Y face (bottom) - reordered vertices to rotate texture 90°
-            quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 1,0,1, 1,0,0, topU0,topV0,topU1,topV1, 0,-1,0, r,g,b,a);
+            quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 1,0,1, 1,0,0, top.u0(),top.v0(),top.u1(),top.v1(), 0,-1,0, r,g,b,a);
         } else {
             // +Y face (top)
-            quad(pose, vc, light, overlay, 0,1,1, 1,1,1, 1,1,0, 0,1,0, topU0,topV1,topU1,topV0, 0,1,0, r,g,b,a);
+            quad(pose, vc, light, overlay, 0,1,1, 1,1,1, 1,1,0, 0,1,0, top.u0(),top.v1(),top.u1(),top.v0(), 0,1,0, r,g,b,a);
             // -Y face (bottom)
-            quad(pose, vc, light, overlay, 0,0,0, 1,0,0, 1,0,1, 0,0,1, topU0,topV1,topU1,topV0, 0,-1,0, r,g,b,a);
+            quad(pose, vc, light, overlay, 0,0,0, 1,0,0, 1,0,1, 0,0,1, top.u0(),top.v1(),top.u1(),top.v0(), 0,-1,0, r,g,b,a);
         }
+    }
+
+    /** A sub-rectangle of a sprite, in atlas UV coordinates. */
+    private record UvRegion(float u0, float v0, float u1, float v1) {}
+
+    /** Maps a rectangle of the sprite's 32-unit grid onto its place in the atlas. */
+    private static UvRegion region(float u0, float v0, float uRange, float vRange,
+                                   float gridU0, float gridV0, float gridU1, float gridV1) {
+        return new UvRegion(
+                u0 + uRange * (gridU0 / 32f),
+                v0 + vRange * (gridV0 / 32f),
+                u0 + uRange * (gridU1 / 32f),
+                v0 + vRange * (gridV1 / 32f));
     }
 
     private static void quad(PoseStack pose, VertexConsumer vc, int light, int overlay,

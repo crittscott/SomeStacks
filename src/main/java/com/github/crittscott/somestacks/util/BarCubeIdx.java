@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -65,69 +64,6 @@ public final class BarCubeIdx {
         return isEWLayer(y) ? EW_DEPTH : NS_DEPTH;
     }
 
-    private static int axisIndexX_EW(double local) {
-        for (int i = 0; i < 2; i++) {
-            if (local >= EW_STARTS_X[i] && local < EW_STARTS_X[i] + EW_WIDTH) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static int axisIndexZ_EW(double local) {
-        for (int i = 0; i < 4; i++) {
-            if (local >= EW_STARTS_Z[i] && local < EW_STARTS_Z[i] + EW_DEPTH) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static int axisIndexX_NS(double local) {
-        for (int i = 0; i < 4; i++) {
-            if (local >= NS_STARTS_X[i] && local < NS_STARTS_X[i] + NS_WIDTH) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static int axisIndexZ_NS(double local) {
-        for (int i = 0; i < 2; i++) {
-            if (local >= NS_STARTS_Z[i] && local < NS_STARTS_Z[i] + NS_DEPTH) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static int axisIndexY(double local) {
-        for (int i = 0; i < 8; i++) {
-            if (local >= STARTS_Y[i] && local < STARTS_Y[i] + BAR_HEIGHT) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static int indexFromLocal(double lx, double ly, double lz) {
-        int y = axisIndexY(ly);
-        if (y < 0) return -1;
-
-        int x, z;
-        if (isEWLayer(y)) {
-            x = axisIndexX_EW(lx);
-            z = axisIndexZ_EW(lz);
-            if (x < 0 || z < 0) return -1;
-            return y * 8 + z * 2 + x;
-        } else {
-            x = axisIndexX_NS(lx);
-            z = axisIndexZ_NS(lz);
-            if (x < 0 || z < 0) return -1;
-            return y * 8 + z * 4 + x;
-        }
-    }
-
     public static int[] xyzFromIndex(int idx) {
         int y = idx / 8;
         int withinLayer = idx % 8;
@@ -170,8 +106,7 @@ public final class BarCubeIdx {
     }
 
     public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, BarStackBE be) {
-        IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        if (handler == null) return -1;
+        IItemHandler handler = be.getItems();
 
         Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
         double closestDist = Double.MAX_VALUE;

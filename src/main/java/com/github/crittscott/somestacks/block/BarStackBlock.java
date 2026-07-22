@@ -18,7 +18,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.Nullable;
 
@@ -81,8 +80,7 @@ public class BarStackBlock extends Block implements EntityBlock {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof BarStackBE barBe) {
-                barBe.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler ->
-                        ItemOps.dropAllItems(handler, level, pos));
+                ItemOps.dropAllItems(barBe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
         }
