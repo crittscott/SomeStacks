@@ -7,17 +7,17 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 
 /**
- * Pile-aware item handler exposed to automation. Slots 0..26 are the connected block's
- * real inventory. While the pile can still grow upward, an extra block's worth of
- * always-empty "overflow" slots (27..53) is advertised, so automation that gauges
- * capacity by reading slots (Mekanism, AE2, ...) sees headroom rather than a full
- * block. Inserting into any slot runs the normal pile deposit, which fills real slots
- * and creates blocks up the column as needed, so the advertised room becomes real.
+ * The whole pile, exposed to automation from any block in it. Slots run from the base block's
+ * first slot upward, so a hopper under the pile and an interface halfway up address the same
+ * inventory and see the same contents.
+ *
+ * <p>The slot count is the pile's potential height, not its current one, so growing and shrinking
+ * never changes the shape of the handler under a machine that is reading it, and the advertised
+ * headroom is capacity a deposit can really reach. Insertion ignores the requested slot: the pile
+ * fills from its base upward and grows the column when it needs to, which is what makes that
+ * headroom real.
  */
 public class PileItemHandler implements IItemHandler {
-    private static final int LOCAL_SLOTS = 27;
-    private static final int OVERFLOW_SLOTS = 27;
-
     private final StorageStackBE blockEntity;
 
     public PileItemHandler(StorageStackBE blockEntity) {
@@ -26,16 +26,18 @@ public class PileItemHandler implements IItemHandler {
 
     @Override
     public int getSlots() {
-        return blockEntity.canOverflowUpward() ? LOCAL_SLOTS + OVERFLOW_SLOTS : LOCAL_SLOTS;
+        StoragePile pile = blockEntity.pile();
+        return pile != null ? pile.advertisedSlots() : StorageStackBE.SLOTS;
     }
 
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        if (slot < 0 || slot >= LOCAL_SLOTS) {
-            return ItemStack.EMPTY;
+        StoragePile pile = blockEntity.pile();
+        if (pile == null) {
+            return localSlot(slot);
         }
-        return blockEntity.getSlotDirect(slot);
+        return pile.getSlot(slot);
     }
 
     @Nonnull
@@ -45,35 +47,40 @@ public class PileItemHandler implements IItemHandler {
             return ItemStack.EMPTY;
         }
 
+        StoragePile pile = blockEntity.pile();
+        if (pile == null) {
+            return stack;
+        }
+
         if (simulate) {
-            int accepted = blockEntity.simulateDeposit(stack);
+            int accepted = pile.simulateDeposit(stack);
             return accepted >= stack.getCount()
                     ? ItemStack.EMPTY
                     : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - accepted);
         }
 
         ItemStack toInsert = stack.copy();
-        blockEntity.deposit(toInsert);
+        pile.deposit(toInsert, null);
         return toInsert;
     }
 
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (slot < 0 || slot >= LOCAL_SLOTS) {
+        StoragePile pile = blockEntity.pile();
+        if (pile == null) {
             return ItemStack.EMPTY;
         }
 
         if (simulate) {
-            ItemStack inSlot = blockEntity.getSlotDirect(slot);
+            ItemStack inSlot = pile.getSlot(slot);
             if (inSlot.isEmpty()) {
                 return ItemStack.EMPTY;
             }
-            int toExtract = Math.min(amount, inSlot.getCount());
-            return ItemHandlerHelper.copyStackWithSize(inSlot, toExtract);
+            return ItemHandlerHelper.copyStackWithSize(inSlot, Math.min(amount, inSlot.getCount()));
         }
 
-        return blockEntity.extractFromSlot(slot, amount);
+        return pile.extract(slot, amount);
     }
 
     @Override
@@ -84,5 +91,13 @@ public class PileItemHandler implements IItemHandler {
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return StorageStackBE.isValidStorageItem(stack);
+    }
+
+    /** Client-side fallback: no pile resolves there, so the handler describes this block alone. */
+    private ItemStack localSlot(int slot) {
+        if (slot < 0 || slot >= StorageStackBE.SLOTS) {
+            return ItemStack.EMPTY;
+        }
+        return blockEntity.getItems().getStackInSlot(slot);
     }
 }

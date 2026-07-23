@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -12,6 +13,7 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -89,6 +91,16 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
+            // Tested against the whole column this would form, so a block dropped into the gap
+            // between two piles cannot join them into an over-tall one.
+            if (msg.blockType == BlockType.STORAGE_STACK && !StoragePile.columnHasRoomFor(level, msg.pos)) {
+                sp.displayClientMessage(
+                        Component.literal("Pile is at its maximum height of " + StoragePile.maxHeight()),
+                        true
+                );
+                return;
+            }
+
             if (msg.blockType == BlockType.SINGLES_STACK && msg.face == Direction.UP) {
                 BlockPos below = msg.pos.below();
                 var beBelow = level.getBlockEntity(below);
@@ -143,6 +155,10 @@ public class PlaceAndDepositPkt {
             boolean depositSucceeded = false;
 
             if (be instanceof StorageStackBE sbe) {
+                // A block placed onto a pile joins it, so it takes the pile's mode rather than
+                // imposing a fresh one — placing beneath a permanent pile makes this the base.
+                StoragePile.adoptNeighbourState(level, msg.pos, sbe);
+
                 int deposited = sbe.deposit(handStack, sp);
                 sp.setItemInHand(msg.hand, handStack);
 

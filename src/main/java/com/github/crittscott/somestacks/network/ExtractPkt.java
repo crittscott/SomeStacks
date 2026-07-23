@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -73,15 +72,11 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         ItemStack taken = sbe.extractAt(index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack);
 
         if (!taken.isEmpty()) {
-            // Prevent the vanilla use-item-on packet (processed after this pkt) from placing into the now-air position.
+            // Prevent the vanilla use-item-on packet (processed after this pkt) from using the
+            // newly held item at a position the pile's settle may be about to clear.
             RightClickBlockSuppressor.suppress(player, pos, level);
 
             level.playSound(null, pos, ModSounds.STORAGE_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
-
-            boolean shouldRemove = sbe.isEmpty() && !sbe.isPermanent() && !sbe.hasStorageBlockAbove();
-            if (shouldRemove) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            }
 
             if (handStack.isEmpty()) {
                 player.setItemInHand(hand, taken);

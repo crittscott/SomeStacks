@@ -65,14 +65,14 @@ public class StorageStackBlock extends Block implements EntityBlock {
         return true;
     }
 
+    /** Reports the whole pile's fill, so a comparator reads the same value anywhere along it. */
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof StorageStackBE sbe) {
-            double fillLevel = sbe.calculateFillLevel();
-            return (int) Math.round(fillLevel * 15.0);
+        StoragePile pile = StoragePile.at(level, pos);
+        if (pile == null) {
+            return 0;
         }
-        return 0;
+        return (int) Math.round(pile.fillLevel() * 15.0);
     }
 
     @Override
@@ -86,10 +86,15 @@ public class StorageStackBlock extends Block implements EntityBlock {
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
+    /**
+     * Runs the settle a content edit scheduled. Edits mark the pile's base, so a burst of them
+     * anywhere in the pile collapses into this one pass.
+     */
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (level.getBlockEntity(pos) instanceof StorageStackBE sbe) {
-            sbe.resortAndPackPile();
+        StoragePile pile = StoragePile.at(level, pos);
+        if (pile != null) {
+            pile.settle();
         }
     }
 
@@ -101,6 +106,11 @@ public class StorageStackBlock extends Block implements EntityBlock {
                 ItemOps.dropAllItems(sbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
+
+            // Losing a block splits one pile into two, or shortens one. Settle both sides rather
+            // than leaving the remains unpacked until something else touches them.
+            StoragePile.markDirtyAt(level, pos.below());
+            StoragePile.markDirtyAt(level, pos.above());
         }
     }
 }

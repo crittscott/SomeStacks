@@ -24,19 +24,19 @@ The normal flow is:
 
 `client click -> first matching interaction rule -> packet -> server validation and mutation -> block entity update -> client renderer`
 
-There is no continuously ticking block entity. Work happens in response to interaction, capability access, configuration events, or resource reloads.
+There is no continuously ticking block entity. Work happens in response to interaction, capability access, configuration events, or resource reloads. The one deferred piece of work is the Storage pile settle, which an edit schedules as a block tick so that a burst of edits collapses into a single pass.
 
 ## The three stack types
 
 | Type | Stored contents | Visual/physical arrangement | Distinct behavior |
 | --- | --- | --- | --- |
-| Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | Vertical blocks form a pile. Deposits merge, overflow upward, and may create another Storage Stack. The pile periodically sorts, consolidates, packs downward, and removes empty temporary blocks. |
+| Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | A vertical run of blocks is a pile, and the pile is the unit of storage. Deposits fill it from the base upward and grow it, bounded by a configured maximum height. It sorts, consolidates and packs down over its whole height. |
 | Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below, counting the top layer of the Singles Stack underneath as the layer below the bottom one. Removing an item shifts every occupied cell above it down one position in the same column, drawing items down out of the Singles Stacks above so a vertical run behaves as one stack. The whole grid and each individual item have independent quarter-turn rotations. |
 | Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar must overlap at least one bar beneath it, counting the top layer of the Bar Stack below as the layer beneath the bottom one. Extraction repeatedly drops every bar made unsupported by the removal, continuing up into the Bar Stacks above so a vertical run behaves as one stack. |
 
 Storage accepts any nonempty item not excluded by the disabled-mod list. Singles uses the same rule but excludes items valid for Bar Stack. Player-driven deposits also reject item ids in the server's disabled-item list.
 
-All three block entities expose Forge's item-handler capability on every side. Storage wraps its local 27 slots in a pile-aware handler: a real insertion uses normal Storage deposit behavior, including upward overflow, regardless of the requested slot. Singles and Bar expose their raw 64-slot handlers. Their player-path support and cascade rules are not imposed on direct capability operations.
+All three block entities expose Forge's item-handler capability on every side. Every block of a Storage pile exposes the whole pile as one inventory, so a hopper under the base and an interface halfway up address the same contents. Singles and Bar expose their raw 64-slot handlers. Their player-path support and cascade rules are not imposed on direct capability operations.
 
 ## Interaction model
 
@@ -48,7 +48,7 @@ All three block entities expose Forge's item-handler capability on every side. S
 | Hold `V`, hold an item, and right-click an existing stack | Deposit into the clicked stack, irrespective of the currently selected placement mode. Clicking the top face of a Singles or Bar Stack whose targeted column is full instead places the current mode's stack in the space above and makes the first deposit there, growing the column upward. |
 | Hold `V`, hold an item, and right-click another block | If the adjacent block on the clicked face is a Singles or Bar Stack, deposit there. Otherwise place the selected stack type in the replaceable adjacent position and make the first deposit. A newly placed block is removed again if that deposit fails. |
 | Right-click a stack without `V` or Shift | Ray-select the nearest occupied rendered cell and extract it. Storage takes as much of the selected item stack as the player's hand can accept; Singles and Bar take one item. The hand must be empty or contain the same item and tags with free capacity. |
-| Select Toggle Permanent, hold `V`, use an empty hand, and right-click a Storage Stack | Toggle whether that Storage Stack may disappear automatically when empty. |
+| Select Toggle Permanent, hold `V`, use an empty hand, and right-click a Storage Stack | Toggle whether that pile's blocks may disappear automatically when empty. The mode belongs to the pile, so any block of it toggles all of them. |
 | Shift-right-click a Storage or Singles Stack with a redstone torch | Rotate the entire stored layout by 90 degrees. Bar layouts have a fixed alternating orientation. |
 | Shift-right-click an item in a Singles Stack with a soul torch | Rotate that individual rendered item by 90 degrees. |
 
@@ -72,21 +72,28 @@ After successful extraction, the server marks the position for same-tick right-c
 
 ### Storage piles
 
-A Storage deposit fills compatible partial slots, then empty slots. Any remainder recurses into the Storage Stack directly above. If the space above is replaceable and Storage creation is enabled, the deposit creates another Storage Stack and continues there. Creating that overflow block runs the same protection path as any placement — build height, world border, spawn protection, and Forge's block-place event — so a pile never grows above the world or across a protected boundary. Automation-driven overflow (capability insertion) carries no player, so it is attributed to the level's fake player and checked the same way.
+A pile is a maximal contiguous vertical run of Storage Stacks, and it is the unit of storage. Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole column. Piles are one block wide; a stack placed beside a pile is unrelated to it.
 
-A deposit that overflows upward repacks once, from the block the deposit entered, rather than once per block it passed through.
+A pile may be at most `max_pile_height` blocks tall. That ceiling governs creation only: placement is refused when the resulting contiguous column would exceed it — tested over the runs both below and above the target, so a block dropped into the gap between two piles cannot join them into an over-tall one — and a pile stops growing there. A pile left over-tall by a lowered configuration keeps working and simply cannot grow.
 
-After a successful deposit or extraction, the pile may be repacked. Repacking is throttled by a cooldown stored on the pile's base block and processes at most the configured number of contiguous Storage Stack blocks around the initiating block. Within that window it:
+A deposit fills the pile from its base upward regardless of which block or slot it was aimed at: compatible partial slots first, then empty slots. While items remain and the height allows, it adds a block on top and continues. Creating that block runs the same protection path as any placement — build height, world border, spawn protection, and Forge's block-place event — so a pile never grows above the world or across a protected boundary. Automation-driven growth carries no player, so it is attributed to the level's fake player and checked the same way.
 
-1. Copies all stored stacks.
-2. Totals them by exact identity — item, damage value, and tags — so compatible stacks always merge no matter where in the window they sat.
+Any edit — a player deposit or extraction, a capability insertion or extraction — marks the pile for settling and schedules a block tick on its base. Edits anywhere in the pile mark the same base, so a burst of automation traffic settles once rather than once per item moved. The settle:
+
+1. Copies all stored stacks over the pile's whole height.
+2. Totals them by exact identity — item, damage value, and tags — so compatible stacks always merge no matter where in the pile they sat.
 3. Re-cuts each total into whole stacks plus at most one partial, then orders the result by item registry id, damage value, tags, and count with the fullest stack first.
-4. Writes the result from lower blocks and lower slot indices upward.
-5. Removes empty, non-permanent blocks from the top of the processed window until it reaches a nonempty block, a permanent block, or a block that still has a Storage Stack directly above it. An empty block is never removed while another Storage Stack sits directly above, so a pile taller than the window is not severed.
+4. Writes the result from lower blocks and lower slot indices upward, skipping slots that already hold exactly what they should, so an edit that disturbs a few stacks resyncs a few blocks rather than the whole column.
+5. Propagates the base block's permanent flag to every block in the pile.
+6. Removes empty, non-permanent blocks from the top until it reaches a nonempty or permanent block. Packing has already pushed every item as far down as it goes, so the empty blocks are exactly the run at the top and nothing below can be stranded by this.
 
-The sort cooldown and maximum window are server-performance controls, not capacity limits. A vertical pile may be taller than one repack window.
+Because the settle covers the pile's full height, items always occupy a contiguous run from the base and gaps cannot survive an edit.
 
-Storage Stack is the only type with comparator output. Its signal is the rounded fraction of its 27 local slots' capacity; neighboring Storage blocks are not included in that calculation.
+The pile's permanent flag is a property of the pile, held on its base block and normalized by every settle. A block that joins a pile takes the pile's mode and rotation rather than imposing its own: one grown by a deposit inherits from the base, and one a player places inherits from the block below it, or from the block above when there is none below. Placing a block beneath a permanent pile therefore does not silently make the pile temporary. A permanent pile never shrinks, so it keeps whatever height it once grew to.
+
+Rotation remains a property of the individual block. Because settling moves items between blocks, an item can come to be drawn under a different rotation than the one it was deposited under.
+
+Storage Stack is the only type with comparator output. Its signal is the rounded fraction of the whole pile's capacity, so a comparator reads the same value anywhere along it.
 
 ### Singles gravity
 
@@ -110,20 +117,20 @@ The seam also governs deposits: a bottom-layer bar may only be placed where the 
 
 ### Cascade publication
 
-Singles and Bar gravity, like Storage repacking, suppress per-slot client sync while they run and settle once at the end: one content update to clients and one light-level recomputation for the whole cascade.
+Singles and Bar gravity, like Storage deposits and pile settling, suppress per-slot client sync while they run and publish once at the end: one content update to clients and one light-level recomputation for the whole cascade. The Storage path additionally tracks which blocks a batch actually changed and publishes only those.
 
 ### Empty and broken blocks
 
 - Empty Singles and Bar blocks remove themselves after player extraction, including Bar blocks that a gravity cascade empties higher up a column.
 - An empty Singles block is not removed while another Singles Stack sits directly above it, matching the rule Storage piles use: severing a column there would strand the run above with nothing to fall onto. Removing a Singles block clears any empty blocks it was covering, so blocks kept back for that reason do not outlive their purpose.
-- Empty Storage blocks remove themselves unless permanent or another Storage Stack sits directly above them; pile repacking removes empty temporary blocks from the processed top under the same never-remove-under-a-stack rule.
+- Empty Storage blocks are removed by the pile's settle, from the top down, stopping at the first nonempty or permanent block. An empty temporary pile removes itself entirely. Storage needs no never-remove-under-a-stack rule, because packing the whole pile leaves its empty blocks contiguous at the top.
 - Breaking or replacing any stack block drops every item still in its local item handler.
 
 ## World state, collision, light, and persistence
 
 The visible inventories are authoritative block entity state and are included in save NBT and block entity update packets.
 
-- Storage persists items, block rotation, pile-sort time, and the permanent flag.
+- Storage persists items, block rotation, and the permanent flag.
 - Singles persists items, block rotation, and all 64 per-item rotations.
 - Bar persists items.
 
@@ -140,7 +147,7 @@ The logical packet directions are:
 
 These directions are registered with the network channel, so a packet arriving from the wrong logical side is rejected before it is handled.
 
-The server owns all inventory and block mutation and does not trust client gesture state. Every mutation packet first clears a common boundary: a real sender, a loaded target position, and a target within the player's interaction reach. Operations whose gesture requires a specific held item or an empty hand — rotate block, rotate item, toggle permanent — verify that item state server-side rather than trusting the client. World-editing operations — place, deposit, extract — also consult the world border and vanilla spawn protection, which exempts operators. Because the mod's packets replace the vanilla interaction the client suppresses, deposit and extract additionally fire Forge's right-click-block event server-side, so claim and protection mods can veto access to a stack exactly as they would a vanilla container. Placement additionally checks that the target is replaceable, checks the player's permission to use the item there, fires Forge's block-place event so protection mods can veto or record it, enforces the selected block's enable flag, validates blacklists, and removes a just-created block if its initial deposit fails. Deposit recomputes cell targeting and support. Extraction accepts the client-selected slot index, then validates the block entity, index, contents, and hand compatibility before changing state.
+The server owns all inventory and block mutation and does not trust client gesture state. Every mutation packet first clears a common boundary: a real sender, a loaded target position, and a target within the player's interaction reach. Operations whose gesture requires a specific held item or an empty hand — rotate block, rotate item, toggle permanent — verify that item state server-side rather than trusting the client. World-editing operations — place, deposit, extract — also consult the world border and vanilla spawn protection, which exempts operators. Because the mod's packets replace the vanilla interaction the client suppresses, deposit and extract additionally fire Forge's right-click-block event server-side, so claim and protection mods can veto access to a stack exactly as they would a vanilla container. Placement additionally checks that the target is replaceable, checks the player's permission to use the item there, fires Forge's block-place event so protection mods can veto or record it, enforces the selected block's enable flag, enforces the maximum pile height for Storage, validates blacklists, and removes a just-created block if its initial deposit fails. Deposit recomputes cell targeting and support. Extraction accepts the client-selected slot index, then validates the block entity, index, contents, and hand compatibility before changing state.
 
 On player login and server-config reload, the server sends clients the three block-enable flags and the admin render overrides read from `config/somestacks/server_item_overrides/`. The client uses the flags for mode selection and the overrides as its top render layer. Blacklists and pile settings stay server-side.
 
@@ -205,9 +212,8 @@ The Forge server config contains:
 
 | Setting | Default | Operating effect |
 | --- | --- | --- |
-| Pile sort cooldown | 20 ticks | Minimum elapsed time between repacks, tracked on the Storage pile base. |
-| Maximum stacks per repack | 3 | Limits the contiguous Storage blocks touched by one repack operation. |
-| Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage also stops auto-creating overflow blocks. Existing blocks remain present and their direct deposit/extract paths remain usable. |
+| Maximum pile height | 8 | Blocks in one vertical Storage pile. Placement producing a taller column is refused and a pile stops growing there. Bounds the work of settling, which always covers a pile's whole height. |
+| Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage also stops growing piles. Existing blocks remain present and their direct deposit/extract paths remain usable. |
 | Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces; existing contents can still be extracted. |
 | Disabled items | empty | Rejects those ids on player packet deposit paths; existing contents can still be extracted. |
 | `ss` command allow list | empty | Player names permitted to use the `ss` command. Empty means no one may use it. |
@@ -238,6 +244,7 @@ The `ss` command is player-only and gated by the server config's `ss_command_all
 
 - Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
 - Stack invariants and persistence: the three block entities in `block/` are authoritative. Keep their NBT, update packet, collision cache, and renderer assumptions aligned.
+- Storage pile behavior: `StoragePile` owns pile resolution, bottom-up filling, growth, the capability's flat slot range, settling, and trimming. A Storage Stack that needs to reach past its own 27 slots resolves a pile rather than walking the column itself.
 - Spatial layout and targeting: `StorageCubeIdx`, `SinglesCubeIdx`, and `BarCubeIdx` are shared geometry contracts between rendering, selection, collision, grounding, and cross-block support.
 - Ordinary item compatibility: prefer an override entry — authored in game with `ss item` and `ss write`, or edited into the bundled `item_render_overrides/` corpus — before changing the global rendering paths.
 - Bar appearance: extend `textures/bars/` and reuse the base ingot/brick textures where tinting is sufficient.

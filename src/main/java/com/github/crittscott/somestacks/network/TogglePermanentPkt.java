@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StoragePile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -38,14 +38,15 @@ public class TogglePermanentPkt {
                 return;
             }
 
-            var be = level.getBlockEntity(msg.pos);
-            if (!(be instanceof StorageStackBE sbe)) return;
+            // The mode belongs to the pile, not the block that was clicked.
+            StoragePile pile = StoragePile.at(level, msg.pos);
+            if (pile == null) return;
 
-            boolean newState = !sbe.isPermanent();
-            sbe.setPermanent(newState);
+            boolean newState = !pile.isPermanent();
+            pile.setPermanent(newState);
 
             sp.displayClientMessage(
-                    Component.literal("Stack: " + (newState ? "Permanent" : "Temporary")),
+                    Component.literal("Pile: " + (newState ? "Permanent" : "Temporary")),
                     true
             );
         });

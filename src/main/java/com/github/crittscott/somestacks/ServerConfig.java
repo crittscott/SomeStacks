@@ -15,8 +15,7 @@ public final class ServerConfig {
 
     public static final ForgeConfigSpec SERVER_CONFIG;
 
-    public static final ForgeConfigSpec.IntValue PILE_SORT_COOLDOWN_TICKS;
-    public static final ForgeConfigSpec.IntValue PILE_SORT_MAX_STACKS;
+    public static final ForgeConfigSpec.IntValue MAX_PILE_HEIGHT;
 
     public static final ForgeConfigSpec.BooleanValue ENABLE_STORAGE_STACK_BLOCK;
     public static final ForgeConfigSpec.BooleanValue ENABLE_SINGLES_STACK_BLOCK;
@@ -36,15 +35,14 @@ public final class ServerConfig {
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        builder.comment("Pile Sorting Configuration").push("pile_sorting");
+        builder.comment("Storage Pile Configuration").push("piles");
 
-        PILE_SORT_COOLDOWN_TICKS = builder
-                .comment("Cooldown between pile resorts (in ticks, 20 = 1 second)")
-                .defineInRange("cooldown_ticks", 20, 1, Integer.MAX_VALUE);
-
-        PILE_SORT_MAX_STACKS = builder
-                .comment("Maximum number of stacks to resort in a pile operation")
-                .defineInRange("max_stacks_per_resort", 3, 1, Integer.MAX_VALUE);
+        MAX_PILE_HEIGHT = builder
+                .comment("Maximum number of Storage Stacks in one vertical pile.",
+                        "A pile is one inventory: it fills from the bottom up, packs down, and sorts",
+                        "over its whole height. This bounds that work. Placement that would produce a",
+                        "taller column is refused, and a pile stops growing here.")
+                .defineInRange("max_pile_height", 8, 1, 64);
 
         builder.pop();
 
