@@ -45,7 +45,7 @@ All three block entities expose Forge's item-handler capability on every side. S
 | Gesture | Result |
 | --- | --- |
 | Hold `V` and right-click air | Cycle Storage, Singles, Bar, and Toggle Permanent modes, showing the selected mode in the action bar. The code does not require Shift. Synced-disabled Singles and Bar modes are skipped. |
-| Hold `V`, hold an item, and right-click an existing stack | Deposit into the clicked stack, irrespective of the currently selected placement mode. |
+| Hold `V`, hold an item, and right-click an existing stack | Deposit into the clicked stack, irrespective of the currently selected placement mode. Clicking the top face of a Singles or Bar Stack whose targeted column is full instead places the current mode's stack in the space above and makes the first deposit there, growing the column upward. |
 | Hold `V`, hold an item, and right-click another block | If the adjacent block on the clicked face is a Singles or Bar Stack, deposit there. Otherwise place the selected stack type in the replaceable adjacent position and make the first deposit. A newly placed block is removed again if that deposit fails. |
 | Right-click a stack without `V` or Shift | Ray-select the nearest occupied rendered cell and extract it. Storage takes as much of the selected item stack as the player's hand can accept; Singles and Bar take one item. The hand must be empty or contain the same item and tags with free capacity. |
 | Select Toggle Permanent, hold `V`, use an empty hand, and right-click a Storage Stack | Toggle whether that Storage Stack may disappear automatically when empty. |
@@ -54,7 +54,7 @@ All three block entities expose Forge's item-handler capability on every side. S
 
 Shift plus `V` is not a general placement gesture. Placement and deposit rules require that Shift not be held.
 
-The torch rules currently also consume their matching clicks on Bar Stack, but the server has no Bar block-rotation or item-rotation operation, so those Bar gestures make no state change.
+The torch rules do not apply to Bar Stack: block rotation matches only Storage and Singles, and item rotation matches only Singles. A torch click on a Bar Stack matches no rule and falls through to vanilla, so the torch is placed against the block as usual.
 
 ### Cell targeting and support
 
