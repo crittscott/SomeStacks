@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ModSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
@@ -59,7 +60,7 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
-            if (PacketBoundary.isProtected(sp, msg.pos)) {
+            if (Protection.isProtected(sp, msg.pos)) {
                 return;
             }
 
@@ -144,7 +145,7 @@ public class PlaceAndDepositPkt {
 
             BlockState state = msg.blockType.getBlock().defaultBlockState();
 
-            if (!PacketBoundary.placeBlockChecked(sp, msg.pos, state, msg.face)) {
+            if (!Protection.placeChecked(sp, sp.serverLevel(), msg.pos, state, msg.face.getOpposite())) {
                 return;
             }
 
@@ -153,7 +154,7 @@ public class PlaceAndDepositPkt {
             boolean depositSucceeded = false;
 
             if (be instanceof StorageStackBE sbe) {
-                int deposited = sbe.deposit(handStack);
+                int deposited = sbe.deposit(handStack, sp);
                 sp.setItemInHand(msg.hand, handStack);
 
                 if (deposited > 0) {

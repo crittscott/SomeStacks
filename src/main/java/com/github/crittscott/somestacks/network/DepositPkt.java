@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.ModSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
@@ -49,7 +50,11 @@ public class DepositPkt {
                 return;
             }
 
-            if (PacketBoundary.isProtected(sp, msg.pos)) {
+            if (Protection.isProtected(sp, msg.pos)) {
+                return;
+            }
+
+            if (!Protection.mayInteract(sp, msg.pos)) {
                 return;
             }
 
@@ -74,7 +79,7 @@ public class DepositPkt {
             var be = level.getBlockEntity(msg.pos);
 
             if (block == ModRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE sbe) {
-                int deposited = sbe.deposit(handStack);
+                int deposited = sbe.deposit(handStack, sp);
                 sp.setItemInHand(msg.hand, handStack);
 
                 if (deposited > 0) {

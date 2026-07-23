@@ -47,8 +47,9 @@ import java.util.stream.Collectors;
  *       server config to every player.</li>
  * </ul>
  *
- * <p>Every subcommand adjusts how stacks look and is issued against the sender's own view,
- * so the whole tree requires a creative-mode player and is unavailable from the console.
+ * <p>Every subcommand adjusts how stacks look and is issued against the sender's own view, so the
+ * whole tree is player-only and, beyond that, gated by the {@code ss_command_allowlist} server
+ * config list. A player not on that list is told to add their name to the server config.
  */
 public final class SsCommand {
     private SsCommand() {}
@@ -56,7 +57,7 @@ public final class SsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal("ss")
-                        .requires(SsCommand::isCreativePlayer)
+                        .requires(source -> source.getEntity() instanceof ServerPlayer)
                         .then(Commands.literal("item")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
@@ -88,8 +89,19 @@ public final class SsCommand {
         );
     }
 
-    private static boolean isCreativePlayer(CommandSourceStack source) {
-        return source.getEntity() instanceof ServerPlayer player && player.isCreative();
+    /**
+     * Gate every subcommand on the {@code ss_command_allowlist} server config list. A player not
+     * on it is told to add their name there. Returns whether the command may proceed.
+     */
+    private static boolean checkAllowed(CommandContext<CommandSourceStack> ctx) {
+        if (ctx.getSource().getEntity() instanceof ServerPlayer player
+                && ServerConfig.isSsAllowed(player.getGameProfile().getName())) {
+            return true;
+        }
+        ctx.getSource().sendFailure(Component.literal(
+                "You are not permitted to use /ss. Add your name to 'ss_command_allowlist' "
+                        + "in the Some Stacks server config, then reload."));
+        return false;
     }
 
     private static CompletableFuture<Suggestions> suggestItems(
@@ -113,6 +125,7 @@ public final class SsCommand {
     }
 
     private static int setItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
@@ -148,6 +161,7 @@ public final class SsCommand {
     }
 
     private static int resetItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
@@ -159,6 +173,7 @@ public final class SsCommand {
     }
 
     private static int testSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         String modId = StringArgumentType.getString(ctx, "modid");
 
@@ -176,6 +191,7 @@ public final class SsCommand {
     }
 
     private static int testAll(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         List<String> modIds = new ArrayList<>(TestWallGenerator.getModIdsWithItems());
@@ -231,6 +247,7 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
+        if (!checkAllowed(ctx)) return 0;
         int synced = SomeStacks.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.literal(
                 "Reloaded Some Stacks server overrides and synced " + synced + " player(s)"), true);
@@ -238,6 +255,7 @@ public final class SsCommand {
     }
 
     private static int write(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new WriteOverridesPkt());
         return 1;

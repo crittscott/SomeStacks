@@ -57,6 +57,13 @@ public final class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
+        // Only the client-side firing drives the gesture rules. In single player the integrated
+        // server shares this event bus, and the server re-fires RightClickBlock when consulting
+        // protection for our own deposit/extract packets; handling that re-fire would re-run the
+        // rules and cancel the very interaction being validated.
+        if (!evt.getLevel().isClientSide()) {
+            return;
+        }
         SomeStacks.LOGGER.debug(
                 "RightClickBlock fired: blockstate {}, hand item {}",
                 evt.getLevel().getBlockState(evt.getPos()),

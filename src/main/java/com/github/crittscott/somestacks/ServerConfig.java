@@ -25,10 +25,13 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
 
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SS_COMMAND_ALLOWLIST;
+
     public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
 
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
+    private static volatile Set<String> ssAllowlist = Set.of();
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -79,6 +82,18 @@ public final class ServerConfig {
 
         builder.pop();
 
+        builder.comment("Command Configuration").push("commands");
+
+        SS_COMMAND_ALLOWLIST = builder
+                .comment("Player names permitted to use the /ss render-tuning command.",
+                        "Empty by default: no one may use /ss until a name is added here.",
+                        "In single player, add your own name.")
+                .defineList("ss_command_allowlist",
+                        Collections.emptyList(),
+                        obj -> obj instanceof String);
+
+        builder.pop();
+
         builder.comment("Test Wall Configuration").push("test_wall");
 
         TEST_WALL_PLACEMENTS_PER_TICK = builder
@@ -93,16 +108,16 @@ public final class ServerConfig {
     }
 
     /**
-     * Resolves the compatibility lists into lookup sets. Config entries are free-form text, so
-     * mod ids are lowercased to match the namespace of a {@link ResourceLocation} and item ids are
-     * parsed once here; a malformed item id is reported and dropped rather than being re-parsed and
-     * swallowed on every deposit.
+     * Resolves the server's free-form text lists into lookup sets: the disabled-mod and
+     * disabled-item compatibility lists and the {@code ss} command allow list. Mod ids and player
+     * names are lowercased and item ids are parsed once here; a malformed item id is reported and
+     * dropped rather than being re-parsed and swallowed on every deposit.
      *
      * <p>Called from the config load and reload events, which fire on Forge's file-watcher thread.
      * Each list is published as an immutable set through a volatile field, so a server thread
      * lookup sees either the old lists or the new ones.
      */
-    public static void bakeCompatibilityLists() {
+    public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
         for (String entry : DISABLE_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
@@ -121,8 +136,17 @@ public final class ServerConfig {
             items.add(itemId);
         }
 
+        Set<String> allowed = new HashSet<>();
+        for (String entry : SS_COMMAND_ALLOWLIST.get()) {
+            String name = entry.trim().toLowerCase(Locale.ROOT);
+            if (!name.isEmpty()) {
+                allowed.add(name);
+            }
+        }
+
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
+        ssAllowlist = Set.copyOf(allowed);
     }
 
     /**
@@ -139,5 +163,13 @@ public final class ServerConfig {
      */
     public static boolean isItemDisabled(ResourceLocation itemId) {
         return disabledItems.contains(itemId);
+    }
+
+    /**
+     * @param playerName a player's profile name, in any case
+     * @return whether that player may use the {@code ss} command
+     */
+    public static boolean isSsAllowed(String playerName) {
+        return ssAllowlist.contains(playerName.toLowerCase(Locale.ROOT));
     }
 }

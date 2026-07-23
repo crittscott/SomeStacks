@@ -3,6 +3,8 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -82,6 +84,13 @@ public class StorageStackBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         SomeStacks.LOGGER.debug("StorageStackBlock.use() called.");
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (level.getBlockEntity(pos) instanceof StorageStackBE sbe) {
+            sbe.resortAndPackPile();
+        }
     }
 
     @Override

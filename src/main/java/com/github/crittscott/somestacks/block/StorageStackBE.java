@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackSort;
 import net.minecraft.core.BlockPos;
@@ -9,12 +10,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -113,15 +117,25 @@ public class StorageStackBE extends BlockEntity {
     }
 
     public int deposit(ItemStack fromHand) {
-        return deposit(fromHand, true);
+        return deposit(fromHand, true, null);
+    }
+
+    /**
+     * @param placer the player responsible for any overflow blocks this deposit creates, or null
+     *               for automation. A created block is placed through the protection-aware path,
+     *               attributed to {@code placer} or, when null, to the level's fake player.
+     */
+    public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
+        return deposit(fromHand, true, placer);
     }
 
     /**
      * @param ownsRepack whether this call is responsible for the post-deposit repack. Overflow
      *                   frames pass false, so a deposit that spills up a tall pile walks to the
      *                   pile base once instead of once per block it touched.
+     * @param placer     see {@link #deposit(ItemStack, ServerPlayer)}.
      */
-    private int deposit(ItemStack fromHand, boolean ownsRepack) {
+    private int deposit(ItemStack fromHand, boolean ownsRepack, @Nullable ServerPlayer placer) {
         if (fromHand.isEmpty()) {
             return 0;
         }
@@ -139,15 +153,21 @@ public class StorageStackBE extends BlockEntity {
             if (aboveState.getBlock() == ModRegistry.STORAGE_STACK_BLOCK.get()) {
                 var beAbove = level.getBlockEntity(above);
                 if (beAbove instanceof StorageStackBE sbeAbove) {
-                    int movedAbove = sbeAbove.deposit(fromHand, false);
+                    int movedAbove = sbeAbove.deposit(fromHand, false, placer);
                     moved += movedAbove;
                 }
-            } else if (aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()) {
+            } else if (aboveState.canBeReplaced() && ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()
+                    && !level.isOutsideBuildHeight(above)) {
+                ServerLevel serverLevel = (ServerLevel) level;
+                // Automation carries no player; attribute its growth to the level's fake player so
+                // the same protection path governs machine-driven overflow.
+                ServerPlayer editor = placer != null ? placer : FakePlayerFactory.getMinecraft(serverLevel);
                 BlockState newStack = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
-                if (level.setBlock(above, newStack, Block.UPDATE_ALL)) {
+                if (!Protection.isProtected(editor, above)
+                        && Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
                     var beAbove = level.getBlockEntity(above);
                     if (beAbove instanceof StorageStackBE sbeAbove) {
-                        int movedAbove = sbeAbove.deposit(fromHand, false);
+                        int movedAbove = sbeAbove.deposit(fromHand, false, placer);
                         moved += movedAbove;
                     }
                 }
@@ -438,6 +458,10 @@ public class StorageStackBE extends BlockEntity {
 
             int cooldownTicks = ServerConfig.PILE_SORT_COOLDOWN_TICKS.get();
             if (elapsed < cooldownTicks) {
+                // Throttled. Don't drop the repack, or a gap opened faster than the cooldown would
+                // sit unsorted until the next unthrottled edit. Defer it so the pile still settles
+                // once the cooldown passes.
+                scheduleDeferredRepack((int) (cooldownTicks - elapsed));
                 return;
             }
 
@@ -491,6 +515,20 @@ public class StorageStackBE extends BlockEntity {
                 break;
             }
             level.setBlock(sbe.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
+        }
+    }
+
+    /**
+     * Schedules a block tick that retries the repack once the cooldown has passed, unless one is
+     * already pending for this block. {@link StorageStackBlock#tick} routes it back here, where the
+     * cooldown will by then permit the sort.
+     */
+    private void scheduleDeferredRepack(int delayTicks) {
+        if (level instanceof ServerLevel serverLevel) {
+            Block block = getBlockState().getBlock();
+            if (!serverLevel.getBlockTicks().hasScheduledTick(getBlockPos(), block)) {
+                serverLevel.scheduleTick(getBlockPos(), block, Math.max(1, delayTicks));
+            }
         }
     }
 

@@ -56,7 +56,7 @@ public class SomeStacks {
 
     private void onConfigLoad(ModConfigEvent.Loading event) {
         if (event.getConfig().getType() == ModConfig.Type.SERVER) {
-            ServerConfig.bakeCompatibilityLists();
+            ServerConfig.bakeServerLists();
         }
     }
 
@@ -65,7 +65,7 @@ public class SomeStacks {
             return;
         }
 
-        ServerConfig.bakeCompatibilityLists();
+        ServerConfig.bakeServerLists();
 
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {

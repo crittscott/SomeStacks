@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ModSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,9 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
 
             if (msg.index < 0 || msg.index >= 64) return;
 
-            if (PacketBoundary.isProtected(player, msg.pos)) return;
+            if (Protection.isProtected(player, msg.pos)) return;
+
+            if (!Protection.mayInteract(player, msg.pos)) return;
 
             Level level = player.level();
             BlockEntity be = level.getBlockEntity(msg.pos);
