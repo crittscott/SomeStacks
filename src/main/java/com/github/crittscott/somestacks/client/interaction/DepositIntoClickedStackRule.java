@@ -39,13 +39,21 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
         if (be instanceof SinglesStackBE ssbe) {
             IItemHandler handler = ssbe.getItems();
             int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, ctx.getClickedPos(), handler, ssbe.getRotation());
-            return index >= 0 && handler.getStackInSlot(index).isEmpty() && SinglesCubeIdx.isGrounded(index, handler);
+            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof SinglesStackBE below
+                    ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
+                    : null;
+            return index >= 0 && handler.getStackInSlot(index).isEmpty()
+                    && SinglesCubeIdx.isGrounded(index, handler, ssbe.getRotation(), seam);
         }
 
         if (be instanceof BarStackBE barbe) {
             IItemHandler handler = barbe.getItems();
             int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, ctx.getClickedPos(), handler);
-            return index >= 0 && handler.getStackInSlot(index).isEmpty() && BarCubeIdx.isGrounded(index, handler);
+            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof BarStackBE below
+                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
+                    : null;
+            return index >= 0 && handler.getStackInSlot(index).isEmpty()
+                    && BarCubeIdx.isGrounded(index, handler, seam);
         }
 
         return true;

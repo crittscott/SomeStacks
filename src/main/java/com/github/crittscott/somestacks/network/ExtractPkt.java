@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
@@ -115,11 +114,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
 
             level.playSound(null, pos, ModSounds.SINGLES_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
 
-            boolean shouldRemove = ssbe.isEmpty();
-            if (shouldRemove) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            }
-
             ItemOps.giveToPlayerOrDrop(player, hand, taken);
         }
     }
@@ -139,11 +133,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
             RightClickBlockSuppressor.suppress(player, pos, level);
 
             level.playSound(null, pos, ModSounds.BAR_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
-
-            boolean shouldRemove = barbe.isEmpty();
-            if (shouldRemove) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            }
 
             ItemOps.giveToPlayerOrDrop(player, hand, taken);
         }

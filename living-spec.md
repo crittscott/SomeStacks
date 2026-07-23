@@ -31,8 +31,8 @@ There is no continuously ticking block entity. Work happens in response to inter
 | Type | Stored contents | Visual/physical arrangement | Distinct behavior |
 | --- | --- | --- | --- |
 | Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | Vertical blocks form a pile. Deposits merge, overflow upward, and may create another Storage Stack. The pile periodically sorts, consolidates, packs downward, and removes empty temporary blocks. |
-| Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below. Removing an item shifts every occupied cell above it down one position in the same column. The whole grid and each individual item have independent quarter-turn rotations. |
-| Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar above the bottom layer must overlap at least one bar beneath it. Extraction repeatedly drops every bar made unsupported by the removal. |
+| Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below, counting the top layer of the Singles Stack underneath as the layer below the bottom one. Removing an item shifts every occupied cell above it down one position in the same column, drawing items down out of the Singles Stacks above so a vertical run behaves as one stack. The whole grid and each individual item have independent quarter-turn rotations. |
+| Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar must overlap at least one bar beneath it, counting the top layer of the Bar Stack below as the layer beneath the bottom one. Extraction repeatedly drops every bar made unsupported by the removal, continuing up into the Bar Stacks above so a vertical run behaves as one stack. |
 
 Storage accepts any nonempty item not excluded by the disabled-mod list. Singles uses the same rule but excludes items valid for Bar Stack. Player-driven deposits also reject item ids in the server's disabled-item list.
 
@@ -62,8 +62,8 @@ Extraction traces only occupied cells and chooses the closest hit. Singles and B
 
 Grounding is enforced for player deposits:
 
-- A Singles item is grounded on the bottom layer or by the same column in the layer immediately below.
-- A Bar is grounded on the bottom layer or when its horizontal footprint overlaps an occupied bar in the immediately lower layer.
+- A Singles item is grounded by the same column in the layer immediately below, which for the bottom layer means the top layer of the Singles Stack underneath, matched in visual columns. A bottom-layer item in a block that does not stand on another Singles Stack is grounded outright.
+- A Bar is grounded when its horizontal footprint overlaps an occupied bar in the layer immediately below, which for the bottom layer means the top layer of the Bar Stack underneath. A bottom-layer bar in a block that does not stand on another Bar Stack is grounded outright.
 - When a new Singles or Bar block is placed above an existing block of the same kind, its first item must also be supported by the top layer of the lower block.
 
 After successful extraction, the server marks the position for same-tick right-click suppression. This cancels the vanilla use-item-on-block event that can arrive after the custom extraction packet and would otherwise use the newly held item at a position whose stack block may just have disappeared.
@@ -90,11 +90,23 @@ Storage Stack is the only type with comparator output. Its signal is the rounded
 
 ### Singles gravity
 
-Singles removal closes the gap in one vertical column. Every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade. A cell left empty carries no rotation, so the next item deposited into it starts unrotated.
+A vertical run of Singles Stacks behaves as one stack. Singles removal closes the gap in one vertical column: every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade, and it is positional rather than a compaction, so gaps left by capability inserts survive it. A cell left empty carries no rotation, so the next item deposited into it starts unrotated.
+
+The shift always vacates the top cell of its column, so the Singles Stack above can hand its own bottom-layer item down into the space. Exactly one item crosses each block boundary per removal, and the receiving cell is always free. The block that gave the item up then shifts the same column and draws from the block above it, and so on; the walk ends at the first block with nothing to hand down.
+
+Two stacked blocks may carry different block rotations, so columns are matched between them in visual coordinates — the run the player sees as continuous. Block rotation turns a cell's position but never the item drawn in it, so an item's stored rotation carries its facing across a change of frame unchanged.
+
+The bottom layer of a stacked block rests on the seam, the top layer of the Singles Stack below, recorded in visual columns so it means the same thing to a block above of any rotation. A block standing on the world rather than on another Singles Stack has its bottom layer grounded outright. The seam governs deposits as well: a bottom-layer item may only be placed where the block below supports it, on every deposit into a stacked block rather than only the first one that creates it.
 
 ### Bar gravity
 
-After one bar is extracted, the block scans the remaining bars from the bottom layer up. Any bar without an overlapping support footprint in the layer below is removed and dropped into the world. One pass suffices: a layer is only ever supported by the layer beneath it, which the pass has already settled.
+A vertical run of Bar Stacks behaves as one stack. After one bar is extracted, the block scans the remaining bars from the bottom layer up. Any bar without an overlapping support footprint beneath it is removed and dropped into the world. One pass suffices per block: a layer is only ever supported by the layer beneath it, which the pass has already settled.
+
+The bottom layer rests on the seam — the top layer of the Bar Stack directly below. Layer 7 runs north-south and layer 0 east-west, so the alternation continues across the block boundary and the ordinary footprint overlap describes support at the seam unchanged. A block standing on the world rather than on another Bar Stack has its bottom layer grounded outright.
+
+When a settle changes a block's top layer, the cascade continues into the Bar Stack above, carrying that top layer as its seam. Support crosses the seam per footprint, so the block above loses only the bars whose support actually went away; bars still standing on a surviving column below are untouched. The walk stops at the first block whose top layer it leaves intact, because only the top layer can hold up the block above. A block emptied along the way removes itself and passes on its now-empty top layer, so pulling the base out of a pile collapses it the whole way up without that being a separate rule — nothing overlaps an empty seam.
+
+The seam also governs deposits: a bottom-layer bar may only be placed where the Bar Stack below supports it. This holds for every deposit into a stacked block, not just the first one that creates it.
 
 ### Cascade publication
 
@@ -102,7 +114,8 @@ Singles and Bar gravity, like Storage repacking, suppress per-slot client sync w
 
 ### Empty and broken blocks
 
-- Empty Singles and Bar blocks remove themselves after player extraction.
+- Empty Singles and Bar blocks remove themselves after player extraction, including Bar blocks that a gravity cascade empties higher up a column.
+- An empty Singles block is not removed while another Singles Stack sits directly above it, matching the rule Storage piles use: severing a column there would strand the run above with nothing to fall onto. Removing a Singles block clears any empty blocks it was covering, so blocks kept back for that reason do not outlive their purpose.
 - Empty Storage blocks remove themselves unless permanent or another Storage Stack sits directly above them; pile repacking removes empty temporary blocks from the processed top under the same never-remove-under-a-stack rule.
 - Breaking or replacing any stack block drops every item still in its local item handler.
 

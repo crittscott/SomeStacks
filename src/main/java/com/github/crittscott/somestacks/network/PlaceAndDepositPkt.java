@@ -123,20 +123,9 @@ public class PlaceAndDepositPkt {
                     int depositIndex = BarCubeIdx.calculateDepositIndex(eyePos, lookDir, msg.pos);
 
                     if (depositIndex >= 0) {
-                        int[] xyz = BarCubeIdx.xyzFromIndex(depositIndex);
-                        int x = xyz[0];
-                        int y = xyz[1];
-                        int z = xyz[2];
+                        boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
 
-                        double newMinX = BarCubeIdx.startPixelX(x, y);
-                        double newMinZ = BarCubeIdx.startPixelZ(z, y);
-                        double newMaxX = newMinX + BarCubeIdx.barWidth(y);
-                        double newMaxZ = newMinZ + BarCubeIdx.barDepth(y);
-
-                        boolean hasSupport = topLayerSupports(barBeBelow.getItems(),
-                                newMinX, newMinZ, newMaxX, newMaxZ);
-
-                        if (!hasSupport) {
+                        if (!BarCubeIdx.seamSupports(depositIndex, seam)) {
                             return;
                         }
                     }
@@ -172,26 +161,6 @@ public class PlaceAndDepositPkt {
             }
         });
         ctx.get().setPacketHandled(true);
-    }
-
-    /** Whether an occupied bar in the top layer below covers the footprint the new bar would take. */
-    private static boolean topLayerSupports(IItemHandler lower, double minX, double minZ, double maxX, double maxZ) {
-        for (int i = 56; i < 64; i++) {
-            if (lower.getStackInSlot(i).isEmpty()) {
-                continue;
-            }
-
-            int[] lowerXYZ = BarCubeIdx.xyzFromIndex(i);
-            double lowerMinX = BarCubeIdx.startPixelX(lowerXYZ[0], lowerXYZ[1]);
-            double lowerMinZ = BarCubeIdx.startPixelZ(lowerXYZ[2], lowerXYZ[1]);
-            double lowerMaxX = lowerMinX + BarCubeIdx.barWidth(lowerXYZ[1]);
-            double lowerMaxZ = lowerMinZ + BarCubeIdx.barDepth(lowerXYZ[1]);
-
-            if (!(maxX <= lowerMinX || minX >= lowerMaxX || maxZ <= lowerMinZ || minZ >= lowerMaxZ)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static boolean depositIntoSingles(SinglesStackBE ssbe, ServerPlayer sp, PlaceAndDepositPkt msg,

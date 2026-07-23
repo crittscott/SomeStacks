@@ -9,7 +9,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -141,7 +143,7 @@ public class SinglesStackBE extends BlockEntity {
             return false;
         }
 
-        if (!SinglesCubeIdx.isGrounded(index, items)) {
+        if (!SinglesCubeIdx.isGrounded(index, items, rotation, seamBeneath())) {
             return false;
         }
 
@@ -162,6 +164,9 @@ public class SinglesStackBE extends BlockEntity {
             return ItemStack.EMPTY;
         }
 
+        int column = SinglesCubeIdx.columnFromIndex(index);
+        int y = SinglesCubeIdx.xyzFromIndex(index)[1];
+
         ItemStack extracted;
         suppressSync = true;
         try {
@@ -169,36 +174,139 @@ public class SinglesStackBE extends BlockEntity {
             if (extracted.isEmpty()) {
                 return ItemStack.EMPTY;
             }
-            cascadeUnsupportedBlocks(index);
+            shiftColumnDown(column, y);
         } finally {
             suppressSync = false;
         }
 
-        setChanged();
-        finalizeAfterBatch();
+        if (level == null || level.isClientSide) {
+            clearEmptyCubeRotations();
+            setChanged();
+            finalizeAfterBatch();
+            return extracted;
+        }
+
+        drawDownColumn(column);
         return extracted;
     }
 
-    private void cascadeUnsupportedBlocks(int removedIndex) {
-        int[] xyz = SinglesCubeIdx.xyzFromIndex(removedIndex);
-        int x = xyz[0];
-        int z = xyz[2];
-        int y = xyz[1];
+    /**
+     * The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
+     * directly below, or null when this block stands on the world instead of on another Singles
+     * Stack.
+     */
+    private boolean[] seamBeneath() {
+        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof SinglesStackBE below) {
+            return SinglesCubeIdx.topLayerOccupancy(below.items, below.rotation);
+        }
+        return null;
+    }
 
-        for (int checkY = y + 1; checkY < 4; checkY++) {
-            int sourceIndex = checkY * 16 + z * 4 + x;
+    /**
+     * Closes the gap one column left behind: every occupied cell above {@code fromY} moves down
+     * exactly one layer, carrying its rotation. The shift is positional rather than a compaction, so
+     * gaps that capability inserts created are preserved rather than quietly closed, and it always
+     * leaves the top cell of the column empty for the block above to hand down into.
+     */
+    private void shiftColumnDown(int column, int fromY) {
+        for (int checkY = fromY + 1; checkY < 4; checkY++) {
+            int sourceIndex = SinglesCubeIdx.indexFromColumn(column, checkY);
 
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
-                int targetIndex = (checkY - 1) * 16 + z * 4 + x;
+                int targetIndex = SinglesCubeIdx.indexFromColumn(column, checkY - 1);
 
-                ItemStack extracted = items.extractItem(sourceIndex, 1, false);
-                items.insertItem(targetIndex, extracted, false);
+                ItemStack moved = items.extractItem(sourceIndex, 1, false);
+                items.insertItem(targetIndex, moved, false);
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
             }
         }
+    }
 
+    /**
+     * Draws a column down through the Singles Stacks above, so a vertical run behaves as one stack.
+     * Each shift vacates the top cell of its column, so exactly one item crosses each block boundary
+     * and the receiving cell is always free. The column is matched between blocks through visual
+     * coordinates, because two stacked blocks may carry different rotations and the run the player
+     * sees as continuous is the visual one. The walk ends at the first block that hands nothing down.
+     */
+    private void drawDownColumn(int column) {
+        Level columnLevel = level;
+        if (columnLevel == null) {
+            return;
+        }
+
+        SinglesStackBE be = this;
+        int col = column;
+
+        while (true) {
+            SinglesStackBE next = null;
+            int nextColumn = -1;
+
+            if (columnLevel.getBlockEntity(be.getBlockPos().above()) instanceof SinglesStackBE above) {
+                int visualColumn = SinglesCubeIdx.visualColumnFromStorage(col, be.rotation);
+                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, above.rotation);
+
+                int sourceIndex = SinglesCubeIdx.indexFromColumn(aboveColumn, 0);
+
+                if (!above.items.getStackInSlot(sourceIndex).isEmpty()) {
+                    int targetIndex = SinglesCubeIdx.indexFromColumn(col, 3);
+
+                    be.suppressSync = true;
+                    above.suppressSync = true;
+                    try {
+                        ItemStack moved = above.items.extractItem(sourceIndex, 1, false);
+                        be.items.insertItem(targetIndex, moved, false);
+                        // Block rotation turns a cell's position but never the item in it, so the
+                        // stored rotation carries an item's facing across a change of frame as is.
+                        be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
+                        above.shiftColumnDown(aboveColumn, 0);
+                    } finally {
+                        above.suppressSync = false;
+                        be.suppressSync = false;
+                    }
+
+                    next = above;
+                    nextColumn = aboveColumn;
+                }
+            }
+
+            be.publishColumnEdit(columnLevel);
+
+            if (next == null) {
+                return;
+            }
+
+            be = next;
+            col = nextColumn;
+        }
+    }
+
+    /**
+     * Publishes one block's settled contents. An emptied block removes itself, except while another
+     * Singles Stack sits directly above it: severing a column there would strand the run above with
+     * nothing to fall onto. Removing a block therefore clears any empty blocks it was covering.
+     */
+    private void publishColumnEdit(Level columnLevel) {
         clearEmptyCubeRotations();
+
+        if (isEmpty() && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)) {
+            columnLevel.setBlock(getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            removeEmptyBelow(columnLevel, getBlockPos().below());
+            return;
+        }
+
+        setChanged();
+        finalizeAfterBatch();
+    }
+
+    private static void removeEmptyBelow(Level columnLevel, BlockPos pos) {
+        BlockPos current = pos;
+
+        while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
+            columnLevel.setBlock(current, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            current = current.below();
+        }
     }
 
     /**

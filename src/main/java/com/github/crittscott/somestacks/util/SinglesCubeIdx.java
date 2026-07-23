@@ -16,6 +16,9 @@ public final class SinglesCubeIdx {
 
     private static final int[] STARTS = {0, 4, 8, 12};
 
+    private static final int LAYER_SIZE = 16;
+    private static final int TOP_LAYER_Y = 3;
+
     public static int startPixel(int i) {
         return STARTS[i];
     }
@@ -115,15 +118,75 @@ public final class SinglesCubeIdx {
         return lastEmpty;
     }
 
+    /** The slot holding the cell at {@code y} in a storage column. */
+    public static int indexFromColumn(int storageColumn, int y) {
+        return y * LAYER_SIZE + storageColumn;
+    }
+
+    /** The storage column of a slot, the identity a vertical shift works along. */
+    public static int columnFromIndex(int index) {
+        return index % LAYER_SIZE;
+    }
+
+    /**
+     * The visual column a storage column occupies under a block rotation. Rotation permutes x and z
+     * but never y, so columns always map to columns and only their horizontal identity moves.
+     */
+    public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
+        int[] visual = rotateXYZ(storageColumn % 4, 0, storageColumn / 4, blockRotation);
+        return visual[2] * 4 + visual[0];
+    }
+
+    /**
+     * The storage column a visual column occupies under a block rotation, the inverse of
+     * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
+     * {@code r} is {@code (4 - r) % 4}.
+     */
+    public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
+        int[] storage = rotateXYZ(visualColumn % 4, 0, visualColumn / 4, (4 - blockRotation % 4) % 4);
+        return storage[2] * 4 + storage[0];
+    }
+
+    /**
+     * Occupancy of the top layer, the only layer that can hold up the Singles Stack above, recorded
+     * in visual columns so it means the same thing to a block above of any rotation. Taken as a
+     * snapshot so it stays usable once the block it came from is gone.
+     */
+    public static boolean[] topLayerOccupancy(IItemHandler handler, int blockRotation) {
+        boolean[] occupancy = new boolean[LAYER_SIZE];
+        for (int column = 0; column < LAYER_SIZE; column++) {
+            if (!handler.getStackInSlot(indexFromColumn(column, TOP_LAYER_Y)).isEmpty()) {
+                occupancy[visualColumnFromStorage(column, blockRotation)] = true;
+            }
+        }
+        return occupancy;
+    }
+
+    /** Whether the top layer beneath a block occupies the visual column {@code index} stands in. */
+    public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
+        if (seamBelow == null) {
+            return false;
+        }
+        return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
+    }
+
     public static boolean isGrounded(int index, IItemHandler handler) {
+        return isGrounded(index, handler, 0, null);
+    }
+
+    /**
+     * Whether a cell rests on something. Cells above the bottom consult the cell under them in the
+     * same column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
+     * Singles Stack underneath; a null seam means the block stands on the world rather than on
+     * another Singles Stack, which grounds the bottom layer outright.
+     */
+    public static boolean isGrounded(int index, IItemHandler handler, int blockRotation, boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
         int y = xyz[1];
 
-        if (y == 0) return true;
+        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
 
-        int x = xyz[0];
-        int z = xyz[2];
-        int belowIndex = (y - 1) * 16 + z * 4 + x;
+        int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
 
         return !handler.getStackInSlot(belowIndex).isEmpty();
     }

@@ -36,6 +36,10 @@ public final class BarCubeIdx {
     // Y positions for 8 layers
     private static final double[] STARTS_Y = {0, 2, 4, 6, 8, 10, 12, 14};
 
+    private static final int LAYER_SIZE = 8;
+    private static final int TOP_LAYER_Y = 7;
+    private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
+
     private static boolean isEWLayer(int y) {
         return y % 2 == 0;
     }
@@ -161,16 +165,66 @@ public final class BarCubeIdx {
         return lastEmpty;
     }
 
+    /**
+     * Occupancy of the top layer, the only layer that can hold up the Bar Stack above. Taken as a
+     * snapshot so a cascade can carry it past the point where the block it came from is emptied and
+     * removed from the world.
+     */
+    public static boolean[] topLayerOccupancy(IItemHandler handler) {
+        boolean[] occupancy = new boolean[LAYER_SIZE];
+        for (int i = 0; i < LAYER_SIZE; i++) {
+            occupancy[i] = !handler.getStackInSlot(TOP_LAYER_START + i).isEmpty();
+        }
+        return occupancy;
+    }
+
+    /**
+     * Whether the top layer beneath a block covers the footprint of {@code index}. Layer 7 runs
+     * north-south and layer 0 east-west, so the alternation carries across a block boundary and the
+     * ordinary footprint overlap describes support at the seam unchanged.
+     */
+    public static boolean seamSupports(int index, boolean[] seamBelow) {
+        if (seamBelow == null) {
+            return false;
+        }
+
+        int[] xyz = xyzFromIndex(index);
+        AABB thisFootprint = getBarFootprint(xyz[0], xyz[1], xyz[2]);
+
+        for (int i = 0; i < LAYER_SIZE; i++) {
+            if (!seamBelow[i]) continue;
+
+            int[] belowXYZ = xyzFromIndex(TOP_LAYER_START + i);
+            AABB belowFootprint = getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]);
+
+            if (footprintsOverlap(thisFootprint, belowFootprint)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean isGrounded(int index, IItemHandler handler) {
+        return isGrounded(index, handler, null);
+    }
+
+    /**
+     * Whether a bar rests on something. Layers above the bottom consult the layer beneath them in
+     * the same block. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
+     * Bar Stack underneath; a null seam means the block stands on the world rather than on another
+     * Bar Stack, which grounds the bottom layer outright.
+     */
+    public static boolean isGrounded(int index, IItemHandler handler, boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
         int y = xyz[1];
 
-        if (y == 0) return true;
+        if (y == 0) return seamBelow == null || seamSupports(index, seamBelow);
 
         AABB thisFootprint = getBarFootprint(xyz[0], y, xyz[2]);
 
-        int belowLayerStart = (y - 1) * 8;
-        for (int i = 0; i < 8; i++) {
+        int belowLayerStart = (y - 1) * LAYER_SIZE;
+        for (int i = 0; i < LAYER_SIZE; i++) {
             int belowIndex = belowLayerStart + i;
             if (!handler.getStackInSlot(belowIndex).isEmpty()) {
                 int[] belowXYZ = xyzFromIndex(belowIndex);

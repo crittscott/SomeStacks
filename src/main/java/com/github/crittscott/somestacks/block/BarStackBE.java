@@ -11,7 +11,9 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -24,6 +26,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.Arrays;
 
 public class BarStackBE extends BlockEntity {
     private VoxelShape cachedShape = null;
@@ -112,7 +116,7 @@ public class BarStackBE extends BlockEntity {
             return false;
         }
 
-        if (!BarCubeIdx.isGrounded(index, items)) {
+        if (!BarCubeIdx.isGrounded(index, items, seamBeneath())) {
             return false;
         }
 
@@ -133,46 +137,112 @@ public class BarStackBE extends BlockEntity {
             return ItemStack.EMPTY;
         }
 
+        boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
+
         ItemStack extracted;
         suppressSync = true;
         try {
             extracted = items.extractItem(index, 1, false);
-            if (extracted.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-            removeUnsupportedBlocks();
         } finally {
             suppressSync = false;
         }
 
-        setChanged();
-        finalizeAfterBatch();
+        if (extracted.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        if (level == null || level.isClientSide) {
+            setChanged();
+            return extracted;
+        }
+
+        settleColumn(seamBeneath(), topBefore);
         return extracted;
     }
 
     /**
-     * Drops every bar left without support. Slot index is layer-major and a bar is supported only
-     * by the layer directly beneath it, so one ascending pass settles the whole block: by the time
-     * a layer is reached, the layer it rests on is final.
+     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
+     * directly below, or null when this block stands on the world instead of on another Bar Stack.
      */
-    private void removeUnsupportedBlocks() {
-        if (level == null || level.isClientSide) {
+    private boolean[] seamBeneath() {
+        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
+            return BarCubeIdx.topLayerOccupancy(below.items);
+        }
+        return null;
+    }
+
+    /**
+     * Settles this block against the seam beneath it, then carries the result up the column so a
+     * vertical run of Bar Stacks behaves as one stack. Support crosses the seam per footprint, so a
+     * block above loses only the bars whose support went away rather than collapsing wholesale. Only
+     * the top layer can hold up the block above, so a block whose top layer survives intact ends the
+     * walk. A block emptied along the way removes itself and passes on its now-empty top layer,
+     * which is why an emptied or vanished block needs no case of its own: nothing overlaps an empty
+     * seam. {@code topBefore} is this block's top layer as it stood before the edit that prompted
+     * the settle, which the edit itself may already have changed.
+     */
+    private void settleColumn(boolean[] seamBelow, boolean[] topBefore) {
+        Level columnLevel = level;
+        if (columnLevel == null) {
             return;
         }
 
-        for (int i = 0; i < 64; i++) {
-            if (items.getStackInSlot(i).isEmpty() || BarCubeIdx.isGrounded(i, items)) {
-                continue;
+        BarStackBE be = this;
+        boolean[] seam = seamBelow;
+        boolean[] before = topBefore;
+
+        while (true) {
+            be.dropUnsupported(columnLevel, seam);
+            boolean[] after = BarCubeIdx.topLayerOccupancy(be.items);
+
+            BlockPos abovePos = be.getBlockPos().above();
+
+            if (be.isEmpty()) {
+                columnLevel.setBlock(be.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            } else {
+                be.setChanged();
+                be.finalizeAfterBatch();
             }
 
-            ItemStack removed = items.extractItem(i, 1, false);
-            if (!removed.isEmpty()) {
-                Containers.dropItemStack(level,
-                        getBlockPos().getX() + 0.5,
-                        getBlockPos().getY() + 0.5,
-                        getBlockPos().getZ() + 0.5,
-                        removed);
+            if (Arrays.equals(before, after)) {
+                return;
             }
+
+            if (!(columnLevel.getBlockEntity(abovePos) instanceof BarStackBE above)) {
+                return;
+            }
+
+            be = above;
+            seam = after;
+            before = BarCubeIdx.topLayerOccupancy(above.items);
+        }
+    }
+
+    /**
+     * Drops every bar this block leaves without support. Slot index is layer-major and a bar is
+     * supported only by the layer directly beneath it, so one ascending pass settles the block: by
+     * the time a layer is reached, the layer it rests on is final, whether that is the layer below
+     * it here or the seam.
+     */
+    private void dropUnsupported(Level columnLevel, boolean[] seamBelow) {
+        suppressSync = true;
+        try {
+            for (int i = 0; i < 64; i++) {
+                if (items.getStackInSlot(i).isEmpty() || BarCubeIdx.isGrounded(i, items, seamBelow)) {
+                    continue;
+                }
+
+                ItemStack removed = items.extractItem(i, 1, false);
+                if (!removed.isEmpty()) {
+                    Containers.dropItemStack(columnLevel,
+                            getBlockPos().getX() + 0.5,
+                            getBlockPos().getY() + 0.5,
+                            getBlockPos().getZ() + 0.5,
+                            removed);
+                }
+            }
+        } finally {
+            suppressSync = false;
         }
     }
 
