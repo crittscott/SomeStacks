@@ -28,7 +28,7 @@ public final class ModRegistry {
             () -> new StorageStackBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
                     .strength(0.5F, 6.0F)
-                    .pushReaction(PushReaction.NORMAL)
+                    .pushReaction(PushReaction.BLOCK)
                     .noOcclusion()
             ));
 
@@ -36,7 +36,7 @@ public final class ModRegistry {
             () -> new SinglesStackBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.WOOD)
                     .strength(0.5F, 6.0F)
-                    .pushReaction(PushReaction.NORMAL)
+                    .pushReaction(PushReaction.BLOCK)
                     .noOcclusion()
                     .dynamicShape()
             ));
@@ -45,7 +45,7 @@ public final class ModRegistry {
             () -> new BarStackBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
                     .strength(0.5F, 6.0F)
-                    .pushReaction(PushReaction.NORMAL)
+                    .pushReaction(PushReaction.BLOCK)
                     .noOcclusion()
                     .dynamicShape()
             ));
