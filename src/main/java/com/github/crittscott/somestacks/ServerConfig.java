@@ -38,12 +38,13 @@ public final class ServerConfig {
         builder.comment("Pile and Column Configuration").push("piles");
 
         MAX_PILE_HEIGHT = builder
-                .comment("Maximum number of blocks in one vertical Storage pile or Bar column.",
-                        "Each is one inventory over its whole height: a Storage pile fills from the",
-                        "bottom up, packs down and sorts; a Bar column fills its lowest supported",
-                        "positions and backfills holes from its top. This bounds that work.",
-                        "Placement that would produce a taller column is refused, and a pile or",
-                        "column stops growing here.")
+                .comment("Maximum number of blocks in one vertical Storage pile, Singles column or",
+                        "Bar column. Each is one inventory over its whole height: a Storage pile",
+                        "fills from the bottom up, packs down and sorts; a Singles column fills its",
+                        "lowest supported cells and falls down over an emptied one; a Bar column",
+                        "fills its lowest supported positions and backfills holes from its top.",
+                        "This bounds that work. Placement that would produce a taller column is",
+                        "refused, and a pile or column stops growing here.")
                 .defineInRange("max_pile_height", 8, 1, 64);
 
         builder.pop();

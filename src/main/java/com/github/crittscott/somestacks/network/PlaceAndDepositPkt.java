@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModSounds;
 import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -96,8 +97,8 @@ public class PlaceAndDepositPkt {
             // between two piles cannot join them into an over-tall one.
             boolean columnFull = switch (msg.blockType) {
                 case STORAGE_STACK -> !StoragePile.columnHasRoomFor(level, msg.pos);
+                case SINGLES_STACK -> !SinglesColumn.columnHasRoomFor(level, msg.pos);
                 case BAR_STACK -> !BarColumn.columnHasRoomFor(level, msg.pos);
-                case SINGLES_STACK -> false;
             };
             if (columnFull) {
                 sp.displayClientMessage(

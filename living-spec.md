@@ -31,12 +31,12 @@ There is no continuously ticking block entity. Work happens in response to inter
 | Type | Stored contents | Visual/physical arrangement | Distinct behavior |
 | --- | --- | --- | --- |
 | Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | A vertical run of blocks is a pile, and the pile is the unit of storage. Deposits fill it from the base upward and grow it, bounded by a configured maximum height. It sorts, consolidates and packs down over its whole height. |
-| Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below, counting the top layer of the Singles Stack underneath as the layer below the bottom one. Removing an item shifts every occupied cell above it down one position in the same column, drawing items down out of the Singles Stacks above so a vertical run behaves as one stack. The whole grid and each individual item have independent quarter-turn rotations. |
+| Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below, counting the top layer of the Singles Stack underneath as the layer below the bottom one. Removing an item shifts every occupied cell above it down one position in the same column, drawing items down out of the Singles Stacks above so a vertical run behaves as one stack. A vertical run is a column, bounded by the same maximum height as a Storage pile. The whole grid and each individual item have independent quarter-turn rotations. |
 | Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar must overlap at least one bar beneath it, counting the top layer of the Bar Stack below as the layer beneath the bottom one. A vertical run is a column, bounded by the same maximum height as a Storage pile. Player extraction drops every bar the removal leaves unsupported, up the whole column. Automation instead fills the lowest supported position and backfills a hole from the column's top, so it never drops anything. |
 
 Storage accepts any nonempty item not excluded by the disabled-mod list. Singles uses the same rule but excludes items valid for Bar Stack. Player-driven deposits also reject item ids in the server's disabled-item list.
 
-All three block entities expose Forge's item-handler capability on every side. Every block of a Storage pile exposes the whole pile as one inventory, and every block of a Bar column exposes the whole column, so a hopper under the base and an interface halfway up address the same contents. Both keep their structure under automation: a Storage pile fills from its base upward, and a Bar column fills its lowest supported position and backfills holes from its top. Singles exposes its raw 64-slot handler, and its player-path support and cascade rules are not imposed on direct capability operations.
+All three block entities expose Forge's item-handler capability on every side, and in each case every block of a vertical run exposes the whole run as one inventory, so a hopper under the base and an interface halfway up address the same contents. All three keep their structure under automation: a Storage pile fills from its base upward, a Singles column fills its lowest supported cell, and a Bar column fills its lowest supported position and backfills holes from its top.
 
 ## Interaction model
 
@@ -102,13 +102,24 @@ Storage Stack is the only type with comparator output. Its signal is the rounded
 
 ### Singles gravity
 
-A vertical run of Singles Stacks behaves as one stack. Singles removal closes the gap in one vertical column: every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade, and it is positional rather than a compaction, so gaps left by capability inserts survive it. A cell left empty carries no rotation, so the next item deposited into it starts unrotated.
+A vertical run of Singles Stacks behaves as one stack. Singles removal closes the gap in one vertical column: every occupied cell above the removed position moves down exactly one layer, preserving its per-item rotation. This is a deterministic column shift, not a dropped-item cascade, and it is positional rather than a compaction, so a gap in a column survives it. A cell left empty carries no rotation, so the next item deposited into it starts unrotated.
 
 The shift always vacates the top cell of its column, so the Singles Stack above can hand its own bottom-layer item down into the space. Exactly one item crosses each block boundary per removal, and the receiving cell is always free. The block that gave the item up then shifts the same column and draws from the block above it, and so on; the walk ends at the first block with nothing to hand down.
 
 Two stacked blocks may carry different block rotations, so columns are matched between them in visual coordinates — the run the player sees as continuous. Block rotation turns a cell's position but never the item drawn in it, so an item's stored rotation carries its facing across a change of frame unchanged.
 
 The bottom layer of a stacked block rests on the seam, the top layer of the Singles Stack below, recorded in visual columns so it means the same thing to a block above of any rotation. A block standing on the world rather than on another Singles Stack has its bottom layer grounded outright. The seam governs deposits as well: a bottom-layer item may only be placed where the block below supports it, on every deposit into a stacked block rather than only the first one that creates it.
+
+A column may be at most `max_pile_height` blocks tall, the same ceiling Storage piles use. That ceiling governs creation only: placement is refused when the resulting contiguous column would exceed it, tested over the runs both below and above the target, and a column stops growing there.
+
+### Singles columns under automation
+
+A vertical run of Singles Stacks is one inventory to the item-handler capability, addressed from any block in it, with positions running from the bottom block's first cell upward. A slot index is a place in a structure rather than a place in a bag, so insertion does not take the requested slot at face value:
+
+- **Insertion** ignores the requested slot and takes the lowest empty cell in the column that is already supported, adding a block on top when none is left and the height allows. A column automation builds is therefore filled layer by layer from the bottom, and a gap lower down is filled before anything higher. Growth carries no player, so it is attributed to the level's fake player and runs the same protection path as any placement. A block grown this way is unrotated, as a player's own placement is; the seam is read in visual columns, so a grown block's frame need not match the one beneath it.
+- **Extraction** is the player's own removal unchanged: the cell is emptied and the column falls down over it, drawing items out of the Singles Stacks above and removing any block the walk empties.
+
+Extraction needs no separate automated path because the shift drops nothing. Backfilling a hole from the column's top, which is what a Bar column does, would move an unrelated item down the column: Singles cells hold different items where a Bar column's are all the same.
 
 ### Bar gravity
 
@@ -232,7 +243,7 @@ The Forge server config contains:
 
 | Setting | Default | Operating effect |
 | --- | --- | --- |
-| Maximum pile height | 8 | Blocks in one vertical Storage pile or Bar column. Placement producing a taller column is refused and a pile or column stops growing there. Bounds the work of settling a pile and of walking a column, both of which cover the whole height. |
+| Maximum pile height | 8 | Blocks in one vertical Storage pile, Singles column or Bar column. Placement producing a taller column is refused and a pile or column stops growing there. Bounds the work of settling a pile and of walking a column, both of which cover the whole height. |
 | Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage and Bar also stop growing their columns. Existing blocks remain present and their direct deposit/extract paths remain usable. |
 | Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces; existing contents can still be extracted. |
 | Disabled items | empty | Rejects those ids on player packet deposit paths; existing contents can still be extracted. |
@@ -265,6 +276,7 @@ The `ss` command is player-only and gated by the server config's `ss_command_all
 - Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
 - Stack invariants and persistence: the three block entities in `block/` are authoritative. Keep their NBT, update packet, collision cache, and renderer assumptions aligned.
 - Storage pile behavior: `StoragePile` owns pile resolution, bottom-up filling, growth, the capability's flat slot range, settling, and trimming. A Storage Stack that needs to reach past its own 27 slots resolves a pile rather than walking the column itself.
+- Singles column behavior: `SinglesColumn` owns column resolution, supported-cell placement, growth, and the capability's flat slot range. Extraction routes back through the block entity's own removal, so the column has one gravity implementation rather than a player one and an automated one.
 - Bar column behavior: `BarColumn` owns column resolution, supported-position placement, growth, the capability's flat slot range, and the backfilling extraction. `BarCubeIdx` reasons over occupancy snapshots, so a placement can be weighed before it happens and a block can be settled in place.
 - Spatial layout and targeting: `StorageCubeIdx`, `SinglesCubeIdx`, and `BarCubeIdx` are shared geometry contracts between rendering, selection, collision, grounding, and cross-block support.
 - Ordinary item compatibility: prefer an override entry — authored in game with `ss item` and `ss write`, or edited into the bundled `item_render_overrides/` corpus — before changing the global rendering paths.

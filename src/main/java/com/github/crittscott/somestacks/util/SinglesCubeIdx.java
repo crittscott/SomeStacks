@@ -162,6 +162,29 @@ public final class SinglesCubeIdx {
         return occupancy;
     }
 
+    /** Snapshot of which of a block's cells hold an item. */
+    public static boolean[] occupancyOf(IItemHandler handler) {
+        boolean[] occupancy = new boolean[SinglesStackBE.SLOTS];
+        for (int i = 0; i < SinglesStackBE.SLOTS; i++) {
+            occupancy[i] = !handler.getStackInSlot(i).isEmpty();
+        }
+        return occupancy;
+    }
+
+    /**
+     * The top-layer slice of a block occupancy snapshot, in the visual columns
+     * {@link #seamSupports} takes.
+     */
+    public static boolean[] topLayerOf(boolean[] occupancy, int blockRotation) {
+        boolean[] top = new boolean[LAYER_SIZE];
+        for (int column = 0; column < LAYER_SIZE; column++) {
+            if (occupancy[indexFromColumn(column, TOP_LAYER_Y)]) {
+                top[visualColumnFromStorage(column, blockRotation)] = true;
+            }
+        }
+        return top;
+    }
+
     /** Whether the top layer beneath a block occupies the visual column {@code index} stands in. */
     public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
         if (seamBelow == null) {
@@ -189,6 +212,18 @@ public final class SinglesCubeIdx {
         int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
 
         return !handler.getStackInSlot(belowIndex).isEmpty();
+    }
+
+    /**
+     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
+     * weigh a run of placements before any of them happens.
+     */
+    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
+        int y = xyzFromIndex(index)[1];
+
+        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
+
+        return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
     }
 
     public static int calculateDepositIndex(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, int blockRotation) {

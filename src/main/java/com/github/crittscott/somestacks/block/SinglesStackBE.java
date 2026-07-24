@@ -26,17 +26,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SinglesStackBE extends BlockEntity {
+    /** Cells in one block. The column's flat range is this times its height. */
+    public static final int SLOTS = 64;
+
     private VoxelShape cachedShape = null;
     private int rotation = 0;
-    private int[] cubeRotations = new int[64];
+    private int[] cubeRotations = new int[SLOTS];
     private boolean suppressSync = false;
+    private boolean batchTouched = false;
 
-    private final ItemStackHandler items = new ItemStackHandler(64) {
+    private final ItemStackHandler items = new ItemStackHandler(SLOTS) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
             cachedShape = null;
-            if (!suppressSync) {
+            if (suppressSync) {
+                batchTouched = true;
+            } else {
                 finalizeAfterBatch();
             }
         }
@@ -51,10 +57,16 @@ public class SinglesStackBE extends BlockEntity {
             return isValidSinglesItem(stack);
         }
     };
-    private LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> items);
+    private LazyOptional<IItemHandler> itemsCap = LazyOptional.of(() -> new SinglesColumnHandler(this));
 
     public SinglesStackBE(BlockPos pos, BlockState state) {
         super(ModRegistry.SINGLES_STACK_BE.get(), pos, state);
+    }
+
+    /** The column this block belongs to, or null on the client and for a block being removed. */
+    @Nullable
+    public SinglesColumn column() {
+        return SinglesColumn.at(level, getBlockPos());
     }
 
     public static boolean isValidSinglesItem(ItemStack stack) {
@@ -81,14 +93,14 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     public int getCubeRotation(int index) {
-        if (index < 0 || index >= 64) {
+        if (index < 0 || index >= SLOTS) {
             return 0;
         }
         return cubeRotations[index];
     }
 
     public void setCubeRotation(int index, int cubeRot) {
-        if (index < 0 || index >= 64) {
+        if (index < 0 || index >= SLOTS) {
             return;
         }
         cubeRotations[index] = cubeRot % 4;
@@ -135,7 +147,7 @@ public class SinglesStackBE extends BlockEntity {
             return false;
         }
 
-        if (index < 0 || index >= 64) {
+        if (index < 0 || index >= SLOTS) {
             return false;
         }
 
@@ -160,7 +172,7 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     public ItemStack extractAt(int index) {
-        if (index < 0 || index >= 64) {
+        if (index < 0 || index >= SLOTS) {
             return ItemStack.EMPTY;
         }
 
@@ -333,6 +345,26 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /**
+     * Opens a run of edits that should publish as one. Per-slot sync is held back and the block
+     * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
+     * blocks a column-wide pass really touched. The gravity paths hold sync back themselves and
+     * publish through their own route, so a batch starts from a clean slate rather than inheriting
+     * what one of them last touched.
+     */
+    void beginBatch() {
+        suppressSync = true;
+        batchTouched = false;
+    }
+
+    void endBatch() {
+        suppressSync = false;
+        if (batchTouched) {
+            batchTouched = false;
+            finalizeAfterBatch();
+        }
+    }
+
+    /**
      * Settles the derived state a content edit leaves behind: pushes contents to clients and
      * recomputes the emitted light level. Callers mark the block changed; this reproduces the rest
      * of the per-edit path as one pass, so a batch that suppresses per-slot sync can finalize once
@@ -362,7 +394,7 @@ public class SinglesStackBE extends BlockEntity {
         }
         if (tag.contains("CubeRotations")) {
             int[] loaded = tag.getIntArray("CubeRotations");
-            if (loaded.length == 64) {
+            if (loaded.length == SLOTS) {
                 cubeRotations = loaded.clone();
             }
         }
@@ -401,7 +433,7 @@ public class SinglesStackBE extends BlockEntity {
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        itemsCap = LazyOptional.of(() -> items);
+        itemsCap = LazyOptional.of(() -> new SinglesColumnHandler(this));
     }
 
     @Override
