@@ -88,7 +88,8 @@ public final class ServerConfig {
         SS_COMMAND_ALLOWLIST = builder
                 .comment("Player names permitted to use the /ss render-tuning command.",
                         "Empty by default: no one may use /ss until a name is added here.",
-                        "In single player, add your own name.")
+                        "In single player, add your own name.",
+                        "Names must be quoted: [\"Alice\", \"Bob\"]")
                 .defineList("ss_command_allowlist",
                         Collections.emptyList(),
                         obj -> obj instanceof String);
