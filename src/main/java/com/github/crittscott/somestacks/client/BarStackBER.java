@@ -100,7 +100,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
             // +Y face (top) - reordered vertices to rotate texture 90°
             quad(pose, vc, light, overlay, 0,1,0, 0,1,1, 1,1,1, 1,1,0, top.u0(),top.v0(),top.u1(),top.v1(), 0,1,0, r,g,b,a);
             // -Y face (bottom) - reordered vertices to rotate texture 90°
-            quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 1,0,1, 1,0,0, top.u0(),top.v0(),top.u1(),top.v1(), 0,-1,0, r,g,b,a);
+            quad(pose, vc, light, overlay, 1,0,0, 1,0,1, 0,0,1, 0,0,0, top.u0(),top.v1(),top.u1(),top.v0(), 0,-1,0, r,g,b,a);
         } else {
             // +Y face (top)
             quad(pose, vc, light, overlay, 0,1,1, 1,1,1, 1,1,0, 0,1,0, top.u0(),top.v1(),top.u1(),top.v0(), 0,1,0, r,g,b,a);
