@@ -56,6 +56,8 @@ Shift plus `V` is not a general placement gesture. Placement and deposit rules r
 
 The torch rules do not apply to Bar Stack: block rotation matches only Storage and Singles, and item rotation matches only Singles. A torch click on a Bar Stack matches no rule and falls through to vanilla, so the torch is placed against the block as usual. A torch click a rotation rule does match never places the torch, including one whose ray finds no item to turn.
 
+A matched rule reports the click as consumed, not merely cancelled. A cancelled interaction that reports no result reads to the client as unhandled, and the client goes on to use the held item where the gesture was aimed — an item whose own use edits the world, a bucket above all, then places a fluid over the position the gesture is working on. Because that placement is a client prediction, it also swallows the block entity sync of a block the gesture has just created, leaving a stack the server has filled drawn empty until the next deposit.
+
 Cancelling a rule's interaction on the client does not stop the client from sending the vanilla use-item-on packet, so a gesture that vanilla would resolve as a use of the held item has to be suppressed server-side as well. The mod's own packet arrives first and marks its position for same-tick right-click suppression, which cancels the vanilla event that follows. Two gestures need the mark:
 
 - Extraction, because the newly held item would otherwise be used at a position whose stack block may just have disappeared.

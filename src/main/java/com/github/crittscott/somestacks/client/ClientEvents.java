@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -79,6 +80,10 @@ public final class ClientEvents {
             evt.setCanceled(true);
             evt.setUseBlock(Event.Result.DENY);
             evt.setUseItem(Event.Result.DENY);
+            // The cancellation result is what the client's own interaction chain sees. Left at the
+            // default PASS it reads as "nobody handled this" and the click falls through to using
+            // the held item, so a bucket empties itself into the space the gesture is aiming at.
+            evt.setCancellationResult(InteractionResult.SUCCESS);
         }
     }
 
