@@ -32,11 +32,11 @@ There is no continuously ticking block entity. Work happens in response to inter
 | --- | --- | --- | --- |
 | Storage Stack | 27 ordinary item stacks per block | A rotatable 3 x 3 x 3 grid with gaps between cells | A vertical run of blocks is a pile, and the pile is the unit of storage. Deposits fill it from the base upward and grow it, bounded by a configured maximum height. It sorts, consolidates and packs down over its whole height. |
 | Singles Stack | 64 items, one per slot | A rotatable 4 x 4 x 4 grid of touching quarter-block cells | Accepts non-ingot items. Each item must be supported by the cell below, counting the top layer of the Singles Stack underneath as the layer below the bottom one. Removing an item shifts every occupied cell above it down one position in the same column, drawing items down out of the Singles Stacks above so a vertical run behaves as one stack. The whole grid and each individual item have independent quarter-turn rotations. |
-| Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar must overlap at least one bar beneath it, counting the top layer of the Bar Stack below as the layer beneath the bottom one. Extraction repeatedly drops every bar made unsupported by the removal, continuing up into the Bar Stacks above so a vertical run behaves as one stack. |
+| Bar Stack | 64 items, one per slot | Eight two-pixel-high layers of eight bars; successive layers alternate east-west and north-south | Accepts items in `#somestacks:ingots`, which delegates to `#forge:ingots`. A bar must overlap at least one bar beneath it, counting the top layer of the Bar Stack below as the layer beneath the bottom one. A vertical run is a column, bounded by the same maximum height as a Storage pile. Player extraction drops every bar the removal leaves unsupported, up the whole column. Automation instead fills the lowest supported position and backfills a hole from the column's top, so it never drops anything. |
 
 Storage accepts any nonempty item not excluded by the disabled-mod list. Singles uses the same rule but excludes items valid for Bar Stack. Player-driven deposits also reject item ids in the server's disabled-item list.
 
-All three block entities expose Forge's item-handler capability on every side. Every block of a Storage pile exposes the whole pile as one inventory, so a hopper under the base and an interface halfway up address the same contents. Singles and Bar expose their raw 64-slot handlers. Their player-path support and cascade rules are not imposed on direct capability operations.
+All three block entities expose Forge's item-handler capability on every side. Every block of a Storage pile exposes the whole pile as one inventory, and every block of a Bar column exposes the whole column, so a hopper under the base and an interface halfway up address the same contents. Both keep their structure under automation: a Storage pile fills from its base upward, and a Bar column fills its lowest supported position and backfills holes from its top. Singles exposes its raw 64-slot handler, and its player-path support and cascade rules are not imposed on direct capability operations.
 
 ## Interaction model
 
@@ -113,7 +113,22 @@ The bottom layer rests on the seam — the top layer of the Bar Stack directly b
 
 When a settle changes a block's top layer, the cascade continues into the Bar Stack above, carrying that top layer as its seam. Support crosses the seam per footprint, so the block above loses only the bars whose support actually went away; bars still standing on a surviving column below are untouched. The walk stops at the first block whose top layer it leaves intact, because only the top layer can hold up the block above. A block emptied along the way removes itself and passes on its now-empty top layer, so pulling the base out of a pile collapses it the whole way up without that being a separate rule — nothing overlaps an empty seam.
 
-The seam also governs deposits: a bottom-layer bar may only be placed where the Bar Stack below supports it. This holds for every deposit into a stacked block, not just the first one that creates it.
+The seam also governs deposits: a bottom-layer bar may only be placed where the Bar Stack below supports it. This holds for every deposit into a stacked block, not just the first one that creates it. Grounding is checked in one place, the block entity's deposit, which is the only caller holding the seam beneath it; the packet handlers target a cell and leave support to it.
+
+Breaking or replacing a Bar Stack collapses the column above it. The block above has lost the seam it stood on, and an absent Bar Stack hands on an empty seam exactly as a block a cascade empties does, so pulling one out with a pickaxe and pulling one out by emptying it give the same answer. A block that a cascade is itself removing does not start a second collapse of the column that cascade is already walking.
+
+A column may be at most `max_pile_height` blocks tall, the same ceiling Storage piles use. That ceiling governs creation only: placement is refused when the resulting contiguous column would exceed it, tested over the runs both below and above the target, and a column stops growing there.
+
+### Bar columns under automation
+
+A vertical run of Bar Stacks is one inventory to the item-handler capability, addressed from any block in it, with positions running from the bottom block's first cell upward. A slot index is a place in a structure rather than a place in a bag, so neither automated operation takes the slot at face value:
+
+- **Insertion** ignores the requested slot and takes the lowest empty position in the column that is already supported, adding a block on top when none is left and the height allows. A column automation builds is therefore filled layer by layer from the bottom. Growth carries no player, so it is attributed to the level's fake player and runs the same protection path as any placement.
+- **Extraction** takes the bar at the requested position and moves the column's topmost bar into the hole. The topmost bar holds nothing up, and a position vacated by extraction keeps the support it had, so the result always stands. When the hole is in a top layer, the backfill restores that layer's occupancy exactly, leaving the seam under the block above untouched. Blocks the column empties at its top are removed.
+
+Both operations preserve density: a column whose bars occupy a contiguous run of positions still does afterwards, so automation neither leaves gaps among filled positions nor drops anything on the floor. A column a player built sparsely is not made worse, and insertion fills its lower gaps first.
+
+This is deliberately not what a player's own extraction does. A player pulling a bar out lets go of whatever it was holding up; automation lifts a bar off the top to fill the gap.
 
 ### Cascade publication
 
@@ -121,7 +136,7 @@ Singles and Bar gravity, like Storage deposits and pile settling, suppress per-s
 
 ### Empty and broken blocks
 
-- Empty Singles and Bar blocks remove themselves after player extraction, including Bar blocks that a gravity cascade empties higher up a column.
+- Empty Singles and Bar blocks remove themselves after player extraction, including Bar blocks that a gravity cascade empties higher up a column, and Bar blocks that automated extraction empties at the top of one.
 - An empty Singles block is not removed while another Singles Stack sits directly above it, matching the rule Storage piles use: severing a column there would strand the run above with nothing to fall onto. Removing a Singles block clears any empty blocks it was covering, so blocks kept back for that reason do not outlive their purpose.
 - Empty Storage blocks are removed by the pile's settle, from the top down, stopping at the first nonempty or permanent block. An empty temporary pile removes itself entirely. Storage needs no never-remove-under-a-stack rule, because packing the whole pile leaves its empty blocks contiguous at the top.
 - Breaking or replacing any stack block drops every item still in its local item handler.
@@ -212,8 +227,8 @@ The Forge server config contains:
 
 | Setting | Default | Operating effect |
 | --- | --- | --- |
-| Maximum pile height | 8 | Blocks in one vertical Storage pile. Placement producing a taller column is refused and a pile stops growing there. Bounds the work of settling, which always covers a pile's whole height. |
-| Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage also stops growing piles. Existing blocks remain present and their direct deposit/extract paths remain usable. |
+| Maximum pile height | 8 | Blocks in one vertical Storage pile or Bar column. Placement producing a taller column is refused and a pile or column stops growing there. Bounds the work of settling a pile and of walking a column, both of which cover the whole height. |
+| Enable Storage / Singles / Bar | `true` | Prevents new placement of the disabled type. Storage and Bar also stop growing their columns. Existing blocks remain present and their direct deposit/extract paths remain usable. |
 | Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces; existing contents can still be extracted. |
 | Disabled items | empty | Rejects those ids on player packet deposit paths; existing contents can still be extracted. |
 | `ss` command allow list | empty | Player names permitted to use the `ss` command. Empty means no one may use it. |
@@ -245,6 +260,7 @@ The `ss` command is player-only and gated by the server config's `ss_command_all
 - Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
 - Stack invariants and persistence: the three block entities in `block/` are authoritative. Keep their NBT, update packet, collision cache, and renderer assumptions aligned.
 - Storage pile behavior: `StoragePile` owns pile resolution, bottom-up filling, growth, the capability's flat slot range, settling, and trimming. A Storage Stack that needs to reach past its own 27 slots resolves a pile rather than walking the column itself.
+- Bar column behavior: `BarColumn` owns column resolution, supported-position placement, growth, the capability's flat slot range, and the backfilling extraction. `BarCubeIdx` reasons over occupancy snapshots, so a placement can be weighed before it happens and a block can be settled in place.
 - Spatial layout and targeting: `StorageCubeIdx`, `SinglesCubeIdx`, and `BarCubeIdx` are shared geometry contracts between rendering, selection, collision, grounding, and cross-block support.
 - Ordinary item compatibility: prefer an override entry — authored in game with `ss item` and `ss write`, or edited into the bundled `item_render_overrides/` corpus — before changing the global rendering paths.
 - Bar appearance: extend `textures/bars/` and reuse the base ingot/brick textures where tinting is sufficient.

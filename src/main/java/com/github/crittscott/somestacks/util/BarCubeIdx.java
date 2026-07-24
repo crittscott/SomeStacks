@@ -7,6 +7,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -135,7 +136,21 @@ public final class BarCubeIdx {
         return closestIndex;
     }
 
-    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, IItemHandler handler) {
+    /**
+     * Deposit targeting for a Bar Stack that does not exist yet, where every cell is empty. Used to
+     * decide, before the block is placed, which cell the deposit that follows would land in.
+     */
+    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos) {
+        return traceAllPositions(eyePos, lookDir, blockPos, null);
+    }
+
+    /**
+     * The cell a deposit aims at: the last empty cell along the view ray before the first occupied
+     * one, or the farthest intersected cell when the ray meets no bar. A null handler means every
+     * cell is empty.
+     */
+    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos,
+                                        @Nullable IItemHandler handler) {
         Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
         List<Hit> hits = new ArrayList<>();
 
@@ -155,14 +170,43 @@ public final class BarCubeIdx {
 
         int lastEmpty = -1;
         for (Hit hit : hits) {
-            boolean occupied = !handler.getStackInSlot(hit.index).isEmpty();
-            if (occupied) {
+            if (handler != null && !handler.getStackInSlot(hit.index).isEmpty()) {
                 return lastEmpty;
             }
             lastEmpty = hit.index;
         }
 
         return lastEmpty;
+    }
+
+    /** Snapshot of which of a block's 64 cells hold a bar. */
+    public static boolean[] occupancyOf(IItemHandler handler) {
+        boolean[] occupancy = new boolean[64];
+        for (int i = 0; i < 64; i++) {
+            occupancy[i] = !handler.getStackInSlot(i).isEmpty();
+        }
+        return occupancy;
+    }
+
+    /**
+     * Whether a Bar Stack that does not exist yet could take a bar at {@code index}, given the seam
+     * it would stand on. Every cell of such a block is empty, so only the bottom layer can be
+     * supported, and only by the seam.
+     */
+    public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
+        return isGroundedIn(new boolean[64], index, seamBelow);
+    }
+
+    /** A seam that holds nothing up, which is what a vanished Bar Stack leaves behind. */
+    public static boolean[] emptySeam() {
+        return new boolean[LAYER_SIZE];
+    }
+
+    /** The top-layer slice of a block occupancy snapshot, in the form {@link #seamSupports} takes. */
+    public static boolean[] topLayerOf(boolean[] occupancy) {
+        boolean[] top = new boolean[LAYER_SIZE];
+        System.arraycopy(occupancy, TOP_LAYER_START, top, 0, LAYER_SIZE);
+        return top;
     }
 
     /**
@@ -205,17 +249,21 @@ public final class BarCubeIdx {
         return false;
     }
 
-    public static boolean isGrounded(int index, IItemHandler handler) {
-        return isGrounded(index, handler, null);
-    }
-
     /**
      * Whether a bar rests on something. Layers above the bottom consult the layer beneath them in
      * the same block. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
      * Bar Stack underneath; a null seam means the block stands on the world rather than on another
      * Bar Stack, which grounds the bottom layer outright.
      */
-    public static boolean isGrounded(int index, IItemHandler handler, boolean[] seamBelow) {
+    public static boolean isGrounded(int index, IItemHandler handler, @Nullable boolean[] seamBelow) {
+        return isGroundedIn(occupancyOf(handler), index, seamBelow);
+    }
+
+    /**
+     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
+     * settle a block in place or weigh a placement that has not happened yet.
+     */
+    public static boolean isGroundedIn(boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
         int y = xyz[1];
 
@@ -226,7 +274,7 @@ public final class BarCubeIdx {
         int belowLayerStart = (y - 1) * LAYER_SIZE;
         for (int i = 0; i < LAYER_SIZE; i++) {
             int belowIndex = belowLayerStart + i;
-            if (!handler.getStackInSlot(belowIndex).isEmpty()) {
+            if (occupancy[belowIndex]) {
                 int[] belowXYZ = xyzFromIndex(belowIndex);
                 AABB belowFootprint = getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]);
 
@@ -237,26 +285,6 @@ public final class BarCubeIdx {
         }
 
         return false;
-    }
-
-    public static int calculateDepositIndex(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos) {
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
-        List<Hit> hits = new ArrayList<>();
-
-        for (int i = 0; i < 64; i++) {
-            AABB barBox = getBarBox(i, blockPos);
-            Vec3 hitPos = barBox.clip(eyePos, farPoint).orElse(null);
-
-            if (hitPos != null) {
-                double dist = hitPos.distanceTo(eyePos);
-                hits.add(new Hit(i, dist));
-            }
-        }
-
-        if (hits.isEmpty()) return -1;
-
-        hits.sort(Comparator.comparingDouble(h -> h.distance));
-        return hits.get(hits.size() - 1).index;
     }
 
     private record Hit(int index, double distance) {

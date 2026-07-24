@@ -78,11 +78,21 @@ public class BarStackBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
+            boolean cascading = false;
+
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof BarStackBE barBe) {
+                cascading = barBe.wasRemovedByCascade();
                 ItemOps.dropAllItems(barBe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
+
+            // The column above has lost the seam it stood on, so it comes down — the same answer a
+            // cascade gives when it empties a block out from under one. A cascade already walks its
+            // own way up, so only a removal from outside one starts the collapse.
+            if (!isMoving && !cascading) {
+                BarStackBE.collapseAbove(level, pos);
+            }
         }
     }
 }

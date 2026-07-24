@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModSounds;
+import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
@@ -93,9 +94,14 @@ public class PlaceAndDepositPkt {
 
             // Tested against the whole column this would form, so a block dropped into the gap
             // between two piles cannot join them into an over-tall one.
-            if (msg.blockType == BlockType.STORAGE_STACK && !StoragePile.columnHasRoomFor(level, msg.pos)) {
+            boolean columnFull = switch (msg.blockType) {
+                case STORAGE_STACK -> !StoragePile.columnHasRoomFor(level, msg.pos);
+                case BAR_STACK -> !BarColumn.columnHasRoomFor(level, msg.pos);
+                case SINGLES_STACK -> false;
+            };
+            if (columnFull) {
                 sp.displayClientMessage(
-                        Component.literal("Pile is at its maximum height of " + StoragePile.maxHeight()),
+                        Component.literal("Stack is at its maximum height of " + StoragePile.maxHeight()),
                         true
                 );
                 return;
@@ -132,14 +138,14 @@ public class PlaceAndDepositPkt {
                 if (beBelow instanceof BarStackBE barBeBelow) {
                     Vec3 eyePos = sp.getEyePosition(1.0f);
                     Vec3 lookDir = sp.getLookAngle();
-                    int depositIndex = BarCubeIdx.calculateDepositIndex(eyePos, lookDir, msg.pos);
 
-                    if (depositIndex >= 0) {
-                        boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
+                    // Targeted through the same trace the deposit below will use, against a block
+                    // that is still empty, so the two cannot disagree about which cell is meant.
+                    int depositIndex = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos);
+                    boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
 
-                        if (!BarCubeIdx.seamSupports(depositIndex, seam)) {
-                            return;
-                        }
+                    if (depositIndex >= 0 && !BarCubeIdx.freshBlockSupports(depositIndex, seam)) {
+                        return;
                     }
                 }
             }
@@ -206,10 +212,11 @@ public class PlaceAndDepositPkt {
         Vec3 lookDir = sp.getLookAngle();
         int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
 
-        if (index < 0 || !handler.getStackInSlot(index).isEmpty() || !BarCubeIdx.isGrounded(index, handler)) {
+        if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
             return false;
         }
 
+        // Grounding is left to depositAt, which is the only caller holding the seam beneath.
         boolean deposited = barbe.depositAt(index, handStack);
         sp.setItemInHand(msg.hand, handStack);
 
