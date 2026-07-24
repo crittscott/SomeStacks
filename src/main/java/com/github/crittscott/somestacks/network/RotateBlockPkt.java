@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -40,17 +41,23 @@ public class RotateBlockPkt {
             Block block = level.getBlockState(msg.pos).getBlock();
             var be = level.getBlockEntity(msg.pos);
 
+            int newRotation;
             if (block == ModRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
-                int currentRotation = ssbe.getRotation();
-                int newRotation = (currentRotation + 1) % 4;
+                newRotation = (ssbe.getRotation() + 1) % 4;
                 ssbe.setRotation(newRotation);
-                sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
             } else if (block == ModRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE sbe) {
-                int currentRotation = sbe.getRotation();
-                int newRotation = (currentRotation + 1) % 4;
+                newRotation = (sbe.getRotation() + 1) % 4;
                 sbe.setRotation(newRotation);
-                sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
+            } else {
+                return;
             }
+
+            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
+            // that item on the block. Deny the use-item-on packet that follows so the rotation does
+            // not also place the torch against the stack.
+            RightClickBlockSuppressor.suppress(sp, msg.pos, level);
+
+            sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
         });
         ctx.get().setPacketHandled(true);
     }

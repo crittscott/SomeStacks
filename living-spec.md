@@ -54,7 +54,14 @@ All three block entities expose Forge's item-handler capability on every side. E
 
 Shift plus `V` is not a general placement gesture. Placement and deposit rules require that Shift not be held.
 
-The torch rules do not apply to Bar Stack: block rotation matches only Storage and Singles, and item rotation matches only Singles. A torch click on a Bar Stack matches no rule and falls through to vanilla, so the torch is placed against the block as usual.
+The torch rules do not apply to Bar Stack: block rotation matches only Storage and Singles, and item rotation matches only Singles. A torch click on a Bar Stack matches no rule and falls through to vanilla, so the torch is placed against the block as usual. A torch click a rotation rule does match never places the torch, including one whose ray finds no item to turn.
+
+Cancelling a rule's interaction on the client does not stop the client from sending the vanilla use-item-on packet, so a gesture that vanilla would resolve as a use of the held item has to be suppressed server-side as well. The mod's own packet arrives first and marks its position for same-tick right-click suppression, which cancels the vanilla event that follows. Two gestures need the mark:
+
+- Extraction, because the newly held item would otherwise be used at a position whose stack block may just have disappeared.
+- The two torch rotations, because a sneaking click holding an item skips the block's use handler and goes straight to placing the torch. The rotation packet is sent whenever the gesture matches, even when it turns nothing, so the mark is set either way.
+
+Deposit and Toggle Permanent need no mark. Neither holds Shift with an item, so the block's own use handler consumes the interaction before the held item is reached.
 
 ### Cell targeting and support
 
@@ -65,8 +72,6 @@ Grounding is enforced for player deposits:
 - A Singles item is grounded by the same column in the layer immediately below, which for the bottom layer means the top layer of the Singles Stack underneath, matched in visual columns. A bottom-layer item in a block that does not stand on another Singles Stack is grounded outright.
 - A Bar is grounded when its horizontal footprint overlaps an occupied bar in the layer immediately below, which for the bottom layer means the top layer of the Bar Stack underneath. A bottom-layer bar in a block that does not stand on another Bar Stack is grounded outright.
 - When a new Singles or Bar block is placed above an existing block of the same kind, its first item must also be supported by the top layer of the lower block.
-
-After successful extraction, the server marks the position for same-tick right-click suppression. This cancels the vanilla use-item-on-block event that can arrive after the custom extraction packet and would otherwise use the newly held item at a position whose stack block may just have disappeared.
 
 ## Server-side storage behavior
 

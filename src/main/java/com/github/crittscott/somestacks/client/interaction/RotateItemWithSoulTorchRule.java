@@ -33,10 +33,11 @@ public final class RotateItemWithSoulTorchRule implements InteractionRule {
         Vec3 lookDir = ctx.getPlayer().getLookAngle();
 
         if (ctx.getLevel().getBlockEntity(ctx.getClickedPos()) instanceof SinglesStackBE ssbe) {
+            // Sent even when the ray hit no item. The gesture takes the click either way, and the
+            // packet is what tells the server to suppress the vanilla torch placement; the server
+            // ignores an index that names no cell.
             int index = SinglesCubeIdx.traceCubes(eyePos, lookDir, ctx.getClickedPos(), ssbe);
-            if (index >= 0) {
-                ClientEvents.sendRotateItem(ctx.getClickedPos(), index);
-            }
+            ClientEvents.sendRotateItem(ctx.getClickedPos(), index);
         }
 
         ctx.cancelEvent();

@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -42,14 +43,19 @@ public class RotateItemPkt {
             Block block = level.getBlockState(msg.pos).getBlock();
             var be = level.getBlockEntity(msg.pos);
 
-            if (block == ModRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
-                if (msg.slotIndex < 0 || msg.slotIndex >= 64) return;
+            if (block != ModRegistry.SINGLES_STACK_BLOCK.get() || !(be instanceof SinglesStackBE ssbe)) return;
 
-                int currentCubeRot = ssbe.getCubeRotation(msg.slotIndex);
-                int newCubeRot = (currentCubeRot + 1) % 4;
-                ssbe.setCubeRotation(msg.slotIndex, newCubeRot);
-                sp.displayClientMessage(Component.literal("Item Rotation: " + (newCubeRot * 90) + "°"), true);
-            }
+            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
+            // that item on the block. Deny the use-item-on packet that follows so the rotation does
+            // not also place the torch against the stack. This holds even when the click hit no
+            // item: the gesture claimed the click either way.
+            RightClickBlockSuppressor.suppress(sp, msg.pos, level);
+
+            if (msg.slotIndex < 0 || msg.slotIndex >= 64) return;
+
+            int newCubeRot = (ssbe.getCubeRotation(msg.slotIndex) + 1) % 4;
+            ssbe.setCubeRotation(msg.slotIndex, newCubeRot);
+            sp.displayClientMessage(Component.literal("Item Rotation: " + (newCubeRot * 90) + "°"), true);
         });
         ctx.get().setPacketHandled(true);
     }
