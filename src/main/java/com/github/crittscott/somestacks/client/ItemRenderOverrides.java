@@ -53,9 +53,11 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
 
-        resources.forEach((fileLocation, resource) -> {
+        // Read in file order so that two files covering one item resolve the same way every reload.
+        resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
+            ResourceLocation fileLocation = fileEntry.getKey();
             try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(resource.open(), StandardCharsets.UTF_8))) {
+                    new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
                 configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {

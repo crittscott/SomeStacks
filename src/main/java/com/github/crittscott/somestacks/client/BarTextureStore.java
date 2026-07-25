@@ -66,9 +66,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
         var resources = resourceManager.listResources("textures/bars", loc -> loc.getPath().endsWith(".json"));
 
-        resources.forEach((fileLocation, resource) -> {
+        // Read in file order so that two files mapping one item resolve the same way every reload.
+        resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
+            ResourceLocation fileLocation = fileEntry.getKey();
             try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(resource.open(), StandardCharsets.UTF_8))) {
+                    new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject root = GSON.fromJson(reader, JsonObject.class);
 
                 for (String key : root.keySet()) {
