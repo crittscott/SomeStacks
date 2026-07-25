@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -115,9 +116,10 @@ public final class ServerConfig {
      * names are lowercased and item ids are parsed once here; a malformed item id is reported and
      * dropped rather than being re-parsed and swallowed on every deposit.
      *
-     * <p>Called from the config load and reload events, which fire on Forge's file-watcher thread.
-     * Each list is published as an immutable set through a volatile field, so a server thread
-     * lookup sees either the old lists or the new ones.
+     * <p>Called from the config load and reload events, which fire on Forge's file-watcher thread,
+     * and from the {@code ss} list-editing commands, which run on the server thread. Each list is
+     * published as an immutable set through a volatile field, so a lookup sees either the old
+     * lists or the new ones.
      */
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
@@ -149,6 +151,49 @@ public final class ServerConfig {
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
         ssAllowlist = Set.copyOf(allowed);
+
+        SomeStacks.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s), "
+                        + "{} player(s) allowed to use /ss",
+                disabledMods.size(), disabledItems.size(), ssAllowlist.size());
+    }
+
+    /**
+     * Adds an entry to one of the server's text lists and re-bakes the lookup sets. The entry is
+     * stored as it was typed but compared without regard to case, matching the case-insensitive
+     * lookups the bake produces. Setting the config value writes through to the config file, so
+     * the file and the running server agree and a later save cannot undo the change.
+     *
+     * @return whether the entry was added; false when the list already contains it
+     */
+    public static boolean addListEntry(ForgeConfigSpec.ConfigValue<List<? extends String>> list, String entry) {
+        List<String> updated = new ArrayList<>(list.get());
+        for (String existing : updated) {
+            if (existing.equalsIgnoreCase(entry)) {
+                return false;
+            }
+        }
+
+        updated.add(entry);
+        list.set(updated);
+        bakeServerLists();
+        return true;
+    }
+
+    /**
+     * Removes an entry from one of the server's text lists and re-bakes the lookup sets, matching
+     * without regard to case as {@link #addListEntry} does.
+     *
+     * @return whether an entry was removed; false when the list does not contain it
+     */
+    public static boolean removeListEntry(ForgeConfigSpec.ConfigValue<List<? extends String>> list, String entry) {
+        List<String> updated = new ArrayList<>(list.get());
+        if (!updated.removeIf(existing -> existing.equalsIgnoreCase(entry))) {
+            return false;
+        }
+
+        list.set(updated);
+        bakeServerLists();
+        return true;
     }
 
     /**

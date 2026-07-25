@@ -1,7 +1,11 @@
-###### v3
+###### v4
 
-# Building
-Do not build unless asked. Everything not explicitly a command to build is a discussion.
+# Scope of analysis and work
+Your domain of interest is the project at hand. Only if you cannot answer the question by looking here are you to look outside.
+
+Do not decompile Forge or Minecraft. Do not decompile Gradle or adjust the development environment. If you believe that the source of an issue lies deep within some external asset, stop and declare that, do not go on extended hunts to prove it.
+
+You are a programmer; you write code. Do not build unless asked. Everything not explicitly a command to build is a discussion.
 
 # Project Principles
 
