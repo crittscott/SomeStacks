@@ -35,6 +35,9 @@ public final class ClientSetup {
     private static void onRegisterReloadListeners(RegisterClientReloadListenersEvent evt) {
         evt.registerReloadListener(new ItemRenderOverrides());
         evt.registerReloadListener(new BarTextureStore());
-        evt.registerReloadListener((ResourceManagerReloadListener) manager -> AutoRenderProfiles.onResourceReload());
+        evt.registerReloadListener((ResourceManagerReloadListener) manager -> {
+            AutoRenderProfiles.onResourceReload();
+            CubeRenderHelper.onResourceReload();
+        });
     }
 }

@@ -30,12 +30,17 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation("somestacks", "block/stack_cube");
+
+    /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
+    private static final Direction[] DIRECTIONS = Direction.values();
 
     /** How far outside the cell face the projected art sits, clear of the background cube. */
     private static final float FACE_OFFSET = 0.001f;
@@ -49,10 +54,10 @@ public final class CubeRenderHelper {
      * All six are proper rotations, so the art reads the same way round from every side. SOUTH is
      * where the art already lies and needs none.
      */
-    private static final Quaternionf[] FACE_ROTATIONS = new Quaternionf[Direction.values().length];
+    private static final Quaternionf[] FACE_ROTATIONS = new Quaternionf[DIRECTIONS.length];
 
     /** Corners of each cube face in cell space, wound to face outward. */
-    private static final float[][] FACE_CORNERS = new float[Direction.values().length][];
+    private static final float[][] FACE_CORNERS = new float[DIRECTIONS.length][];
 
     static {
         FACE_ROTATIONS[Direction.NORTH.ordinal()] = Axis.YP.rotationDegrees(180.0f);
@@ -71,6 +76,15 @@ public final class CubeRenderHelper {
 
     /** Reseeded before every quad group, so one instance serves the whole render thread. */
     private static final RandomSource RANDOM = RandomSource.create();
+
+    private static final BakedQuad[] NO_PLATES = new BakedQuad[0];
+
+    /**
+     * The quads of a render pass that survive the flat projection, keyed by the pass. Baked models
+     * carry no equality beyond identity, which is the right key here anyway: a reload replaces every
+     * instance, so an entry can only ever be read back for the pass it was gathered from.
+     */
+    private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
 
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
@@ -206,17 +220,54 @@ public final class CubeRenderHelper {
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
         boolean fabulous = fabulousFlag(stack, ItemDisplayContext.FIXED);
 
-        // Walk the model as ItemRenderer.renderModelLists does: every render pass, each
-        // culled direction group and then the unculled group, reseeding per group. Reading
-        // only the root model's unculled quads drops the layers of a multi-pass item.
-        for (BakedModel pass : model.getRenderPasses(stack, fabulous)) {
-            for (Direction direction : Direction.values()) {
-                RANDOM.setSeed(42L);
-                emitQuads(vc, stack, pass.getQuads(null, direction, RANDOM), light, faces);
-            }
-            RANDOM.setSeed(42L);
-            emitQuads(vc, stack, pass.getQuads(null, null, RANDOM), light, faces);
+        // Resolving the model and its passes stays here, so a stack's own state still chooses both:
+        // a charged crossbow draws charged, a coated weapon draws its coating. Only the step from a
+        // pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
+        List<BakedModel> passes = model.getRenderPasses(stack, fabulous);
+        for (int i = 0; i < passes.size(); i++) {
+            emitQuads(vc, stack, plates(passes.get(i)), light, faces);
         }
+    }
+
+    private static BakedQuad[] plates(BakedModel pass) {
+        BakedQuad[] cached = PLATE_CACHE.get(pass);
+        if (cached == null) {
+            cached = gatherPlates(pass);
+            PLATE_CACHE.put(pass, cached);
+        }
+        return cached;
+    }
+
+    /**
+     * Collects the quads of one pass that the flat projection can show. An item model lays its art on
+     * a front and a back plate and hangs a sliver off every span of the sprite's outline. The slivers
+     * stand perpendicular to the plates to give a held item its thickness; flattened onto a cell face
+     * they are edge-on and cover nothing, and they outnumber the plates by up to a hundred to one.
+     */
+    private static BakedQuad[] gatherPlates(BakedModel pass) {
+        // Walk the pass as ItemRenderer.renderModelLists does: each culled direction group and then
+        // the unculled group, reseeding per group.
+        List<BakedQuad> plates = new ArrayList<>(2);
+        for (Direction bucket : DIRECTIONS) {
+            RANDOM.setSeed(42L);
+            collectPlates(pass.getQuads(null, bucket, RANDOM), plates);
+        }
+        RANDOM.setSeed(42L);
+        collectPlates(pass.getQuads(null, null, RANDOM), plates);
+        return plates.isEmpty() ? NO_PLATES : plates.toArray(NO_PLATES);
+    }
+
+    private static void collectPlates(List<BakedQuad> quads, List<BakedQuad> plates) {
+        for (BakedQuad quad : quads) {
+            if (quad.getDirection().getAxis() == Direction.Axis.Z) {
+                plates.add(quad);
+            }
+        }
+    }
+
+    /** Drops geometry gathered from the baked models a reload is about to replace. */
+    public static void onResourceReload() {
+        PLATE_CACHE.clear();
     }
 
     /**
@@ -236,7 +287,7 @@ public final class CubeRenderHelper {
         Vector3f centre = pose.last().pose().transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
 
         List<FaceTarget> faces = new ArrayList<>(3);
-        for (Direction face : Direction.values()) {
+        for (Direction face : DIRECTIONS) {
             Vector3f normal = cellNormal.transform(
                     new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
             if (centre.dot(normal) >= 0.0f) {
@@ -276,23 +327,17 @@ public final class CubeRenderHelper {
         return art;
     }
 
-    private static void emitQuads(VertexConsumer vc, ItemStack stack, List<BakedQuad> quads, int light,
+    private static void emitQuads(VertexConsumer vc, ItemStack stack, BakedQuad[] plates, int light,
                                   List<FaceTarget> faces) {
         int tintIndex = Integer.MIN_VALUE;
         int r = 0xFF, g = 0xFF, b = 0xFF;
 
-        for (BakedQuad quad : quads) {
-            // An item model lays its art on a front and a back plate and hangs one sliver off each
-            // span of the sprite's outline. The slivers stand perpendicular to the plates to give a
-            // held item its thickness; flattened onto a cell face they are edge-on and cover nothing,
-            // and they outnumber the plates by up to a hundred to one. Both plates are kept, and the
-            // render type's own back-face culling shows the outward one exactly as it does in hand.
-            if (quad.getDirection().getAxis() != Direction.Axis.Z) {
-                continue;
-            }
-
-            // Every quad of a layer carries that layer's tint index, so a group resolves its colour
-            // once per layer rather than once per quad.
+        // Both plates are kept and the render type's own back-face culling shows the outward one,
+        // exactly as it does for an item in the hand.
+        for (BakedQuad quad : plates) {
+            // Every quad of a layer carries that layer's tint index, so a pass resolves its colour
+            // once rather than once per quad. Colour cannot be cached with the geometry: a potion's
+            // and a coated weapon's are per stack.
             if (quad.getTintIndex() != tintIndex) {
                 tintIndex = quad.getTintIndex();
                 int color = tintIndex >= 0
