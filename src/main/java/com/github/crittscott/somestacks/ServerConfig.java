@@ -99,7 +99,7 @@ public final class ServerConfig {
         builder.comment("Test Wall Configuration").push("test_wall");
 
         TEST_WALL_PLACEMENTS_PER_TICK = builder
-                .comment("Blocks the 'ss test' command places per tick, counting both stacks and floor.",
+                .comment("Blocks the 'ss test' and 'ss testingot' commands place per tick, counting both stacks and floor.",
                         "A wall spanning every loaded mod is tens of thousands of placements; lower",
                         "values spread it over more ticks.")
                 .defineInRange("placements_per_tick", 64, 1, Integer.MAX_VALUE);

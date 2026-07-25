@@ -1,4 +1,7 @@
-###### v2
+###### v3
+
+# Building
+Do not build unless asked. Everything not explicitly a command to build is a discussion.
 
 # Project Principles
 
@@ -11,6 +14,7 @@
 
 - Do not compile, build, or run the project (no `gradlew`, no `runGameTestServer`, etc.) unless I explicitly ask. Your job is to read and write code. Verify your work by reading it and reasoning about it. Do not touch the ForgeGradle caches, kill processes, or otherwise rewire the dev environment.
 - I run the builds and tests. If you believe a build or test run is warranted, say so and let me decide.
+- Do not decompile anything (Minecraft, Forge) without permission.
 
 # Version Control and Commit Messages
 

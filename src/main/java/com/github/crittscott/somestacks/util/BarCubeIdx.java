@@ -37,7 +37,9 @@ public final class BarCubeIdx {
     // Y positions for 8 layers
     private static final double[] STARTS_Y = {0, 2, 4, 6, 8, 10, 12, 14};
 
-    private static final int LAYER_SIZE = 8;
+    /** Bars in one layer. */
+    public static final int LAYER_SIZE = 8;
+
     private static final int TOP_LAYER_Y = 7;
     private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 

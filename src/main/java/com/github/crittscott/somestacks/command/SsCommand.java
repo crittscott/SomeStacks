@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.network.WriteOverridesPkt;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -41,6 +42,8 @@ import java.util.stream.Collectors;
  *   <li>{@code ss test <modid|all>} generates Storage Stack walls of every item in the
  *       given namespace, or in all loaded namespaces. The wall is built over the following
  *       ticks and reports again when it finishes.</li>
+ *   <li>{@code ss testingot <modid|all>} does the same with Bar Stacks, over the ingots of
+ *       those namespaces, one bar per ingot.</li>
  *   <li>{@code ss write} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
  *   <li>{@code ss reload} re-reads the server override directory and pushes the current
@@ -75,18 +78,27 @@ public final class SsCommand {
                                                                 .then(Commands.argument("y", FloatArgumentType.floatArg())
                                                                         .then(Commands.argument("z", FloatArgumentType.floatArg())
                                                                                 .executes(SsCommand::setItem))))))))
-                        .then(Commands.literal("test")
-                                .then(Commands.literal("all")
-                                        .executes(SsCommand::testAll))
-                                .then(Commands.argument("modid", StringArgumentType.word())
-                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                TestWallGenerator.getModIdsWithItems(), builder))
-                                        .executes(SsCommand::testSingle)))
+                        .then(testTree("test", TestWallGenerator.Kind.STORAGE))
+                        .then(testTree("testingot", TestWallGenerator.Kind.BAR))
                         .then(Commands.literal("write")
                                 .executes(SsCommand::write))
                         .then(Commands.literal("reload")
                                 .executes(SsCommand::reload))
         );
+    }
+
+    /**
+     * The {@code <modid>|all} subtree one wall kind is generated from. The two kinds differ only
+     * in which items they can show, which is what the kind itself answers.
+     */
+    private static LiteralArgumentBuilder<CommandSourceStack> testTree(
+            String name, TestWallGenerator.Kind kind) {
+        return Commands.literal(name)
+                .then(Commands.literal("all")
+                        .executes(ctx -> testAll(ctx, kind)))
+                .then(Commands.argument("modid", StringArgumentType.word())
+                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(kind.modIds(), builder))
+                        .executes(ctx -> testSingle(ctx, kind)));
     }
 
     /**
@@ -172,13 +184,15 @@ public final class SsCommand {
         return 1;
     }
 
-    private static int testSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+            throws CommandSyntaxException {
         if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         String modId = StringArgumentType.getString(ctx, "modid");
 
-        if (TestWallGenerator.collectModItems(modId).isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal(modId + " is not loaded or has no items"));
+        if (kind.itemsIn(modId).isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(
+                    modId + " is not loaded or has no " + kind.itemLabel()));
             return 0;
         }
 
@@ -187,14 +201,15 @@ public final class SsCommand {
             return 0;
         }
 
-        return generate(ctx, player, List.of(modId), List.of());
+        return generate(ctx, player, kind, List.of(modId), List.of());
     }
 
-    private static int testAll(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int testAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+            throws CommandSyntaxException {
         if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        List<String> modIds = new ArrayList<>(TestWallGenerator.getModIdsWithItems());
+        List<String> modIds = new ArrayList<>(kind.modIds());
         Collections.sort(modIds);
 
         List<String> skippedMods = new ArrayList<>();
@@ -211,17 +226,17 @@ public final class SsCommand {
             return 0;
         }
 
-        return generate(ctx, player, modIds, skippedMods);
+        return generate(ctx, player, kind, modIds, skippedMods);
     }
 
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
-                                List<String> modIds, List<String> skippedMods) {
+                                TestWallGenerator.Kind kind, List<String> modIds, List<String> skippedMods) {
         String subject = modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
 
-        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, modIds, result -> {
+        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, kind, modIds, result -> {
             StringBuilder done = new StringBuilder("Created ")
-                    .append(result.totalStacks()).append(" StorageStacks (")
-                    .append(result.totalItems()).append(" items) for ").append(subject)
+                    .append(result.totalStacks()).append(' ').append(kind.stackLabel()).append(" (")
+                    .append(result.totalItems()).append(' ').append(kind.itemLabel()).append(") for ").append(subject)
                     .append(". Rows run north.");
 
             if (result.totalStacks() < result.expectedStacks()) {
@@ -233,8 +248,9 @@ public final class SsCommand {
         });
 
         StringBuilder message = new StringBuilder("Building ")
-                .append(plan.expectedStacks()).append(" StorageStacks (")
-                .append(plan.totalItems()).append(" items) for ").append(subject).append('.');
+                .append(plan.expectedStacks()).append(' ').append(kind.stackLabel()).append(" (")
+                .append(plan.totalItems()).append(' ').append(kind.itemLabel()).append(") for ")
+                .append(subject).append('.');
 
         if (!skippedMods.isEmpty()) {
             message.append(" Skipped ").append(skippedMods.size())
