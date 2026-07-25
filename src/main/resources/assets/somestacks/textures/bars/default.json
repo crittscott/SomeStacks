@@ -1,5 +1,5 @@
 {
-  "_comment": "Simple string format uses texture as-is (no tinting)",
+  "_comment": "Simple string format names a texture and auto-tints it",
   "somemod:brick": "minecraft:block/bricks",
   "someothermod:someotheringot": "minecraft:block/nether_bricks",
 

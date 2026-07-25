@@ -233,7 +233,7 @@ A multiplayer admin makes overrides authoritative for all players by copying a c
 
 ### Bar texture data
 
-Client resource reload also loads `assets/*/textures/bars/*.json`. A mapping may be a texture id string or an object with `texture` and optional `tint` fields. A mapped item without an explicit tint is auto-tinted by averaging pixels with alpha greater than 127 from the particle sprite of the item's baked model, then brightening the average ten percent toward white. A mapping with `tint` uses the supplied RGB or ARGB hex color. An unmapped item uses the iron-block fallback texture without auto-tinting.
+Client resource reload also loads `assets/*/textures/bars/*.json`. A mapping may be a texture id string or an object with `texture` and optional `tint` fields. A mapped item without an explicit tint is auto-tinted by averaging pixels with alpha greater than 127 from the particle sprite of the item's baked model, then brightening the average ten percent toward white. A mapping with `tint` uses the supplied RGB or ARGB hex color. An unmapped item gets the same treatment as a mapping with no explicit tint — the base ingot texture, auto-tinted — computed on first render rather than at reload and held until the next one, since the set of items that will need it is not known in advance. An item whose tint cannot be computed at all is drawn untinted.
 
 ### Sound data
 

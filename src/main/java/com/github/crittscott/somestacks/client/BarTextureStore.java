@@ -25,8 +25,10 @@ import java.util.Map;
 public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
     private static final Gson GSON = new Gson();
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
+    /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
+    private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("somestacks", "block/minecraft/base_ingot");
-    private static final BarTextureData FALLBACK = new BarTextureData(new ResourceLocation("minecraft", "block/iron_block"));
+    private static final BarTextureData FALLBACK = new BarTextureData(DEFAULT_TEXTURE);
     private static final int AUTO_TINT_MARKER = -1;
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
@@ -121,6 +123,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     @Override
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
+        unmappedTints.clear();
         int autoTinted = 0;
 
         for (Map.Entry<ResourceLocation, BarTextureData> entry : prepared.entrySet()) {
@@ -290,6 +293,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         ResourceLocation itemLoc = ForgeRegistries.ITEMS.getKey(stack.getItem());
         if (itemLoc == null) return FALLBACK;
 
-        return textureMap.getOrDefault(itemLoc, FALLBACK);
+        BarTextureData mapped = textureMap.get(itemLoc);
+        if (mapped != null) return mapped;
+
+        return unmappedTints.computeIfAbsent(itemLoc, loc -> new BarTextureData(
+                DEFAULT_TEXTURE,
+                calculateTintFromItemTexture(loc, Minecraft.getInstance().getResourceManager())));
     }
 }
