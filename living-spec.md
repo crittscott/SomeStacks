@@ -199,7 +199,7 @@ All stack blocks use `ENTITYBLOCK_ANIMATED` and are drawn by block entity render
 
 | Mode | Behavior |
 | --- | --- |
-| `2d` | Draw a small `stack_cube` background and project the item's unculled baked quads onto all six faces, applying item tint. |
+| `2d` | Draw a small `stack_cube` background and project the item's baked quads onto the cell faces the camera can see, applying item tint. Only the quads lying in the art's own plane are projected; the slivers an item model hangs off its outline are edge-on once flattened and are skipped, so a model that carries its art on some other plane draws nothing here. Each face carries the same layout under a proper rotation, so the art reads the same way round from every side, and it is lit by the normal of the face it lies on rather than the direction of the quad it came from. |
 | `3d` | Use the normal item renderer in `FIXED` display context. |
 | `gui` | Use the normal item renderer in `GUI` context with counter-rotation to fit the stack cell. |
 | `block` | Render a `BlockItem`'s default block state directly; if block rendering throws, fall back to `3d`. A non-`BlockItem` configured as `block` draws nothing. |

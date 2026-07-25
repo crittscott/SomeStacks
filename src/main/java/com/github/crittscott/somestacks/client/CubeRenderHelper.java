@@ -24,12 +24,53 @@ import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation("somestacks", "block/stack_cube");
+
+    /** How far outside the cell face the projected art sits, clear of the background cube. */
+    private static final float FACE_OFFSET = 0.001f;
+    /** How much of a quad's own depth survives the projection, keeping a multi-pass item's layers apart. */
+    private static final float FACE_DEPTH = 0.01f;
+    /** Fraction of the face the art spans, leaving a one-pixel border. */
+    private static final float ART_INSET = 0.875f;
+
+    /**
+     * Rotation carrying the +Z face, where a baked item model lays its art out, onto each cube face.
+     * All six are proper rotations, so the art reads the same way round from every side. SOUTH is
+     * where the art already lies and needs none.
+     */
+    private static final Quaternionf[] FACE_ROTATIONS = new Quaternionf[Direction.values().length];
+
+    /** Corners of each cube face in cell space, wound to face outward. */
+    private static final float[][] FACE_CORNERS = new float[Direction.values().length][];
+
+    static {
+        FACE_ROTATIONS[Direction.NORTH.ordinal()] = Axis.YP.rotationDegrees(180.0f);
+        FACE_ROTATIONS[Direction.EAST.ordinal()] = Axis.YP.rotationDegrees(90.0f);
+        FACE_ROTATIONS[Direction.WEST.ordinal()] = Axis.YP.rotationDegrees(-90.0f);
+        FACE_ROTATIONS[Direction.UP.ordinal()] = Axis.XP.rotationDegrees(-90.0f);
+        FACE_ROTATIONS[Direction.DOWN.ordinal()] = Axis.XP.rotationDegrees(90.0f);
+
+        FACE_CORNERS[Direction.SOUTH.ordinal()] = new float[]{0,0,1, 1,0,1, 1,1,1, 0,1,1};
+        FACE_CORNERS[Direction.NORTH.ordinal()] = new float[]{1,0,0, 0,0,0, 0,1,0, 1,1,0};
+        FACE_CORNERS[Direction.EAST.ordinal()] = new float[]{1,0,1, 1,0,0, 1,1,0, 1,1,1};
+        FACE_CORNERS[Direction.WEST.ordinal()] = new float[]{0,0,0, 0,0,1, 0,1,1, 0,1,0};
+        FACE_CORNERS[Direction.UP.ordinal()] = new float[]{0,1,1, 1,1,1, 1,1,0, 0,1,0};
+        FACE_CORNERS[Direction.DOWN.ordinal()] = new float[]{0,0,0, 1,0,0, 1,0,1, 0,0,1};
+    }
+
+    /** Reseeded before every quad group, so one instance serves the whole render thread. */
+    private static final RandomSource RANDOM = RandomSource.create();
 
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
@@ -149,14 +190,20 @@ public final class CubeRenderHelper {
 
     private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
                                          float scale, float[] offset) {
+        List<FaceTarget> faces = visibleFaces(pose, scale, offset);
+        if (faces.isEmpty()) {
+            return;
+        }
+
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
                 .apply(STACK_CUBE_TEXTURE);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
-        emitCube(pose, solidVc, backgroundSprite, light);
+        for (FaceTarget target : faces) {
+            emitBackgroundFace(pose.last().pose(), solidVc, backgroundSprite, light, target);
+        }
 
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
-        RandomSource random = RandomSource.create();
         boolean fabulous = fabulousFlag(stack, ItemDisplayContext.FIXED);
 
         // Walk the model as ItemRenderer.renderModelLists does: every render pass, each
@@ -164,145 +211,141 @@ public final class CubeRenderHelper {
         // only the root model's unculled quads drops the layers of a multi-pass item.
         for (BakedModel pass : model.getRenderPasses(stack, fabulous)) {
             for (Direction direction : Direction.values()) {
-                random.setSeed(42L);
-                emitQuadsOnAllFaces(pose, vc, stack, pass.getQuads(null, direction, random), light, scale, offset);
+                RANDOM.setSeed(42L);
+                emitQuads(vc, stack, pass.getQuads(null, direction, RANDOM), light, faces);
             }
-            random.setSeed(42L);
-            emitQuadsOnAllFaces(pose, vc, stack, pass.getQuads(null, null, random), light, scale, offset);
+            RANDOM.setSeed(42L);
+            emitQuads(vc, stack, pass.getQuads(null, null, RANDOM), light, faces);
         }
     }
 
-    private static void emitQuadsOnAllFaces(PoseStack pose, VertexConsumer vc, ItemStack stack, List<BakedQuad> quads,
-                                            int light, float scale, float[] offset) {
+    /**
+     * One cube face worth drawing, carrying the transform that lays a quad's art on it and the
+     * face's outward normal in the frame the vertices are written in.
+     */
+    private record FaceTarget(Direction face, Matrix4f art, float nx, float ny, float nz) {}
+
+    /**
+     * The cube faces the camera can see. The level renderer has already translated by the camera
+     * position, so the camera sits at this frame's origin and a face is visible exactly when the
+     * cell centre lies on the face's inward side. The faces that fail the test are behind the
+     * opaque background cube, so skipping them removes nothing that could be seen.
+     */
+    private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, float[] offset) {
+        Matrix3f cellNormal = pose.last().normal();
+        Vector3f centre = pose.last().pose().transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
+
+        List<FaceTarget> faces = new ArrayList<>(3);
+        for (Direction face : Direction.values()) {
+            Vector3f normal = cellNormal.transform(
+                    new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
+            if (centre.dot(normal) >= 0.0f) {
+                continue;
+            }
+            normal.normalize();
+            faces.add(new FaceTarget(face, artMatrix(pose, face, scale, offset),
+                    normal.x(), normal.y(), normal.z()));
+        }
+        return faces;
+    }
+
+    /**
+     * The transform from a baked quad's own coordinates onto one cube face: turn the +Z face onto
+     * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink the
+     * art about the face centre to leave a border and apply the profile's offset.
+     */
+    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, float[] offset) {
+        pose.pushPose();
+
+        Quaternionf rotation = FACE_ROTATIONS[face.ordinal()];
+        if (rotation != null) {
+            pose.translate(0.5f, 0.5f, 0.5f);
+            pose.mulPose(rotation);
+            pose.translate(-0.5f, -0.5f, -0.5f);
+        }
+
+        pose.translate(0.0f, 0.0f, 1.0f + FACE_OFFSET);
+        pose.scale(1.0f, 1.0f, FACE_DEPTH);
+
+        pose.translate(0.5f + offset[0], 0.5f + offset[1], 0.0f);
+        pose.scale(ART_INSET * scale, ART_INSET * scale, 1.0f);
+        pose.translate(-0.5f, -0.5f, 0.0f);
+
+        Matrix4f art = new Matrix4f(pose.last().pose());
+        pose.popPose();
+        return art;
+    }
+
+    private static void emitQuads(VertexConsumer vc, ItemStack stack, List<BakedQuad> quads, int light,
+                                  List<FaceTarget> faces) {
+        int tintIndex = Integer.MIN_VALUE;
+        int r = 0xFF, g = 0xFF, b = 0xFF;
+
         for (BakedQuad quad : quads) {
-            int tintIndex = quad.getTintIndex();
-            int color = tintIndex >= 0
-                    ? Minecraft.getInstance().getItemColors().getColor(stack, tintIndex)
-                    : 0xFFFFFFFF;
-
-            int r = (color >> 16) & 0xFF;
-            int g = (color >> 8) & 0xFF;
-            int b = color & 0xFF;
-
-            QuadVertex[] vertices = extractQuadVertices(quad);
-
-            // Shrink 2D texture from 16x16 to 15x15 to leave 1px border, then apply custom scale
-            // Scale around center point: new_coord = (old_coord - 0.5) * 0.875 * scale + 0.5
-            for (int i = 0; i < vertices.length; i++) {
-                float x = vertices[i].x;
-                float y = vertices[i].y;
-                float z = vertices[i].z;
-
-                x = (x - 0.5f) * 0.875f * scale + 0.5f;
-                y = (y - 0.5f) * 0.875f * scale + 0.5f;
-
-                // Apply offset (x, y only for 2D items)
-                x += offset[0];
-                y += offset[1];
-
-                vertices[i] = new QuadVertex(x, y, z, vertices[i].u, vertices[i].v);
+            // An item model lays its art on a front and a back plate and hangs one sliver off each
+            // span of the sprite's outline. The slivers stand perpendicular to the plates to give a
+            // held item its thickness; flattened onto a cell face they are edge-on and cover nothing,
+            // and they outnumber the plates by up to a hundred to one. Both plates are kept, and the
+            // render type's own back-face culling shows the outward one exactly as it does in hand.
+            if (quad.getDirection().getAxis() != Direction.Axis.Z) {
+                continue;
             }
 
-            for (Direction face : Direction.values()) {
-                renderQuadOnFace(pose, vc, vertices, r, g, b, 255, light, face);
+            // Every quad of a layer carries that layer's tint index, so a group resolves its colour
+            // once per layer rather than once per quad.
+            if (quad.getTintIndex() != tintIndex) {
+                tintIndex = quad.getTintIndex();
+                int color = tintIndex >= 0
+                        ? Minecraft.getInstance().getItemColors().getColor(stack, tintIndex)
+                        : 0xFFFFFFFF;
+                r = (color >> 16) & 0xFF;
+                g = (color >> 8) & 0xFF;
+                b = color & 0xFF;
+            }
+
+            int[] vertices = quad.getVertices();
+            for (FaceTarget target : faces) {
+                for (int i = 0; i < 4; i++) {
+                    int base = i * 8;
+                    vertex(vc, target.art(),
+                            Float.intBitsToFloat(vertices[base]),
+                            Float.intBitsToFloat(vertices[base + 1]),
+                            Float.intBitsToFloat(vertices[base + 2]),
+                            Float.intBitsToFloat(vertices[base + 4]),
+                            Float.intBitsToFloat(vertices[base + 5]),
+                            r, g, b, light, target);
+                }
             }
         }
     }
 
-    public static QuadVertex[] extractQuadVertices(BakedQuad quad) {
-        int[] vertexData = quad.getVertices();
-        QuadVertex[] vertices = new QuadVertex[4];
-
-        for (int i = 0; i < 4; i++) {
-            int offset = i * 8;
-            float x = Float.intBitsToFloat(vertexData[offset]);
-            float y = Float.intBitsToFloat(vertexData[offset + 1]);
-            float z = Float.intBitsToFloat(vertexData[offset + 2]);
-            float u = Float.intBitsToFloat(vertexData[offset + 4]);
-            float v = Float.intBitsToFloat(vertexData[offset + 5]);
-            vertices[i] = new QuadVertex(x, y, z, u, v);
-        }
-
-        return vertices;
-    }
-
-    public static void renderQuadOnFace(PoseStack pose, VertexConsumer vc, QuadVertex[] vertices,
-                                        int r, int g, int b, int a, int light, Direction face) {
-        var m = pose.last().pose();
-        var n = pose.last().normal();
-
-        for (QuadVertex v : vertices) {
-            float[] pos = transformToFace(v.x, v.y, v.z, face);
-            float nx = 0, ny = 0, nz = 0;
-
-            switch (face) {
-                case NORTH: nz = -1; break;
-                case SOUTH: nz = 1; break;
-                case WEST: nx = -1; break;
-                case EAST: nx = 1; break;
-                case DOWN: ny = -1; break;
-                case UP: ny = 1; break;
-            }
-
-            vc.vertex(m, pos[0], pos[1], pos[2])
-                    .color(r, g, b, a)
-                    .uv(v.u, v.v)
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .uv2(light)
-                    .normal(n, nx, ny, nz)
-                    .endVertex();
-        }
-    }
-
-    public static float[] transformToFace(float itemX, float itemY, float itemZ, Direction face) {
-        float offset = 0.001f;
-        float depthScale = 0.01f;
-        return switch (face) {
-            case SOUTH -> new float[]{itemX, itemY, 1.0f + offset + (itemZ * depthScale)};
-            case NORTH -> new float[]{1.0f - itemX, itemY, 0.0f - offset - (itemZ * depthScale)};
-            case EAST -> new float[]{1.0f + offset + (itemZ * depthScale), itemY, itemX};
-            case WEST -> new float[]{0.0f - offset - (itemZ * depthScale), itemY, 1.0f - itemX};
-            case UP -> new float[]{itemX, 1.0f + offset + (itemZ * depthScale), itemY};
-            case DOWN -> new float[]{itemX, 0.0f - offset - (itemZ * depthScale), 1.0f - itemY};
-            default -> new float[]{itemX, itemY, 0.0f};
-        };
-    }
-
-    public static void emitCube(PoseStack pose, VertexConsumer vc, TextureAtlasSprite sp, int light) {
-        emitCube(pose, vc, sp, light, 255, 255, 255, 255);
-    }
-
-    public static void emitCube(PoseStack pose, VertexConsumer vc, TextureAtlasSprite sp, int light, int r, int g, int b, int a) {
-        int overlay = OverlayTexture.NO_OVERLAY;
+    private static void emitBackgroundFace(Matrix4f cell, VertexConsumer vc, TextureAtlasSprite sp, int light,
+                                           FaceTarget target) {
+        float[] c = FACE_CORNERS[target.face().ordinal()];
         float u0 = sp.getU0(), v0 = sp.getV0(), u1 = sp.getU1(), v1 = sp.getV1();
-        // +Z
-        quad(pose, vc, light, overlay, 0,0,1, 1,0,1, 1,1,1, 0,1,1, u0,v1,u1,v0, 0,0,1, r,g,b,a);
-        // -Z
-        quad(pose, vc, light, overlay, 1,0,0, 0,0,0, 0,1,0, 1,1,0, u0,v1,u1,v0, 0,0,-1, r,g,b,a);
-        // +X
-        quad(pose, vc, light, overlay, 1,0,1, 1,0,0, 1,1,0, 1,1,1, u0,v1,u1,v0, 1,0,0, r,g,b,a);
-        // -X
-        quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 0,1,1, 0,1,0, u0,v1,u1,v0, -1,0,0, r,g,b,a);
-        // +Y
-        quad(pose, vc, light, overlay, 0,1,1, 1,1,1, 1,1,0, 0,1,0, u0,v1,u1,v0, 0,1,0, r,g,b,a);
-        // -Y
-        quad(pose, vc, light, overlay, 0,0,0, 1,0,0, 1,0,1, 0,0,1, u0,v1,u1,v0, 0,-1,0, r,g,b,a);
+
+        vertex(vc, cell, c[0], c[1], c[2], u0, v1, 0xFF, 0xFF, 0xFF, light, target);
+        vertex(vc, cell, c[3], c[4], c[5], u1, v1, 0xFF, 0xFF, 0xFF, light, target);
+        vertex(vc, cell, c[6], c[7], c[8], u1, v0, 0xFF, 0xFF, 0xFF, light, target);
+        vertex(vc, cell, c[9], c[10], c[11], u0, v0, 0xFF, 0xFF, 0xFF, light, target);
     }
 
-    public static void quad(PoseStack pose, VertexConsumer vc, int light, int overlay,
-                            float x1,float y1,float z1, float x2,float y2,float z2,
-                            float x3,float y3,float z3, float x4,float y4,float z4,
-                            float u0,float v0,float u1,float v1,
-                            float nx,float ny,float nz,
-                            int r, int g, int b, int a) {
-        var m = pose.last().pose();
-        var n = pose.last().normal();
-        vc.vertex(m, x1,y1,z1).color(r,g,b,a).uv(u0,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x2,y2,z2).color(r,g,b,a).uv(u1,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x3,y3,z3).color(r,g,b,a).uv(u1,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x4,y4,z4).color(r,g,b,a).uv(u0,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-    }
-
-    public record QuadVertex(float x, float y, float z, float u, float v) {
+    /**
+     * Writes one vertex. The position is transformed here rather than through
+     * {@link VertexConsumer#vertex(Matrix4f, float, float, float)}, which allocates a vector per
+     * call, and the normal is the cube face's rather than the source quad's, so lighting reads the
+     * surface the art lies on instead of the direction of an extruded sprite edge.
+     */
+    private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,
+                               int r, int g, int b, int light, FaceTarget target) {
+        vc.vertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
+                        m.m01() * x + m.m11() * y + m.m21() * z + m.m31(),
+                        m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
+                .color(r, g, b, 0xFF)
+                .uv(u, v)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
+                .normal(target.nx(), target.ny(), target.nz())
+                .endVertex();
     }
 }
