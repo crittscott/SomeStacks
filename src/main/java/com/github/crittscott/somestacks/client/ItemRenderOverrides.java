@@ -9,10 +9,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,7 +26,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +42,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path USER_FILE = FMLPaths.CONFIGDIR.get().resolve("somestacks/item_overrides.json");
+    private static final Path GENERATED_DIR = FMLPaths.CONFIGDIR.get().resolve("somestacks/generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
     /** Bundled corpus, from client resource reload. */
@@ -140,6 +146,73 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             message = "Failed to write " + USER_FILE + ": " + e.getMessage();
         }
 
+        report(message);
+    }
+
+    /**
+     * Dumps the resolved presentation of every item in these namespaces, one file per namespace
+     * under {@code generated_overrides}, and reports the result to the player. Entries are
+     * complete, and the folder is a destination rather than a layer: nothing reads it back, so a
+     * dump of a whole modpack neither freezes that pack into the user layer nor stops a later
+     * corpus or measurement change from reaching an item. A file is ready to be hand-corrected
+     * and dropped into a resource pack's {@code item_render_overrides} or a server's override
+     * folder as it stands.
+     *
+     * <p>Every item a layer does not configure is measured here rather than at first sight of it,
+     * so a dump of a large pack is the measurement pass for all of it. The results reach the
+     * measured cache, which is saved once the dump is done rather than waiting for logout.
+     */
+    public static void handleDumpRequest(List<String> namespaces) {
+        Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
+        for (String namespace : namespaces) {
+            byNamespace.put(namespace, new HashMap<>());
+        }
+
+        for (Map.Entry<ResourceKey<Item>, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
+            ResourceLocation itemId = entry.getKey().location();
+            Map<ResourceLocation, ItemRenderConfig> namespaceEntries = byNamespace.get(itemId.getNamespace());
+            if (namespaceEntries == null) {
+                continue;
+            }
+
+            RenderProfile profile = resolve(new ItemStack(entry.getValue()));
+            if (profile != null) {
+                namespaceEntries.put(itemId, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
+            }
+        }
+
+        AutoRenderProfiles.saveCache();
+
+        int itemCount = 0;
+        List<String> failed = new ArrayList<>();
+        try {
+            Files.createDirectories(GENERATED_DIR);
+        } catch (IOException e) {
+            SomeStacks.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
+            report("Failed to create " + GENERATED_DIR + ": " + e.getMessage());
+            return;
+        }
+
+        for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
+            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json");
+            try {
+                Files.writeString(file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
+                itemCount += entry.getValue().size();
+            } catch (IOException e) {
+                SomeStacks.LOGGER.error("Failed to write {}", file, e);
+                failed.add(entry.getKey());
+            }
+        }
+
+        String message = "Dumped " + itemCount + " render profile(s) for "
+                + (byNamespace.size() - failed.size()) + " namespace(s) to " + GENERATED_DIR;
+        if (!failed.isEmpty()) {
+            message += ". Failed to write " + failed.size() + ": " + String.join(", ", failed);
+        }
+        report(message);
+    }
+
+    private static void report(String message) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             player.displayClientMessage(Component.literal(message), false);

@@ -25,6 +25,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,8 +56,11 @@ import java.util.stream.Collectors;
  *       reports again when it finishes.</li>
  *   <li>{@code ss testingot <modid|all|list>} does the same with Bar Stacks, over the ingots of
  *       those namespaces, one bar per ingot.</li>
- *   <li>{@code ss write} asks the issuing player's client to write its user override
+ *   <li>{@code ss write changed} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
+ *   <li>{@code ss write <modid|all|list>} asks that client to dump a complete profile for every
+ *       item of those namespaces to its generated-override folder, measuring what no layer
+ *       configures. Namespaces are named as the wall commands name them.</li>
  * </ul>
  *
  * <p>The administrative subcommands act on the server rather than on a view, so they are gated
@@ -83,6 +88,9 @@ public final class SsCommand {
     private static final String DISABLED_MODS_LABEL = "disabled mod list";
     private static final String DISABLED_ITEMS_LABEL = "disabled item list";
     private static final String GEN_MODS_LABEL = "gen mod list";
+
+    /** A dump covers every item, which is the namespace and item set the Storage kind holds. */
+    private static final TestWallGenerator.Kind DUMP_KIND = TestWallGenerator.Kind.STORAGE;
 
     private SsCommand() {}
 
@@ -112,9 +120,7 @@ public final class SsCommand {
                                                                                 .executes(SsCommand::setModeScaleAndXyz))))))))
                         .then(testTree("test", TestWallGenerator.Kind.STORAGE))
                         .then(testTree("testingot", TestWallGenerator.Kind.BAR))
-                        .then(Commands.literal("write")
-                                .requires(SsCommand::isPlayer)
-                                .executes(SsCommand::write))
+                        .then(writeTree())
                         .then(Commands.literal("reload")
                                 .requires(SsCommand::isAdmin)
                                 .executes(SsCommand::reload))
@@ -139,6 +145,27 @@ public final class SsCommand {
                 .then(Commands.argument("modid", StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(kind.modIds(), builder))
                         .executes(ctx -> testSingle(ctx, kind)));
+    }
+
+    /**
+     * The {@code ss write} subtree. {@code changed} writes the user override layer to the file
+     * the client loads at startup, so it holds only what {@code ss item} set. The namespace forms
+     * dump complete profiles for every item of those namespaces to a folder nothing reads back,
+     * which is what keeps a dump of a whole modpack from freezing that pack into the user layer.
+     * Namespaces are named exactly as the wall commands name them.
+     */
+    private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
+        return Commands.literal("write")
+                .requires(SsCommand::isPlayer)
+                .then(Commands.literal("changed")
+                        .executes(SsCommand::writeChanged))
+                .then(Commands.literal("all")
+                        .executes(SsCommand::dumpAll))
+                .then(Commands.literal("list")
+                        .executes(SsCommand::dumpList))
+                .then(Commands.argument("modid", StringArgumentType.word())
+                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DUMP_KIND.modIds(), builder))
+                        .executes(SsCommand::dumpSingle));
     }
 
     /**
@@ -355,31 +382,38 @@ public final class SsCommand {
         return 1;
     }
 
-    private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
-            throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-        String modId = StringArgumentType.getString(ctx, "modid");
+    /**
+     * The namespaces one invocation acts on, with the ones dropped from the request and why.
+     * The wall commands and the dump select namespaces the same way, so a review session can
+     * dump exactly what it just looked at.
+     */
+    private record Selection(TestWallGenerator.Kind kind, List<String> modIds,
+                             List<String> disabledMods, List<String> unusableMods) {}
 
+    /**
+     * The one namespace named, or null when it cannot be used. Naming a single namespace fails
+     * rather than skipping, because the command names one thing and it did not happen.
+     */
+    @Nullable
+    private static Selection selectSingle(CommandContext<CommandSourceStack> ctx,
+                                          TestWallGenerator.Kind kind, String modId) {
         if (kind.itemsIn(modId).isEmpty()) {
             ctx.getSource().sendFailure(Component.literal(
                     modId + " is not loaded or has no " + kind.itemLabel()));
-            return 0;
+            return null;
         }
 
         if (ServerConfig.isModDisabled(modId)) {
             ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
-            return 0;
+            return null;
         }
 
-        return generate(ctx, player, kind, List.of(modId), List.of(), List.of());
+        return new Selection(kind, List.of(modId), List.of(), List.of());
     }
 
-    private static int testAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
-            throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
+    /** Every namespace this kind can use, minus those the server disabled; null when none remain. */
+    @Nullable
+    private static Selection selectAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind) {
         List<String> modIds = new ArrayList<>(kind.modIds());
         Collections.sort(modIds);
 
@@ -394,25 +428,22 @@ public final class SsCommand {
 
         if (modIds.isEmpty()) {
             ctx.getSource().sendFailure(Component.literal("All loaded mods are disabled in server config"));
-            return 0;
+            return null;
         }
 
-        return generate(ctx, player, kind, modIds, disabledMods, List.of());
+        return new Selection(kind, modIds, disabledMods, List.of());
     }
 
     /**
-     * Builds the wall named by the {@code gen_mods} server config list, in the order that list
-     * holds. Like {@code all} and unlike a single namespace, an entry the wall cannot use is
-     * skipped and reported rather than failing the command, since the list is edited ahead of use
-     * and one bad entry should not withhold the rest. The two reasons are reported apart: a
-     * namespace the server disabled is doing what it was told, while one that is unloaded or holds
-     * none of this kind's items is usually a typo or an entry meant for the other kind.
+     * The namespaces of the {@code gen_mods} server config list, in the order that list holds.
+     * Like {@code all} and unlike a single namespace, an entry that cannot be used is skipped and
+     * reported rather than failing the command, since the list is edited ahead of use and one bad
+     * entry should not withhold the rest. The two reasons are reported apart: a namespace the
+     * server disabled is doing what it was told, while one that is unloaded or holds none of this
+     * kind's items is usually a typo or an entry meant for the other kind.
      */
-    private static int testList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
-            throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
+    @Nullable
+    private static Selection selectList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind) {
         List<String> modIds = new ArrayList<>();
         List<String> disabledMods = new ArrayList<>();
         List<String> unusableMods = new ArrayList<>();
@@ -439,16 +470,62 @@ public final class SsCommand {
                     : "No mod in the " + GEN_MODS_LABEL + " can show " + kind.itemLabel() + ": "
                             + disabledMods.size() + " disabled, "
                             + unusableMods.size() + " not loaded or with none"));
-            return 0;
+            return null;
         }
 
-        return generate(ctx, player, kind, modIds, disabledMods, unusableMods);
+        return new Selection(kind, modIds, disabledMods, unusableMods);
+    }
+
+    private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+            throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectSingle(ctx, kind, StringArgumentType.getString(ctx, "modid"));
+        return selection == null ? 0 : generate(ctx, player, selection);
+    }
+
+    private static int testAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+            throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectAll(ctx, kind);
+        return selection == null ? 0 : generate(ctx, player, selection);
+    }
+
+    private static int testList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+            throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectList(ctx, kind);
+        return selection == null ? 0 : generate(ctx, player, selection);
+    }
+
+    private static String subject(List<String> modIds) {
+        return modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
+    }
+
+    /** Reports what {@code all} and {@code list} dropped, the two reasons apart. */
+    private static void appendSkips(StringBuilder message, Selection selection) {
+        if (!selection.disabledMods().isEmpty()) {
+            message.append(" Skipped ").append(selection.disabledMods().size())
+                    .append(" disabled: ").append(String.join(", ", selection.disabledMods())).append('.');
+        }
+
+        if (!selection.unusableMods().isEmpty()) {
+            message.append(" Skipped ").append(selection.unusableMods().size())
+                    .append(" not loaded or with no ").append(selection.kind().itemLabel()).append(": ")
+                    .append(String.join(", ", selection.unusableMods())).append('.');
+        }
     }
 
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
-                                TestWallGenerator.Kind kind, List<String> modIds,
-                                List<String> disabledMods, List<String> unusableMods) {
-        String subject = modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
+                                Selection selection) {
+        TestWallGenerator.Kind kind = selection.kind();
+        List<String> modIds = selection.modIds();
+        String subject = subject(modIds);
 
         TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, kind, modIds, result -> {
             StringBuilder done = new StringBuilder("Created ")
@@ -469,16 +546,7 @@ public final class SsCommand {
                 .append(plan.totalItems()).append(' ').append(kind.itemLabel()).append(") for ")
                 .append(subject).append('.');
 
-        if (!disabledMods.isEmpty()) {
-            message.append(" Skipped ").append(disabledMods.size())
-                    .append(" disabled: ").append(String.join(", ", disabledMods)).append('.');
-        }
-
-        if (!unusableMods.isEmpty()) {
-            message.append(" Skipped ").append(unusableMods.size())
-                    .append(" not loaded or with no ").append(kind.itemLabel()).append(": ")
-                    .append(String.join(", ", unusableMods)).append('.');
-        }
+        appendSkips(message, selection);
 
         final String finalMessage = message.toString();
         ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), true);
@@ -555,10 +623,53 @@ public final class SsCommand {
         return entries.size();
     }
 
-    private static int write(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int writeChanged(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
-        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new WriteOverridesPkt());
+        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), WriteOverridesPkt.userLayer());
+        return 1;
+    }
+
+    private static int dumpSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectSingle(ctx, DUMP_KIND, StringArgumentType.getString(ctx, "modid"));
+        return selection == null ? 0 : dump(ctx, player, selection);
+    }
+
+    private static int dumpAll(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectAll(ctx, DUMP_KIND);
+        return selection == null ? 0 : dump(ctx, player, selection);
+    }
+
+    private static int dumpList(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        Selection selection = selectList(ctx, DUMP_KIND);
+        return selection == null ? 0 : dump(ctx, player, selection);
+    }
+
+    /**
+     * Hands the client the namespaces to dump. The work is all on that client: it resolves and
+     * measures every item and reports what it wrote, which for a large pack takes long enough to
+     * be worth saying so here.
+     */
+    private static int dump(CommandContext<CommandSourceStack> ctx, ServerPlayer player, Selection selection) {
+        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                WriteOverridesPkt.dump(selection.modIds()));
+
+        StringBuilder message = new StringBuilder("Dumping render profiles for ")
+                .append(subject(selection.modIds()))
+                .append("; unmeasured items are measured now, and the client reports what it wrote.");
+        appendSkips(message, selection);
+
+        final String finalMessage = message.toString();
+        ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), false);
         return 1;
     }
 }
