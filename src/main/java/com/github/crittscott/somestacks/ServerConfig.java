@@ -28,6 +28,7 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SS_COMMAND_ALLOWLIST;
 
     public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_MODS;
 
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
@@ -104,6 +105,15 @@ public final class ServerConfig {
                         "A wall spanning every loaded mod is tens of thousands of placements; lower",
                         "values spread it over more ticks.")
                 .defineInRange("placements_per_tick", 64, 1, Integer.MAX_VALUE);
+
+        GEN_MODS = builder
+                .comment("Mod IDs the 'ss test list' and 'ss testingot list' commands build walls for.",
+                        "The order given is the order of the wall's columns.",
+                        "Empty by default; editable in game with 'ss gen add' and 'ss gen remove'.",
+                        "Mod IDs must be quoted: [\"create\", \"farmersdelight\"]")
+                .defineList("gen_mods",
+                        Collections.emptyList(),
+                        obj -> obj instanceof String);
 
         builder.pop();
 
