@@ -1188,8 +1188,8 @@
     ]
   },
   "betterend:dragon_tree_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1242,8 +1242,8 @@
     ]
   },
   "betterend:dragon_tree_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1251,8 +1251,8 @@
     ]
   },
   "betterend:dragon_tree_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1521,8 +1521,8 @@
     ]
   },
   "betterend:end_lotus_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,8 +1575,8 @@
     ]
   },
   "betterend:end_lotus_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2322,8 +2322,8 @@
     ]
   },
   "betterend:helix_tree_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2376,8 +2376,8 @@
     ]
   },
   "betterend:helix_tree_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2385,8 +2385,8 @@
     ]
   },
   "betterend:helix_tree_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2619,8 +2619,8 @@
     ]
   },
   "betterend:hydralux_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2943,8 +2943,8 @@
     ]
   },
   "betterend:jellyshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2988,8 +2988,8 @@
     ]
   },
   "betterend:jellyshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3213,8 +3213,8 @@
     ]
   },
   "betterend:lacugrove_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3267,8 +3267,8 @@
     ]
   },
   "betterend:lacugrove_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3276,8 +3276,8 @@
     ]
   },
   "betterend:lacugrove_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3501,8 +3501,8 @@
     ]
   },
   "betterend:lucernia_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3510,8 +3510,8 @@
     ]
   },
   "betterend:lucernia_jellyshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3573,8 +3573,8 @@
     ]
   },
   "betterend:lucernia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3582,8 +3582,8 @@
     ]
   },
   "betterend:lucernia_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3852,8 +3852,8 @@
     ]
   },
   "betterend:mossy_glowshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3906,8 +3906,8 @@
     ]
   },
   "betterend:mossy_glowshroom_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3915,8 +3915,8 @@
     ]
   },
   "betterend:mossy_glowshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4320,8 +4320,8 @@
     ]
   },
   "betterend:pythadendron_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4374,8 +4374,8 @@
     ]
   },
   "betterend:pythadendron_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4383,8 +4383,8 @@
     ]
   },
   "betterend:pythadendron_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5292,8 +5292,8 @@
     ]
   },
   "betterend:tenanea_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5355,8 +5355,8 @@
     ]
   },
   "betterend:tenanea_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5364,8 +5364,8 @@
     ]
   },
   "betterend:tenanea_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6678,8 +6678,8 @@
     ]
   },
   "betterend:umbrella_tree_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6732,8 +6732,8 @@
     ]
   },
   "betterend:umbrella_tree_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6741,8 +6741,8 @@
     ]
   },
   "betterend:umbrella_tree_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

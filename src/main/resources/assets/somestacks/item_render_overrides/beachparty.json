@@ -396,8 +396,8 @@
     ]
   },
   "beachparty:palm_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -441,8 +441,8 @@
     ]
   },
   "beachparty:palm_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -450,8 +450,8 @@
     ]
   },
   "beachparty:palm_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

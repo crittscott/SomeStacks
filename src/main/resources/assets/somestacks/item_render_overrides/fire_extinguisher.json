@@ -1,65 +1,65 @@
 {
   "fire_extinguisher:exit_sign": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_left": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_left_down": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_left_up": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_right": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_right_down": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:exit_sign_right_up": {
     "mode": "3d",
-    "scale": 0.45,
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
-      0.032
+      0.0
     ]
   },
   "fire_extinguisher:fire_alarm_bell": {
@@ -171,8 +171,8 @@
     ]
   },
   "fire_extinguisher:fire_extinguisher_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -180,8 +180,8 @@
     ]
   },
   "fire_extinguisher:fire_extinguisher_sign_left": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -189,8 +189,8 @@
     ]
   },
   "fire_extinguisher:fire_extinguisher_sign_right": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

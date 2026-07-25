@@ -405,8 +405,8 @@
     ]
   },
   "ars_nouveau:blue_archwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1593,8 +1593,8 @@
     ]
   },
   "ars_nouveau:green_archwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1935,8 +1935,8 @@
     ]
   },
   "ars_nouveau:purple_archwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1980,8 +1980,8 @@
     ]
   },
   "ars_nouveau:red_archwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

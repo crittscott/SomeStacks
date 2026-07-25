@@ -396,8 +396,8 @@
     ]
   },
   "biomesoplenty:dead_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -441,8 +441,8 @@
     ]
   },
   "biomesoplenty:dead_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -450,8 +450,8 @@
     ]
   },
   "biomesoplenty:dead_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -585,8 +585,8 @@
     ]
   },
   "biomesoplenty:fir_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -630,8 +630,8 @@
     ]
   },
   "biomesoplenty:fir_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -639,8 +639,8 @@
     ]
   },
   "biomesoplenty:fir_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -720,8 +720,8 @@
     ]
   },
   "biomesoplenty:flowering_oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -882,8 +882,8 @@
     ]
   },
   "biomesoplenty:hellbark_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -927,8 +927,8 @@
     ]
   },
   "biomesoplenty:hellbark_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -936,8 +936,8 @@
     ]
   },
   "biomesoplenty:hellbark_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1080,8 +1080,8 @@
     ]
   },
   "biomesoplenty:jacaranda_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1125,8 +1125,8 @@
     ]
   },
   "biomesoplenty:jacaranda_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1134,8 +1134,8 @@
     ]
   },
   "biomesoplenty:jacaranda_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1251,8 +1251,8 @@
     ]
   },
   "biomesoplenty:magic_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1296,8 +1296,8 @@
     ]
   },
   "biomesoplenty:magic_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1305,8 +1305,8 @@
     ]
   },
   "biomesoplenty:magic_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1404,8 +1404,8 @@
     ]
   },
   "biomesoplenty:mahogany_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1449,8 +1449,8 @@
     ]
   },
   "biomesoplenty:mahogany_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1458,8 +1458,8 @@
     ]
   },
   "biomesoplenty:mahogany_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1512,8 +1512,8 @@
     ]
   },
   "biomesoplenty:maple_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1557,8 +1557,8 @@
     ]
   },
   "biomesoplenty:orange_autumn_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1638,8 +1638,8 @@
     ]
   },
   "biomesoplenty:origin_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1701,8 +1701,8 @@
     ]
   },
   "biomesoplenty:palm_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1746,8 +1746,8 @@
     ]
   },
   "biomesoplenty:palm_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1755,8 +1755,8 @@
     ]
   },
   "biomesoplenty:palm_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1836,8 +1836,8 @@
     ]
   },
   "biomesoplenty:potted_dead_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1845,8 +1845,8 @@
     ]
   },
   "biomesoplenty:potted_fir_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1854,8 +1854,8 @@
     ]
   },
   "biomesoplenty:potted_flowering_oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1881,8 +1881,8 @@
     ]
   },
   "biomesoplenty:potted_hellbark_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1890,8 +1890,8 @@
     ]
   },
   "biomesoplenty:potted_jacaranda_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1908,8 +1908,8 @@
     ]
   },
   "biomesoplenty:potted_magic_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1917,8 +1917,8 @@
     ]
   },
   "biomesoplenty:potted_mahogany_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1926,8 +1926,8 @@
     ]
   },
   "biomesoplenty:potted_maple_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1935,8 +1935,8 @@
     ]
   },
   "biomesoplenty:potted_orange_autumn_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1953,8 +1953,8 @@
     ]
   },
   "biomesoplenty:potted_origin_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1962,8 +1962,8 @@
     ]
   },
   "biomesoplenty:potted_palm_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1989,8 +1989,8 @@
     ]
   },
   "biomesoplenty:potted_rainbow_birch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1998,8 +1998,8 @@
     ]
   },
   "biomesoplenty:potted_redwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2016,8 +2016,8 @@
     ]
   },
   "biomesoplenty:potted_snowblossom_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2043,8 +2043,8 @@
     ]
   },
   "biomesoplenty:potted_umbran_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2070,8 +2070,8 @@
     ]
   },
   "biomesoplenty:potted_willow_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2088,8 +2088,8 @@
     ]
   },
   "biomesoplenty:potted_yellow_autumn_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2115,8 +2115,8 @@
     ]
   },
   "biomesoplenty:rainbow_birch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2178,8 +2178,8 @@
     ]
   },
   "biomesoplenty:redwood_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2223,8 +2223,8 @@
     ]
   },
   "biomesoplenty:redwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2232,8 +2232,8 @@
     ]
   },
   "biomesoplenty:redwood_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2430,8 +2430,8 @@
     ]
   },
   "biomesoplenty:snowblossom_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2754,8 +2754,8 @@
     ]
   },
   "biomesoplenty:umbran_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2799,8 +2799,8 @@
     ]
   },
   "biomesoplenty:umbran_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2808,8 +2808,8 @@
     ]
   },
   "biomesoplenty:umbran_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3006,8 +3006,8 @@
     ]
   },
   "biomesoplenty:willow_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3051,8 +3051,8 @@
     ]
   },
   "biomesoplenty:willow_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3060,8 +3060,8 @@
     ]
   },
   "biomesoplenty:willow_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3132,8 +3132,8 @@
     ]
   },
   "biomesoplenty:yellow_autumn_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

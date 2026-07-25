@@ -1422,8 +1422,8 @@
     ]
   },
   "candlelight:table_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

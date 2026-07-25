@@ -72,8 +72,8 @@
     ]
   },
   "regions_unexplored:alpha_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -108,8 +108,8 @@
     ]
   },
   "regions_unexplored:apple_oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -189,8 +189,8 @@
     ]
   },
   "regions_unexplored:ashen_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -243,8 +243,8 @@
     ]
   },
   "regions_unexplored:bamboo_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -315,8 +315,8 @@
     ]
   },
   "regions_unexplored:baobab_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -360,8 +360,8 @@
     ]
   },
   "regions_unexplored:baobab_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -378,8 +378,8 @@
     ]
   },
   "regions_unexplored:baobab_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -567,8 +567,8 @@
     ]
   },
   "regions_unexplored:blackwood_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -612,8 +612,8 @@
     ]
   },
   "regions_unexplored:blackwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -630,8 +630,8 @@
     ]
   },
   "regions_unexplored:blackwood_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -756,8 +756,8 @@
     ]
   },
   "regions_unexplored:blue_bioshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -792,8 +792,8 @@
     ]
   },
   "regions_unexplored:blue_bioshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -864,8 +864,8 @@
     ]
   },
   "regions_unexplored:blue_magnolia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -972,8 +972,8 @@
     ]
   },
   "regions_unexplored:brimwood_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1026,8 +1026,8 @@
     ]
   },
   "regions_unexplored:brimwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1044,8 +1044,8 @@
     ]
   },
   "regions_unexplored:brimwood_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1296,8 +1296,8 @@
     ]
   },
   "regions_unexplored:cobalt_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1359,8 +1359,8 @@
     ]
   },
   "regions_unexplored:cobalt_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1368,8 +1368,8 @@
     ]
   },
   "regions_unexplored:cobalt_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1530,8 +1530,8 @@
     ]
   },
   "regions_unexplored:cypress_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,8 +1575,8 @@
     ]
   },
   "regions_unexplored:cypress_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1593,8 +1593,8 @@
     ]
   },
   "regions_unexplored:cypress_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1737,8 +1737,8 @@
     ]
   },
   "regions_unexplored:dead_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1773,8 +1773,8 @@
     ]
   },
   "regions_unexplored:dead_pine_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1809,8 +1809,8 @@
     ]
   },
   "regions_unexplored:dead_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1827,8 +1827,8 @@
     ]
   },
   "regions_unexplored:dead_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1980,8 +1980,8 @@
     ]
   },
   "regions_unexplored:enchanted_birch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2061,8 +2061,8 @@
     ]
   },
   "regions_unexplored:eucalyptus_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2106,8 +2106,8 @@
     ]
   },
   "regions_unexplored:eucalyptus_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2124,8 +2124,8 @@
     ]
   },
   "regions_unexplored:eucalyptus_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2205,8 +2205,8 @@
     ]
   },
   "regions_unexplored:flowering_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2349,8 +2349,8 @@
     ]
   },
   "regions_unexplored:golden_larch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2457,8 +2457,8 @@
     ]
   },
   "regions_unexplored:green_bioshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2493,8 +2493,8 @@
     ]
   },
   "regions_unexplored:green_bioshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2709,8 +2709,8 @@
     ]
   },
   "regions_unexplored:joshua_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2754,8 +2754,8 @@
     ]
   },
   "regions_unexplored:joshua_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2772,8 +2772,8 @@
     ]
   },
   "regions_unexplored:joshua_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2898,8 +2898,8 @@
     ]
   },
   "regions_unexplored:kapok_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2943,8 +2943,8 @@
     ]
   },
   "regions_unexplored:kapok_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2961,8 +2961,8 @@
     ]
   },
   "regions_unexplored:kapok_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3078,8 +3078,8 @@
     ]
   },
   "regions_unexplored:larch_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3123,8 +3123,8 @@
     ]
   },
   "regions_unexplored:larch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3141,8 +3141,8 @@
     ]
   },
   "regions_unexplored:larch_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3402,8 +3402,8 @@
     ]
   },
   "regions_unexplored:magnolia_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3447,8 +3447,8 @@
     ]
   },
   "regions_unexplored:magnolia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3465,8 +3465,8 @@
     ]
   },
   "regions_unexplored:magnolia_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3600,8 +3600,8 @@
     ]
   },
   "regions_unexplored:maple_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3654,8 +3654,8 @@
     ]
   },
   "regions_unexplored:maple_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3672,8 +3672,8 @@
     ]
   },
   "regions_unexplored:maple_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3780,8 +3780,8 @@
     ]
   },
   "regions_unexplored:mauve_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3825,8 +3825,8 @@
     ]
   },
   "regions_unexplored:mauve_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3843,8 +3843,8 @@
     ]
   },
   "regions_unexplored:mauve_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3996,8 +3996,8 @@
     ]
   },
   "regions_unexplored:orange_maple_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4122,8 +4122,8 @@
     ]
   },
   "regions_unexplored:palm_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4167,8 +4167,8 @@
     ]
   },
   "regions_unexplored:palm_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4185,8 +4185,8 @@
     ]
   },
   "regions_unexplored:palm_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4356,8 +4356,8 @@
     ]
   },
   "regions_unexplored:pine_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4401,8 +4401,8 @@
     ]
   },
   "regions_unexplored:pine_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4419,8 +4419,8 @@
     ]
   },
   "regions_unexplored:pine_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4518,8 +4518,8 @@
     ]
   },
   "regions_unexplored:pink_bioshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4554,8 +4554,8 @@
     ]
   },
   "regions_unexplored:pink_bioshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4626,8 +4626,8 @@
     ]
   },
   "regions_unexplored:pink_magnolia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4851,8 +4851,8 @@
     ]
   },
   "regions_unexplored:red_maple_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4986,8 +4986,8 @@
     ]
   },
   "regions_unexplored:redwood_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5031,8 +5031,8 @@
     ]
   },
   "regions_unexplored:redwood_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5049,8 +5049,8 @@
     ]
   },
   "regions_unexplored:redwood_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5238,8 +5238,8 @@
     ]
   },
   "regions_unexplored:silver_birch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5292,8 +5292,8 @@
     ]
   },
   "regions_unexplored:small_oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5364,8 +5364,8 @@
     ]
   },
   "regions_unexplored:socotra_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5409,8 +5409,8 @@
     ]
   },
   "regions_unexplored:socotra_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5427,8 +5427,8 @@
     ]
   },
   "regions_unexplored:socotra_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6075,8 +6075,8 @@
     ]
   },
   "regions_unexplored:white_magnolia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6201,8 +6201,8 @@
     ]
   },
   "regions_unexplored:willow_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6246,8 +6246,8 @@
     ]
   },
   "regions_unexplored:willow_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6264,8 +6264,8 @@
     ]
   },
   "regions_unexplored:willow_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6381,8 +6381,8 @@
     ]
   },
   "regions_unexplored:yellow_bioshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6417,8 +6417,8 @@
     ]
   },
   "regions_unexplored:yellow_bioshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

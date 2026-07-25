@@ -39,8 +39,10 @@ import java.util.stream.Collectors;
  * and gated by the {@code ss_command_allowlist} server config list:
  *
  * <ul>
- *   <li>{@code ss item <item> <mode> <scale> <x> <y> <z>} sets an entry in the issuing
- *       player's user override layer, applied immediately.</li>
+ *   <li>{@code ss item <item> <mode> [<scale> [<x> <y> [<z>]]]} sets an entry in the issuing
+ *       player's user override layer, applied immediately. Arguments the shorter forms leave
+ *       off take the defaults an override entry omitting them would take: scale 1 and zero
+ *       offset.</li>
  *   <li>{@code ss item <item> reset} removes that entry, restoring built-in or measured
  *       behavior.</li>
  *   <li>{@code ss test <modid|all>} generates Storage Stack walls of every item in the
@@ -93,11 +95,14 @@ public final class SsCommand {
                                                     }
                                                     return builder.buildFuture();
                                                 })
+                                                .executes(SsCommand::setMode)
                                                 .then(Commands.argument("scale", FloatArgumentType.floatArg())
+                                                        .executes(SsCommand::setModeAndScale)
                                                         .then(Commands.argument("x", FloatArgumentType.floatArg())
                                                                 .then(Commands.argument("y", FloatArgumentType.floatArg())
+                                                                        .executes(SsCommand::setModeScaleAndXy)
                                                                         .then(Commands.argument("z", FloatArgumentType.floatArg())
-                                                                                .executes(SsCommand::setItem))))))))
+                                                                                .executes(SsCommand::setModeScaleAndXyz))))))))
                         .then(testTree("test", TestWallGenerator.Kind.STORAGE))
                         .then(testTree("testingot", TestWallGenerator.Kind.BAR))
                         .then(Commands.literal("write")
@@ -240,7 +245,35 @@ public final class SsCommand {
         return SharedSuggestionProvider.suggest(itemIds, builder);
     }
 
-    private static int setItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    /**
+     * The four forms of {@code ss item <item> <mode> ...}, each supplying the arguments the
+     * shorter ones leave off. The defaults match what an override entry omitting those fields
+     * resolves to, so {@code ss item foo:bar gui} and a hand-written {@code {"mode": "gui"}}
+     * render the same way. Brigadier cannot report which optional nodes it parsed, so each form
+     * passes its own values down rather than probing the context.
+     */
+    private static int setMode(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return setItem(ctx, 1.0f, new float[3]);
+    }
+
+    private static int setModeAndScale(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[3]);
+    }
+
+    private static int setModeScaleAndXy(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
+                FloatArgumentType.getFloat(ctx, "x"), FloatArgumentType.getFloat(ctx, "y"), 0.0f});
+    }
+
+    private static int setModeScaleAndXyz(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
+                FloatArgumentType.getFloat(ctx, "x"),
+                FloatArgumentType.getFloat(ctx, "y"),
+                FloatArgumentType.getFloat(ctx, "z")});
+    }
+
+    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, float[] offset)
+            throws CommandSyntaxException {
         if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -257,22 +290,18 @@ public final class SsCommand {
             return 0;
         }
 
-        float scale = FloatArgumentType.getFloat(ctx, "scale");
         if (scale <= 0) {
             ctx.getSource().sendFailure(Component.literal("Scale must be positive"));
             return 0;
         }
 
-        float x = FloatArgumentType.getFloat(ctx, "x");
-        float y = FloatArgumentType.getFloat(ctx, "y");
-        float z = FloatArgumentType.getFloat(ctx, "z");
-
-        RenderOverridePkt packet = RenderOverridePkt.set(itemId, modeString, scale, new float[]{x, y, z});
+        RenderOverridePkt packet = RenderOverridePkt.set(itemId, modeString, scale, offset);
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
 
         ctx.getSource().sendSuccess(() -> Component.literal(
                 "Set render override for " + itemId + ": mode=" + modeString
-                        + ", scale=" + scale + ", offset=[" + x + "," + y + "," + z + "]"), false);
+                        + ", scale=" + scale + ", offset=["
+                        + offset[0] + "," + offset[1] + "," + offset[2] + "]"), false);
         return 1;
     }
 

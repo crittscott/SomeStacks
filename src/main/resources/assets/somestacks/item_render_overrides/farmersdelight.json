@@ -135,8 +135,8 @@
     ]
   },
   "farmersdelight:black_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -144,8 +144,8 @@
     ]
   },
   "farmersdelight:black_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -153,8 +153,8 @@
     ]
   },
   "farmersdelight:blue_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -162,8 +162,8 @@
     ]
   },
   "farmersdelight:blue_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -180,8 +180,8 @@
     ]
   },
   "farmersdelight:brown_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -189,8 +189,8 @@
     ]
   },
   "farmersdelight:brown_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -279,8 +279,8 @@
     ]
   },
   "farmersdelight:canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -450,8 +450,8 @@
     ]
   },
   "farmersdelight:cyan_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -459,8 +459,8 @@
     ]
   },
   "farmersdelight:cyan_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -585,8 +585,8 @@
     ]
   },
   "farmersdelight:gray_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -594,8 +594,8 @@
     ]
   },
   "farmersdelight:gray_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -603,8 +603,8 @@
     ]
   },
   "farmersdelight:green_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -612,8 +612,8 @@
     ]
   },
   "farmersdelight:green_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -657,8 +657,8 @@
     ]
   },
   "farmersdelight:hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -747,8 +747,8 @@
     ]
   },
   "farmersdelight:light_blue_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -756,8 +756,8 @@
     ]
   },
   "farmersdelight:light_blue_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -765,8 +765,8 @@
     ]
   },
   "farmersdelight:light_gray_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -774,8 +774,8 @@
     ]
   },
   "farmersdelight:light_gray_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -783,8 +783,8 @@
     ]
   },
   "farmersdelight:lime_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -792,8 +792,8 @@
     ]
   },
   "farmersdelight:lime_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -801,8 +801,8 @@
     ]
   },
   "farmersdelight:magenta_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -810,8 +810,8 @@
     ]
   },
   "farmersdelight:magenta_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -954,8 +954,8 @@
     ]
   },
   "farmersdelight:orange_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -963,8 +963,8 @@
     ]
   },
   "farmersdelight:orange_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1008,8 +1008,8 @@
     ]
   },
   "farmersdelight:pink_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1017,8 +1017,8 @@
     ]
   },
   "farmersdelight:pink_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1053,8 +1053,8 @@
     ]
   },
   "farmersdelight:purple_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1062,8 +1062,8 @@
     ]
   },
   "farmersdelight:purple_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1089,8 +1089,8 @@
     ]
   },
   "farmersdelight:red_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1098,8 +1098,8 @@
     ]
   },
   "farmersdelight:red_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1494,8 +1494,8 @@
     ]
   },
   "farmersdelight:white_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1503,8 +1503,8 @@
     ]
   },
   "farmersdelight:white_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,8 +1575,8 @@
     ]
   },
   "farmersdelight:yellow_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1584,8 +1584,8 @@
     ]
   },
   "farmersdelight:yellow_hanging_canvas_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

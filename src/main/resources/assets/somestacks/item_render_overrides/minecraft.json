@@ -27,8 +27,8 @@
     ]
   },
   "minecraft:acacia_door": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -54,8 +54,8 @@
     ]
   },
   "minecraft:acacia_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -99,8 +99,8 @@
     ]
   },
   "minecraft:acacia_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -108,8 +108,8 @@
     ]
   },
   "minecraft:acacia_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -432,8 +432,8 @@
     ]
   },
   "minecraft:bamboo_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -495,8 +495,8 @@
     ]
   },
   "minecraft:bamboo_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -720,8 +720,8 @@
     ]
   },
   "minecraft:birch_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -765,8 +765,8 @@
     ]
   },
   "minecraft:birch_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -774,8 +774,8 @@
     ]
   },
   "minecraft:birch_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -828,16 +828,16 @@
     ]
   },
   "minecraft:black_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:black_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1026,16 +1026,16 @@
     ]
   },
   "minecraft:blue_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:blue_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1260,8 +1260,8 @@
     ]
   },
   "minecraft:brewing_stand": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1323,16 +1323,16 @@
     ]
   },
   "minecraft:brown_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:brown_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1386,8 +1386,8 @@
     ]
   },
   "minecraft:brown_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,7 +1575,7 @@
     ]
   },
   "minecraft:candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1647,8 +1647,8 @@
     ]
   },
   "minecraft:chain": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1764,8 +1764,8 @@
     ]
   },
   "minecraft:cherry_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1809,8 +1809,8 @@
     ]
   },
   "minecraft:cherry_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1818,8 +1818,8 @@
     ]
   },
   "minecraft:cherry_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1998,8 +1998,8 @@
     ]
   },
   "minecraft:chorus_plant": {
-    "mode": "3d",
-    "scale": 1.8,
+    "mode": "block",
+    "scale": 0.655,
     "offset": [
       0.0,
       0.0,
@@ -2484,8 +2484,8 @@
     ]
   },
   "minecraft:crimson_fungus": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2493,8 +2493,8 @@
     ]
   },
   "minecraft:crimson_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2547,8 +2547,8 @@
     ]
   },
   "minecraft:crimson_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2682,16 +2682,16 @@
     ]
   },
   "minecraft:cyan_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:cyan_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -2871,8 +2871,8 @@
     ]
   },
   "minecraft:dark_oak_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2916,8 +2916,8 @@
     ]
   },
   "minecraft:dark_oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2925,8 +2925,8 @@
     ]
   },
   "minecraft:dark_oak_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4500,16 +4500,16 @@
     ]
   },
   "minecraft:gray_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:gray_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -4617,16 +4617,16 @@
     ]
   },
   "minecraft:green_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:green_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -5265,8 +5265,8 @@
     ]
   },
   "minecraft:jungle_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5310,8 +5310,8 @@
     ]
   },
   "minecraft:jungle_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5319,8 +5319,8 @@
     ]
   },
   "minecraft:jungle_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5553,16 +5553,16 @@
     ]
   },
   "minecraft:light_blue_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:light_blue_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -5670,16 +5670,16 @@
     ]
   },
   "minecraft:light_gray_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:light_gray_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -5832,16 +5832,16 @@
     ]
   },
   "minecraft:lime_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:lime_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -5985,16 +5985,16 @@
     ]
   },
   "minecraft:magenta_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:magenta_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -6174,8 +6174,8 @@
     ]
   },
   "minecraft:mangrove_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6219,8 +6219,8 @@
     ]
   },
   "minecraft:mangrove_propagule": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6237,8 +6237,8 @@
     ]
   },
   "minecraft:mangrove_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7029,8 +7029,8 @@
     ]
   },
   "minecraft:oak_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7074,8 +7074,8 @@
     ]
   },
   "minecraft:oak_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7083,8 +7083,8 @@
     ]
   },
   "minecraft:oak_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7173,16 +7173,16 @@
     ]
   },
   "minecraft:orange_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:orange_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -7497,16 +7497,16 @@
     ]
   },
   "minecraft:pink_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:pink_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -8136,16 +8136,16 @@
     ]
   },
   "minecraft:purple_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:purple_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -8478,16 +8478,16 @@
     ]
   },
   "minecraft:red_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:red_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -8541,8 +8541,8 @@
     ]
   },
   "minecraft:red_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -8730,8 +8730,8 @@
     ]
   },
   "minecraft:redstone_torch": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -8964,8 +8964,8 @@
     ]
   },
   "minecraft:sea_pickle": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -9396,8 +9396,8 @@
     ]
   },
   "minecraft:soul_lantern": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -9423,8 +9423,8 @@
     ]
   },
   "minecraft:soul_torch": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -9558,8 +9558,8 @@
     ]
   },
   "minecraft:spruce_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -9603,8 +9603,8 @@
     ]
   },
   "minecraft:spruce_sapling": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -9612,8 +9612,8 @@
     ]
   },
   "minecraft:spruce_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -10215,8 +10215,8 @@
     ]
   },
   "minecraft:torch": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -10521,8 +10521,8 @@
     ]
   },
   "minecraft:warped_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -10575,8 +10575,8 @@
     ]
   },
   "minecraft:warped_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -10872,16 +10872,16 @@
     ]
   },
   "minecraft:white_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:white_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -11124,16 +11124,16 @@
     ]
   },
   "minecraft:yellow_bed": {
-    "mode": "3d",
-    "scale": 0.45,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
       0.0,
-      0.0,
-      0.007
+      -0.33,
+      0.0
     ]
   },
   "minecraft:yellow_candle": {
-    "mode": "2d",
+    "mode": "block",
     "scale": 1.0,
     "offset": [
       0.0,
