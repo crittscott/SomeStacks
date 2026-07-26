@@ -24,6 +24,24 @@ import java.util.TreeMap;
 public final class OverrideJsonCodec {
     private OverrideJsonCodec() {}
 
+    /**
+     * The range a scale may take, matching the range measurement fits a model into, so a measured
+     * profile and an authored one are bounded the same way. The bounds exist because the schema had
+     * none: an unbounded field admits a value no transform can use, and the parse is the one place
+     * every source of an override passes through.
+     */
+    public static final float MIN_SCALE = 0.01f;
+    public static final float MAX_SCALE = 20.0f;
+
+    /** The range an offset component may take, in cell widths. One cell either way is the limit. */
+    public static final float MIN_OFFSET = -1.0f;
+    public static final float MAX_OFFSET = 1.0f;
+
+    /** Whether a field is a usable number: finite, and inside its rail. */
+    public static boolean inRange(float value, float min, float max) {
+        return Float.isFinite(value) && value >= min && value <= max;
+    }
+
     public static Map<ResourceLocation, ItemRenderConfig> parse(JsonObject root, String sourceName) {
         Map<ResourceLocation, ItemRenderConfig> map = new TreeMap<>();
 
@@ -67,10 +85,11 @@ public final class OverrideJsonCodec {
         if (json.has("scale")) {
             try {
                 scale = json.get("scale").getAsFloat();
-                // NaN compares false against every bound, so test for finiteness rather than
-                // letting it through to poison the render transform silently.
-                if (!Float.isFinite(scale) || scale <= 0) {
-                    SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be finite and positive", scale, itemKey);
+                // NaN compares false against every bound, so inRange tests for finiteness rather
+                // than letting it through to poison the render transform silently.
+                if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
+                    SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be between {} and {}",
+                            scale, itemKey, MIN_SCALE, MAX_SCALE);
                     scale = null;
                 }
             } catch (Exception e) {
@@ -89,10 +108,13 @@ public final class OverrideJsonCodec {
                             offsetArray.get(1).getAsFloat(),
                             offsetArray.get(2).getAsFloat()
                     };
-                    if (Float.isFinite(parsed[0]) && Float.isFinite(parsed[1]) && Float.isFinite(parsed[2])) {
+                    if (inRange(parsed[0], MIN_OFFSET, MAX_OFFSET)
+                            && inRange(parsed[1], MIN_OFFSET, MAX_OFFSET)
+                            && inRange(parsed[2], MIN_OFFSET, MAX_OFFSET)) {
                         offset = parsed;
                     } else {
-                        SomeStacks.LOGGER.warn("Non-finite offset for item '{}', ignoring it", itemKey);
+                        SomeStacks.LOGGER.warn("Out of range offset for item '{}', each component must be between {} and {}; ignoring it",
+                                itemKey, MIN_OFFSET, MAX_OFFSET);
                     }
                 }
             } catch (Exception e) {

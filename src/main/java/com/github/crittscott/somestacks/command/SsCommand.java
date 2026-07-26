@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
+import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -52,14 +53,6 @@ import java.util.stream.Collectors;
  *       offset.</li>
  *   <li>{@code ss item <item> reset} removes that entry, restoring built-in or measured
  *       behavior.</li>
- *   <li>{@code ss test <modid|all|list>} generates Storage Stack walls of every item in the
- *       given namespace, in all loaded namespaces, or in the namespaces named by the
- *       {@code gen_mods} server config list. The wall is built over the following ticks and
- *       reports again when it finishes.</li>
- *   <li>{@code ss test items} builds one row from the items named by the {@code gen_items} server
- *       config list, sorted by mod id and then item name.</li>
- *   <li>{@code ss testingot <modid|all|list>} does the same with Bar Stacks, over the ingots of
- *       those namespaces, one bar per ingot.</li>
  *   <li>{@code ss write changed} asks the issuing player's client to write its user override
  *       layer to its override file.</li>
  *   <li>{@code ss write <modid|all|list>} asks that client to dump a complete profile for every
@@ -68,9 +61,18 @@ import java.util.stream.Collectors;
  * </ul>
  *
  * <p>The administrative subcommands act on the server rather than on a view, so they are gated
- * by operator permission level and need no player, leaving them usable from the console:
+ * by operator permission level. Most need no player and are usable from the console; the two wall
+ * generators need one, because a wall is built where the sender stands:
  *
  * <ul>
+ *   <li>{@code ss test <modid|all|list>} generates Storage Stack walls of every item in the
+ *       given namespace, in all loaded namespaces, or in the namespaces named by the
+ *       {@code gen_mods} server config list. The wall is built over the following ticks and
+ *       reports again when it finishes.</li>
+ *   <li>{@code ss test items} builds one row from the items named by the {@code gen_items} server
+ *       config list, sorted by mod id and then item name.</li>
+ *   <li>{@code ss testingot <modid|all|list>} does the same with Bar Stacks, over the ingots of
+ *       those namespaces, one bar per ingot.</li>
  *   <li>{@code ss allow add|remove|list} edits the {@code ss_command_allowlist}.</li>
  *   <li>{@code ss gen mod add|remove|list} edits the {@code gen_mods} list the {@code list} form
  *       of the two test-wall commands builds from.</li>
@@ -124,12 +126,12 @@ public final class SsCommand {
                                                     return builder.buildFuture();
                                                 })
                                                 .executes(SsCommand::setMode)
-                                                .then(Commands.argument("scale", FloatArgumentType.floatArg())
+                                                .then(Commands.argument("scale", scaleArg())
                                                         .executes(SsCommand::setModeAndScale)
-                                                        .then(Commands.argument("x", FloatArgumentType.floatArg())
-                                                                .then(Commands.argument("y", FloatArgumentType.floatArg())
+                                                        .then(Commands.argument("x", offsetArg())
+                                                                .then(Commands.argument("y", offsetArg())
                                                                         .executes(SsCommand::setModeScaleAndXy)
-                                                                        .then(Commands.argument("z", FloatArgumentType.floatArg())
+                                                                        .then(Commands.argument("z", offsetArg())
                                                                                 .executes(SsCommand::setModeScaleAndXyz))))))))
                         .then(testTree("test", TestWallGenerator.Kind.STORAGE)
                                 .then(Commands.literal("items")
@@ -148,15 +150,35 @@ public final class SsCommand {
     }
 
     /**
+     * The rails on the two numeric arguments of {@code ss item}, taken from the override schema so
+     * the command and a hand-written entry accept the same values. Declaring them on the argument
+     * rather than testing after the fact is what makes an out-of-range value a parse error the
+     * player sees against the offending word, and it is also what keeps a run of digits long enough
+     * to overflow a float to infinity from reaching the render transform.
+     */
+    private static FloatArgumentType scaleArg() {
+        return FloatArgumentType.floatArg(OverrideJsonCodec.MIN_SCALE, OverrideJsonCodec.MAX_SCALE);
+    }
+
+    private static FloatArgumentType offsetArg() {
+        return FloatArgumentType.floatArg(OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET);
+    }
+
+    /**
      * The {@code <modid>|all|list} subtree one wall kind is generated from. The two kinds differ
      * only in which items they can show, which is what the kind itself answers. The Storage tree
      * carries an {@code items} form on top of this, which the ingot tree has no use for: the
      * ingots of a pack are few enough to review a namespace at a time.
+     *
+     * <p>Operator-gated rather than allow-listed, and player-only because the wall is built where
+     * the sender stands. A wall is not a view: it overwrites a large region of the world outright,
+     * without the protection consults a placement gesture answers to. That is an operator's
+     * authority, not the authority to tune how items are drawn for oneself.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> testTree(
             String name, TestWallGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(SsCommand::isPlayer)
+                .requires(source -> isPlayer(source) && isAdmin(source))
                 .then(Commands.literal("all")
                         .executes(ctx -> testAll(ctx, kind)))
                 .then(Commands.literal("list")
@@ -434,11 +456,6 @@ public final class SsCommand {
             return 0;
         }
 
-        if (scale <= 0) {
-            ctx.getSource().sendFailure(Component.literal("Scale must be positive"));
-            return 0;
-        }
-
         RenderOverridePkt packet = RenderOverridePkt.set(itemId, modeString, scale, offset);
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
 
@@ -626,7 +643,6 @@ public final class SsCommand {
 
     private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
             throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectSingle(ctx, kind, StringArgumentType.getString(ctx, "modid"));
@@ -635,7 +651,6 @@ public final class SsCommand {
 
     private static int testAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
             throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectAll(ctx, kind);
@@ -644,7 +659,6 @@ public final class SsCommand {
 
     private static int testList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
             throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectList(ctx, kind);
@@ -656,7 +670,6 @@ public final class SsCommand {
      * list longer than a stack holds runs on north exactly as a namespace with many items does.
      */
     private static int testItems(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ItemSelection selection = selectItems(ctx);

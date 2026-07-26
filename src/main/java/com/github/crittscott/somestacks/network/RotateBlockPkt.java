@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,6 +35,10 @@ public class RotateBlockPkt {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
+
+            if (Protection.isProtected(sp, msg.pos)) return;
+
+            if (!Protection.mayInteract(sp, msg.pos)) return;
 
             if (!PacketBoundary.holdsInMainHand(sp, Items.REDSTONE_TORCH)) return;
 

@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
+import com.github.crittscott.somestacks.server.Protection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,10 @@ public class TogglePermanentPkt {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
+
+            if (Protection.isProtected(sp, msg.pos)) return;
+
+            if (!Protection.mayInteract(sp, msg.pos)) return;
 
             if (!PacketBoundary.mainHandEmpty(sp)) return;
 

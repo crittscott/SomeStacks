@@ -66,13 +66,20 @@ public class SomeStacks {
             return;
         }
 
-        ServerConfig.bakeServerLists();
-
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server != null) {
-            // Config events fire on the file-watcher thread; touch the player list on the server thread.
-            server.execute(() -> syncAllPlayers(server));
+        if (server == null) {
+            // No level, so no item tags to walk and no players to tell.
+            ServerConfig.bakeServerLists();
+            return;
         }
+
+        // Config events fire on the file-watcher thread. Baking reads the item tags, which are data
+        // pack state the server thread rewrites on reload, so the whole bake goes there along with
+        // the player list it feeds.
+        server.execute(() -> {
+            ServerConfig.bakeServerLists();
+            syncAllPlayers(server);
+        });
     }
 
     private void sendConfigSync(ServerPlayer player) {

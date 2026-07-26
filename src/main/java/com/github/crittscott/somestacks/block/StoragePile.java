@@ -235,9 +235,11 @@ public final class StoragePile {
 
     /**
      * Read-only twin of {@link #deposit}: how many of {@code fromHand} the pile would take. Exact
-     * for the space that exists; growth is credited at a full block per remaining level once the
-     * first one is known to be placeable, since the block-place event the real growth fires cannot
-     * be consulted without firing it.
+     * for the space that exists; growth is credited for the one block above the pile that has been
+     * weighed against the world, and no further, because only that position is known to be free.
+     * A deposit that grows further will take more than this promised, which is the safe direction
+     * to be wrong in: a caller that acts on the answer and then inserts is left holding a smaller
+     * remainder, never a larger one.
      */
     public int simulateDeposit(ItemStack fromHand) {
         if (fromHand.isEmpty() || !StorageStackBE.isValidStorageItem(fromHand)) {
@@ -256,7 +258,7 @@ public final class StoragePile {
         }
 
         if (room < wanted && canGrow()) {
-            room += StorageStackBE.SLOTS * (maxHeight() - blocks.size()) * fromHand.getMaxStackSize();
+            room += StorageStackBE.SLOTS * fromHand.getMaxStackSize();
         }
 
         return Math.min(wanted, room);

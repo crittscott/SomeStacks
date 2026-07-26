@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public final class ServerConfig {
@@ -42,7 +43,7 @@ public final class ServerConfig {
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
     private static volatile Set<String> ssAllowlist = Set.of();
     private static volatile Set<Item> ingotItems = Set.of();
-    private static volatile int ingotGeneration;
+    private static final AtomicInteger ingotGeneration = new AtomicInteger();
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -160,10 +161,11 @@ public final class ServerConfig {
      * Mod ids and player names are lowercased and item ids are parsed once here; a malformed item id
      * is reported and dropped rather than being re-parsed and swallowed on every deposit.
      *
-     * <p>Called from the config load and reload events, which fire on Forge's file-watcher thread,
-     * and from the {@code ss} list-editing commands, which run on the server thread. Each list is
-     * published as an immutable set through a volatile field, so a lookup sees either the old
-     * lists or the new ones.
+     * <p>Runs on the server thread whenever there is one: the {@code ss} list-editing commands are
+     * already there, and the config reload event hands this off to it, because resolving the ingot
+     * tags reads data pack state that only that thread may be walking. Config load runs before any
+     * server exists, where there is nothing to race. Each list is published as an immutable set
+     * through a volatile field, so a lookup sees either the old lists or the new ones.
      */
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
@@ -242,7 +244,7 @@ public final class ServerConfig {
         }
 
         ingotItems = Set.copyOf(items);
-        ingotGeneration++;
+        ingotGeneration.incrementAndGet();
 
         if (knownTags == 0) {
             // Before a level is loaded there are no tags to walk; the tag event re-bakes this.
@@ -385,9 +387,11 @@ public final class ServerConfig {
     /**
      * How many times the ingot item set has been resolved. A caller that groups or filters by
      * ingot-ness holds this alongside its own cache and rebuilds when it changes, which covers a
-     * data pack reload and a config edit alike.
+     * data pack reload and a config edit alike. Counted atomically because a config edit and a tag
+     * update can resolve the set from different threads, and a repeated number would leave such a
+     * cache stale for good.
      */
     public static int ingotGeneration() {
-        return ingotGeneration;
+        return ingotGeneration.get();
     }
 }

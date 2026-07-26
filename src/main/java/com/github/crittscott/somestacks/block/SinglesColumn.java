@@ -181,9 +181,11 @@ public final class SinglesColumn {
      * can never support one below it, and a cell already passed over as unsupported stays
      * unsupported — one pass over the column therefore places any number of items.
      *
-     * <p>Only the first growth can be weighed against the world; further ones are assumed to
-     * succeed, since the block-place event a real growth fires cannot be consulted without firing
-     * it.
+     * <p>Only the position directly above the column can be weighed against the world, so the plan
+     * grows once and stops. The block-place event a real growth fires cannot be consulted without
+     * firing it, and a plan that assumed further growths would promise a capability caller more
+     * than the insertion could deliver. One block holds a whole stack, so a single insertion never
+     * needs a second.
      */
     private int[] planPlacements(int wanted) {
         int height = blocks.size();
@@ -213,6 +215,8 @@ public final class SinglesColumn {
                 // A grown block is placed unrotated, as a player's own placement is.
                 rotations[virtualHeight] = 0;
                 virtualHeight++;
+                // Only the one position tested above the column is known to be free.
+                mayGrow = false;
                 target = findSupportedEmpty(occupancy, rotations, virtualHeight, cursor);
                 if (target < 0) {
                     // Nothing in the new block is supported: the top layer beneath it is empty.

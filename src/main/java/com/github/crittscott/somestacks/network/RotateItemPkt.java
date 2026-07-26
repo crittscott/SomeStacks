@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,6 +38,10 @@ public class RotateItemPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
+            if (Protection.isProtected(sp, msg.pos)) return;
+
+            if (!Protection.mayInteract(sp, msg.pos)) return;
+
             if (!PacketBoundary.holdsInMainHand(sp, Items.SOUL_TORCH)) return;
 
             Level level = sp.level();
@@ -52,6 +57,10 @@ public class RotateItemPkt {
             RightClickBlockSuppressor.suppress(sp, msg.pos, level);
 
             if (msg.slotIndex < 0 || msg.slotIndex >= 64) return;
+
+            // An empty cell carries no orientation, so there is nothing to turn: rotating one
+            // would leave a facing behind for whatever is deposited into it next.
+            if (ssbe.getItems().getStackInSlot(msg.slotIndex).isEmpty()) return;
 
             int newCubeRot = (ssbe.getCubeRotation(msg.slotIndex) + 1) % 4;
             ssbe.setCubeRotation(msg.slotIndex, newCubeRot);

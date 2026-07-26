@@ -30,6 +30,7 @@ final class SsHelp {
     private enum Gate {
         ALLOW_LIST("a player whose name is on the ss allow list"),
         OPERATOR("an operator, in game or from the server console"),
+        OPERATOR_IN_GAME("an operator, in game only"),
         ANYONE("anyone");
 
         private final String audience;
@@ -57,11 +58,14 @@ final class SsHelp {
                         "reset drops your entry, so the item goes back to the server, built-in or"
                                 + " measured setting it had before.")),
 
-        TEST("test", "Build walls of Storage Stacks to review item rendering", Gate.ALLOW_LIST,
+        TEST("test", "Build walls of Storage Stacks to review item rendering", Gate.OPERATOR_IN_GAME,
                 List.of("/ss test <modid>", "/ss test all", "/ss test list", "/ss test items"),
                 List.of("Builds east of you over a sandstone floor, nine items to a stack, rows running"
                                 + " north. Whatever blocks stand in the floor and stack positions are"
                                 + " replaced.",
+                        "It overwrites that region outright, without the protection checks a placement"
+                                + " gesture answers to, which is why it needs operator permission rather"
+                                + " than the ss allow list.",
                         "<modid> is one namespace and all is every loaded one, which in a large pack is"
                                 + " thousands of rendered block entities. list builds the namespaces of"
                                 + " the gen mod list.",
@@ -70,7 +74,7 @@ final class SsHelp {
                         "all, list and items skip an entry they cannot show and report it; naming one"
                                 + " namespace that cannot be shown fails instead.")),
 
-        TESTINGOT("testingot", "Build walls of Bar Stacks to review bar textures and tints", Gate.ALLOW_LIST,
+        TESTINGOT("testingot", "Build walls of Bar Stacks to review bar textures and tints", Gate.OPERATOR_IN_GAME,
                 List.of("/ss testingot <modid>", "/ss testingot all", "/ss testingot list"),
                 List.of("The same generator over Bar Stacks, covering only the items a Bar Stack accepts,"
                                 + " one bar per ingot and eight to a block.",
@@ -99,9 +103,11 @@ final class SsHelp {
 
         ALLOW("allow", "Edit which players may use the render subcommands", Gate.OPERATOR,
                 List.of("/ss allow add <name>", "/ss allow remove <name>", "/ss allow list"),
-                List.of("ss item, ss test, ss testingot and ss write are limited to the players on this"
-                                + " list. It is empty by default, so no one may use them until a name is"
-                                + " added, including the single player of a single-player world.",
+                List.of("ss item and ss write are limited to the players on this list. It is empty by"
+                                + " default, so no one may use them until a name is added, including the"
+                                + " single player of a single-player world.",
+                        "The test wall commands are not on it: they edit the world rather than a view,"
+                                + " so they answer to operator permission instead.",
                         "add completes over the players online now, since a name usually reaches the list"
                                 + " before its owner has needed it; remove completes over the list.")),
 
