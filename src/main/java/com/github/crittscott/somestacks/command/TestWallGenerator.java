@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.ModTags;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -55,7 +53,8 @@ public final class TestWallGenerator {
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts
-         * qualify, which is the {@code #somestacks:ingots} tag.
+         * qualify, tested by the block entity itself so that a wall shows what a player could
+         * actually deposit rather than a second opinion about it.
          */
         BAR("BarStacks", "ingots", BarCubeIdx.LAYER_SIZE);
 
@@ -113,10 +112,13 @@ public final class TestWallGenerator {
 
     /**
      * The ingot subset of {@link #itemsByNamespace}, holding only namespaces that have one.
-     * Membership comes from a data pack rather than the registry, so unlike the registry
-     * grouping this one is rebuilt whenever tags are.
+     * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
+     * registry grouping this one is rebuilt whenever that answer can have changed.
      */
     private static Map<String, List<Item>> barItemsByNamespace;
+
+    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
+    private static int barItemsGeneration;
 
     /** Queued walls. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
@@ -133,24 +135,21 @@ public final class TestWallGenerator {
     }
 
     private static Map<String, List<Item>> barItemsByNamespace() {
-        if (barItemsByNamespace == null) {
+        int generation = ServerConfig.ingotGeneration();
+        if (barItemsByNamespace == null || barItemsGeneration != generation) {
             Map<String, List<Item>> map = new TreeMap<>();
             itemsByNamespace().forEach((namespace, items) -> {
                 List<Item> ingots = items.stream()
-                        .filter(item -> new ItemStack(item).is(ModTags.FORGE_INGOTS))
+                        .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item)))
                         .toList();
                 if (!ingots.isEmpty()) {
                     map.put(namespace, ingots);
                 }
             });
             barItemsByNamespace = map;
+            barItemsGeneration = generation;
         }
         return barItemsByNamespace;
-    }
-
-    /** Which items are ingots is data pack state, so a tag rebuild drops that grouping. */
-    public static void onTagsUpdated(TagsUpdatedEvent event) {
-        barItemsByNamespace = null;
     }
 
     public static List<String> getModIdsWithItems() {

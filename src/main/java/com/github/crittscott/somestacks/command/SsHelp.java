@@ -126,6 +126,21 @@ final class SsHelp {
                                 + " list is matched by exact id and a typo would sit in it looking"
                                 + " effective.")),
 
+        INGOT("ingot", "Edit which item tags a Bar Stack accepts", Gate.OPERATOR,
+                List.of("/ss ingot add <tag>", "/ss ingot remove <tag>", "/ss ingot list"),
+                List.of("A Bar Stack holds the items in these tags, and a Singles Stack holds"
+                                + " everything else, so widening this list narrows Singles by as much."
+                                + " Contents already stored can still be taken out either way.",
+                        "An entry may contain * to match a run of any characters. The default"
+                                + " forge:ingots* covers forge:ingots and every forge:ingots/<metal>"
+                                + " beneath it, which reaches a mod that tags its ingots only under the"
+                                + " child tag.",
+                        "To accept a hand-picked set of items, make an item tag holding them in a data"
+                                + " pack and add it here.",
+                        "An entry is taken as typed, since it may name a tag no data pack has declared"
+                                + " yet. An edit reports how many items are accepted afterwards, and an"
+                                + " entry matching no tag at all is logged when the list is read.")),
+
         HELP("help", "List these commands, or explain one", Gate.ANYONE,
                 List.of("/ss help", "/ss help <command>"),
                 List.of("Every ss subcommand has an entry, and each one names the gate it answers to:"

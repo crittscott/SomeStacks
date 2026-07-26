@@ -43,7 +43,7 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(TestWallGenerator::onServerTick);
-        MinecraftForge.EVENT_BUS.addListener(TestWallGenerator::onTagsUpdated);
+        MinecraftForge.EVENT_BUS.addListener(ServerConfig::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }
 

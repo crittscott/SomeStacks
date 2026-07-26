@@ -78,6 +78,8 @@ import java.util.stream.Collectors;
  *       {@code ss test items} builds from.</li>
  *   <li>{@code ss deny mod add|remove|list} edits the disabled-mod list.</li>
  *   <li>{@code ss deny item add|remove|list} edits the disabled-item list.</li>
+ *   <li>{@code ss ingot add|remove|list} edits the item tags a Bar Stack takes its contents
+ *       from.</li>
  *   <li>{@code ss reload} re-reads the server override directory and pushes the current
  *       server config to every player.</li>
  * </ul>
@@ -98,6 +100,7 @@ public final class SsCommand {
     private static final String DISABLED_ITEMS_LABEL = "disabled item list";
     private static final String GEN_MODS_LABEL = "gen mod list";
     private static final String GEN_ITEMS_LABEL = "gen item list";
+    private static final String INGOT_TAGS_LABEL = "ingot tag list";
 
     /** A dump covers every item, which is the namespace and item set the Storage kind holds. */
     private static final TestWallGenerator.Kind DUMP_KIND = TestWallGenerator.Kind.STORAGE;
@@ -139,6 +142,7 @@ public final class SsCommand {
                         .then(allowTree())
                         .then(genTree())
                         .then(denyTree())
+                        .then(ingotTree())
                         .then(SsHelp.tree())
         );
     }
@@ -287,6 +291,48 @@ public final class SsCommand {
                                                 ResourceLocationArgument.getId(ctx, "item").toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
+    }
+
+    /**
+     * The {@code ss ingot} subtree, editing the tags a Bar Stack takes its contents from. An entry
+     * may carry {@code *} wildcards, so it is read as a greedy string rather than as a resource
+     * location: neither a wildcard nor an unquoted colon survives the word parser.
+     *
+     * <p>An entry is taken as typed, as a denied mod id is, because it may legitimately name a tag
+     * no loaded data pack declares or match one by wildcard. A typo is caught where it shows: the
+     * bake warns about an entry matching no tag, and an edit reports how many items the list now
+     * accepts, so an entry that did nothing says so.
+     */
+    private static LiteralArgumentBuilder<CommandSourceStack> ingotTree() {
+        return Commands.literal("ingot")
+                .requires(SsCommand::isAdmin)
+                .then(Commands.literal("add")
+                        .then(Commands.argument("tag", StringArgumentType.greedyString())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        ServerConfig.itemTagNames(), builder))
+                                .executes(ctx -> reportIngotEdit(ctx, addEntry(ctx, ServerConfig.INGOT_TAGS,
+                                        INGOT_TAGS_LABEL,
+                                        StringArgumentType.getString(ctx, "tag").trim())))))
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("tag", StringArgumentType.greedyString())
+                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.INGOT_TAGS, builder))
+                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.INGOT_TAGS,
+                                        INGOT_TAGS_LABEL,
+                                        StringArgumentType.getString(ctx, "tag").trim())))))
+                .then(Commands.literal("list")
+                        .executes(ctx -> listEntries(ctx, ServerConfig.INGOT_TAGS, INGOT_TAGS_LABEL, true)));
+    }
+
+    /**
+     * Follows an ingot list edit with what it did to the accepted set, which is the answer the
+     * editor is after: the list names tags, and what a Bar Stack holds is the items in them.
+     */
+    private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
+        if (result != 0) {
+            ctx.getSource().sendSuccess(() -> Component.literal(
+                    "Bar Stacks now accept " + ServerConfig.ingotItemCount() + " item(s)"), false);
+        }
+        return result;
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
@@ -441,18 +487,23 @@ public final class SsCommand {
     /**
      * The one namespace named, or null when it cannot be used. Naming a single namespace fails
      * rather than skipping, because the command names one thing and it did not happen.
+     *
+     * <p>Being disabled is reported ahead of having nothing to show, as it is in the bulk forms: a
+     * kind answers what it can show by asking the stack itself, which refuses a disabled mod's
+     * items outright, so a disabled namespace looks empty and the emptiness would be reported as
+     * the typo it is not.
      */
     @Nullable
     private static Selection selectSingle(CommandContext<CommandSourceStack> ctx,
                                           TestWallGenerator.Kind kind, String modId) {
-        if (kind.itemsIn(modId).isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal(
-                    modId + " is not loaded or has no " + kind.itemLabel()));
+        if (ServerConfig.isModDisabled(modId)) {
+            ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
             return null;
         }
 
-        if (ServerConfig.isModDisabled(modId)) {
-            ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
+        if (kind.itemsIn(modId).isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(
+                    modId + " is not loaded or has no " + kind.itemLabel()));
             return null;
         }
 

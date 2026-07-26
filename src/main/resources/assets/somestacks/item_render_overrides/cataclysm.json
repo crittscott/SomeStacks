@@ -153,8 +153,8 @@
     ]
   },
   "cataclysm:astrape": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -621,8 +621,8 @@
     ]
   },
   "cataclysm:ceraunus": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -783,8 +783,8 @@
     ]
   },
   "cataclysm:coral_bardiche": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

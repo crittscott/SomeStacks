@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.ModTags;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
@@ -79,6 +79,12 @@ public class BarStackBE extends BlockEntity {
         super(ModRegistry.BAR_STACK_BE.get(), pos, state);
     }
 
+    /**
+     * Whether a Bar Stack accepts this item, the single decision point every deposit, column
+     * insertion and capability path consults. Ingot-ness is the server's {@code ingot_tags} list
+     * resolved against the loaded item tags, so an admin widens or narrows it without a data pack;
+     * because the Singles rule is this rule's complement, widening it narrows Singles by as much.
+     */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -86,7 +92,7 @@ public class BarStackBE extends BlockEntity {
         if (ItemOps.isItemFromDisabledMod(stack)) {
             return false;
         }
-        return stack.is(ModTags.FORGE_INGOTS);
+        return ServerConfig.isIngotItem(stack.getItem());
     }
 
     /** The column this block belongs to, or null on the client and for a block being removed. */
