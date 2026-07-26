@@ -9,8 +9,8 @@
     ]
   },
   "create:acacia_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -216,8 +216,8 @@
     ]
   },
   "create:birch_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -882,8 +882,8 @@
     ]
   },
   "create:crimson_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -2070,8 +2070,8 @@
     ]
   },
   "create:dark_oak_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -2367,8 +2367,8 @@
     ]
   },
   "create:framed_glass_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -2565,8 +2565,8 @@
     ]
   },
   "create:horizontal_framed_glass_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -2646,8 +2646,8 @@
     ]
   },
   "create:jungle_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -2952,8 +2952,8 @@
     ]
   },
   "create:mangrove_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -3186,8 +3186,8 @@
     ]
   },
   "create:oak_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -3249,8 +3249,8 @@
     ]
   },
   "create:ornate_iron_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -4860,8 +4860,8 @@
     ]
   },
   "create:spruce_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -4959,8 +4959,8 @@
     ]
   },
   "create:tiled_glass_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -5085,8 +5085,8 @@
     ]
   },
   "create:vertical_framed_glass_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
@@ -5121,8 +5121,8 @@
     ]
   },
   "create:warped_window_pane": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,

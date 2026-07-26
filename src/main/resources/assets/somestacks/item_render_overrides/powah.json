@@ -1080,7 +1080,7 @@
     ]
   },
   "powah:solar_panel_basic": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1089,7 +1089,7 @@
     ]
   },
   "powah:solar_panel_blazing": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1098,7 +1098,7 @@
     ]
   },
   "powah:solar_panel_hardened": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1107,7 +1107,7 @@
     ]
   },
   "powah:solar_panel_niotic": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1116,7 +1116,7 @@
     ]
   },
   "powah:solar_panel_nitro": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1125,7 +1125,7 @@
     ]
   },
   "powah:solar_panel_spirited": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,
@@ -1134,7 +1134,7 @@
     ]
   },
   "powah:solar_panel_starter": {
-    "mode": "2d",
+    "mode": "gui",
     "scale": 1.0,
     "offset": [
       0.0,

@@ -5337,8 +5337,8 @@
     ]
   },
   "securitycraft:secret_acacia_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5355,8 +5355,8 @@
     ]
   },
   "securitycraft:secret_bamboo_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5373,8 +5373,8 @@
     ]
   },
   "securitycraft:secret_birch_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5391,8 +5391,8 @@
     ]
   },
   "securitycraft:secret_cherry_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5409,8 +5409,8 @@
     ]
   },
   "securitycraft:secret_crimson_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5427,8 +5427,8 @@
     ]
   },
   "securitycraft:secret_dark_oak_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5445,8 +5445,8 @@
     ]
   },
   "securitycraft:secret_jungle_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5463,8 +5463,8 @@
     ]
   },
   "securitycraft:secret_mangrove_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5481,8 +5481,8 @@
     ]
   },
   "securitycraft:secret_oak_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5499,8 +5499,8 @@
     ]
   },
   "securitycraft:secret_spruce_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5517,8 +5517,8 @@
     ]
   },
   "securitycraft:secret_warped_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

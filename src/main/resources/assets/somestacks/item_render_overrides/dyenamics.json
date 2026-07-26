@@ -9,12 +9,12 @@
     ]
   },
   "dyenamics:amber_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:amber_candle": {
@@ -135,12 +135,12 @@
     ]
   },
   "dyenamics:aquamarine_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:aquamarine_candle": {
@@ -261,12 +261,12 @@
     ]
   },
   "dyenamics:bubblegum_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:bubblegum_candle": {
@@ -387,12 +387,12 @@
     ]
   },
   "dyenamics:cherenkov_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:cherenkov_candle": {
@@ -513,12 +513,12 @@
     ]
   },
   "dyenamics:conifer_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:conifer_candle": {
@@ -639,12 +639,12 @@
     ]
   },
   "dyenamics:fluorescent_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:fluorescent_candle": {
@@ -765,12 +765,12 @@
     ]
   },
   "dyenamics:honey_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:honey_candle": {
@@ -891,12 +891,12 @@
     ]
   },
   "dyenamics:icy_blue_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:icy_blue_candle": {
@@ -1017,12 +1017,12 @@
     ]
   },
   "dyenamics:lavender_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:lavender_candle": {
@@ -1143,12 +1143,12 @@
     ]
   },
   "dyenamics:maroon_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:maroon_candle": {
@@ -1269,12 +1269,12 @@
     ]
   },
   "dyenamics:mint_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:mint_candle": {
@@ -1395,12 +1395,12 @@
     ]
   },
   "dyenamics:navy_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:navy_candle": {
@@ -1521,12 +1521,12 @@
     ]
   },
   "dyenamics:peach_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:peach_candle": {
@@ -1647,12 +1647,12 @@
     ]
   },
   "dyenamics:persimmon_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:persimmon_candle": {
@@ -1773,12 +1773,12 @@
     ]
   },
   "dyenamics:rose_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:rose_candle": {
@@ -1899,12 +1899,12 @@
     ]
   },
   "dyenamics:spring_green_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:spring_green_candle": {
@@ -2025,12 +2025,12 @@
     ]
   },
   "dyenamics:ultramarine_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:ultramarine_candle": {
@@ -2151,12 +2151,12 @@
     ]
   },
   "dyenamics:wine_bed": {
-    "mode": "3d",
-    "scale": 0.45000005,
+    "mode": "gui",
+    "scale": 0.35,
     "offset": [
-      6.7055232E-9,
-      -0.0,
-      0.0070312573
+      0.0,
+      -0.33,
+      0.0
     ]
   },
   "dyenamics:wine_candle": {

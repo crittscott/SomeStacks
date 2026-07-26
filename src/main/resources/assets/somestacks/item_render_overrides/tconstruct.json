@@ -360,8 +360,8 @@
     ]
   },
   "tconstruct:bloodshroom_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -414,8 +414,8 @@
     ]
   },
   "tconstruct:bloodshroom_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,8 +1575,8 @@
     ]
   },
   "tconstruct:enderbark_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1638,8 +1638,8 @@
     ]
   },
   "tconstruct:enderbark_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1944,8 +1944,8 @@
     ]
   },
   "tconstruct:greenheart_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1998,8 +1998,8 @@
     ]
   },
   "tconstruct:greenheart_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5013,8 +5013,8 @@
     ]
   },
   "tconstruct:skyroot_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5067,8 +5067,8 @@
     ]
   },
   "tconstruct:skyroot_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

@@ -252,8 +252,8 @@
     ]
   },
   "blue_skies:baneful_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -432,8 +432,8 @@
     ]
   },
   "blue_skies:bluebright_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -522,8 +522,8 @@
     ]
   },
   "blue_skies:bluebright_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1116,8 +1116,8 @@
     ]
   },
   "blue_skies:comet_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1206,8 +1206,8 @@
     ]
   },
   "blue_skies:comet_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1953,8 +1953,8 @@
     ]
   },
   "blue_skies:dusk_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2043,8 +2043,8 @@
     ]
   },
   "blue_skies:dusk_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2448,8 +2448,8 @@
     ]
   },
   "blue_skies:frostbright_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2538,8 +2538,8 @@
     ]
   },
   "blue_skies:frostbright_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3285,8 +3285,8 @@
     ]
   },
   "blue_skies:lunar_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3393,8 +3393,8 @@
     ]
   },
   "blue_skies:lunar_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3672,8 +3672,8 @@
     ]
   },
   "blue_skies:maple_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3762,8 +3762,8 @@
     ]
   },
   "blue_skies:maple_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5175,8 +5175,8 @@
     ]
   },
   "blue_skies:snowcap_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5400,8 +5400,8 @@
     ]
   },
   "blue_skies:starlit_hanging_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5490,8 +5490,8 @@
     ]
   },
   "blue_skies:starlit_sign": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

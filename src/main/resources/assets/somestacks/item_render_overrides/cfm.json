@@ -945,8 +945,8 @@
     ]
   },
   "cfm:door_mat": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "gui",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2205,8 +2205,8 @@
     ]
   },
   "cfm:rock_path": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "gui",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

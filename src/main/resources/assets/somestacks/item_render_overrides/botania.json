@@ -99,8 +99,8 @@
     ]
   },
   "botania:animated_torch": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -513,8 +513,8 @@
     ]
   },
   "botania:black_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -666,8 +666,8 @@
     ]
   },
   "botania:blue_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -783,8 +783,8 @@
     ]
   },
   "botania:brown_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1575,8 +1575,8 @@
     ]
   },
   "botania:cyan_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2988,8 +2988,8 @@
     ]
   },
   "botania:gray_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3051,8 +3051,8 @@
     ]
   },
   "botania:green_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3690,8 +3690,8 @@
     ]
   },
   "botania:light_blue_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3753,8 +3753,8 @@
     ]
   },
   "botania:light_gray_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3834,8 +3834,8 @@
     ]
   },
   "botania:lime_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4113,8 +4113,8 @@
     ]
   },
   "botania:magenta_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5670,8 +5670,8 @@
     ]
   },
   "botania:orange_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5877,8 +5877,8 @@
     ]
   },
   "botania:pink_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6075,8 +6075,8 @@
     ]
   },
   "botania:purple_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6264,8 +6264,8 @@
     ]
   },
   "botania:red_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7452,8 +7452,8 @@
     ]
   },
   "botania:white_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7551,8 +7551,8 @@
     ]
   },
   "botania:yellow_mushroom": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,

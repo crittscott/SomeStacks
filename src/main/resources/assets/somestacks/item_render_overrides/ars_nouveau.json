@@ -423,12 +423,12 @@
     ]
   },
   "ars_nouveau:blue_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   },
   "ars_nouveau:bombegranate_pod": {
@@ -1611,12 +1611,12 @@
     ]
   },
   "ars_nouveau:green_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   },
   "ars_nouveau:imbuement_chamber": {
@@ -1710,8 +1710,8 @@
     ]
   },
   "ars_nouveau:magelight_torch": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1827,12 +1827,12 @@
     ]
   },
   "ars_nouveau:orange_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   },
   "ars_nouveau:pierce_arrow": {
@@ -1953,12 +1953,12 @@
     ]
   },
   "ars_nouveau:purple_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   },
   "ars_nouveau:red_archwood_leaves": {
@@ -1998,12 +1998,12 @@
     ]
   },
   "ars_nouveau:red_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   },
   "ars_nouveau:redstone_relay": {
@@ -3609,12 +3609,12 @@
     ]
   },
   "ars_nouveau:yellow_sbed": {
-    "mode": "3d",
-    "scale": 0.9,
+    "mode": "gui",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.056
+      0.0
     ]
   }
 }
