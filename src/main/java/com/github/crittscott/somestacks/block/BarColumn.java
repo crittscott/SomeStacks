@@ -62,6 +62,7 @@ public final class BarColumn {
         if (level == null || level.isClientSide) {
             return null;
         }
+        RunResolveCounter.countBar();
         if (!(level.getBlockEntity(pos) instanceof BarStackBE)) {
             return null;
         }

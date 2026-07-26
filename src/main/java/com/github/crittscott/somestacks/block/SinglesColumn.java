@@ -55,6 +55,7 @@ public final class SinglesColumn {
         if (level == null || level.isClientSide) {
             return null;
         }
+        RunResolveCounter.countSingles();
         if (!(level.getBlockEntity(pos) instanceof SinglesStackBE)) {
             return null;
         }

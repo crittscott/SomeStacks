@@ -304,6 +304,12 @@ public class BarStackBE extends BlockEntity {
      * Opens a run of edits that should publish as one. Per-slot sync is held back and the block
      * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
      * blocks a column-wide pass really touched.
+     *
+     * <p>Unlike Storage and Singles this does not clear {@code batchTouched}, and must not: batches
+     * nest here. {@link #extractAt} opens one, takes a bar — which sets the flag — and then calls
+     * {@link #cascadeFrom}, which opens another on this same block. Clearing on the inner open would
+     * forget the extraction, and a removal that left nothing unsupported would close its batch with
+     * nothing to publish, leaving the taken bar drawn until something else refreshed the block.
      */
     void beginBatch() {
         suppressSync = true;

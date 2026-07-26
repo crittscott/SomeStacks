@@ -38,16 +38,40 @@ public final class Protection {
         return server.isUnderSpawnProtection(level, pos, sp);
     }
 
+    /** Extra range beyond the attribute, matching vanilla's server-side interaction slack. */
+    private static final double REACH_PADDING = 1.0;
+
     /**
      * Fires {@link PlayerInteractEvent.RightClickBlock} for a stack access at {@code pos} so
      * claim/protection mods can veto it, exactly as they would for a right-click on a vanilla
      * container. {@code true} means the interaction is allowed.
+     *
+     * <p>The event describes the interaction that is really happening: the hand the gesture used,
+     * and the face and point the player's own view ray meets. A mod that only asks who and where is
+     * unaffected, but one that logs what was clicked, or distinguishes the hands, is told the truth
+     * rather than a placeholder.
      */
-    public static boolean mayInteract(ServerPlayer sp, BlockPos pos) {
-        BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
+    public static boolean mayInteract(ServerPlayer sp, BlockPos pos, InteractionHand hand) {
         PlayerInteractEvent.RightClickBlock evt =
-                ForgeHooks.onRightClickBlock(sp, InteractionHand.MAIN_HAND, pos, hit);
+                ForgeHooks.onRightClickBlock(sp, hand, pos, lookHit(sp, pos));
         return !evt.isCanceled() && evt.getUseBlock() != Event.Result.DENY;
+    }
+
+    /**
+     * Where the player is actually looking at {@code pos}, taken against the block's interaction
+     * shape, which is the full cube every stack block exposes so that it can be clicked through the
+     * gaps between its contents. Falls back to the centre of the block when the ray no longer meets
+     * it, which a player who has turned away since sending the packet can produce; the operation
+     * itself has already cleared the reach check, so a missed ray is a stale aim rather than a
+     * reason to refuse.
+     */
+    private static BlockHitResult lookHit(ServerPlayer sp, BlockPos pos) {
+        ServerLevel level = sp.serverLevel();
+        Vec3 eye = sp.getEyePosition(1.0f);
+        Vec3 end = eye.add(sp.getLookAngle().scale(sp.getBlockReach() + REACH_PADDING));
+
+        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos).clip(eye, end, pos);
+        return hit != null ? hit : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
     /**

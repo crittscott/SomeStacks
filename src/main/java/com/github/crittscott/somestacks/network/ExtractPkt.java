@@ -45,7 +45,7 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
 
             if (Protection.isProtected(player, msg.pos)) return;
 
-            if (!Protection.mayInteract(player, msg.pos)) return;
+            if (!Protection.mayInteract(player, msg.pos, msg.hand())) return;
 
             Level level = player.level();
             BlockEntity be = level.getBlockEntity(msg.pos);

@@ -56,6 +56,7 @@ public final class StoragePile {
         if (level == null || level.isClientSide) {
             return null;
         }
+        RunResolveCounter.countStorage();
         if (!(level.getBlockEntity(pos) instanceof StorageStackBE)) {
             return null;
         }
@@ -183,6 +184,44 @@ public final class StoragePile {
 
     private IItemHandler handlerOf(int flatSlot) {
         return blocks.get(flatSlot / StorageStackBE.SLOTS).getItems();
+    }
+
+    /**
+     * The comparator output for the whole pile, which is what every block of it reports. Held in one
+     * place so the value a block answers with and the value a settle decides to publish cannot drift
+     * apart.
+     */
+    public int comparatorSignal() {
+        return (int) Math.round(fillLevel() * 15.0);
+    }
+
+    /**
+     * Tells the pile's neighbours to read the comparator output again, but only when that output has
+     * actually changed.
+     *
+     * <p>Every block of the pile reports the whole pile's fill, so an edit anywhere in it changes the
+     * value every block answers with — including blocks whose own slots the edit never touched, and
+     * which therefore publish nothing of their own. Those are exactly the blocks a comparator may be
+     * sitting against, so the whole run is notified rather than the one block that changed. The
+     * guard is what keeps that from being a run-length worth of neighbour updates per item moved.
+     *
+     * <p>The base block holds the last published value, because the base is what identifies a pile.
+     */
+    private void publishComparatorSignal() {
+        if (blocks.isEmpty()) {
+            return;
+        }
+        int signal = comparatorSignal();
+        if (!blocks.get(0).exchangePublishedSignal(signal)) {
+            return;
+        }
+
+        Block block = ModRegistry.STORAGE_STACK_BLOCK.get();
+        for (StorageStackBE sbe : blocks) {
+            // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
+            // block further away behind a solid block, which the plain neighbour update does not.
+            level.updateNeighbourForOutputSignal(sbe.getBlockPos(), block);
+        }
     }
 
     public double fillLevel() {
@@ -392,6 +431,7 @@ public final class StoragePile {
         }
 
         trimEmptyTop();
+        publishComparatorSignal();
     }
 
     /**

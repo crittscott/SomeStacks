@@ -54,7 +54,7 @@ public class DepositPkt {
                 return;
             }
 
-            if (!Protection.mayInteract(sp, msg.pos)) {
+            if (!Protection.mayInteract(sp, msg.pos, msg.hand)) {
                 return;
             }
 

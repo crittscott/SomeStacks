@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -32,10 +33,16 @@ import java.util.TreeMap;
 
 /**
  * Per-item cache of measured render profiles, persisted to a client-side cache file so
- * an item is measured once ever rather than once per session. The file records each
- * namespace's mod version; entries from a namespace whose version changed are dropped
- * at load and re-measured, since the mod's models may have changed. A manual resource
- * reload (which can also change models) discards the cache entirely.
+ * an item is measured once ever rather than once per session.
+ *
+ * <p>A measurement describes a baked model, so the cache is only good for as long as the models
+ * are. Three things can change them, and the cache answers to all three: a mod update, which the
+ * recorded per-namespace mod versions catch, dropping that namespace's entries; a manual resource
+ * reload mid-session, which discards the cache entirely; and a change of resource packs between
+ * sessions, which neither of those sees, because the reload that happens at startup is the normal
+ * one and must not throw the cache away. That last case is what the recorded pack list is for: the
+ * packs that produced the measurements are named in the file, and a cache written under a different
+ * set is dropped whole at load.
  */
 public final class AutoRenderProfiles {
     private static final Gson GSON = new GsonBuilder().create();
@@ -113,6 +120,7 @@ public final class AutoRenderProfiles {
         }
 
         JsonObject root = new JsonObject();
+        root.addProperty("packs", selectedPackIds());
         root.add("versions", versions);
         root.add("entries", OverrideJsonCodec.toJson(entries));
 
@@ -139,6 +147,16 @@ public final class AutoRenderProfiles {
             if (root == null || !root.has("entries")) {
                 return;
             }
+
+            // Measurements read baked models, which a resource pack rewrites as surely as a mod
+            // update does. A cache written under a different set of packs describes models that are
+            // no longer loaded, so none of it is kept.
+            String packs = root.has("packs") ? root.get("packs").getAsString() : null;
+            if (packs == null || !packs.equals(selectedPackIds())) {
+                dirty = true;
+                return;
+            }
+
             JsonObject versions = root.has("versions") ? root.getAsJsonObject("versions") : new JsonObject();
 
             Map<ResourceLocation, ItemRenderConfig> entries =
@@ -165,6 +183,11 @@ public final class AutoRenderProfiles {
         } catch (Exception e) {
             SomeStacks.LOGGER.warn("Failed to read {}: {}", CACHE_FILE, e.getMessage());
         }
+    }
+
+    /** The enabled resource packs, in the order they apply, which is what decides a baked model. */
+    private static String selectedPackIds() {
+        return String.join("\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
     }
 
     private static String modVersion(String namespace) {

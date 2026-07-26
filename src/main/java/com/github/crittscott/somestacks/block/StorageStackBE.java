@@ -56,6 +56,13 @@ public class StorageStackBE extends BlockEntity {
     private int rotation = 0;
     private boolean permanent = false;
 
+    /**
+     * The comparator output last published for the pile this block is the base of, or -1 before the
+     * first settle. Only the base's copy is consulted, and it is runtime state rather than saved
+     * NBT: a freshly loaded pile has published nothing, so its first settle should notify.
+     */
+    private int publishedSignal = -1;
+
     public StorageStackBE(BlockPos pos, BlockState state) {
         super(ModRegistry.STACK_BE.get(), pos, state);
     }
@@ -98,6 +105,20 @@ public class StorageStackBE extends BlockEntity {
             setChanged();
             syncToClients();
         }
+    }
+
+    /**
+     * Records the comparator output the pile is about to publish.
+     *
+     * @return whether it differs from the last one, and so whether the pile needs to tell its
+     *         neighbours to read again
+     */
+    boolean exchangePublishedSignal(int signal) {
+        if (publishedSignal == signal) {
+            return false;
+        }
+        publishedSignal = signal;
+        return true;
     }
 
     /** Gives a block that has just joined a pile the pile's presentation and mode. */

@@ -72,7 +72,7 @@ public class StorageStackBlock extends Block implements EntityBlock {
         if (pile == null) {
             return 0;
         }
-        return (int) Math.round(pile.fillLevel() * 15.0);
+        return pile.comparatorSignal();
     }
 
     @Override
