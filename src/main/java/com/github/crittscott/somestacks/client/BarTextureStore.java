@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -157,42 +158,72 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             SomeStacks.LOGGER.debug("  Found item: {}", item.getClass().getSimpleName());
 
             ItemStack stack = new ItemStack(item);
-            SomeStacks.LOGGER.debug("  Created ItemStack: {}", stack);
 
-            Minecraft mc = Minecraft.getInstance();
-            BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
-            SomeStacks.LOGGER.debug("  Got BakedModel: {}", model.getClass().getSimpleName());
-
-            TextureAtlasSprite sprite = model.getParticleIcon();
-            if (sprite == null) {
-                SomeStacks.LOGGER.debug("  Particle icon is null, returning WHITE");
-                return BarTextureData.WHITE;
-            }
-            SomeStacks.LOGGER.debug("  Got sprite: {}", sprite);
-
-            ResourceLocation spriteName = sprite.contents().name();
-            SomeStacks.LOGGER.debug("  Sprite name: {}", spriteName);
-
-            ResourceLocation texturePath = getTextureResourceLocation(spriteName);
-            SomeStacks.LOGGER.debug("  Texture path: {}", texturePath);
-
-            NativeImage image = loadTextureImage(texturePath, resourceManager);
-            if (image == null) {
-                SomeStacks.LOGGER.debug("  Failed to load texture image, returning WHITE");
-                return BarTextureData.WHITE;
-            }
-
-            try {
-                int tint = analyzePixelsForTint(image);
-                SomeStacks.LOGGER.debug("  Calculated tint: #{}", String.format("%08X", tint));
-                return tint;
-            } finally {
-                image.close();
-            }
+            // An item is drawn as its texture multiplied by the tint its mod registers, so the
+            // average has to carry both. Either half alone is white when the item does not use it.
+            int spriteColor = averageSpriteColor(stack, resourceManager);
+            int itemColor = registeredItemColor(stack);
+            int tint = multiplyColors(spriteColor, itemColor);
+            SomeStacks.LOGGER.debug("  Sprite #{} x item colour #{} -> tint #{}",
+                    String.format("%08X", spriteColor), String.format("%08X", itemColor),
+                    String.format("%08X", tint));
+            return tint;
         } catch (Exception e) {
             SomeStacks.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
             return BarTextureData.WHITE;
         }
+    }
+
+    /**
+     * The average of the sprite the item's baked model puts on the item atlas, or white when there
+     * is none to read. An item drawn by a custom renderer carries its art in that renderer rather
+     * than in its model, so its particle resolves to the missing texture and only its registered
+     * tint describes its colour.
+     */
+    private static int averageSpriteColor(ItemStack stack, ResourceManager resourceManager) {
+        Minecraft mc = Minecraft.getInstance();
+        BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
+        SomeStacks.LOGGER.debug("  Got BakedModel: {}", model.getClass().getSimpleName());
+
+        TextureAtlasSprite sprite = model.getParticleIcon();
+        if (sprite == null) {
+            SomeStacks.LOGGER.debug("  Particle icon is null, returning WHITE");
+            return BarTextureData.WHITE;
+        }
+
+        ResourceLocation spriteName = sprite.contents().name();
+        SomeStacks.LOGGER.debug("  Sprite name: {}", spriteName);
+        if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
+            SomeStacks.LOGGER.debug("  Model carries no texture, returning WHITE");
+            return BarTextureData.WHITE;
+        }
+
+        ResourceLocation texturePath = getTextureResourceLocation(spriteName);
+        SomeStacks.LOGGER.debug("  Texture path: {}", texturePath);
+
+        NativeImage image = loadTextureImage(texturePath, resourceManager);
+        if (image == null) {
+            SomeStacks.LOGGER.debug("  Failed to load texture image, returning WHITE");
+            return BarTextureData.WHITE;
+        }
+
+        try {
+            return analyzePixelsForTint(image);
+        } finally {
+            image.close();
+        }
+    }
+
+    /** The colour the item's mod registers for the primary layer, or white when it registers none. */
+    private static int registeredItemColor(ItemStack stack) {
+        return Minecraft.getInstance().getItemColors().getColor(stack, 0) | 0xFF000000;
+    }
+
+    private static int multiplyColors(int left, int right) {
+        int r = (((left >> 16) & 0xFF) * ((right >> 16) & 0xFF)) / 0xFF;
+        int g = (((left >> 8) & 0xFF) * ((right >> 8) & 0xFF)) / 0xFF;
+        int b = ((left & 0xFF) * (right & 0xFF)) / 0xFF;
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
     private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {

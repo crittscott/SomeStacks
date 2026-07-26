@@ -72,8 +72,8 @@
     ]
   },
   "chemlib:actinium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -144,8 +144,8 @@
     ]
   },
   "chemlib:aluminum_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -495,8 +495,8 @@
     ]
   },
   "chemlib:barium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -693,8 +693,8 @@
     ]
   },
   "chemlib:beryllium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -819,8 +819,8 @@
     ]
   },
   "chemlib:bismuth_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -972,8 +972,8 @@
     ]
   },
   "chemlib:cadmium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1152,8 +1152,8 @@
     ]
   },
   "chemlib:calcium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1386,8 +1386,8 @@
     ]
   },
   "chemlib:cerium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1494,8 +1494,8 @@
     ]
   },
   "chemlib:cesium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1620,8 +1620,8 @@
     ]
   },
   "chemlib:chromium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -1728,8 +1728,8 @@
     ]
   },
   "chemlib:cobalt_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2034,8 +2034,8 @@
     ]
   },
   "chemlib:dysprosium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2115,8 +2115,8 @@
     ]
   },
   "chemlib:erbium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2223,8 +2223,8 @@
     ]
   },
   "chemlib:europium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2313,8 +2313,8 @@
     ]
   },
   "chemlib:francium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2367,8 +2367,8 @@
     ]
   },
   "chemlib:gadolinium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2421,8 +2421,8 @@
     ]
   },
   "chemlib:gallium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2538,8 +2538,8 @@
     ]
   },
   "chemlib:hafnium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2655,8 +2655,8 @@
     ]
   },
   "chemlib:holmium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2790,8 +2790,8 @@
     ]
   },
   "chemlib:indium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -2862,8 +2862,8 @@
     ]
   },
   "chemlib:iridium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3105,8 +3105,8 @@
     ]
   },
   "chemlib:lanthanum_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3186,8 +3186,8 @@
     ]
   },
   "chemlib:lead_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3375,8 +3375,8 @@
     ]
   },
   "chemlib:lithium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3492,8 +3492,8 @@
     ]
   },
   "chemlib:lutetium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3600,8 +3600,8 @@
     ]
   },
   "chemlib:magnesium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3735,8 +3735,8 @@
     ]
   },
   "chemlib:manganese_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3915,8 +3915,8 @@
     ]
   },
   "chemlib:molybdenum_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -3996,8 +3996,8 @@
     ]
   },
   "chemlib:neodymium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4122,8 +4122,8 @@
     ]
   },
   "chemlib:nickel_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4257,8 +4257,8 @@
     ]
   },
   "chemlib:niobium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4419,8 +4419,8 @@
     ]
   },
   "chemlib:osmium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4491,8 +4491,8 @@
     ]
   },
   "chemlib:palladium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4626,8 +4626,8 @@
     ]
   },
   "chemlib:platinum_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4689,8 +4689,8 @@
     ]
   },
   "chemlib:polonium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4869,8 +4869,8 @@
     ]
   },
   "chemlib:potassium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -4986,8 +4986,8 @@
     ]
   },
   "chemlib:praseodymium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5067,8 +5067,8 @@
     ]
   },
   "chemlib:protactinium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5130,8 +5130,8 @@
     ]
   },
   "chemlib:radium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5211,8 +5211,8 @@
     ]
   },
   "chemlib:rhenium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5265,8 +5265,8 @@
     ]
   },
   "chemlib:rhodium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5382,8 +5382,8 @@
     ]
   },
   "chemlib:rubidium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5490,8 +5490,8 @@
     ]
   },
   "chemlib:ruthenium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5553,8 +5553,8 @@
     ]
   },
   "chemlib:samarium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5607,8 +5607,8 @@
     ]
   },
   "chemlib:scandium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5715,8 +5715,8 @@
     ]
   },
   "chemlib:silver_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -5841,8 +5841,8 @@
     ]
   },
   "chemlib:sodium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6021,8 +6021,8 @@
     ]
   },
   "chemlib:strontium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6219,8 +6219,8 @@
     ]
   },
   "chemlib:tantalum_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6309,8 +6309,8 @@
     ]
   },
   "chemlib:terbium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6363,8 +6363,8 @@
     ]
   },
   "chemlib:thallium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6417,8 +6417,8 @@
     ]
   },
   "chemlib:thorium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6471,8 +6471,8 @@
     ]
   },
   "chemlib:thulium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6525,8 +6525,8 @@
     ]
   },
   "chemlib:tin_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6615,8 +6615,8 @@
     ]
   },
   "chemlib:titanium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6696,8 +6696,8 @@
     ]
   },
   "chemlib:tungsten_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6750,8 +6750,8 @@
     ]
   },
   "chemlib:uranium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6822,8 +6822,8 @@
     ]
   },
   "chemlib:vanadium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6912,8 +6912,8 @@
     ]
   },
   "chemlib:ytterbium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -6966,8 +6966,8 @@
     ]
   },
   "chemlib:yttrium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7056,8 +7056,8 @@
     ]
   },
   "chemlib:zinc_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
@@ -7182,8 +7182,8 @@
     ]
   },
   "chemlib:zirconium_ingot": {
-    "mode": "2d",
-    "scale": 1.0,
+    "mode": "3d",
+    "scale": 0.5,
     "offset": [
       0.0,
       0.0,
