@@ -1,0 +1,4070 @@
+{
+  "cfm:acacia_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:acacia_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:acacia_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:acacia_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:acacia_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:acacia_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:acacia_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:acacia_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:acacia_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:acacia_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:azalea_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:birch_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:birch_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:birch_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:birch_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:birch_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:birch_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:birch_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:birch_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:birch_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:black_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:black_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:black_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:black_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:black_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:black_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:black_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:black_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:blue_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:blue_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:blue_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:blue_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:blue_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:blue_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:blue_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:blue_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:brown_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:brown_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:brown_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:brown_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:brown_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:brown_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:brown_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:brown_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:crimson_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:crimson_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:crimson_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:crimson_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:crimson_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:crimson_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:crimson_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:crimson_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:crimson_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:crimson_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:cyan_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:cyan_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:cyan_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:cyan_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:cyan_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:cyan_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:cyan_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:cyan_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:dark_oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:dark_oak_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:dark_oak_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:dark_oak_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:dark_oak_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:dark_oak_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:diving_board": {
+    "mode": "3d",
+    "scale": 0.22500001,
+    "offset": [
+      -0.0,
+      0.1125,
+      0.028125005
+    ]
+  },
+  "cfm:door_mat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cfm:flowering_azalea_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:fridge_dark": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      -0.0,
+      0.0140625,
+      0.00703125
+    ]
+  },
+  "cfm:fridge_light": {
+    "mode": "3d",
+    "scale": 0.225,
+    "offset": [
+      -0.0,
+      0.0140625,
+      0.00703125
+    ]
+  },
+  "cfm:gray_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:gray_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:gray_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:gray_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:gray_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:gray_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:gray_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:gray_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:green_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:green_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:green_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:green_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:green_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:green_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:green_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:green_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:jungle_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:jungle_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:jungle_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:jungle_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:jungle_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:jungle_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:jungle_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:jungle_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:jungle_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:jungle_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:light_blue_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:light_blue_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:light_blue_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:light_blue_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:light_blue_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:light_blue_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:light_blue_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:light_blue_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:light_gray_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:light_gray_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:light_gray_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:light_gray_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:light_gray_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:light_gray_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:light_gray_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:light_gray_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:lime_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:lime_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:lime_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:lime_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:lime_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:lime_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:lime_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:lime_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:magenta_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:magenta_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:magenta_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:magenta_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:magenta_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:magenta_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:magenta_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:magenta_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:mangrove_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:mangrove_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:mangrove_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:mangrove_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:mangrove_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:mangrove_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:mangrove_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:oak_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:oak_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:oak_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:oak_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:oak_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:oak_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:oak_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:orange_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:orange_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:orange_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:orange_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:orange_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:orange_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:orange_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:orange_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:pink_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:pink_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:pink_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:pink_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:pink_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:pink_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:pink_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:pink_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:post_box": {
+    "mode": "3d",
+    "scale": 0.31304207,
+    "offset": [
+      -0.0,
+      0.009781557,
+      -0.0
+    ]
+  },
+  "cfm:purple_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:purple_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:purple_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:purple_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:purple_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:purple_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:purple_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:purple_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:rainbow_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:red_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:red_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:red_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:red_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:red_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:red_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:red_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:red_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:rock_path": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cfm:spatula": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "cfm:spruce_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:spruce_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:spruce_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:spruce_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:spruce_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_hedge": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:spruce_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:spruce_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:spruce_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:spruce_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:spruce_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_acacia_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_acacia_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_acacia_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_acacia_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_acacia_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_acacia_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_acacia_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_birch_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_birch_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_birch_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_birch_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_birch_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_birch_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_birch_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_crimson_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_crimson_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_crimson_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_crimson_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_crimson_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_crimson_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_crimson_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_dark_oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_dark_oak_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_dark_oak_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_dark_oak_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_dark_oak_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_dark_oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_dark_oak_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_jungle_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_jungle_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_jungle_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_jungle_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_jungle_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_jungle_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_jungle_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_mangrove_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_mangrove_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_mangrove_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_mangrove_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_mangrove_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_mangrove_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_mangrove_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_oak_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_oak_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_oak_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_oak_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_oak_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_oak_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_oak_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_spruce_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_spruce_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_spruce_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_spruce_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_spruce_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_spruce_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_spruce_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:stripped_warped_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:stripped_warped_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:stripped_warped_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:stripped_warped_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:stripped_warped_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:stripped_warped_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:stripped_warped_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:trampoline": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_bedside_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_blinds": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0140625,
+      0.0140625
+    ]
+  },
+  "cfm:warped_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_chair": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.123749994
+    ]
+  },
+  "cfm:warped_coffee_table": {
+    "mode": "3d",
+    "scale": 0.45000002,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.08437501
+    ]
+  },
+  "cfm:warped_crate": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.013235293
+    ]
+  },
+  "cfm:warped_desk": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_desk_cabinet": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:warped_kitchen_sink_dark": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:warped_kitchen_sink_light": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:warped_mail_box": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -4.8767435E-9,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_park_bench": {
+    "mode": "3d",
+    "scale": 0.36124307,
+    "offset": [
+      -0.0,
+      -0.044378452,
+      -0.011935423
+    ]
+  },
+  "cfm:warped_table": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_upgraded_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:warped_upgraded_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:white_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:white_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:white_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:white_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:white_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:white_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:white_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:white_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  },
+  "cfm:yellow_cooler": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.098437496
+    ]
+  },
+  "cfm:yellow_grill": {
+    "mode": "3d",
+    "scale": 0.44997722,
+    "offset": [
+      -1.3410366E-8,
+      -0.0,
+      5.6859953E-6
+    ]
+  },
+  "cfm:yellow_kitchen_counter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:yellow_kitchen_drawer": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.013235293
+    ]
+  },
+  "cfm:yellow_kitchen_sink": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "cfm:yellow_picket_fence": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cfm:yellow_picket_gate": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.0112499995,
+      -0.0
+    ]
+  },
+  "cfm:yellow_sofa": {
+    "mode": "3d",
+    "scale": 0.35999998,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      -0.0
+    ]
+  }
+}

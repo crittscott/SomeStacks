@@ -1,0 +1,1226 @@
+{
+  "evilcraft:biome_extract": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.0,
+      0.03,
+      0.015
+    ]
+  },
+  "evilcraft:blood_extractor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_infuser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:blood_infusion_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_orb_empty": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_orb_filled": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_pearl_of_teleportation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_potash": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_stain": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_waxed_coal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:blood_waxed_coal_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:bloody_cobblestone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:blook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_dusted": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_empty": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_tier0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_tier1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_tier2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bowl_of_promises_tier3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:box_of_eternal_closure": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.04289418,
+      0.003412132
+    ]
+  },
+  "evilcraft:broom": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.05625
+    ]
+  },
+  "evilcraft:broom_part": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bucket_blood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bucket_eternal_water": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:bucket_poison": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:burning_gem_stone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:colossal_blood_chest": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:condensed_blood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:controlled_zombie_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:corrupted_tear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:creative_blood_drop": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_blood_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_blood_brick_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_brick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_brick_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_gem_crushed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_ore_deepslate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_power_gem": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_power_gem_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:dark_spike": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_stick": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:dark_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:darkened_apple": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:display_stand": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.225,
+      -0.0
+    ]
+  },
+  "evilcraft:dull_dust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:effortless_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:ender_tear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:entangled_chalice": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:environmental_accumulation_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:environmental_accumulator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:eternal_water": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:exalted_crafter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:exalted_crafter_empowered": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:exalted_crafter_wooden": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:exalted_crafter_wooden_empowered": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:flesh_humanoid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:flesh_rejuvenated": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:flesh_werewolf": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:garmonbozia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:gem_stone_torch": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:golden_string": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:hardened_blood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:hardened_blood_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:infested_nether_nether_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:infested_nether_netherrack": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:infested_nether_soul_sand": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:inverted_potentia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:inverted_potentia_empowered": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:invigorating_pendant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:invisible_redstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:kineticator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:kineticator_repelling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:lightning_bomb": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:lightning_grenade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:mace_of_destruction": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:mace_of_distortion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:necromancer_staff": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:netherfish_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:obscured_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:origins_of_darkness": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:piercing_vengeance_focus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:poison": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:poison_bottle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:poison_sac": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:poisonous_libelle_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:potentia_sphere": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:primed_pendant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_acceptor_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_acceptor_gold": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_acceptor_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_efficiency_0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_speed_0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_tier_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_tier_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:promise_tier_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:purifier": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:redstone_grenade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:reinforced_undead_planks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:reinforced_undead_planks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:sanguinary_environmental_accumulator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:sanguinary_pedestal_0": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:sanguinary_pedestal_1": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:sceptre_of_thunder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:spectral_glasses": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:spiked_plate": {
+    "mode": "gui",
+    "scale": 0.82285696,
+    "offset": [
+      1.2261524E-8,
+      0.24107136,
+      -2.4523048E-8
+    ]
+  },
+  "evilcraft:spikey_claws": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:spirit_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:spirit_portal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:spirit_reanimator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_fence": {
+    "mode": "3d",
+    "scale": 0.7200001,
+    "offset": [
+      1.0728837E-8,
+      -0.0,
+      -5.3644187E-9
+    ]
+  },
+  "evilcraft:undead_fence_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_log": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_log_stripped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_planks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_planks_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_sapling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:undead_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_wood": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:undead_wood_stripped": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "evilcraft:vein_sword": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_essence_materialized": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_focus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_pickaxe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:vengeance_spirit_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:weather_container": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:werewolf_bone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:werewolf_fur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "evilcraft:werewolf_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

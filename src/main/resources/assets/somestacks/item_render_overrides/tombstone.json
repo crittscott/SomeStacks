@@ -1,0 +1,920 @@
+{
+  "tombstone:advancement_0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_10": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_11": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.0,
+      -0.015,
+      -0.0
+    ]
+  },
+  "tombstone:advancement_12": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.0,
+      -0.015,
+      -0.0
+    ]
+  },
+  "tombstone:advancement_13": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_14": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_15": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_16": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_17": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_18": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_6": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_7": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_8": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:advancement_9": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:ankh_of_prayer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:bag_of_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:blue_marble": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:blue_marble_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "tombstone:blue_marble_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:blue_marble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "tombstone:bone_needle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:bone_scepter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_disenchantment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_magic_impregnation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_oblivion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_recycling": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_repairing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_scribe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:book_of_soulbound": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:carmin_marble": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:carmin_marble_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "tombstone:carmin_marble_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:carmin_marble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "tombstone:christmas_gift": {
+    "mode": "3d",
+    "scale": 1.3090909,
+    "offset": [
+      -0.0,
+      0.10227272,
+      -0.0
+    ]
+  },
+  "tombstone:christmas_hat": {
+    "mode": "3d",
+    "scale": 0.75907075,
+    "offset": [
+      -0.0011920361,
+      -0.34395394,
+      -0.030668685
+    ]
+  },
+  "tombstone:dark_marble": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:dark_marble_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "tombstone:dark_marble_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:dark_marble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "tombstone:decorative_grave_cross": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
+    ]
+  },
+  "tombstone:decorative_grave_normal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.028125,
+      -0.0
+    ]
+  },
+  "tombstone:decorative_grave_original": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.028125,
+      -0.0
+    ]
+  },
+  "tombstone:decorative_grave_simple": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.028125,
+      -0.0
+    ]
+  },
+  "tombstone:decorative_subaraki_grave": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
+    ]
+  },
+  "tombstone:decorative_tombstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.080156244,
+      -0.0
+    ]
+  },
+  "tombstone:dust_of_frost": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:dust_of_vanishing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:essence_of_undeath": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:fishing_rod_of_misadventure": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:flying_carpet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:gemstone_of_familiar": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:gemstone_of_guardian": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:gemstone_of_merchant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:gemstone_of_prayer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:gift": {
+    "mode": "3d",
+    "scale": 1.3090909,
+    "offset": [
+      -0.0,
+      0.10227272,
+      -0.0
+    ]
+  },
+  "tombstone:grave_dust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:grave_key": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:grave_plate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:green_marble": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:green_marble_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "tombstone:green_marble_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:green_marble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "tombstone:impregnated_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:lollipop": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:lost_tablet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:magic_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:readable_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:receptacle_of_familiar": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:receptacle_of_soul": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:ritual_flute": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_aquatic_life": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_feather_fall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_frost_resistance": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_knowledge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_lightning_resistance": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_mercy": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_preservation": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_purification": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_reach": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_true_sight": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:scroll_of_unstable_intangibility": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:seeker_rod": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:smoke_ball": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:strange_scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:strange_tablet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:tablet_of_assistance": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:tablet_of_cupidity": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:tablet_of_guard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:tablet_of_home": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:tablet_of_recall": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:thornveil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:villager_gift": {
+    "mode": "3d",
+    "scale": 1.3090909,
+    "offset": [
+      -0.0,
+      0.10227272,
+      -0.0
+    ]
+  },
+  "tombstone:voodoo_poppet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "tombstone:white_marble": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:white_marble_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "tombstone:white_marble_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "tombstone:white_marble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  }
+}

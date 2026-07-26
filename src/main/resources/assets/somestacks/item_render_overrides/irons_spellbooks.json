@@ -1,0 +1,2090 @@
+{
+  "irons_spellbooks:affinity_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:alchemist_cauldron": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:amethyst_rapier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:amethyst_resonance_charm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ancient_knowledge_fragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:apothecarist_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:arcane_anvil": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:arcane_debris": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:arcane_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:arcane_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:arcane_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:arcane_salvage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_logbook_translated": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_logbook_untranslated": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:archevoker_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:armor_pile": {
+    "mode": "3d",
+    "scale": 0.5559262,
+    "offset": [
+      0.01382642,
+      0.09472518,
+      0.019042108
+    ]
+  },
+  "irons_spellbooks:artificer_cane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:autoloader_crossbow": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:betrayer_signet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:blank_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:blaze_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:blood_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:blood_staff": {
+    "mode": "3d",
+    "scale": 0.40909088,
+    "offset": [
+      -6.095929E-9,
+      -0.030681811,
+      0.019176131
+    ]
+  },
+  "irons_spellbooks:blood_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:blood_vial": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:bloody_vellum": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:bone_key": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:bone_vault": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:book_stack": {
+    "mode": "3d",
+    "scale": 0.6041496,
+    "offset": [
+      0.018879665,
+      0.1510374,
+      0.03775935
+    ]
+  },
+  "irons_spellbooks:boreal_blade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:brazier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:brazier_soul": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cast_time_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:chained_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:chronicle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cinder_essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cinderous_soul_rune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:cinderous_soulcaller": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cinderous_vault": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:claymore": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:common_ink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:concentration_amulet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:conjurers_talisman": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cooldown_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cooldown_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cooldown_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:copper_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.022499999,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:cryomancer_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cryomancer_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cryomancer_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cryomancer_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cryomancer_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cultist_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cultist_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cultist_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cultist_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:cursed_doll_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:dead_king_corpse_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:dead_king_phylactery": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:dead_king_phylactery_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:decrepit_key": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:decrepit_scythe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:deepslate_mithril_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:diamond_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:disc_fragment_flame_still_burns": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:divine_pearl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:divine_soulshard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:dragonskin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:dragonskin_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:druidic_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:eldritch_manuscript": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:electromancer_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:electromancer_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:electromancer_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:electromancer_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:emerald_stoneplate_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ender_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ender_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:energized_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:epic_ink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:evasion_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:evocation_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:evocation_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:evoker_spell_book": {
+    "mode": "3d",
+    "scale": 0.6923077,
+    "offset": [
+      -0.0,
+      0.19471154,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:fire_ale": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:fire_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:fire_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:firefly_jar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:fireward_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:frosted_helve": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:frostward_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:frozen_bone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:furled_map": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:furled_map_ancient": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:furled_map_citadel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:furled_map_ice_spider_den": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:gold_crown": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:gold_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:graybeard_staff": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.0020454624,
+      0.027875442
+    ]
+  },
+  "irons_spellbooks:greater_conjurers_talisman": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:greater_evasion_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:greater_healing_potion": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:greater_invisibility_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:greater_oakskin_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:heavy_chain_necklace": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:hellrazor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:hither_thither_wand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:hogskin": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:holy_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:holy_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ice_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ice_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:ice_spider_egg": {
+    "mode": "3d",
+    "scale": 1.0285714,
+    "offset": [
+      -0.0,
+      0.032142855,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:ice_spider_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ice_staff": {
+    "mode": "3d",
+    "scale": 0.32727268,
+    "offset": [
+      -0.0,
+      0.00920454,
+      0.0153409075
+    ]
+  },
+  "irons_spellbooks:ice_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ice_venom_vial": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:icy_fang": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:infernal_sorcerer_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:inscription_table": {
+    "mode": "3d",
+    "scale": 0.4227551,
+    "offset": [
+      -0.119311236,
+      -0.10568877,
+      0.1029182
+    ]
+  },
+  "irons_spellbooks:invisibility_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:invisibility_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:iron_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:keeper_flamberge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:keeper_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:legendary_ink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:legendary_spell_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:legionnaire_flamberge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lesser_spell_slot_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lightning_bottle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lightning_rod": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lightning_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lightning_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:lurker_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:magehunter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:magic_cloth": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:mana_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:mana_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:misery": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:mithril_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:mithril_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:mithril_scrap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:mithril_weave": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:music_disc_dead_king_lullaby": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:music_disc_flame_still_burns": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:music_disc_whispers_of_ice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:nature_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:nature_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:necromancer_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:necronomicon_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:nether_brick_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:netherite_mage_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:netherite_mage_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:netherite_mage_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:netherite_mage_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:netherite_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:netherward_tincture": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:oakskin_elixir": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:ominous_bottle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:paladin_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pedestal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:permafrost_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:plagued_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:plagued_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:plagued_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:plagued_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:poisonward_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:portal_frame": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:priest_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:priest_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:priest_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:priest_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:priest_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:protection_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:protection_upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pumpkin_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pumpkin_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pumpkin_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pumpkin_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyrium_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyrium_staff": {
+    "mode": "3d",
+    "scale": 0.37117684,
+    "offset": [
+      0.0073195253,
+      -0.061450195,
+      0.017398914
+    ]
+  },
+  "irons_spellbooks:pyromancer_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyromancer_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyromancer_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyromancer_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:pyromancer_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:rare_ink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:raw_mithril": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:rotten_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:ruined_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:scroll": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:scroll_forge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.028125,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:shadowwalker_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:shadowwalker_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:shadowwalker_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:shadowwalker_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:shriving_stone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:silver_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:speed_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:spellbreaker": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:staff_of_the_nines": {
+    "mode": "3d",
+    "scale": 0.19504681,
+    "offset": [
+      0.0041178013,
+      0.0147151435,
+      0.047301654
+    ]
+  },
+  "irons_spellbooks:tarnished_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:teleportation_amulet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:timeless_slurry": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:tincture_of_forgetfulness": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:trial_spawner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:twilight_gale": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:tyros_statue": {
+    "mode": "3d",
+    "scale": 0.44315526,
+    "offset": [
+      -0.06079748,
+      -0.058816765,
+      -0.06004688
+    ]
+  },
+  "irons_spellbooks:unchained_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:uncommon_ink": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:upgrade_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:vault": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:villager_spell_book": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      0.20249999,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:visibility_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wandering_magician_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wandering_magician_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wandering_magician_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wandering_magician_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wayward_compass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:weapon_parts": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wicked_bone_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wimpy_spell_book": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wisewood_bookshelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "irons_spellbooks:wizard_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wizard_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wizard_hat": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wizard_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "irons_spellbooks:wizard_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

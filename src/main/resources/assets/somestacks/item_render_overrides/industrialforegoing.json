@@ -1,0 +1,1397 @@
+{
+  "industrialforegoing:advanced_black_hole_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:advanced_black_hole_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:animal_baby_separator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:animal_feeder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:animal_rancher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:biofuel_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:biofuel_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:bioreactor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:black_hole_controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:block_breaker": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:block_placer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:common_black_hole_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:common_black_hole_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:conveyor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_blinking_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_bouncing_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_detection_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_dropping_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_extraction_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_insertion_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:conveyor_splitting_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:diamond_gear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:dissolution_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:dryrubber": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:dye_mixer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:efficiency_addon_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:efficiency_addon_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:enchantment_applicator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:enchantment_extractor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:enchantment_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:enchantment_sorter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:essence_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:ether_gas_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:fermentation_station": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fermented_ore_meat_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:fluid_collector": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fluid_extractor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fluid_laser_base": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fluid_placer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fluid_sieving_machine": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:fluid_transporter_type": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.042187497
+    ]
+  },
+  "industrialforegoing:gold_gear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:hydroponic_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:hydroponic_simulation_processor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:infinity_backpack": {
+    "mode": "3d",
+    "scale": 0.35555553,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      0.10555555
+    ]
+  },
+  "industrialforegoing:infinity_charger": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:infinity_drill": {
+    "mode": "3d",
+    "scale": 0.33159548,
+    "offset": [
+      -0.009473405,
+      0.0046604406,
+      0.04423191
+    ]
+  },
+  "industrialforegoing:infinity_hammer": {
+    "mode": "3d",
+    "scale": 0.27804396,
+    "offset": [
+      0.05147827,
+      -0.05147828,
+      0.02519773
+    ]
+  },
+  "industrialforegoing:infinity_launcher": {
+    "mode": "3d",
+    "scale": 0.22135514,
+    "offset": [
+      -0.020650234,
+      -0.022532295,
+      0.05188011
+    ]
+  },
+  "industrialforegoing:infinity_nuke": {
+    "mode": "3d",
+    "scale": 0.27692306,
+    "offset": [
+      -0.0,
+      -0.017307691,
+      -0.0
+    ]
+  },
+  "industrialforegoing:infinity_saw": {
+    "mode": "3d",
+    "scale": 0.26795623,
+    "offset": [
+      -0.0024525817,
+      -0.022668315,
+      0.05024179
+    ]
+  },
+  "industrialforegoing:infinity_trident": {
+    "mode": "3d",
+    "scale": 0.19771528,
+    "offset": [
+      0.0021844683,
+      0.0021844683,
+      0.009267904
+    ]
+  },
+  "industrialforegoing:iron_gear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:item_transporter_type": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.042187497
+    ]
+  },
+  "industrialforegoing:laser_drill": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:laser_lens0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens10": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens11": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens12": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens13": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens14": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens15": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens6": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens7": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens8": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:laser_lens9": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:latex_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:latex_processing_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:machine_frame_advanced": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:machine_frame_pity": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:machine_frame_simple": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:machine_frame_supreme": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:machine_settings_copier": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:marine_fisher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:material_stonework_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:meat_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:meat_feeder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:mechanical_dirt": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mob_crusher": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mob_detector": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mob_duplicator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mob_imprisonment_tool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:mob_slaughter_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_crimed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_culinary": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_death": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_disenchantment": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_ender": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_explosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_frosty": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_halitosis": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_magma": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_meatallurgic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_netherstar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_pink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_potion": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_reactor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_rocket": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:mycelial_slimey": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:ore_laser_base": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:pink_slime": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:pink_slime_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:pink_slime_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:pitiful_generator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:pity_black_hole_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:pity_black_hole_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:plant_fertilizer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:plant_gatherer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:plant_sower": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:potion_brewer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:processing_addon_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:processing_addon_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon0": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon10": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon11": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon6": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon7": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon8": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:range_addon9": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:raw_ore_meat_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:resourceful_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:sewage_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:sewage_composter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:sewer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:simple_black_hole_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:simple_black_hole_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:simulated_hydroponic_bed": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:sludge_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:sludge_refiner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:speed_addon_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:speed_addon_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:spores_recreator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:stasis_chamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:straw": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:supreme_black_hole_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:supreme_black_hole_unit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:tinydryrubber": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "industrialforegoing:transporter": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:washing_factory": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:water_condensator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:wither_builder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "industrialforegoing:world_transporter_type": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.042187497
+    ]
+  }
+}

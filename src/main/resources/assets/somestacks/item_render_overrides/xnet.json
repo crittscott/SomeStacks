@@ -1,0 +1,227 @@
+{
+  "xnet:advanced_connector_blue": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:advanced_connector_green": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:advanced_connector_red": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:advanced_connector_routing": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:advanced_connector_yellow": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:antenna": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:antenna_base": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:antenna_dish": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.053296417,
+      0.005625001
+    ]
+  },
+  "xnet:connector_blue": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:connector_green": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:connector_red": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:connector_routing": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:connector_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "xnet:connector_yellow": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:facade": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:netcable_blue": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:netcable_green": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:netcable_red": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:netcable_routing": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:netcable_yellow": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:redstone_proxy": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:redstone_proxy_upd": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:router": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "xnet:wireless_router": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  }
+}

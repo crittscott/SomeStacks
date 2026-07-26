@@ -1,0 +1,101 @@
+{
+  "createoreexcavation:diamond_drill": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:drill": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:drilling_machine": {
+    "mode": "3d",
+    "scale": 0.37499997,
+    "offset": [
+      -0.021358585,
+      0.074999996,
+      -0.0
+    ]
+  },
+  "createoreexcavation:extractor": {
+    "mode": "3d",
+    "scale": 0.37499997,
+    "offset": [
+      -0.021358585,
+      0.074999996,
+      -0.0
+    ]
+  },
+  "createoreexcavation:netherite_drill": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:raw_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:raw_emerald": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:raw_redstone": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:sample_drill": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "createoreexcavation:vein_atlas": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "createoreexcavation:vein_finder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

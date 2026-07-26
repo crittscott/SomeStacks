@@ -1,0 +1,3908 @@
+{
+  "bloodmagic:accelerationrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:accelerationrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:activationcrystalawakened": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:activationcrystalcreative": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:activationcrystalweak": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:advancedcuttingfluid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:airritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:airscribetool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:airsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:alchemicalreactionchamber": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:alchemy_flask": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:alchemy_flask_lingering": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:alchemy_flask_throwable": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:alchemytable": {
+    "mode": "3d",
+    "scale": 0.4042854,
+    "offset": [
+      0.10107135,
+      -0.029539209,
+      -0.0
+    ]
+  },
+  "bloodmagic:altar": {
+    "mode": "3d",
+    "scale": 0.6875971,
+    "offset": [
+      -1.0245995E-8,
+      0.042525295,
+      -1.0245995E-8
+    ]
+  },
+  "bloodmagic:altarcapacityrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:altarcapacityrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:amethystthrowingdagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:apprenticebloodorb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:arcaneashes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:archmagebloodorb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:aug_shaped_charge": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:averagelengtheningcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:averagepowercatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basemonstersoul": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basemonstersoul_corrosive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basemonstersoul_destructive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basemonstersoul_steadfast": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basemonstersoul_vengeful": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:basiccuttingfluid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bettercapacityrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:bettercapacityrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:blankrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:blankslate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bleedingedge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bloodlightsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bloodstonebrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment_strong": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_power_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_velocity_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_velocity_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_velocity_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_velocity_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:bow_velocity_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:chargingrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:chargingrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:coalsand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:combinationalcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:componentframeparts": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:copperfragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:coppergravel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:coppersand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:corrosivecatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:corrosivecrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:corrosivedemoncrystal": {
+    "mode": "3d",
+    "scale": 1.0166539,
+    "offset": [
+      0.0023210202,
+      0.06318683,
+      0.02538179
+    ]
+  },
+  "bloodmagic:corrupted_dust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:corrupted_tinydust": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:cyclingcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:daggerofsacrifice": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:defaultcrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:deforester_charge": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:deforester_charge_2": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:demoncrucible": {
+    "mode": "3d",
+    "scale": 0.5877551,
+    "offset": [
+      -0.0,
+      -0.07806122,
+      -0.0
+    ]
+  },
+  "bloodmagic:demoncrystallizer": {
+    "mode": "3d",
+    "scale": 0.6545454,
+    "offset": [
+      -0.0,
+      -0.061363634,
+      -0.0
+    ]
+  },
+  "bloodmagic:demonitefragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:demonitegravel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:demonpylon": {
+    "mode": "3d",
+    "scale": 0.5142857,
+    "offset": [
+      -0.0,
+      -0.096428566,
+      -0.0
+    ]
+  },
+  "bloodmagic:demonslate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:demonwillgauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:destructivecatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:destructivecrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:destructivedemoncrystal": {
+    "mode": "3d",
+    "scale": 1.0166539,
+    "offset": [
+      0.0023210202,
+      0.06318683,
+      0.02538179
+    ]
+  },
+  "bloodmagic:dislocationrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dislocationrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:divinationsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:doubt_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:dungeon_alternator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_gate_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_gate_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_gate_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_gate_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_slab_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_slab_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_slab_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_slab_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_stairs_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_stairs_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_stairs_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_stairs_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick1_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_brick1_wall_corrosive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_brick1_wall_destructive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_brick1_wall_steadfast": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_brick1_wall_vengeful": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_brick2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick2_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick2_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick2_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick2_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick3": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick3_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick3_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick3_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick3_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick_assorted": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_brick_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_cracked_brick1": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_emitter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_eye": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_eye_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_eye_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_eye_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_eye_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_metal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_metal_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_metal_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_metal_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_metal_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_cap": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_cap_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_cap_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_cap_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_cap_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_center": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_center_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_center_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_center_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_center_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_special": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_special_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_special_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_special_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_pillar_special_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_gate": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_gate_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_gate_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_gate_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_gate_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_slab_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_slab_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_slab_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_slab_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_stairs_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_stairs_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_stairs_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_stairs_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_polished_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_polished_wall_corrosive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_polished_wall_destructive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_polished_wall_steadfast": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_polished_wall_vengeful": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_regular_cracked_brick1": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_seal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_smallbrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_smallbrick_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_smallbrick_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_smallbrick_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_smallbrick_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_spike_trap": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_slab_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_slab_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_slab_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_slab_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_stairs_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_stairs_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_stairs_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_stairs_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_stone_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_stone_wall_corrosive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_stone_wall_destructive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_stone_wall_steadfast": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_stone_wall_vengeful": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tester": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_slab_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_slab_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_slab_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_slab_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tile_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tile_wall_corrosive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tile_wall_destructive": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tile_wall_steadfast": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tile_wall_vengeful": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "bloodmagic:dungeon_tilespecial": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tilespecial_corrosive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tilespecial_destructive": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tilespecial_steadfast": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:dungeon_tilespecial_vengeful": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:duskritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:duskscribetool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:earthritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:earthscribetool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:enhancedteleposerfocus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ethereal_mimic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:etherealslate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:experiencebook": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:explosivepowder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fireritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:firescribetool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fortune_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fortune_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fortune_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fortune_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fortune_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fragment_netherite_scrap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:fungal_charge": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:fungal_charge_2": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:furnacecell_primitive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:goldfragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:goldgravel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:goldsand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:gravel_netherite_scrap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:growing_doubt": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:growthsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hellforged_explosive_cell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hellforged_resonator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hellforgedparts": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hidden_knowledge_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hidden_knowledge_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hidden_knowledge_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hidden_knowledge_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:hidden_knowledge_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:holy_water_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:holy_water_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:holy_water_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:holy_water_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:holy_water_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:icesigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:incensealtar": {
+    "mode": "3d",
+    "scale": 0.80672264,
+    "offset": [
+      -0.0,
+      -0.023319332,
+      -0.0
+    ]
+  },
+  "bloodmagic:infusedslate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ingot_hellforged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:inputroutingnode": {
+    "mode": "3d",
+    "scale": 1.4399999,
+    "offset": [
+      -0.0,
+      0.13499999,
+      -0.0
+    ]
+  },
+  "bloodmagic:intermediatecuttingfluid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:inversion_pillar": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:inversion_pillar_cap": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.106249996,
+      -0.0
+    ]
+  },
+  "bloodmagic:ironfragment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:irongravel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ironsand": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemrouterfiltercomposite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemrouterfilterenchant": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemrouterfilterexact": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemrouterfiltermoditems": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemrouterfilteroredict": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:itemroutingnode": {
+    "mode": "3d",
+    "scale": 1.4399999,
+    "offset": [
+      -0.0,
+      0.13499999,
+      -0.0
+    ]
+  },
+  "bloodmagic:largebloodstonebrick": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:lavacrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:lavasigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:life_essence_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:lightritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:livingboots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:livinghelmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:livingleggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:livingplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:looting_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:looting_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:looting_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:looting_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:looting_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:magicianbloodorb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:masterbloodorb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:mastercore": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:mastercorespeed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:masterritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:masterroutingnode": {
+    "mode": "3d",
+    "scale": 1.3714285,
+    "offset": [
+      -0.0,
+      0.117857136,
+      -0.0
+    ]
+  },
+  "bloodmagic:melee_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:melee_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:melee_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:melee_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:melee_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:mimic": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:mineentrancekey": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:minekey": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:miningsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:mundanelengtheningcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:mundanepowercatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:nether_soil": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
+    ]
+  },
+  "bloodmagic:noderouter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:obsidianbrickpath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:obsidiantilepath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:orbcapacityrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:orbcapacityrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:outputroutingnode": {
+    "mode": "3d",
+    "scale": 1.4399999,
+    "offset": [
+      -0.0,
+      0.13499999,
+      -0.0
+    ]
+  },
+  "bloodmagic:plantoil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:primitive_crystalline_resonator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:primitive_explosive_cell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:primitive_hydration_cell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:quick_draw_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:quick_draw_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:quick_draw_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:quick_draw_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:quick_draw_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:rawcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:rawdemoncrystal": {
+    "mode": "3d",
+    "scale": 1.0166539,
+    "offset": [
+      0.0023210202,
+      0.06318683,
+      0.02538179
+    ]
+  },
+  "bloodmagic:rawdemonite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:rawdemoniteblock": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:reagentair": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentbinding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentbloodlight": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentfastminer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentfrost": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentgrowth": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentholding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentlava": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentmagnetism": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentsight": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentsuppression": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentteleposition": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentvoid": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reagentwater": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reinforcedslate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:reinforcedteleposerfocus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:resonator": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ritualdiviner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ritualdivinerdusk": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:ritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:ritualtinkerer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sacrificerune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:sacrificerune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:sacrificialdagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:saltpeter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sand_hellforged": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sand_netherite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sanguinereverter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:seersigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:selfsacrificerune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:selfsacrificerune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:shaped_charge": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:shaped_charge_deep": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:sigilofholding": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sigilofmagnetism": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sigilofsuppression": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:silk_touch_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:silk_touch_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:silk_touch_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:simplecatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:simplekey": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:slate_ampoule": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:slate_vial": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:smelting_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:smelting_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:smelting_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulaxe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulforge": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.00703125,
+      -0.0
+    ]
+  },
+  "bloodmagic:soulgemcommon": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulgemgreater": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulgemlesser": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulgempetty": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulpickaxe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulscythe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulshovel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulsnare": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:soulsword": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:special_dungeon_seal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:speedrune": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:speedrune2": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:spikes": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:standardfillingagent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:steadfastcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:steadfastcrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:steadfastdemoncrystal": {
+    "mode": "3d",
+    "scale": 1.0166539,
+    "offset": [
+      0.0023210202,
+      0.06318683,
+      0.02538179
+    ]
+  },
+  "bloodmagic:stonebrickpath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:stonetilepath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:strengthenedcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:strong_tau": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:sulfur": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:syntheticpoint": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:tauoil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:teleposer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:teleposerfocus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:telepositionsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:throwing_dagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:throwing_dagger_syringe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:tippedamethystthrowingdagger": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:upgradescraps": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:upgradetome": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:upgradetrainer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:veinmine_charge": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:veinmine_charge_2": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      0.16874999,
+      -0.0
+    ]
+  },
+  "bloodmagic:vengefulcatalyst": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:vengefulcrystal": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:vengefuldemoncrystal": {
+    "mode": "3d",
+    "scale": 1.0166539,
+    "offset": [
+      0.0023210202,
+      0.06318683,
+      0.02538179
+    ]
+  },
+  "bloodmagic:voiding_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:voiding_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:voiding_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:voidsigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:waterritualstone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:waterscribetool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:watersigil": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weak_tau": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weakbloodorb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weakbloodshard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weakfillingagent": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weapon_repair_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weapon_repair_anointment_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weapon_repair_anointment_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weapon_repair_anointment_l": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:weapon_repair_anointment_xl": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:will_power_anointment": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "bloodmagic:woodbrickpath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:woodtilepath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:wornstonebrickpath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "bloodmagic:wornstonetilepath": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  }
+}

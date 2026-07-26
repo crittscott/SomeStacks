@@ -1,0 +1,191 @@
+{
+  "cabletiers:elite_constructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:elite_destructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:elite_disk_manipulator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:elite_exporter": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:elite_importer": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:elite_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:elite_requester": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:mega_constructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:mega_destructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:mega_disk_manipulator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:mega_exporter": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:mega_importer": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:mega_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:mega_requester": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:ultra_constructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:ultra_destructor": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1125
+    ]
+  },
+  "cabletiers:ultra_disk_manipulator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:ultra_exporter": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:ultra_importer": {
+    "mode": "3d",
+    "scale": 0.48,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.13499999
+    ]
+  },
+  "cabletiers:ultra_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "cabletiers:ultra_requester": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  }
+}

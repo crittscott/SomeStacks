@@ -1,0 +1,389 @@
+{
+  "utilitarian:angel_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:black_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:black_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:blue_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:blue_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:brown_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:brown_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:cyan_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:cyan_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:drit": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:fluid_hopper": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "utilitarian:gray_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:gray_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:green_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:green_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:grrass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:light_blue_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:light_blue_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:light_gray_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:light_gray_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:lime_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:lime_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:magenta_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:magenta_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:no_soliciting_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "utilitarian:orange_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:orange_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:pink_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:pink_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:purple_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:purple_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:red_snad": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:red_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:red_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:redstone_clock": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:restraining_order": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "utilitarian:snad": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:soul_snad": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:tps_meter": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "utilitarian:white_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:white_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:yellow_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "utilitarian:yellow_trapped_soliciting_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  }
+}

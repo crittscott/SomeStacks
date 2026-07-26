@@ -1,0 +1,29 @@
+{
+  "sliceanddice:fertilizer_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "sliceanddice:slicer": {
+    "mode": "3d",
+    "scale": 0.5142857,
+    "offset": [
+      -0.0,
+      -0.06428571,
+      -0.0
+    ]
+  },
+  "sliceanddice:sprinkler": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.18749999,
+      -0.0
+    ]
+  }
+}

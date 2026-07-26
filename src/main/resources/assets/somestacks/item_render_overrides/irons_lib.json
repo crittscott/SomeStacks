@@ -1,0 +1,20 @@
+{
+  "irons_lib:player_statue": {
+    "mode": "3d",
+    "scale": 0.5200878,
+    "offset": [
+      -0.0,
+      0.035043906,
+      0.022390006
+    ]
+  },
+  "irons_lib:transmog_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  }
+}

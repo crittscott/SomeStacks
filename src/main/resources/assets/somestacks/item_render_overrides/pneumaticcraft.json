@@ -1,0 +1,2783 @@
+{
+  "pneumaticcraft:advanced_air_compressor": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.22500002
+    ]
+  },
+  "pneumaticcraft:advanced_liquid_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:advanced_pressure_tube": {
+    "mode": "3d",
+    "scale": 0.50000006,
+    "offset": [
+      -0.0,
+      -7.4505815E-9,
+      7.4505815E-9
+    ]
+  },
+  "pneumaticcraft:aerial_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:air_canister": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:air_cannon": {
+    "mode": "3d",
+    "scale": 1.0285714,
+    "offset": [
+      -0.0,
+      0.055446424,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:air_compressor": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.22500002
+    ]
+  },
+  "pneumaticcraft:air_conditioning_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:air_grate_module": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      0.00703125,
+      0.042187497
+    ]
+  },
+  "pneumaticcraft:amadron_tablet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:aphorism_tile": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:armor_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:assembly_controller": {
+    "mode": "3d",
+    "scale": 0.85569495,
+    "offset": [
+      -0.0,
+      -0.011076254,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:assembly_drill": {
+    "mode": "3d",
+    "scale": 0.62608695,
+    "offset": [
+      -0.0,
+      -0.06847826,
+      -0.0048913043
+    ]
+  },
+  "pneumaticcraft:assembly_io_unit_export": {
+    "mode": "3d",
+    "scale": 0.62608695,
+    "offset": [
+      -0.0,
+      -0.06847826,
+      -0.014673913
+    ]
+  },
+  "pneumaticcraft:assembly_io_unit_import": {
+    "mode": "3d",
+    "scale": 0.62608695,
+    "offset": [
+      -0.0,
+      -0.06847826,
+      -0.014673913
+    ]
+  },
+  "pneumaticcraft:assembly_laser": {
+    "mode": "3d",
+    "scale": 0.61276597,
+    "offset": [
+      -0.0,
+      -0.07180851,
+      -0.019148936
+    ]
+  },
+  "pneumaticcraft:assembly_platform": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.12656249,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:assembly_program_drill": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:assembly_program_drill_laser": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:assembly_program_laser": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:bandage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:biodiesel_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:block_tracker_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:camo_applicator": {
+    "mode": "3d",
+    "scale": 0.5888714,
+    "offset": [
+      0.005027894,
+      0.07116713,
+      -8.774868E-9
+    ]
+  },
+  "pneumaticcraft:cannon_barrel": {
+    "mode": "3d",
+    "scale": 1.9072846,
+    "offset": [
+      -0.0,
+      0.13261588,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:capacitor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:charging_module": {
+    "mode": "3d",
+    "scale": 1.309091,
+    "offset": [
+      1.9506976E-8,
+      -0.020454528,
+      0.22500002
+    ]
+  },
+  "pneumaticcraft:charging_station": {
+    "mode": "3d",
+    "scale": 1.125,
+    "offset": [
+      -0.0,
+      0.0703125,
+      0.22851561
+    ]
+  },
+  "pneumaticcraft:charging_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:chips": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:chunkloader_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:classify_filter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:cod_n_chips": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:collector_drone": {
+    "mode": "3d",
+    "scale": 0.41592678,
+    "offset": [
+      -1.2395584E-8,
+      -0.0,
+      0.025995428
+    ]
+  },
+  "pneumaticcraft:compressed_brick_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_brick_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_brick_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_brick_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_brick_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "pneumaticcraft:compressed_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_gear": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:compressed_iron_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:compressed_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:compressed_stone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:coordinate_tracker_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:copper_nugget": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:creative_compressed_iron_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:creative_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:creative_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:crop_support": {
+    "mode": "3d",
+    "scale": 0.7578948,
+    "offset": [
+      1.1293513E-8,
+      1.1293513E-8,
+      -0.023684213
+    ]
+  },
+  "pneumaticcraft:diagnostic_subroutine": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:diesel_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:dispenser_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:display_shelf": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      0.225
+    ]
+  },
+  "pneumaticcraft:display_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:drill_bit_compressed_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:drill_bit_diamond": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:drill_bit_iron": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:drill_bit_netherite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:drill_pipe": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      0.062499996
+    ]
+  },
+  "pneumaticcraft:drone": {
+    "mode": "3d",
+    "scale": 0.41592678,
+    "offset": [
+      -1.2395584E-8,
+      -0.0,
+      0.025995428
+    ]
+  },
+  "pneumaticcraft:drone_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:electrostatic_compressor": {
+    "mode": "3d",
+    "scale": 0.62608695,
+    "offset": [
+      -0.0,
+      -0.06847826,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:elevator_base": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:elevator_caller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:elevator_frame": {
+    "mode": "3d",
+    "scale": 0.90005624,
+    "offset": [
+      -0.0,
+      1.4069065E-5,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:elytra_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:empty_pcb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:empty_spawner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:ender_visor_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:entity_tracker_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:etching_acid_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:etching_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:ethanol_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:failed_pcb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:flippers_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:flow_detector_module": {
+    "mode": "3d",
+    "scale": 1.1999999,
+    "offset": [
+      -0.0,
+      -0.018749999,
+      0.18749999
+    ]
+  },
+  "pneumaticcraft:fluid_mixer": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:flux_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:gas_lift": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:gasoline_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gilded_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:glycerol": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gps_area_tool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gps_tool": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:guard_drone": {
+    "mode": "3d",
+    "scale": 0.41592678,
+    "offset": [
+      -1.2395584E-8,
+      -0.0,
+      0.025995428
+    ]
+  },
+  "pneumaticcraft:gun_ammo": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gun_ammo_ap": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gun_ammo_explosive": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gun_ammo_freezing": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gun_ammo_incendiary": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:gun_ammo_weighted": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:harvesting_drone": {
+    "mode": "3d",
+    "scale": 0.41592678,
+    "offset": [
+      -1.2395584E-8,
+      -0.0,
+      0.025995428
+    ]
+  },
+  "pneumaticcraft:heat_frame": {
+    "mode": "3d",
+    "scale": 0.8470588,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:heat_pipe": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:heat_sink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:huge_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:ingot_iron_compressed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:inventory_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:item_life_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jackhammer": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.074999996,
+      0.0046874997
+    ]
+  },
+  "pneumaticcraft:jet_boots_upgrade_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jet_boots_upgrade_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jet_boots_upgrade_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jet_boots_upgrade_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jet_boots_upgrade_5": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jumping_upgrade_1": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jumping_upgrade_2": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jumping_upgrade_3": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:jumping_upgrade_4": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:kerosene_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:kerosene_lamp": {
+    "mode": "3d",
+    "scale": 1.3090909,
+    "offset": [
+      -0.0,
+      0.10227272,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:large_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:liquid_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:liquid_hopper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:logistics_configurator": {
+    "mode": "3d",
+    "scale": 0.5888714,
+    "offset": [
+      0.005027894,
+      0.07116713,
+      -8.774868E-9
+    ]
+  },
+  "pneumaticcraft:logistics_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:logistics_drone": {
+    "mode": "3d",
+    "scale": 0.41592678,
+    "offset": [
+      -1.2395584E-8,
+      -0.0,
+      0.025995428
+    ]
+  },
+  "pneumaticcraft:logistics_frame_active_provider": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.028125
+    ]
+  },
+  "pneumaticcraft:logistics_frame_default_storage": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.028125
+    ]
+  },
+  "pneumaticcraft:logistics_frame_passive_provider": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.028125
+    ]
+  },
+  "pneumaticcraft:logistics_frame_requester": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.028125
+    ]
+  },
+  "pneumaticcraft:logistics_frame_storage": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.028125
+    ]
+  },
+  "pneumaticcraft:logistics_module": {
+    "mode": "3d",
+    "scale": 0.5538461,
+    "offset": [
+      -0.0,
+      -0.017307691,
+      0.069230765
+    ]
+  },
+  "pneumaticcraft:lpg_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:lubricant_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:magnet_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:manometer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:manual_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0041188137,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:medium_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:memory_essence_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:memory_stick": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:micromissiles": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:minigun": {
+    "mode": "3d",
+    "scale": 0.4819173,
+    "offset": [
+      0.002377147,
+      0.008562604,
+      0.062498648
+    ]
+  },
+  "pneumaticcraft:minigun_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:module_expansion_card": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:network_api": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:network_data_storage": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:network_io_port": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:network_node": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:network_registry": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:night_vision_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:nuke_virus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:oil_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:omnidirectional_hopper": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pcb_blueprint": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:plastic": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_black": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_blue": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_brown": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_cyan": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_gray": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_green": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_light_blue": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_light_gray": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_lime": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_magenta": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_orange": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_pink": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_purple": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_red": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_white": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_brick_yellow": {
+    "mode": "3d",
+    "scale": 0.79999995,
+    "offset": [
+      -0.0,
+      -0.024999999,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:plastic_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_cylinder": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_door": {
+    "mode": "3d",
+    "scale": 0.45,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.021093749
+    ]
+  },
+  "pneumaticcraft:pneumatic_door_base": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_dynamo": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pneumatic_wrench": {
+    "mode": "3d",
+    "scale": 0.5888714,
+    "offset": [
+      0.005027894,
+      0.07116713,
+      -8.774868E-9
+    ]
+  },
+  "pneumaticcraft:pressure_chamber_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pressure_chamber_interface": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pressure_chamber_valve": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pressure_chamber_wall": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:pressure_gauge": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:pressure_gauge_module": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.07875
+    ]
+  },
+  "pneumaticcraft:pressure_tube": {
+    "mode": "3d",
+    "scale": 0.50000006,
+    "offset": [
+      -0.0,
+      -7.4505815E-9,
+      7.4505815E-9
+    ]
+  },
+  "pneumaticcraft:pressurized_spawner": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:printed_circuit_board": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:programmable_controller": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:programmer": {
+    "mode": "3d",
+    "scale": 0.8914023,
+    "offset": [
+      -0.0,
+      -0.002149417,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:programming_puzzle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:radiation_shielding_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:range_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:raw_salmon_tempura": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:redstone_module": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0703125,
+      0.054843742
+    ]
+  },
+  "pneumaticcraft:refinery": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:refinery_output": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:regulator_tube_module": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      -0.033749998,
+      0.225
+    ]
+  },
+  "pneumaticcraft:reinforced_air_canister": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_brick_pillar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_brick_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_brick_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_brick_tile": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_brick_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
+    ]
+  },
+  "pneumaticcraft:reinforced_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.0,
+      0.015,
+      0.015
+    ]
+  },
+  "pneumaticcraft:reinforced_chest_kit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_pressure_tube": {
+    "mode": "3d",
+    "scale": 0.50000006,
+    "offset": [
+      -0.0,
+      -7.4505815E-9,
+      7.4505815E-9
+    ]
+  },
+  "pneumaticcraft:reinforced_stone": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:reinforced_stone_slab": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1125,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:remote": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:safety_tube_module": {
+    "mode": "3d",
+    "scale": 1.2,
+    "offset": [
+      -0.042049512,
+      0.018750055,
+      0.22500002
+    ]
+  },
+  "pneumaticcraft:salmon_tempura": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:scuba_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:search_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:security_station": {
+    "mode": "3d",
+    "scale": 0.8914023,
+    "offset": [
+      -0.0,
+      -0.002149417,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:security_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:seismic_sensor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:sentry_turret": {
+    "mode": "3d",
+    "scale": 0.4645161,
+    "offset": [
+      -0.0,
+      0.014516128,
+      0.10887096
+    ]
+  },
+  "pneumaticcraft:small_tank": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smart_chest": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.0,
+      0.015,
+      0.015
+    ]
+  },
+  "pneumaticcraft:smart_chest_kit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_black": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_brown": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_cyan": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_green": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_light_blue": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_light_gray": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_lime": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_magenta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_orange": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_pink": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_purple": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_red": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_white": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:smooth_plastic_brick_yellow": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:solar_cell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:solar_compressor": {
+    "mode": "3d",
+    "scale": 0.3272727,
+    "offset": [
+      -0.0,
+      -0.10232594,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:solar_wafer": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:sourdough": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:sourdough_bread": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:spawner_agitator": {
+    "mode": "3d",
+    "scale": 0.8470588,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:spawner_core": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:spawner_core_shell": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:spawner_extractor": {
+    "mode": "3d",
+    "scale": 0.37499997,
+    "offset": [
+      2.7939675E-9,
+      -0.0,
+      2.7939675E-9
+    ]
+  },
+  "pneumaticcraft:speed_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:standby_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:stomp_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:stone_base": {
+    "mode": "3d",
+    "scale": 1.8947366,
+    "offset": [
+      -0.0,
+      0.2960526,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:stop_worm": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:tag_filter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:tag_workbench": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:thaumcraft_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:thermal_compressor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:thermal_lagging": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:thermopneumatic_processing_plant": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.225
+    ]
+  },
+  "pneumaticcraft:thermostat_module": {
+    "mode": "3d",
+    "scale": 1.3090909,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.020454545
+    ]
+  },
+  "pneumaticcraft:transfer_gadget": {
+    "mode": "3d",
+    "scale": 1.8,
+    "offset": [
+      -0.0,
+      0.365625,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:transistor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:tube_junction": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:turbine_blade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:turbine_rotor": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:unassembled_netherite_drill_bit": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:unassembled_pcb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:universal_sensor": {
+    "mode": "3d",
+    "scale": 0.8470589,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.19852942
+    ]
+  },
+  "pneumaticcraft:upgrade_matrix": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:uv_light_box": {
+    "mode": "3d",
+    "scale": 0.96,
+    "offset": [
+      -0.015,
+      0.03,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:vacuum_module": {
+    "mode": "3d",
+    "scale": 1.0285714,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:vacuum_pump": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.052734375,
+      0.140625
+    ]
+  },
+  "pneumaticcraft:vacuum_trap": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      0.1546875
+    ]
+  },
+  "pneumaticcraft:vegetable_oil_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:volume_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:vortex_cannon": {
+    "mode": "3d",
+    "scale": 0.4235294,
+    "offset": [
+      0.0066176467,
+      0.0343821,
+      0.122426465
+    ]
+  },
+  "pneumaticcraft:vortex_tube": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "pneumaticcraft:wall_lamp_black": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_blue": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_brown": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_cyan": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_gray": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_green": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_black": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_blue": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_brown": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_cyan": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_gray": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_green": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_light_blue": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_light_gray": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_lime": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_magenta": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_orange": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_pink": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_purple": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_red": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_white": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_inverted_yellow": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_light_blue": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_light_gray": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_lime": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_magenta": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_orange": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_pink": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_purple": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_red": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_white": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wall_lamp_yellow": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.07875002
+    ]
+  },
+  "pneumaticcraft:wheat_flour": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pneumaticcraft:yeast_culture_bucket": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

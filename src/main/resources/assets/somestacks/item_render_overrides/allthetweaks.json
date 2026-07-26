@@ -1,0 +1,191 @@
+{
+  "allthetweaks:allthecatalystium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:atm_star": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:atm_star_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "allthetweaks:atm_star_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:dimensional_seed": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:dragon_soul": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:ender_pearl_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "allthetweaks:greg_star": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:greg_star_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "allthetweaks:improbable_probability_device": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:mini_end": {
+    "mode": "3d",
+    "scale": 0.72,
+    "offset": [
+      1.07288365E-8,
+      1.07288365E-8,
+      0.03375
+    ]
+  },
+  "allthetweaks:mini_exit": {
+    "mode": "3d",
+    "scale": 0.5142857,
+    "offset": [
+      -0.0,
+      -0.032142855,
+      0.080357134
+    ]
+  },
+  "allthetweaks:mini_nether": {
+    "mode": "3d",
+    "scale": 0.59999996,
+    "offset": [
+      -0.0,
+      0.018749999,
+      -0.018749999
+    ]
+  },
+  "allthetweaks:nether_star_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "allthetweaks:nexium_emitter": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:oblivion_shard": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:patrick_star": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:philosophers_fuel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:pulsating_black_hole": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "allthetweaks:trophy_atm": {
+    "mode": "3d",
+    "scale": 0.6545454,
+    "offset": [
+      -0.0,
+      0.10738636,
+      -0.0
+    ]
+  },
+  "allthetweaks:withers_compass": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

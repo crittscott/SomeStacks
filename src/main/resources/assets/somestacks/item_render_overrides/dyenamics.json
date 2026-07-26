@@ -1,0 +1,2270 @@
+{
+  "dyenamics:amber_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:amber_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:amber_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:amber_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:amber_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:amber_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:amber_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:amber_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:aquamarine_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:aquamarine_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:aquamarine_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:aquamarine_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:aquamarine_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:aquamarine_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:aquamarine_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:bubblegum_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:bubblegum_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:bubblegum_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:bubblegum_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:bubblegum_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:bubblegum_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:bubblegum_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:cherenkov_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:cherenkov_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:cherenkov_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:cherenkov_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:cherenkov_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:cherenkov_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:cherenkov_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:conifer_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:conifer_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:conifer_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:conifer_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:conifer_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:conifer_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:conifer_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:fluorescent_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:fluorescent_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:fluorescent_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:fluorescent_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:fluorescent_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:fluorescent_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:fluorescent_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:honey_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:honey_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:honey_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:honey_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:honey_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:honey_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:honey_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:icy_blue_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:icy_blue_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:icy_blue_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:icy_blue_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:icy_blue_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:icy_blue_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:icy_blue_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:lavender_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:lavender_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:lavender_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:lavender_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:lavender_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:lavender_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:lavender_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:maroon_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:maroon_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:maroon_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:maroon_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:maroon_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:maroon_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:maroon_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:mint_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:mint_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:mint_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:mint_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:mint_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:mint_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:mint_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:navy_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:navy_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:navy_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:navy_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:navy_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:navy_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:navy_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:peach_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:peach_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:peach_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:peach_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:peach_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:peach_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:peach_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:persimmon_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:persimmon_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:persimmon_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:persimmon_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:persimmon_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:persimmon_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:persimmon_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:rose_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:rose_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:rose_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:rose_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:rose_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:rose_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:rose_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:spring_green_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:spring_green_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:spring_green_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:spring_green_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:spring_green_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:spring_green_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:spring_green_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:ultramarine_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:ultramarine_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:ultramarine_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:ultramarine_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:ultramarine_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:ultramarine_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:ultramarine_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_banner": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:wine_bed": {
+    "mode": "3d",
+    "scale": 0.45000005,
+    "offset": [
+      6.7055232E-9,
+      -0.0,
+      0.0070312573
+    ]
+  },
+  "dyenamics:wine_candle": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:wine_carpet": {
+    "mode": "gui",
+    "scale": 0.71999985,
+    "offset": [
+      -0.0,
+      0.21093744,
+      -2.1457668E-8
+    ]
+  },
+  "dyenamics:wine_concrete": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_concrete_powder": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_dye": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:wine_glazed_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_rockwool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_shulker_box": {
+    "mode": "3d",
+    "scale": 0.9004502,
+    "offset": [
+      -0.0,
+      -1.3417754E-8,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_stained_glass": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_stained_glass_pane": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "dyenamics:wine_terracotta": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "dyenamics:wine_wool": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  }
+}

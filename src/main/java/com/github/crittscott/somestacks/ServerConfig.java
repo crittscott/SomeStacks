@@ -29,6 +29,7 @@ public final class ServerConfig {
 
     public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_MODS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_ITEMS;
 
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
@@ -109,9 +110,18 @@ public final class ServerConfig {
         GEN_MODS = builder
                 .comment("Mod IDs the 'ss test list' and 'ss testingot list' commands build walls for.",
                         "The order given is the order of the wall's columns.",
-                        "Empty by default; editable in game with 'ss gen add' and 'ss gen remove'.",
+                        "Empty by default; editable in game with 'ss gen mod add' and 'ss gen mod remove'.",
                         "Mod IDs must be quoted: [\"create\", \"farmersdelight\"]")
                 .defineList("gen_mods",
+                        Collections.emptyList(),
+                        obj -> obj instanceof String);
+
+        GEN_ITEMS = builder
+                .comment("Items the 'ss test items' command builds a row for. The row is sorted by",
+                        "mod id and then item name, so this list may be kept in any order.",
+                        "Empty by default; editable in game with 'ss gen item add' and 'ss gen item remove'.",
+                        "Format: \"modid:itemname\", quoted: [\"minecraft:torch\", \"alexscaves:sea_staff\"]")
+                .defineList("gen_items",
                         Collections.emptyList(),
                         obj -> obj instanceof String);
 

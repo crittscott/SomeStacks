@@ -1,0 +1,110 @@
+{
+  "paraglider:anti_vessel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "paraglider:deku_leaf": {
+    "mode": "3d",
+    "scale": 0.57178056,
+    "offset": [
+      0.008355771,
+      -0.0123781385,
+      0.017868126
+    ]
+  },
+  "paraglider:essence": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "paraglider:goddess_statue": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      0.1125
+    ]
+  },
+  "paraglider:goron_goddess_statue": {
+    "mode": "3d",
+    "scale": 0.62608695,
+    "offset": [
+      -0.0,
+      -0.06847826,
+      0.097826086
+    ]
+  },
+  "paraglider:heart_container": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "paraglider:horned_statue": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      0.13499999
+    ]
+  },
+  "paraglider:kakariko_goddess_statue": {
+    "mode": "3d",
+    "scale": 0.71999997,
+    "offset": [
+      -0.0,
+      -0.044999998,
+      0.1125
+    ]
+  },
+  "paraglider:paraglider": {
+    "mode": "3d",
+    "scale": 0.432957,
+    "offset": [
+      -1.2903124E-8,
+      0.013529913,
+      0.0135298995
+    ]
+  },
+  "paraglider:rito_goddess_statue": {
+    "mode": "3d",
+    "scale": 0.68571424,
+    "offset": [
+      -0.0,
+      -0.053571425,
+      0.10714285
+    ]
+  },
+  "paraglider:spirit_orb": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "paraglider:stamina_vessel": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

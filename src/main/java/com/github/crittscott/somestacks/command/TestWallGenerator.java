@@ -25,16 +25,15 @@ import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /**
- * Generates walls of stacks filled with the items of one or more namespaces, for reviewing
- * render settings in the world. One column of stacks per mod, rows running north, over a
- * uniform floor.
+ * Generates walls of stacks filled with given groups of items, for reviewing render settings in
+ * the world. One column of stacks per group — a namespace, or a row of hand-picked items — with
+ * rows running north, over a uniform floor.
  *
  * <p>A wall spanning every loaded mod runs to tens of thousands of placements, so a
  * request is queued and drained a bounded number of placements per server tick rather
@@ -169,38 +168,37 @@ public final class TestWallGenerator {
     public record Result(int totalStacks, int expectedStacks, int totalItems) {}
 
     /**
-     * Queues a wall for the given namespaces and returns what it will contain. The wall is
-     * built over the following ticks; {@code onComplete} runs on the server thread once the
-     * last stack is placed, and not at all if the player disconnects first.
+     * Queues a wall for the given groups of items and returns what it will contain. Each group is
+     * one column, filled a stack at a time along a row running north; a namespace wall passes one
+     * group per mod, and a wall of hand-picked items passes a single group. The wall is built over
+     * the following ticks; {@code onComplete} runs on the server thread once the last stack is
+     * placed, and not at all if the player disconnects first.
      */
-    public static Plan enqueue(ServerPlayer player, Kind kind, List<String> modIds,
+    public static Plan enqueue(ServerPlayer player, Kind kind, List<List<Item>> groups,
                                Consumer<Result> onComplete) {
         Level level = player.level();
         BlockPos basePos = player.blockPosition().east();
 
-        Map<String, List<Item>> itemsByMod = new LinkedHashMap<>();
         int maxRows = 0;
         int totalItems = 0;
-        for (String modId : modIds) {
-            List<Item> modItems = kind.itemsIn(modId);
-            itemsByMod.put(modId, modItems);
-            maxRows = Math.max(maxRows, kind.rowsFor(modItems.size()));
-            totalItems += modItems.size();
+        for (List<Item> group : groups) {
+            maxRows = Math.max(maxRows, kind.rowsFor(group.size()));
+            totalItems += group.size();
         }
 
         Deque<PendingStack> stacks = new ArrayDeque<>();
-        int modIndex = 0;
-        for (List<Item> modItems : itemsByMod.values()) {
-            BlockPos currentPos = basePos.offset(modIndex * MOD_SPACING, 0, 0);
-            for (int i = 0; i < modItems.size(); i += kind.itemsPerStack) {
+        int groupIndex = 0;
+        for (List<Item> group : groups) {
+            BlockPos currentPos = basePos.offset(groupIndex * MOD_SPACING, 0, 0);
+            for (int i = 0; i < group.size(); i += kind.itemsPerStack) {
                 stacks.add(new PendingStack(currentPos,
-                        modItems.subList(i, Math.min(i + kind.itemsPerStack, modItems.size()))));
+                        group.subList(i, Math.min(i + kind.itemsPerStack, group.size()))));
                 currentPos = currentPos.north();
             }
-            modIndex++;
+            groupIndex++;
         }
 
-        jobs.add(new Job(player, level, kind, basePos, modIds.size(), maxRows, stacks, totalItems, onComplete));
+        jobs.add(new Job(player, level, kind, basePos, groups.size(), maxRows, stacks, totalItems, onComplete));
         return new Plan(stacks.size(), totalItems);
     }
 
@@ -254,7 +252,7 @@ public final class TestWallGenerator {
 
         private int placedStacks;
 
-        private Job(ServerPlayer player, Level level, Kind kind, BlockPos basePos, int modCount, int maxRows,
+        private Job(ServerPlayer player, Level level, Kind kind, BlockPos basePos, int groupCount, int maxRows,
                     Deque<PendingStack> stacks, int totalItems, Consumer<Result> onComplete) {
             this.player = player;
             this.level = level;
@@ -268,7 +266,7 @@ public final class TestWallGenerator {
             // walked around and viewed against a uniform background. Rows advance north, which is
             // decreasing Z.
             this.floorMinX = basePos.getX() - 1;
-            this.floorMaxX = basePos.getX() + (modCount - 1) * MOD_SPACING + 1;
+            this.floorMaxX = basePos.getX() + (groupCount - 1) * MOD_SPACING + 1;
             this.floorMinZ = basePos.getZ() - maxRows;
             this.floorMaxZ = basePos.getZ() + 1;
             this.floorY = basePos.getY() - 1;

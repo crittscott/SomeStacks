@@ -1,5 +1,5 @@
 {
-  "iceandfire:ambrosia": {
+  "mysticalagriculture:absorption_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -8,7 +8,7 @@
       0.0
     ]
   },
-  "iceandfire:amphithere_arrow": {
+  "mysticalagriculture:absorption_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -17,7 +17,7 @@
       0.0
     ]
   },
-  "iceandfire:amphithere_feather": {
+  "mysticalagriculture:absorption_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -26,7 +26,7 @@
       0.0
     ]
   },
-  "iceandfire:amphithere_macuahuitl": {
+  "mysticalagriculture:absorption_iv_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -35,7 +35,7 @@
       0.0
     ]
   },
-  "iceandfire:amphithere_skull": {
+  "mysticalagriculture:absorption_v_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -44,7 +44,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_amythest_boots": {
+  "mysticalagriculture:air_agglomeratio": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -53,7 +53,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_amythest_chestplate": {
+  "mysticalagriculture:air_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -62,7 +62,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_amythest_helmet": {
+  "mysticalagriculture:air_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -71,7 +71,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_amythest_leggings": {
+  "mysticalagriculture:aluminum_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -80,7 +80,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_black_boots": {
+  "mysticalagriculture:aluminum_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -89,7 +89,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_black_chestplate": {
+  "mysticalagriculture:amethyst_bronze_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -98,7 +98,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_black_helmet": {
+  "mysticalagriculture:amethyst_bronze_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -107,7 +107,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_black_leggings": {
+  "mysticalagriculture:amethyst_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -116,7 +116,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_blue_boots": {
+  "mysticalagriculture:amethyst_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -125,7 +125,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_blue_chestplate": {
+  "mysticalagriculture:apatite_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -134,7 +134,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_blue_helmet": {
+  "mysticalagriculture:apatite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -143,7 +143,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_blue_leggings": {
+  "mysticalagriculture:aquamarine_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -152,7 +152,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_bronze_boots": {
+  "mysticalagriculture:aquamarine_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -161,7 +161,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_bronze_chestplate": {
+  "mysticalagriculture:attack_aoe_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -170,7 +170,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_bronze_helmet": {
+  "mysticalagriculture:attack_aoe_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -179,7 +179,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_bronze_leggings": {
+  "mysticalagriculture:attack_aoe_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -188,7 +188,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_boots": {
+  "mysticalagriculture:awakened_supremium_axe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -197,16 +197,16 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_chestplate": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:awakened_supremium_block": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:armor_copper_helmet": {
+  "mysticalagriculture:awakened_supremium_boots": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -215,7 +215,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_leggings": {
+  "mysticalagriculture:awakened_supremium_bow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -224,7 +224,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_metal_boots": {
+  "mysticalagriculture:awakened_supremium_chestplate": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -233,7 +233,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_metal_chestplate": {
+  "mysticalagriculture:awakened_supremium_crossbow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -242,7 +242,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_metal_helmet": {
+  "mysticalagriculture:awakened_supremium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -251,25 +251,43 @@
       0.0
     ]
   },
-  "iceandfire:armor_copper_metal_leggings": {
+  "mysticalagriculture:awakened_supremium_fishing_rod": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:awakened_supremium_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:armor_electric_boots": {
+  "mysticalagriculture:awakened_supremium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:awakened_supremium_gemstone_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:armor_electric_chestplate": {
+  "mysticalagriculture:awakened_supremium_helmet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -278,7 +296,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_electric_helmet": {
+  "mysticalagriculture:awakened_supremium_hoe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -287,16 +305,25 @@
       0.0
     ]
   },
-  "iceandfire:armor_electric_leggings": {
+  "mysticalagriculture:awakened_supremium_ingot": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:awakened_supremium_ingot_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:armor_gray_boots": {
+  "mysticalagriculture:awakened_supremium_leggings": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -305,7 +332,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_gray_chestplate": {
+  "mysticalagriculture:awakened_supremium_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -314,7 +341,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_gray_helmet": {
+  "mysticalagriculture:awakened_supremium_pickaxe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -323,7 +350,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_gray_leggings": {
+  "mysticalagriculture:awakened_supremium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -332,7 +359,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_green_boots": {
+  "mysticalagriculture:awakened_supremium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -341,7 +368,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_green_chestplate": {
+  "mysticalagriculture:awakened_supremium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -350,16 +377,25 @@
       0.0
     ]
   },
-  "iceandfire:armor_green_helmet": {
+  "mysticalagriculture:awakened_supremium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:awakened_supremium_staff": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0062499996,
+      -0.0
     ]
   },
-  "iceandfire:armor_green_leggings": {
+  "mysticalagriculture:awakened_supremium_sword": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -368,7 +404,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_red_boots": {
+  "mysticalagriculture:awakened_supremium_upgrade": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -377,16 +413,34 @@
       0.0
     ]
   },
-  "iceandfire:armor_red_chestplate": {
+  "mysticalagriculture:awakened_supremium_watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:awakening_altar": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.021093749,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:awakening_pedestal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:armor_red_helmet": {
+  "mysticalagriculture:basalt_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -395,7 +449,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_red_leggings": {
+  "mysticalagriculture:basalt_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -404,7 +458,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_sapphire_boots": {
+  "mysticalagriculture:basalz_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -413,7 +467,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_sapphire_chestplate": {
+  "mysticalagriculture:basalz_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -422,7 +476,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_sapphire_helmet": {
+  "mysticalagriculture:blank_record": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -431,7 +485,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_sapphire_leggings": {
+  "mysticalagriculture:blank_skull": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -440,7 +494,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_boots": {
+  "mysticalagriculture:blaze_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -449,7 +503,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_chestplate": {
+  "mysticalagriculture:blaze_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -458,7 +512,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_helmet": {
+  "mysticalagriculture:blazing_crystal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -467,7 +521,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_leggings": {
+  "mysticalagriculture:blazing_crystal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -476,7 +530,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_metal_boots": {
+  "mysticalagriculture:blindness_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -485,7 +539,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_metal_chestplate": {
+  "mysticalagriculture:blitz_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -494,7 +548,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_metal_helmet": {
+  "mysticalagriculture:blitz_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -503,7 +557,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_silver_metal_leggings": {
+  "mysticalagriculture:blizz_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -512,7 +566,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_white_boots": {
+  "mysticalagriculture:blizz_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -521,7 +575,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_white_chestplate": {
+  "mysticalagriculture:brass_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -530,7 +584,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_white_helmet": {
+  "mysticalagriculture:brass_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -539,7 +593,7 @@
       0.0
     ]
   },
-  "iceandfire:armor_white_leggings": {
+  "mysticalagriculture:bronze_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -548,16 +602,16 @@
       0.0
     ]
   },
-  "iceandfire:ash": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:bronze_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:banner_pattern_amphithere": {
+  "mysticalagriculture:certus_quartz_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -566,7 +620,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_bird": {
+  "mysticalagriculture:certus_quartz_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -575,7 +629,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_dread": {
+  "mysticalagriculture:chicken_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -584,7 +638,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_eye": {
+  "mysticalagriculture:chicken_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -593,7 +647,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_fae": {
+  "mysticalagriculture:chrome_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -602,7 +656,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_feather": {
+  "mysticalagriculture:chrome_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -611,7 +665,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_fire": {
+  "mysticalagriculture:coal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -620,7 +674,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_fire_head": {
+  "mysticalagriculture:coal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -629,7 +683,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_gorgon": {
+  "mysticalagriculture:cobalt_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -638,7 +692,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_hippocampus": {
+  "mysticalagriculture:cobalt_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -647,7 +701,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_hippogryph_head": {
+  "mysticalagriculture:cognizant_dust": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -656,7 +710,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_ice": {
+  "mysticalagriculture:compressed_iron_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -665,7 +719,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_ice_head": {
+  "mysticalagriculture:compressed_iron_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -674,7 +728,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_lightning": {
+  "mysticalagriculture:conductive_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -683,7 +737,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_lightning_head": {
+  "mysticalagriculture:conductive_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -692,7 +746,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_mermaid": {
+  "mysticalagriculture:constantan_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -701,7 +755,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_sea_serpent": {
+  "mysticalagriculture:constantan_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -710,7 +764,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_troll": {
+  "mysticalagriculture:copper_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -719,7 +773,7 @@
       0.0
     ]
   },
-  "iceandfire:banner_pattern_weezer": {
+  "mysticalagriculture:copper_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -728,7 +782,7 @@
       0.0
     ]
   },
-  "iceandfire:bestiary": {
+  "mysticalagriculture:copper_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -737,7 +791,7 @@
       0.0
     ]
   },
-  "iceandfire:blindfold": {
+  "mysticalagriculture:copper_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -746,16 +800,16 @@
       0.0
     ]
   },
-  "iceandfire:burnt_torch": {
-    "mode": "block",
-    "scale": 0.5,
+  "mysticalagriculture:coral_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:cannoli": {
+  "mysticalagriculture:coral_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -764,7 +818,7 @@
       0.0
     ]
   },
-  "iceandfire:chain": {
+  "mysticalagriculture:coral_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -773,7 +827,7 @@
       0.0
     ]
   },
-  "iceandfire:chain_sticky": {
+  "mysticalagriculture:cow_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -782,61 +836,61 @@
       0.0
     ]
   },
-  "iceandfire:chared_cobblestone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:cow_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:chared_dirt": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:creative_soulium_dagger": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:chared_dirt_path": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:creeper_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      0.014,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:chared_grass": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:creeper_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:chared_gravel": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:cyanite_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:chared_stone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:cyanite_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:cockatrice_eye": {
+  "mysticalagriculture:dark_steel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -845,7 +899,7 @@
       0.0
     ]
   },
-  "iceandfire:cockatrice_scepter": {
+  "mysticalagriculture:dark_steel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -854,16 +908,34 @@
       0.0
     ]
   },
-  "iceandfire:cockatrice_skull": {
+  "mysticalagriculture:deepslate_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:deepslate_inferium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:copper_axe": {
+  "mysticalagriculture:deepslate_prosperity_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:deepslate_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -872,7 +944,7 @@
       0.0
     ]
   },
-  "iceandfire:copper_hoe": {
+  "mysticalagriculture:diamond_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -881,7 +953,7 @@
       0.0
     ]
   },
-  "iceandfire:copper_nugget": {
+  "mysticalagriculture:diamond_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -890,7 +962,7 @@
       0.0
     ]
   },
-  "iceandfire:copper_pickaxe": {
+  "mysticalagriculture:diamond_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -899,16 +971,16 @@
       0.0
     ]
   },
-  "iceandfire:copper_pile": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:diamond_sickle": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
+      0.0,
       0.0,
-      0.197,
       0.0
     ]
   },
-  "iceandfire:copper_shovel": {
+  "mysticalagriculture:dirt_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -917,7 +989,7 @@
       0.0
     ]
   },
-  "iceandfire:copper_sword": {
+  "mysticalagriculture:dirt_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -926,61 +998,61 @@
       0.0
     ]
   },
-  "iceandfire:crackled_cobblestone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:draconium_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:crackled_dirt": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:draconium_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:crackled_dirt_path": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:dye_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      0.014,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:crackled_grass": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:dye_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:crackled_gravel": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:dye_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:crackled_stone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:earth_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:creative_dragon_meal": {
+  "mysticalagriculture:earth_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -989,7 +1061,7 @@
       0.0
     ]
   },
-  "iceandfire:cyclops_eye": {
+  "mysticalagriculture:earth_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -998,7 +1070,7 @@
       0.0
     ]
   },
-  "iceandfire:cyclops_skull": {
+  "mysticalagriculture:electrum_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1007,7 +1079,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_chitin_red": {
+  "mysticalagriculture:electrum_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1016,7 +1088,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_chitin_white": {
+  "mysticalagriculture:elementium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1025,7 +1097,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_chitin_yellow": {
+  "mysticalagriculture:elementium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1034,7 +1106,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_egg": {
+  "mysticalagriculture:emerald_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1043,43 +1115,25 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_egg_giant": {
+  "mysticalagriculture:emerald_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
-      0.0
-    ]
-  },
-  "iceandfire:deathworm_gauntlet_red": {
-    "mode": "3d",
-    "scale": 0.946,
-    "offset": [
-      -0.012,
-      0.118,
       0.0
     ]
   },
-  "iceandfire:deathworm_gauntlet_white": {
+  "mysticalagriculture:enchanter": {
     "mode": "3d",
-    "scale": 0.946,
+    "scale": 0.89209497,
     "offset": [
-      -0.012,
-      0.118,
-      0.0
-    ]
-  },
-  "iceandfire:deathworm_gauntlet_yellow": {
-    "mode": "3d",
-    "scale": 0.946,
-    "offset": [
-      -0.012,
-      0.118,
-      0.0
+      -0.0,
+      -0.0019762544,
+      -0.0
     ]
   },
-  "iceandfire:deathworm_red_boots": {
+  "mysticalagriculture:end_agglomeratio": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1088,7 +1142,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_red_chestplate": {
+  "mysticalagriculture:end_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1097,7 +1151,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_red_helmet": {
+  "mysticalagriculture:end_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1106,7 +1160,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_red_leggings": {
+  "mysticalagriculture:end_steel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1115,7 +1169,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_tounge": {
+  "mysticalagriculture:end_steel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1124,7 +1178,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_white_boots": {
+  "mysticalagriculture:enderium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1133,7 +1187,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_white_chestplate": {
+  "mysticalagriculture:enderium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1142,7 +1196,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_white_helmet": {
+  "mysticalagriculture:enderman_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1151,7 +1205,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_white_leggings": {
+  "mysticalagriculture:enderman_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1160,7 +1214,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_yellow_boots": {
+  "mysticalagriculture:energetic_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1169,7 +1223,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_yellow_chestplate": {
+  "mysticalagriculture:energetic_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1178,7 +1232,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_yellow_helmet": {
+  "mysticalagriculture:energized_steel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1187,7 +1241,7 @@
       0.0
     ]
   },
-  "iceandfire:deathworm_yellow_leggings": {
+  "mysticalagriculture:energized_steel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1196,25 +1250,25 @@
       0.0
     ]
   },
-  "iceandfire:deepslate_silver_ore": {
+  "mysticalagriculture:essence_vessel": {
     "mode": "3d",
-    "scale": 0.9,
+    "scale": 0.7578947,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.035526313,
+      -0.0
     ]
   },
-  "iceandfire:desert_myrmex_cocoon": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:experience_capsule": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:diamond_hippogryph_armor": {
+  "mysticalagriculture:experience_droplet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1223,25 +1277,25 @@
       0.0
     ]
   },
-  "iceandfire:dragon_bone_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:experience_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragon_bone_wall": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:experience_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragon_debug_stick": {
+  "mysticalagriculture:fertilized_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1250,7 +1304,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_flute": {
+  "mysticalagriculture:fiery_ingot_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1259,7 +1313,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_horn": {
+  "mysticalagriculture:fiery_ingot_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1268,16 +1322,16 @@
       0.0
     ]
   },
-  "iceandfire:dragon_ice": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:fire_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragon_ice_spikes": {
+  "mysticalagriculture:fire_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1286,7 +1340,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_meal": {
+  "mysticalagriculture:fire_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1295,7 +1349,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_skull_fire": {
+  "mysticalagriculture:fire_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1304,7 +1358,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_skull_ice": {
+  "mysticalagriculture:fish_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1313,7 +1367,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_skull_lightning": {
+  "mysticalagriculture:fish_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1322,7 +1376,7 @@
       0.0
     ]
   },
-  "iceandfire:dragon_stick": {
+  "mysticalagriculture:flight_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1331,7 +1385,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_copper_body": {
+  "mysticalagriculture:fluix_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1340,7 +1394,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_copper_head": {
+  "mysticalagriculture:fluix_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1349,7 +1403,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_copper_neck": {
+  "mysticalagriculture:fluorite_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1358,7 +1412,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_copper_tail": {
+  "mysticalagriculture:fluorite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1367,7 +1421,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_diamond_body": {
+  "mysticalagriculture:flux_infused_gem_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1376,7 +1430,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_diamond_head": {
+  "mysticalagriculture:flux_infused_gem_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1385,7 +1439,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_diamond_neck": {
+  "mysticalagriculture:flux_infused_ingot_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1394,7 +1448,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_diamond_tail": {
+  "mysticalagriculture:flux_infused_ingot_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1403,7 +1457,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_fire_body": {
+  "mysticalagriculture:ghast_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1412,7 +1466,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_fire_head": {
+  "mysticalagriculture:ghast_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1421,7 +1475,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_fire_neck": {
+  "mysticalagriculture:glowstone_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1430,7 +1484,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_fire_tail": {
+  "mysticalagriculture:glowstone_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1439,7 +1493,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_ice_body": {
+  "mysticalagriculture:gold_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1448,7 +1502,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_ice_head": {
+  "mysticalagriculture:gold_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1457,7 +1511,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_ice_neck": {
+  "mysticalagriculture:grains_of_infinity_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1466,7 +1520,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_ice_tail": {
+  "mysticalagriculture:grains_of_infinity_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1475,7 +1529,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_lightning_body": {
+  "mysticalagriculture:graphite_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1484,16 +1538,25 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_lightning_head": {
+  "mysticalagriculture:graphite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:harvester": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_lightning_neck": {
+  "mysticalagriculture:haste_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1502,7 +1565,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_dragonsteel_lightning_tail": {
+  "mysticalagriculture:haste_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1511,7 +1574,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_gold_body": {
+  "mysticalagriculture:haste_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1520,7 +1583,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_gold_head": {
+  "mysticalagriculture:health_boost_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1529,7 +1592,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_gold_neck": {
+  "mysticalagriculture:health_boost_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1538,7 +1601,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_gold_tail": {
+  "mysticalagriculture:health_boost_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1547,7 +1610,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_iron_body": {
+  "mysticalagriculture:health_boost_iv_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1556,7 +1619,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_iron_head": {
+  "mysticalagriculture:health_boost_v_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1565,7 +1628,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_iron_neck": {
+  "mysticalagriculture:hepatizon_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1574,7 +1637,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_iron_tail": {
+  "mysticalagriculture:hepatizon_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1583,7 +1646,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_silver_body": {
+  "mysticalagriculture:honey_agglomeratio": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1592,7 +1655,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_silver_head": {
+  "mysticalagriculture:honey_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1601,7 +1664,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_silver_neck": {
+  "mysticalagriculture:honey_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1610,7 +1673,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonarmor_silver_tail": {
+  "mysticalagriculture:hop_graphite_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1619,7 +1682,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone": {
+  "mysticalagriculture:hop_graphite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1628,7 +1691,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_arrow": {
+  "mysticalagriculture:hostile_soulium_dagger": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1637,7 +1700,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_axe": {
+  "mysticalagriculture:hunger_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1646,7 +1709,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_bow": {
+  "mysticalagriculture:ice_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1655,7 +1718,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_hoe": {
+  "mysticalagriculture:ice_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1664,16 +1727,25 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_pickaxe": {
+  "mysticalagriculture:imperium_axe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:imperium_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonbone_shovel": {
+  "mysticalagriculture:imperium_boots": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1682,7 +1754,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_sword": {
+  "mysticalagriculture:imperium_bow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1691,7 +1763,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_sword_fire": {
+  "mysticalagriculture:imperium_chestplate": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1700,7 +1772,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_sword_ice": {
+  "mysticalagriculture:imperium_crossbow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1709,34 +1781,70 @@
       0.0
     ]
   },
-  "iceandfire:dragonbone_sword_lightning": {
+  "mysticalagriculture:imperium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:imperium_farmland": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
     ]
   },
-  "iceandfire:dragonegg_amythest": {
+  "mysticalagriculture:imperium_fishing_rod": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:imperium_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonegg_black": {
+  "mysticalagriculture:imperium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:imperium_gemstone_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:imperium_growth_accelerator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonegg_blue": {
+  "mysticalagriculture:imperium_helmet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1745,7 +1853,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_bronze": {
+  "mysticalagriculture:imperium_hoe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1754,7 +1862,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_copper": {
+  "mysticalagriculture:imperium_ingot": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1763,7 +1871,16 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_electric": {
+  "mysticalagriculture:imperium_ingot_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:imperium_leggings": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1772,7 +1889,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_gray": {
+  "mysticalagriculture:imperium_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1781,7 +1898,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_green": {
+  "mysticalagriculture:imperium_pickaxe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1790,7 +1907,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_red": {
+  "mysticalagriculture:imperium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1799,7 +1916,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_sapphire": {
+  "mysticalagriculture:imperium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1808,7 +1925,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_silver": {
+  "mysticalagriculture:imperium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1817,7 +1934,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonegg_white": {
+  "mysticalagriculture:imperium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -1826,223 +1943,232 @@
       0.0
     ]
   },
-  "iceandfire:dragonforge_fire_brick": {
+  "mysticalagriculture:imperium_staff": {
     "mode": "3d",
-    "scale": 0.9,
+    "scale": 0.39999998,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0062499996,
+      -0.0
     ]
   },
-  "iceandfire:dragonforge_fire_core": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:imperium_sword": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_fire_core_disabled": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:imperium_upgrade": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_fire_input": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:imperium_watering_can": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_ice_brick": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_axe": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_ice_core": {
+  "mysticalagriculture:inferium_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonforge_ice_core_disabled": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_boots": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_ice_input": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_bow": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_lightning_brick": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_lightning_core": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_crossbow": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_lightning_core_disabled": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonforge_lightning_input": {
+  "mysticalagriculture:inferium_farmland": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.0140625,
+      -0.0
     ]
   },
-  "iceandfire:dragonscale_amythest": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_fishing_rod": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_black": {
+  "mysticalagriculture:inferium_furnace": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonscale_blue": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_gemstone": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_bronze": {
+  "mysticalagriculture:inferium_gemstone_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonscale_copper": {
+  "mysticalagriculture:inferium_growth_accelerator": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonscale_electric": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_gray": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_hoe": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_green": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_red": {
+  "mysticalagriculture:inferium_ingot_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:inferium_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_sapphire": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_nugget": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscale_silver": {
+  "mysticalagriculture:inferium_ore": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonscale_white": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:inferium_pickaxe": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonscales_amythest": {
+  "mysticalagriculture:inferium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2051,7 +2177,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_black": {
+  "mysticalagriculture:inferium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2060,7 +2186,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_blue": {
+  "mysticalagriculture:inferium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2069,7 +2195,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_bronze": {
+  "mysticalagriculture:inferium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2078,7 +2204,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_copper": {
+  "mysticalagriculture:inferium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2087,16 +2213,16 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_electric": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:inferium_staff": {
+    "mode": "3d",
+    "scale": 0.4173913,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0032608695,
+      -0.0
     ]
   },
-  "iceandfire:dragonscales_gray": {
+  "mysticalagriculture:inferium_sword": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2105,7 +2231,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_green": {
+  "mysticalagriculture:inferium_upgrade": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2114,7 +2240,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_red": {
+  "mysticalagriculture:inferium_watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2123,25 +2249,34 @@
       0.0
     ]
   },
-  "iceandfire:dragonscales_sapphire": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:infusion_altar": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.021093749,
+      -0.0
     ]
   },
-  "iceandfire:dragonscales_silver": {
+  "mysticalagriculture:infusion_crystal": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:infusion_pedestal": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonscales_white": {
+  "mysticalagriculture:invar_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2150,7 +2285,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_axe": {
+  "mysticalagriculture:invar_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2159,16 +2294,16 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:iridium_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_boots": {
+  "mysticalagriculture:iridium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2177,7 +2312,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_chestplate": {
+  "mysticalagriculture:iron_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2186,7 +2321,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_helmet": {
+  "mysticalagriculture:iron_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2195,7 +2330,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_hoe": {
+  "mysticalagriculture:ironwood_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2204,7 +2339,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_ingot": {
+  "mysticalagriculture:ironwood_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2213,7 +2348,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_leggings": {
+  "mysticalagriculture:jump_boost_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2222,7 +2357,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_pickaxe": {
+  "mysticalagriculture:jump_boost_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2231,7 +2366,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_shovel": {
+  "mysticalagriculture:jump_boost_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2240,7 +2375,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_fire_sword": {
+  "mysticalagriculture:knightmetal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2249,7 +2384,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_axe": {
+  "mysticalagriculture:knightmetal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2258,16 +2393,16 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:lapis_lazuli_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_boots": {
+  "mysticalagriculture:lapis_lazuli_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2276,7 +2411,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_chestplate": {
+  "mysticalagriculture:lead_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2285,7 +2420,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_helmet": {
+  "mysticalagriculture:lead_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2294,7 +2429,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_hoe": {
+  "mysticalagriculture:limestone_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2303,7 +2438,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_ingot": {
+  "mysticalagriculture:limestone_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2312,7 +2447,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_leggings": {
+  "mysticalagriculture:luck_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2321,7 +2456,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_pickaxe": {
+  "mysticalagriculture:luck_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2330,7 +2465,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_shovel": {
+  "mysticalagriculture:luck_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2339,7 +2474,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_ice_sword": {
+  "mysticalagriculture:lumium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2348,7 +2483,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_axe": {
+  "mysticalagriculture:lumium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2357,16 +2492,16 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_block": {
+  "mysticalagriculture:machine_frame": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_boots": {
+  "mysticalagriculture:manasteel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2375,7 +2510,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_chestplate": {
+  "mysticalagriculture:manasteel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2384,7 +2519,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_helmet": {
+  "mysticalagriculture:manyullyn_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2393,7 +2528,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_hoe": {
+  "mysticalagriculture:manyullyn_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2402,7 +2537,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_ingot": {
+  "mysticalagriculture:marble_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2411,7 +2546,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_leggings": {
+  "mysticalagriculture:marble_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2420,7 +2555,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_pickaxe": {
+  "mysticalagriculture:master_infusion_crystal": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2429,7 +2564,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_shovel": {
+  "mysticalagriculture:menril_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2438,7 +2573,7 @@
       0.0
     ]
   },
-  "iceandfire:dragonsteel_lightning_sword": {
+  "mysticalagriculture:menril_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2447,7 +2582,7 @@
       0.0
     ]
   },
-  "iceandfire:dread_key": {
+  "mysticalagriculture:mining_aoe_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2456,7 +2591,7 @@
       0.0
     ]
   },
-  "iceandfire:dread_knight_sword": {
+  "mysticalagriculture:mining_aoe_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2465,16 +2600,16 @@
       0.0
     ]
   },
-  "iceandfire:dread_portal": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mining_aoe_iii_augment": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_queen_staff": {
+  "mysticalagriculture:mining_aoe_iv_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2483,7 +2618,7 @@
       0.0
     ]
   },
-  "iceandfire:dread_queen_sword": {
+  "mysticalagriculture:mining_fatigue_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2492,7 +2627,7 @@
       0.0
     ]
   },
-  "iceandfire:dread_shard": {
+  "mysticalagriculture:mithril_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2501,97 +2636,97 @@
       0.0
     ]
   },
-  "iceandfire:dread_spawner": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mithril_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mystical_fertilizer": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_bricks": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mystical_flower_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_bricks_chiseled": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mystical_flower_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_bricks_cracked": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:mystical_flower_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_bricks_mossy": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nature_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_face": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nature_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_slab": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nature_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      0.112,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_stairs": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nausea_resistance_augment": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_stone_tile": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nether_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dread_sword": {
+  "mysticalagriculture:nether_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2600,43 +2735,43 @@
       0.0
     ]
   },
-  "iceandfire:dread_torch": {
-    "mode": "block",
-    "scale": 0.5,
+  "mysticalagriculture:nether_quartz_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dreadwood_log": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nether_quartz_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dreadwood_planks": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nether_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:dreadwood_planks_lock": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:netherite_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:earplugs": {
+  "mysticalagriculture:netherite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2645,7 +2780,7 @@
       0.0
     ]
   },
-  "iceandfire:ectoplasm": {
+  "mysticalagriculture:nickel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2654,16 +2789,16 @@
       0.0
     ]
   },
-  "iceandfire:egginice": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:nickel_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:fire_dragon_blood": {
+  "mysticalagriculture:night_vision_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2672,7 +2807,7 @@
       0.0
     ]
   },
-  "iceandfire:fire_dragon_flesh": {
+  "mysticalagriculture:niotic_crystal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2681,7 +2816,7 @@
       0.0
     ]
   },
-  "iceandfire:fire_dragon_heart": {
+  "mysticalagriculture:niotic_crystal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2690,7 +2825,7 @@
       0.0
     ]
   },
-  "iceandfire:fire_lily": {
+  "mysticalagriculture:no_fall_damage_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2699,7 +2834,7 @@
       0.0
     ]
   },
-  "iceandfire:fire_stew": {
+  "mysticalagriculture:obsidian_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2708,7 +2843,7 @@
       0.0
     ]
   },
-  "iceandfire:fishing_spear": {
+  "mysticalagriculture:obsidian_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2717,7 +2852,7 @@
       0.0
     ]
   },
-  "iceandfire:forest_troll_leather_boots": {
+  "mysticalagriculture:osmium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2726,7 +2861,7 @@
       0.0
     ]
   },
-  "iceandfire:forest_troll_leather_chestplate": {
+  "mysticalagriculture:osmium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2735,7 +2870,7 @@
       0.0
     ]
   },
-  "iceandfire:forest_troll_leather_helmet": {
+  "mysticalagriculture:passive_soulium_dagger": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2744,7 +2879,7 @@
       0.0
     ]
   },
-  "iceandfire:forest_troll_leather_leggings": {
+  "mysticalagriculture:pathing_aoe_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2753,7 +2888,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_lily": {
+  "mysticalagriculture:pathing_aoe_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2762,7 +2897,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_stew": {
+  "mysticalagriculture:pathing_aoe_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2771,7 +2906,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_troll_leather_boots": {
+  "mysticalagriculture:pathing_aoe_iv_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2780,7 +2915,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_troll_leather_chestplate": {
+  "mysticalagriculture:peridot_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2789,7 +2924,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_troll_leather_helmet": {
+  "mysticalagriculture:peridot_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2798,7 +2933,7 @@
       0.0
     ]
   },
-  "iceandfire:frost_troll_leather_leggings": {
+  "mysticalagriculture:pig_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2807,79 +2942,70 @@
       0.0
     ]
   },
-  "iceandfire:frozen_cobblestone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:pig_iron_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_dirt": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:pig_iron_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_dirt_path": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:pig_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      0.014,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_grass": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:platinum_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_gravel": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:platinum_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_splinters": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:poison_resistance_augment": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:frozen_stone": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:prismarine_agglomeratio": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
-    ]
-  },
-  "iceandfire:ghost_chest": {
-    "mode": "3d",
-    "scale": 0.96,
-    "offset": [
-      0.0,
-      0.03,
-      0.015
     ]
   },
-  "iceandfire:ghost_ingot": {
+  "mysticalagriculture:prismarine_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2888,16 +3014,25 @@
       0.0
     ]
   },
-  "iceandfire:ghost_sword": {
+  "mysticalagriculture:prismarine_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prosperity_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:gold_hippogryph_armor": {
+  "mysticalagriculture:prosperity_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2906,43 +3041,52 @@
       0.0
     ]
   },
-  "iceandfire:gold_pile": {
+  "mysticalagriculture:prosperity_gemstone_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.197,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:gorgon_head": {
-    "mode": "3d",
-    "scale": 0.547,
+  "mysticalagriculture:prosperity_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.007,
-      0.044,
-      0.009
+      0.0,
+      0.0,
+      0.0
     ]
   },
-  "iceandfire:graveyard_soil": {
+  "mysticalagriculture:prosperity_ingot_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:hippocampus_fin": {
+  "mysticalagriculture:prosperity_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prosperity_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:hippocampus_slapper": {
+  "mysticalagriculture:prosperity_seed_base": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2951,7 +3095,7 @@
       0.0
     ]
   },
-  "iceandfire:hippogryph_egg": {
+  "mysticalagriculture:prosperity_shard": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2960,16 +3104,25 @@
       0.0
     ]
   },
-  "iceandfire:hippogryph_skull": {
+  "mysticalagriculture:prudentium_axe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:hippogryph_sword": {
+  "mysticalagriculture:prudentium_boots": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2978,7 +3131,7 @@
       0.0
     ]
   },
-  "iceandfire:hippogryph_talon": {
+  "mysticalagriculture:prudentium_bow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2987,7 +3140,7 @@
       0.0
     ]
   },
-  "iceandfire:hydra_arrow": {
+  "mysticalagriculture:prudentium_chestplate": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -2996,7 +3149,7 @@
       0.0
     ]
   },
-  "iceandfire:hydra_fang": {
+  "mysticalagriculture:prudentium_crossbow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3005,34 +3158,70 @@
       0.0
     ]
   },
-  "iceandfire:hydra_heart": {
+  "mysticalagriculture:prudentium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_farmland": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
     ]
   },
-  "iceandfire:hydra_skull": {
+  "mysticalagriculture:prudentium_fishing_rod": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:ice_dragon_blood": {
+  "mysticalagriculture:prudentium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_gemstone_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_growth_accelerator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:ice_dragon_flesh": {
+  "mysticalagriculture:prudentium_helmet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3041,7 +3230,7 @@
       0.0
     ]
   },
-  "iceandfire:ice_dragon_heart": {
+  "mysticalagriculture:prudentium_hoe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3050,7 +3239,7 @@
       0.0
     ]
   },
-  "iceandfire:iron_hippogryph_armor": {
+  "mysticalagriculture:prudentium_ingot": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3059,25 +3248,25 @@
       0.0
     ]
   },
-  "iceandfire:jungle_myrmex_cocoon": {
+  "mysticalagriculture:prudentium_ingot_block": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:lectern": {
-    "mode": "3d",
-    "scale": 0.375,
+  "mysticalagriculture:prudentium_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      -0.131,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:lich_staff": {
+  "mysticalagriculture:prudentium_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3086,7 +3275,7 @@
       0.0
     ]
   },
-  "iceandfire:lightning_dragon_blood": {
+  "mysticalagriculture:prudentium_pickaxe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3095,7 +3284,7 @@
       0.0
     ]
   },
-  "iceandfire:lightning_dragon_flesh": {
+  "mysticalagriculture:prudentium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3104,7 +3293,7 @@
       0.0
     ]
   },
-  "iceandfire:lightning_dragon_heart": {
+  "mysticalagriculture:prudentium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3113,7 +3302,7 @@
       0.0
     ]
   },
-  "iceandfire:lightning_lily": {
+  "mysticalagriculture:prudentium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3122,16 +3311,25 @@
       0.0
     ]
   },
-  "iceandfire:lightning_stew": {
+  "mysticalagriculture:prudentium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:prudentium_staff": {
+    "mode": "3d",
+    "scale": 0.40851063,
+    "offset": [
+      -0.0,
+      -0.0015957446,
+      -0.0
     ]
   },
-  "iceandfire:manuscript": {
+  "mysticalagriculture:prudentium_sword": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3140,7 +3338,7 @@
       0.0
     ]
   },
-  "iceandfire:mountain_troll_leather_boots": {
+  "mysticalagriculture:prudentium_upgrade": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3149,7 +3347,7 @@
       0.0
     ]
   },
-  "iceandfire:mountain_troll_leather_chestplate": {
+  "mysticalagriculture:prudentium_watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3158,7 +3356,7 @@
       0.0
     ]
   },
-  "iceandfire:mountain_troll_leather_helmet": {
+  "mysticalagriculture:pulsating_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3167,7 +3365,7 @@
       0.0
     ]
   },
-  "iceandfire:mountain_troll_leather_leggings": {
+  "mysticalagriculture:pulsating_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3176,7 +3374,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_axe": {
+  "mysticalagriculture:quartz_enriched_iron_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3185,7 +3383,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_biolight": {
+  "mysticalagriculture:quartz_enriched_iron_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3194,7 +3392,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_boots": {
+  "mysticalagriculture:queens_slime_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3203,7 +3401,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_chestplate": {
+  "mysticalagriculture:queens_slime_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3212,7 +3410,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_chitin": {
+  "mysticalagriculture:rabbit_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3221,7 +3419,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_egg": {
+  "mysticalagriculture:rabbit_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3230,7 +3428,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_helmet": {
+  "mysticalagriculture:redstone_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3239,7 +3437,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_hoe": {
+  "mysticalagriculture:redstone_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3248,7 +3446,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_leggings": {
+  "mysticalagriculture:redstone_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3257,7 +3455,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_pickaxe": {
+  "mysticalagriculture:redstone_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3266,7 +3464,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_resin": {
+  "mysticalagriculture:refined_glowstone_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3275,25 +3473,25 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_resin_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:refined_glowstone_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_resin_glass": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:refined_obsidian_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_shovel": {
+  "mysticalagriculture:refined_obsidian_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3302,7 +3500,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_staff": {
+  "mysticalagriculture:rock_crystal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3311,7 +3509,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_swarm": {
+  "mysticalagriculture:rock_crystal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3320,7 +3518,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_sword": {
+  "mysticalagriculture:rose_gold_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3329,7 +3527,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_desert_sword_venom": {
+  "mysticalagriculture:rose_gold_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3338,7 +3536,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_axe": {
+  "mysticalagriculture:rubber_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3347,7 +3545,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_biolight": {
+  "mysticalagriculture:rubber_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3356,7 +3554,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_boots": {
+  "mysticalagriculture:ruby_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3365,7 +3563,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_chestplate": {
+  "mysticalagriculture:ruby_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3374,7 +3572,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_chitin": {
+  "mysticalagriculture:saltpeter_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3383,7 +3581,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_egg": {
+  "mysticalagriculture:saltpeter_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3392,7 +3590,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_helmet": {
+  "mysticalagriculture:sapphire_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3401,16 +3599,25 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_hoe": {
+  "mysticalagriculture:sapphire_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:seed_reprocessor": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:myrmex_jungle_leggings": {
+  "mysticalagriculture:sheep_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3419,7 +3626,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_pickaxe": {
+  "mysticalagriculture:sheep_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3428,7 +3635,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_resin": {
+  "mysticalagriculture:signalum_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3437,25 +3644,25 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_resin_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:signalum_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_resin_glass": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:silicon_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_shovel": {
+  "mysticalagriculture:silicon_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3464,7 +3671,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_staff": {
+  "mysticalagriculture:silver_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3473,7 +3680,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_swarm": {
+  "mysticalagriculture:silver_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3482,7 +3689,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_sword": {
+  "mysticalagriculture:skeleton_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3491,7 +3698,7 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_jungle_sword_venom": {
+  "mysticalagriculture:skeleton_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3500,43 +3707,43 @@
       0.0
     ]
   },
-  "iceandfire:myrmex_resin_desert": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:sky_stone_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_resin_jungle": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:sky_stone_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_resin_sticky_desert": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:slime_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_resin_sticky_jungle": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:slime_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:myrmex_stinger": {
+  "mysticalagriculture:slimesteel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3545,79 +3752,61 @@
       0.0
     ]
   },
-  "iceandfire:nest": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:slimesteel_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:pixie_dust": {
+  "mysticalagriculture:slow_falling_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
-    ]
-  },
-  "iceandfire:pixie_house_birch": {
-    "mode": "3d",
-    "scale": 1.139,
-    "offset": [
-      0.024,
-      0.121,
-      -0.002
-    ]
-  },
-  "iceandfire:pixie_house_dark_oak": {
-    "mode": "3d",
-    "scale": 1.139,
-    "offset": [
-      0.024,
-      0.121,
-      -0.002
     ]
   },
-  "iceandfire:pixie_house_mushroom_brown": {
-    "mode": "3d",
-    "scale": 1.139,
+  "mysticalagriculture:slowness_resistance_augment": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.024,
-      0.121,
-      -0.002
+      0.0,
+      0.0,
+      0.0
     ]
   },
-  "iceandfire:pixie_house_mushroom_red": {
-    "mode": "3d",
-    "scale": 1.139,
+  "mysticalagriculture:soul_dust": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.024,
-      0.121,
-      -0.002
+      0.0,
+      0.0,
+      0.0
     ]
   },
-  "iceandfire:pixie_house_oak": {
+  "mysticalagriculture:soul_extractor": {
     "mode": "3d",
-    "scale": 1.139,
+    "scale": 0.9,
     "offset": [
-      0.024,
-      0.121,
-      -0.002
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:pixie_house_spruce": {
+  "mysticalagriculture:soul_glass": {
     "mode": "3d",
-    "scale": 1.139,
+    "scale": 0.9,
     "offset": [
-      0.024,
-      0.121,
-      -0.002
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:pixie_jar_0": {
+  "mysticalagriculture:soul_jar": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3626,7 +3815,7 @@
       0.0
     ]
   },
-  "iceandfire:pixie_jar_1": {
+  "mysticalagriculture:soularium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3635,7 +3824,7 @@
       0.0
     ]
   },
-  "iceandfire:pixie_jar_2": {
+  "mysticalagriculture:soularium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3644,16 +3833,16 @@
       0.0
     ]
   },
-  "iceandfire:pixie_jar_3": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulium_block": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:pixie_jar_4": {
+  "mysticalagriculture:soulium_dagger": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3662,7 +3851,7 @@
       0.0
     ]
   },
-  "iceandfire:pixie_jar_empty": {
+  "mysticalagriculture:soulium_dust": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3671,7 +3860,7 @@
       0.0
     ]
   },
-  "iceandfire:pixie_wand": {
+  "mysticalagriculture:soulium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3680,7 +3869,7 @@
       0.0
     ]
   },
-  "iceandfire:pixie_wings": {
+  "mysticalagriculture:soulium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3689,61 +3878,61 @@
       0.0
     ]
   },
-  "iceandfire:podium_acacia": {
+  "mysticalagriculture:soulium_gemstone_block": {
     "mode": "3d",
-    "scale": 0.313,
+    "scale": 0.9,
     "offset": [
-      0.0,
-      -0.147,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:podium_birch": {
-    "mode": "3d",
-    "scale": 0.313,
+  "mysticalagriculture:soulium_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      -0.147,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:podium_dark_oak": {
+  "mysticalagriculture:soulium_ingot_block": {
     "mode": "3d",
-    "scale": 0.313,
+    "scale": 0.9,
     "offset": [
-      0.0,
-      -0.147,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:podium_jungle": {
-    "mode": "3d",
-    "scale": 0.313,
+  "mysticalagriculture:soulium_nugget": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      -0.147,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:podium_oak": {
+  "mysticalagriculture:soulium_ore": {
     "mode": "3d",
-    "scale": 0.313,
+    "scale": 0.9,
     "offset": [
-      0.0,
-      -0.147,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:podium_spruce": {
-    "mode": "3d",
-    "scale": 0.313,
+  "mysticalagriculture:soulium_seed_base": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
-      -0.147,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:raw_silver": {
+  "mysticalagriculture:soulium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3752,142 +3941,151 @@
       0.0
     ]
   },
-  "iceandfire:raw_silver_block": {
+  "mysticalagriculture:soulium_spawner": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:rotten_egg": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulstone": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sapphire_block": {
+  "mysticalagriculture:soulstone_bricks": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sapphire_gem": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulstone_bricks_slab": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.1125,
+      -0.0
     ]
   },
-  "iceandfire:sapphire_ore": {
+  "mysticalagriculture:soulstone_bricks_stairs": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_arrow": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulstone_bricks_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -3.3527614E-9
     ]
   },
-  "iceandfire:sea_serpent_fang": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulstone_chiseled_bricks": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_blue": {
+  "mysticalagriculture:soulstone_cobble": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_bronze": {
+  "mysticalagriculture:soulstone_cobble_slab": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.1125,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_deepblue": {
+  "mysticalagriculture:soulstone_cobble_stairs": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:soulstone_cobble_wall": {
+    "mode": "3d",
+    "scale": 0.90000004,
+    "offset": [
+      -0.0,
+      -0.0,
+      -3.3527614E-9
     ]
   },
-  "iceandfire:sea_serpent_scale_block_green": {
+  "mysticalagriculture:soulstone_cracked_bricks": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_purple": {
+  "mysticalagriculture:soulstone_slab": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.1125,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_red": {
+  "mysticalagriculture:soulstone_smooth": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scale_block_teal": {
+  "mysticalagriculture:soulstone_smooth_slab": {
     "mode": "3d",
     "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      0.1125,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_blue": {
-    "mode": "2d",
-    "scale": 1.0,
+  "mysticalagriculture:soulstone_stairs": {
+    "mode": "3d",
+    "scale": 0.9,
     "offset": [
-      0.0,
-      0.0,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_bronze": {
+  "mysticalagriculture:speed_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3896,7 +4094,7 @@
       0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_deepblue": {
+  "mysticalagriculture:speed_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3905,7 +4103,7 @@
       0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_green": {
+  "mysticalagriculture:speed_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3914,7 +4112,7 @@
       0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_purple": {
+  "mysticalagriculture:spider_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3923,7 +4121,7 @@
       0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_red": {
+  "mysticalagriculture:spider_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3932,7 +4130,7 @@
       0.0
     ]
   },
-  "iceandfire:sea_serpent_scales_teal": {
+  "mysticalagriculture:spirited_crystal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3941,7 +4139,7 @@
       0.0
     ]
   },
-  "iceandfire:seaserpent_skull": {
+  "mysticalagriculture:spirited_crystal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3950,7 +4148,7 @@
       0.0
     ]
   },
-  "iceandfire:sheep_boots": {
+  "mysticalagriculture:squid_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3959,7 +4157,7 @@
       0.0
     ]
   },
-  "iceandfire:sheep_chestplate": {
+  "mysticalagriculture:squid_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3968,7 +4166,7 @@
       0.0
     ]
   },
-  "iceandfire:sheep_helmet": {
+  "mysticalagriculture:starmetal_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3977,7 +4175,7 @@
       0.0
     ]
   },
-  "iceandfire:sheep_leggings": {
+  "mysticalagriculture:starmetal_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3986,7 +4184,7 @@
       0.0
     ]
   },
-  "iceandfire:shiny_scales": {
+  "mysticalagriculture:steel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -3995,7 +4193,7 @@
       0.0
     ]
   },
-  "iceandfire:sickly_dragon_meal": {
+  "mysticalagriculture:steel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4004,7 +4202,7 @@
       0.0
     ]
   },
-  "iceandfire:silver_axe": {
+  "mysticalagriculture:steeleaf_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4013,16 +4211,16 @@
       0.0
     ]
   },
-  "iceandfire:silver_block": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:steeleaf_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:silver_hoe": {
+  "mysticalagriculture:step_assist_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4031,7 +4229,7 @@
       0.0
     ]
   },
-  "iceandfire:silver_ingot": {
+  "mysticalagriculture:stone_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4040,7 +4238,7 @@
       0.0
     ]
   },
-  "iceandfire:silver_nugget": {
+  "mysticalagriculture:stone_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4049,34 +4247,25 @@
       0.0
     ]
   },
-  "iceandfire:silver_ore": {
-    "mode": "3d",
-    "scale": 0.9,
+  "mysticalagriculture:strength_i_augment": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
     ]
   },
-  "iceandfire:silver_pickaxe": {
+  "mysticalagriculture:strength_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
-      0.0,
       0.0,
-      0.0
-    ]
-  },
-  "iceandfire:silver_pile": {
-    "mode": "3d",
-    "scale": 0.9,
-    "offset": [
       0.0,
-      0.197,
       0.0
     ]
   },
-  "iceandfire:silver_shovel": {
+  "mysticalagriculture:strength_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4085,7 +4274,7 @@
       0.0
     ]
   },
-  "iceandfire:silver_sword": {
+  "mysticalagriculture:sulfur_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4094,7 +4283,7 @@
       0.0
     ]
   },
-  "iceandfire:siren_flute": {
+  "mysticalagriculture:sulfur_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4103,16 +4292,25 @@
       0.0
     ]
   },
-  "iceandfire:siren_tear": {
+  "mysticalagriculture:supremium_axe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_amphithere": {
+  "mysticalagriculture:supremium_boots": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4121,7 +4319,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_cockatrice": {
+  "mysticalagriculture:supremium_bow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4130,7 +4328,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_cyclops": {
+  "mysticalagriculture:supremium_chestplate": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4139,7 +4337,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_death_worm": {
+  "mysticalagriculture:supremium_crossbow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4148,34 +4346,70 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_beast": {
+  "mysticalagriculture:supremium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_farmland": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_ghoul": {
+  "mysticalagriculture:supremium_fishing_rod": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_horse": {
+  "mysticalagriculture:supremium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_gemstone_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:supremium_growth_accelerator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_knight": {
+  "mysticalagriculture:supremium_helmet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4184,7 +4418,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_scuttler": {
+  "mysticalagriculture:supremium_hoe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4193,16 +4427,25 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_dread_thrall": {
+  "mysticalagriculture:supremium_ingot": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_ingot_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_fire_dragon": {
+  "mysticalagriculture:supremium_leggings": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4211,7 +4454,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_ghost": {
+  "mysticalagriculture:supremium_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4220,7 +4463,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_gorgon": {
+  "mysticalagriculture:supremium_pickaxe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4229,7 +4472,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_hippocampus": {
+  "mysticalagriculture:supremium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4238,7 +4481,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_hippogryph": {
+  "mysticalagriculture:supremium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4247,7 +4490,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_hydra": {
+  "mysticalagriculture:supremium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4256,16 +4499,25 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_ice_dragon": {
+  "mysticalagriculture:supremium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:supremium_staff": {
+    "mode": "3d",
+    "scale": 0.384,
+    "offset": [
+      -0.0,
+      -0.015000001,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_lich": {
+  "mysticalagriculture:supremium_sword": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4274,7 +4526,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_lightning_dragon": {
+  "mysticalagriculture:supremium_upgrade": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4283,7 +4535,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_myrmex_queen": {
+  "mysticalagriculture:supremium_watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4292,7 +4544,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_myrmex_royal": {
+  "mysticalagriculture:terrasteel_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4301,7 +4553,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_myrmex_sentinel": {
+  "mysticalagriculture:terrasteel_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4310,16 +4562,25 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_myrmex_soldier": {
+  "mysticalagriculture:tertium_axe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_myrmex_worker": {
+  "mysticalagriculture:tertium_boots": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4328,7 +4589,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_pixie": {
+  "mysticalagriculture:tertium_bow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4337,7 +4598,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_sea_serpent": {
+  "mysticalagriculture:tertium_chestplate": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4346,7 +4607,7 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_siren": {
+  "mysticalagriculture:tertium_crossbow": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4355,34 +4616,70 @@
       0.0
     ]
   },
-  "iceandfire:spawn_egg_stymphalian_bird": {
+  "mysticalagriculture:tertium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_farmland": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.0140625,
+      -0.0
     ]
   },
-  "iceandfire:spawn_egg_troll": {
+  "mysticalagriculture:tertium_fishing_rod": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_furnace": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:stone_statue": {
+  "mysticalagriculture:tertium_gemstone": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_gemstone_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:tertium_growth_accelerator": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:stymphalian_arrow": {
+  "mysticalagriculture:tertium_helmet": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4391,7 +4688,7 @@
       0.0
     ]
   },
-  "iceandfire:stymphalian_bird_dagger": {
+  "mysticalagriculture:tertium_hoe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4400,16 +4697,25 @@
       0.0
     ]
   },
-  "iceandfire:stymphalian_bird_feather": {
+  "mysticalagriculture:tertium_ingot": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_ingot_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:stymphalian_feather_bundle": {
+  "mysticalagriculture:tertium_leggings": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4418,7 +4724,7 @@
       0.0
     ]
   },
-  "iceandfire:stymphalian_skull": {
+  "mysticalagriculture:tertium_nugget": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4427,7 +4733,7 @@
       0.0
     ]
   },
-  "iceandfire:summoning_crystal_fire": {
+  "mysticalagriculture:tertium_pickaxe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4436,7 +4742,7 @@
       0.0
     ]
   },
-  "iceandfire:summoning_crystal_ice": {
+  "mysticalagriculture:tertium_scythe": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4445,7 +4751,7 @@
       0.0
     ]
   },
-  "iceandfire:summoning_crystal_lightning": {
+  "mysticalagriculture:tertium_shears": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4454,7 +4760,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_blue_boots": {
+  "mysticalagriculture:tertium_shovel": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4463,16 +4769,25 @@
       0.0
     ]
   },
-  "iceandfire:tide_blue_chestplate": {
+  "mysticalagriculture:tertium_sickle": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tertium_staff": {
+    "mode": "3d",
+    "scale": 0.39999998,
+    "offset": [
+      -0.0,
+      -0.0062499996,
+      -0.0
     ]
   },
-  "iceandfire:tide_blue_helmet": {
+  "mysticalagriculture:tertium_sword": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4481,7 +4796,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_blue_leggings": {
+  "mysticalagriculture:tertium_upgrade": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4490,7 +4805,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_bronze_boots": {
+  "mysticalagriculture:tertium_watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4499,7 +4814,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_bronze_chestplate": {
+  "mysticalagriculture:tilling_aoe_i_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4508,7 +4823,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_bronze_helmet": {
+  "mysticalagriculture:tilling_aoe_ii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4517,7 +4832,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_bronze_leggings": {
+  "mysticalagriculture:tilling_aoe_iii_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4526,7 +4841,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_deepblue_boots": {
+  "mysticalagriculture:tilling_aoe_iv_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4535,7 +4850,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_deepblue_chestplate": {
+  "mysticalagriculture:tin_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4544,16 +4859,25 @@
       0.0
     ]
   },
-  "iceandfire:tide_deepblue_helmet": {
+  "mysticalagriculture:tin_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
       0.0,
       0.0,
       0.0
+    ]
+  },
+  "mysticalagriculture:tinkering_table": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.028125,
+      -0.0
     ]
   },
-  "iceandfire:tide_deepblue_leggings": {
+  "mysticalagriculture:titanium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4562,7 +4886,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_green_boots": {
+  "mysticalagriculture:titanium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4571,7 +4895,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_green_chestplate": {
+  "mysticalagriculture:tungsten_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4580,7 +4904,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_green_helmet": {
+  "mysticalagriculture:tungsten_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4589,7 +4913,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_green_leggings": {
+  "mysticalagriculture:turtle_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4598,7 +4922,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_purple_boots": {
+  "mysticalagriculture:turtle_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4607,7 +4931,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_purple_chestplate": {
+  "mysticalagriculture:unattuned_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4616,7 +4940,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_purple_helmet": {
+  "mysticalagriculture:upgrade_base": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4625,7 +4949,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_purple_leggings": {
+  "mysticalagriculture:uraninite_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4634,7 +4958,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_red_boots": {
+  "mysticalagriculture:uraninite_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4643,7 +4967,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_red_chestplate": {
+  "mysticalagriculture:uranium_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4652,7 +4976,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_red_helmet": {
+  "mysticalagriculture:uranium_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4661,7 +4985,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_red_leggings": {
+  "mysticalagriculture:vibrant_alloy_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4670,7 +4994,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_teal_boots": {
+  "mysticalagriculture:vibrant_alloy_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4679,7 +5003,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_teal_chestplate": {
+  "mysticalagriculture:wand": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4688,7 +5012,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_teal_helmet": {
+  "mysticalagriculture:water_agglomeratio": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4697,7 +5021,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_teal_leggings": {
+  "mysticalagriculture:water_breathing_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4706,7 +5030,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_trident": {
+  "mysticalagriculture:water_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4715,7 +5039,7 @@
       0.0
     ]
   },
-  "iceandfire:tide_trident_inventory": {
+  "mysticalagriculture:water_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4724,7 +5048,7 @@
       0.0
     ]
   },
-  "iceandfire:troll_leather_forest": {
+  "mysticalagriculture:watering_can": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4733,7 +5057,7 @@
       0.0
     ]
   },
-  "iceandfire:troll_leather_frost": {
+  "mysticalagriculture:weakness_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4742,7 +5066,7 @@
       0.0
     ]
   },
-  "iceandfire:troll_leather_mountain": {
+  "mysticalagriculture:wither_resistance_augment": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4751,7 +5075,7 @@
       0.0
     ]
   },
-  "iceandfire:troll_skull": {
+  "mysticalagriculture:wither_skeleton_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4760,7 +5084,7 @@
       0.0
     ]
   },
-  "iceandfire:troll_tusk": {
+  "mysticalagriculture:wither_skeleton_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4769,70 +5093,79 @@
       0.0
     ]
   },
-  "iceandfire:troll_weapon_axe": {
+  "mysticalagriculture:witherproof_block": {
     "mode": "3d",
-    "scale": 0.381,
+    "scale": 0.9,
     "offset": [
-      0.037,
-      -0.092,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:troll_weapon_column": {
+  "mysticalagriculture:witherproof_bricks": {
     "mode": "3d",
-    "scale": 0.381,
+    "scale": 0.9,
     "offset": [
-      0.037,
-      -0.092,
-      0.0
+      -0.0,
+      -0.0,
+      -0.0
     ]
   },
-  "iceandfire:troll_weapon_column_forest": {
+  "mysticalagriculture:witherproof_glass": {
     "mode": "3d",
-    "scale": 0.381,
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mysticalagriculture:wood_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.037,
-      -0.092,
+      0.0,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:troll_weapon_column_frost": {
-    "mode": "3d",
-    "scale": 0.381,
+  "mysticalagriculture:wood_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.037,
-      -0.092,
+      0.0,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:troll_weapon_hammer": {
-    "mode": "3d",
-    "scale": 0.381,
+  "mysticalagriculture:yellorium_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.037,
-      -0.092,
+      0.0,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:troll_weapon_trunk": {
-    "mode": "3d",
-    "scale": 0.381,
+  "mysticalagriculture:yellorium_seeds": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.037,
-      -0.092,
+      0.0,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:troll_weapon_trunk_frost": {
-    "mode": "3d",
-    "scale": 0.381,
+  "mysticalagriculture:zinc_essence": {
+    "mode": "2d",
+    "scale": 1.0,
     "offset": [
-      0.037,
-      -0.092,
+      0.0,
+      0.0,
       0.0
     ]
   },
-  "iceandfire:weezer_blue_album": {
+  "mysticalagriculture:zinc_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4841,7 +5174,7 @@
       0.0
     ]
   },
-  "iceandfire:wither_shard": {
+  "mysticalagriculture:zombie_essence": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [
@@ -4850,7 +5183,7 @@
       0.0
     ]
   },
-  "iceandfire:witherbone": {
+  "mysticalagriculture:zombie_seeds": {
     "mode": "2d",
     "scale": 1.0,
     "offset": [

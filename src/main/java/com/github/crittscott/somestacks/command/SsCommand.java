@@ -21,6 +21,7 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +56,8 @@ import java.util.stream.Collectors;
  *       given namespace, in all loaded namespaces, or in the namespaces named by the
  *       {@code gen_mods} server config list. The wall is built over the following ticks and
  *       reports again when it finishes.</li>
+ *   <li>{@code ss test items} builds one row from the items named by the {@code gen_items} server
+ *       config list, sorted by mod id and then item name.</li>
  *   <li>{@code ss testingot <modid|all|list>} does the same with Bar Stacks, over the ingots of
  *       those namespaces, one bar per ingot.</li>
  *   <li>{@code ss write changed} asks the issuing player's client to write its user override
@@ -68,8 +72,10 @@ import java.util.stream.Collectors;
  *
  * <ul>
  *   <li>{@code ss allow add|remove|list} edits the {@code ss_command_allowlist}.</li>
- *   <li>{@code ss gen add|remove|list} edits the {@code gen_mods} list the {@code list} form of
- *       the two test-wall commands builds from.</li>
+ *   <li>{@code ss gen mod add|remove|list} edits the {@code gen_mods} list the {@code list} form
+ *       of the two test-wall commands builds from.</li>
+ *   <li>{@code ss gen item add|remove|list} edits the {@code gen_items} list
+ *       {@code ss test items} builds from.</li>
  *   <li>{@code ss deny mod add|remove|list} edits the disabled-mod list.</li>
  *   <li>{@code ss deny item add|remove|list} edits the disabled-item list.</li>
  *   <li>{@code ss reload} re-reads the server override directory and pushes the current
@@ -79,6 +85,9 @@ import java.util.stream.Collectors;
  * <p>Gating the list editors on operator permission rather than on the allow list is what makes
  * an empty allow list recoverable: the list is empty by default, so a gate that consulted it
  * could never be opened from in game.
+ *
+ * <p>{@code ss help} in {@link SsHelp} describes all of the above in game and is gated by
+ * nothing, so a player who cannot run a subcommand can still read what it needs.
  */
 public final class SsCommand {
     /** Vanilla's gamerule and op-command level, the gate on the administrative subcommands. */
@@ -88,6 +97,7 @@ public final class SsCommand {
     private static final String DISABLED_MODS_LABEL = "disabled mod list";
     private static final String DISABLED_ITEMS_LABEL = "disabled item list";
     private static final String GEN_MODS_LABEL = "gen mod list";
+    private static final String GEN_ITEMS_LABEL = "gen item list";
 
     /** A dump covers every item, which is the namespace and item set the Storage kind holds. */
     private static final TestWallGenerator.Kind DUMP_KIND = TestWallGenerator.Kind.STORAGE;
@@ -118,7 +128,9 @@ public final class SsCommand {
                                                                         .executes(SsCommand::setModeScaleAndXy)
                                                                         .then(Commands.argument("z", FloatArgumentType.floatArg())
                                                                                 .executes(SsCommand::setModeScaleAndXyz))))))))
-                        .then(testTree("test", TestWallGenerator.Kind.STORAGE))
+                        .then(testTree("test", TestWallGenerator.Kind.STORAGE)
+                                .then(Commands.literal("items")
+                                        .executes(SsCommand::testItems)))
                         .then(testTree("testingot", TestWallGenerator.Kind.BAR))
                         .then(writeTree())
                         .then(Commands.literal("reload")
@@ -127,12 +139,15 @@ public final class SsCommand {
                         .then(allowTree())
                         .then(genTree())
                         .then(denyTree())
+                        .then(SsHelp.tree())
         );
     }
 
     /**
      * The {@code <modid>|all|list} subtree one wall kind is generated from. The two kinds differ
-     * only in which items they can show, which is what the kind itself answers.
+     * only in which items they can show, which is what the kind itself answers. The Storage tree
+     * carries an {@code items} form on top of this, which the ingot tree has no use for: the
+     * ingots of a pack are few enough to review a namespace at a time.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> testTree(
             String name, TestWallGenerator.Kind kind) {
@@ -192,31 +207,48 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code ss gen} subtree, editing the namespaces the {@code list} form of the two
-     * test-wall commands builds from. It is an operator command like the other list editors,
-     * because it edits server config rather than the issuing player's view; running the wall it
-     * describes stays with the allow list.
+     * The {@code ss gen} subtree, editing the two lists the wall commands build from: the
+     * namespaces of {@code ss test list} and {@code ss testingot list}, and the items of
+     * {@code ss test items}. These are operator commands like the other list editors, because they
+     * edit server config rather than the issuing player's view; running the walls they describe
+     * stays with the allow list.
      *
-     * <p>Adding completes over the namespaces that have items at all rather than over one kind's,
-     * since the one list serves both kinds and a namespace with no ingots is still worth listing
-     * for {@code ss test list}.
+     * <p>Adding a namespace completes over those that have items at all rather than over one
+     * kind's, since the one list serves both kinds and a namespace with no ingots is still worth
+     * listing for {@code ss test list}. An item id is checked against the registry as
+     * {@code ss deny item add} checks one, since a typo would otherwise sit in the list and be
+     * skipped by every wall.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> genTree() {
         return Commands.literal("gen")
                 .requires(SsCommand::isAdmin)
-                .then(Commands.literal("add")
-                        .then(Commands.argument("modid", StringArgumentType.word())
-                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                        TestWallGenerator.getModIdsWithItems(), builder))
-                                .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
-                                        StringArgumentType.getString(ctx, "modid")))))
-                .then(Commands.literal("remove")
-                        .then(Commands.argument("modid", StringArgumentType.word())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
-                                .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
-                                        StringArgumentType.getString(ctx, "modid")))))
-                .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false)));
+                .then(Commands.literal("mod")
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("modid", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                TestWallGenerator.getModIdsWithItems(), builder))
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                                StringArgumentType.getString(ctx, "modid")))))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("modid", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                                StringArgumentType.getString(ctx, "modid")))))
+                        .then(Commands.literal("list")
+                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
+                .then(Commands.literal("item")
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                        .suggests(SsCommand::suggestItems)
+                                        .executes(ctx -> addItemEntry(
+                                                ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
+                                                ResourceLocationArgument.getId(ctx, "item").toString()))))
+                        .then(Commands.literal("list")
+                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
 
     /**
@@ -246,7 +278,8 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
-                                        .executes(SsCommand::denyItemAdd)))
+                                        .executes(ctx -> addItemEntry(
+                                                ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
@@ -382,13 +415,28 @@ public final class SsCommand {
         return 1;
     }
 
+    /** Entries an invocation dropped from a request, and the one reason they share. */
+    private record Skips(String reason, List<String> entries) {}
+
     /**
      * The namespaces one invocation acts on, with the ones dropped from the request and why.
      * The wall commands and the dump select namespaces the same way, so a review session can
      * dump exactly what it just looked at.
      */
     private record Selection(TestWallGenerator.Kind kind, List<String> modIds,
-                             List<String> disabledMods, List<String> unusableMods) {}
+                             List<String> disabledMods, List<String> unusableMods) {
+        private List<Skips> skips() {
+            return List.of(new Skips("disabled", disabledMods),
+                    new Skips("not loaded or with no " + kind.itemLabel(), unusableMods));
+        }
+
+        private List<List<Item>> groups() {
+            return modIds.stream().map(kind::itemsIn).toList();
+        }
+    }
+
+    /** The items one invocation acts on, with the gen item list entries it dropped and why. */
+    private record ItemSelection(List<Item> items, List<Skips> skips) {}
 
     /**
      * The one namespace named, or null when it cannot be used. Naming a single namespace fails
@@ -466,7 +514,7 @@ public final class SsCommand {
 
         if (modIds.isEmpty()) {
             ctx.getSource().sendFailure(Component.literal(seen.isEmpty()
-                    ? "The " + GEN_MODS_LABEL + " is empty; add a mod with /ss gen add <modid>"
+                    ? "The " + GEN_MODS_LABEL + " is empty; add a mod with /ss gen mod add <modid>"
                     : "No mod in the " + GEN_MODS_LABEL + " can show " + kind.itemLabel() + ": "
                             + disabledMods.size() + " disabled, "
                             + unusableMods.size() + " not loaded or with none"));
@@ -474,6 +522,55 @@ public final class SsCommand {
         }
 
         return new Selection(kind, modIds, disabledMods, unusableMods);
+    }
+
+    /**
+     * The items of the {@code gen_items} server config list, sorted by mod id and then item name so
+     * a row reads the same way however the list was built up. Like {@code all} and {@code list} and
+     * unlike a single named namespace, an entry that cannot be used is skipped and reported rather
+     * than failing the command. The two reasons are reported apart: an item barred by the
+     * disabled-mod list is doing what the server was told, while one the registry does not know is
+     * a typo, or a mod that has been removed since the entry was added.
+     */
+    @Nullable
+    private static ItemSelection selectItems(CommandContext<CommandSourceStack> ctx) {
+        List<ResourceLocation> itemIds = new ArrayList<>();
+        List<String> disabledItems = new ArrayList<>();
+        List<String> unknownItems = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+
+        for (String entry : ServerConfig.GEN_ITEMS.get()) {
+            String trimmed = entry.trim().toLowerCase(Locale.ROOT);
+            if (trimmed.isEmpty() || !seen.add(trimmed)) {
+                continue;
+            }
+
+            ResourceLocation itemId = ResourceLocation.tryParse(trimmed);
+            if (itemId == null || !ForgeRegistries.ITEMS.containsKey(itemId)) {
+                unknownItems.add(trimmed);
+            } else if (ServerConfig.isModDisabled(itemId.getNamespace())) {
+                disabledItems.add(trimmed);
+            } else {
+                itemIds.add(itemId);
+            }
+        }
+
+        if (itemIds.isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(seen.isEmpty()
+                    ? "The " + GEN_ITEMS_LABEL + " is empty; add an item with /ss gen item add <item>"
+                    : "No item in the " + GEN_ITEMS_LABEL + " can be shown: "
+                            + disabledItems.size() + " from disabled mods, "
+                            + unknownItems.size() + " unknown"));
+            return null;
+        }
+
+        itemIds.sort(Comparator.comparing(ResourceLocation::getNamespace)
+                .thenComparing(ResourceLocation::getPath));
+
+        return new ItemSelection(
+                itemIds.stream().map(ForgeRegistries.ITEMS::getValue).toList(),
+                List.of(new Skips("from disabled mods", disabledItems),
+                        new Skips("unknown", unknownItems)));
     }
 
     private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
@@ -503,31 +600,48 @@ public final class SsCommand {
         return selection == null ? 0 : generate(ctx, player, selection);
     }
 
+    /**
+     * Builds the row of the {@code gen_items} server config list. One group means one column, so a
+     * list longer than a stack holds runs on north exactly as a namespace with many items does.
+     */
+    private static int testItems(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        if (!checkAllowed(ctx)) return 0;
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+        ItemSelection selection = selectItems(ctx);
+        return selection == null ? 0 : generate(ctx, player, TestWallGenerator.Kind.STORAGE,
+                List.of(selection.items()), "the " + GEN_ITEMS_LABEL, selection.skips());
+    }
+
     private static String subject(List<String> modIds) {
         return modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
     }
 
-    /** Reports what {@code all} and {@code list} dropped, the two reasons apart. */
-    private static void appendSkips(StringBuilder message, Selection selection) {
-        if (!selection.disabledMods().isEmpty()) {
-            message.append(" Skipped ").append(selection.disabledMods().size())
-                    .append(" disabled: ").append(String.join(", ", selection.disabledMods())).append('.');
-        }
-
-        if (!selection.unusableMods().isEmpty()) {
-            message.append(" Skipped ").append(selection.unusableMods().size())
-                    .append(" not loaded or with no ").append(selection.kind().itemLabel()).append(": ")
-                    .append(String.join(", ", selection.unusableMods())).append('.');
+    /** Reports what a bulk form dropped, one clause per reason and none for a reason with nothing. */
+    private static void appendSkips(StringBuilder message, List<Skips> skips) {
+        for (Skips skip : skips) {
+            if (!skip.entries().isEmpty()) {
+                message.append(" Skipped ").append(skip.entries().size()).append(' ')
+                        .append(skip.reason()).append(": ")
+                        .append(String.join(", ", skip.entries())).append('.');
+            }
         }
     }
 
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
                                 Selection selection) {
-        TestWallGenerator.Kind kind = selection.kind();
-        List<String> modIds = selection.modIds();
-        String subject = subject(modIds);
+        return generate(ctx, player, selection.kind(), selection.groups(),
+                subject(selection.modIds()), selection.skips());
+    }
 
-        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, kind, modIds, result -> {
+    /**
+     * Queues one wall and reports it twice: what it will hold now, and what it did hold once the
+     * generator has finished placing it some ticks later.
+     */
+    private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
+                                TestWallGenerator.Kind kind, List<List<Item>> groups,
+                                String subject, List<Skips> skips) {
+        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, kind, groups, result -> {
             StringBuilder done = new StringBuilder("Created ")
                     .append(result.totalStacks()).append(' ').append(kind.stackLabel()).append(" (")
                     .append(result.totalItems()).append(' ').append(kind.itemLabel()).append(") for ").append(subject)
@@ -546,7 +660,7 @@ public final class SsCommand {
                 .append(plan.totalItems()).append(' ').append(kind.itemLabel()).append(") for ")
                 .append(subject).append('.');
 
-        appendSkips(message, selection);
+        appendSkips(message, skips);
 
         final String finalMessage = message.toString();
         ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), true);
@@ -561,17 +675,18 @@ public final class SsCommand {
     }
 
     /**
-     * Rejects an item the registry does not know before it reaches the disabled-item list. That
-     * list is consulted by exact id, so a typo would sit in it looking effective while barring
-     * nothing.
+     * Rejects an item the registry does not know before it reaches one of the item lists. Both are
+     * consulted by exact id, so a typo would sit in the list looking effective while barring
+     * nothing or showing nothing.
      */
-    private static int denyItemAdd(CommandContext<CommandSourceStack> ctx) {
+    private static int addItemEntry(CommandContext<CommandSourceStack> ctx,
+                                    ForgeConfigSpec.ConfigValue<List<? extends String>> list, String label) {
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
         if (!ForgeRegistries.ITEMS.containsKey(itemId)) {
             ctx.getSource().sendFailure(Component.literal("Unknown item: " + itemId));
             return 0;
         }
-        return addEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, itemId.toString());
+        return addEntry(ctx, list, label, itemId.toString());
     }
 
     private static int addEntry(CommandContext<CommandSourceStack> ctx,
@@ -666,7 +781,7 @@ public final class SsCommand {
         StringBuilder message = new StringBuilder("Dumping render profiles for ")
                 .append(subject(selection.modIds()))
                 .append("; unmeasured items are measured now, and the client reports what it wrote.");
-        appendSkips(message, selection);
+        appendSkips(message, selection.skips());
 
         final String finalMessage = message.toString();
         ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), false);

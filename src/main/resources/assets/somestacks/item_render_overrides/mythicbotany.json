@@ -1,0 +1,551 @@
+{
+  "mythicbotany:alf_pixie_spawn_egg": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_axe": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:alfsteel_boots": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_chestplate": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_helmet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_ingot": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_leggings": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_nugget": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_pick": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_pylon": {
+    "mode": "3d",
+    "scale": 0.68571424,
+    "offset": [
+      -0.0,
+      -0.0021428652,
+      -0.0
+    ]
+  },
+  "mythicbotany:alfsteel_sword": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:alfsteel_template": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:andwari_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:aquapanthus": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:aquapanthus_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:asgard_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:aura_ring_greatest": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:central_rune_holder": {
+    "mode": "3d",
+    "scale": 2.3999999,
+    "offset": [
+      -0.0,
+      0.48749998,
+      -0.0
+    ]
+  },
+  "mythicbotany:cursed_andwari_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:dragonstone_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:dream_cherry": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:dreamwood_leaves": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:elementium_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:exoblaze": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:exoblaze_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:faded_nether_star": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:feysythia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:feysythia_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:fimbultyr_tablet": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:fire_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:gjallar_horn_empty": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:gjallar_horn_full": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:gold_ore": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:helheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:hellebore": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:hellebore_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:ice_ring": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:joetunheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:kvasir_blood": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:kvasir_mead": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:mana_collector": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:mana_infuser": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      0.1828125,
+      -0.0
+    ]
+  },
+  "mythicbotany:mana_ring_greatest": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:midgard_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:mjoellnir": {
+    "mode": "3d",
+    "scale": 0.33941123,
+    "offset": [
+      -1.0115243E-8,
+      -1.0115243E-8,
+      -0.0
+    ]
+  },
+  "mythicbotany:muspelheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:nidavellir_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:niflheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:petrunia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:petrunia_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:raindeletia": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:raindeletia_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:raw_elementium": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:raw_elementium_block": {
+    "mode": "3d",
+    "scale": 0.9,
+    "offset": [
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "mythicbotany:rune_holder": {
+    "mode": "3d",
+    "scale": 2.3999999,
+    "offset": [
+      -0.0,
+      0.48749998,
+      -0.0
+    ]
+  },
+  "mythicbotany:vanaheim_rune": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:wither_aconite": {
+    "mode": "2d",
+    "scale": 1.0,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mythicbotany:wither_aconite_floating": {
+    "mode": "3d",
+    "scale": 1.2307693,
+    "offset": [
+      -0.0,
+      -0.051923074,
+      -0.0
+    ]
+  },
+  "mythicbotany:yggdrasil_branch": {
+    "mode": "3d",
+    "scale": 0.84715986,
+    "offset": [
+      0.020206537,
+      -0.013210035,
+      0.0323741
+    ]
+  }
+}
