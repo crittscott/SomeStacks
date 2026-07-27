@@ -327,6 +327,18 @@ Entries are stored as typed and matched without regard to case, which is the com
 
 Help is gated by nothing at all, unlike either half it describes. The player who cannot run a subcommand is the one most likely to be reading about it, and because each entry names the gate its subcommand answers to, being told what a command needs is also the answer to why it was refused. It changes nothing and answers the sender alone rather than broadcasting to the other operators.
 
+## Automated verification
+
+The automated suite has two deliberately separate layers, 47 JUnit tests and 45 Forge GameTests.
+
+JUnit tests live under `src/test/java` and run as part of `build`. They cover logic that can execute without a bootstrapped game: coordinate and rotation invariants, support calculations over occupancy snapshots, packet codecs, render-mode cycling, override JSON parsing, bundled resource integrity, command registration, and server-config lifecycle behavior. A plain JUnit fixture must not touch `Items`, `Blocks`, or another entry point that initializes the vanilla registries; Gradle's test JVM has the mod classes but is not a running Minecraft instance.
+
+Tests that need registered items or blocks, a level, block entities, capabilities, Forge events, or packet handling are Forge GameTests. Most live under `gametest/`, with packet boundary tests beside the packets they exercise. They cover pile and column behavior, growth, gravity and support, capability semantics, persistence and synchronization, protection events, stack sorting, test-wall generation, item-stack utility behavior, and server packet rejection. `runGameTestServer` boots Minecraft, enables the `somestacks` test namespace, runs all 45 required tests, and exits.
+
+Every GameTest uses the same empty structure. `generateGameTestTemplate` decodes that structure from the `somestacks_empty_template_base64` Gradle property into generated resources before resource processing. GameTest classes, packet boundary test classes, and the generated structure are available to development runs but excluded from the release jar.
+
+The two commands are complementary: `build` runs JUnit but does not execute GameTests, while `runGameTestServer` executes GameTests but not JUnit. A behavior that crosses both pure logic and game state should be divided at that boundary rather than bootstrapping Minecraft inside JUnit.
+
 ## Main extension points
 
 - Interaction behavior: add or reorder a rule in `client/interaction/`, then add a packet when the result mutates server state. Rule order is semantic because only the first match runs.
@@ -339,3 +351,4 @@ Help is gated by nothing at all, unlike either half it describes. The player who
 - Bar appearance: extend `textures/bars/` and reuse the base ingot/brick textures where tinting is sufficient. A resource pack is the supported route for a pack author who wants a whole set of bars to look a particular way, and the only route to a consistent look across players, since nothing about bar appearance is synced. Adding a bar item needs no appearance work at all: an unmapped item is auto-tinted from its own sprite, and a mapping is worth adding only where that reads wrong.
 - What a Bar Stack accepts: name another item tag in the `ingot_tags` server config list, or add values to the `#somestacks:ingots` item tag from a data pack. Keep the validity test the single decision point rather than resolving tags at a call site, and remember that widening it narrows Singles by the same amount. A caller that groups or filters items by ingot-ness caches against the config's ingot generation counter, so a data pack reload and a list edit both drop that grouping.
 - Client-visible configuration: extend `ConfigSyncPkt` as well as the server config; purely server-side controls need no client copy.
+- Automated verification: keep registry-independent contracts in JUnit and game-backed contracts in Forge GameTests. Add a test to the layer that owns the behavior; do not make the plain test JVM impersonate a Minecraft bootstrap.

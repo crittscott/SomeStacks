@@ -212,8 +212,10 @@ public final class ServerConfig {
      * what every deposit, column insertion and capability path runs.
      *
      * <p>Unlike the other lists this one also depends on data pack state, so it is re-baked when
-     * tags are bound as well as when the config changes, and it tolerates being called before any
-     * tag exists: config load runs long before a level does.
+     * tags are bound as well as when the config changes. Config loading may precede tag binding,
+     * in which case this publishes an empty set and the later tag event rebuilds it. Initial world
+     * creation may bind tags first instead; that event waits for the world-specific server config,
+     * whose loading event then performs the first bake against the already-bound tags.
      */
     private static void bakeIngotItems() {
         List<Pattern> patterns = new ArrayList<>();
@@ -282,9 +284,13 @@ public final class ServerConfig {
     /**
      * Re-resolves the ingot tag list against the tags just bound. Item tags are data pack state, so
      * the set of items a Bar Stack accepts changes with a data pack reload even though the config
-     * naming those tags has not.
+     * naming those tags has not. A world-specific server config is not necessarily loaded when
+     * initial tags are bound; its loading event will perform the bake once both inputs are ready.
      */
     public static void onTagsUpdated(TagsUpdatedEvent event) {
+        if (!SERVER_CONFIG.isLoaded()) {
+            return;
+        }
         bakeIngotItems();
     }
 

@@ -1,0 +1,203 @@
+package com.github.crittscott.somestacks.gametest;
+
+import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.items.IItemHandler;
+
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
+
+@GameTestHolder(SomeStacks.MODID)
+@PrefixGameTestTemplate(false)
+public final class BarColumnGameTests {
+    private BarColumnGameTests() {}
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        ItemStack accepted = new ItemStack(barItem, 2);
+
+        check(bars.depositAt(0, accepted), "Valid bottom bar was rejected");
+        checkEquals(1, accepted.getCount(), "Accepted remainder");
+
+        ItemStack invalid = new ItemStack(Items.STICK);
+        check(!bars.depositAt(1, invalid), "Invalid Bar item was accepted");
+        checkEquals(1, invalid.getCount(), "Rejected stack changed");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        int upper = firstSupportedBy(0, 8, 16);
+
+        check(!bars.depositAt(upper, new ItemStack(barItem)),
+                "Floating upper bar was accepted");
+        check(bars.depositAt(0, new ItemStack(barItem)), "Bottom bar deposit failed");
+        check(bars.depositAt(upper, new ItemStack(barItem)),
+                "Supported upper bar was rejected");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        int upper = firstSupportedBy(0, 8, 16);
+        bars.depositAt(0, new ItemStack(barItem));
+        bars.depositAt(upper, new ItemStack(barItem));
+
+        ItemStack extracted = bars.extractAt(0);
+
+        checkEquals(barItem, extracted.getItem(), "Extracted item");
+        checkEquals(1, extracted.getCount(), "Extracted count");
+        check(helper.getLevel().getBlockEntity(bars.getBlockPos()) == null,
+                "Emptied Bar block remained");
+        checkEquals(1, droppedCount(helper, bars.getBlockPos(), barItem),
+                "Unsupported bar drop count");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        int removedSupport = 0;
+        int survivingSupport = 1;
+        int upper = firstSupportedBy(survivingSupport, 8, 16);
+        bars.depositAt(removedSupport, new ItemStack(barItem));
+        bars.depositAt(survivingSupport, new ItemStack(barItem));
+        bars.depositAt(upper, new ItemStack(barItem));
+
+        bars.extractAt(removedSupport);
+
+        checkEquals(barItem, bars.getItems().getStackInSlot(upper).getItem(),
+                "Still-supported upper bar was removed");
+        checkEquals(0, droppedCount(helper, bars.getBlockPos(), barItem),
+                "A supported bar was dropped");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        int lowerTop = 56;
+        int upperBottom = firstSeamSupportedBy(0);
+        lower.getItems().insertItem(lowerTop, new ItemStack(barItem), false);
+
+        check(upper.depositAt(upperBottom, new ItemStack(barItem)),
+                "Cross-block footprint support was rejected");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationBackfillsWithoutDropping(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        IItemHandler capability = GameTestSupport.capability(bars);
+        ItemStack offered = new ItemStack(barItem, 10);
+
+        ItemStack simulated = capability.insertItem(63, offered, true);
+        check(simulated.isEmpty(), "Simulation did not accept ten bars");
+        checkEquals(0, GameTestSupport.occupied(bars.getItems()),
+                "Simulation changed occupancy");
+
+        ItemStack remainder = capability.insertItem(63, offered, false);
+        check(remainder.isEmpty(), "Insertion left a remainder");
+        checkEquals(10, GameTestSupport.count(bars.getItems(), barItem),
+                "Inserted bar count");
+
+        ItemStack extracted = capability.extractItem(0, 64, false);
+
+        checkEquals(1, extracted.getCount(), "Automated extracted count");
+        checkEquals(9, GameTestSupport.count(bars.getItems(), barItem),
+                "Count after automated extraction");
+        checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
+                "Hole was not backfilled");
+        checkEquals(0, droppedCount(helper, bars.getBlockPos(), barItem),
+                "Automation dropped a bar");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        bars.depositAt(0, new ItemStack(barItem));
+        IItemHandler capability = GameTestSupport.capability(bars);
+
+        ItemStack simulated = capability.extractItem(0, 64, true);
+
+        checkEquals(barItem, simulated.getItem(), "Simulated item");
+        checkEquals(1, simulated.getCount(), "Simulated count");
+        checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
+                "Simulation mutated contents");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        int upperBottom = firstSeamSupportedBy(0);
+        lower.getItems().insertItem(56, new ItemStack(barItem), false);
+        upper.depositAt(upperBottom, new ItemStack(barItem));
+
+        helper.getLevel().setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
+
+        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
+                "Dependent upper Bar block remained");
+        checkEquals(2, droppedCount(helper, lower.getBlockPos(), barItem),
+                "Break/collapse drop count");
+        helper.succeed();
+    }
+
+    private static int firstSupportedBy(int lowerIndex, int from, int to) {
+        boolean[] occupancy = new boolean[64];
+        occupancy[lowerIndex] = true;
+        for (int index = from; index < to; index++) {
+            if (BarCubeIdx.isGroundedIn(occupancy, index, null)) {
+                return index;
+            }
+        }
+        throw new AssertionError("No supported upper bar");
+    }
+
+    private static int firstSeamSupportedBy(int seamIndex) {
+        boolean[] seam = new boolean[8];
+        seam[seamIndex] = true;
+        for (int index = 0; index < 8; index++) {
+            if (BarCubeIdx.seamSupports(index, seam)) {
+                return index;
+            }
+        }
+        throw new AssertionError("No seam-supported bottom bar");
+    }
+
+    private static int droppedCount(
+            GameTestHelper helper, net.minecraft.core.BlockPos center, Item item) {
+        return helper.getLevel()
+                .getEntitiesOfClass(ItemEntity.class, new AABB(center).inflate(2.0))
+                .stream()
+                .filter(entity -> entity.getItem().is(item))
+                .mapToInt(entity -> entity.getItem().getCount())
+                .sum();
+    }
+}
