@@ -98,6 +98,15 @@ public class StorageStackBlock extends Block implements EntityBlock {
         }
     }
 
+    /** Joining a pile changes what its blocks resolve to, so their held piles are dropped. */
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (!oldState.is(this)) {
+            StoragePile.invalidateAround(level, pos);
+        }
+    }
+
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
@@ -106,6 +115,10 @@ public class StorageStackBlock extends Block implements EntityBlock {
                 ItemOps.dropAllItems(sbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
+
+            // Before anything resolves a pile again: what the neighbours hold describes a run this
+            // block was part of.
+            StoragePile.invalidateAround(level, pos);
 
             // Losing a block splits one pile into two, or shortens one. Settle both sides rather
             // than leaving the remains unpacked until something else touches them.

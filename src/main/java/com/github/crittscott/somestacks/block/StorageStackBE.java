@@ -63,6 +63,10 @@ public class StorageStackBE extends BlockEntity {
      */
     private int publishedSignal = -1;
 
+    /** The pile resolved for this block, good for the tick it was taken on. See {@link #pile()}. */
+    private StoragePile cachedPile;
+    private long cachedPileTick = Long.MIN_VALUE;
+
     public StorageStackBE(BlockPos pos, BlockState state) {
         super(ModRegistry.STACK_BE.get(), pos, state);
     }
@@ -77,10 +81,34 @@ public class StorageStackBE extends BlockEntity {
         return true;
     }
 
-    /** The pile this block belongs to, or null on the client and for a block being removed. */
+    /**
+     * The pile this block belongs to, or null on the client and for a block being removed.
+     *
+     * <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
+     * pile once per slot it walks, which is hundreds of times a tick for one attached storage
+     * network, and the run cannot change between two of those reads without passing through the
+     * block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is what
+     * drops it for anything that edits the world without them.
+     */
     @Nullable
     public StoragePile pile() {
-        return StoragePile.at(level, getBlockPos());
+        if (level == null || level.isClientSide) {
+            return null;
+        }
+
+        long now = level.getGameTime();
+        if (cachedPile != null && cachedPileTick == now) {
+            return cachedPile;
+        }
+
+        cachedPile = StoragePile.resolve(level, getBlockPos());
+        cachedPileTick = now;
+        return cachedPile;
+    }
+
+    /** Drops the held pile, so the next caller walks the world again. */
+    void invalidatePile() {
+        cachedPile = null;
     }
 
     public int getRotation() {

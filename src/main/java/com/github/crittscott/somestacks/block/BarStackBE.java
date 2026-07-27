@@ -51,6 +51,10 @@ public class BarStackBE extends BlockEntity {
      */
     private boolean removedByCascade = false;
 
+    /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
+    private BarColumn cachedColumn;
+    private long cachedColumnTick = Long.MIN_VALUE;
+
     private final ItemStackHandler items = new ItemStackHandler(SLOTS) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -95,10 +99,31 @@ public class BarStackBE extends BlockEntity {
         return ServerConfig.isIngotItem(stack.getItem());
     }
 
-    /** The column this block belongs to, or null on the client and for a block being removed. */
+    /**
+     * The column this block belongs to, or null on the client and for a block being removed.
+     *
+     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
+     * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
+     */
     @Nullable
     public BarColumn column() {
-        return BarColumn.at(level, getBlockPos());
+        if (level == null || level.isClientSide) {
+            return null;
+        }
+
+        long now = level.getGameTime();
+        if (cachedColumn != null && cachedColumnTick == now) {
+            return cachedColumn;
+        }
+
+        cachedColumn = BarColumn.resolve(level, getBlockPos());
+        cachedColumnTick = now;
+        return cachedColumn;
+    }
+
+    /** Drops the held column, so the next caller walks the world again. */
+    void invalidateColumn() {
+        cachedColumn = null;
     }
 
     public VoxelShape computeShape() {

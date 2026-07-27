@@ -62,11 +62,17 @@ public final class BarColumn {
         if (level == null || level.isClientSide) {
             return null;
         }
-        RunResolveCounter.countBar();
-        if (!(level.getBlockEntity(pos) instanceof BarStackBE)) {
+        if (!(level.getBlockEntity(pos) instanceof BarStackBE be)) {
             return null;
         }
+        return be.column();
+    }
 
+    /**
+     * Walks the world for the run containing {@code pos}. Every caller reaches this through the
+     * cache {@link BarStackBE#column()} keeps; see there for why.
+     */
+    static BarColumn resolve(Level level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof BarStackBE) {
             base = base.below();
@@ -80,6 +86,24 @@ public final class BarColumn {
         }
 
         return new BarColumn(level, blocks);
+    }
+
+    /**
+     * Drops the cached run held by every block a change at {@code pos} could have altered. See
+     * {@link StoragePile#invalidateAround} for the reasoning.
+     */
+    static void invalidateAround(Level level, BlockPos pos) {
+        invalidateRun(level, pos, Direction.UP);
+        invalidateRun(level, pos.above(), Direction.UP);
+        invalidateRun(level, pos.below(), Direction.DOWN);
+    }
+
+    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
+        BlockPos current = from;
+        while (level.getBlockEntity(current) instanceof BarStackBE be) {
+            be.invalidateColumn();
+            current = current.relative(direction);
+        }
     }
 
     /** The configured ceiling on column height, shared with Storage piles. */
@@ -116,12 +140,14 @@ public final class BarColumn {
     }
 
     /**
-     * Positions the column advertises to automation: always its full potential height, so the slot
-     * count does not move as the column grows and shrinks. A column left over-tall by a lowered
-     * configuration advertises its real height instead.
+     * Positions the column advertises to automation: the ones it holds, plus one block's worth of
+     * headroom while the configured height allows another block. See
+     * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the
+     * real one.
      */
     public int advertisedSlots() {
-        return BarStackBE.SLOTS * Math.max(maxHeight(), blocks.size());
+        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
+        return BarStackBE.SLOTS * levels;
     }
 
     public ItemStack getSlot(int flatSlot) {

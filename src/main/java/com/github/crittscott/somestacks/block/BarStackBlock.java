@@ -75,6 +75,15 @@ public class BarStackBlock extends Block implements EntityBlock {
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
+    /** Joining a column changes what its blocks resolve to, so their held columns are dropped. */
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (!oldState.is(this)) {
+            BarColumn.invalidateAround(level, pos);
+        }
+    }
+
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
@@ -86,6 +95,7 @@ public class BarStackBlock extends Block implements EntityBlock {
                 ItemOps.dropAllItems(barBe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
+            BarColumn.invalidateAround(level, pos);
 
             // The column above has lost the seam it stood on, so it comes down — the same answer a
             // cascade gives when it empties a block out from under one. A cascade already walks its

@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.block.RunResolveCounter;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.command.TestWallGenerator;
@@ -44,8 +43,6 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(TestWallGenerator::onServerTick);
-        // Measurement scaffolding; remove with RunResolveCounter.
-        MinecraftForge.EVENT_BUS.addListener(RunResolveCounter::onServerTick);
         MinecraftForge.EVENT_BUS.addListener(ServerConfig::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }

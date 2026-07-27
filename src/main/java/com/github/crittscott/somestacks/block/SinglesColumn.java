@@ -55,11 +55,17 @@ public final class SinglesColumn {
         if (level == null || level.isClientSide) {
             return null;
         }
-        RunResolveCounter.countSingles();
-        if (!(level.getBlockEntity(pos) instanceof SinglesStackBE)) {
+        if (!(level.getBlockEntity(pos) instanceof SinglesStackBE be)) {
             return null;
         }
+        return be.column();
+    }
 
+    /**
+     * Walks the world for the run containing {@code pos}. Every caller reaches this through the
+     * cache {@link SinglesStackBE#column()} keeps; see there for why.
+     */
+    static SinglesColumn resolve(Level level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof SinglesStackBE) {
             base = base.below();
@@ -73,6 +79,24 @@ public final class SinglesColumn {
         }
 
         return new SinglesColumn(level, blocks);
+    }
+
+    /**
+     * Drops the cached run held by every block a change at {@code pos} could have altered. See
+     * {@link StoragePile#invalidateAround} for the reasoning.
+     */
+    static void invalidateAround(Level level, BlockPos pos) {
+        invalidateRun(level, pos, Direction.UP);
+        invalidateRun(level, pos.above(), Direction.UP);
+        invalidateRun(level, pos.below(), Direction.DOWN);
+    }
+
+    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
+        BlockPos current = from;
+        while (level.getBlockEntity(current) instanceof SinglesStackBE be) {
+            be.invalidateColumn();
+            current = current.relative(direction);
+        }
     }
 
     /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
@@ -109,12 +133,23 @@ public final class SinglesColumn {
     }
 
     /**
-     * Positions the column advertises to automation: always its full potential height, so the slot
-     * count does not move as the column grows and shrinks. A column left over-tall by a lowered
-     * configuration advertises its real height instead.
+     * Positions the column advertises to automation: the ones it holds, plus one block's worth of
+     * headroom while the configured height allows another block.
+     *
+     * <p>Neither extreme works. Advertising the full potential height leaves most of the range
+     * permanently empty, and a caller that walks it re-derives that emptiness every time — a
+     * storage network's external storage, which polls its inventory once a tick, was measured
+     * spending the great majority of its scan on positions that could not exist. Advertising only
+     * what the column holds is worse in a subtler way: the common insertion helpers offer a stack
+     * to each advertised position and stop, so a full column would never be offered the insertion
+     * that grows it, and automation could not build a column past its first block.
+     *
+     * <p>One block of headroom is what one insertion can actually grow, since {@link #insert} takes
+     * a single growth and stops. So the advertised range is reachable capacity and nothing more.
      */
     public int advertisedSlots() {
-        return SinglesStackBE.SLOTS * Math.max(maxHeight(), blocks.size());
+        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
+        return SinglesStackBE.SLOTS * levels;
     }
 
     public ItemStack getSlot(int flatSlot) {

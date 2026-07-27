@@ -75,6 +75,15 @@ public class SinglesStackBlock extends Block implements EntityBlock {
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
+    /** Joining a column changes what its blocks resolve to, so their held columns are dropped. */
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (!oldState.is(this)) {
+            SinglesColumn.invalidateAround(level, pos);
+        }
+    }
+
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
@@ -83,6 +92,7 @@ public class SinglesStackBlock extends Block implements EntityBlock {
                 ItemOps.dropAllItems(ssbe.getItems(), level, pos);
             }
             super.onRemove(state, level, pos, newState, isMoving);
+            SinglesColumn.invalidateAround(level, pos);
         }
     }
 }

@@ -56,11 +56,18 @@ public final class StoragePile {
         if (level == null || level.isClientSide) {
             return null;
         }
-        RunResolveCounter.countStorage();
-        if (!(level.getBlockEntity(pos) instanceof StorageStackBE)) {
+        if (!(level.getBlockEntity(pos) instanceof StorageStackBE sbe)) {
             return null;
         }
+        return sbe.pile();
+    }
 
+    /**
+     * Walks the world for the run containing {@code pos}. Every caller reaches this through the
+     * cache {@link StorageStackBE#pile()} keeps, because a capability read resolves the run once per
+     * slot and a machine reading the whole handler does that hundreds of times a tick.
+     */
+    static StoragePile resolve(Level level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof StorageStackBE) {
             base = base.below();
@@ -74,6 +81,30 @@ public final class StoragePile {
         }
 
         return new StoragePile(level, base, blocks);
+    }
+
+    /**
+     * Drops the cached run held by every block a change at {@code pos} could have altered: the run
+     * {@code pos} belongs to when it still holds a Storage Stack, and the runs above and below it
+     * when it no longer does.
+     *
+     * <p>The cache expires on its own at the end of the tick, which covers anything that edits the
+     * world without telling us. This is what covers the same tick, and the block's own place and
+     * remove hooks are where every structural change passes, including the growth and trimming this
+     * class does itself.
+     */
+    static void invalidateAround(Level level, BlockPos pos) {
+        invalidateRun(level, pos, Direction.UP);
+        invalidateRun(level, pos.above(), Direction.UP);
+        invalidateRun(level, pos.below(), Direction.DOWN);
+    }
+
+    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
+        BlockPos current = from;
+        while (level.getBlockEntity(current) instanceof StorageStackBE sbe) {
+            sbe.invalidatePile();
+            current = current.relative(direction);
+        }
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
@@ -154,13 +185,14 @@ public final class StoragePile {
     }
 
     /**
-     * Slots the pile advertises to automation: always its full potential height, so the slot count
-     * does not move as the pile grows and shrinks and the advertised headroom is capacity a deposit
-     * can really reach. A pile left over-tall by a lowered configuration advertises its real
-     * height instead.
+     * Slots the pile advertises to automation: the ones it holds, plus one block's worth of
+     * headroom while the configured height allows another block. See
+     * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the
+     * real one.
      */
     public int advertisedSlots() {
-        return StorageStackBE.SLOTS * Math.max(maxHeight(), blocks.size());
+        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
+        return StorageStackBE.SLOTS * levels;
     }
 
     public ItemStack getSlot(int flatSlot) {
