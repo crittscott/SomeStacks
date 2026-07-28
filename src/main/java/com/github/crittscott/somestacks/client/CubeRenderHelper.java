@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.SomeStacks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,13 +17,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -30,9 +34,11 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
@@ -85,6 +91,14 @@ public final class CubeRenderHelper {
      * instance, so an entry can only ever be read back for the pass it was gathered from.
      */
     private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
+
+    /**
+     * Items whose block form threw when it was drawn. Held so the attempt is made once per bake
+     * rather than once per frame for as long as the item is on screen: a renderer that throws
+     * part way through a quad leaves the shared buffer mid-quad, and repeating that every frame
+     * compounds it.
+     */
+    private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
@@ -168,6 +182,16 @@ public final class CubeRenderHelper {
 
         BlockState blockState = blockItem.getBlock().defaultBlockState();
 
+        // Only a MODEL block has a block form to draw here. Any other shape is drawn by a block
+        // entity renderer, and the single-block path would hand our pose stack and a throwaway
+        // ItemStack to that renderer with the NONE display context; 3d reaches the same renderer
+        // with the real stack under FIXED, and cannot leave the pose stack unbalanced.
+        if (blockState.getRenderShape() != RenderShape.MODEL
+                || BLOCK_RENDER_FAILURES.contains(stack.getItem())) {
+            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
+            return;
+        }
+
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
@@ -178,9 +202,13 @@ public final class CubeRenderHelper {
         try {
             blockRenderer.renderSingleBlock(blockState, pose, buffers, light, OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            // Some blocks (like IE multiblocks) have complex models that require level context
-            // and will crash when rendered without it. Fall back to item rendering.
+            // A third-party block model that cannot be baked or drawn on its own. The model path
+            // works from the pose it is handed and never pushes, so the stack is where we left it.
             pose.popPose();
+            if (BLOCK_RENDER_FAILURES.add(stack.getItem())) {
+                SomeStacks.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
+                        ForgeRegistries.ITEMS.getKey(stack.getItem()), e);
+            }
             render3DItem(stack, pose, buffers, light, level, finalScale, offset);
             return;
         }
@@ -265,9 +293,10 @@ public final class CubeRenderHelper {
         }
     }
 
-    /** Drops geometry gathered from the baked models a reload is about to replace. */
+    /** Drops what was gathered or learned from the baked models a reload is about to replace. */
     public static void onResourceReload() {
         PLATE_CACHE.clear();
+        BLOCK_RENDER_FAILURES.clear();
     }
 
     /**
