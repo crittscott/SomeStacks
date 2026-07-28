@@ -11,11 +11,16 @@ import javax.annotation.Nonnull;
  * first slot upward, so a hopper under the pile and an interface halfway up address the same
  * inventory and see the same contents.
  *
- * <p>The slot count is the pile's potential height, not its current one, so growing and shrinking
- * never changes the shape of the handler under a machine that is reading it, and the advertised
- * headroom is capacity a deposit can really reach. Insertion ignores the requested slot: the pile
- * fills from its base upward and grows the column when it needs to, which is what makes that
- * headroom real.
+ * <p>The handler is positional for reading and extraction but not for insertion. {@code
+ * getStackInSlot} and {@code extractItem} address the slot they are given; insertion ignores it,
+ * because the pile fills from its base upward and grows the column when it needs to. A caller that
+ * sums simulated per-slot capacity therefore over-counts, since every slot answers with the space
+ * the whole pile has.
+ *
+ * <p>The slot count is what the pile holds plus one block's worth of headroom while the configured
+ * height allows another block, so it grows and shrinks with the pile. See
+ * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
+ * one.
  */
 public class PileItemHandler implements IItemHandler {
     private final StorageStackBE blockEntity;

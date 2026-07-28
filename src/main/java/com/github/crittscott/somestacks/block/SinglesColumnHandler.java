@@ -11,13 +11,19 @@ import javax.annotation.Nonnull;
  * bottom block's first cell upward, so a pipe under the column and one halfway up address the same
  * items.
  *
- * <p>Unlike an ordinary inventory, a position here is a place in a structure. Insertion therefore
- * ignores the requested slot and lets the column choose the lowest supported empty cell, growing
- * upward when it runs out; extraction empties the requested cell and lets the column fall down over
- * it, which is the player's own removal and drops nothing.
+ * <p>Unlike an ordinary inventory, a position here is a place in a structure, so the handler is
+ * positional for reading and extraction but not for insertion. {@code getStackInSlot} and {@code
+ * extractItem} address the cell they are given — extraction empties it and lets the column fall
+ * down over it, which is the player's own removal and drops nothing. Insertion ignores the slot and
+ * lets the column choose the lowest supported empty cell, growing upward when it runs out, since
+ * that is the only placement that cannot leave an item hanging in the air. A caller that sums
+ * simulated per-slot capacity therefore over-counts, since every slot answers with the space the
+ * whole column has.
  *
- * <p>The slot count is the column's potential height, not its current one, so growing and shrinking
- * never changes the shape of the handler under a machine that is reading it.
+ * <p>The slot count is what the column holds plus one block's worth of headroom while the
+ * configured height allows another block, so it grows and shrinks with the column. See
+ * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
+ * one.
  */
 public class SinglesColumnHandler implements IItemHandler {
     private final SinglesStackBE blockEntity;

@@ -10,14 +10,19 @@ import javax.annotation.Nonnull;
  * The whole Bar column, exposed to automation from any block in it. Positions run from the bottom
  * block's first cell upward, so a pipe under the column and one halfway up address the same bars.
  *
- * <p>Unlike an ordinary inventory, a position here is a place in a structure. Insertion therefore
- * ignores the requested slot and lets the column choose the lowest supported empty position,
- * growing upward when it runs out; extraction takes the requested bar and fills the hole from the
- * top. Both leave a standing structure, which is why automation never drops bars the way a player's
- * own extraction does.
+ * <p>Unlike an ordinary inventory, a position here is a place in a structure, so the handler is
+ * positional for reading and extraction but not for insertion. {@code getStackInSlot} and {@code
+ * extractItem} address the position they are given — extraction takes that bar and fills the hole
+ * from the top of the column. Insertion ignores the slot and lets the column choose the lowest
+ * supported empty position, growing upward when it runs out. Both leave a standing structure, which
+ * is why automation never drops bars the way a player's own extraction does. A caller that sums
+ * simulated per-slot capacity over-counts, since every slot answers with the space the whole column
+ * has.
  *
- * <p>The slot count is the column's potential height, not its current one, so growing and shrinking
- * never changes the shape of the handler under a machine that is reading it.
+ * <p>The slot count is what the column holds plus one block's worth of headroom while the
+ * configured height allows another block, so it grows and shrinks with the column. See
+ * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
+ * one.
  */
 public class BarColumnHandler implements IItemHandler {
     private final BarStackBE blockEntity;
