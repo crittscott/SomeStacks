@@ -41,8 +41,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
             ServerPlayer player = PacketBoundary.validate(ctx, msg.pos);
             if (player == null) return;
 
-            if (msg.index < 0 || msg.index >= 64) return;
-
             if (Protection.isProtected(player, msg.pos)) return;
 
             if (!Protection.mayInteract(player, msg.pos, msg.hand())) return;
@@ -62,7 +60,7 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         ctx.get().setPacketHandled(true);
     }
 
-    private static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
+    static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
         ItemStack handStack = player.getItemInHand(hand);
 
         int maxCanTake = handStack.isEmpty()
@@ -93,7 +91,9 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         }
     }
 
-    private static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
+    static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
+        if (index < 0 || index >= SinglesStackBE.SLOTS) return;
+
         ItemStack cubeStack = ssbe.getItems().getStackInSlot(index);
 
         if (cubeStack.isEmpty()) return;
@@ -113,7 +113,9 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         }
     }
 
-    private static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
+    static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
+        if (index < 0 || index >= BarStackBE.SLOTS) return;
+
         ItemStack barStack = barbe.getItems().getStackInSlot(index);
 
         if (barStack.isEmpty()) return;

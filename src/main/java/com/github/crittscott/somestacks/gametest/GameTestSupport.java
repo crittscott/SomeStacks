@@ -18,25 +18,25 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 
-final class GameTestSupport {
-    static final String TEMPLATE = "somestacks_empty";
-    static final BlockPos ORIGIN = new BlockPos(2, 1, 2);
+public final class GameTestSupport {
+    public static final String TEMPLATE = "somestacks_empty";
+    public static final BlockPos ORIGIN = new BlockPos(2, 1, 2);
 
     private GameTestSupport() {}
 
-    static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
+    public static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
         return place(helper, relative, ModRegistry.STORAGE_STACK_BLOCK.get(), StorageStackBE.class);
     }
 
-    static SinglesStackBE placeSingles(GameTestHelper helper, BlockPos relative) {
+    public static SinglesStackBE placeSingles(GameTestHelper helper, BlockPos relative) {
         return place(helper, relative, ModRegistry.SINGLES_STACK_BLOCK.get(), SinglesStackBE.class);
     }
 
-    static BarStackBE placeBar(GameTestHelper helper, BlockPos relative) {
+    public static BarStackBE placeBar(GameTestHelper helper, BlockPos relative) {
         return place(helper, relative, ModRegistry.BAR_STACK_BLOCK.get(), BarStackBE.class);
     }
 
-    static <T extends BlockEntity> T place(
+    public static <T extends BlockEntity> T place(
             GameTestHelper helper,
             BlockPos relative,
             Block block,
@@ -51,14 +51,14 @@ final class GameTestSupport {
         return type.cast(blockEntity);
     }
 
-    static IItemHandler capability(BlockEntity blockEntity) {
+    public static IItemHandler capability(BlockEntity blockEntity) {
         IItemHandler handler =
                 blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         check(handler != null, "Missing item-handler capability at " + blockEntity.getBlockPos());
         return handler;
     }
 
-    static Item firstBarItem() {
+    public static Item firstBarItem() {
         for (Item item : ForgeRegistries.ITEMS.getValues()) {
             if (BarStackBE.isValidBarItem(new ItemStack(item))) {
                 return item;
@@ -67,7 +67,7 @@ final class GameTestSupport {
         throw new GameTestAssertException("No item is currently valid for Bar Stack tests");
     }
 
-    static int count(IItemHandler handler, Item item) {
+    public static int count(IItemHandler handler, Item item) {
         int total = 0;
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             ItemStack stack = handler.getStackInSlot(slot);
@@ -78,7 +78,7 @@ final class GameTestSupport {
         return total;
     }
 
-    static int occupied(IItemHandler handler) {
+    public static int occupied(IItemHandler handler) {
         int total = 0;
         for (int slot = 0; slot < handler.getSlots(); slot++) {
             if (!handler.getStackInSlot(slot).isEmpty()) {
@@ -88,13 +88,13 @@ final class GameTestSupport {
         return total;
     }
 
-    static void check(boolean condition, String message) {
+    public static void check(boolean condition, String message) {
         if (!condition) {
             throw new GameTestAssertException(message);
         }
     }
 
-    static void checkEquals(Object expected, Object actual, String message) {
+    public static void checkEquals(Object expected, Object actual, String message) {
         if (!Objects.equals(expected, actual)) {
             throw new GameTestAssertException(
                     message + ": expected " + expected + ", found " + actual);
