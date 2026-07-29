@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -29,15 +30,26 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
     private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("somestacks", "block/minecraft/base_ingot");
-    private static final BarTextureData FALLBACK = new BarTextureData(DEFAULT_TEXTURE);
-    private static final int AUTO_TINT_MARKER = -1;
+    private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
-    public record BarTextureData(ResourceLocation texture, int color) {
+    /**
+     * A bar's appearance: the texture to draw and the colour to draw it in. {@code autoTint} says
+     * the colour is still to be worked out from the item itself, and is carried apart from the
+     * colour rather than reserved out of it, so that a mapping asking for white — the way a pack
+     * author declines tinting — is not read as a request to compute one.
+     */
+    public record BarTextureData(ResourceLocation texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
-        public BarTextureData(ResourceLocation texture) {
-            this(texture, WHITE);
+        /** A mapping whose colour is to be computed from the item's own sprite and registered tint. */
+        public static BarTextureData auto(ResourceLocation texture) {
+            return new BarTextureData(texture, WHITE, true);
+        }
+
+        /** A mapping whose colour is settled: an authored tint, a computed one, or white for none. */
+        public static BarTextureData tinted(ResourceLocation texture, int color) {
+            return new BarTextureData(texture, color, false);
         }
 
         public int red() {
@@ -54,10 +66,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
         public int alpha() {
             return (color >> 24) & 0xFF;
-        }
-
-        public boolean needsAutoTint() {
-            return color == AUTO_TINT_MARKER;
         }
     }
 
@@ -79,36 +87,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
                     try {
                         ResourceLocation itemLoc = new ResourceLocation(key);
-                        JsonElement value = root.get(key);
-
-                        BarTextureData data;
-                        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
-                            // Simple string format: texture specified, needs auto-tint
-                            ResourceLocation textureLoc = new ResourceLocation(value.getAsString());
-                            data = new BarTextureData(textureLoc, AUTO_TINT_MARKER);
-                        } else if (value.isJsonObject()) {
-                            JsonObject obj = value.getAsJsonObject();
-
-                            // Determine texture
-                            ResourceLocation textureLoc = obj.has("texture")
-                                    ? new ResourceLocation(obj.get("texture").getAsString())
-                                    : DEFAULT_TEXTURE;
-
-                            // Determine tint
-                            int color;
-                            if (obj.has("tint")) {
-                                String tintStr = obj.get("tint").getAsString();
-                                color = parseColor(tintStr);
-                            } else {
-                                color = AUTO_TINT_MARKER;
-                            }
-
-                            data = new BarTextureData(textureLoc, color);
-                        } else {
+                        BarTextureData data = parseEntry(root.get(key));
+                        if (data == null) {
                             SomeStacks.LOGGER.warn("Invalid format for '{}': expected string or object", key);
                             continue;
                         }
-
                         configMap.put(itemLoc, data);
                     } catch (Exception e) {
                         SomeStacks.LOGGER.warn("Invalid mapping for '{}': {}", key, e.getMessage());
@@ -123,6 +106,32 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         return configMap;
     }
 
+    /**
+     * One mapping: a bare texture id, or an object with optional {@code texture} and {@code tint}.
+     * A mapping carrying a tint is settled by it, including a white one, which is how a pack author
+     * says to draw the texture as it is; a mapping with no tint asks for one to be computed.
+     *
+     * @return the mapping, or null when the value is neither a string nor an object.
+     * @throws IllegalArgumentException for a malformed id or colour, which the caller reports.
+     */
+    @Nullable
+    static BarTextureData parseEntry(JsonElement value) {
+        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
+            return BarTextureData.auto(new ResourceLocation(value.getAsString()));
+        }
+        if (!value.isJsonObject()) {
+            return null;
+        }
+
+        JsonObject obj = value.getAsJsonObject();
+        ResourceLocation texture = obj.has("texture")
+                ? new ResourceLocation(obj.get("texture").getAsString())
+                : DEFAULT_TEXTURE;
+        return obj.has("tint")
+                ? BarTextureData.tinted(texture, parseColor(obj.get("tint").getAsString()))
+                : BarTextureData.auto(texture);
+    }
+
     @Override
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
@@ -133,8 +142,9 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             ResourceLocation itemLoc = entry.getKey();
             BarTextureData data = entry.getValue();
 
-            if (data.needsAutoTint()) {
-                data = new BarTextureData(data.texture(), calculateTintFromItemTexture(itemLoc, resourceManager));
+            if (data.autoTint()) {
+                data = BarTextureData.tinted(
+                        data.texture(), calculateTintFromItemTexture(itemLoc, resourceManager));
                 autoTinted++;
             }
 
@@ -329,7 +339,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         BarTextureData mapped = textureMap.get(itemLoc);
         if (mapped != null) return mapped;
 
-        return unmappedTints.computeIfAbsent(itemLoc, loc -> new BarTextureData(
+        return unmappedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
                 DEFAULT_TEXTURE,
                 calculateTintFromItemTexture(loc, Minecraft.getInstance().getResourceManager())));
     }

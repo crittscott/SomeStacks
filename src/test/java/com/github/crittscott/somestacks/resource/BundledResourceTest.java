@@ -66,6 +66,26 @@ class BundledResourceTest {
         assertTrue(entryCount > 0);
     }
 
+    /**
+     * The corpus is loaded by file name: a file naming a namespace the client does not have is
+     * skipped unread, so an entry filed under the wrong name would never be seen.
+     */
+    @Test
+    void everyBundledOverrideFileIsNamedForTheNamespaceItCovers() throws IOException {
+        try (Stream<Path> paths = Files.list(OVERRIDES)) {
+            for (Path path : paths.filter(p -> p.toString().endsWith(".json")).sorted().toList()) {
+                String fileName = path.getFileName().toString();
+                String namespace = fileName.substring(0, fileName.length() - ".json".length());
+                JsonObject root = JsonParser.parseString(Files.readString(path)).getAsJsonObject();
+
+                for (var entry : root.entrySet()) {
+                    assertEquals(namespace, new ResourceLocation(entry.getKey()).getNamespace(),
+                            path + ": " + entry.getKey() + " is filed under the wrong namespace");
+                }
+            }
+        }
+    }
+
     @Test
     void bundledSoundDataHasEveryStackAction() throws IOException {
         Path path = RESOURCES.resolve(

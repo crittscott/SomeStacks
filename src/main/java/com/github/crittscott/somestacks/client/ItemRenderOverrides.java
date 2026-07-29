@@ -11,12 +11,15 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -28,15 +31,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * The client's item render configuration, layered by authority. {@link #resolve} walks
  * the layers and returns the first entry found, whole: server-synced admin overrides,
  * then the user's own override file, then the bundled resource corpus. An item no layer
  * mentions takes its complete profile from measurement.
+ *
+ * <p>A corpus file is named for the namespace whose items it covers, and covers no other.
+ * The corpus is cross-mod compatibility data, most of which any one client cannot use, so a
+ * file naming a namespace this client does not have is skipped unread rather than parsed and
+ * retained. A file whose name is not a namespace therefore reaches nothing.
  */
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
@@ -58,10 +69,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         Map<ResourceLocation, ItemRenderConfig> configMap = new HashMap<>();
 
         var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
+        Set<String> present = presentNamespaces();
+        int skipped = 0;
 
         // Read in file order so that two files covering one item resolve the same way every reload.
-        resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
+        for (Map.Entry<ResourceLocation, Resource> fileEntry
+                : new TreeMap<>(resources).entrySet()) {
             ResourceLocation fileLocation = fileEntry.getKey();
+            if (!present.contains(coveredNamespace(fileLocation))) {
+                skipped++;
+                continue;
+            }
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
@@ -69,9 +87,37 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             } catch (Exception e) {
                 SomeStacks.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
             }
-        });
+        }
 
+        SomeStacks.LOGGER.info("Loaded {} render override(s) from {} file(s); skipped {} for absent namespaces",
+                configMap.size(), resources.size() - skipped, skipped);
         return configMap;
+    }
+
+    /** The namespace a corpus file covers: its file name without the {@code .json}. */
+    private static String coveredNamespace(ResourceLocation fileLocation) {
+        String path = fileLocation.getPath();
+        return path.substring(path.lastIndexOf('/') + 1, path.length() - ".json".length());
+    }
+
+    /**
+     * The namespaces whose items this client can hold. Neither source can change within a
+     * session, so a file naming a namespace outside this set covers nothing that exists here.
+     *
+     * <p>The union of both sources is deliberate. The item registry is the exact answer and
+     * covers a mod that registers items under some other namespace, but reading it depends on
+     * registration having run; the mod list is fixed at mod-file discovery, before any mod bus
+     * event fires, so it cannot be consulted too early.
+     */
+    private static Set<String> presentNamespaces() {
+        Set<String> namespaces = new HashSet<>();
+        for (ResourceLocation itemId : ForgeRegistries.ITEMS.getKeys()) {
+            namespaces.add(itemId.getNamespace());
+        }
+        for (IModInfo mod : ModList.get().getMods()) {
+            namespaces.add(mod.getModId());
+        }
+        return namespaces;
     }
 
     @Override
