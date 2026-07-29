@@ -233,7 +233,10 @@ public final class SinglesColumn {
             rotations[i] = blocks.get(i).getRotation();
         }
 
-        boolean mayGrow = ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get() && spaceAboveIsFree();
+        // Only the one position above the column is known to be free, so the plan grows once. The
+        // world tests behind canGrow() are deferred to the point of use, so a column with room to
+        // spare never pays for them.
+        boolean growthUnspent = true;
         int virtualHeight = height;
 
         int[] plan = new int[wanted];
@@ -244,15 +247,14 @@ public final class SinglesColumn {
             int target = findSupportedEmpty(occupancy, rotations, virtualHeight, cursor);
 
             if (target < 0) {
-                if (!mayGrow || virtualHeight >= maxHeight()) {
+                if (!growthUnspent || !canGrow()) {
                     break;
                 }
                 occupancy[virtualHeight] = new boolean[SinglesStackBE.SLOTS];
                 // A grown block is placed unrotated, as a player's own placement is.
                 rotations[virtualHeight] = 0;
                 virtualHeight++;
-                // Only the one position tested above the column is known to be free.
-                mayGrow = false;
+                growthUnspent = false;
                 target = findSupportedEmpty(occupancy, rotations, virtualHeight, cursor);
                 if (target < 0) {
                     // Nothing in the new block is supported: the top layer beneath it is empty.
@@ -291,27 +293,33 @@ public final class SinglesColumn {
         return -1;
     }
 
-    private boolean spaceAboveIsFree() {
-        if (blocks.size() >= maxHeight()) {
+    /**
+     * Whether growth is permitted and the space above the column could take a block: height,
+     * enablement, build height, replaceability, and everything protection can answer without side
+     * effects. Planning and committing share this predicate, so a simulated insertion cannot
+     * promise a block the insertion itself would refuse. Growth carries no player, so protection
+     * is weighed against the level's fake player, which is never exempt from spawn protection.
+     */
+    private boolean canGrow() {
+        if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get()
+                || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
         BlockPos above = topPos().above();
-        return !level.isOutsideBuildHeight(above) && level.getBlockState(above).canBeReplaced();
+        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
+            return false;
+        }
+        return !Protection.isProtected(serverLevel, above);
     }
 
     /** Adds one block on top. Automation carries no player, so growth answers to the fake player. */
     private boolean grow() {
-        if (!spaceAboveIsFree() || !ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get()
-                || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow() || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
 
         BlockPos above = topPos().above();
         ServerPlayer editor = FakePlayerFactory.getMinecraft(serverLevel);
-        if (Protection.isProtected(editor, above)) {
-            return false;
-        }
-
         BlockState newStack = ModRegistry.SINGLES_STACK_BLOCK.get().defaultBlockState();
         if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
             return false;

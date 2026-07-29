@@ -1,6 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
@@ -10,13 +14,19 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.items.IItemHandler;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
@@ -71,5 +81,112 @@ public final class ProtectionGameTests {
                     "Expired suppression still vetoed interaction");
             helper.succeed();
         });
+    }
+
+    // Growth under protection
+    //
+    // A capability insertion that needs a taller run weighs the position above it before promising
+    // the caller anything, so a simulation and the commit that follows agree about a position
+    // growth cannot have. The three tests below stage that with the world border. Spawn protection,
+    // the other half of the same predicate, cannot be staged here: it is implemented on
+    // DedicatedServer, and the server running these tests is not one.
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
+        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(storage);
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+
+        check(capability.insertItem(0, offered, true).isEmpty(),
+                "A full pile with free headroom did not credit growth");
+
+        outsideTheBorder(helper, () -> {
+            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+                    "Simulated remainder");
+            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+                    "Committed remainder");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(singles);
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+
+        check(capability.insertItem(0, offered, true).isEmpty(),
+                "A full column with free headroom did not credit growth");
+
+        outsideTheBorder(helper, () -> {
+            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+                    "Simulated remainder");
+            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+                    "Committed remainder");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item bar = GameTestSupport.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(bars);
+        ItemStack offered = new ItemStack(bar, 4);
+
+        check(capability.insertItem(0, offered, true).isEmpty(),
+                "A full column with free headroom did not credit growth");
+
+        outsideTheBorder(helper, () -> {
+            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+                    "Simulated remainder");
+            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+                    "Committed remainder");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    /**
+     * Runs {@code action} with the world border moved off the test structure, and restores it
+     * before returning. The border is level-wide state, but the move and the restore both happen
+     * inside this one synchronous call, so no other test observes it moved.
+     */
+    private static void outsideTheBorder(GameTestHelper helper, Runnable action) {
+        WorldBorder border = helper.getLevel().getWorldBorder();
+        BlockPos above = helper.absolutePos(ORIGIN.above());
+        double centerX = border.getCenterX();
+        double centerZ = border.getCenterZ();
+        double size = border.getSize();
+        try {
+            border.setCenter(above.getX() + 1000.0, above.getZ());
+            border.setSize(16.0);
+            check(!border.isWithinBounds(above),
+                    "Test setup left the position inside the world border");
+            action.run();
+        } finally {
+            border.setCenter(centerX, centerZ);
+            border.setSize(size);
+        }
     }
 }

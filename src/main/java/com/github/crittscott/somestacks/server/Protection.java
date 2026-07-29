@@ -12,6 +12,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -36,6 +37,15 @@ public final class Protection {
         }
         MinecraftServer server = level.getServer();
         return server.isUnderSpawnProtection(level, pos, sp);
+    }
+
+    /**
+     * Protection as automation sees it: the level's fake player, which is never an operator and so
+     * is never exempt from spawn protection. Growth driven by a capability insertion carries no
+     * player and answers to this, both when it is planned and when it is committed.
+     */
+    public static boolean isProtected(ServerLevel level, BlockPos pos) {
+        return isProtected(FakePlayerFactory.getMinecraft(level), pos);
     }
 
     /** Extra range beyond the attribute, matching vanilla's server-side interaction slack. */

@@ -311,6 +311,9 @@ public final class StoragePile {
      * A deposit that grows further will take more than this promised, which is the safe direction
      * to be wrong in: a caller that acts on the answer and then inserts is left holding a smaller
      * remainder, never a larger one.
+     *
+     * <p>Only the capability calls this, and a capability insertion carries no player, so the
+     * headroom is weighed against the fake player that would actually place the block.
      */
     public int simulateDeposit(ItemStack fromHand) {
         if (fromHand.isEmpty() || !StorageStackBE.isValidStorageItem(fromHand)) {
@@ -328,7 +331,7 @@ public final class StoragePile {
             }
         }
 
-        if (room < wanted && canGrow()) {
+        if (room < wanted && canGrow(null)) {
             room += StorageStackBE.SLOTS * fromHand.getMaxStackSize();
         }
 
@@ -368,27 +371,41 @@ public final class StoragePile {
         return used;
     }
 
-    /** Whether growth is permitted and the space above the pile could take a block. */
-    private boolean canGrow() {
-        if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()) {
+    /**
+     * Whether growth is permitted and the space above the pile could take a block: height,
+     * enablement, build height, replaceability, and everything protection can answer without side
+     * effects. Planning and committing share this predicate so that a simulated deposit cannot
+     * promise a block the deposit itself would refuse.
+     *
+     * <p>Spawn protection exempts operators, so the answer depends on who is growing the pile: a
+     * player's own deposit is weighed against that player, and automation against the level's fake
+     * player, which is never exempt.
+     */
+    private boolean canGrow(@Nullable ServerPlayer placer) {
+        if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_STORAGE_STACK_BLOCK.get()
+                || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
         BlockPos above = topPos().above();
-        return !level.isOutsideBuildHeight(above) && level.getBlockState(above).canBeReplaced();
+        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
+            return false;
+        }
+        return !Protection.isProtected(editor(serverLevel, placer), above);
+    }
+
+    /** The player a growth is attributed to: the depositing player, or the fake player. */
+    private static ServerPlayer editor(ServerLevel serverLevel, @Nullable ServerPlayer placer) {
+        return placer != null ? placer : FakePlayerFactory.getMinecraft(serverLevel);
     }
 
     /** Adds one block on top, inheriting the pile's mode and rotation. */
     private boolean grow(@Nullable ServerPlayer placer) {
-        if (!canGrow() || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow(placer) || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = placer != null ? placer : FakePlayerFactory.getMinecraft(serverLevel);
-        if (Protection.isProtected(editor, above)) {
-            return false;
-        }
-
+        ServerPlayer editor = editor(serverLevel, placer);
         BlockState newStack = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
         if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
             return false;
