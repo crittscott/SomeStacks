@@ -52,11 +52,10 @@ public final class SinglesCubeIdx {
         return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, SinglesStackBE be) {
+    public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
         IItemHandler handler = be.getItems();
 
         int blockRotation = be.getRotation();
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
@@ -68,10 +67,10 @@ public final class SinglesCubeIdx {
             int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
 
             AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hit = cubeBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hit != null) {
-                double dist = hit.distanceTo(eyePos);
+                double dist = hit.distanceTo(ray.eye());
                 if (dist < closestDist) {
                     closestDist = dist;
                     closestIndex = storageIndex;
@@ -82,9 +81,7 @@ public final class SinglesCubeIdx {
         return closestIndex;
     }
 
-    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, IItemHandler handler, int blockRotation) {
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
-
+    public static int traceAllPositions(ViewRay ray, BlockPos blockPos, IItemHandler handler, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
         for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
@@ -92,10 +89,10 @@ public final class SinglesCubeIdx {
             int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
 
             AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hitPos = cubeBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hitPos = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hitPos != null) {
-                double dist = hitPos.distanceTo(eyePos);
+                double dist = hitPos.distanceTo(ray.eye());
                 hits.add(new Hit(storageIndex, dist));
             }
         }
@@ -226,8 +223,7 @@ public final class SinglesCubeIdx {
         return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
     }
 
-    public static int calculateDepositIndex(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, int blockRotation) {
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
+    public static int calculateDepositIndex(ViewRay ray, BlockPos blockPos, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
         for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
@@ -235,10 +231,10 @@ public final class SinglesCubeIdx {
             int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
 
             AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hitPos = cubeBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hitPos = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hitPos != null) {
-                double dist = hitPos.distanceTo(eyePos);
+                double dist = hitPos.distanceTo(ray.eye());
                 hits.add(new Hit(storageIndex, dist));
             }
         }

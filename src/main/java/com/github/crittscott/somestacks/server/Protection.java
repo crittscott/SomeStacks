@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -48,9 +49,6 @@ public final class Protection {
         return isProtected(FakePlayerFactory.getMinecraft(level), pos);
     }
 
-    /** Extra range beyond the attribute, matching vanilla's server-side interaction slack. */
-    private static final double REACH_PADDING = 1.0;
-
     /**
      * Fires {@link PlayerInteractEvent.RightClickBlock} for a stack access at {@code pos} so
      * claim/protection mods can veto it, exactly as they would for a right-click on a vanilla
@@ -77,10 +75,10 @@ public final class Protection {
      */
     private static BlockHitResult lookHit(ServerPlayer sp, BlockPos pos) {
         ServerLevel level = sp.serverLevel();
-        Vec3 eye = sp.getEyePosition(1.0f);
-        Vec3 end = eye.add(sp.getLookAngle().scale(sp.getBlockReach() + REACH_PADDING));
+        ViewRay ray = ViewRay.of(sp);
 
-        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos).clip(eye, end, pos);
+        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
+                .clip(ray.eye(), ray.end(), pos);
         return hit != null ? hit : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 

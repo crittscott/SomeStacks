@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -264,9 +265,7 @@ public final class SinglesColumnGameTests {
         BlockPos blockPos = singles.getBlockPos();
 
         int result = SinglesCubeIdx.traceAllPositions(
-                new Vec3(blockPos.getX() + 0.125, blockPos.getY() + 0.125,
-                        blockPos.getZ() - 1.0),
-                new Vec3(0.0, 0.0, 1.0),
+                traceThroughBlock(blockPos),
                 blockPos,
                 singles.getItems(),
                 0);
@@ -281,15 +280,23 @@ public final class SinglesColumnGameTests {
         BlockPos blockPos = singles.getBlockPos();
 
         int result = SinglesCubeIdx.traceAllPositions(
-                new Vec3(blockPos.getX() + 0.125, blockPos.getY() + 0.125,
-                        blockPos.getZ() - 1.0),
-                new Vec3(0.0, 0.0, 1.0),
+                traceThroughBlock(blockPos),
                 blockPos,
                 singles.getItems(),
                 0);
 
         checkEquals(12, result, "Trace deposit index");
         helper.succeed();
+    }
+
+    /**
+     * A ray entering the block's lowest north-west cell head on and running clear through it, so the
+     * cells it meets are the column the trace is being asked about.
+     */
+    private static ViewRay traceThroughBlock(BlockPos blockPos) {
+        double x = blockPos.getX() + 0.125;
+        double y = blockPos.getY() + 0.125;
+        return new ViewRay(new Vec3(x, y, blockPos.getZ() - 1.0), new Vec3(x, y, blockPos.getZ() + 2.0));
     }
 
     /**

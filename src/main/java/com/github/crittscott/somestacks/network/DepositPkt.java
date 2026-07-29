@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +18,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -87,9 +87,7 @@ public class DepositPkt {
                 }
             } else if (block == ModRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
                 IItemHandler handler = ssbe.getItems();
-                Vec3 eyePos = sp.getEyePosition(1.0f);
-                Vec3 lookDir = sp.getLookAngle();
-                int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, ssbe.getRotation());
+                int index = SinglesCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler, ssbe.getRotation());
 
                 if (index < 0) {
                     return;
@@ -111,9 +109,7 @@ public class DepositPkt {
                 }
             } else if (block == ModRegistry.BAR_STACK_BLOCK.get() && be instanceof BarStackBE barbe) {
                 IItemHandler handler = barbe.getItems();
-                Vec3 eyePos = sp.getEyePosition(1.0f);
-                Vec3 lookDir = sp.getLookAngle();
-                int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
+                int index = BarCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler);
 
                 if (index < 0) {
                     return;

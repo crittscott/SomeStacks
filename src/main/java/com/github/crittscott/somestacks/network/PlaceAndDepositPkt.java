@@ -12,6 +12,7 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,7 +23,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -122,9 +122,7 @@ public class PlaceAndDepositPkt {
                 var beBelow = level.getBlockEntity(below);
 
                 if (beBelow instanceof SinglesStackBE ssbeBelow) {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-                    int depositIndex = SinglesCubeIdx.calculateDepositIndex(eyePos, lookDir, msg.pos, ssbeBelow.getRotation());
+                    int depositIndex = SinglesCubeIdx.calculateDepositIndex(ViewRay.of(sp), msg.pos, ssbeBelow.getRotation());
 
                     if (depositIndex >= 0) {
                         int[] xyz = SinglesCubeIdx.xyzFromIndex(depositIndex);
@@ -146,12 +144,9 @@ public class PlaceAndDepositPkt {
                 var beBelow = level.getBlockEntity(below);
 
                 if (beBelow instanceof BarStackBE barBeBelow) {
-                    Vec3 eyePos = sp.getEyePosition(1.0f);
-                    Vec3 lookDir = sp.getLookAngle();
-
                     // Targeted through the same trace the deposit below will use, against a block
                     // that is still empty, so the two cannot disagree about which cell is meant.
-                    int depositIndex = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos);
+                    int depositIndex = BarCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos);
                     boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
 
                     if (depositIndex >= 0 && !BarCubeIdx.freshBlockSupports(depositIndex, seam)) {
@@ -198,9 +193,7 @@ public class PlaceAndDepositPkt {
     private static boolean depositIntoSingles(SinglesStackBE ssbe, ServerPlayer sp, PlaceAndDepositPkt msg,
                                               ItemStack handStack, Level level) {
         IItemHandler handler = ssbe.getItems();
-        Vec3 eyePos = sp.getEyePosition(1.0f);
-        Vec3 lookDir = sp.getLookAngle();
-        int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler, 0);
+        int index = SinglesCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler, 0);
 
         if (index < 0 || !handler.getStackInSlot(index).isEmpty() || !SinglesCubeIdx.isGrounded(index, handler)) {
             return false;
@@ -218,9 +211,7 @@ public class PlaceAndDepositPkt {
     private static boolean depositIntoBar(BarStackBE barbe, ServerPlayer sp, PlaceAndDepositPkt msg,
                                           ItemStack handStack, Level level) {
         IItemHandler handler = barbe.getItems();
-        Vec3 eyePos = sp.getEyePosition(1.0f);
-        Vec3 lookDir = sp.getLookAngle();
-        int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, msg.pos, handler);
+        int index = BarCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler);
 
         if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
             return false;

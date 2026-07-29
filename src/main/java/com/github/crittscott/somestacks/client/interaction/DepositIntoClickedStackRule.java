@@ -6,8 +6,8 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 
 public final class DepositIntoClickedStackRule implements InteractionRule {
@@ -32,13 +32,12 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
             return true;
         }
 
-        Vec3 eyePos = ctx.getPlayer().getEyePosition(1.0f);
-        Vec3 lookDir = ctx.getPlayer().getLookAngle();
+        ViewRay ray = ViewRay.of(ctx.getPlayer());
         var be = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
 
         if (be instanceof SinglesStackBE ssbe) {
             IItemHandler handler = ssbe.getItems();
-            int index = SinglesCubeIdx.traceAllPositions(eyePos, lookDir, ctx.getClickedPos(), handler, ssbe.getRotation());
+            int index = SinglesCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler, ssbe.getRotation());
             boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof SinglesStackBE below
                     ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
                     : null;
@@ -48,7 +47,7 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
 
         if (be instanceof BarStackBE barbe) {
             IItemHandler handler = barbe.getItems();
-            int index = BarCubeIdx.traceAllPositions(eyePos, lookDir, ctx.getClickedPos(), handler);
+            int index = BarCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler);
             boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof BarStackBE below
                     ? BarCubeIdx.topLayerOccupancy(below.getItems())
                     : null;

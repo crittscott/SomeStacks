@@ -35,10 +35,9 @@ public final class StorageCubeIdx {
         };
     }
 
-    public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, StorageStackBE be, int rotation) {
+    public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
         IItemHandler handler = be.getItems();
 
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0)); // extend ray far past block
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
@@ -57,10 +56,10 @@ public final class StorageCubeIdx {
             double maxZ = minZ + 4.0 / 16.0;
 
             AABB cubeBox = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
-            Vec3 hit = cubeBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hit != null) {
-                double dist = hit.distanceTo(eyePos);
+                double dist = hit.distanceTo(ray.eye());
                 if (dist < closestDist) {
                     closestDist = dist;
                     closestIndex = i;

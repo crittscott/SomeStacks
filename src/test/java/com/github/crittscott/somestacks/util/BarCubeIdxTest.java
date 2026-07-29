@@ -112,8 +112,7 @@ class BarCubeIdxTest {
     @Test
     void emptyBlockTraceUsesTheFarthestIntersectedBar() {
         int result = BarCubeIdx.traceAllPositions(
-                new Vec3(0.25, 0.0625, -1.0),
-                new Vec3(0.0, 0.0, 1.0),
+                new ViewRay(new Vec3(0.25, 0.0625, -1.0), new Vec3(0.25, 0.0625, 2.0)),
                 BlockPos.ZERO);
 
         assertTrue(result >= 0 && result < 8);

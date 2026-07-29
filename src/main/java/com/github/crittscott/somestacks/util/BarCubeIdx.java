@@ -112,10 +112,9 @@ public final class BarCubeIdx {
                 a.maxZ <= b.minZ || a.minZ >= b.maxZ);
     }
 
-    public static int traceCubes(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos, BarStackBE be) {
+    public static int traceCubes(ViewRay ray, BlockPos blockPos, BarStackBE be) {
         IItemHandler handler = be.getItems();
 
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
@@ -124,10 +123,10 @@ public final class BarCubeIdx {
             if (stack.isEmpty()) continue;
 
             AABB barBox = getBarBox(i, blockPos);
-            Vec3 hit = barBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hit = barBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hit != null) {
-                double dist = hit.distanceTo(eyePos);
+                double dist = hit.distanceTo(ray.eye());
                 if (dist < closestDist) {
                     closestDist = dist;
                     closestIndex = i;
@@ -142,8 +141,8 @@ public final class BarCubeIdx {
      * Deposit targeting for a Bar Stack that does not exist yet, where every cell is empty. Used to
      * decide, before the block is placed, which cell the deposit that follows would land in.
      */
-    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos) {
-        return traceAllPositions(eyePos, lookDir, blockPos, null);
+    public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
+        return traceAllPositions(ray, blockPos, null);
     }
 
     /**
@@ -151,17 +150,16 @@ public final class BarCubeIdx {
      * one, or the farthest intersected cell when the ray meets no bar. A null handler means every
      * cell is empty.
      */
-    public static int traceAllPositions(Vec3 eyePos, Vec3 lookDir, BlockPos blockPos,
+    public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
                                         @Nullable IItemHandler handler) {
-        Vec3 farPoint = eyePos.add(lookDir.scale(10.0));
         List<Hit> hits = new ArrayList<>();
 
         for (int i = 0; i < 64; i++) {
             AABB barBox = getBarBox(i, blockPos);
-            Vec3 hitPos = barBox.clip(eyePos, farPoint).orElse(null);
+            Vec3 hitPos = barBox.clip(ray.eye(), ray.end()).orElse(null);
 
             if (hitPos != null) {
-                double dist = hitPos.distanceTo(eyePos);
+                double dist = hitPos.distanceTo(ray.eye());
                 hits.add(new Hit(i, dist));
             }
         }

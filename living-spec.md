@@ -87,6 +87,8 @@ Deposit and Toggle Permanent need no mark. Neither holds Shift with an item, so 
 
 Extraction traces only occupied cells and chooses the closest hit. Singles and Bar deposit traces every possible cell along the view ray and chooses the last empty cell before the first occupied cell, or the farthest intersected empty cell when no occupied cell is hit. The server recomputes deposit targeting from the player's current eye position and look direction.
 
+Every trace takes the view ray as a segment, and the segment is derived from the player's block-reach attribute rather than a fixed distance, so a player whose reach has been raised finds the cells of a block they can legitimately click. The segment runs past the reach limit by a block's worth, since reach is measured to a block's centre and the far cells of a block at maximum range lie beyond it. The same segment describes the point reported to the right-click interaction event.
+
 Grounding is enforced for player deposits:
 
 - A Singles item is grounded by the same column in the layer immediately below, which for the bottom layer means the top layer of the Singles Stack underneath, matched in visual columns. A bottom-layer item in a block that does not stand on another Singles Stack is grounded outright.

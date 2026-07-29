@@ -8,8 +8,8 @@ import com.github.crittscott.somestacks.client.ClientEvents;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 
 public final class ExtractionRule implements InteractionRule {
     @Override
@@ -27,19 +27,18 @@ public final class ExtractionRule implements InteractionRule {
             return;
         }
 
-        Vec3 eyePos = ctx.getPlayer().getEyePosition(1.0f);
-        Vec3 lookDir = ctx.getPlayer().getLookAngle();
+        ViewRay ray = ViewRay.of(ctx.getPlayer());
         var be = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
         int index = -1;
 
         Block block = ctx.getLevel().getBlockState(ctx.getClickedPos()).getBlock();
 
         if (be instanceof StorageStackBE sbe) {
-            index = StorageCubeIdx.traceCubes(eyePos, lookDir, ctx.getClickedPos(), sbe, sbe.getRotation());
+            index = StorageCubeIdx.traceCubes(ray, ctx.getClickedPos(), sbe, sbe.getRotation());
         } else if (be instanceof SinglesStackBE ssbe) {
-            index = SinglesCubeIdx.traceCubes(eyePos, lookDir, ctx.getClickedPos(), ssbe);
+            index = SinglesCubeIdx.traceCubes(ray, ctx.getClickedPos(), ssbe);
         } else if (be instanceof BarStackBE barbe) {
-            index = BarCubeIdx.traceCubes(eyePos, lookDir, ctx.getClickedPos(), barbe);
+            index = BarCubeIdx.traceCubes(ray, ctx.getClickedPos(), barbe);
         }
 
         if (index >= 0) {
