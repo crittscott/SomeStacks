@@ -68,6 +68,15 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
+            // The interaction happened against the block the player clicked, which is the one the
+            // new block will rest against; msg.pos is the replaceable position it goes into and has
+            // no shape to report. The client sends msg.pos as the clicked position offset along
+            // msg.face, so backing out along that face recovers it.
+            BlockPos clicked = msg.pos.relative(msg.face.getOpposite());
+            if (!Protection.mayInteract(sp, clicked, msg.hand)) {
+                return;
+            }
+
             Level level = sp.level();
             if (!level.getBlockState(msg.pos).canBeReplaced()) {
                 return;
