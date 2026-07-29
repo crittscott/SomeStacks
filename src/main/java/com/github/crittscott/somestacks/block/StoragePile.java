@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -222,9 +223,16 @@ public final class StoragePile {
      * The comparator output for the whole pile, which is what every block of it reports. Held in one
      * place so the value a block answers with and the value a settle decides to publish cannot drift
      * apart.
+     *
+     * <p>This is vanilla's container conversion, over a fill level computed the way vanilla computes
+     * it. The bottom of the range is reserved rather than proportional: any nonempty pile reads at
+     * least 1, so signal 0 means empty and nothing else, which is what the standard emptiness
+     * circuit tests. A pile is large enough that this matters — 216 slots at full height, where a
+     * proportional conversion would leave hundreds of items reading 0.
      */
     public int comparatorSignal() {
-        return (int) Math.round(fillLevel() * 15.0);
+        double fill = fillLevel();
+        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
     }
 
     /**

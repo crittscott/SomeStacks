@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -98,6 +99,29 @@ public final class BarColumn {
         invalidateRun(level, pos.below(), Direction.DOWN);
     }
 
+    /**
+     * Publishes the comparator output of every run a structural change at {@code pos} could have
+     * altered. Adding a block lengthens a column, which changes the fill every one of its blocks
+     * reports; removing one splits a column into two runs that each answer differently than the one
+     * did. The run a split leaves on top has a bottom block that has published nothing, so it
+     * notifies on its first look.
+     *
+     * <p>Call after {@link #invalidateAround}, and after any collapse the change starts, so the runs
+     * are walked fresh and the value published is the one they settle on.
+     */
+    static void publishAround(Level level, BlockPos pos) {
+        publishAt(level, pos);
+        publishAt(level, pos.below());
+        publishAt(level, pos.above());
+    }
+
+    private static void publishAt(Level level, BlockPos pos) {
+        BarColumn column = at(level, pos);
+        if (column != null) {
+            column.publishComparatorSignal();
+        }
+    }
+
     private static void invalidateRun(Level level, BlockPos from, Direction direction) {
         BlockPos current = from;
         while (level.getBlockEntity(current) instanceof BarStackBE be) {
@@ -163,6 +187,72 @@ public final class BarColumn {
 
     private IItemHandler handlerOf(int flatSlot) {
         return blockOf(flatSlot).getItems();
+    }
+
+    // Comparator output
+
+    /**
+     * The share of the column's positions that hold a bar. A position takes one bar and no more, so
+     * occupancy is the whole of it — which is what vanilla's container measure reduces to when a
+     * slot's limit is one, rather than the sum of stack fractions a Storage pile computes.
+     */
+    public double fillLevel() {
+        int total = totalSlots();
+        if (total == 0) {
+            return 0.0;
+        }
+        int occupied = 0;
+        for (BarStackBE be : blocks) {
+            IItemHandler handler = be.getItems();
+            for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+                if (!handler.getStackInSlot(slot).isEmpty()) {
+                    occupied++;
+                }
+            }
+        }
+        return (double) occupied / total;
+    }
+
+    /**
+     * The comparator output for the whole column, which is what every block of it reports. Vanilla's
+     * container conversion, reserving the bottom of the range rather than scaling into it: any
+     * nonempty column reads at least 1, so signal 0 means empty and nothing else. Full means every
+     * position of every block occupied, which for a column a player built sparsely it never is.
+     */
+    public int comparatorSignal() {
+        double fill = fillLevel();
+        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
+    }
+
+    /**
+     * Tells the column's neighbours to read the comparator output again, but only when that output
+     * has actually changed.
+     *
+     * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
+     * every block answers with — including blocks whose own positions the edit never touched, and
+     * which therefore publish nothing of their own. Those are exactly the blocks a comparator may be
+     * sitting against, so the whole run is notified rather than the one block that changed. The
+     * guard is what keeps that from being a run-length worth of neighbour updates per bar moved, and
+     * what reduces a collapse crossing several signal values to the one update that outlives it.
+     *
+     * <p>The bottom block holds the last published value, because the bottom is what identifies a
+     * column.
+     */
+    void publishComparatorSignal() {
+        if (blocks.isEmpty()) {
+            return;
+        }
+        int signal = comparatorSignal();
+        if (!blocks.get(0).exchangePublishedSignal(signal)) {
+            return;
+        }
+
+        Block block = ModRegistry.BAR_STACK_BLOCK.get();
+        for (BarStackBE be : blocks) {
+            // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
+            // block further away behind a solid block, which the plain neighbour update does not.
+            level.updateNeighbourForOutputSignal(be.getBlockPos(), block);
+        }
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */

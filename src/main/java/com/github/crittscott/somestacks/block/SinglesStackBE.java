@@ -35,6 +35,14 @@ public class SinglesStackBE extends BlockEntity {
     private boolean suppressSync = false;
     private boolean batchTouched = false;
 
+    /**
+     * The comparator output last published for the column this block is the bottom of, or -1 before
+     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
+     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
+     * should notify.
+     */
+    private int publishedSignal = -1;
+
     /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
     private SinglesColumn cachedColumn;
     private long cachedColumnTick = Long.MIN_VALUE;
@@ -92,6 +100,20 @@ public class SinglesStackBE extends BlockEntity {
     /** Drops the held column, so the next caller walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
+    }
+
+    /**
+     * Records the comparator output the column is about to publish.
+     *
+     * @return whether it differs from the last one, and so whether the column needs to tell its
+     *         neighbours to read again
+     */
+    boolean exchangePublishedSignal(int signal) {
+        if (publishedSignal == signal) {
+            return false;
+        }
+        publishedSignal = signal;
+        return true;
     }
 
     public static boolean isValidSinglesItem(ItemStack stack) {
@@ -409,6 +431,14 @@ public class SinglesStackBE extends BlockEntity {
             return;
         }
         syncToClients();
+
+        // The comparator value belongs to the column, so an edit to one block changes what every
+        // block of it answers. Publishing here rather than at each operation's own end is what makes
+        // that impossible to miss; the column's own change guard is what keeps it cheap.
+        SinglesColumn column = column();
+        if (column != null) {
+            column.publishComparatorSignal();
+        }
 
         int newLight = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();

@@ -190,4 +190,27 @@ public final class StoragePileGameTests {
         checkEquals(expected, upperSignal, "Upper comparator signal");
         helper.succeed();
     }
+
+    /**
+     * The comparator range reserves 0 for an empty pile, as a vanilla container's does. A pile is
+     * large enough that a proportional conversion would round hundreds of items down to 0, so the
+     * reserved value is what makes an emptiness circuit read a pile correctly.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
+        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        StoragePile pile = storage.pile();
+        check(pile != null, "Pile did not resolve");
+
+        checkEquals(0, pile.comparatorSignal(), "Empty pile signal");
+
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
+        checkEquals(1, pile.comparatorSignal(), "Signal for a single item in a whole pile");
+
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+        }
+        checkEquals(15, pile.comparatorSignal(), "Full pile signal");
+        helper.succeed();
+    }
 }

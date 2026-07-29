@@ -81,6 +81,7 @@ public class SinglesStackBlock extends Block implements EntityBlock {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             SinglesColumn.invalidateAround(level, pos);
+            SinglesColumn.publishAround(level, pos);
         }
     }
 
@@ -93,6 +94,22 @@ public class SinglesStackBlock extends Block implements EntityBlock {
             }
             super.onRemove(state, level, pos, newState, isMoving);
             SinglesColumn.invalidateAround(level, pos);
+            SinglesColumn.publishAround(level, pos);
         }
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        SinglesColumn column = SinglesColumn.at(level, pos);
+        if (column == null) {
+            return 0;
+        }
+        return column.comparatorSignal();
     }
 }

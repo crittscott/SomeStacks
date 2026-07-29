@@ -81,6 +81,7 @@ public class BarStackBlock extends Block implements EntityBlock {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             BarColumn.invalidateAround(level, pos);
+            BarColumn.publishAround(level, pos);
         }
     }
 
@@ -103,6 +104,25 @@ public class BarStackBlock extends Block implements EntityBlock {
             if (!isMoving && !cascading) {
                 BarStackBE.collapseAbove(level, pos);
             }
+
+            // After the collapse, so the runs left standing publish what they settled on rather
+            // than what they held on the way there.
+            BarColumn.publishAround(level, pos);
         }
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        BarColumn column = BarColumn.at(level, pos);
+        if (column == null) {
+            return 0;
+        }
+        return column.comparatorSignal();
     }
 }

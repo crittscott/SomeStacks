@@ -9,6 +9,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
@@ -288,6 +289,60 @@ public final class SinglesColumnGameTests {
                 0);
 
         checkEquals(12, result, "Trace deposit index");
+        helper.succeed();
+    }
+
+    /**
+     * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
+     * holds one item, so full means every cell of every block occupied.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+
+        checkEquals(0, GameTestSupport.signalAt(helper, ORIGIN), "Empty column signal");
+
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
+        checkEquals(1, GameTestSupport.signalAt(helper, ORIGIN),
+                "Signal for a single item in a whole column");
+
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+        }
+        checkEquals(15, GameTestSupport.signalAt(helper, ORIGIN), "Full column signal");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
+        SinglesStackBE lower = GameTestSupport.placeSingles(helper, ORIGIN);
+        GameTestSupport.placeSingles(helper, ORIGIN.above());
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+        }
+
+        // Half the column's cells are occupied, and both blocks report that rather than their own.
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN), "Lower block signal");
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN.above()), "Upper block signal");
+        helper.succeed();
+    }
+
+    /**
+     * The fill is measured against the column's current height, so a run that loses a block reports
+     * the same contents as a larger share of a smaller column.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
+        SinglesStackBE lower = GameTestSupport.placeSingles(helper, ORIGIN);
+        GameTestSupport.placeSingles(helper, ORIGIN.above());
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+        }
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN), "Signal before the block was lost");
+
+        helper.setBlock(ORIGIN.above(), Blocks.AIR);
+
+        checkEquals(15, GameTestSupport.signalAt(helper, ORIGIN), "Signal after the block was lost");
         helper.succeed();
     }
 }

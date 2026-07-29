@@ -46,6 +46,14 @@ public class BarStackBE extends BlockEntity {
     private boolean batchTouched = false;
 
     /**
+     * The comparator output last published for the column this block is the bottom of, or -1 before
+     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
+     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
+     * should notify.
+     */
+    private int publishedSignal = -1;
+
+    /**
      * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
      * column above is already being walked and does not start a second collapse of it.
      */
@@ -124,6 +132,20 @@ public class BarStackBE extends BlockEntity {
     /** Drops the held column, so the next caller walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
+    }
+
+    /**
+     * Records the comparator output the column is about to publish.
+     *
+     * @return whether it differs from the last one, and so whether the column needs to tell its
+     *         neighbours to read again
+     */
+    boolean exchangePublishedSignal(int signal) {
+        if (publishedSignal == signal) {
+            return false;
+        }
+        publishedSignal = signal;
+        return true;
     }
 
     public VoxelShape computeShape() {
@@ -288,8 +310,17 @@ public class BarStackBE extends BlockEntity {
      * A Bar Stack has gone from beneath {@code removed}, so the column above it has lost the seam it
      * stood on. Carries an empty seam upward, which is the same thing a cascade hands on when it
      * empties a block: nothing overlaps it, so the column comes down.
+     *
+     * <p>Server only, as the extraction route into the cascade is. A client reaches this while
+     * applying the server's own removal, and would go on to empty block entities and set blocks to
+     * air on its own authority — deciding a collapse the server has already decided and is sending.
+     * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
+     * not even tell it was inside one.
      */
     static void collapseAbove(Level level, BlockPos removed) {
+        if (level.isClientSide) {
+            return;
+        }
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(), BarCubeIdx.topLayerOccupancy(above.items));
         }
@@ -370,6 +401,15 @@ public class BarStackBE extends BlockEntity {
             return;
         }
         syncToClients();
+
+        // The comparator value belongs to the column, so an edit to one block changes what every
+        // block of it answers. Publishing here rather than at each operation's own end is what makes
+        // that impossible to miss; because a collapse runs inside one batch, the whole cascade
+        // reaches this once and publishes the value it settles on rather than each it passes through.
+        BarColumn column = column();
+        if (column != null) {
+            column.publishComparatorSignal();
+        }
 
         int newLight = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();

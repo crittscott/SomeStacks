@@ -195,6 +195,63 @@ public final class BarColumnGameTests {
         helper.succeed();
     }
 
+    /**
+     * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
+     * position holds one bar, so full means every position of every block occupied.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+
+        checkEquals(0, GameTestSupport.signalAt(helper, ORIGIN), "Empty column signal");
+
+        bars.getItems().insertItem(0, new ItemStack(barItem, 1), false);
+        checkEquals(1, GameTestSupport.signalAt(helper, ORIGIN),
+                "Signal for a single bar in a whole column");
+
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            bars.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+        }
+        checkEquals(15, GameTestSupport.signalAt(helper, ORIGIN), "Full column signal");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            lower.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+        }
+
+        // Half the column's positions are occupied, and both blocks report that rather than their own.
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN), "Lower block signal");
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN.above()), "Upper block signal");
+        helper.succeed();
+    }
+
+    /**
+     * The fill is measured against the column's current height, so a run that loses a block reports
+     * the same contents as a larger share of a smaller column.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            lower.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+        }
+        checkEquals(8, GameTestSupport.signalAt(helper, ORIGIN), "Signal before the block was lost");
+
+        helper.setBlock(ORIGIN.above(), Blocks.AIR);
+
+        checkEquals(15, GameTestSupport.signalAt(helper, ORIGIN), "Signal after the block was lost");
+        helper.succeed();
+    }
+
     private static int firstSupportedBy(int lowerIndex, int from, int to) {
         boolean[] occupancy = new boolean[64];
         occupancy[lowerIndex] = true;

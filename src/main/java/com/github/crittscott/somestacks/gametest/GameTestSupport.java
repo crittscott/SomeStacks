@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
@@ -124,6 +125,13 @@ public final class GameTestSupport {
                 .filter(entity -> entity.getItem().is(item))
                 .mapToInt(entity -> entity.getItem().getCount())
                 .sum();
+    }
+
+    /** The comparator output at {@code relative}, read the way a comparator against it reads. */
+    public static int signalAt(GameTestHelper helper, BlockPos relative) {
+        BlockPos absolute = helper.absolutePos(relative);
+        BlockState state = helper.getLevel().getBlockState(absolute);
+        return state.getBlock().getAnalogOutputSignal(state, helper.getLevel(), absolute);
     }
 
     public static int occupied(IItemHandler handler) {
