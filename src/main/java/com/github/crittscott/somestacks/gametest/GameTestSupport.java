@@ -8,12 +8,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
@@ -76,6 +79,51 @@ public final class GameTestSupport {
             }
         }
         return total;
+    }
+
+    /**
+     * Puts {@code stack} straight into a slot, bypassing the validity test an insertion runs.
+     *
+     * <p>This is how a test reaches the state an {@code ss ingot} edit, an {@code ss deny mod} edit
+     * or a data pack reload leaves behind: contents a block holds and must keep handing back, which
+     * that same block would refuse from a deposit today. Validity gates insertion only, so the
+     * stored side of that rule has to be set up without going through insertion.
+     * {@link com.github.crittscott.somestacks.block.StorageStackBE#setSlotIfChanged} takes the same
+     * route for the same reason.
+     */
+    public static void seedSlot(IItemHandler handler, int slot, ItemStack stack) {
+        check(handler instanceof IItemHandlerModifiable,
+                "Handler " + handler.getClass().getSimpleName() + " cannot be seeded directly");
+        ((IItemHandlerModifiable) handler).setStackInSlot(slot, stack);
+    }
+
+    /**
+     * Items of {@code item} still held by the stack block at {@code absolutePos}. A position the
+     * block has removed itself from holds none, which is what a caller counting whether an operation
+     * conserved its contents wants to see.
+     */
+    public static int heldAt(GameTestHelper helper, BlockPos absolutePos, Item item) {
+        BlockEntity blockEntity = helper.getLevel().getBlockEntity(absolutePos);
+        if (blockEntity instanceof StorageStackBE storage) {
+            return count(storage.getItems(), item);
+        }
+        if (blockEntity instanceof SinglesStackBE singles) {
+            return count(singles.getItems(), item);
+        }
+        if (blockEntity instanceof BarStackBE bars) {
+            return count(bars.getItems(), item);
+        }
+        return 0;
+    }
+
+    /** Items of {@code item} lying on the ground around {@code center}. */
+    public static int droppedNear(GameTestHelper helper, BlockPos center, Item item) {
+        return helper.getLevel()
+                .getEntitiesOfClass(ItemEntity.class, new AABB(center).inflate(2.0))
+                .stream()
+                .filter(entity -> entity.getItem().is(item))
+                .mapToInt(entity -> entity.getItem().getCount())
+                .sum();
     }
 
     public static int occupied(IItemHandler handler) {

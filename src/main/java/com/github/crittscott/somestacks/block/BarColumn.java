@@ -157,8 +157,12 @@ public final class BarColumn {
         return handlerOf(flatSlot).getStackInSlot(flatSlot % BarStackBE.SLOTS);
     }
 
+    private BarStackBE blockOf(int flatSlot) {
+        return blocks.get(flatSlot / BarStackBE.SLOTS);
+    }
+
     private IItemHandler handlerOf(int flatSlot) {
-        return blocks.get(flatSlot / BarStackBE.SLOTS).getItems();
+        return blockOf(flatSlot).getItems();
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
@@ -337,6 +341,12 @@ public final class BarColumn {
     /**
      * Takes the bar at {@code flatSlot} and fills the hole it leaves with the column's topmost bar.
      * Nothing is dropped and nothing is left unsupported.
+     *
+     * <p>The backfilled bar is written into the hole rather than inserted, because the column
+     * already holds it and the hole is the position the extraction just vacated. Insertion would put
+     * the Bar Stack's deposit rule in the way of a bar that is only changing position: contents
+     * stored before an {@code ss ingot} edit or a data pack reload narrowed the ingot set stay
+     * extractable, so they must stay movable too.
      */
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {
@@ -363,7 +373,7 @@ public final class BarColumn {
             int top = topmostOccupied();
             if (top > flatSlot) {
                 ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1, false);
-                handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, moved, false);
+                blockOf(flatSlot).relocateInto(flatSlot % BarStackBE.SLOTS, moved);
             }
         } finally {
             for (BarStackBE be : blocks) {

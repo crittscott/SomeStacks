@@ -26,3 +26,7 @@ logs/
 
 # Files from Forge MDK
 forge*changelog.txt
+
+
+# work files
+/code-review*

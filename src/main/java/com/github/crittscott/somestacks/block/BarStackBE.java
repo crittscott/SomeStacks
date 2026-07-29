@@ -216,6 +216,17 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
+     * Writes a bar the column already holds into an empty position, without the validity test an
+     * insertion runs. Validity gates what a deposit may add rather than what the structure may
+     * carry, so a bar stored before an {@code ss ingot} edit or a data pack reload narrowed the
+     * ingot set still moves with the column that holds it. The caller owns the bar and the position
+     * it goes to; see {@link BarColumn#extract}, the one place a bar changes position in place.
+     */
+    void relocateInto(int index, ItemStack bar) {
+        items.setStackInSlot(index, bar);
+    }
+
+    /**
      * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
      * directly below, or null when this block stands on the world instead of on another Bar Stack.
      */

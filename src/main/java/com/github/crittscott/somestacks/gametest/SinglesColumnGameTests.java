@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -103,6 +104,60 @@ public final class SinglesColumnGameTests {
                 "Top source cell remained occupied");
         checkEquals(0, singles.getCubeRotation(top),
                 "Vacated cell retained a rotation");
+        helper.succeed();
+    }
+
+    /**
+     * Validity gates insertion only, so an item stored before the rule narrowed under it has to
+     * survive the shift that closes the gap beneath it. An ingot stands in for such an item: a
+     * Singles Stack refuses one from a deposit, because Bar accepts it, but may be holding one that
+     * predates an {@code ss ingot} edit or a data pack reload.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        BlockPos pos = singles.getBlockPos();
+        Item legacy = GameTestSupport.firstBarItem();
+        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+                "Test needs an item a Singles Stack refuses");
+        int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
+        int second = SinglesCubeIdx.indexFromColumn(0, 1);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
+        GameTestSupport.seedSlot(singles.getItems(), second, new ItemStack(legacy));
+
+        ItemStack extracted = singles.extractAt(bottom);
+
+        checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
+        int accounted = GameTestSupport.heldAt(helper, pos, legacy)
+                + GameTestSupport.droppedNear(helper, pos, legacy);
+        checkEquals(1, accounted, "Refused item after the shift that moved it");
+        helper.succeed();
+    }
+
+    /**
+     * The same conservation across a block boundary: the item handed down from the block above is
+     * one the receiving block would refuse from a deposit.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
+        SinglesStackBE lower = GameTestSupport.placeSingles(helper, ORIGIN);
+        SinglesStackBE upper = GameTestSupport.placeSingles(helper, ORIGIN.above());
+        BlockPos lowerPos = lower.getBlockPos();
+        BlockPos upperPos = upper.getBlockPos();
+        Item legacy = GameTestSupport.firstBarItem();
+        check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
+                "Test needs an item a Singles Stack refuses");
+        int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
+        lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
+        GameTestSupport.seedSlot(upper.getItems(), bottom, new ItemStack(legacy));
+
+        ItemStack extracted = lower.extractAt(bottom);
+
+        checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
+        int accounted = GameTestSupport.heldAt(helper, lowerPos, legacy)
+                + GameTestSupport.heldAt(helper, upperPos, legacy)
+                + GameTestSupport.droppedNear(helper, lowerPos, legacy);
+        checkEquals(1, accounted, "Refused item after being drawn down across the seam");
         helper.succeed();
     }
 

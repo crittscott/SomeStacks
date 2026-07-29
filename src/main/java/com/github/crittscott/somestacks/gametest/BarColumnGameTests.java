@@ -3,14 +3,13 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
@@ -67,7 +66,7 @@ public final class BarColumnGameTests {
         checkEquals(1, extracted.getCount(), "Extracted count");
         check(helper.getLevel().getBlockEntity(bars.getBlockPos()) == null,
                 "Emptied Bar block remained");
-        checkEquals(1, droppedCount(helper, bars.getBlockPos(), barItem),
+        checkEquals(1, GameTestSupport.droppedNear(helper, bars.getBlockPos(), barItem),
                 "Unsupported bar drop count");
         helper.succeed();
     }
@@ -87,7 +86,7 @@ public final class BarColumnGameTests {
 
         checkEquals(barItem, bars.getItems().getStackInSlot(upper).getItem(),
                 "Still-supported upper bar was removed");
-        checkEquals(0, droppedCount(helper, bars.getBlockPos(), barItem),
+        checkEquals(0, GameTestSupport.droppedNear(helper, bars.getBlockPos(), barItem),
                 "A supported bar was dropped");
         helper.succeed();
     }
@@ -130,8 +129,35 @@ public final class BarColumnGameTests {
                 "Count after automated extraction");
         checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
                 "Hole was not backfilled");
-        checkEquals(0, droppedCount(helper, bars.getBlockPos(), barItem),
+        checkEquals(0, GameTestSupport.droppedNear(helper, bars.getBlockPos(), barItem),
                 "Automation dropped a bar");
+        helper.succeed();
+    }
+
+    /**
+     * Validity gates insertion only, so a bar stored before an {@code ss ingot} edit or a data pack
+     * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
+     * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
+     * contents the current ingot set no longer covers.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        BlockPos pos = bars.getBlockPos();
+        check(!BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
+                "Test needs an item a Bar Stack refuses");
+        bars.getItems().insertItem(0, new ItemStack(barItem), false);
+        GameTestSupport.seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));
+        IItemHandler capability = GameTestSupport.capability(bars);
+
+        ItemStack extracted = capability.extractItem(0, 64, false);
+
+        checkEquals(barItem, extracted.getItem(), "Automated extracted item");
+        checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
+        int accounted = GameTestSupport.heldAt(helper, pos, Items.STICK)
+                + GameTestSupport.droppedNear(helper, pos, Items.STICK);
+        checkEquals(1, accounted, "Refused bar after being backfilled into the hole");
         helper.succeed();
     }
 
@@ -164,7 +190,7 @@ public final class BarColumnGameTests {
 
         check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Dependent upper Bar block remained");
-        checkEquals(2, droppedCount(helper, lower.getBlockPos(), barItem),
+        checkEquals(2, GameTestSupport.droppedNear(helper, lower.getBlockPos(), barItem),
                 "Break/collapse drop count");
         helper.succeed();
     }
@@ -189,15 +215,5 @@ public final class BarColumnGameTests {
             }
         }
         throw new AssertionError("No seam-supported bottom bar");
-    }
-
-    private static int droppedCount(
-            GameTestHelper helper, net.minecraft.core.BlockPos center, Item item) {
-        return helper.getLevel()
-                .getEntitiesOfClass(ItemEntity.class, new AABB(center).inflate(2.0))
-                .stream()
-                .filter(entity -> entity.getItem().is(item))
-                .mapToInt(entity -> entity.getItem().getCount())
-                .sum();
     }
 }

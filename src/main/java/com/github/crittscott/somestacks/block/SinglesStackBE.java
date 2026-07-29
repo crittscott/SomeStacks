@@ -244,6 +244,13 @@ public class SinglesStackBE extends BlockEntity {
      * exactly one layer, carrying its rotation. The shift is positional rather than a compaction, so
      * gaps that capability inserts created are preserved rather than quietly closed, and it always
      * leaves the top cell of the column empty for the block above to hand down into.
+     *
+     * <p>The cell moved into is always empty — it was either vacated by the extraction that started
+     * the pass, emptied by the previous step, or skipped for being empty already — so the item is
+     * written straight into it. Going through {@link ItemStackHandler#insertItem} would put the
+     * block's deposit rule in the way of an item the block already holds, and validity gates what a
+     * deposit may add rather than what the structure may carry: an item stored before an
+     * {@code ss ingot} edit or a data pack reload narrowed the rule still has to move with it.
      */
     private void shiftColumnDown(int column, int fromY) {
         for (int checkY = fromY + 1; checkY < 4; checkY++) {
@@ -252,8 +259,7 @@ public class SinglesStackBE extends BlockEntity {
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
                 int targetIndex = SinglesCubeIdx.indexFromColumn(column, checkY - 1);
 
-                ItemStack moved = items.extractItem(sourceIndex, 1, false);
-                items.insertItem(targetIndex, moved, false);
+                items.setStackInSlot(targetIndex, items.extractItem(sourceIndex, 1, false));
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
             }
@@ -266,6 +272,9 @@ public class SinglesStackBE extends BlockEntity {
      * and the receiving cell is always free. The column is matched between blocks through visual
      * coordinates, because two stacked blocks may carry different rotations and the run the player
      * sees as continuous is the visual one. The walk ends at the first block that hands nothing down.
+     *
+     * <p>The receiving cell is written directly for the reason {@link #shiftColumnDown} gives: the
+     * item is already stored in the column, so the deposit rule has no say in whether it may move.
      */
     private void drawDownColumn(int column) {
         Level columnLevel = level;
@@ -292,8 +301,8 @@ public class SinglesStackBE extends BlockEntity {
                     be.suppressSync = true;
                     above.suppressSync = true;
                     try {
-                        ItemStack moved = above.items.extractItem(sourceIndex, 1, false);
-                        be.items.insertItem(targetIndex, moved, false);
+                        be.items.setStackInSlot(targetIndex,
+                                above.items.extractItem(sourceIndex, 1, false));
                         // Block rotation turns a cell's position but never the item in it, so the
                         // stored rotation carries an item's facing across a change of frame as is.
                         be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
