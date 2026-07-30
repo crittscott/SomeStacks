@@ -64,6 +64,11 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
+            ItemStack handStack = sp.getItemInHand(msg.hand);
+            if (handStack.isEmpty()) {
+                return;
+            }
+
             if (Protection.isProtected(sp, msg.pos)) {
                 return;
             }
@@ -81,8 +86,6 @@ public class PlaceAndDepositPkt {
             if (!level.getBlockState(msg.pos).canBeReplaced()) {
                 return;
             }
-
-            ItemStack handStack = sp.getItemInHand(msg.hand);
 
             if (!sp.mayUseItemAt(msg.pos, msg.face, handStack)) {
                 return;
