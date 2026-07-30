@@ -460,9 +460,7 @@ public final class StoragePile {
         if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
             return false;
         }
-        if (!(level.getBlockEntity(above) instanceof StorageStackBE grown)) {
-            return false;
-        }
+        StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
 
         grown.adoptPileState(isPermanent(), blocks.get(0).getRotation());
         grown.beginBatch();

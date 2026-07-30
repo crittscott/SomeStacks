@@ -13,12 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -307,10 +304,10 @@ public final class TestWallGenerator {
     }
 
     private static boolean fillStorageStack(Level level, BlockPos pos, List<Item> batch) {
-        StorageStackBE sbe = placeStack(level, pos, ModRegistry.STORAGE_STACK_BLOCK.get(), StorageStackBE.class);
-        if (sbe == null) {
+        if (!placeStack(level, pos, ModRegistry.STORAGE_STACK_BLOCK.get())) {
             return false;
         }
+        StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(pos);
 
         for (Item item : batch) {
             sbe.deposit(new ItemStack(item, 1));
@@ -324,10 +321,10 @@ public final class TestWallGenerator {
      * grounds outright.
      */
     private static boolean fillBarStack(Level level, BlockPos pos, List<Item> batch) {
-        BarStackBE bbe = placeStack(level, pos, ModRegistry.BAR_STACK_BLOCK.get(), BarStackBE.class);
-        if (bbe == null) {
+        if (!placeStack(level, pos, ModRegistry.BAR_STACK_BLOCK.get())) {
             return false;
         }
+        BarStackBE bbe = (BarStackBE) level.getBlockEntity(pos);
 
         for (int i = 0; i < batch.size(); i++) {
             bbe.depositAt(i, new ItemStack(batch.get(i), 1));
@@ -336,29 +333,20 @@ public final class TestWallGenerator {
     }
 
     /**
-     * Puts a stack block at {@code pos} and hands back its block entity, or null with a logged
-     * reason when the position or the placement does not yield one.
+     * Puts a stack block at {@code pos}, or logs the rejected placement.
      */
-    @Nullable
-    private static <T extends BlockEntity> T placeStack(Level level, BlockPos pos, Block block, Class<T> type) {
+    private static boolean placeStack(Level level, BlockPos pos, Block block) {
         if (level.isOutsideBuildHeight(pos)) {
             SomeStacks.LOGGER.warn("Test stack skipped at {}: outside build height", pos);
-            return null;
+            return false;
         }
 
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
             SomeStacks.LOGGER.warn("Test stack placement rejected at {}, block there is {}",
                     pos, level.getBlockState(pos));
-            return null;
+            return false;
         }
 
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!type.isInstance(blockEntity)) {
-            SomeStacks.LOGGER.warn("Test stack at {} has no {} after placement (found {})",
-                    pos, type.getSimpleName(), blockEntity);
-            return null;
-        }
-
-        return type.cast(blockEntity);
+        return true;
     }
 }

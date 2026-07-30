@@ -410,9 +410,7 @@ public final class SinglesColumn {
         if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
             return false;
         }
-        if (!(level.getBlockEntity(above) instanceof SinglesStackBE grown)) {
-            return false;
-        }
+        SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);
 
         blocks.add(grown);
         return true;

@@ -423,9 +423,7 @@ public final class BarColumn {
         if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
             return false;
         }
-        if (!(level.getBlockEntity(above) instanceof BarStackBE grown)) {
-            return false;
-        }
+        BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
 
         blocks.add(grown);
         return true;

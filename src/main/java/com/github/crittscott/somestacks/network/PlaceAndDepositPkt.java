@@ -155,27 +155,28 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
-            var be = level.getBlockEntity(msg.pos);
+            boolean depositSucceeded = switch (msg.blockType) {
+                case STORAGE_STACK -> {
+                    StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(msg.pos);
 
-            boolean depositSucceeded = false;
+                    // A block placed onto a pile joins it, so it takes the pile's mode rather than
+                    // imposing a fresh one — placing beneath a permanent pile makes this the base.
+                    StoragePile.adoptNeighbourState(level, msg.pos, sbe);
 
-            if (be instanceof StorageStackBE sbe) {
-                // A block placed onto a pile joins it, so it takes the pile's mode rather than
-                // imposing a fresh one — placing beneath a permanent pile makes this the base.
-                StoragePile.adoptNeighbourState(level, msg.pos, sbe);
+                    int deposited = sbe.deposit(handStack, sp);
+                    sp.setItemInHand(msg.hand, handStack);
 
-                int deposited = sbe.deposit(handStack, sp);
-                sp.setItemInHand(msg.hand, handStack);
-
-                if (deposited > 0) {
-                    level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-                    depositSucceeded = true;
+                    if (deposited > 0) {
+                        level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT,
+                                SoundSource.BLOCKS, 0.5f, 1.0f);
+                    }
+                    yield deposited > 0;
                 }
-            } else if (be instanceof SinglesStackBE ssbe) {
-                depositSucceeded = depositIntoSingles(ssbe, sp, msg, handStack, level);
-            } else if (be instanceof BarStackBE barbe) {
-                depositSucceeded = depositIntoBar(barbe, sp, msg, handStack, level);
-            }
+                case SINGLES_STACK -> depositIntoSingles(
+                        (SinglesStackBE) level.getBlockEntity(msg.pos), sp, msg, handStack, level);
+                case BAR_STACK -> depositIntoBar(
+                        (BarStackBE) level.getBlockEntity(msg.pos), sp, msg, handStack, level);
+            };
 
             if (!depositSucceeded) {
                 level.removeBlock(msg.pos, false);
