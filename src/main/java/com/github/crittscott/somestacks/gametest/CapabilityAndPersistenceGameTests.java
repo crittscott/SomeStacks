@@ -164,13 +164,15 @@ public final class CapabilityAndPersistenceGameTests {
         IItemHandler capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.APPLE, 5);
 
-        ItemStack remainder = capability.insertItem(91, offered, true);
+        // Cell 0 is a bottom-layer cell of a column standing on the world, so it is grounded
+        // outright and the simulation has something to accept.
+        ItemStack remainder = capability.insertItem(0, offered, true);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
         checkEquals(0, GameTestSupport.count(capability, Items.APPLE),
                 "Simulation mutated the column");
-        checkEquals(0, remainder.getCount(),
-                "Supported headroom should accept the whole simulated offer");
+        checkEquals(4, remainder.getCount(),
+                "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
 }

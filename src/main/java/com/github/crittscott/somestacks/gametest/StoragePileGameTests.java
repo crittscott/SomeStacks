@@ -61,6 +61,38 @@ public final class StoragePileGameTests {
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
+        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        IItemHandler capability = GameTestSupport.capability(storage);
+        ItemStack offered = new ItemStack(Items.STONE, 8);
+
+        // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
+        // rather than at the base a deposit would have filled.
+        checkEquals(0, capability.insertItem(20, offered, true).getCount(),
+                "Simulated insertion into an empty slot");
+        checkEquals(0, capability.insertItem(20, offered, false).getCount(),
+                "Committed insertion into an empty slot");
+        checkEquals(8, offered.getCount(), "Capability mutated caller input");
+        checkEquals(8, storage.getItems().getStackInSlot(20).getCount(),
+                "The slot named should hold the items");
+
+        // An incompatible slot takes nothing, rather than answering with room elsewhere.
+        ItemStack other = new ItemStack(Items.DIRT, 8);
+        checkEquals(8, capability.insertItem(20, other, true).getCount(),
+                "Simulated insertion into an occupied incompatible slot");
+
+        // The settle the insertion scheduled is what puts the items at the base.
+        StoragePile pile = storage.pile();
+        check(pile != null, "Pile did not resolve");
+        pile.settle();
+        checkEquals(8, storage.getItems().getStackInSlot(0).getCount(),
+                "Settle should pack the insertion down to the base");
+        checkEquals(0, GameTestSupport.count(storage.getItems(), Items.DIRT),
+                "Refused insertion stored something");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
         StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -71,8 +103,11 @@ public final class StoragePileGameTests {
         IItemHandler capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
-        ItemStack simulatedRemainder = capability.insertItem(0, offered, true);
-        ItemStack committedRemainder = capability.insertItem(0, offered, false);
+        // The first advertised slot past what the pile holds: the one insertion grows into, and so
+        // the only one an obstruction can refuse.
+        int headroom = StorageStackBE.SLOTS;
+        ItemStack simulatedRemainder = capability.insertItem(headroom, offered, true);
+        ItemStack committedRemainder = capability.insertItem(headroom, offered, false);
 
         checkEquals(4, simulatedRemainder.getCount(), "Simulated remainder");
         checkEquals(4, committedRemainder.getCount(), "Committed remainder");

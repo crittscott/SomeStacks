@@ -85,11 +85,11 @@ public final class ProtectionGameTests {
 
     // Growth under protection
     //
-    // A capability insertion that needs a taller run weighs the position above it before promising
-    // the caller anything, so a simulation and the commit that follows agree about a position
-    // growth cannot have. The three tests below stage that with the world border. Spawn protection,
-    // the other half of the same predicate, cannot be staged here: it is implemented on
-    // DedicatedServer, and the server running these tests is not one.
+    // A capability insertion aimed at a slot past what the run holds is the one that grows it, and it
+    // weighs the position above the run before promising the caller anything, so a simulation and the
+    // commit that follows agree about a position growth cannot have. The three tests below stage that
+    // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
+    // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
@@ -100,13 +100,14 @@ public final class ProtectionGameTests {
         IItemHandler capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
-        check(capability.insertItem(0, offered, true).isEmpty(),
+        int headroom = StorageStackBE.SLOTS;
+        check(capability.insertItem(headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 
@@ -125,13 +126,15 @@ public final class ProtectionGameTests {
         IItemHandler capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
-        check(capability.insertItem(0, offered, true).isEmpty(),
+        // A cell takes one item, so a credited growth leaves three of the four behind.
+        int headroom = SinglesStackBE.SLOTS;
+        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 
@@ -151,13 +154,15 @@ public final class ProtectionGameTests {
         IItemHandler capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
 
-        check(capability.insertItem(0, offered, true).isEmpty(),
+        // A position takes one bar, so a credited growth leaves three of the four behind.
+        int headroom = BarStackBE.SLOTS;
+        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, capability.insertItem(0, offered, true).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, capability.insertItem(0, offered, false).getCount(),
+            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 

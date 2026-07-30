@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
@@ -112,13 +113,10 @@ public final class BarColumnGameTests {
         IItemHandler capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(barItem, 10);
 
-        ItemStack simulated = capability.insertItem(63, offered, true);
-        check(simulated.isEmpty(), "Simulation did not accept ten bars");
-        checkEquals(0, GameTestSupport.occupied(bars.getItems()),
-                "Simulation changed occupancy");
-
-        ItemStack remainder = capability.insertItem(63, offered, false);
-        check(remainder.isEmpty(), "Insertion left a remainder");
+        // A walk of the advertised positions fills the block from the bottom, because each bar
+        // placed supports the layer above it before the walk reaches it.
+        ItemStack remainder = ItemHandlerHelper.insertItemStacked(capability, offered, false);
+        check(remainder.isEmpty(), "A walk of the positions left a remainder");
         checkEquals(10, GameTestSupport.count(bars.getItems(), barItem),
                 "Inserted bar count");
 
@@ -131,6 +129,36 @@ public final class BarColumnGameTests {
                 "Hole was not backfilled");
         checkEquals(0, GameTestSupport.droppedNear(helper, bars.getBlockPos(), barItem),
                 "Automation dropped a bar");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        IItemHandler capability = GameTestSupport.capability(bars);
+        ItemStack offered = new ItemStack(barItem, 4);
+
+        // Position 8 is the first of layer 1, with an empty layer 0 beneath it, so it is refused
+        // rather than redirected to a position that would take the bar.
+        checkEquals(4, capability.insertItem(8, offered, true).getCount(),
+                "Simulated insertion into an unsupported position");
+        checkEquals(4, capability.insertItem(8, offered, false).getCount(),
+                "Committed insertion into an unsupported position");
+        checkEquals(0, GameTestSupport.occupied(bars.getItems()),
+                "An unsupported position stored something");
+
+        // Position 0 is in the bottom layer of a column standing on the world, so it is grounded
+        // outright and takes exactly the one bar a position holds.
+        checkEquals(3, capability.insertItem(0, offered, true).getCount(),
+                "Simulated insertion into a grounded position");
+        checkEquals(3, capability.insertItem(0, offered, false).getCount(),
+                "Committed insertion into a grounded position");
+        checkEquals(4, offered.getCount(), "Capability mutated caller input");
+        checkEquals(1, GameTestSupport.occupied(bars.getItems()),
+                "One call should store one bar");
+        checkEquals(1, capability.getSlotLimit(0),
+                "A position's slot limit should be what one call takes");
         helper.succeed();
     }
 

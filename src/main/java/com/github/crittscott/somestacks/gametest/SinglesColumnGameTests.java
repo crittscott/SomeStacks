@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
@@ -211,27 +212,53 @@ public final class SinglesColumnGameTests {
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void capabilityInsertionIgnoresRequestedSlotAndFillsLowestCells(GameTestHelper helper) {
+    public static void capabilityInsertionAnswersForTheCellItIsGiven(GameTestHelper helper) {
         SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
         IItemHandler capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STICK, 3);
 
-        ItemStack simulated = capability.insertItem(63, offered, true);
-        check(simulated.isEmpty(), "Simulation did not accept three items");
+        // Cell 63 is a top-layer cell with nothing beneath it, so it is refused rather than
+        // redirected to a cell that would take the item.
+        checkEquals(3, capability.insertItem(63, offered, true).getCount(),
+                "Simulated insertion into an unsupported cell");
+        checkEquals(3, capability.insertItem(63, offered, false).getCount(),
+                "Committed insertion into an unsupported cell");
+        checkEquals(0, GameTestSupport.occupied(singles.getItems()),
+                "An unsupported cell stored something");
+
+        // Cell 0 is grounded outright, and takes exactly the one item a cell holds.
+        checkEquals(2, capability.insertItem(0, offered, true).getCount(),
+                "Simulated insertion into a grounded cell");
         checkEquals(3, offered.getCount(), "Simulation changed input");
         checkEquals(0, GameTestSupport.occupied(singles.getItems()),
                 "Simulation changed occupancy");
 
-        ItemStack remainder = capability.insertItem(63, offered, false);
-
-        check(remainder.isEmpty(), "Committed insertion left a remainder");
+        checkEquals(2, capability.insertItem(0, offered, false).getCount(),
+                "Committed insertion into a grounded cell");
         checkEquals(3, offered.getCount(), "Capability mutated caller input");
+        checkEquals(1, GameTestSupport.occupied(singles.getItems()),
+                "One call should store one item");
         checkEquals(Items.STICK, singles.getItems().getStackInSlot(0).getItem(),
-                "First lowest cell");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(1).getItem(),
-                "Second lowest cell");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(2).getItem(),
-                "Third lowest cell");
+                "The cell named should hold the item");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void capabilityWalkFillsTheColumnFromTheBottom(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        IItemHandler capability = GameTestSupport.capability(singles);
+        ItemStack offered = new ItemStack(Items.STICK, 3);
+
+        // A caller walking the advertised cells in order still fills the column, because each
+        // placement stands before the next cell is offered.
+        ItemStack remainder = ItemHandlerHelper.insertItemStacked(capability, offered, false);
+
+        check(remainder.isEmpty(), "A walk of the cells left a remainder");
+        checkEquals(3, offered.getCount(), "Capability mutated caller input");
+        for (int cell = 0; cell < 3; cell++) {
+            checkEquals(Items.STICK, singles.getItems().getStackInSlot(cell).getItem(),
+                    "Lowest cell " + cell);
+        }
         helper.succeed();
     }
 

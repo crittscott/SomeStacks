@@ -46,6 +46,12 @@ public class BarStackBE extends BlockEntity {
     private boolean batchTouched = false;
 
     /**
+     * Set when a content edit still owes clients this block's contents and the block its light
+     * level. The column's scheduled publication pass clears it; see {@link #schedulePublish()}.
+     */
+    private boolean publishPending = false;
+
+    /**
      * The comparator output last published for the column this block is the bottom of, or -1 before
      * the first publication. Only the bottom block's copy is consulted, and it is runtime state
      * rather than saved NBT: a freshly loaded column has published nothing, so its first change
@@ -71,7 +77,7 @@ public class BarStackBE extends BlockEntity {
             if (suppressSync) {
                 batchTouched = true;
             } else {
-                finalizeAfterBatch();
+                schedulePublish();
             }
         }
 
@@ -375,8 +381,8 @@ public class BarStackBE extends BlockEntity {
      * <p>Unlike Storage and Singles this does not clear {@code batchTouched}, and must not: batches
      * nest here. {@link #extractAt} opens one, takes a bar — which sets the flag — and then calls
      * {@link #cascadeFrom}, which opens another on this same block. Clearing on the inner open would
-     * forget the extraction, and a removal that left nothing unsupported would close its batch with
-     * nothing to publish, leaving the taken bar drawn until something else refreshed the block.
+     * forget the extraction, and a removal that left nothing unsupported would close its batch
+     * owing nothing, leaving the taken bar drawn until something else refreshed the block.
      */
     void beginBatch() {
         suppressSync = true;
@@ -386,36 +392,53 @@ public class BarStackBE extends BlockEntity {
         suppressSync = false;
         if (batchTouched) {
             batchTouched = false;
-            finalizeAfterBatch();
+            schedulePublish();
         }
     }
 
     /**
-     * Settles the derived state a content edit leaves behind: pushes contents to clients and
-     * recomputes the emitted light level. Callers mark the block changed; this reproduces the rest
-     * of the per-edit path as one pass, so a batch that suppresses per-slot sync can finalize once
-     * when it finishes.
+     * Records that this block owes a publication, and asks the column to schedule the pass that
+     * pays it.
+     *
+     * <p>Publishing a content change costs a block entity update packet, a walk of the whole column
+     * for the comparator, and a light recompute. A position holds exactly one bar, so a caller
+     * moving a stack through the capability calls the handler once per bar; deferring to a block
+     * tick on the column's bottom is what keeps one stack from costing all of that sixty-four times
+     * over. A Storage pile defers its settle for the same reason.
      */
-    private void finalizeAfterBatch() {
+    private void schedulePublish() {
         if (level == null || level.isClientSide) {
             return;
         }
-        syncToClients();
+        publishPending = true;
 
-        // The comparator value belongs to the column, so an edit to one block changes what every
-        // block of it answers. Publishing here rather than at each operation's own end is what makes
-        // that impossible to miss; because a collapse runs inside one batch, the whole cascade
-        // reaches this once and publishes the value it settles on rather than each it passes through.
         BarColumn column = column();
         if (column != null) {
-            column.publishComparatorSignal();
+            column.markDirty();
         }
+    }
+
+    /**
+     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
+     * The comparator value belongs to the column rather than to one of its blocks, so
+     * {@link BarColumn#publishPending()} settles that once for the whole run.
+     *
+     * @return whether anything was owed
+     */
+    boolean publishIfPending() {
+        Level columnLevel = level;
+        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
+            return false;
+        }
+        publishPending = false;
+        syncToClients();
 
         int newLight = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();
         if (state.getValue(BarStackBlock.LIGHT_LEVEL) != newLight) {
-            level.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
+            columnLevel.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
         }
+        return true;
     }
 
     @Override

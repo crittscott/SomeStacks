@@ -2,6 +2,8 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -75,6 +77,18 @@ public class BarStackBlock extends Block implements EntityBlock {
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
+    /**
+     * Pays the publication a content edit deferred. Edits schedule this on the column's bottom
+     * block, so a burst of them anywhere in the run collapses into one pass.
+     */
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        BarColumn column = BarColumn.at(level, pos);
+        if (column != null) {
+            column.publishPending();
+        }
+    }
+
     /** Joining a column changes what its blocks resolve to, so their held columns are dropped. */
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
@@ -108,6 +122,13 @@ public class BarStackBlock extends Block implements EntityBlock {
             // After the collapse, so the runs left standing publish what they settled on rather
             // than what they held on the way there.
             BarColumn.publishAround(level, pos);
+
+            // Losing a block from the middle leaves two runs where there was one, and a publication
+            // an edit deferred is scheduled on the bottom of the run as it stood. The upper run has
+            // its own bottom now, which that tick will never reach, so both sides are scheduled
+            // again.
+            BarColumn.markDirtyAt(level, pos.below());
+            BarColumn.markDirtyAt(level, pos.above());
         }
     }
 

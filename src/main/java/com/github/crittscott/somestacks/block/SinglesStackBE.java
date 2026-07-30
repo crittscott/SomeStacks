@@ -36,6 +36,12 @@ public class SinglesStackBE extends BlockEntity {
     private boolean batchTouched = false;
 
     /**
+     * Set when a content edit still owes clients this block's contents and the block its light
+     * level. The column's scheduled publication pass clears it; see {@link #schedulePublish()}.
+     */
+    private boolean publishPending = false;
+
+    /**
      * The comparator output last published for the column this block is the bottom of, or -1 before
      * the first publication. Only the bottom block's copy is consulted, and it is runtime state
      * rather than saved NBT: a freshly loaded column has published nothing, so its first change
@@ -55,7 +61,7 @@ public class SinglesStackBE extends BlockEntity {
             if (suppressSync) {
                 batchTouched = true;
             } else {
-                finalizeAfterBatch();
+                schedulePublish();
             }
         }
 
@@ -241,7 +247,7 @@ public class SinglesStackBE extends BlockEntity {
         if (level == null || level.isClientSide) {
             clearEmptyCubeRotations();
             setChanged();
-            finalizeAfterBatch();
+            schedulePublish();
             return extracted;
         }
 
@@ -365,7 +371,7 @@ public class SinglesStackBE extends BlockEntity {
         }
 
         setChanged();
-        finalizeAfterBatch();
+        schedulePublish();
     }
 
     private static void removeEmptyBelow(Level columnLevel, BlockPos pos) {
@@ -416,35 +422,55 @@ public class SinglesStackBE extends BlockEntity {
         suppressSync = false;
         if (batchTouched) {
             batchTouched = false;
-            finalizeAfterBatch();
+            schedulePublish();
         }
     }
 
     /**
-     * Settles the derived state a content edit leaves behind: pushes contents to clients and
-     * recomputes the emitted light level. Callers mark the block changed; this reproduces the rest
-     * of the per-edit path as one pass, so a batch that suppresses per-slot sync can finalize once
-     * when it finishes.
+     * Records that this block owes a publication, and asks the column to schedule the pass that
+     * pays it.
+     *
+     * <p>Publishing a content change costs a block entity update packet, a walk of the whole column
+     * for the comparator, and a light recompute. A cell holds exactly one item, so a caller moving a
+     * stack through the capability calls the handler once per item, and one removal draws an item
+     * down out of every block above it; deferring to a block tick on the column's bottom is what
+     * keeps either from paying that at each step. A Storage pile defers its settle for the same
+     * reason.
      */
-    private void finalizeAfterBatch() {
+    private void schedulePublish() {
         if (level == null || level.isClientSide) {
             return;
         }
-        syncToClients();
+        publishPending = true;
 
-        // The comparator value belongs to the column, so an edit to one block changes what every
-        // block of it answers. Publishing here rather than at each operation's own end is what makes
-        // that impossible to miss; the column's own change guard is what keeps it cheap.
         SinglesColumn column = column();
         if (column != null) {
-            column.publishComparatorSignal();
+            column.markDirty();
         }
+    }
+
+    /**
+     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
+     * The comparator value belongs to the column rather than to one of its blocks, so
+     * {@link SinglesColumn#publishPending()} settles that once for the whole run.
+     *
+     * @return whether anything was owed
+     */
+    boolean publishIfPending() {
+        Level columnLevel = level;
+        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
+            return false;
+        }
+        publishPending = false;
+        syncToClients();
 
         int newLight = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();
         if (state.getValue(SinglesStackBlock.LIGHT_LEVEL) != newLight) {
-            level.setBlock(getBlockPos(), state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
+            columnLevel.setBlock(getBlockPos(),
+                    state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
         }
+        return true;
     }
 
     @Override

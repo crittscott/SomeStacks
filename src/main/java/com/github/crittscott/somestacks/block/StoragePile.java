@@ -313,37 +313,78 @@ public final class StoragePile {
     }
 
     /**
-     * Read-only twin of {@link #deposit}: how many of {@code fromHand} the pile would take. Exact
-     * for the space that exists; growth is credited for the one block above the pile that has been
-     * weighed against the world, and no further, because only that position is known to be free.
-     * A deposit that grows further will take more than this promised, which is the safe direction
-     * to be wrong in: a caller that acts on the answer and then inserts is left holding a smaller
-     * remainder, never a larger one.
+     * Puts what it can of {@code stack} into the one slot at {@code flatSlot}, growing the pile when
+     * that slot lies in the block above it.
      *
-     * <p>Only the capability calls this, and a capability insertion carries no player, so the
-     * headroom is weighed against the fake player that would actually place the block.
+     * <p>A pile is genuinely a bag, so unlike the two structures its capability insertion is an
+     * ordinary positional one: the slot named takes what a slot takes, and the settle scheduled
+     * behind it packs the pile down from the base on the next tick. Filling from the base is
+     * therefore still what a pile ends up doing, just a tick later than a player's own deposit does
+     * it. Answering for the slot given rather than for the pile is what makes the handler's slot
+     * range mean something: a caller that walks the range and sums what each slot accepts gets the
+     * pile's real capacity, where a whole-pile answer repeated at every slot multiplied it.
+     *
+     * <p>A capability insertion carries no player, so growth is weighed against the fake player that
+     * would place the block.
+     *
+     * @param simulate when true, nothing is stored and the pile does not grow
+     * @return how many items were, or would be, taken from {@code stack}
      */
-    public int simulateDeposit(ItemStack fromHand) {
-        if (fromHand.isEmpty() || !StorageStackBE.isValidStorageItem(fromHand)) {
+    public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)) {
+            return 0;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots()) {
             return 0;
         }
 
-        int wanted = fromHand.getCount();
-        int room = 0;
-        for (int i = 0; i < totalSlots() && room < wanted; i++) {
-            ItemStack slot = getSlot(i);
-            if (slot.isEmpty()) {
-                room += fromHand.getMaxStackSize();
-            } else if (ItemStack.isSameItemSameTags(slot, fromHand)) {
-                room += slot.getMaxStackSize() - slot.getCount();
+        if (simulate) {
+            return Math.min(stack.getCount(), roomAt(flatSlot, stack));
+        }
+
+        int moved;
+        for (StorageStackBE sbe : blocks) {
+            sbe.beginBatch();
+        }
+        try {
+            // Growth hands back a block with a batch already open, which the close below pairs with.
+            if (flatSlot >= totalSlots() && !grow(null)) {
+                return 0;
+            }
+            ItemStack offer = stack.copy();
+            ItemStack rejected = handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);
+            moved = stack.getCount() - rejected.getCount();
+        } finally {
+            for (StorageStackBE sbe : blocks) {
+                sbe.endBatch();
             }
         }
 
-        if (room < wanted && canGrow(null)) {
-            room += StorageStackBE.SLOTS * fromHand.getMaxStackSize();
+        if (moved > 0) {
+            markDirty();
+        }
+        return moved;
+    }
+
+    /**
+     * How much of {@code stack} the one slot at {@code flatSlot} has room for. A slot in the block
+     * above the pile is empty, so it has room for a whole stack — but only where growth would
+     * actually be permitted, which {@link #canGrow} answers without side effects, so a simulation
+     * cannot promise a slot the commit would refuse.
+     */
+    private int roomAt(int flatSlot, ItemStack stack) {
+        if (flatSlot >= totalSlots()) {
+            return canGrow(null) ? stack.getMaxStackSize() : 0;
         }
 
-        return Math.min(wanted, room);
+        ItemStack inSlot = getSlot(flatSlot);
+        if (inSlot.isEmpty()) {
+            return stack.getMaxStackSize();
+        }
+        if (!ItemStack.isSameItemSameTags(inSlot, stack)) {
+            return 0;
+        }
+        return Math.max(0, inSlot.getMaxStackSize() - inSlot.getCount());
     }
 
     /** Compatible partials first, then empty slots, both walked from the base upward. */
@@ -357,20 +398,21 @@ public final class StoragePile {
             }
             int room = slot.getMaxStackSize() - slot.getCount();
             if (room > 0) {
-                moved += insertAt(i, from, Math.min(from.getCount(), room));
+                moved += fillSlot(i, from, Math.min(from.getCount(), room));
             }
         }
 
         for (int i = 0; i < totalSlots() && !from.isEmpty(); i++) {
             if (getSlot(i).isEmpty()) {
-                moved += insertAt(i, from, Math.min(from.getCount(), from.getMaxStackSize()));
+                moved += fillSlot(i, from, Math.min(from.getCount(), from.getMaxStackSize()));
             }
         }
 
         return moved;
     }
 
-    private int insertAt(int flatSlot, ItemStack from, int amount) {
+    /** Moves up to {@code amount} from {@code from} into one slot, shrinking {@code from} by what it took. */
+    private int fillSlot(int flatSlot, ItemStack from, int amount) {
         ItemStack offer = from.copy();
         offer.setCount(amount);
         ItemStack rejected = handlerOf(flatSlot).insertItem(flatSlot % StorageStackBE.SLOTS, offer, false);

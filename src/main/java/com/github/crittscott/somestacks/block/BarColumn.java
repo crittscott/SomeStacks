@@ -19,20 +19,21 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
  *
  * <p>Bars are a structure, not a bag: a slot index is a position, every bar must rest on something,
- * and nothing can be reordered without moving what the player sees. So the two automated operations
- * are the two that keep the structure standing without dropping anything:
+ * and nothing can be reordered without moving what the player sees. So both automated operations
+ * address the position they are given, and both keep the structure standing without dropping
+ * anything:
  *
  * <ul>
- *   <li>Insertion takes the lowest empty position in the column that is already supported, growing
- *       the column when none is left. A column automation builds is therefore filled layer by
- *       layer from the bottom.
+ *   <li>Insertion places one bar at the position named, and only where that position is empty and
+ *       supported; where the position lies in the block above the column, it grows the column
+ *       first. A caller walking the positions in order therefore fills the column layer by layer
+ *       from the bottom, because each placement stands before the next position is offered.
  *   <li>Extraction takes the requested bar and moves the column's topmost bar into the hole. The
  *       topmost bar holds nothing up, and a slot vacated by extraction keeps the support it had,
  *       so the result always stands. When the hole is in a top layer the backfill restores that
@@ -119,6 +120,14 @@ public final class BarColumn {
         BarColumn column = at(level, pos);
         if (column != null) {
             column.publishComparatorSignal();
+        }
+    }
+
+    /** Schedules the publication pass for the column at {@code pos}, if one is there. */
+    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+        BarColumn column = at(level, pos);
+        if (column != null) {
+            column.markDirty();
         }
     }
 
@@ -255,6 +264,47 @@ public final class BarColumn {
         }
     }
 
+    // Deferred publication
+
+    /**
+     * Schedules the publication pass for the next tick, on the column's bottom block so that every
+     * edit anywhere in the run coalesces into one pass.
+     *
+     * <p>A position holds exactly one bar, so a caller moving a stack through the capability makes
+     * one call per bar, and publication is what each of those would otherwise pay for: a block
+     * entity update packet per touched block, a walk of the whole column for the comparator, and a
+     * light recompute. This is the deferral a Storage pile applies to its settle, for the same
+     * reason.
+     */
+    void markDirty() {
+        if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        Block block = ModRegistry.BAR_STACK_BLOCK.get();
+        BlockPos bottom = blocks.get(0).getBlockPos();
+        if (!serverLevel.getBlockTicks().hasScheduledTick(bottom, block)) {
+            serverLevel.scheduleTick(bottom, block, 1);
+        }
+    }
+
+    /**
+     * Pays the publication the edits of an earlier tick deferred: contents and light for each block
+     * that has one outstanding, then the column's comparator output once for the whole run.
+     *
+     * <p>Nothing outstanding means nothing to publish, and the comparator walk is skipped with it: a
+     * structural change publishes through {@link #publishAround} at the moment it happens, so this
+     * pass owes only what a content edit left behind.
+     */
+    void publishPending() {
+        boolean published = false;
+        for (BarStackBE be : blocks) {
+            published |= be.publishIfPending();
+        }
+        if (published) {
+            publishComparatorSignal();
+        }
+    }
+
     /** The highest occupied position in the column, or -1 when it holds no bars. */
     public int topmostOccupied() {
         for (int flatSlot = totalSlots() - 1; flatSlot >= 0; flatSlot--) {
@@ -268,132 +318,84 @@ public final class BarColumn {
     // Insertion
 
     /**
-     * Places bars at the lowest supported empty positions, growing the column while it must and
-     * may.
+     * Places one bar at {@code flatSlot}, growing the column when that position lies in the block
+     * above it.
      *
-     * @param simulate when true, nothing is placed and {@code stack} is left alone
-     * @return how many bars were taken from {@code stack}, which a real insertion shrinks
+     * <p>A position takes one bar and no more, so this is the whole of what an insertion can do at
+     * the position it names. Answering for the position it was given rather than for the column is
+     * what makes the handler's slot range mean something: a caller that walks the range and sums
+     * what each position accepts gets the column's real capacity, where a whole-column answer
+     * repeated at every position multiplied it.
+     *
+     * <p>A caller walking the range in ascending order still fills the column, because each
+     * placement stands before the next position is offered: a filled layer supports the layer above
+     * it by the time the walk arrives there.
+     *
+     * @param simulate when true, nothing is placed
+     * @return whether a bar was, or would be, taken from {@code stack}
      */
-    public int insert(ItemStack stack, boolean simulate) {
+    public boolean insertOneAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
-            return 0;
+            return false;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
+            return false;
+        }
+        if (simulate) {
+            return true;
+        }
+        if (flatSlot >= totalSlots() && !grow()) {
+            return false;
         }
 
-        int[] plan = planPlacements(stack.getCount());
-        if (simulate || plan.length == 0) {
-            return plan.length;
-        }
-
-        int placed = 0;
-        for (BarStackBE be : blocks) {
-            be.beginBatch();
-        }
-        try {
-            for (int target : plan) {
-                int blockIndex = target / BarStackBE.SLOTS;
-                if (blockIndex >= blocks.size() && !grow()) {
-                    break;
-                }
-
-                ItemStack one = stack.copy();
-                one.setCount(1);
-                if (!handlerOf(target).insertItem(target % BarStackBE.SLOTS, one, false).isEmpty()) {
-                    break;
-                }
-                placed++;
-            }
-        } finally {
-            for (BarStackBE be : blocks) {
-                be.endBatch();
-            }
-        }
-
-        stack.shrink(placed);
-        return placed;
+        ItemStack one = stack.copy();
+        one.setCount(1);
+        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one, false).isEmpty();
     }
 
     /**
-     * Chooses the positions {@code wanted} bars would take, against a copy of the column's
-     * occupancy so the same walk serves both a simulation and a real insertion.
+     * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty and
+     * its footprint must overlap an occupied bar in the layer beneath it, which for a bottom layer
+     * means the seam with the Bar Stack below, and for the bottom block of all means the world.
      *
-     * <p>The scan cursor only ever moves up. Grounding looks strictly downward, so filling a
-     * position can never support one below it, and a position already passed over as unsupported
-     * stays unsupported — one pass over the column therefore places any number of bars.
-     *
-     * <p>Only the position directly above the column can be weighed against the world, so the plan
-     * grows once and stops. The block-place event a real growth fires cannot be consulted without
-     * firing it, and a plan that assumed further growths would promise a capability caller more
-     * than the insertion could deliver. One block holds a whole stack, so a single insertion never
-     * needs a second.
+     * <p>A position in the block above the column is weighed against the block growth would put
+     * there — empty, standing on the column's current top layer — and against everything
+     * {@link #canGrow()} can answer without side effects, so a simulation cannot promise a position
+     * the commit would refuse.
      */
-    private int[] planPlacements(int wanted) {
-        int height = blocks.size();
-        boolean[][] occupancy = new boolean[Math.max(maxHeight(), height)][];
-        for (int i = 0; i < height; i++) {
-            occupancy[i] = BarCubeIdx.occupancyOf(blocks.get(i).getItems());
-        }
+    private boolean positionAccepts(int flatSlot) {
+        int blockIndex = flatSlot / BarStackBE.SLOTS;
+        int slot = flatSlot % BarStackBE.SLOTS;
 
-        // Only the one position above the column is known to be free, so the plan grows once. The
-        // world tests behind canGrow() are deferred to the point of use, so a column with room to
-        // spare never pays for them.
-        boolean growthUnspent = true;
-        int virtualHeight = height;
-
-        int[] plan = new int[wanted];
-        int placed = 0;
-        int cursor = 0;
-
-        while (placed < wanted) {
-            int target = findSupportedEmpty(occupancy, virtualHeight, cursor);
-
-            if (target < 0) {
-                if (!growthUnspent || !canGrow()) {
-                    break;
-                }
-                occupancy[virtualHeight] = new boolean[BarStackBE.SLOTS];
-                virtualHeight++;
-                growthUnspent = false;
-                target = findSupportedEmpty(occupancy, virtualHeight, cursor);
-                if (target < 0) {
-                    // Nothing in the new block is supported: the top layer beneath it is empty.
-                    break;
-                }
+        if (blockIndex < blocks.size()) {
+            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
+            if (occupancy[slot]) {
+                return false;
             }
-
-            occupancy[target / BarStackBE.SLOTS][target % BarStackBE.SLOTS] = true;
-            plan[placed++] = target;
-            cursor = target;
+            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
         }
 
-        return Arrays.copyOf(plan, placed);
+        return canGrow()
+                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
     }
 
-    private static int findSupportedEmpty(boolean[][] occupancy, int height, int from) {
-        int startBlock = from / BarStackBE.SLOTS;
-
-        for (int b = startBlock; b < height; b++) {
-            // The bottom block of a column stands on the world, which supports its bottom layer
-            // outright; every other block rests on the seam below it.
-            boolean[] seam = b == 0 ? null : BarCubeIdx.topLayerOf(occupancy[b - 1]);
-            int startSlot = b == startBlock ? from % BarStackBE.SLOTS : 0;
-
-            for (int slot = startSlot; slot < BarStackBE.SLOTS; slot++) {
-                if (occupancy[b][slot]) {
-                    continue;
-                }
-                if (BarCubeIdx.isGroundedIn(occupancy[b], slot, seam)) {
-                    return b * BarStackBE.SLOTS + slot;
-                }
-            }
+    /**
+     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
+     * below, or null for the bottom block of the column, which stands on the world and is grounded
+     * outright.
+     */
+    @Nullable
+    private boolean[] seamUnder(int blockIndex) {
+        if (blockIndex == 0) {
+            return null;
         }
-
-        return -1;
+        return BarCubeIdx.topLayerOccupancy(blocks.get(blockIndex - 1).getItems());
     }
 
     /**
      * Whether growth is permitted and the space above the column could take a block: height,
      * enablement, build height, replaceability, and everything protection can answer without side
-     * effects. Planning and committing share this predicate, so a simulated insertion cannot
+     * effects. Simulating and committing share this predicate, so a simulated insertion cannot
      * promise a block the insertion itself would refuse. Growth carries no player, so protection
      * is weighed against the level's fake player, which is never exempt from spawn protection.
      */
@@ -425,7 +427,6 @@ public final class BarColumn {
             return false;
         }
 
-        grown.beginBatch();
         blocks.add(grown);
         return true;
     }

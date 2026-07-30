@@ -11,11 +11,14 @@ import javax.annotation.Nonnull;
  * first slot upward, so a hopper under the pile and an interface halfway up address the same
  * inventory and see the same contents.
  *
- * <p>The handler is positional for reading and extraction but not for insertion. {@code
- * getStackInSlot} and {@code extractItem} address the slot they are given; insertion ignores it,
- * because the pile fills from its base upward and grows the column when it needs to. A caller that
- * sums simulated per-slot capacity therefore over-counts, since every slot answers with the space
- * the whole pile has.
+ * <p>Every operation is positional: {@code getStackInSlot}, {@code extractItem} and {@code
+ * insertItem} all address the slot they are given, so a caller that walks the range and sums what
+ * each slot accepts gets the pile's real capacity, and a simulation promises what the commit
+ * delivers. A slot in the block above the pile is where insertion grows the column.
+ *
+ * <p>Filling from the base upward is not lost by that: the settle an insertion schedules packs the
+ * whole pile down on the next tick. It arrives a tick behind a player's own deposit, which fills
+ * from the base outright.
  *
  * <p>The slot count is what the pile holds plus one block's worth of headroom while the configured
  * height allows another block, so it grows and shrinks with the pile. See
@@ -57,16 +60,10 @@ public class PileItemHandler implements IItemHandler {
             return stack;
         }
 
-        if (simulate) {
-            int accepted = pile.simulateDeposit(stack);
-            return accepted >= stack.getCount()
-                    ? ItemStack.EMPTY
-                    : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - accepted);
-        }
-
-        ItemStack toInsert = stack.copy();
-        pile.deposit(toInsert, null);
-        return toInsert;
+        int accepted = pile.insertAt(slot, stack, simulate);
+        return accepted >= stack.getCount()
+                ? ItemStack.EMPTY
+                : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - accepted);
     }
 
     @Nonnull

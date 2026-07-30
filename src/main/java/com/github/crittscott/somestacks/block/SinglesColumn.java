@@ -18,16 +18,16 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.
  *
  * <p>Cells are a structure, not a bag: a slot index is a position and every item must rest on the
- * cell beneath it or on the seam with the Singles Stack below. So insertion ignores the requested
- * slot and takes the lowest supported empty cell in the column, growing it upward when none is
- * left, which is the only placement that cannot leave an item hanging in the air.
+ * cell beneath it or on the seam with the Singles Stack below. So insertion places one item at the
+ * cell it is given, and only where that cell is empty and supported, growing the column when the
+ * cell lies in the block above it. Refusing an unsupported cell rather than choosing another is what
+ * keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
  *
  * <p>Extraction is the player's own removal, unchanged: the cell is emptied and the column shifts
  * down over it. That shift drops nothing and moves no item across the column horizontally, so
@@ -114,6 +114,14 @@ public final class SinglesColumn {
         }
     }
 
+    /** Schedules the publication pass for the column at {@code pos}, if one is there. */
+    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+        SinglesColumn column = at(level, pos);
+        if (column != null) {
+            column.markDirty();
+        }
+    }
+
     private static void invalidateRun(Level level, BlockPos from, Direction direction) {
         BlockPos current = from;
         while (level.getBlockEntity(current) instanceof SinglesStackBE be) {
@@ -163,12 +171,12 @@ public final class SinglesColumn {
      * permanently empty, and a caller that walks it re-derives that emptiness every time — a
      * storage network's external storage, which polls its inventory once a tick, was measured
      * spending the great majority of its scan on positions that could not exist. Advertising only
-     * what the column holds is worse in a subtler way: the common insertion helpers offer a stack
-     * to each advertised position and stop, so a full column would never be offered the insertion
-     * that grows it, and automation could not build a column past its first block.
+     * what the column holds is worse in a subtler way: a caller offers items to the positions the
+     * range names and no others, so a full column would never be offered the insertion that grows
+     * it, and automation could not build a column past its first block.
      *
-     * <p>One block of headroom is what one insertion can actually grow, since {@link #insert} takes
-     * a single growth and stops. So the advertised range is reachable capacity and nothing more.
+     * <p>One block of headroom is what one growth adds, and {@link #insertOneAt} grows once for the
+     * cell it was given. So the advertised range is reachable capacity and nothing more.
      */
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
@@ -251,140 +259,130 @@ public final class SinglesColumn {
         }
     }
 
+    // Deferred publication
+
+    /**
+     * Schedules the publication pass for the next tick, on the column's bottom block so that every
+     * edit anywhere in the run coalesces into one pass.
+     *
+     * <p>A cell holds exactly one item, so a caller moving a stack through the capability makes one
+     * call per item, and a single removal walks the column drawing an item down out of each block
+     * above. Publication is what each of those steps would otherwise pay for: a block entity update
+     * packet per block touched, a walk of the whole column for the comparator, and a light
+     * recompute. This is the deferral a Storage pile applies to its settle, for the same reason.
+     */
+    void markDirty() {
+        if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        Block block = ModRegistry.SINGLES_STACK_BLOCK.get();
+        BlockPos bottom = blocks.get(0).getBlockPos();
+        if (!serverLevel.getBlockTicks().hasScheduledTick(bottom, block)) {
+            serverLevel.scheduleTick(bottom, block, 1);
+        }
+    }
+
+    /**
+     * Pays the publication the edits of an earlier tick deferred: contents and light for each block
+     * that has one outstanding, then the column's comparator output once for the whole run.
+     *
+     * <p>Nothing outstanding means nothing to publish, and the comparator walk is skipped with it: a
+     * structural change publishes through {@link #publishAround} at the moment it happens, so this
+     * pass owes only what a content edit left behind.
+     */
+    void publishPending() {
+        boolean published = false;
+        for (SinglesStackBE be : blocks) {
+            published |= be.publishIfPending();
+        }
+        if (published) {
+            publishComparatorSignal();
+        }
+    }
+
     // Insertion
 
     /**
-     * Places items in the lowest supported empty cells, growing the column while it must and may.
+     * Places one item at {@code flatSlot}, growing the column when that cell lies in the block above
+     * it.
      *
-     * @param simulate when true, nothing is placed and {@code stack} is left alone
-     * @return how many items were taken from {@code stack}, which a real insertion shrinks
+     * <p>A cell takes one item and no more, so this is the whole of what an insertion can do at the
+     * cell it names. Answering for the cell it was given rather than for the column is what makes
+     * the handler's slot range mean something: a caller that walks the range and sums what each cell
+     * accepts gets the column's real capacity, where a whole-column answer repeated at every cell
+     * multiplied it.
+     *
+     * <p>A caller walking the range in ascending order still fills the column, because each
+     * placement stands before the next cell is offered: a filled layer supports the layer above it
+     * by the time the walk arrives there.
+     *
+     * @param simulate when true, nothing is placed
+     * @return whether an item was, or would be, taken from {@code stack}
      */
-    public int insert(ItemStack stack, boolean simulate) {
+    public boolean insertOneAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
-            return 0;
+            return false;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot)) {
+            return false;
+        }
+        if (simulate) {
+            return true;
+        }
+        if (flatSlot >= totalSlots() && !grow()) {
+            return false;
         }
 
-        int[] plan = planPlacements(stack.getCount());
-        if (simulate || plan.length == 0) {
-            return plan.length;
-        }
-
-        int placed = 0;
-        for (SinglesStackBE be : blocks) {
-            be.beginBatch();
-        }
-        try {
-            for (int target : plan) {
-                int blockIndex = target / SinglesStackBE.SLOTS;
-                if (blockIndex >= blocks.size() && !grow()) {
-                    break;
-                }
-
-                ItemStack one = stack.copy();
-                one.setCount(1);
-                if (!handlerOf(target).insertItem(target % SinglesStackBE.SLOTS, one, false).isEmpty()) {
-                    break;
-                }
-                placed++;
-            }
-        } finally {
-            for (SinglesStackBE be : blocks) {
-                be.endBatch();
-            }
-        }
-
-        stack.shrink(placed);
-        return placed;
+        ItemStack one = stack.copy();
+        one.setCount(1);
+        return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty();
     }
 
     /**
-     * Chooses the cells {@code wanted} items would take, against a copy of the column's occupancy
-     * so the same walk serves both a simulation and a real insertion.
+     * Whether {@code flatSlot} could take an item as the column stands: the cell must be empty and
+     * the cell beneath it occupied, which for a bottom layer means the seam with the Singles Stack
+     * below, and for the bottom block of all means the world.
      *
-     * <p>The scan cursor only ever moves up. Grounding looks strictly downward, so filling a cell
-     * can never support one below it, and a cell already passed over as unsupported stays
-     * unsupported — one pass over the column therefore places any number of items.
-     *
-     * <p>Only the position directly above the column can be weighed against the world, so the plan
-     * grows once and stops. The block-place event a real growth fires cannot be consulted without
-     * firing it, and a plan that assumed further growths would promise a capability caller more
-     * than the insertion could deliver. One block holds a whole stack, so a single insertion never
-     * needs a second.
+     * <p>A cell in the block above the column is weighed against the block growth would put there —
+     * empty, unrotated as a player's own placement is, standing on the column's current top layer —
+     * and against everything {@link #canGrow()} can answer without side effects, so a simulation
+     * cannot promise a cell the commit would refuse.
      */
-    private int[] planPlacements(int wanted) {
-        int height = blocks.size();
-        int capacity = Math.max(maxHeight(), height);
-        boolean[][] occupancy = new boolean[capacity][];
-        int[] rotations = new int[capacity];
-        for (int i = 0; i < height; i++) {
-            occupancy[i] = SinglesCubeIdx.occupancyOf(blocks.get(i).getItems());
-            rotations[i] = blocks.get(i).getRotation();
-        }
+    private boolean cellAccepts(int flatSlot) {
+        int blockIndex = flatSlot / SinglesStackBE.SLOTS;
+        int slot = flatSlot % SinglesStackBE.SLOTS;
 
-        // Only the one position above the column is known to be free, so the plan grows once. The
-        // world tests behind canGrow() are deferred to the point of use, so a column with room to
-        // spare never pays for them.
-        boolean growthUnspent = true;
-        int virtualHeight = height;
-
-        int[] plan = new int[wanted];
-        int placed = 0;
-        int cursor = 0;
-
-        while (placed < wanted) {
-            int target = findSupportedEmpty(occupancy, rotations, virtualHeight, cursor);
-
-            if (target < 0) {
-                if (!growthUnspent || !canGrow()) {
-                    break;
-                }
-                occupancy[virtualHeight] = new boolean[SinglesStackBE.SLOTS];
-                // A grown block is placed unrotated, as a player's own placement is.
-                rotations[virtualHeight] = 0;
-                virtualHeight++;
-                growthUnspent = false;
-                target = findSupportedEmpty(occupancy, rotations, virtualHeight, cursor);
-                if (target < 0) {
-                    // Nothing in the new block is supported: the top layer beneath it is empty.
-                    break;
-                }
+        if (blockIndex < blocks.size()) {
+            SinglesStackBE be = blocks.get(blockIndex);
+            boolean[] occupancy = SinglesCubeIdx.occupancyOf(be.getItems());
+            if (occupancy[slot]) {
+                return false;
             }
-
-            occupancy[target / SinglesStackBE.SLOTS][target % SinglesStackBE.SLOTS] = true;
-            plan[placed++] = target;
-            cursor = target;
+            return SinglesCubeIdx.isGroundedIn(occupancy, slot, be.getRotation(), seamUnder(blockIndex));
         }
 
-        return Arrays.copyOf(plan, placed);
+        return canGrow() && SinglesCubeIdx.isGroundedIn(
+                new boolean[SinglesStackBE.SLOTS], slot, 0, seamUnder(blockIndex));
     }
 
-    private static int findSupportedEmpty(boolean[][] occupancy, int[] rotations, int height, int from) {
-        int startBlock = from / SinglesStackBE.SLOTS;
-
-        for (int b = startBlock; b < height; b++) {
-            // The bottom block of a column stands on the world, which supports its bottom layer
-            // outright; every other block rests on the seam below it. Two stacked blocks may carry
-            // different rotations, so the seam is read in the visual columns both agree on.
-            boolean[] seam = b == 0 ? null : SinglesCubeIdx.topLayerOf(occupancy[b - 1], rotations[b - 1]);
-            int startSlot = b == startBlock ? from % SinglesStackBE.SLOTS : 0;
-
-            for (int slot = startSlot; slot < SinglesStackBE.SLOTS; slot++) {
-                if (occupancy[b][slot]) {
-                    continue;
-                }
-                if (SinglesCubeIdx.isGroundedIn(occupancy[b], slot, rotations[b], seam)) {
-                    return b * SinglesStackBE.SLOTS + slot;
-                }
-            }
+    /**
+     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
+     * below, read in visual columns because two stacked blocks may carry different rotations, or
+     * null for the bottom block of the column, which stands on the world and is grounded outright.
+     */
+    @Nullable
+    private boolean[] seamUnder(int blockIndex) {
+        if (blockIndex == 0) {
+            return null;
         }
-
-        return -1;
+        SinglesStackBE below = blocks.get(blockIndex - 1);
+        return SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation());
     }
 
     /**
      * Whether growth is permitted and the space above the column could take a block: height,
      * enablement, build height, replaceability, and everything protection can answer without side
-     * effects. Planning and committing share this predicate, so a simulated insertion cannot
+     * effects. Simulating and committing share this predicate, so a simulated insertion cannot
      * promise a block the insertion itself would refuse. Growth carries no player, so protection
      * is weighed against the level's fake player, which is never exempt from spawn protection.
      */
@@ -416,7 +414,6 @@ public final class SinglesColumn {
             return false;
         }
 
-        grown.beginBatch();
         blocks.add(grown);
         return true;
     }
