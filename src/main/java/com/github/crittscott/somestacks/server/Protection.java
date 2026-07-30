@@ -65,9 +65,25 @@ public final class Protection {
      * rather than a placeholder.
      */
     public static boolean mayInteract(ServerPlayer sp, BlockPos pos, InteractionHand hand) {
-        PlayerInteractEvent.RightClickBlock evt =
-                ForgeHooks.onRightClickBlock(sp, hand, pos, lookHit(sp, pos));
+        PlayerInteractEvent.RightClickBlock evt = rightClickBlock(sp, pos, hand);
         return !evt.isCanceled() && evt.getUseBlock() != Event.Result.DENY;
+    }
+
+    /**
+     * Fires {@link PlayerInteractEvent.RightClickBlock} for an item-driven placement against
+     * {@code pos}. Placement requires both access to the clicked block and permission to use the
+     * held item on it.
+     */
+    public static boolean mayPlaceAgainst(ServerPlayer sp, BlockPos pos, InteractionHand hand) {
+        PlayerInteractEvent.RightClickBlock evt = rightClickBlock(sp, pos, hand);
+        return !evt.isCanceled()
+                && evt.getUseBlock() != Event.Result.DENY
+                && evt.getUseItem() != Event.Result.DENY;
+    }
+
+    private static PlayerInteractEvent.RightClickBlock rightClickBlock(
+            ServerPlayer sp, BlockPos pos, InteractionHand hand) {
+        return ForgeHooks.onRightClickBlock(sp, hand, pos, lookHit(sp, pos));
     }
 
     /**

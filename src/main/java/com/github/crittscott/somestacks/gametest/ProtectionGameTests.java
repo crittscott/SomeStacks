@@ -21,10 +21,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.function.Consumer;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
@@ -97,6 +102,30 @@ public final class ProtectionGameTests {
                     "Expired suppression still vetoed interaction");
             helper.succeed();
         });
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementHonorsUseItemDenyWithoutChangingBlockAccess(
+            GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        BlockPos clicked = helper.absolutePos(ORIGIN);
+        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
+            if (event.getEntity() == player && event.getPos().equals(clicked)) {
+                event.setUseItem(Event.Result.DENY);
+            }
+        };
+
+        MinecraftForge.EVENT_BUS.addListener(denyItem);
+        try {
+            check(Protection.mayInteract(player, clicked, InteractionHand.MAIN_HAND),
+                    "Item-use denial incorrectly vetoed block access");
+            check(!Protection.mayPlaceAgainst(player, clicked, InteractionHand.MAIN_HAND),
+                    "Item-use denial did not veto placement");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(denyItem);
+        }
+        helper.succeed();
     }
 
     // Growth under protection

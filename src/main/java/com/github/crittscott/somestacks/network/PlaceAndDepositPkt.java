@@ -80,7 +80,7 @@ public class PlaceAndDepositPkt {
             // no shape to report. The client sends msg.pos as the clicked position offset along
             // msg.face, so backing out along that face recovers it.
             BlockPos clicked = msg.pos.relative(msg.face.getOpposite());
-            if (!Protection.mayInteract(sp, clicked, msg.hand)) {
+            if (!Protection.mayPlaceAgainst(sp, clicked, msg.hand)) {
                 return;
             }
 
