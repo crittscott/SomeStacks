@@ -97,10 +97,7 @@ public class DepositPkt {
                     return;
                 }
 
-                if (!SinglesCubeIdx.isGrounded(index, handler)) {
-                    return;
-                }
-
+                // Grounding is left to depositAt, which is the only caller holding the seam beneath.
                 boolean deposited = ssbe.depositAt(index, handStack);
                 sp.setItemInHand(msg.hand, handStack);
 

@@ -122,19 +122,13 @@ public class PlaceAndDepositPkt {
                 var beBelow = level.getBlockEntity(below);
 
                 if (beBelow instanceof SinglesStackBE ssbeBelow) {
-                    int depositIndex = SinglesCubeIdx.calculateDepositIndex(ViewRay.of(sp), msg.pos, ssbeBelow.getRotation());
+                    // Targeted through the same trace and frame the deposit below will use, against a
+                    // block that is still empty, so the two cannot disagree about which cell is meant.
+                    int depositIndex = SinglesCubeIdx.calculateDepositIndex(ViewRay.of(sp), msg.pos, 0);
+                    boolean[] seam = SinglesCubeIdx.topLayerOccupancy(ssbeBelow.getItems(), ssbeBelow.getRotation());
 
-                    if (depositIndex >= 0) {
-                        int[] xyz = SinglesCubeIdx.xyzFromIndex(depositIndex);
-                        int x = xyz[0];
-                        int z = xyz[2];
-                        int lowerIndex = 3 * 16 + z * 4 + x;
-
-                        boolean isGrounded = !ssbeBelow.getItems().getStackInSlot(lowerIndex).isEmpty();
-
-                        if (!isGrounded) {
-                            return;
-                        }
+                    if (depositIndex >= 0 && !SinglesCubeIdx.freshBlockSupports(depositIndex, seam)) {
+                        return;
                     }
                 }
             }
@@ -195,10 +189,11 @@ public class PlaceAndDepositPkt {
         IItemHandler handler = ssbe.getItems();
         int index = SinglesCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler, 0);
 
-        if (index < 0 || !handler.getStackInSlot(index).isEmpty() || !SinglesCubeIdx.isGrounded(index, handler)) {
+        if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
             return false;
         }
 
+        // Grounding is left to depositAt, which is the only caller holding the seam beneath.
         boolean deposited = ssbe.depositAt(index, handStack);
         sp.setItemInHand(msg.hand, handStack);
 

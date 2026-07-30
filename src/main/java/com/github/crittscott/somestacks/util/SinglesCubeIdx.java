@@ -190,10 +190,6 @@ public final class SinglesCubeIdx {
         return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
     }
 
-    public static boolean isGrounded(int index, IItemHandler handler) {
-        return isGrounded(index, handler, 0, null);
-    }
-
     /**
      * Whether a cell rests on something. Cells above the bottom consult the cell under them in the
      * same column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
@@ -221,6 +217,16 @@ public final class SinglesCubeIdx {
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
 
         return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
+    }
+
+    /**
+     * Whether a Singles Stack that does not exist yet could take an item at {@code index}, given the
+     * seam it would stand on. Every cell of such a block is empty, so only the bottom layer can be
+     * supported, and only by the seam. A newly placed block is unrotated, so {@code index} is read in
+     * the visual frame.
+     */
+    public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
+        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
     }
 
     public static int calculateDepositIndex(ViewRay ray, BlockPos blockPos, int blockRotation) {
