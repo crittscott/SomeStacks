@@ -20,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class GameTestSupport {
@@ -125,6 +126,21 @@ public final class GameTestSupport {
                 .filter(entity -> entity.getItem().is(item))
                 .mapToInt(entity -> entity.getItem().getCount())
                 .sum();
+    }
+
+    /** Item entities around the vertical span from {@code bottom} through {@code top}. */
+    public static List<ItemEntity> droppedInColumn(
+            GameTestHelper helper,
+            BlockPos bottom,
+            BlockPos top) {
+        AABB bounds = new AABB(
+                Math.min(bottom.getX(), top.getX()),
+                Math.min(bottom.getY(), top.getY()),
+                Math.min(bottom.getZ(), top.getZ()),
+                Math.max(bottom.getX(), top.getX()) + 1.0,
+                Math.max(bottom.getY(), top.getY()) + 1.0,
+                Math.max(bottom.getZ(), top.getZ()) + 1.0).inflate(2.0);
+        return helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds);
     }
 
     /** The comparator output at {@code relative}, read the way a comparator against it reads. */

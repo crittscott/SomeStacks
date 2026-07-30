@@ -9,7 +9,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -227,6 +226,7 @@ public class BarStackBE extends BlockEntity {
         }
 
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
+        BarDropBatch drops = new BarDropBatch();
 
         ItemStack extracted;
         beginBatch();
@@ -234,12 +234,15 @@ public class BarStackBE extends BlockEntity {
             extracted = items.extractItem(index, 1, false);
 
             if (!extracted.isEmpty() && level != null && !level.isClientSide) {
-                cascadeFrom(level, this, seamBeneath(), topBefore);
+                cascadeFrom(level, this, seamBeneath(), topBefore, drops);
             }
         } finally {
             endBatch();
         }
 
+        if (level != null) {
+            drops.spawn(level);
+        }
         return extracted;
     }
 
@@ -277,7 +280,8 @@ public class BarStackBE extends BlockEntity {
      * the settle, which the edit itself may already have changed.
      */
     static void cascadeFrom(Level columnLevel, BarStackBE start,
-                            @Nullable boolean[] seamBelow, boolean[] topBefore) {
+                            @Nullable boolean[] seamBelow, boolean[] topBefore,
+                            BarDropBatch drops) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -285,7 +289,7 @@ public class BarStackBE extends BlockEntity {
         while (true) {
             be.beginBatch();
             try {
-                be.dropUnsupported(columnLevel, seam);
+                be.dropUnsupported(seam, drops);
             } finally {
                 be.endBatch();
             }
@@ -323,12 +327,13 @@ public class BarStackBE extends BlockEntity {
      * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
      * not even tell it was inside one.
      */
-    static void collapseAbove(Level level, BlockPos removed) {
+    static void collapseAbove(Level level, BlockPos removed, BarDropBatch drops) {
         if (level.isClientSide) {
             return;
         }
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
-            cascadeFrom(level, above, BarCubeIdx.emptySeam(), BarCubeIdx.topLayerOccupancy(above.items));
+            cascadeFrom(level, above, BarCubeIdx.emptySeam(),
+                    BarCubeIdx.topLayerOccupancy(above.items), drops);
         }
     }
 
@@ -342,7 +347,7 @@ public class BarStackBE extends BlockEntity {
      * the time a layer is reached, the layer it rests on is final, whether that is the layer below
      * it here or the seam. Callers batch; this does not publish.
      */
-    private void dropUnsupported(Level columnLevel, @Nullable boolean[] seamBelow) {
+    private void dropUnsupported(@Nullable boolean[] seamBelow, BarDropBatch drops) {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {
@@ -353,11 +358,7 @@ public class BarStackBE extends BlockEntity {
             ItemStack removed = items.extractItem(i, 1, false);
             if (!removed.isEmpty()) {
                 occupancy[i] = false;
-                Containers.dropItemStack(columnLevel,
-                        getBlockPos().getX() + 0.5,
-                        getBlockPos().getY() + 0.5,
-                        getBlockPos().getZ() + 0.5,
-                        removed);
+                drops.add(getBlockPos(), removed);
             }
         }
     }

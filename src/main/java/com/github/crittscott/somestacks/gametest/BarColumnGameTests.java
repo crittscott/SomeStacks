@@ -6,6 +6,8 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,6 +16,9 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
@@ -223,6 +228,110 @@ public final class BarColumnGameTests {
         helper.succeed();
     }
 
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        BlockPos lowerPos = lower.getBlockPos();
+        BlockPos upperPos = upper.getBlockPos();
+
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            GameTestSupport.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+            GameTestSupport.seedSlot(upper.getItems(), slot, new ItemStack(barItem));
+        }
+
+        helper.getLevel().setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 3);
+
+        check(helper.getLevel().getBlockEntity(lowerPos) == null,
+                "Broken lower Bar block remained");
+        check(helper.getLevel().getBlockEntity(upperPos) == null,
+                "Collapsed upper Bar block remained");
+
+        List<ItemEntity> drops = GameTestSupport.droppedInColumn(helper, lowerPos, upperPos).stream()
+                .filter(entity -> entity.getItem().is(barItem))
+                .toList();
+        checkEquals(2, drops.size(), "Consolidated item-entity count");
+        checkEquals(128, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Consolidated item count");
+        check(drops.stream().allMatch(entity -> entity.getItem().getCount() == 64),
+                "A full block's bars were not packed into one full stack");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        BlockPos lowerPos = lower.getBlockPos();
+        BlockPos upperPos = upper.getBlockPos();
+
+        int slot = 0;
+        GameTestSupport.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        for (int layer = 1; layer < 8; layer++) {
+            slot = firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
+            GameTestSupport.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        }
+
+        slot = firstSeamSupportedBy(slot - 56);
+        GameTestSupport.seedSlot(upper.getItems(), slot, new ItemStack(barItem));
+        for (int layer = 1; layer < 8; layer++) {
+            slot = firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
+            GameTestSupport.seedSlot(upper.getItems(), slot, new ItemStack(barItem));
+        }
+
+        ItemStack extracted = lower.extractAt(0);
+
+        checkEquals(barItem, extracted.getItem(), "Extracted support item");
+        checkEquals(1, extracted.getCount(), "Extracted support count");
+        check(helper.getLevel().getBlockEntity(lowerPos) == null,
+                "Emptied lower Bar block remained");
+        check(helper.getLevel().getBlockEntity(upperPos) == null,
+                "Emptied upper Bar block remained");
+
+        List<ItemEntity> drops = GameTestSupport.droppedInColumn(helper, lowerPos, upperPos).stream()
+                .filter(entity -> entity.getItem().is(barItem))
+                .toList();
+        checkEquals(2, drops.size(), "Cross-block cascade item-entity count");
+        checkEquals(15, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Cross-block cascade item count");
+        int[] counts = drops.stream().mapToInt(entity -> entity.getItem().getCount()).sorted().toArray();
+        check(Arrays.equals(new int[]{7, 8}, counts),
+                "Drops were not packed at their originating blocks: " + Arrays.toString(counts));
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item barItem = GameTestSupport.firstBarItem();
+        BlockPos pos = bars.getBlockPos();
+        int[] upper = supportedBy(0, 8, 16);
+        checkEquals(2, upper.length, "Test support fan-out");
+
+        ItemStack first = new ItemStack(barItem);
+        first.getOrCreateTag().putInt("somestacks_test_variant", 1);
+        ItemStack second = new ItemStack(barItem);
+        second.getOrCreateTag().putInt("somestacks_test_variant", 2);
+        GameTestSupport.seedSlot(bars.getItems(), 0, new ItemStack(barItem));
+        GameTestSupport.seedSlot(bars.getItems(), upper[0], first);
+        GameTestSupport.seedSlot(bars.getItems(), upper[1], second);
+
+        bars.extractAt(0);
+
+        List<ItemEntity> drops = GameTestSupport.droppedInColumn(helper, pos, pos).stream()
+                .filter(entity -> entity.getItem().is(barItem))
+                .toList();
+        checkEquals(2, drops.size(), "Differently tagged item-entity count");
+        checkEquals(2, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Differently tagged item count");
+        int[] variants = drops.stream().mapToInt(BarColumnGameTests::testVariant).sorted().toArray();
+        check(Arrays.equals(new int[]{1, 2}, variants),
+                "Different tags were merged or changed: " + Arrays.toString(variants));
+        helper.succeed();
+    }
+
     /**
      * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
      * position holds one bar, so full means every position of every block occupied.
@@ -281,14 +390,24 @@ public final class BarColumnGameTests {
     }
 
     private static int firstSupportedBy(int lowerIndex, int from, int to) {
-        boolean[] occupancy = new boolean[64];
-        occupancy[lowerIndex] = true;
-        for (int index = from; index < to; index++) {
-            if (BarCubeIdx.isGroundedIn(occupancy, index, null)) {
-                return index;
-            }
+        int[] supported = supportedBy(lowerIndex, from, to);
+        if (supported.length > 0) {
+            return supported[0];
         }
         throw new AssertionError("No supported upper bar");
+    }
+
+    private static int[] supportedBy(int lowerIndex, int from, int to) {
+        boolean[] occupancy = new boolean[64];
+        occupancy[lowerIndex] = true;
+        int[] supported = new int[to - from];
+        int count = 0;
+        for (int index = from; index < to; index++) {
+            if (BarCubeIdx.isGroundedIn(occupancy, index, null)) {
+                supported[count++] = index;
+            }
+        }
+        return Arrays.copyOf(supported, count);
     }
 
     private static int firstSeamSupportedBy(int seamIndex) {
@@ -300,5 +419,10 @@ public final class BarColumnGameTests {
             }
         }
         throw new AssertionError("No seam-supported bottom bar");
+    }
+
+    private static int testVariant(ItemEntity entity) {
+        CompoundTag tag = entity.getItem().getTag();
+        return tag == null ? -1 : tag.getInt("somestacks_test_variant");
     }
 }

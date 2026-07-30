@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -103,11 +102,12 @@ public class BarStackBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             boolean cascading = false;
+            BarDropBatch drops = new BarDropBatch();
 
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof BarStackBE barBe) {
                 cascading = barBe.wasRemovedByCascade();
-                ItemOps.dropAllItems(barBe.getItems(), level, pos);
+                drops.addAll(pos, barBe.getItems());
             }
             super.onRemove(state, level, pos, newState, isMoving);
             BarColumn.invalidateAround(level, pos);
@@ -116,7 +116,7 @@ public class BarStackBlock extends Block implements EntityBlock {
             // cascade gives when it empties a block out from under one. A cascade already walks its
             // own way up, so only a removal from outside one starts the collapse.
             if (!isMoving && !cascading) {
-                BarStackBE.collapseAbove(level, pos);
+                BarStackBE.collapseAbove(level, pos, drops);
             }
 
             // After the collapse, so the runs left standing publish what they settled on rather
@@ -129,6 +129,7 @@ public class BarStackBlock extends Block implements EntityBlock {
             // again.
             BarColumn.markDirtyAt(level, pos.below());
             BarColumn.markDirtyAt(level, pos.above());
+            drops.spawn(level);
         }
     }
 
