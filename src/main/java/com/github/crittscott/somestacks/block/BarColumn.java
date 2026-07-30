@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
@@ -344,7 +345,7 @@ public final class BarColumn {
         if (simulate) {
             return true;
         }
-        if (flatSlot >= totalSlots() && !grow()) {
+        if (flatSlot >= totalSlots() && !grow(flatSlot % BarStackBE.SLOTS)) {
             return false;
         }
 
@@ -360,7 +361,7 @@ public final class BarColumn {
      *
      * <p>A position in the block above the column is weighed against the block growth would put
      * there — empty, standing on the column's current top layer — and against everything
-     * {@link #canGrow()} can answer without side effects, so a simulation cannot promise a position
+     * {@link #canGrow(VoxelShape)} can answer without side effects, so a simulation cannot promise a position
      * the commit would refuse.
      */
     private boolean positionAccepts(int flatSlot) {
@@ -375,7 +376,8 @@ public final class BarColumn {
             return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
         }
 
-        return canGrow()
+        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
+        return canGrow(finalCollision)
                 && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
     }
 
@@ -399,7 +401,7 @@ public final class BarColumn {
      * promise a block the insertion itself would refuse. Growth carries no player, so protection
      * is weighed against the level's fake player, which is never exempt from spawn protection.
      */
-    private boolean canGrow() {
+    private boolean canGrow(VoxelShape finalCollision) {
         if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_BAR_STACK_BLOCK.get()
                 || !(level instanceof ServerLevel serverLevel)) {
             return false;
@@ -408,19 +410,22 @@ public final class BarColumn {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !Protection.isProtected(serverLevel, above);
+        return !Protection.isProtected(serverLevel, above)
+                && Protection.isUnobstructed(serverLevel, above, finalCollision);
     }
 
     /** Adds one block on top. Automation carries no player, so growth answers to the fake player. */
-    private boolean grow() {
-        if (!canGrow() || !(level instanceof ServerLevel serverLevel)) {
+    private boolean grow(int slot) {
+        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
+        if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
 
         BlockPos above = topPos().above();
         ServerPlayer editor = FakePlayerFactory.getMinecraft(serverLevel);
         BlockState newStack = ModRegistry.BAR_STACK_BLOCK.get().defaultBlockState();
-        if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
+        if (!Protection.placeChecked(
+                editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         BarStackBE grown = (BarStackBE) level.getBlockEntity(above);

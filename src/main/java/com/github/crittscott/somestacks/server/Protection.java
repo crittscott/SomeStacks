@@ -7,10 +7,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -86,12 +91,27 @@ public final class Protection {
      * Places {@code state} at {@code pos} honoring build height and firing
      * {@link net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent} so claim/protection/
      * logging mods can veto or record it. {@code placedAgainst} is the face the block rests
-     * against, reported to the event. Restores the previous state and returns {@code false} on an
-     * out-of-height target, a failed set, or a vetoed event; {@code true} when the block stands.
+     * against, reported to the event. Uses the state's ordinary collision shape for the vanilla
+     * entity-obstruction check.
      */
     public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
                                        BlockState state, Direction placedAgainst) {
-        if (level.isOutsideBuildHeight(pos)) {
+        VoxelShape collision = state.getCollisionShape(level, pos, CollisionContext.empty());
+        return placeChecked(placer, level, pos, state, placedAgainst, collision);
+    }
+
+    /**
+     * Places a block whose completed placement will have {@code finalCollision}. Block-entity
+     * stacks can start empty and acquire their real collision shape with the first deposit, so
+     * their block state alone cannot describe the shape vanilla placement must weigh.
+     *
+     * <p>Restores the previous state and returns {@code false} on an out-of-height or obstructed
+     * target, a failed set, or a vetoed event; {@code true} when the block stands.
+     */
+    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
+                                       BlockState state, Direction placedAgainst,
+                                       VoxelShape finalCollision) {
+        if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
@@ -103,5 +123,23 @@ public final class Protection {
             return false;
         }
         return true;
+    }
+
+    /** Vanilla's placement obstruction test for a block-local collision shape. */
+    public static boolean isUnobstructed(ServerLevel level, BlockPos pos, VoxelShape localShape) {
+        if (localShape.isEmpty()) {
+            return true;
+        }
+        VoxelShape worldShape = localShape.move(pos.getX(), pos.getY(), pos.getZ());
+        return level.getEntities(
+                (Entity) null,
+                worldShape.bounds(),
+                entity -> !entity.isRemoved()
+                        && entity.blocksBuilding
+                        && Shapes.joinIsNotEmpty(
+                                worldShape,
+                                Shapes.create(entity.getBoundingBox()),
+                                BooleanOp.AND))
+                .isEmpty();
     }
 }

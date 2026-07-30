@@ -48,7 +48,7 @@ Capability operations are positional:
 
 Singles and Bar insertion refuses empty positions without support rather than redirecting the item. A caller walking slots from the bottom fills supported positions in order. Simulations use the structure's present occupancy.
 
-A run advertises its existing positions plus one block of reachable headroom, bounded by `max_pile_height`. Insertion into headroom grows the run if the type is enabled and placement passes build-height, replaceability, world-border, and spawn-protection checks. Capability growth uses the level's fake player.
+A run advertises its existing positions plus one block of reachable headroom, bounded by `max_pile_height`. Insertion into headroom grows the run if the type is enabled and placement passes build-height, replaceability, entity-obstruction, world-border, and spawn-protection checks. Capability growth uses the level's fake player.
 
 Comparators report the fill of the entire vertical run from any block in it:
 
@@ -129,7 +129,7 @@ Breaking or replacing any stack block drops the contents of that block. Mod-driv
 
 Client-to-server packets cover placement and deposit, deposit, extraction, block rotation, item rotation, and permanent-mode changes. Server-to-client packets cover synchronized configuration and render-override commands. Packets received from the wrong logical side are rejected.
 
-The server validates the sender, loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. Placement additionally checks replaceability, type enablement, pile height, item restrictions, and Forge's block-place event.
+The server validates the sender, loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, and Forge's block-place event.
 
 The server synchronizes stack-type enable flags and server render overrides on login and server-config reload. Blacklists and pile settings remain server-side.
 
@@ -226,7 +226,7 @@ Generated override files are output only; they are not an active override layer.
 
 ## Automated verification
 
-The suite contains 51 JUnit tests and 69 Forge GameTests.
+The suite contains 51 JUnit tests and 73 Forge GameTests.
 
 JUnit covers registry-independent logic under `src/test/java` and runs with `build`. Forge GameTests cover registered game objects, levels, block entities, capabilities, events, packets, persistence, growth, gravity, protection, and synchronization. `runGameTestServer` runs the GameTests.
 

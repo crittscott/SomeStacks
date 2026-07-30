@@ -23,6 +23,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -120,17 +122,25 @@ public class PlaceAndDepositPkt {
                 return;
             }
 
+            ViewRay view = ViewRay.of(sp);
+            int depositIndex = switch (msg.blockType) {
+                case STORAGE_STACK -> -1;
+                case SINGLES_STACK ->
+                        SinglesCubeIdx.calculateDepositIndex(view, msg.pos, 0);
+                case BAR_STACK -> BarCubeIdx.traceAllPositions(view, msg.pos);
+            };
+            if (msg.blockType != BlockType.STORAGE_STACK && depositIndex < 0) {
+                return;
+            }
+
             if (msg.blockType == BlockType.SINGLES_STACK && msg.face == Direction.UP) {
                 BlockPos below = msg.pos.below();
                 var beBelow = level.getBlockEntity(below);
 
                 if (beBelow instanceof SinglesStackBE ssbeBelow) {
-                    // Targeted through the same trace and frame the deposit below will use, against a
-                    // block that is still empty, so the two cannot disagree about which cell is meant.
-                    int depositIndex = SinglesCubeIdx.calculateDepositIndex(ViewRay.of(sp), msg.pos, 0);
                     boolean[] seam = SinglesCubeIdx.topLayerOccupancy(ssbeBelow.getItems(), ssbeBelow.getRotation());
 
-                    if (depositIndex >= 0 && !SinglesCubeIdx.freshBlockSupports(depositIndex, seam)) {
+                    if (!SinglesCubeIdx.freshBlockSupports(depositIndex, seam)) {
                         return;
                     }
                 }
@@ -141,20 +151,24 @@ public class PlaceAndDepositPkt {
                 var beBelow = level.getBlockEntity(below);
 
                 if (beBelow instanceof BarStackBE barBeBelow) {
-                    // Targeted through the same trace the deposit below will use, against a block
-                    // that is still empty, so the two cannot disagree about which cell is meant.
-                    int depositIndex = BarCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos);
                     boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
 
-                    if (depositIndex >= 0 && !BarCubeIdx.freshBlockSupports(depositIndex, seam)) {
+                    if (!BarCubeIdx.freshBlockSupports(depositIndex, seam)) {
                         return;
                     }
                 }
             }
 
             BlockState state = msg.blockType.getBlock().defaultBlockState();
+            VoxelShape finalCollision = switch (msg.blockType) {
+                case STORAGE_STACK ->
+                        state.getCollisionShape(level, msg.pos, CollisionContext.empty());
+                case SINGLES_STACK -> SinglesCubeIdx.shapeFor(depositIndex, 0);
+                case BAR_STACK -> BarCubeIdx.shapeFor(depositIndex);
+            };
 
-            if (!Protection.placeChecked(sp, sp.serverLevel(), msg.pos, state, msg.face.getOpposite())) {
+            if (!Protection.placeChecked(
+                    sp, sp.serverLevel(), msg.pos, state, msg.face.getOpposite(), finalCollision)) {
                 return;
             }
 
@@ -176,9 +190,11 @@ public class PlaceAndDepositPkt {
                     yield deposited > 0;
                 }
                 case SINGLES_STACK -> depositIntoSingles(
-                        (SinglesStackBE) level.getBlockEntity(msg.pos), sp, msg, handStack, level);
+                        (SinglesStackBE) level.getBlockEntity(msg.pos),
+                        sp, msg, handStack, level, depositIndex);
                 case BAR_STACK -> depositIntoBar(
-                        (BarStackBE) level.getBlockEntity(msg.pos), sp, msg, handStack, level);
+                        (BarStackBE) level.getBlockEntity(msg.pos),
+                        sp, msg, handStack, level, depositIndex);
             };
 
             if (!depositSucceeded) {
@@ -189,9 +205,8 @@ public class PlaceAndDepositPkt {
     }
 
     private static boolean depositIntoSingles(SinglesStackBE ssbe, ServerPlayer sp, PlaceAndDepositPkt msg,
-                                              ItemStack handStack, Level level) {
+                                              ItemStack handStack, Level level, int index) {
         IItemHandler handler = ssbe.getItems();
-        int index = SinglesCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler, 0);
 
         if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
             return false;
@@ -208,9 +223,8 @@ public class PlaceAndDepositPkt {
     }
 
     private static boolean depositIntoBar(BarStackBE barbe, ServerPlayer sp, PlaceAndDepositPkt msg,
-                                          ItemStack handStack, Level level) {
+                                          ItemStack handStack, Level level, int index) {
         IItemHandler handler = barbe.getItems();
-        int index = BarCubeIdx.traceAllPositions(ViewRay.of(sp), msg.pos, handler);
 
         if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
             return false;

@@ -170,18 +170,7 @@ public class SinglesStackBE extends BlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                int[] storageXYZ = SinglesCubeIdx.xyzFromIndex(i);
-                int[] visualXYZ = SinglesCubeIdx.rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-                double minX = SinglesCubeIdx.startPixel(visualXYZ[0]) / 16.0;
-                double minY = SinglesCubeIdx.startPixel(visualXYZ[1]) / 16.0;
-                double minZ = SinglesCubeIdx.startPixel(visualXYZ[2]) / 16.0;
-                double maxX = minX + 4.0 / 16.0;
-                double maxY = minY + 4.0 / 16.0;
-                double maxZ = minZ + 4.0 / 16.0;
-
-                VoxelShape cubeShape = Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
-                shape = Shapes.or(shape, cubeShape);
+                shape = Shapes.or(shape, SinglesCubeIdx.shapeFor(i, blockRotation));
             }
         }
 

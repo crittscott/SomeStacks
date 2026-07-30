@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -105,6 +107,21 @@ public final class BarCubeIdx {
         double maxZ = minZ + barDepth(xyz[1]) / 16.0;
 
         return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /** Block-local collision shape of one bar position. */
+    public static VoxelShape shapeFor(int index) {
+        int[] xyz = xyzFromIndex(index);
+        double minX = startPixelX(xyz[0], xyz[1]) / 16.0;
+        double minY = startPixelY(xyz[1]) / 16.0;
+        double minZ = startPixelZ(xyz[2], xyz[1]) / 16.0;
+        return Shapes.box(
+                minX,
+                minY,
+                minZ,
+                minX + barWidth(xyz[1]) / 16.0,
+                minY + barHeight(xyz[1]) / 16.0,
+                minZ + barDepth(xyz[1]) / 16.0);
     }
 
     private static boolean footprintsOverlap(AABB a, AABB b) {

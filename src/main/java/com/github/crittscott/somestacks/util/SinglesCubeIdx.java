@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -50,6 +52,17 @@ public final class SinglesCubeIdx {
         double maxZ = minZ + 4.0 / 16.0;
 
         return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /** Block-local collision shape of one stored cell. */
+    public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
+        int[] storageXYZ = xyzFromIndex(storageIndex);
+        int[] visualXYZ = rotateXYZ(
+                storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
+        double minX = startPixel(visualXYZ[0]) / 16.0;
+        double minY = startPixel(visualXYZ[1]) / 16.0;
+        double minZ = startPixel(visualXYZ[2]) / 16.0;
+        return Shapes.box(minX, minY, minZ, minX + 0.25, minY + 0.25, minZ + 0.25);
     }
 
     public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {

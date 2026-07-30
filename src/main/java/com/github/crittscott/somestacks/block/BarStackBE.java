@@ -159,17 +159,7 @@ public class BarStackBE extends BlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                int[] xyz = BarCubeIdx.xyzFromIndex(i);
-
-                double minX = BarCubeIdx.startPixelX(xyz[0], xyz[1]) / 16.0;
-                double minY = BarCubeIdx.startPixelY(xyz[1]) / 16.0;
-                double minZ = BarCubeIdx.startPixelZ(xyz[2], xyz[1]) / 16.0;
-                double maxX = minX + BarCubeIdx.barWidth(xyz[1]) / 16.0;
-                double maxY = minY + BarCubeIdx.barHeight(xyz[1]) / 16.0;
-                double maxZ = minZ + BarCubeIdx.barDepth(xyz[1]) / 16.0;
-
-                VoxelShape barShape = Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
-                shape = Shapes.or(shape, barShape);
+                shape = Shapes.or(shape, BarCubeIdx.shapeFor(i));
             }
         }
 

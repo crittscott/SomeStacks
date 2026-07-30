@@ -14,6 +14,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -50,6 +52,20 @@ public final class ProtectionGameTests {
         check(!Protection.placeChecked(
                         player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
                 "Out-of-height checked placement was accepted");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        putCowIn(helper, ORIGIN);
+
+        check(!Protection.placeChecked(
+                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                "Entity-obstructed checked placement was accepted");
+        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
     }
 
@@ -170,6 +186,94 @@ public final class ProtectionGameTests {
         helper.assertBlockNotPresent(
                 ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
+    }
+
+    // Growth through entities
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+            GameTestHelper helper) {
+        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(storage);
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+        putCowIn(helper, ORIGIN.above());
+
+        int headroom = StorageStackBE.SLOTS;
+        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+                "Simulated remainder");
+        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+                "Committed remainder");
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+            GameTestHelper helper) {
+        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(singles);
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+        putCowIn(helper, ORIGIN.above());
+
+        int headroom = SinglesStackBE.SLOTS;
+        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+                "Simulated remainder");
+        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+                "Committed remainder");
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
+            GameTestHelper helper) {
+        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
+        Item bar = GameTestSupport.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            bars.getItems().insertItem(slot, new ItemStack(bar), false);
+        }
+        IItemHandler capability = GameTestSupport.capability(bars);
+        ItemStack offered = new ItemStack(bar, 4);
+        putCowIn(helper, ORIGIN.above());
+
+        int headroom = BarStackBE.SLOTS;
+        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
+                "Simulated remainder");
+        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
+                "Committed remainder");
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    /**
+     * Puts a living placement-blocking entity across the bottom north-west cell and bar position
+     * of {@code relative}.
+     */
+    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(relative);
+        Cow cow = EntityType.COW.create(level);
+        check(cow != null, "Could not create obstruction cow");
+        check(cow.blocksBuilding, "Cow does not block building");
+        cow.moveTo(
+                target.getX() + 0.5,
+                target.getY(),
+                target.getZ() + 0.5,
+                0.0F,
+                0.0F);
+        check(level.addFreshEntity(cow), "Could not add obstruction cow");
     }
 
     /**

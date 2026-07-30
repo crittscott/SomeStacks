@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
@@ -440,7 +441,8 @@ public final class StoragePile {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !Protection.isProtected(editor(serverLevel, placer), above);
+        return !Protection.isProtected(editor(serverLevel, placer), above)
+                && Protection.isUnobstructed(serverLevel, above, Shapes.block());
     }
 
     /** The player a growth is attributed to: the depositing player, or the fake player. */
@@ -457,7 +459,8 @@ public final class StoragePile {
         BlockPos above = topPos().above();
         ServerPlayer editor = editor(serverLevel, placer);
         BlockState newStack = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
-        if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
+        if (!Protection.placeChecked(
+                editor, serverLevel, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);

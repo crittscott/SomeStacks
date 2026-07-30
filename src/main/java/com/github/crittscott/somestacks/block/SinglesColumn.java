@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
@@ -329,7 +330,7 @@ public final class SinglesColumn {
         if (simulate) {
             return true;
         }
-        if (flatSlot >= totalSlots() && !grow()) {
+        if (flatSlot >= totalSlots() && !grow(flatSlot % SinglesStackBE.SLOTS)) {
             return false;
         }
 
@@ -345,7 +346,7 @@ public final class SinglesColumn {
      *
      * <p>A cell in the block above the column is weighed against the block growth would put there —
      * empty, unrotated as a player's own placement is, standing on the column's current top layer —
-     * and against everything {@link #canGrow()} can answer without side effects, so a simulation
+     * and against everything {@link #canGrow(VoxelShape)} can answer without side effects, so a simulation
      * cannot promise a cell the commit would refuse.
      */
     private boolean cellAccepts(int flatSlot) {
@@ -361,7 +362,8 @@ public final class SinglesColumn {
             return SinglesCubeIdx.isGroundedIn(occupancy, slot, be.getRotation(), seamUnder(blockIndex));
         }
 
-        return canGrow() && SinglesCubeIdx.isGroundedIn(
+        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
+        return canGrow(finalCollision) && SinglesCubeIdx.isGroundedIn(
                 new boolean[SinglesStackBE.SLOTS], slot, 0, seamUnder(blockIndex));
     }
 
@@ -386,7 +388,7 @@ public final class SinglesColumn {
      * promise a block the insertion itself would refuse. Growth carries no player, so protection
      * is weighed against the level's fake player, which is never exempt from spawn protection.
      */
-    private boolean canGrow() {
+    private boolean canGrow(VoxelShape finalCollision) {
         if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get()
                 || !(level instanceof ServerLevel serverLevel)) {
             return false;
@@ -395,19 +397,22 @@ public final class SinglesColumn {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !Protection.isProtected(serverLevel, above);
+        return !Protection.isProtected(serverLevel, above)
+                && Protection.isUnobstructed(serverLevel, above, finalCollision);
     }
 
     /** Adds one block on top. Automation carries no player, so growth answers to the fake player. */
-    private boolean grow() {
-        if (!canGrow() || !(level instanceof ServerLevel serverLevel)) {
+    private boolean grow(int slot) {
+        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
+        if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {
             return false;
         }
 
         BlockPos above = topPos().above();
         ServerPlayer editor = FakePlayerFactory.getMinecraft(serverLevel);
         BlockState newStack = ModRegistry.SINGLES_STACK_BLOCK.get().defaultBlockState();
-        if (!Protection.placeChecked(editor, serverLevel, above, newStack, Direction.DOWN)) {
+        if (!Protection.placeChecked(
+                editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);
