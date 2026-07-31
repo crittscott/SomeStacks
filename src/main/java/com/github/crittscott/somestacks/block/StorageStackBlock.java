@@ -87,23 +87,28 @@ public class StorageStackBlock extends Block implements EntityBlock {
     }
 
     /**
-     * Runs the settle a content edit scheduled. Edits mark the pile's base, so a burst of them
-     * anywhere in the pile collapses into this one pass.
+     * Runs a pile pass scheduled at its base. Structural changes can leave an older tick at a
+     * former base, so only the current base performs the settle.
      */
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         StoragePile pile = StoragePile.at(level, pos);
-        if (pile != null) {
+        if (pile != null && pile.basePos().equals(pos)) {
             pile.settle();
         }
     }
 
-    /** Joining a pile changes what its blocks resolve to, so their held piles are dropped. */
+    /** Repairs the run-wide state and derived values affected when this block joins a pile. */
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             StoragePile.invalidateAround(level, pos);
+            if (!level.isClientSide
+                    && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
+                StoragePile.adoptNeighbourState(level, pos, placed);
+                StoragePile.markDirtyAt(level, pos);
+            }
         }
     }
 

@@ -1,15 +1,20 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
@@ -224,6 +229,66 @@ public final class StoragePileGameTests {
         checkEquals(expected, lowerSignal, "Lower comparator signal");
         checkEquals(expected, upperSignal, "Upper comparator signal");
         helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
+    public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
+            GameTestHelper helper) {
+        var level = helper.getLevel();
+        BlockPos lowerPos = helper.absolutePos(ORIGIN);
+        BlockPos upperPos = helper.absolutePos(ORIGIN.above());
+        BlockPos comparatorPos = upperPos.east();
+
+        StorageStackBE upper = GameTestSupport.placeStorage(helper, ORIGIN.above());
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            upper.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+        }
+        StoragePile originalPile = upper.pile();
+        check(originalPile != null, "Original pile did not resolve");
+        originalPile.setPermanent(true);
+
+        check(level.setBlock(
+                        comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
+                "Could not place comparator support");
+        check(level.setBlock(
+                        comparatorPos,
+                        Blocks.COMPARATOR.defaultBlockState()
+                                .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST),
+                        Block.UPDATE_ALL),
+                "Could not place comparator");
+        originalPile.settle();
+
+        helper.runAfterDelay(3, () -> {
+            check(level.getBlockEntity(comparatorPos) instanceof ComparatorBlockEntity,
+                    "Comparator block entity was missing");
+            ComparatorBlockEntity comparator =
+                    (ComparatorBlockEntity) level.getBlockEntity(comparatorPos);
+            checkEquals(15, comparator.getOutputSignal(), "Initial comparator output");
+
+            check(level.setBlock(
+                            lowerPos,
+                            ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(),
+                            Block.UPDATE_ALL),
+                    "Could not place Storage Stack below pile");
+
+            helper.runAfterDelay(4, () -> {
+                check(level.getBlockEntity(lowerPos) instanceof StorageStackBE,
+                        "Placed Storage Stack disappeared");
+                StorageStackBE lower = (StorageStackBE) level.getBlockEntity(lowerPos);
+                StoragePile joinedPile = lower.pile();
+                check(joinedPile != null, "Joined pile did not resolve");
+                checkEquals(2, joinedPile.height(), "Joined pile height");
+                checkEquals(8, joinedPile.comparatorSignal(), "Joined pile signal");
+                checkEquals(8, comparator.getOutputSignal(), "Published comparator output");
+                check(lower.isPermanent(), "New pile base did not inherit permanence");
+                check(upper.isPermanent(), "Permanence was not propagated through pile");
+                checkEquals(Items.STONE, lower.getItems().getStackInSlot(0).getItem(),
+                        "Pile did not settle into its new base");
+                check(upper.getItems().getStackInSlot(0).isEmpty(),
+                        "Old base contents did not pack down");
+                helper.succeed();
+            });
+        });
     }
 
     /**

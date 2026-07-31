@@ -176,10 +176,6 @@ public class PlaceAndDepositPkt {
                 case STORAGE_STACK -> {
                     StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(msg.pos);
 
-                    // A block placed onto a pile joins it, so it takes the pile's mode rather than
-                    // imposing a fresh one — placing beneath a permanent pile makes this the base.
-                    StoragePile.adoptNeighbourState(level, msg.pos, sbe);
-
                     int deposited = sbe.deposit(handStack, sp);
                     sp.setItemInHand(msg.hand, handStack);
 

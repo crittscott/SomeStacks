@@ -226,7 +226,7 @@ Generated override files are output only; they are not an active override layer.
 
 ## Automated verification
 
-The suite contains 51 JUnit tests and 74 Forge GameTests.
+The suite contains 51 JUnit tests and 75 Forge GameTests.
 
 JUnit covers registry-independent logic under `src/test/java` and runs with `build`. Forge GameTests cover registered game objects, levels, block entities, capabilities, events, packets, persistence, growth, gravity, protection, and synchronization. `runGameTestServer` runs the GameTests.
 

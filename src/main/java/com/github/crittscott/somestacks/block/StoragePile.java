@@ -450,7 +450,7 @@ public final class StoragePile {
         return placer != null ? placer : FakePlayerFactory.getMinecraft(serverLevel);
     }
 
-    /** Adds one block on top, inheriting the pile's mode and rotation. */
+    /** Adds one block on top. The placement hook inherits its mode; growth uses the base rotation. */
     private boolean grow(@Nullable ServerPlayer placer) {
         if (!canGrow(placer) || !(level instanceof ServerLevel serverLevel)) {
             return false;
@@ -465,7 +465,7 @@ public final class StoragePile {
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
 
-        grown.adoptPileState(isPermanent(), blocks.get(0).getRotation());
+        grown.setRotation(blocks.get(0).getRotation());
         grown.beginBatch();
         blocks.add(grown);
         return true;
