@@ -58,7 +58,7 @@ public class RotateItemPkt {
             // item: the gesture claimed the click either way.
             RightClickBlockSuppressor.suppress(sp, msg.pos, level);
 
-            if (msg.slotIndex < 0 || msg.slotIndex >= 64) return;
+            if (msg.slotIndex < 0 || msg.slotIndex >= SinglesStackBE.SLOTS) return;
 
             // An empty cell carries no orientation, so there is nothing to turn: rotating one
             // would leave a facing behind for whatever is deposited into it next.

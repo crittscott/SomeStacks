@@ -37,12 +37,17 @@ public final class StorageCubeIdx {
         return new int[]{x, y, z};
     }
 
+    /**
+     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
+     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
+     * in, so both gestures answer a click the same way.
+     */
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotation % 4) {
             case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{MAX_COORD - z, y, x};
+            case 1 -> new int[]{z, y, MAX_COORD - x};
             case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
-            case 3 -> new int[]{z, y, MAX_COORD - x};
+            case 3 -> new int[]{MAX_COORD - z, y, x};
             default -> new int[]{x, y, z};
         };
     }

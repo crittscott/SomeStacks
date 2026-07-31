@@ -45,6 +45,13 @@ class StorageCubeIdxTest {
     }
 
     @Test
+    void oneQuarterTurnGoesCounterClockwise() {
+        // The north-west cell of a layer lands south-west, the sense a stored item's own rotation
+        // turns in, so the two torch gestures answer a click the same way.
+        assertArrayEquals(new int[]{0, 0, 2}, StorageCubeIdx.rotateXYZ(0, 0, 0, 1));
+    }
+
+    @Test
     void fourQuarterTurnsRestoreEveryCoordinate() {
         for (int index = 0; index < 27; index++) {
             int[] original = StorageCubeIdx.xyzFromIndex(index);
