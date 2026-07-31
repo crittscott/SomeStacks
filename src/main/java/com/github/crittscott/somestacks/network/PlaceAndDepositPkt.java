@@ -138,8 +138,7 @@ public class PlaceAndDepositPkt {
         ViewRay view = ViewRay.of(sp);
         int depositIndex = switch (msg.blockType) {
             case STORAGE_STACK -> -1;
-            case SINGLES_STACK ->
-                    SinglesCubeIdx.calculateDepositIndex(view, msg.pos, 0);
+            case SINGLES_STACK -> SinglesCubeIdx.traceAllPositions(view, msg.pos);
             case BAR_STACK -> BarCubeIdx.traceAllPositions(view, msg.pos);
         };
         if (msg.blockType != BlockType.STORAGE_STACK && depositIndex < 0) {

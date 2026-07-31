@@ -6,11 +6,9 @@ import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.StackSort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -569,7 +567,7 @@ public final class StoragePile {
         for (ItemStack stack : stacks) {
             if (stack.isEmpty()) continue;
 
-            StackKey key = new StackKey(stack.getItem(), stack.getDamageValue(), stack.getTag());
+            StackKey key = StackKey.of(stack);
             models.putIfAbsent(key, stack);
             totals.merge(key, stack.getCount(), Integer::sum);
         }
@@ -591,9 +589,5 @@ public final class StoragePile {
 
         out.sort(StackSort.COMPARATOR);
         return out;
-    }
-
-    /** Exact stack identity: two stacks merge if and only if their keys are equal. */
-    private record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
     }
 }

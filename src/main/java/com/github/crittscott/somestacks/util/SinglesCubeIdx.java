@@ -9,6 +9,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -115,7 +116,22 @@ public final class SinglesCubeIdx {
         return closestIndex;
     }
 
-    public static int traceAllPositions(ViewRay ray, BlockPos blockPos, IItemHandler handler, int blockRotation) {
+    /**
+     * Deposit targeting for a Singles Stack that does not exist yet, where every cell is empty. Used
+     * to decide, before the block is placed, which cell the deposit that follows would land in. A
+     * newly placed block is unrotated, so the answer is read in the visual frame.
+     */
+    public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
+        return traceAllPositions(ray, blockPos, null, 0);
+    }
+
+    /**
+     * The cell a deposit aims at: the last empty cell along the view ray before the first occupied
+     * one, or the farthest intersected cell when the ray meets no item. A null handler means every
+     * cell is empty.
+     */
+    public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
+                                        @Nullable IItemHandler handler, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
         for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
@@ -139,8 +155,7 @@ public final class SinglesCubeIdx {
 
         int lastEmpty = -1;
         for (Hit hit : hits) {
-            boolean occupied = !handler.getStackInSlot(hit.index).isEmpty();
-            if (occupied) {
+            if (handler != null && !handler.getStackInSlot(hit.index).isEmpty()) {
                 return lastEmpty;
             }
             lastEmpty = hit.index;
@@ -261,30 +276,6 @@ public final class SinglesCubeIdx {
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
         return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
-    }
-
-    public static int calculateDepositIndex(ViewRay ray, BlockPos blockPos, int blockRotation) {
-        List<Hit> hits = new ArrayList<>();
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            int[] storageXYZ = xyzFromIndex(storageIndex);
-            int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-            AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hitPos = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hitPos != null) {
-                double dist = hitPos.distanceTo(ray.eye());
-                hits.add(new Hit(storageIndex, dist));
-            }
-        }
-
-        if (hits.isEmpty()) {
-            return -1;
-        }
-
-        hits.sort(Comparator.comparingDouble(h -> h.distance));
-        return hits.get(hits.size() - 1).index;
     }
 
     private record Hit(int index, double distance) {

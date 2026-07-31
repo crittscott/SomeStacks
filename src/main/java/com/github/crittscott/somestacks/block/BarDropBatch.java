@@ -1,14 +1,11 @@
 package com.github.crittscott.somestacks.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,16 +57,6 @@ final class BarDropBatch {
 
         private Group(ItemStack model) {
             this.model = model;
-        }
-    }
-
-    private record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
-        private static StackKey of(ItemStack stack) {
-            CompoundTag tag = stack.getTag();
-            return new StackKey(
-                    stack.getItem(),
-                    stack.getDamageValue(),
-                    tag == null ? null : tag.copy());
         }
     }
 }
