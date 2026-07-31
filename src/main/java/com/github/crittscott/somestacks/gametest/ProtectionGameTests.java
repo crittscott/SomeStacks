@@ -5,8 +5,11 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.network.DepositPkt;
+import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -102,6 +105,58 @@ public final class ProtectionGameTests {
                     "Expired suppression still vetoed interaction");
             helper.succeed();
         });
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void depositSuppressesTheClickedBlockAndStillDeposits(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        BlockPos clicked = target.north();
+        GameTestSupport.placeStorage(helper, ORIGIN);
+
+        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
+                DepositPkt.apply(player, new DepositPkt(InteractionHand.MAIN_HAND, target, clicked)));
+
+        checkEquals(64, GameTestSupport.heldAt(helper, target, Items.DIRT),
+                "Deposit did not reach the stack");
+        check(!Protection.mayInteract(player, clicked, InteractionHand.MAIN_HAND),
+                "The clicked block was left open to the vanilla interaction");
+        check(Protection.mayInteract(player, target, InteractionHand.MAIN_HAND),
+                "The deposit target was suppressed instead of the clicked block");
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementSuppressesTheClickedBlockAndStillPlaces(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        BlockPos clicked = target.below();
+
+        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
+                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
+                        BlockType.STORAGE_STACK, Direction.UP, InteractionHand.MAIN_HAND, target)));
+
+        helper.assertBlockPresent(ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        check(!Protection.mayInteract(player, clicked, InteractionHand.MAIN_HAND),
+                "The clicked block was left open to the vanilla interaction");
+        check(Protection.mayInteract(player, target, InteractionHand.MAIN_HAND),
+                "The placed position was suppressed instead of the clicked block");
+        helper.succeed();
+    }
+
+    /**
+     * Runs {@code action} with {@code stack} held, and empties the hand again before returning.
+     * The fake player is shared across tests, so what it carries has to be put back.
+     */
+    private static void withMainHand(ServerPlayer player, ItemStack stack, Runnable action) {
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        try {
+            action.run();
+        } finally {
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        }
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)

@@ -62,7 +62,7 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
     public void execute(InteractionContext ctx) {
         SomeStacks.LOGGER.debug("Executing DepositIntoClickedStackRule");
         if (ctx.isClientSide() && ctx.isMainHand()) {
-            ClientEvents.sendDeposit(ctx.getClickedPos());
+            ClientEvents.sendDeposit(ctx.getClickedPos(), ctx.getClickedPos());
         }
         ctx.cancelEvent();
     }

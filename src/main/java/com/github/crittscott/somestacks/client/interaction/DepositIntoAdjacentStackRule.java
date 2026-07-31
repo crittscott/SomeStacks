@@ -24,7 +24,7 @@ public final class DepositIntoAdjacentStackRule implements InteractionRule {
         SomeStacks.LOGGER.debug("Executing DepositIntoAdjacentStackRule");
         if (ctx.isClientSide() && ctx.isMainHand()) {
             BlockPos adjacentPos = ctx.getClickedPos().relative(ctx.getFace());
-            ClientEvents.sendDeposit(adjacentPos);
+            ClientEvents.sendDeposit(adjacentPos, ctx.getClickedPos());
         }
         ctx.cancelEvent();
     }

@@ -113,8 +113,8 @@ public final class ClientEvents {
         );
     }
 
-    public static void sendDeposit(BlockPos pos) {
-        ModNetworking.CHANNEL.sendToServer(new DepositPkt(InteractionHand.MAIN_HAND, pos));
+    public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
+        ModNetworking.CHANNEL.sendToServer(new DepositPkt(InteractionHand.MAIN_HAND, pos, clickedPos));
     }
 
     public static void sendExtract(BlockPos pos, int index) {

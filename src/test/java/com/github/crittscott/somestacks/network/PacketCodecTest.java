@@ -35,7 +35,10 @@ class PacketCodecTest {
     @Test
     void depositRoundTrips() {
         assertRoundTrip(
-                new DepositPkt(InteractionHand.MAIN_HAND, new BlockPos(-3, 70, 4)),
+                new DepositPkt(
+                        InteractionHand.MAIN_HAND,
+                        new BlockPos(-3, 70, 4),
+                        new BlockPos(-3, 69, 4)),
                 DepositPkt::encode,
                 DepositPkt::decode);
     }

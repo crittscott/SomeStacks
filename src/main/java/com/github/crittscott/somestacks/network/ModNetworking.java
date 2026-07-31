@@ -11,7 +11,7 @@ import java.util.Optional;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static final String PROTOCOL = "1";
+    private static final String PROTOCOL = "2";
     public static SimpleChannel CHANNEL;
 
     public static void init() {
