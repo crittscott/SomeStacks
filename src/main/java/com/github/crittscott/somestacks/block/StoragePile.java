@@ -494,10 +494,12 @@ public final class StoragePile {
 
     /**
      * Consolidates and sorts the whole pile, writes it back from the base upward, propagates the
-     * base's mode, and removes the empty blocks that packing leaves at the top.
+     * base's mode, removes the empty blocks that packing leaves at the top, and pays the
+     * publication every edit since the last pass deferred.
      *
      * <p>Slots that already hold what they should are left alone, so an edit that disturbs a few
-     * stacks resyncs a few blocks rather than the whole column.
+     * stacks resyncs a few blocks rather than the whole column. Publishing after the trim means a
+     * block that packing emptied away is never sent to clients only to be removed behind it.
      */
     public void settle() {
         List<ItemStack> contents = new ArrayList<>();
@@ -526,11 +528,14 @@ public final class StoragePile {
             }
         } finally {
             for (StorageStackBE sbe : blocks) {
-                sbe.endBatch();
+                sbe.endBatchWithinSettle();
             }
         }
 
         trimEmptyTop();
+        for (StorageStackBE sbe : blocks) {
+            sbe.publishIfPending();
+        }
         publishComparatorSignal();
     }
 

@@ -34,6 +34,7 @@ public class StorageStackBE extends BlockEntity {
 
     private boolean suppressSync = false;
     private boolean batchTouched = false;
+    private boolean publishPending = false;
 
     private final ItemStackHandler items = new ItemStackHandler(SLOTS) {
         @Override
@@ -42,7 +43,7 @@ public class StorageStackBE extends BlockEntity {
             if (suppressSync) {
                 batchTouched = true;
             } else {
-                finalizeAfterBatch();
+                schedulePublish();
             }
         }
 
@@ -212,7 +213,7 @@ public class StorageStackBE extends BlockEntity {
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, 3);
+            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
         }
     }
 
@@ -230,7 +231,19 @@ public class StorageStackBE extends BlockEntity {
         suppressSync = false;
         if (batchTouched) {
             batchTouched = false;
-            finalizeAfterBatch();
+            schedulePublish();
+        }
+    }
+
+    /**
+     * Closes a batch opened by the settle that is about to publish this block anyway, so the pass
+     * that is already running pays for what it wrote instead of scheduling another one behind it.
+     */
+    void endBatchWithinSettle() {
+        suppressSync = false;
+        if (batchTouched) {
+            batchTouched = false;
+            publishPending = true;
         }
     }
 
@@ -250,17 +263,38 @@ public class StorageStackBE extends BlockEntity {
     }
 
     /**
-     * Settles the derived state a content edit leaves behind: pushes contents to clients,
-     * refreshes comparators and neighbors, and recomputes the emitted light level. Callers mark
-     * the block changed; this reproduces the rest of the per-edit path as one pass, so a batch
-     * that suppresses per-slot sync can finalize each block exactly once when it finishes.
+     * Records that this block owes a publication, and asks the pile to schedule the settle that
+     * pays it.
+     *
+     * <p>Publishing a content change costs a block entity update packet and a light recompute, and
+     * the settle behind it can move a stack into another block before any of that is worth sending.
+     * Deferring both to the settle is what keeps a machine making capability calls all tick from
+     * paying them per call, and what stops a stack from being sent once where it landed and again
+     * where it was packed to.
      */
-    private void finalizeAfterBatch() {
+    private void schedulePublish() {
         if (level == null || level.isClientSide) {
             return;
         }
+        publishPending = true;
+
+        StoragePile pile = pile();
+        if (pile != null) {
+            pile.markDirty();
+        }
+    }
+
+    /**
+     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
+     * The comparator value belongs to the pile rather than to one of its blocks, so
+     * {@link StoragePile#settle()} publishes that once for the whole run.
+     */
+    void publishIfPending() {
+        if (level == null || level.isClientSide || !publishPending) {
+            return;
+        }
+        publishPending = false;
         syncToClients();
-        level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
 
         int newLight = ItemOps.calculateLightLevelFromItems(items);
         BlockState state = getBlockState();
