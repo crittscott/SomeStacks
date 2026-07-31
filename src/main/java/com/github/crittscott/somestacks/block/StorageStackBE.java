@@ -266,11 +266,10 @@ public class StorageStackBE extends BlockEntity {
      * Records that this block owes a publication, and asks the pile to schedule the settle that
      * pays it.
      *
-     * <p>Publishing a content change costs a block entity update packet and a light recompute, and
-     * the settle behind it can move a stack into another block before any of that is worth sending.
-     * Deferring both to the settle is what keeps a machine making capability calls all tick from
-     * paying them per call, and what stops a stack from being sent once where it landed and again
-     * where it was packed to.
+     * <p>Publishing costs an update packet and a light recompute, and the settle behind it can move
+     * a stack into another block first. Deferring both keeps a machine making capability calls all
+     * tick from paying per call, and stops a stack from being sent where it landed and again where
+     * it was packed to.
      */
     private void schedulePublish() {
         if (level == null || level.isClientSide) {

@@ -16,6 +16,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 public final class ItemOps {
     private ItemOps(){}
 
+    /** The brightest a block can be, and so the top of each stack block's light property. */
+    public static final int MAX_LIGHT_LEVEL = 15;
+
+    /** Share of a stored block's own emission that a cell holding it contributes. */
+    private static final int LIGHT_SHARE_DIVISOR = 4;
+
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
         if (hand.isEmpty()) return true;
@@ -71,19 +77,13 @@ public final class ItemOps {
             ItemStack stack = handler.getStackInSlot(i);
             if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
                 int blockLight = bi.getBlock().defaultBlockState().getLightEmission();
-                totalLight += blockLight / 4;
+                totalLight += blockLight / LIGHT_SHARE_DIVISOR;
             }
         }
-        return Math.min(totalLight, 15);
+        return Math.min(totalLight, MAX_LIGHT_LEVEL);
     }
 
-    /**
-     * Check if an item is from a mod that has been disabled in the server config.
-     * Items from disabled mods cannot be added to stacks, but can be removed.
-     *
-     * @param stack The item stack to check
-     * @return true if the item is from a disabled mod, false otherwise
-     */
+    /** Whether the server config bars this item's namespace. Disabled contents may still be removed. */
     public static boolean isItemFromDisabledMod(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -97,14 +97,7 @@ public final class ItemOps {
         return ServerConfig.isModDisabled(itemId.getNamespace());
     }
 
-    /**
-     * Check if an item is from a disabled mod and notify the player if so.
-     * Call this before attempting to deposit an item into a stack.
-     *
-     * @param stack The item stack being deposited
-     * @param player The player attempting the deposit
-     * @return true if the item is from a disabled mod (and message was sent), false if allowed
-     */
+    /** {@link #isItemFromDisabledMod} for a deposit path, telling the player when it refuses. */
     public static boolean checkDisabledModAndNotify(ItemStack stack, Player player) {
         if (isItemFromDisabledMod(stack)) {
             ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
@@ -120,13 +113,7 @@ public final class ItemOps {
         return false;
     }
 
-    /**
-     * Check if a specific item has been disabled in the server config.
-     * Disabled items cannot be added to stacks, but can be removed.
-     *
-     * @param stack The item stack to check
-     * @return true if the specific item is disabled, false otherwise
-     */
+    /** Whether the server config bars this item by id. Disabled contents may still be removed. */
     public static boolean isItemDisabled(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -140,14 +127,7 @@ public final class ItemOps {
         return ServerConfig.isItemDisabled(itemId);
     }
 
-    /**
-     * Check if a specific item is disabled and notify the player if so.
-     * Call this before attempting to deposit an item into a stack.
-     *
-     * @param stack The item stack being deposited
-     * @param player The player attempting the deposit
-     * @return true if the item is disabled (and message was sent), false if allowed
-     */
+    /** {@link #isItemDisabled} for a deposit path, telling the player when it refuses. */
     public static boolean checkDisabledItemAndNotify(ItemStack stack, Player player) {
         if (isItemDisabled(stack)) {
             ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());

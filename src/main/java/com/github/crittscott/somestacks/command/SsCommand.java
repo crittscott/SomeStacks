@@ -43,55 +43,17 @@ import java.util.stream.Collectors;
  * The {@code ss} command: render override authoring, test wall generation, server list
  * editing, and override reloading.
  *
- * <p>The render subcommands are issued against the sender's own view, so they are player-only
- * and gated by the {@code ss_command_allowlist} server config list:
- *
- * <ul>
- *   <li>{@code ss item <item> <mode> [<scale> [<x> <y> [<z>]]]} sets an entry in the issuing
- *       player's user override layer, applied immediately. Arguments the shorter forms leave
- *       off take the defaults an override entry omitting them would take: scale 1 and zero
- *       offset.</li>
- *   <li>{@code ss item <item> reset} removes that entry, restoring built-in or measured
- *       behavior.</li>
- *   <li>{@code ss write changed} asks the issuing player's client to write its user override
- *       layer to its override file.</li>
- *   <li>{@code ss write <modid|all|list>} asks that client to dump a complete profile for every
- *       item of those namespaces to its generated-override folder, measuring what no layer
- *       configures. Namespaces are named as the wall commands name them.</li>
- * </ul>
- *
- * <p>The administrative subcommands act on the server rather than on a view, so they are gated
- * by operator permission level. Most need no player and are usable from the console; the two wall
- * generators need one, because a wall is built where the sender stands:
- *
- * <ul>
- *   <li>{@code ss test <modid|all|list>} generates Storage Stack walls of every item in the
- *       given namespace, in all loaded namespaces, or in the namespaces named by the
- *       {@code gen_mods} server config list. The wall is built over the following ticks and
- *       reports again when it finishes.</li>
- *   <li>{@code ss test items} builds one row from the items named by the {@code gen_items} server
- *       config list, sorted by mod id and then item name.</li>
- *   <li>{@code ss testingot <modid|all|list>} does the same with Bar Stacks, over the ingots of
- *       those namespaces, one bar per ingot.</li>
- *   <li>{@code ss allow add|remove|list} edits the {@code ss_command_allowlist}.</li>
- *   <li>{@code ss gen mod add|remove|list} edits the {@code gen_mods} list the {@code list} form
- *       of the two test-wall commands builds from.</li>
- *   <li>{@code ss gen item add|remove|list} edits the {@code gen_items} list
- *       {@code ss test items} builds from.</li>
- *   <li>{@code ss deny mod add|remove|list} edits the disabled-mod list.</li>
- *   <li>{@code ss deny item add|remove|list} edits the disabled-item list.</li>
- *   <li>{@code ss ingot add|remove|list} edits the item tags a Bar Stack takes its contents
- *       from.</li>
- *   <li>{@code ss reload} re-reads the server override directory and pushes the current
- *       server config to every player.</li>
- * </ul>
+ * <p>The render subcommands, {@code item} and {@code write}, are issued against the sender's own
+ * view, so they are player-only and gated by the {@code ss_command_allowlist} server config list.
+ * The rest act on the server and are gated by operator permission level; of those, only the two
+ * wall generators need a player, because a wall is built where the sender stands.
  *
  * <p>Gating the list editors on operator permission rather than on the allow list is what makes
  * an empty allow list recoverable: the list is empty by default, so a gate that consulted it
  * could never be opened from in game.
  *
- * <p>{@code ss help} in {@link SsHelp} describes all of the above in game and is gated by
- * nothing, so a player who cannot run a subcommand can still read what it needs.
+ * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
+ * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
  */
 public final class SsCommand {
     /** Vanilla's gamerule and op-command level, the gate on the administrative subcommands. */

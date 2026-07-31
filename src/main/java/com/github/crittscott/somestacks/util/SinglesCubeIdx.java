@@ -16,29 +16,44 @@ import java.util.List;
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 
-    private static final int[] STARTS = {0, 4, 8, 12};
+    /** Cells along one axis of the grid. */
+    public static final int GRID_EDGE = 4;
 
-    private static final int LAYER_SIZE = 16;
-    private static final int TOP_LAYER_Y = 3;
+    /** Cells in one layer. */
+    public static final int LAYER_SIZE = GRID_EDGE * GRID_EDGE;
+
+    /** Layers in one block. */
+    public static final int LAYERS = GRID_EDGE;
+
+    /** The layer a block hands items down from, and the only one that holds up the block above. */
+    public static final int TOP_LAYER_Y = LAYERS - 1;
+
+    /** The largest cell coordinate on an axis, which a rotation reflects about. */
+    private static final int MAX_COORD = GRID_EDGE - 1;
+
+    /** Edge of one cell, in pixels. */
+    private static final double CELL_PIXELS = 4.0;
+
+    private static final int[] STARTS = {0, 4, 8, 12};
 
     public static int startPixel(int i) {
         return STARTS[i];
     }
 
     public static int[] xyzFromIndex(int idx) {
-        int y = idx / 16;
-        int rem = idx % 16;
-        int z = rem / 4;
-        int x = rem % 4;
+        int y = idx / LAYER_SIZE;
+        int rem = idx % LAYER_SIZE;
+        int z = rem / GRID_EDGE;
+        int x = rem % GRID_EDGE;
         return new int[]{x, y, z};
     }
 
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotation % 4) {
             case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{3 - z, y, x};
-            case 2 -> new int[]{3 - x, y, 3 - z};
-            case 3 -> new int[]{z, y, 3 - x};
+            case 1 -> new int[]{MAX_COORD - z, y, x};
+            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
+            case 3 -> new int[]{z, y, MAX_COORD - x};
             default -> new int[]{x, y, z};
         };
     }
@@ -47,9 +62,9 @@ public final class SinglesCubeIdx {
         double minX = blockPos.getX() + startPixel(visualX) / 16.0;
         double minY = blockPos.getY() + startPixel(visualY) / 16.0;
         double minZ = blockPos.getZ() + startPixel(visualZ) / 16.0;
-        double maxX = minX + 4.0 / 16.0;
-        double maxY = minY + 4.0 / 16.0;
-        double maxZ = minZ + 4.0 / 16.0;
+        double maxX = minX + CELL_PIXELS / 16.0;
+        double maxY = minY + CELL_PIXELS / 16.0;
+        double maxZ = minZ + CELL_PIXELS / 16.0;
 
         return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
@@ -62,7 +77,8 @@ public final class SinglesCubeIdx {
         double minX = startPixel(visualXYZ[0]) / 16.0;
         double minY = startPixel(visualXYZ[1]) / 16.0;
         double minZ = startPixel(visualXYZ[2]) / 16.0;
-        return Shapes.box(minX, minY, minZ, minX + 0.25, minY + 0.25, minZ + 0.25);
+        double size = CELL_PIXELS / 16.0;
+        return Shapes.box(minX, minY, minZ, minX + size, minY + size, minZ + size);
     }
 
     public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
@@ -72,7 +88,7 @@ public final class SinglesCubeIdx {
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
-        for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
+        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
             ItemStack stack = handler.getStackInSlot(storageIndex);
             if (stack.isEmpty()) continue;
 
@@ -97,7 +113,7 @@ public final class SinglesCubeIdx {
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos, IItemHandler handler, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
-        for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
+        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
             int[] storageXYZ = xyzFromIndex(storageIndex);
             int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
 
@@ -143,8 +159,8 @@ public final class SinglesCubeIdx {
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
     public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
-        int[] visual = rotateXYZ(storageColumn % 4, 0, storageColumn / 4, blockRotation);
-        return visual[2] * 4 + visual[0];
+        int[] visual = rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
+        return visual[2] * GRID_EDGE + visual[0];
     }
 
     /**
@@ -153,8 +169,8 @@ public final class SinglesCubeIdx {
      * {@code r} is {@code (4 - r) % 4}.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = rotateXYZ(visualColumn % 4, 0, visualColumn / 4, (4 - blockRotation % 4) % 4);
-        return storage[2] * 4 + storage[0];
+        int[] storage = rotateXYZ(visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE, (4 - blockRotation % 4) % 4);
+        return storage[2] * GRID_EDGE + storage[0];
     }
 
     /**
@@ -245,7 +261,7 @@ public final class SinglesCubeIdx {
     public static int calculateDepositIndex(ViewRay ray, BlockPos blockPos, int blockRotation) {
         List<Hit> hits = new ArrayList<>();
 
-        for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
+        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
             int[] storageXYZ = xyzFromIndex(storageIndex);
             int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
 

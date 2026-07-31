@@ -13,7 +13,6 @@ public final class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacks.MODID);
 
-    // Register custom sound events
     public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND =
             SOUND_EVENTS.register("bar_deposit",
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(SomeStacks.MODID, "bar_deposit")));

@@ -26,9 +26,9 @@ public final class OverrideJsonCodec {
 
     /**
      * The range a scale may take, matching the range measurement fits a model into, so a measured
-     * profile and an authored one are bounded the same way. The bounds exist because the schema had
-     * none: an unbounded field admits a value no transform can use, and the parse is the one place
-     * every source of an override passes through.
+     * profile and an authored one are bounded the same way. An unbounded field admits a value no
+     * transform can use, and the parse is the one place every source of an override passes
+     * through.
      */
     public static final float MIN_SCALE = 0.01f;
     public static final float MAX_SCALE = 20.0f;

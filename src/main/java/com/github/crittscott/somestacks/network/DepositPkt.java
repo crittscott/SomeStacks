@@ -88,12 +88,10 @@ public class DepositPkt {
             RightClickBlockSuppressor.suppress(sp, msg.clickedPos, level);
         }
 
-        // Check if item is from a disabled mod and notify player
         if (ItemOps.checkDisabledModAndNotify(handStack, sp)) {
             return;
         }
 
-        // Check if specific item is disabled and notify player
         if (ItemOps.checkDisabledItemAndNotify(handStack, sp)) {
             return;
         }

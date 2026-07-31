@@ -10,6 +10,18 @@ import net.minecraftforge.items.IItemHandler;
 public final class StorageCubeIdx {
     private StorageCubeIdx(){}
 
+    /** Cells along one axis of the grid. */
+    public static final int GRID_EDGE = 3;
+
+    /** Cells in one layer. */
+    public static final int LAYER_SIZE = GRID_EDGE * GRID_EDGE;
+
+    /** The largest cell coordinate on an axis, which a rotation reflects about. */
+    private static final int MAX_COORD = GRID_EDGE - 1;
+
+    /** Edge of one cell, in pixels. */
+    private static final double CELL_PIXELS = 4.0;
+
     // Start pixels per axis for indices 0,1,2
     private static final int[] STARTS = {1, 6, 11};
 
@@ -18,19 +30,19 @@ public final class StorageCubeIdx {
     }
 
     public static int[] xyzFromIndex(int idx) {
-        int y = idx / 9;
-        int rem = idx % 9;
-        int z = rem / 3;
-        int x = rem % 3;
+        int y = idx / LAYER_SIZE;
+        int rem = idx % LAYER_SIZE;
+        int z = rem / GRID_EDGE;
+        int x = rem % GRID_EDGE;
         return new int[]{x, y, z};
     }
 
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotation % 4) {
             case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{2 - z, y, x};
-            case 2 -> new int[]{2 - x, y, 2 - z};
-            case 3 -> new int[]{z, y, 2 - x};
+            case 1 -> new int[]{MAX_COORD - z, y, x};
+            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
+            case 3 -> new int[]{z, y, MAX_COORD - x};
             default -> new int[]{x, y, z};
         };
     }
@@ -41,7 +53,7 @@ public final class StorageCubeIdx {
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < StorageStackBE.SLOTS; i++) {
             ItemStack stack = handler.getStackInSlot(i);
             if (stack.isEmpty()) continue; // skip empty cubes
 
@@ -51,9 +63,9 @@ public final class StorageCubeIdx {
             double minX = blockPos.getX() + startPixel(visualXYZ[0]) / 16.0;
             double minY = blockPos.getY() + startPixel(visualXYZ[1]) / 16.0;
             double minZ = blockPos.getZ() + startPixel(visualXYZ[2]) / 16.0;
-            double maxX = minX + 4.0 / 16.0;
-            double maxY = minY + 4.0 / 16.0;
-            double maxZ = minZ + 4.0 / 16.0;
+            double maxX = minX + CELL_PIXELS / 16.0;
+            double maxY = minY + CELL_PIXELS / 16.0;
+            double maxZ = minZ + CELL_PIXELS / 16.0;
 
             AABB cubeBox = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
             Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);

@@ -56,6 +56,18 @@ public final class CubeRenderHelper {
     private static final float ART_INSET = 0.875f;
 
     /**
+     * Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
+     * cube becomes eight pixels.
+     */
+    public static final float CELL_RENDER_SCALE = 8.0f / 16.0f;
+
+    /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
+    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+
+    /** The cell's centre in the same units, which a cell's contents are drawn about. */
+    public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
+
+    /**
      * Rotation carrying the +Z face, where a baked item model lays its art out, onto each cube face.
      * All six are proper rotations, so the art reads the same way round from every side. SOUTH is
      * where the art already lies and needs none.
@@ -121,7 +133,8 @@ public final class CubeRenderHelper {
                                      float finalScale, float[] offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
+        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(
@@ -142,7 +155,8 @@ public final class CubeRenderHelper {
                                       float finalScale, float[] offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
+        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
 
         // Counter-rotate the GUI display context transforms
@@ -166,7 +180,7 @@ public final class CubeRenderHelper {
     private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
                                      float scale, float[] offset) {
         pose.pushPose();
-        pose.scale(0.5f, 0.5f, 0.5f);
+        pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
         render2DItemCube(pose, buffers, stack, model, light, scale, offset);
         pose.popPose();
@@ -194,7 +208,8 @@ public final class CubeRenderHelper {
 
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(0.25 / finalScale, 0.25 / finalScale, 0.25 / finalScale);
+        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
+                CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(-0.5, -0.5, -0.5);

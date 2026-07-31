@@ -238,10 +238,9 @@ public class BarStackBE extends BlockEntity {
 
     /**
      * Writes a bar the column already holds into an empty position, without the validity test an
-     * insertion runs. Validity gates what a deposit may add rather than what the structure may
-     * carry, so a bar stored before an {@code ss ingot} edit or a data pack reload narrowed the
-     * ingot set still moves with the column that holds it. The caller owns the bar and the position
-     * it goes to; see {@link BarColumn#extract}, the one place a bar changes position in place.
+     * insertion runs. The caller owns the bar and the position it goes to; see
+     * {@link BarColumn#extract}, the one place a bar changes position in place, for why validity has
+     * no say in it.
      */
     void relocateInto(int index, ItemStack bar) {
         items.setStackInSlot(index, bar);
@@ -369,11 +368,10 @@ public class BarStackBE extends BlockEntity {
      * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
      * blocks a column-wide pass really touched.
      *
-     * <p>Unlike Storage and Singles this does not clear {@code batchTouched}, and must not: batches
-     * nest here. {@link #extractAt} opens one, takes a bar — which sets the flag — and then calls
-     * {@link #cascadeFrom}, which opens another on this same block. Clearing on the inner open would
-     * forget the extraction, and a removal that left nothing unsupported would close its batch
-     * owing nothing, leaving the taken bar drawn until something else refreshed the block.
+     * <p>Batches nest here, so unlike Storage and Singles this does not clear {@code batchTouched}:
+     * {@link #extractAt} opens one, takes a bar, and calls {@link #cascadeFrom}, which opens another
+     * on this same block. The flag has to survive the inner open, or a removal that leaves nothing
+     * unsupported closes owing nothing and the taken bar stays drawn.
      */
     void beginBatch() {
         suppressSync = true;
@@ -391,11 +389,10 @@ public class BarStackBE extends BlockEntity {
      * Records that this block owes a publication, and asks the column to schedule the pass that
      * pays it.
      *
-     * <p>Publishing a content change costs a block entity update packet, a walk of the whole column
-     * for the comparator, and a light recompute. A position holds exactly one bar, so a caller
-     * moving a stack through the capability calls the handler once per bar; deferring to a block
-     * tick on the column's bottom is what keeps one stack from costing all of that sixty-four times
-     * over. A Storage pile defers its settle for the same reason.
+     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
+     * recompute. A position holds one bar, so a caller moving a stack calls the handler once per
+     * bar; deferring to a block tick on the column's bottom keeps one stack from costing all of
+     * that sixty-four times over.
      */
     private void schedulePublish() {
         if (level == null || level.isClientSide) {

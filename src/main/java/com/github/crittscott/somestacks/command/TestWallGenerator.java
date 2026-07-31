@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -46,7 +47,7 @@ public final class TestWallGenerator {
      */
     public enum Kind {
         /** Storage Stacks showing nine items each. */
-        STORAGE("StorageStacks", "items", 9),
+        STORAGE("StorageStacks", "items", StorageCubeIdx.LAYER_SIZE),
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts

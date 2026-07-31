@@ -227,7 +227,7 @@ public final class BarColumn {
      * The comparator output for the whole column, which is what every block of it reports. Vanilla's
      * container conversion, reserving the bottom of the range rather than scaling into it: any
      * nonempty column reads at least 1, so signal 0 means empty and nothing else. Full means every
-     * position of every block occupied, which for a column a player built sparsely it never is.
+     * position of every block occupied.
      */
     public int comparatorSignal() {
         double fill = fillLevel();
@@ -239,14 +239,11 @@ public final class BarColumn {
      * has actually changed.
      *
      * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
-     * every block answers with — including blocks whose own positions the edit never touched, and
-     * which therefore publish nothing of their own. Those are exactly the blocks a comparator may be
-     * sitting against, so the whole run is notified rather than the one block that changed. The
-     * guard is what keeps that from being a run-length worth of neighbour updates per bar moved, and
-     * what reduces a collapse crossing several signal values to the one update that outlives it.
-     *
-     * <p>The bottom block holds the last published value, because the bottom is what identifies a
-     * column.
+     * every block answers with, including blocks that publish nothing of their own and are exactly
+     * the ones a comparator may be sitting against. The whole run is notified; the guard is what
+     * keeps that from costing a run-length of neighbour updates per bar moved, and reduces a
+     * collapse crossing several signal values to the one update that outlives it. The bottom block
+     * holds the last published value, because the bottom is what identifies a column.
      */
     void publishComparatorSignal() {
         if (blocks.isEmpty()) {
@@ -271,11 +268,9 @@ public final class BarColumn {
      * Schedules the publication pass for the next tick, on the column's bottom block so that every
      * edit anywhere in the run coalesces into one pass.
      *
-     * <p>A position holds exactly one bar, so a caller moving a stack through the capability makes
-     * one call per bar, and publication is what each of those would otherwise pay for: a block
-     * entity update packet per touched block, a walk of the whole column for the comparator, and a
-     * light recompute. This is the deferral a Storage pile applies to its settle, for the same
-     * reason.
+     * <p>A position holds one bar, so a caller moving a stack through the capability makes one call
+     * per bar. Deferring is what keeps each of those from paying for an update packet, a comparator
+     * walk of the whole column, and a light recompute.
      */
     void markDirty() {
         if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
@@ -322,11 +317,10 @@ public final class BarColumn {
      * Places one bar at {@code flatSlot}, growing the column when that position lies in the block
      * above it.
      *
-     * <p>A position takes one bar and no more, so this is the whole of what an insertion can do at
-     * the position it names. Answering for the position it was given rather than for the column is
-     * what makes the handler's slot range mean something: a caller that walks the range and sums
-     * what each position accepts gets the column's real capacity, where a whole-column answer
-     * repeated at every position multiplied it.
+     * <p>Answering for the position it was given rather than for the column is what makes the
+     * handler's slot range mean something: a caller that walks the range and sums what each position
+     * accepts gets the column's real capacity, where a whole-column answer repeated at every
+     * position multiplied it.
      *
      * <p>A caller walking the range in ascending order still fills the column, because each
      * placement stands before the next position is offered: a filled layer supports the layer above
@@ -444,11 +438,9 @@ public final class BarColumn {
      * Takes the bar at {@code flatSlot} and fills the hole it leaves with the column's topmost bar.
      * Nothing is dropped and nothing is left unsupported.
      *
-     * <p>The backfilled bar is written into the hole rather than inserted, because the column
-     * already holds it and the hole is the position the extraction just vacated. Insertion would put
-     * the Bar Stack's deposit rule in the way of a bar that is only changing position: contents
-     * stored before an {@code ss ingot} edit or a data pack reload narrowed the ingot set stay
-     * extractable, so they must stay movable too.
+     * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
+     * deposit may add rather than what the column may carry, so a bar stored before an
+     * {@code ss ingot} edit or a data pack reload narrowed the ingot set still moves.
      */
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {

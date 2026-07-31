@@ -30,7 +30,7 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
         int blockRotation = be.getRotation();
         int cubeLight = LevelRenderer.getLightColor(be.getLevel(), bePos);
 
-        for (int storageIndex = 0; storageIndex < 64; storageIndex++) {
+        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
             ItemStack stack = handler.getStackInSlot(storageIndex);
             if (stack.isEmpty()) continue;
 
@@ -40,16 +40,17 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
             float sx = SinglesCubeIdx.startPixel(visualXYZ[0]) / 16.0f;
             float sy = SinglesCubeIdx.startPixel(visualXYZ[1]) / 16.0f;
             float sz = SinglesCubeIdx.startPixel(visualXYZ[2]) / 16.0f;
-            float scale = 8.0f / 16.0f;
+            float scale = CubeRenderHelper.CELL_RENDER_SCALE;
 
             pose.pushPose();
             pose.translate(sx, sy, sz);
             pose.scale(scale, scale, scale);
 
             int cubeRotation = be.getCubeRotation(storageIndex);
-            pose.translate(0.25f, 0.25f, 0.25f);
+            float centre = CubeRenderHelper.CELL_LOCAL_CENTRE;
+            pose.translate(centre, centre, centre);
             pose.mulPose(Axis.YP.rotationDegrees(cubeRotation * 90));
-            pose.translate(-0.25f, -0.25f, -0.25f);
+            pose.translate(-centre, -centre, -centre);
 
             CubeRenderHelper.renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, be.getLevel());
 

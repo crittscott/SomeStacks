@@ -262,15 +262,14 @@ public class SinglesStackBE extends BlockEntity {
      * gaps that capability inserts created are preserved rather than quietly closed, and it always
      * leaves the top cell of the column empty for the block above to hand down into.
      *
-     * <p>The cell moved into is always empty — it was either vacated by the extraction that started
-     * the pass, emptied by the previous step, or skipped for being empty already — so the item is
-     * written straight into it. Going through {@link ItemStackHandler#insertItem} would put the
-     * block's deposit rule in the way of an item the block already holds, and validity gates what a
-     * deposit may add rather than what the structure may carry: an item stored before an
-     * {@code ss ingot} edit or a data pack reload narrowed the rule still has to move with it.
+     * <p>The cell moved into is always empty — vacated by the extraction that started the pass,
+     * emptied by the previous step, or empty already — so the item is written straight into it
+     * rather than inserted. Validity gates what a deposit may add rather than what the structure may
+     * carry, so an item stored before an {@code ss ingot} edit or a data pack reload narrowed the
+     * rule still moves with its column.
      */
     private void shiftColumnDown(int column, int fromY) {
-        for (int checkY = fromY + 1; checkY < 4; checkY++) {
+        for (int checkY = fromY + 1; checkY < SinglesCubeIdx.LAYERS; checkY++) {
             int sourceIndex = SinglesCubeIdx.indexFromColumn(column, checkY);
 
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
@@ -288,10 +287,8 @@ public class SinglesStackBE extends BlockEntity {
      * Each shift vacates the top cell of its column, so exactly one item crosses each block boundary
      * and the receiving cell is always free. The column is matched between blocks through visual
      * coordinates, because two stacked blocks may carry different rotations and the run the player
-     * sees as continuous is the visual one. The walk ends at the first block that hands nothing down.
-     *
-     * <p>The receiving cell is written directly for the reason {@link #shiftColumnDown} gives: the
-     * item is already stored in the column, so the deposit rule has no say in whether it may move.
+     * sees as continuous is the visual one. The walk ends at the first block that hands nothing
+     * down. The receiving cell is written directly, for the reason {@link #shiftColumnDown} gives.
      */
     private void drawDownColumn(int column) {
         Level columnLevel = level;
@@ -313,7 +310,7 @@ public class SinglesStackBE extends BlockEntity {
                 int sourceIndex = SinglesCubeIdx.indexFromColumn(aboveColumn, 0);
 
                 if (!above.items.getStackInSlot(sourceIndex).isEmpty()) {
-                    int targetIndex = SinglesCubeIdx.indexFromColumn(col, 3);
+                    int targetIndex = SinglesCubeIdx.indexFromColumn(col, SinglesCubeIdx.TOP_LAYER_Y);
 
                     be.suppressSync = true;
                     above.suppressSync = true;
@@ -419,12 +416,10 @@ public class SinglesStackBE extends BlockEntity {
      * Records that this block owes a publication, and asks the column to schedule the pass that
      * pays it.
      *
-     * <p>Publishing a content change costs a block entity update packet, a walk of the whole column
-     * for the comparator, and a light recompute. A cell holds exactly one item, so a caller moving a
-     * stack through the capability calls the handler once per item, and one removal draws an item
-     * down out of every block above it; deferring to a block tick on the column's bottom is what
-     * keeps either from paying that at each step. A Storage pile defers its settle for the same
-     * reason.
+     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
+     * recompute. A cell holds one item, so a caller moving a stack calls the handler once per item,
+     * and one removal draws an item down out of every block above it; deferring to a block tick on
+     * the column's bottom keeps either from paying that at each step.
      */
     private void schedulePublish() {
         if (level == null || level.isClientSide) {

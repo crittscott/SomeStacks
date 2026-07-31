@@ -22,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class StorageStackBlock extends Block implements EntityBlock {
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
 
     public StorageStackBlock(Properties props) {
         super(props);

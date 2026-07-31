@@ -34,7 +34,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
         VertexConsumer vc = buffers.getBuffer(RenderType.solid());
 
-        for (int idx = 0; idx < 64; idx++) {
+        for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = handler.getStackInSlot(idx);
             if (stack.isEmpty()) continue;
 

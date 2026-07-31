@@ -29,7 +29,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
         int rotation = be.getRotation();
         int cubeLight = LevelRenderer.getLightColor(be.getLevel(), bePos);
 
-        for (int idx = 0; idx < 27; idx++) {
+        for (int idx = 0; idx < StorageStackBE.SLOTS; idx++) {
             ItemStack stack = handler.getStackInSlot(idx);
             if (stack.isEmpty()) continue;
 
@@ -42,7 +42,8 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
 
             pose.pushPose();
             pose.translate(sx, sy, sz);
-            pose.scale(0.5f, 0.5f, 0.5f);
+            pose.scale(CubeRenderHelper.CELL_RENDER_SCALE, CubeRenderHelper.CELL_RENDER_SCALE,
+                    CubeRenderHelper.CELL_RENDER_SCALE);
             CubeRenderHelper.renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, be.getLevel());
             pose.popPose();
         }

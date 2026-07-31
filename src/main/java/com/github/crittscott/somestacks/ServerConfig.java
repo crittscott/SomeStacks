@@ -333,35 +333,22 @@ public final class ServerConfig {
         return true;
     }
 
-    /**
-     * @param namespace a mod id, in any case
-     * @return whether items from that mod are barred from stacks
-     */
+    /** Whether items from {@code namespace}, in any case, are barred from stacks. */
     public static boolean isModDisabled(String namespace) {
         return disabledMods.contains(namespace.toLowerCase(Locale.ROOT));
     }
 
-    /**
-     * @param itemId a registry name
-     * @return whether that item is barred from stacks
-     */
+    /** Whether the item registered as {@code itemId} is barred from stacks. */
     public static boolean isItemDisabled(ResourceLocation itemId) {
         return disabledItems.contains(itemId);
     }
 
-    /**
-     * @param playerName a player's profile name, in any case
-     * @return whether that player may use the {@code ss} command
-     */
+    /** Whether {@code playerName}, in any case, may use the render subcommands of {@code ss}. */
     public static boolean isSsAllowed(String playerName) {
         return ssAllowlist.contains(playerName.toLowerCase(Locale.ROOT));
     }
 
-    /**
-     * @param item any item
-     * @return whether it is an ingot, which is what a Bar Stack holds and what a Singles Stack
-     *         refuses
-     */
+    /** Whether {@code item} is an ingot, which is what a Bar Stack holds and a Singles Stack refuses. */
     public static boolean isIngotItem(Item item) {
         return ingotItems.contains(item);
     }

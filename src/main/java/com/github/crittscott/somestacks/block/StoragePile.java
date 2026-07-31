@@ -228,8 +228,7 @@ public final class StoragePile {
      * <p>This is vanilla's container conversion, over a fill level computed the way vanilla computes
      * it. The bottom of the range is reserved rather than proportional: any nonempty pile reads at
      * least 1, so signal 0 means empty and nothing else, which is what the standard emptiness
-     * circuit tests. A pile is large enough that this matters — 216 slots at full height, where a
-     * proportional conversion would leave hundreds of items reading 0.
+     * circuit tests. At 216 slots a proportional conversion would round hundreds of items to 0.
      */
     public int comparatorSignal() {
         double fill = fillLevel();
@@ -240,13 +239,11 @@ public final class StoragePile {
      * Tells the pile's neighbours to read the comparator output again, but only when that output has
      * actually changed.
      *
-     * <p>Every block of the pile reports the whole pile's fill, so an edit anywhere in it changes the
-     * value every block answers with — including blocks whose own slots the edit never touched, and
-     * which therefore publish nothing of their own. Those are exactly the blocks a comparator may be
-     * sitting against, so the whole run is notified rather than the one block that changed. The
-     * guard is what keeps that from being a run-length worth of neighbour updates per item moved.
-     *
-     * <p>The base block holds the last published value, because the base is what identifies a pile.
+     * <p>Every block of the pile reports the whole pile's fill, so an edit anywhere in it changes
+     * the value every block answers with, including blocks that publish nothing of their own and are
+     * exactly the ones a comparator may be sitting against. The whole run is notified; the guard is
+     * what keeps that from costing a run-length of neighbour updates per item moved. The base block
+     * holds the last published value, because the base is what identifies a pile.
      */
     private void publishComparatorSignal() {
         if (blocks.isEmpty()) {

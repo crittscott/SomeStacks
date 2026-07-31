@@ -12,7 +12,6 @@ public final class DepositIntoAdjacentStackRule implements InteractionRule {
             return false;
         }
 
-        // Check if the block ADJACENT to where we clicked (in the direction of the face) is a Singles/Bar stack
         BlockPos adjacentPos = ctx.getClickedPos().relative(ctx.getFace());
         Block adjacentBlock = ctx.getLevel().getBlockState(adjacentPos).getBlock();
 

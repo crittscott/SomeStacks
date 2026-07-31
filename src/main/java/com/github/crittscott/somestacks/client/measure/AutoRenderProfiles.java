@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client.measure;
 
 import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.client.RenderProfile;
@@ -52,14 +53,10 @@ public final class AutoRenderProfiles {
     /** Fraction of a stack cell the fitted model should span. */
     private static final float TARGET_FILL = 0.9f;
 
-    // One stack cell (4px) measured in the renderer's local units (8px after the BER's 0.5 scale).
-    private static final float CELL_LOCAL_SIZE = 0.5f;
     // Thinnest-to-longest axis ratio below which geometry is treated as a flat card,
     // catching models that report gui3d but draw no real depth.
     private static final float FLAT_RATIO = 0.1f;
     private static final float MIN_EXTENT = 0.001f;
-    private static final float MIN_SCALE = 0.01f;
-    private static final float MAX_SCALE = 20.0f;
     private static final float BUTTON_FIT_SCALE = 0.75f;
 
     private static final Map<Item, RenderProfile> CACHE = new HashMap<>();
@@ -267,8 +264,8 @@ public final class AutoRenderProfiles {
             return null;
         }
 
-        float scale = (float) (TARGET_FILL * scaleFactor * CELL_LOCAL_SIZE / maxExtent);
-        scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+        float scale = (float) (TARGET_FILL * scaleFactor * CubeRenderHelper.CELL_LOCAL_SIZE / maxExtent);
+        scale = Math.max(OverrideJsonCodec.MIN_SCALE, Math.min(OverrideJsonCodec.MAX_SCALE, scale));
 
         // The measured bounds already include the renderer's -0.5 shift, so the geometry
         // center directly gives the offset that recenters it on the cell center.

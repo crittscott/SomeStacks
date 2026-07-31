@@ -31,10 +31,9 @@ import java.util.List;
  * keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
  *
  * <p>Extraction is the player's own removal, unchanged: the cell is emptied and the column shifts
- * down over it. That shift drops nothing and moves no item across the column horizontally, so
- * unlike a Bar column there is nothing for automation to do differently — and backfilling a hole
- * from the top, which is invisible among identical bars, would teleport an unrelated item down the
- * column here.
+ * down over it, dropping nothing and moving no item across the column horizontally. A Bar column's
+ * backfill from the top has no counterpart here, where one item is not interchangeable with the
+ * next.
  *
  * <p>Instances are resolved fresh per operation and are not held across world edits.
  */
@@ -168,16 +167,12 @@ public final class SinglesColumn {
      * Positions the column advertises to automation: the ones it holds, plus one block's worth of
      * headroom while the configured height allows another block.
      *
-     * <p>Neither extreme works. Advertising the full potential height leaves most of the range
-     * permanently empty, and a caller that walks it re-derives that emptiness every time — a
-     * storage network's external storage, which polls its inventory once a tick, was measured
-     * spending the great majority of its scan on positions that could not exist. Advertising only
-     * what the column holds is worse in a subtler way: a caller offers items to the positions the
-     * range names and no others, so a full column would never be offered the insertion that grows
-     * it, and automation could not build a column past its first block.
-     *
-     * <p>One block of headroom is what one growth adds, and {@link #insertOneAt} grows once for the
-     * cell it was given. So the advertised range is reachable capacity and nothing more.
+     * <p>Neither extreme works. The full potential height leaves most of the range permanently
+     * empty, and a caller polling its inventory re-derives that emptiness every tick. Only what the
+     * column holds is worse: a caller offers items to the positions the range names and no others,
+     * so a full column is never offered the insertion that grows it and automation cannot build
+     * past the first block. One block of headroom is what one growth adds, and {@link #insertOneAt}
+     * grows once for the cell it was given, so the range is reachable capacity and nothing more.
      */
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
@@ -235,13 +230,10 @@ public final class SinglesColumn {
      * has actually changed.
      *
      * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
-     * every block answers with — including blocks whose own cells the edit never touched, and which
-     * therefore publish nothing of their own. Those are exactly the blocks a comparator may be
-     * sitting against, so the whole run is notified rather than the one block that changed. The
-     * guard is what keeps that from being a run-length worth of neighbour updates per item moved.
-     *
-     * <p>The bottom block holds the last published value, because the bottom is what identifies a
-     * column.
+     * every block answers with, including blocks that publish nothing of their own and are exactly
+     * the ones a comparator may be sitting against. The whole run is notified; the guard is what
+     * keeps that from costing a run-length of neighbour updates per item moved. The bottom block
+     * holds the last published value, because the bottom is what identifies a column.
      */
     void publishComparatorSignal() {
         if (blocks.isEmpty()) {
@@ -266,11 +258,10 @@ public final class SinglesColumn {
      * Schedules the publication pass for the next tick, on the column's bottom block so that every
      * edit anywhere in the run coalesces into one pass.
      *
-     * <p>A cell holds exactly one item, so a caller moving a stack through the capability makes one
-     * call per item, and a single removal walks the column drawing an item down out of each block
-     * above. Publication is what each of those steps would otherwise pay for: a block entity update
-     * packet per block touched, a walk of the whole column for the comparator, and a light
-     * recompute. This is the deferral a Storage pile applies to its settle, for the same reason.
+     * <p>A cell holds one item, so a caller moving a stack through the capability makes one call
+     * per item, and a single removal draws an item down out of every block above. Deferring is what
+     * keeps each of those steps from paying for an update packet, a comparator walk of the whole
+     * column, and a light recompute.
      */
     void markDirty() {
         if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
@@ -307,11 +298,10 @@ public final class SinglesColumn {
      * Places one item at {@code flatSlot}, growing the column when that cell lies in the block above
      * it.
      *
-     * <p>A cell takes one item and no more, so this is the whole of what an insertion can do at the
-     * cell it names. Answering for the cell it was given rather than for the column is what makes
-     * the handler's slot range mean something: a caller that walks the range and sums what each cell
-     * accepts gets the column's real capacity, where a whole-column answer repeated at every cell
-     * multiplied it.
+     * <p>Answering for the cell it was given rather than for the column is what makes the handler's
+     * slot range mean something: a caller that walks the range and sums what each cell accepts gets
+     * the column's real capacity, where a whole-column answer repeated at every cell multiplied
+     * it.
      *
      * <p>A caller walking the range in ascending order still fills the column, because each
      * placement stands before the next cell is offered: a filled layer supports the layer above it

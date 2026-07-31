@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class SinglesStackBlock extends Block implements EntityBlock {
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 
     public SinglesStackBlock(Properties props) {

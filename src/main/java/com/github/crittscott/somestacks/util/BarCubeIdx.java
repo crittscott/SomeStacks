@@ -39,10 +39,13 @@ public final class BarCubeIdx {
     // Y positions for 8 layers
     private static final double[] STARTS_Y = {0, 2, 4, 6, 8, 10, 12, 14};
 
-    /** Bars in one layer. */
-    public static final int LAYER_SIZE = 8;
+    /** Bars in one layer, the two orientations laying out the same count differently. */
+    public static final int LAYER_SIZE = EW_STARTS_X.length * EW_STARTS_Z.length;
 
-    private static final int TOP_LAYER_Y = 7;
+    /** Layers in one block. */
+    private static final int LAYERS = STARTS_Y.length;
+
+    private static final int TOP_LAYER_Y = LAYERS - 1;
     private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 
     private static boolean isEWLayer(int y) {
@@ -74,18 +77,14 @@ public final class BarCubeIdx {
     }
 
     public static int[] xyzFromIndex(int idx) {
-        int y = idx / 8;
-        int withinLayer = idx % 8;
+        int y = idx / LAYER_SIZE;
+        int withinLayer = idx % LAYER_SIZE;
 
-        if (isEWLayer(y)) {
-            int z = withinLayer / 2;
-            int x = withinLayer % 2;
-            return new int[]{x, y, z};
-        } else {
-            int z = withinLayer / 4;
-            int x = withinLayer % 4;
-            return new int[]{x, y, z};
-        }
+        // A layer is indexed row by row, so its own count of bars along X divides the index.
+        int barsAlongX = isEWLayer(y) ? EW_STARTS_X.length : NS_STARTS_X.length;
+        int z = withinLayer / barsAlongX;
+        int x = withinLayer % barsAlongX;
+        return new int[]{x, y, z};
     }
 
     private static AABB getBarFootprint(int x, int y, int z) {
@@ -135,7 +134,7 @@ public final class BarCubeIdx {
         double closestDist = Double.MAX_VALUE;
         int closestIndex = -1;
 
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < BarStackBE.SLOTS; i++) {
             ItemStack stack = handler.getStackInSlot(i);
             if (stack.isEmpty()) continue;
 
@@ -171,7 +170,7 @@ public final class BarCubeIdx {
                                         @Nullable IItemHandler handler) {
         List<Hit> hits = new ArrayList<>();
 
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < BarStackBE.SLOTS; i++) {
             AABB barBox = getBarBox(i, blockPos);
             Vec3 hitPos = barBox.clip(ray.eye(), ray.end()).orElse(null);
 
@@ -196,10 +195,10 @@ public final class BarCubeIdx {
         return lastEmpty;
     }
 
-    /** Snapshot of which of a block's 64 cells hold a bar. */
+    /** Snapshot of which of a block's cells hold a bar. */
     public static boolean[] occupancyOf(IItemHandler handler) {
-        boolean[] occupancy = new boolean[64];
-        for (int i = 0; i < 64; i++) {
+        boolean[] occupancy = new boolean[BarStackBE.SLOTS];
+        for (int i = 0; i < BarStackBE.SLOTS; i++) {
             occupancy[i] = !handler.getStackInSlot(i).isEmpty();
         }
         return occupancy;
@@ -211,7 +210,7 @@ public final class BarCubeIdx {
      * supported, and only by the seam.
      */
     public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
-        return isGroundedIn(new boolean[64], index, seamBelow);
+        return isGroundedIn(new boolean[BarStackBE.SLOTS], index, seamBelow);
     }
 
     /** A seam that holds nothing up, which is what a vanished Bar Stack leaves behind. */

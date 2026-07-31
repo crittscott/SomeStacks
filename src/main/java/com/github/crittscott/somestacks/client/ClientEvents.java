@@ -90,7 +90,7 @@ public final class ClientEvents {
     public static void cycleModeAllFour(Player player) {
         StackMode startMode = stackMode;
         do {
-            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % 4);
+            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
             if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;

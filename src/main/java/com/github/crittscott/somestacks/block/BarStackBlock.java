@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -23,7 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class BarStackBlock extends Block implements EntityBlock {
-    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 
     public BarStackBlock(Properties props) {
