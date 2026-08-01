@@ -3,12 +3,10 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -39,10 +37,11 @@ public class RotateItemPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            if (Protection.isProtected(sp, msg.pos)) return;
-
-            // The gesture is a main-hand click holding a soul torch.
-            if (!Protection.mayInteract(sp, msg.pos, InteractionHand.MAIN_HAND)) return;
+            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
+            // that item on the block. Claiming the click denies the use-item-on packet that
+            // follows, so the rotation does not also place the torch against the stack. This holds
+            // even when the click hit no item: the gesture claimed the click either way.
+            if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
 
             if (!PacketBoundary.holdsInMainHand(sp, Items.SOUL_TORCH)) return;
 
@@ -51,12 +50,6 @@ public class RotateItemPkt {
             var be = level.getBlockEntity(msg.pos);
 
             if (block != ModRegistry.SINGLES_STACK_BLOCK.get() || !(be instanceof SinglesStackBE ssbe)) return;
-
-            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
-            // that item on the block. Deny the use-item-on packet that follows so the rotation does
-            // not also place the torch against the stack. This holds even when the click hit no
-            // item: the gesture claimed the click either way.
-            RightClickBlockSuppressor.suppress(sp, msg.pos, level);
 
             if (msg.slotIndex < 0 || msg.slotIndex >= SinglesStackBE.SLOTS) return;
 

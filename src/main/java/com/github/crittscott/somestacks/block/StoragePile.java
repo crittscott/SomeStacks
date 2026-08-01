@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StackSort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -453,7 +453,8 @@ public final class StoragePile {
 
         BlockPos above = topPos().above();
         ServerPlayer editor = editor(serverLevel, placer);
-        BlockState newStack = ModRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState();
+        BlockState newStack = StackPlacement.stateFor(
+                ModRegistry.STORAGE_STACK_BLOCK.get(), serverLevel, above);
         if (!Protection.placeChecked(
                 editor, serverLevel, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
@@ -538,6 +539,9 @@ public final class StoragePile {
      * Removes empty blocks from the top of the pile, stopping at the first block that still holds
      * something or is permanent. Packing has already pushed every item as far down as it goes, so
      * the empty blocks are exactly the run at the top: nothing below can be stranded by this.
+     *
+     * <p>Protection can refuse a removal, and the walk stops there rather than skipping past it:
+     * the pile keeps every block from the refused one down, so what it holds is what stands.
      */
     private void trimEmptyTop() {
         int keep = blocks.size();
@@ -549,10 +553,18 @@ public final class StoragePile {
             keep--;
         }
 
-        for (int i = blocks.size() - 1; i >= keep; i--) {
-            level.setBlock(blocks.get(i).getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
         }
-        blocks.subList(keep, blocks.size()).clear();
+
+        int removedDownTo = blocks.size();
+        for (int i = blocks.size() - 1; i >= keep; i--) {
+            if (!Protection.removeChecked(serverLevel, blocks.get(i).getBlockPos())) {
+                break;
+            }
+            removedDownTo = i;
+        }
+        blocks.subList(removedDownTo, blocks.size()).clear();
     }
 
     /**

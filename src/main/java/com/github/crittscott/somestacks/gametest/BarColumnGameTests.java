@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
@@ -12,6 +13,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
@@ -19,6 +22,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
@@ -386,6 +390,50 @@ public final class BarColumnGameTests {
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
         checkEquals(15, GameTestSupport.signalAt(helper, ORIGIN), "Signal after the block was lost");
+        helper.succeed();
+    }
+
+    /**
+     * A cascade that protection stops from taking the emptied block down still brings the column
+     * above it home. Support runs through the seam, which an emptied block leaves bare whether or
+     * not the block itself goes, so only the removal is protection's to refuse.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
+        BarStackBE lower = GameTestSupport.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestSupport.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestSupport.firstBarItem();
+        BlockPos lowerPos = lower.getBlockPos();
+        BlockPos upperPos = upper.getBlockPos();
+
+        // One bar per layer, each resting on the one below, so slot 0 carries the whole column and
+        // the seam the upper block stands on is the top of that chain.
+        int slot = 0;
+        GameTestSupport.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        for (int layer = 1; layer < 8; layer++) {
+            slot = firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
+            GameTestSupport.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        }
+        GameTestSupport.seedSlot(
+                upper.getItems(), firstSeamSupportedBy(slot - 56), new ItemStack(barItem));
+
+        Consumer<BlockEvent.BreakEvent> denyLower = event -> {
+            if (event.getPos().equals(lowerPos)) {
+                event.setCanceled(true);
+            }
+        };
+
+        MinecraftForge.EVENT_BUS.addListener(denyLower);
+        try {
+            lower.extractAt(0);
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(denyLower);
+        }
+
+        helper.assertBlockPresent(ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        check(lower.isEmpty(), "The kept block held on to its bars");
+        check(helper.getLevel().getBlockEntity(upperPos) == null,
+                "The block above a kept block was not brought down");
         helper.succeed();
     }
 

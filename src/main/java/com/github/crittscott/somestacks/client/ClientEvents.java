@@ -14,7 +14,6 @@ import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -109,16 +108,16 @@ public final class ClientEvents {
 
     public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
         ModNetworking.CHANNEL.sendToServer(
-                new PlaceAndDepositPkt(stackMode.toBlockType(), face, InteractionHand.MAIN_HAND, placePos)
+                new PlaceAndDepositPkt(stackMode.toBlockType(), face, placePos)
         );
     }
 
     public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        ModNetworking.CHANNEL.sendToServer(new DepositPkt(InteractionHand.MAIN_HAND, pos, clickedPos));
+        ModNetworking.CHANNEL.sendToServer(new DepositPkt(pos, clickedPos));
     }
 
     public static void sendExtract(BlockPos pos, int index) {
-        ModNetworking.CHANNEL.sendToServer(new ExtractPkt(InteractionHand.MAIN_HAND, pos, index));
+        ModNetworking.CHANNEL.sendToServer(new ExtractPkt(pos, index));
     }
 
     public static void sendRotateBlock(BlockPos pos) {

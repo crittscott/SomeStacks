@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,7 +25,6 @@ class PacketCodecTest {
                 new PlaceAndDepositPkt(
                         BlockType.SINGLES_STACK,
                         Direction.NORTH,
-                        InteractionHand.OFF_HAND,
                         new BlockPos(12, -4, 91)),
                 PlaceAndDepositPkt::encode,
                 PlaceAndDepositPkt::decode);
@@ -35,10 +33,7 @@ class PacketCodecTest {
     @Test
     void depositRoundTrips() {
         assertRoundTrip(
-                new DepositPkt(
-                        InteractionHand.MAIN_HAND,
-                        new BlockPos(-3, 70, 4),
-                        new BlockPos(-3, 69, 4)),
+                new DepositPkt(new BlockPos(-3, 70, 4), new BlockPos(-3, 69, 4)),
                 DepositPkt::encode,
                 DepositPkt::decode);
     }
@@ -46,7 +41,7 @@ class PacketCodecTest {
     @Test
     void extractRoundTrips() {
         assertRoundTrip(
-                new ExtractPkt(InteractionHand.OFF_HAND, new BlockPos(2, 8, -5), 63),
+                new ExtractPkt(new BlockPos(2, 8, -5), 63),
                 ExtractPkt::encode,
                 ExtractPkt::decode);
     }

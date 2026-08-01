@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
@@ -8,10 +9,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -346,13 +347,17 @@ public class SinglesStackBE extends BlockEntity {
      * Publishes one block's settled contents. An emptied block removes itself, except while another
      * Singles Stack sits directly above it: severing a column there would strand the run above with
      * nothing to fall onto. Removing a block therefore clears any empty blocks it was covering.
+     *
+     * <p>A block protection refuses to remove stays, and publishes as the empty block it now is.
      */
     private void publishColumnEdit(Level columnLevel) {
         clearEmptyCubeRotations();
 
-        if (isEmpty() && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)) {
-            columnLevel.setBlock(getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-            removeEmptyBelow(columnLevel, getBlockPos().below());
+        if (isEmpty()
+                && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
+                && columnLevel instanceof ServerLevel serverLevel
+                && Protection.removeChecked(serverLevel, getBlockPos())) {
+            removeEmptyBelow(serverLevel, getBlockPos().below());
             return;
         }
 
@@ -360,11 +365,14 @@ public class SinglesStackBE extends BlockEntity {
         schedulePublish();
     }
 
-    private static void removeEmptyBelow(Level columnLevel, BlockPos pos) {
+    /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
+    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos) {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            columnLevel.setBlock(current, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            if (!Protection.removeChecked(columnLevel, current)) {
+                return;
+            }
             current = current.below();
         }
     }

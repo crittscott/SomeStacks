@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -35,8 +34,10 @@ public class TogglePermanentPkt {
 
             if (Protection.isProtected(sp, msg.pos)) return;
 
-            // The gesture is a main-hand click with an empty hand.
-            if (!Protection.mayInteract(sp, msg.pos, InteractionHand.MAIN_HAND)) return;
+            // Consulted but not claimed: the gesture is an empty-hand click, and the vanilla
+            // interaction that follows it reaches the stack's own use handler, which takes the
+            // click and does nothing. There is no held item for it to spend.
+            if (!Protection.mayInteract(sp, msg.pos)) return;
 
             if (!PacketBoundary.mainHandEmpty(sp)) return;
 

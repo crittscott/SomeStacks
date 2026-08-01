@@ -20,7 +20,9 @@ import java.util.UUID;
  * the held item is not also placed or used against the position the interaction just changed.
  *
  * <p>The mark lives for one tick and is held in memory, keyed by player: it describes an
- * in-flight interaction, not player state worth saving.
+ * in-flight interaction, not player state worth saving. {@link Protection} owns when one is
+ * placed, and is the only caller of {@link #suppress}; see its class documentation for why the
+ * ordering against the protection consults matters.
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class RightClickBlockSuppressor {
@@ -32,7 +34,7 @@ public final class RightClickBlockSuppressor {
     private RightClickBlockSuppressor() {
     }
 
-    public static void suppress(Player player, BlockPos pos, Level level) {
+    static void suppress(Player player, BlockPos pos, Level level) {
         if (level.isClientSide) return;
 
         marks.put(player.getUUID(), new Mark(level.getGameTime(), pos.asLong()));

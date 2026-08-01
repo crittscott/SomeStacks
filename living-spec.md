@@ -119,17 +119,25 @@ Block entity NBT and update packets contain the visible inventory.
 - Singles also persists block rotation and 64 per-item rotations.
 - Bar has no additional persistent presentation state.
 
-Storage has a full-block shape. Singles and Bar derive their outline and collision shapes from occupied cells while retaining a full-block interaction shape.
+All three types are waterloggable. A stack placed into water keeps it, whether the placement came from a player gesture or from capability-driven growth.
+
+Storage has a full-block shape. Singles and Bar derive their outline and collision shapes from occupied cells while retaining a full-block interaction shape. An empty Singles or Bar block therefore shows no highlight box but can still be clicked and broken. Neither type is passable to mob pathfinding, and neither suffocates a player standing in its empty space.
 
 Occupied slots containing `BlockItem`s emit light. Each contributes one quarter of that block's default light emission; the sum is capped at 15. The item count inside a Storage slot does not multiply its contribution.
 
-Breaking or replacing any stack block drops the contents of that block. Mod-driven removal follows the pile and column rules above.
+Breaking or replacing any stack block drops the contents of that block. Mod-driven removal follows the pile and column rules above, and answers to protection as growth does: it consults the level's fake player and reports a break event. A refused removal leaves the emptied block standing, and the run carries on around it. Bars still collapse onto a seam whose block was kept, because moving them is an inventory edit rather than a world edit.
 
 ## Networking and protection
 
 Client-to-server packets cover placement and deposit, deposit, extraction, block rotation, item rotation, and permanent-mode changes. Server-to-client packets cover synchronized configuration and render-override commands. Packets received from the wrong logical side are rejected.
 
-The server validates the sender, that the sender is not a spectator, the loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, whether the first deposit would succeed, and Forge's block-place event.
+Every gesture is a main-hand gesture. No packet carries a hand.
+
+The server validates the sender, that the sender is not a spectator, the loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. A deposit reached through a click on a neighbouring block consults both that block and the stack. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, whether the first deposit would succeed, and Forge's block-place event.
+
+A gesture claims the click it displaces, so the vanilla interaction that follows in the same tick cannot act on the same position. The consults above fire the very event that claim suppresses, so they always run first.
+
+A deposit by a player in creative mode fills the stack without spending the held stack.
 
 The server synchronizes stack-type enable flags and server render overrides on login and server-config reload. Blacklists and pile settings remain server-side.
 
@@ -226,7 +234,7 @@ Generated override files are output only; they are not an active override layer.
 
 ## Automated verification
 
-The suite contains 51 JUnit tests and 77 Forge GameTests.
+The suite contains 51 JUnit tests and 82 Forge GameTests.
 
 JUnit covers registry-independent logic under `src/test/java` and runs with `build`. Forge GameTests cover registered game objects, levels, block entities, capabilities, events, packets, persistence, growth, gravity, protection, and synchronization. `runGameTestServer` runs the GameTests.
 

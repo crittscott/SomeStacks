@@ -4,12 +4,10 @@ import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -37,10 +35,10 @@ public class RotateBlockPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            if (Protection.isProtected(sp, msg.pos)) return;
-
-            // The gesture is a main-hand click holding a redstone torch.
-            if (!Protection.mayInteract(sp, msg.pos, InteractionHand.MAIN_HAND)) return;
+            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
+            // that item on the block. Claiming the click denies the use-item-on packet that
+            // follows, so the rotation does not also place the torch against the stack.
+            if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
 
             if (!PacketBoundary.holdsInMainHand(sp, Items.REDSTONE_TORCH)) return;
 
@@ -58,11 +56,6 @@ public class RotateBlockPkt {
             } else {
                 return;
             }
-
-            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
-            // that item on the block. Deny the use-item-on packet that follows so the rotation does
-            // not also place the torch against the stack.
-            RightClickBlockSuppressor.suppress(sp, msg.pos, level);
 
             sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
         });

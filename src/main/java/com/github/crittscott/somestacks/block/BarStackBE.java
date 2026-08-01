@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
@@ -9,10 +10,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -286,9 +287,17 @@ public class BarStackBE extends BlockEntity {
             boolean[] after = BarCubeIdx.topLayerOccupancy(be.items);
             BlockPos abovePos = be.getBlockPos().above();
 
-            if (be.isEmpty()) {
+            // A refused removal leaves an empty block standing, and the walk carries on regardless:
+            // an empty seam holds nothing up either way, so the bars above still come down. Only
+            // the block's going is protection's to decide.
+            //
+            // The flag is raised first because the removal runs onRemove, which reads it to know
+            // the cascade is already walking its own way up, and lowered again if nothing went.
+            if (be.isEmpty() && columnLevel instanceof ServerLevel serverLevel) {
                 be.removedByCascade = true;
-                columnLevel.setBlock(be.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                if (!Protection.removeChecked(serverLevel, be.getBlockPos())) {
+                    be.removedByCascade = false;
+                }
             }
 
             if (Arrays.equals(before, after)) {

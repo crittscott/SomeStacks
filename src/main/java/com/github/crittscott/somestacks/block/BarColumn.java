@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -417,7 +417,8 @@ public final class BarColumn {
 
         BlockPos above = topPos().above();
         ServerPlayer editor = FakePlayerFactory.getMinecraft(serverLevel);
-        BlockState newStack = ModRegistry.BAR_STACK_BLOCK.get().defaultBlockState();
+        BlockState newStack = StackPlacement.stateFor(
+                ModRegistry.BAR_STACK_BLOCK.get(), serverLevel, above);
         if (!Protection.placeChecked(
                 editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
@@ -482,6 +483,9 @@ public final class BarColumn {
     /**
      * Removes the empty blocks at the top of the column. Nothing sits above them, so no seam and no
      * bar depends on their going.
+     *
+     * <p>Protection can refuse a removal, and the walk stops there rather than skipping past it:
+     * the column keeps every block from the refused one down, so what it holds is what stands.
      */
     private void trimEmptyTop() {
         int keep = blocks.size();
@@ -489,9 +493,17 @@ public final class BarColumn {
             keep--;
         }
 
-        for (int i = blocks.size() - 1; i >= keep; i--) {
-            level.setBlock(blocks.get(i).getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
         }
-        blocks.subList(keep, blocks.size()).clear();
+
+        int removedDownTo = blocks.size();
+        for (int i = blocks.size() - 1; i >= keep; i--) {
+            if (!Protection.removeChecked(serverLevel, blocks.get(i).getBlockPos())) {
+                break;
+            }
+            removedDownTo = i;
+        }
+        blocks.subList(removedDownTo, blocks.size()).clear();
     }
 }

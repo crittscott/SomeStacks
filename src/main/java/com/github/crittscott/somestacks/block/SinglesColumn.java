@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -400,7 +401,8 @@ public final class SinglesColumn {
 
         BlockPos above = topPos().above();
         ServerPlayer editor = FakePlayerFactory.getMinecraft(serverLevel);
-        BlockState newStack = ModRegistry.SINGLES_STACK_BLOCK.get().defaultBlockState();
+        BlockState newStack = StackPlacement.stateFor(
+                ModRegistry.SINGLES_STACK_BLOCK.get(), serverLevel, above);
         if (!Protection.placeChecked(
                 editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
             return false;

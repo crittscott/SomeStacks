@@ -6,7 +6,6 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.RightClickBlockSuppressor;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
@@ -25,27 +24,21 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DepositPkt {
-    private final InteractionHand hand;
     private final BlockPos pos;
     private final BlockPos clickedPos;
 
-    public DepositPkt(InteractionHand hand, BlockPos pos, BlockPos clickedPos) {
-        this.hand = hand;
+    public DepositPkt(BlockPos pos, BlockPos clickedPos) {
         this.pos = pos;
         this.clickedPos = clickedPos;
     }
 
     public static void encode(DepositPkt msg, FriendlyByteBuf buf) {
-        buf.writeEnum(msg.hand);
         buf.writeBlockPos(msg.pos);
         buf.writeBlockPos(msg.clickedPos);
     }
 
     public static DepositPkt decode(FriendlyByteBuf buf) {
-        return new DepositPkt(
-                buf.readEnum(InteractionHand.class),
-                buf.readBlockPos(),
-                buf.readBlockPos());
+        return new DepositPkt(buf.readBlockPos(), buf.readBlockPos());
     }
 
     public static void handle(DepositPkt msg, Supplier<NetworkEvent.Context> ctx) {
@@ -60,32 +53,35 @@ public class DepositPkt {
     }
 
     public static void apply(ServerPlayer sp, DepositPkt msg) {
-        if (Protection.isProtected(sp, msg.pos)) {
-            return;
-        }
-
-        if (!Protection.mayInteract(sp, msg.pos, msg.hand)) {
-            return;
-        }
-
         Level level = sp.level();
+
+        // A deposit reaches the stack either from a click on it or from a click on the block beside
+        // it; nothing further apart is a gesture.
+        boolean adjacent = !msg.clickedPos.equals(msg.pos);
+        if (adjacent && msg.clickedPos.distManhattan(msg.pos) != 1) {
+            return;
+        }
+
+        // Both the stack and the block the player actually clicked, because the two can fall on
+        // opposite sides of a protection boundary and the click lands on the latter. The mark goes
+        // on the clicked position: a deposit takes at most one item from a Singles or Bar hand and
+        // leaves the rest for the vanilla interaction to use there.
+        if (!Protection.claimInteraction(
+                sp, msg.clickedPos, adjacent ? new BlockPos[] {msg.pos, msg.clickedPos}
+                                             : new BlockPos[] {msg.pos})) {
+            return;
+        }
+
         Block block = level.getBlockState(msg.pos).getBlock();
-        ItemStack handStack = sp.getItemInHand(msg.hand);
+
+        // A creative player keeps what they deposit, the way vanilla placement leaves their stack
+        // untouched, so the deposit works from a copy and the hand is never written back.
+        boolean creative = sp.getAbilities().instabuild;
+        ItemStack held = sp.getMainHandItem();
+        ItemStack handStack = creative ? held.copy() : held;
 
         if (handStack.isEmpty()) {
             return;
-        }
-
-        // The gesture claimed the click, so the vanilla interaction the client still sends for it
-        // must not also run: a deposit takes at most one item from a Singles or Bar hand and leaves
-        // the rest for that interaction to use against the clicked block. The mark goes on the
-        // clicked position, which is the deposit target when the player aimed at the stack and its
-        // neighbour when they aimed at the block beside it; nothing further apart is a gesture.
-        //
-        // It goes here rather than earlier because the consults above fire the very event the mark
-        // vetoes, and a deposit into the clicked block would otherwise refuse itself.
-        if (msg.clickedPos.equals(msg.pos) || msg.clickedPos.distManhattan(msg.pos) == 1) {
-            RightClickBlockSuppressor.suppress(sp, msg.clickedPos, level);
         }
 
         if (ItemOps.checkDisabledModAndNotify(handStack, sp)) {
@@ -100,7 +96,7 @@ public class DepositPkt {
 
         if (block == ModRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE sbe) {
             int deposited = sbe.deposit(handStack, sp);
-            sp.setItemInHand(msg.hand, handStack);
+            returnToHand(sp, creative, handStack);
 
             if (deposited > 0) {
                 level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
@@ -119,7 +115,7 @@ public class DepositPkt {
 
             // Grounding is left to depositAt, which is the only caller holding the seam beneath.
             boolean deposited = ssbe.depositAt(index, handStack);
-            sp.setItemInHand(msg.hand, handStack);
+            returnToHand(sp, creative, handStack);
 
             if (deposited) {
                 level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
@@ -138,11 +134,21 @@ public class DepositPkt {
 
             // Grounding is left to depositAt, which is the only caller holding the seam beneath.
             boolean deposited = barbe.depositAt(index, handStack);
-            sp.setItemInHand(msg.hand, handStack);
+            returnToHand(sp, creative, handStack);
 
             if (deposited) {
                 level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
             }
+        }
+    }
+
+    /**
+     * Writes back what the deposit left of the hand stack. A creative deposit worked from a copy,
+     * so there is nothing to write back and the real stack stands untouched.
+     */
+    private static void returnToHand(ServerPlayer sp, boolean creative, ItemStack handStack) {
+        if (!creative) {
+            sp.setItemInHand(InteractionHand.MAIN_HAND, handStack);
         }
     }
 }
