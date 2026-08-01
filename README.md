@@ -76,4 +76,4 @@ Please report bugs and ideas on the [issue tracker](https://github.com/crittscot
 
 ## License
 
-All Rights Reserved. Please do not redistribute the jar or include it in a modpack without permission.
+[GNU General Public License v3.0](LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.
