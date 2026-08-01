@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -15,8 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-
-import com.github.crittscott.somestacks.util.BarCubeIdx;
 
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 

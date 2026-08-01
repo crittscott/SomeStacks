@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
+import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.StackSoundData;
@@ -39,9 +39,9 @@ public class SomeStacks {
         ModNetworking.init();
         modBus.addListener(this::onConfigLoad);
         modBus.addListener(this::onConfigReload);
+        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
-        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(RenderGalleryGenerator::onServerTick);
         MinecraftForge.EVENT_BUS.addListener(ServerConfig::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
@@ -49,10 +49,6 @@ public class SomeStacks {
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new StackSoundData());
-    }
-
-    private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        sendConfigSync((ServerPlayer) event.getEntity());
     }
 
     private void onConfigLoad(ModConfigEvent.Loading event) {
@@ -82,6 +78,14 @@ public class SomeStacks {
         });
     }
 
+    private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        sendConfigSync((ServerPlayer) event.getEntity());
+    }
+
+    private void onRegisterCommands(RegisterCommandsEvent event) {
+        SsCommand.register(event.getDispatcher());
+    }
+
     private void sendConfigSync(ServerPlayer player) {
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), buildConfigSync());
     }
@@ -104,9 +108,5 @@ public class SomeStacks {
                 ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get(),
                 ServerConfig.ENABLE_BAR_STACK_BLOCK.get(),
                 ServerOverridesLoader.load());
-    }
-
-    private void onRegisterCommands(RegisterCommandsEvent event) {
-        SsCommand.register(event.getDispatcher());
     }
 }

@@ -1,11 +1,11 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.block.BarStackBlock;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.BarStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;

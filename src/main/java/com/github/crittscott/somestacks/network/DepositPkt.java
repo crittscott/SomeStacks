@@ -1,11 +1,11 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
