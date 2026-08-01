@@ -43,23 +43,28 @@ import java.util.stream.Collectors;
  * The {@code ss} command: render override authoring, test wall generation, server list
  * editing, and override reloading.
  *
- * <p>The render subcommands, {@code item} and {@code write}, are issued against the sender's own
- * view, so they are player-only and gated by the {@code ss_command_allowlist} server config list.
- * The rest act on the server and are gated by operator permission level; of those, only the two
- * wall generators need a player, because a wall is built where the sender stands.
+ * <p>Everything here is an administrative tool, so every subcommand but {@code help} answers to a
+ * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
+ * against the sender's own view and so are player-only on top of that; the two wall generators
+ * need a player because a wall is built where the sender stands.
  *
- * <p>Gating the list editors on operator permission rather than on the allow list is what makes
- * an empty allow list recoverable: the list is empty by default, so a gate that consulted it
- * could never be opened from in game.
+ * <p>The wall generators sit a level above the rest. They overwrite a region of the world outright,
+ * without the protection consults a placement gesture answers to, which is a wider authority than
+ * editing config or tuning how an item is drawn.
  *
  * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
  * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
  */
 public final class SsCommand {
-    /** Vanilla's gamerule and op-command level, the gate on the administrative subcommands. */
+    /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
     private static final int ADMIN_PERMISSION_LEVEL = 2;
 
-    private static final String ALLOWLIST_LABEL = "ss allow list";
+    /**
+     * Vanilla's server-administration level, the gate on the test wall commands. An operator holds
+     * it under the default {@code op-permission-level}, so this costs an admin nothing; it excludes
+     * whatever a server has handed the lower level to.
+     */
+    private static final int WALL_PERMISSION_LEVEL = 3;
     private static final String DISABLED_MODS_LABEL = "disabled mod list";
     private static final String DISABLED_ITEMS_LABEL = "disabled item list";
     private static final String GEN_MODS_LABEL = "gen mod list";
@@ -75,7 +80,7 @@ public final class SsCommand {
         dispatcher.register(
                 Commands.literal("ss")
                         .then(Commands.literal("item")
-                                .requires(SsCommand::isPlayer)
+                                .requires(SsCommand::isAdminPlayer)
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .then(Commands.literal("reset")
@@ -103,7 +108,6 @@ public final class SsCommand {
                         .then(Commands.literal("reload")
                                 .requires(SsCommand::isAdmin)
                                 .executes(SsCommand::reload))
-                        .then(allowTree())
                         .then(genTree())
                         .then(denyTree())
                         .then(ingotTree())
@@ -132,15 +136,15 @@ public final class SsCommand {
      * carries an {@code items} form on top of this, which the ingot tree has no use for: the
      * ingots of a pack are few enough to review a namespace at a time.
      *
-     * <p>Operator-gated rather than allow-listed, and player-only because the wall is built where
-     * the sender stands. A wall is not a view: it overwrites a large region of the world outright,
-     * without the protection consults a placement gesture answers to. That is an operator's
-     * authority, not the authority to tune how items are drawn for oneself.
+     * <p>Held a permission level above the rest of {@code ss}, and player-only because the wall is
+     * built where the sender stands. A wall is not a view: it overwrites a large region of the
+     * world outright, without the protection consults a placement gesture answers to. That is a
+     * wider authority than editing a server list or tuning how items are drawn for oneself.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> testTree(
             String name, TestWallGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> isPlayer(source) && isAdmin(source))
+                .requires(source -> isPlayer(source) && source.hasPermission(WALL_PERMISSION_LEVEL))
                 .then(Commands.literal("all")
                         .executes(ctx -> testAll(ctx, kind)))
                 .then(Commands.literal("list")
@@ -159,7 +163,7 @@ public final class SsCommand {
      */
     private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
         return Commands.literal("write")
-                .requires(SsCommand::isPlayer)
+                .requires(SsCommand::isAdminPlayer)
                 .then(Commands.literal("changed")
                         .executes(SsCommand::writeChanged))
                 .then(Commands.literal("all")
@@ -172,34 +176,10 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code ss allow} subtree, editing which players may use the render subcommands. Adding
-     * completes over the players currently online, since a name reaches the list before its owner
-     * has ever needed it; removing completes over the list itself.
-     */
-    private static LiteralArgumentBuilder<CommandSourceStack> allowTree() {
-        return Commands.literal("allow")
-                .requires(SsCommand::isAdmin)
-                .then(Commands.literal("add")
-                        .then(Commands.argument("name", StringArgumentType.word())
-                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                        ctx.getSource().getOnlinePlayerNames(), builder))
-                                .executes(ctx -> addEntry(ctx, ServerConfig.SS_COMMAND_ALLOWLIST, ALLOWLIST_LABEL,
-                                        StringArgumentType.getString(ctx, "name")))))
-                .then(Commands.literal("remove")
-                        .then(Commands.argument("name", StringArgumentType.word())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.SS_COMMAND_ALLOWLIST, builder))
-                                .executes(ctx -> removeEntry(ctx, ServerConfig.SS_COMMAND_ALLOWLIST, ALLOWLIST_LABEL,
-                                        StringArgumentType.getString(ctx, "name")))))
-                .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.SS_COMMAND_ALLOWLIST, ALLOWLIST_LABEL, true)));
-    }
-
-    /**
      * The {@code ss gen} subtree, editing the two lists the wall commands build from: the
      * namespaces of {@code ss test list} and {@code ss testingot list}, and the items of
-     * {@code ss test items}. These are operator commands like the other list editors, because they
-     * edit server config rather than the issuing player's view; running the walls they describe
-     * stays with the allow list.
+     * {@code ss test items}. Describing a wall is an ordinary config edit and sits with the other
+     * list editors; building the wall it describes needs the higher level the wall commands hold.
      *
      * <p>Adding a namespace completes over those that have items at all rather than over one
      * kind's, since the one list serves both kinds and a namespace with no ingots is still worth
@@ -328,24 +308,11 @@ public final class SsCommand {
     }
 
     /**
-     * Gate the render subcommands on the {@code ss_command_allowlist} server config list. A player
-     * not on it is given the command an operator runs to add them. Returns whether the command may
-     * proceed.
+     * The gate on the render subcommands: they configure the server's rendering, which is an
+     * operator's job, and they act on the sender's own view, which needs a sender to have one.
      */
-    private static boolean checkAllowed(CommandContext<CommandSourceStack> ctx) {
-        if (!(ctx.getSource().getEntity() instanceof ServerPlayer player)) {
-            ctx.getSource().sendFailure(Component.literal("This /ss subcommand must be run by a player"));
-            return false;
-        }
-
-        String name = player.getGameProfile().getName();
-        if (ServerConfig.isSsAllowed(name)) {
-            return true;
-        }
-
-        ctx.getSource().sendFailure(Component.literal(
-                "You are not permitted to use /ss. Ask a server operator to run: /ss allow add " + name));
-        return false;
+    private static boolean isAdminPlayer(CommandSourceStack source) {
+        return isPlayer(source) && isAdmin(source);
     }
 
     private static CompletableFuture<Suggestions> suggestEntries(
@@ -402,7 +369,6 @@ public final class SsCommand {
 
     private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, float[] offset)
             throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
@@ -429,7 +395,6 @@ public final class SsCommand {
     }
 
     private static int resetItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
@@ -765,14 +730,12 @@ public final class SsCommand {
     }
 
     private static int writeChanged(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), WriteOverridesPkt.userLayer());
         return 1;
     }
 
     private static int dumpSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectSingle(ctx, DUMP_KIND, StringArgumentType.getString(ctx, "modid"));
@@ -780,7 +743,6 @@ public final class SsCommand {
     }
 
     private static int dumpAll(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectAll(ctx, DUMP_KIND);
@@ -788,7 +750,6 @@ public final class SsCommand {
     }
 
     private static int dumpList(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!checkAllowed(ctx)) return 0;
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         Selection selection = selectList(ctx, DUMP_KIND);

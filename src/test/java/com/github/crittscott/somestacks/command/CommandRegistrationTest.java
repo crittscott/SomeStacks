@@ -23,7 +23,7 @@ class CommandRegistrationTest {
 
         assertEquals(Set.of(
                         "item", "test", "testingot", "write", "reload",
-                        "allow", "gen", "deny", "ingot", "help"),
+                        "gen", "deny", "ingot", "help"),
                 ss.getChildren().stream()
                         .map(CommandNode::getName)
                         .collect(Collectors.toUnmodifiableSet()));

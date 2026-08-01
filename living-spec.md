@@ -1,6 +1,6 @@
 # Some Stacks Living Specification
 
-This document summarizes the mod's architecture, user-visible rules, persistent state, configuration, and data formats. The code is authoritative for implementation details. This document is updated after changes to the code and is always somewhat inconsistent with the code; the code wins, always.
+This document summarizes the mod's architecture, user-visible rules, persistent state, configuration, and data formats. The code is authoritative for implementation details. **This document is updated after changes to the code and is always somewhat inconsistent with the code; the code wins, always.**
 
 This document is not, and should not become, a prose version of the code, nor does it contain history, what was changed and why, nor potential future changes or plans.
 
@@ -202,30 +202,30 @@ Bar appearance is client-side resource data loaded from `assets/*/textures/bars/
 | Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces. |
 | Disabled items | empty | Rejects those item ids on player deposit paths. |
 | Ingot tags | `forge:ingots*`, `somestacks:ingots` | Defines Bar-valid items and, by complement, items excluded from Singles. |
-| `ss` command allow list | empty | Names players permitted to use client render commands. |
 | Test wall placements per tick | `64` | Throttles `ss test` and `ss testingot` world edits. |
 | Gen mods | empty | Ordered namespaces used by test-wall `list` commands. |
 | Gen items | empty | Items used by `ss test items`. |
 
-Operators edit the six text lists through `ss allow`, `ss gen`, `ss deny`, and `ss ingot`. Command edits update both the running values and the config file. Direct file edits apply through Forge's config reload.
+Operators edit the five text lists through `ss gen`, `ss deny`, and `ss ingot`. Command edits update both the running values and the config file. Direct file edits apply through Forge's config reload.
 
 ## The `ss` command
 
-`ss` combines player render tools, operator administration, and unrestricted help.
+`ss` is an administrative command throughout: render authoring, world-building test walls, server list editing, and unrestricted help.
+
+Gates are vanilla permission levels. Level 2 is the gamerule and world-editing level; level 3 is the server-administration level, which an operator holds under the default `op-permission-level`.
 
 | Command | Gate | Purpose |
 | --- | --- | --- |
-| `ss item <item> <mode> [...]` | Player in allow list | Set an in-memory user render override. |
-| `ss item <item> reset` | Player in allow list | Remove a user render override. |
-| `ss write changed` | Player in allow list | Write user overrides to `config/somestacks/item_overrides.json`. |
-| `ss write <modid\|all\|list>` | Player in allow list | Write resolved namespace profiles under `config/somestacks/generated_overrides/`. |
-| `ss test <modid\|all\|list\|items>` | Operator player | Build Storage Stack render-review walls. |
-| `ss testingot <modid\|all\|list>` | Operator player | Build Bar Stack render-review walls. |
-| `ss allow add\|remove\|list` | Operator | Edit the render-command allow list. |
-| `ss gen mod|item add\|remove\|list` | Operator | Edit test-wall namespace and item lists. |
-| `ss deny mod|item add\|remove\|list` | Operator | Edit disabled namespace and item lists. |
-| `ss ingot add\|remove\|list` | Operator | Edit ingot-tag patterns. |
-| `ss reload` | Operator | Reload server render overrides and resend synchronized configuration. |
+| `ss item <item> <mode> [...]` | Level 2 player | Set an in-memory user render override. |
+| `ss item <item> reset` | Level 2 player | Remove a user render override. |
+| `ss write changed` | Level 2 player | Write user overrides to `config/somestacks/item_overrides.json`. |
+| `ss write <modid\|all\|list>` | Level 2 player | Write resolved namespace profiles under `config/somestacks/generated_overrides/`. |
+| `ss test <modid\|all\|list\|items>` | Level 3 player | Build Storage Stack render-review walls. |
+| `ss testingot <modid\|all\|list>` | Level 3 player | Build Bar Stack render-review walls. |
+| `ss gen mod|item add\|remove\|list` | Level 2 | Edit test-wall namespace and item lists. |
+| `ss deny mod|item add\|remove\|list` | Level 2 | Edit disabled namespace and item lists. |
+| `ss ingot add\|remove\|list` | Level 2 | Edit ingot-tag patterns. |
+| `ss reload` | Level 2 | Reload server render overrides and resend synchronized configuration. |
 | `ss help [command]` | None | Show command forms, gates, and summaries. |
 
 Test-wall commands overwrite their floor and stack positions directly and do not apply ordinary placement protections. Large walls are spread across ticks by the configured placement limit.

@@ -33,15 +33,12 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> INGOT_TAGS;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> SS_COMMAND_ALLOWLIST;
-
     public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_ITEMS;
 
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
-    private static volatile Set<String> ssAllowlist = Set.of();
     private static volatile Set<Item> ingotItems = Set.of();
     private static final AtomicInteger ingotGeneration = new AtomicInteger();
 
@@ -111,19 +108,6 @@ public final class ServerConfig {
 
         builder.pop();
 
-        builder.comment("Command Configuration").push("commands");
-
-        SS_COMMAND_ALLOWLIST = builder
-                .comment("Player names permitted to use the /ss render-tuning command.",
-                        "Empty by default: no one may use /ss until a name is added here.",
-                        "In single player, add your own name.",
-                        "Names must be quoted: [\"Alice\", \"Bob\"]")
-                .defineList("ss_command_allowlist",
-                        Collections.emptyList(),
-                        obj -> obj instanceof String);
-
-        builder.pop();
-
         builder.comment("Test Wall Configuration").push("test_wall");
 
         TEST_WALL_PLACEMENTS_PER_TICK = builder
@@ -157,9 +141,9 @@ public final class ServerConfig {
 
     /**
      * Resolves the server's free-form text lists into lookup sets: the disabled-mod and
-     * disabled-item compatibility lists, the ingot tag list, and the {@code ss} command allow list.
-     * Mod ids and player names are lowercased and item ids are parsed once here; a malformed item id
-     * is reported and dropped rather than being re-parsed and swallowed on every deposit.
+     * disabled-item compatibility lists, and the ingot tag list. Mod ids are lowercased and item ids
+     * are parsed once here; a malformed item id is reported and dropped rather than being re-parsed
+     * and swallowed on every deposit.
      *
      * <p>Runs on the server thread whenever there is one: the {@code ss} list-editing commands are
      * already there, and the config reload event hands this off to it, because resolving the ingot
@@ -186,21 +170,11 @@ public final class ServerConfig {
             items.add(itemId);
         }
 
-        Set<String> allowed = new HashSet<>();
-        for (String entry : SS_COMMAND_ALLOWLIST.get()) {
-            String name = entry.trim().toLowerCase(Locale.ROOT);
-            if (!name.isEmpty()) {
-                allowed.add(name);
-            }
-        }
-
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
-        ssAllowlist = Set.copyOf(allowed);
 
-        SomeStacks.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s), "
-                        + "{} player(s) allowed to use /ss",
-                disabledMods.size(), disabledItems.size(), ssAllowlist.size());
+        SomeStacks.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s)",
+                disabledMods.size(), disabledItems.size());
 
         bakeIngotItems();
     }
@@ -341,11 +315,6 @@ public final class ServerConfig {
     /** Whether the item registered as {@code itemId} is barred from stacks. */
     public static boolean isItemDisabled(ResourceLocation itemId) {
         return disabledItems.contains(itemId);
-    }
-
-    /** Whether {@code playerName}, in any case, may use the render subcommands of {@code ss}. */
-    public static boolean isSsAllowed(String playerName) {
-        return ssAllowlist.contains(playerName.toLowerCase(Locale.ROOT));
     }
 
     /** Whether {@code item} is an ingot, which is what a Bar Stack holds and a Singles Stack refuses. */
