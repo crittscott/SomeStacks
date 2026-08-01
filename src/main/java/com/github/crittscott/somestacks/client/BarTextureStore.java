@@ -109,7 +109,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             }
         });
 
-        SomeStacks.LOGGER.debug("Read {} bar texture mappings", configMap.size());
         return configMap;
     }
 
@@ -156,8 +155,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             }
 
             textureMap.put(itemLoc, data);
-            SomeStacks.LOGGER.debug("  {} -> texture: {}, tint: #{}",
-                    itemLoc, data.texture(), String.format("%08X", data.color()));
         }
 
         SomeStacks.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
@@ -165,14 +162,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     private static int calculateTintFromItemTexture(ResourceLocation itemLoc, ResourceManager resourceManager) {
-        SomeStacks.LOGGER.debug("Auto-calculating tint for {}", itemLoc);
         try {
             Item item = ForgeRegistries.ITEMS.getValue(itemLoc);
             if (item == null) {
-                SomeStacks.LOGGER.debug("  Item not found in registry, returning WHITE");
                 return BarTextureData.WHITE;
             }
-            SomeStacks.LOGGER.debug("  Found item: {}", item.getClass().getSimpleName());
 
             ItemStack stack = new ItemStack(item);
 
@@ -181,9 +175,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             int spriteColor = averageSpriteColor(stack, resourceManager);
             int itemColor = registeredItemColor(stack);
             int tint = multiplyColors(spriteColor, itemColor);
-            SomeStacks.LOGGER.debug("  Sprite #{} x item color #{} -> tint #{}",
-                    String.format("%08X", spriteColor), String.format("%08X", itemColor),
-                    String.format("%08X", tint));
             return tint;
         } catch (Exception e) {
             SomeStacks.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
@@ -200,27 +191,21 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static int averageSpriteColor(ItemStack stack, ResourceManager resourceManager) {
         Minecraft mc = Minecraft.getInstance();
         BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
-        SomeStacks.LOGGER.debug("  Got BakedModel: {}", model.getClass().getSimpleName());
 
         TextureAtlasSprite sprite = model.getParticleIcon();
         if (sprite == null) {
-            SomeStacks.LOGGER.debug("  Particle icon is null, returning WHITE");
             return BarTextureData.WHITE;
         }
 
         ResourceLocation spriteName = sprite.contents().name();
-        SomeStacks.LOGGER.debug("  Sprite name: {}", spriteName);
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
-            SomeStacks.LOGGER.debug("  Model carries no texture, returning WHITE");
             return BarTextureData.WHITE;
         }
 
         ResourceLocation texturePath = getTextureResourceLocation(spriteName);
-        SomeStacks.LOGGER.debug("  Texture path: {}", texturePath);
 
         NativeImage image = loadTextureImage(texturePath, resourceManager);
         if (image == null) {
-            SomeStacks.LOGGER.debug("  Failed to load texture image, returning WHITE");
             return BarTextureData.WHITE;
         }
 
@@ -253,23 +238,18 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         try {
             var resource = resourceManager.getResource(texturePath);
             if (resource.isEmpty()) {
-                SomeStacks.LOGGER.debug("  Texture resource not found: {}", texturePath);
                 return null;
             }
 
             try (var inputStream = resource.get().open()) {
-                NativeImage image = NativeImage.read(inputStream);
-                SomeStacks.LOGGER.debug("  Loaded texture: {}x{}", image.getWidth(), image.getHeight());
-                return image;
+                return NativeImage.read(inputStream);
             }
         } catch (Exception e) {
-            SomeStacks.LOGGER.debug("  Failed to load texture {}: {}", texturePath, e.getMessage());
             return null;
         }
     }
 
     private static int analyzePixelsForTint(NativeImage image) {
-        SomeStacks.LOGGER.debug("  Analyzing pixels from image: {}x{}", image.getWidth(), image.getHeight());
         try {
             long sumR = 0, sumG = 0, sumB = 0;
             int count = 0;
@@ -292,10 +272,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 }
             }
 
-            SomeStacks.LOGGER.debug("    Analyzed {} opaque pixels", count);
-
             if (count == 0) {
-                SomeStacks.LOGGER.debug("    No opaque pixels found, returning WHITE");
                 return BarTextureData.WHITE;
             }
 
@@ -303,18 +280,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             int avgG = (int) (sumG / count);
             int avgB = (int) (sumB / count);
 
-            SomeStacks.LOGGER.debug("    Average RGB (raw): R={}, G={}, B={}", avgR, avgG, avgB);
-
             // Brighten to compensate for dark outlines in ingot textures.
             int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
             int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
             int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
 
-            SomeStacks.LOGGER.debug("    Average RGB (brightened): R={}, G={}, B={}", brightR, brightG, brightB);
-
-            int result = 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
-            SomeStacks.LOGGER.debug("    Final color: #{}", String.format("%08X", result));
-            return result;
+            return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
         } catch (Exception e) {
             SomeStacks.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);
             return BarTextureData.WHITE;

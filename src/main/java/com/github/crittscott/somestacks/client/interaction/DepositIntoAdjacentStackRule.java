@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
@@ -25,7 +24,6 @@ public final class DepositIntoAdjacentStackRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        SomeStacks.LOGGER.debug("Executing DepositIntoAdjacentStackRule");
         if (ctx.isClientSide() && ctx.isMainHand()) {
             BlockPos adjacentPos = ctx.getClickedPos().relative(ctx.getFace());
             ClientEvents.sendDeposit(adjacentPos, ctx.getClickedPos());

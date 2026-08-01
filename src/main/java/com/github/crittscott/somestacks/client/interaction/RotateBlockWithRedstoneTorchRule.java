@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import net.minecraft.world.item.Items;
 
@@ -19,7 +18,6 @@ public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        SomeStacks.LOGGER.debug("Executing RotateBlockWithRedstoneTorchRule");
         if (ctx.isClientSide() && ctx.isMainHand()) {
             ClientEvents.sendRotateBlock(ctx.getClickedPos());
         }

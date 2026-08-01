@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import com.github.crittscott.somestacks.util.StackMode;
 
@@ -19,7 +18,6 @@ public final class TogglePermanentRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        SomeStacks.LOGGER.debug("Executing TogglePermanentRule");
         if (ctx.isClientSide() && ctx.isMainHand()) {
             ClientEvents.sendTogglePermanent(ctx.getClickedPos());
         }

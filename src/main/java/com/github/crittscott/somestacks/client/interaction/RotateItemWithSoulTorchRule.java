@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
@@ -27,7 +26,6 @@ public final class RotateItemWithSoulTorchRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        SomeStacks.LOGGER.debug("Executing RotateItemWithSoulTorchRule");
         if (!ctx.isClientSide() || !ctx.isMainHand()) {
             ctx.cancelEvent();
             return;

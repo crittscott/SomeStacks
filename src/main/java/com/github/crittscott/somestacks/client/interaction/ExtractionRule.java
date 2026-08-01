@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -26,7 +25,6 @@ public final class ExtractionRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        SomeStacks.LOGGER.debug("Executing ExtractionRule");
         if (!ctx.isClientSide() || !ctx.isMainHand()) {
             ctx.cancelEvent();
             return;
