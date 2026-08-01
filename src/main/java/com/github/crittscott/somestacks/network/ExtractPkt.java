@@ -19,6 +19,11 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * An extraction from one rendered cell. The client traced the cell, so the index arrives from it
+ * and is range-checked against the block entity it names. What the cell yields follows the type:
+ * Storage gives as much as the hand accepts, Singles and Bar give one item.
+ */
 public record ExtractPkt(BlockPos pos, int index) {
 
     public static void encode(ExtractPkt msg, FriendlyByteBuf buf) {

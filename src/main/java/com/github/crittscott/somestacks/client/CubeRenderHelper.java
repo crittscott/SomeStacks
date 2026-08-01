@@ -39,6 +39,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Draws one stored item inside one cell, in whichever way its render profile asks for. The Storage
+ * and Singles renderers position a cell and delegate here; everything about how the item itself is
+ * presented lives in this class.
+ *
+ * <p>The {@code 3d}, {@code gui}, and {@code block} modes hand off to Minecraft's own renderers.
+ * The {@code 2d} mode is the one implemented here: flat item art projected onto the visible faces
+ * of a small background cube, which is what makes a wall of stored items readable at a distance.
+ */
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 

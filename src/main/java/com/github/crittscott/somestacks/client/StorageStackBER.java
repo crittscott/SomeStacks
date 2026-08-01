@@ -12,6 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * Draws a Storage Stack's 27 stored stacks in their cells. Each occupied slot is placed at its
+ * cell's corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
+ * applies the item's own render profile.
+ *
+ * <p>A slot's item count does not affect what is drawn; one stack is one item's worth of art.
+ */
 public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
     private final BlockRenderDispatcher blockRenderer;
 

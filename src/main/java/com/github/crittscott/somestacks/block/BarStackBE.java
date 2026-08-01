@@ -153,6 +153,7 @@ public class BarStackBE extends BlockEntity {
         return true;
     }
 
+    /** Builds the union of the occupied bars' boxes. */
     public VoxelShape computeShape() {
         VoxelShape shape = Shapes.empty();
 
@@ -166,6 +167,10 @@ public class BarStackBE extends BlockEntity {
         return shape;
     }
 
+    /**
+     * The shape, rebuilt only when contents last invalidated it. Called for every outline,
+     * collision, and pathfinding query, so it is not somewhere to recompute.
+     */
     public VoxelShape getCachedShape() {
         if (cachedShape == null) {
             cachedShape = computeShape();
@@ -173,6 +178,13 @@ public class BarStackBE extends BlockEntity {
         return cachedShape;
     }
 
+    /**
+     * Puts one bar from the given stack into the named position, if that position is empty, valid,
+     * and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
+     * walking positions from the bottom fills the supported ones in order.
+     *
+     * @return whether the bar moved; the hand shrinks by one only then
+     */
     public boolean depositAt(int index, ItemStack fromHand) {
         if (fromHand.isEmpty()) {
             return false;
@@ -364,6 +376,7 @@ public class BarStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
+    /** Pushes this block's contents to everyone tracking it. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();

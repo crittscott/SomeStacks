@@ -25,6 +25,13 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The mod entry point: registers the server config, the blocks and block entities, the network
+ * channel, and the listeners behind sound data, config reloads, login sync, and commands. Client
+ * registration is deferred to {@link ClientSetup} so the dedicated server never touches it.
+ *
+ * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
+ */
 @Mod(SomeStacks.MODID)
 public class SomeStacks {
     public static final String MODID = "somestacks";

@@ -16,6 +16,13 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Rotates a Storage or Singles Stack's layout 90 degrees. Rotation is per block even in a run whose
+ * contents settling moves between blocks.
+ *
+ * <p>The gesture is a sneaking click with a redstone torch in hand, which vanilla would resolve as
+ * placing that torch, so the handler claims the click to deny the placement that would follow.
+ */
 public class RotateBlockPkt {
     private final BlockPos pos;
 

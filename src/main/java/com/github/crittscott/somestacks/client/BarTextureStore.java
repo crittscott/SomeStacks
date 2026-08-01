@@ -24,6 +24,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * What each item's bar looks like, loaded from {@code assets/*}/{@code textures/bars/*.json} and
+ * reloaded with the resource packs. A mapping names a texture and an optional tint; an item no
+ * mapping covers falls back to the base ingot texture with a tint derived from the item's own
+ * sprite.
+ *
+ * <p>This is client resource data and is never synchronized, so two players may see the same bar
+ * differently if their resource packs differ.
+ */
 public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
     private static final Gson GSON = new Gson();
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();

@@ -23,6 +23,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * A deposit into an existing stack. Carries the stack's position and the position actually clicked,
+ * which differ when the gesture reached the stack through a neighbouring block; the server checks
+ * protection at both and writes only the stack.
+ *
+ * <p>The server recomputes the target cell from the player's current view rather than trusting a
+ * cell index from the client, so the packet names none.
+ */
 public class DepositPkt {
     private final BlockPos pos;
     private final BlockPos clickedPos;

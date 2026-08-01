@@ -1,5 +1,13 @@
 package com.github.crittscott.somestacks.util;
 
+/**
+ * What the placement modifier does next, as cycled by the mode gesture: place one of the three
+ * stack types, or toggle a Storage pile's permanence. Client-side selection state only; the server
+ * learns the choice from the packet the gesture sends.
+ *
+ * <p>Toggle Permanent is a mode but not a stack type, so {@link #toBlockType()} rejects it and
+ * {@link #isBlockType()} is how callers ask first.
+ */
 public enum StackMode {
     STORAGE_STACK("somestacks.mode.storage_stack"),
     SINGLES_STACK("somestacks.mode.singles_stack"),

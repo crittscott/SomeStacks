@@ -27,8 +27,21 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
+/**
+ * The Storage Stack block: the world-facing half of {@link StorageStackBE}, holding the block
+ * state, the shapes, and the breaking behaviour. Unlike its Singles and Bar counterparts it keeps a
+ * full-block shape whatever its contents, because its grid always fills the block.
+ *
+ * <p>Breaking drops only this block's own contents. What that does to the rest of the pile, which
+ * may need to settle or shrink around the gap, belongs to {@link StoragePile}.
+ */
 public class StorageStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
+    /**
+     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
+     * block state so lighting updates travel by the ordinary block-state path.
+     */
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public StorageStackBlock(Properties props) {

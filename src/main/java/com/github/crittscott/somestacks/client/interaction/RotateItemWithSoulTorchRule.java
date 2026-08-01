@@ -7,6 +7,10 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.world.item.Items;
 
+/**
+ * Shift plus a soul torch rotates one rendered item within a Singles Stack, leaving the block's own
+ * layout alone. Only Singles carries per-item rotation.
+ */
 public final class RotateItemWithSoulTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {

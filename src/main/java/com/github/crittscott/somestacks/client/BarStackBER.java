@@ -17,6 +17,14 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * Draws a Bar Stack's 64 bars. Alone among the three renderers this ignores the stored item's model
+ * entirely: every bar is the same cuboid, drawn with a texture and tint looked up per item in
+ * {@link BarTextureStore}, so a Bar Stack looks like bars rather than like stacked ingot items.
+ *
+ * <p>Bars go into the solid render type in one pass, and their vertices are wound per face so the
+ * texture runs along each bar's long axis whichever way its layer lies.
+ */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
     public BarStackBER(BlockEntityRendererProvider.Context ctx) {

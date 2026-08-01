@@ -7,9 +7,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Comparator;
 
+/** The order a settled Storage pile lays its stacks out in. */
 public final class StackSort {
     private StackSort(){}
 
+    /**
+     * Orders stacks by item id, then damage, then tags, then fullest first, with empties last.
+     * Total and stable in the sense that matters here: two identical piles pack to the same layout,
+     * and a run of one item ends on its single partial stack.
+     */
     public static final Comparator<ItemStack> COMPARATOR = (a, b) -> {
         if (a.isEmpty() && b.isEmpty()) return 0;
         if (a.isEmpty()) return 1;

@@ -14,6 +14,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The geometry of a Singles Stack's 4 x 4 x 4 grid: where each of the 64 cells sits, what box it
+ * occupies, which one a reach ray hits, and which cells hold up which.
+ *
+ * <p>Support is what makes this more than a coordinate table. A cell rests on the one directly
+ * below it, and the bottom layer rests on the seam with the block beneath, which callers pass in as
+ * that block's top-layer occupancy. Because support follows visual columns rather than slot
+ * indexes, the rotation of each block is applied before columns are compared, and two differently
+ * rotated blocks still line up.
+ */
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 

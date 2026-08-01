@@ -14,29 +14,48 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The geometry of a Bar Stack's 64 bar positions: where each bar sits, what box it occupies, which
+ * one a reach ray hits, and which bars hold up which.
+ *
+ * <p>Eight layers of eight alternate orientation. Even layers run East-West, two bars across and
+ * four deep; odd layers run North-South, four across and two deep. A bar is supported when its
+ * footprint overlaps one in the layer below, so support crosses between the two orientations rather
+ * than following a single column, and the bottom layer rests on the seam with the block beneath,
+ * which callers pass in as that block's top-layer occupancy.
+ *
+ * <p>Bars do not rotate with the block; their orientation belongs to the layer.
+ */
 public final class BarCubeIdx {
     private BarCubeIdx(){}
 
-    // 8 layers alternating orientation: EW (0,2,4,6) and NS (1,3,5,7)
-    // EW layers: 2 columns × 4 rows = 8 positions
-    // NS layers: 4 columns × 2 rows = 8 positions
-    // Total: 64 positions
-
     private static final double BAR_HEIGHT = 2.0;
 
-    // EW layers (0,2,4,6): bars run East-West (long axis along X)
+    /** Start pixels on X, in the even layers, where bars run East-West along their long axis. */
     private static final double[] EW_STARTS_X = {1.0, 9.0};
+
+    /** Start pixels on Z, in the even layers. */
     private static final double[] EW_STARTS_Z = {0.5, 4.5, 8.5, 12.5};
+
+    /** Bar span on X, in pixels, in the even layers. */
     private static final double EW_WIDTH = 6.0;
+
+    /** Bar span on Z, in pixels, in the even layers. */
     private static final double EW_DEPTH = 3.0;
 
-    // NS layers (1,3,5,7): bars run North-South (long axis along Z)
+    /** Start pixels on X, in the odd layers, where bars run North-South along their long axis. */
     private static final double[] NS_STARTS_X = {0.5, 4.5, 8.5, 12.5};
+
+    /** Start pixels on Z, in the odd layers. */
     private static final double[] NS_STARTS_Z = {1.0, 9.0};
+
+    /** Bar span on X, in pixels, in the odd layers. */
     private static final double NS_WIDTH = 3.0;
+
+    /** Bar span on Z, in pixels, in the odd layers. */
     private static final double NS_DEPTH = 6.0;
 
-    // Y positions for 8 layers
+    /** Start pixel on Y of each layer, one entry per layer. */
     private static final double[] STARTS_Y = {0, 2, 4, 6, 8, 10, 12, 14};
 
     /** Bars in one layer, the two orientations laying out the same count differently. */

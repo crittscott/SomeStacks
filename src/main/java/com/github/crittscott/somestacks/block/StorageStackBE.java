@@ -72,6 +72,10 @@ public class StorageStackBE extends BlockEntity {
         super(ModRegistry.STORAGE_STACK_BE.get(), pos, state);
     }
 
+    /**
+     * Whether Storage accepts this item. The broadest of the three rules: anything nonempty from a
+     * namespace the server has not disabled. The per-item deny list applies to player deposits only.
+     */
     public static boolean isValidStorageItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -210,6 +214,7 @@ public class StorageStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
+    /** Pushes this block's contents and presentation state to everyone tracking it. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();

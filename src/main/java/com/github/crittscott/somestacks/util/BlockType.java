@@ -7,6 +7,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 
+/**
+ * The three stack types, as a value that can be named in a packet and looked up in the registry or
+ * the server config. Ordinals are the wire form, so their order is a protocol detail.
+ */
 public enum BlockType {
     STORAGE_STACK,
     SINGLES_STACK,

@@ -21,6 +21,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
+ * on the one below it, visual columns lining up across differently rotated blocks, and extraction
+ * shifting a column down while carrying each item's rotation with it.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class SinglesColumnGameTests {

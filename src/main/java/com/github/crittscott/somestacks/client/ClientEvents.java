@@ -22,6 +22,14 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * The client's gesture entry point: the three right-click events feed
+ * {@link InteractionRuleRegistry}, and the send methods here are how a matched rule reaches the
+ * server. Also holds the selected placement mode, which is client state alone.
+ *
+ * <p>A cancelled event denies both the block use and the item use, so a gesture never also spends
+ * what the player is holding.
+ */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public final class ClientEvents {
     private ClientEvents() {}

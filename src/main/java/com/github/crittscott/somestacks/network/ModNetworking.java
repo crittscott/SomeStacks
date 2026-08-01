@@ -8,6 +8,13 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Optional;
 
+/**
+ * The mod's single channel and the packet registrations on it. Client and server must agree on the
+ * protocol version exactly, so both accept only their own, and the mod is required on both sides.
+ *
+ * <p>Message ids are positional. Adding a packet anywhere but the end renumbers the ones after it,
+ * which is a protocol change.
+ */
 public final class ModNetworking {
     private ModNetworking() {}
 

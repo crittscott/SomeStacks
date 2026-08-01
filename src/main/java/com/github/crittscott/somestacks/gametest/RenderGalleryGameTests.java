@@ -20,6 +20,10 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * The render-gallery world builder: that a queued gallery lays out its floor and rows as described
+ * and reports the totals it finished with, spread across ticks by the configured placement limit.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class RenderGalleryGameTests {

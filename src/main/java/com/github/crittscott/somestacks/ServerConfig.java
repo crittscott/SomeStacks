@@ -18,6 +18,17 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
+/**
+ * The server config spec and the resolved values behind it.
+ *
+ * <p>The text lists are stored as patterns and baked into sets that the hot paths can test cheaply.
+ * Baking happens on config load, on config reload, and, for the ingot tags, whenever tags are
+ * rebuilt, since those name item tags whose membership a data pack decides. The baked sets are
+ * volatile because the config can be reloaded off the server thread while gameplay reads them.
+ *
+ * <p>Everything here is server-side. Only the stack-type enable flags reach the client, through the
+ * configuration sync.
+ */
 public final class ServerConfig {
     private ServerConfig() {}
 

@@ -15,6 +15,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Rotates one rendered item within a Singles Stack, leaving the block's layout alone.
+ *
+ * <p>The gesture is a sneaking click with a soul torch in hand, which vanilla would resolve as
+ * placing that torch, so the handler claims the click to deny the placement that would follow. The
+ * client sends this even when its ray hit no item, because claiming the click is what suppresses
+ * the torch; a slot index naming no occupied cell simply rotates nothing.
+ */
 public class RotateItemPkt {
     private final BlockPos pos;
     private final int slotIndex;

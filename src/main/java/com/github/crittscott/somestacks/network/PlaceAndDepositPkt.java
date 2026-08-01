@@ -31,6 +31,15 @@ import net.minecraftforge.network.NetworkEvent;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
+/**
+ * Places a new stack of the selected type against a clicked face and makes the first deposit into
+ * it. The two are one packet because they are one gesture: a placement whose deposit would fail is
+ * refused outright rather than leaving an empty block behind.
+ *
+ * <p>This is the only client packet that creates a block, so it carries the widest set of server
+ * checks: replaceability, entity obstruction, type enablement, pile height, and the block-place
+ * event.
+ */
 public class PlaceAndDepositPkt {
     private final BlockType blockType;
     private final Direction face;

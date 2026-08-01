@@ -26,6 +26,14 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
+ *
+ * <p>A slot index is a cell, not a place in a bag, and every item must sit on one directly below it
+ * or on the seam with the Singles Stack beneath. A vertical run of these is a {@link SinglesColumn},
+ * which is what automation addresses; this class owns one block's cells, its shape, its layout
+ * rotation, and a rotation for each rendered item.
+ */
 public class SinglesStackBE extends BlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = 64;
@@ -123,6 +131,10 @@ public class SinglesStackBE extends BlockEntity {
         return true;
     }
 
+    /**
+     * Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
+     * narrows what Singles takes by the same set.
+     */
     public static boolean isValidSinglesItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -146,6 +158,7 @@ public class SinglesStackBE extends BlockEntity {
         }
     }
 
+    /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
     public int getCubeRotation(int index) {
         if (index < 0 || index >= SLOTS) {
             return 0;
@@ -164,6 +177,7 @@ public class SinglesStackBE extends BlockEntity {
         }
     }
 
+    /** Builds the union of the occupied cells' boxes at the current layout rotation. */
     public VoxelShape computeShape() {
         VoxelShape shape = Shapes.empty();
         int blockRotation = this.rotation;
@@ -178,6 +192,10 @@ public class SinglesStackBE extends BlockEntity {
         return shape;
     }
 
+    /**
+     * The shape, rebuilt only when contents or rotation last invalidated it. Called for every
+     * outline, collision, and pathfinding query, so it is not somewhere to recompute.
+     */
     public VoxelShape getCachedShape() {
         if (cachedShape == null) {
             cachedShape = computeShape();
@@ -185,6 +203,13 @@ public class SinglesStackBE extends BlockEntity {
         return cachedShape;
     }
 
+    /**
+     * Puts one item from the given stack into the named cell, if that cell is empty and supported.
+     * Refuses rather than redirecting the item elsewhere, so a caller walking cells from the bottom
+     * fills the supported ones in order.
+     *
+     * @return whether the item moved; the hand shrinks by one only then
+     */
     public boolean depositAt(int index, ItemStack fromHand) {
         if (fromHand.isEmpty()) {
             return false;
@@ -214,6 +239,12 @@ public class SinglesStackBE extends BlockEntity {
         return false;
     }
 
+    /**
+     * Takes the item out of the named cell and settles the visual column above it downward, drawing
+     * items across block seams as needed so nothing is left unsupported.
+     *
+     * @return the extracted item, or empty when the cell held nothing
+     */
     public ItemStack extractAt(int index) {
         if (index < 0 || index >= SLOTS) {
             return ItemStack.EMPTY;
@@ -393,6 +424,7 @@ public class SinglesStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
+    /** Pushes this block's contents and presentation state to everyone tracking it. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();

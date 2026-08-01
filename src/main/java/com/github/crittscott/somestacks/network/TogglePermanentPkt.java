@@ -12,6 +12,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Switches automatic removal for a Storage pile. The flag belongs to the pile, so the clicked block
+ * only identifies which one; a permanent pile keeps its emptied blocks standing.
+ *
+ * <p>Alone among the gesture packets this consults protection without claiming the click: the
+ * gesture is empty-handed, and the vanilla interaction that follows reaches the stack's own use
+ * handler, which absorbs it harmlessly.
+ */
 public class TogglePermanentPkt {
     private final BlockPos pos;
 

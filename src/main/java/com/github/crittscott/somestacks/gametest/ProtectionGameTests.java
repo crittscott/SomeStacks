@@ -42,6 +42,14 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
+ * and the same-tick claim that stops the vanilla interaction following a gesture from acting on the
+ * position the gesture just used.
+ *
+ * <p>These fire the Forge events themselves, so they cover the order a consult and the commit that
+ * follows must agree on.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class ProtectionGameTests {

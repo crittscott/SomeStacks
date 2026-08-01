@@ -53,8 +53,10 @@ public final class AutoRenderProfiles {
     /** Fraction of a stack cell the fitted model should span. */
     private static final float TARGET_FILL = 0.9f;
 
-    // Thinnest-to-longest axis ratio below which geometry is treated as a flat card,
-    // catching models that report gui3d but draw no real depth.
+    /**
+     * Thinnest-to-longest axis ratio below which geometry is treated as a flat card, catching
+     * models that report gui3d but draw no real depth.
+     */
     private static final float FLAT_RATIO = 0.1f;
     private static final float MIN_EXTENT = 0.001f;
     private static final float BUTTON_FIT_SCALE = 0.75f;

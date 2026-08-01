@@ -17,6 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Server-to-client synchronization of the settings the client must agree with the server about:
+ * which stack types are enabled, and the server's item render overrides. Sent on login and on
+ * server-config reload.
+ *
+ * <p>Blacklists and pile limits are not sent. They gate server-side decisions only, and the client
+ * never needs to predict them.
+ */
 public class ConfigSyncPkt {
     /** More per-item override entries than any server would configure by hand. */
     private static final int MAX_OVERRIDE_ENTRIES = 65536;

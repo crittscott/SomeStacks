@@ -23,6 +23,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Shared scaffolding for the GameTests: placing each stack type on the empty template, seeding
+ * handlers directly, and the two assertion helpers the tests read through.
+ *
+ * <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
+ * the ordinary rules would not produce and check what happens next.
+ */
 public final class GameTestSupport {
     public static final String TEMPLATE = "somestacks_empty";
     public static final BlockPos ORIGIN = new BlockPos(2, 1, 2);

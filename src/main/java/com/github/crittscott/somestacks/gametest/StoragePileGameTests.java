@@ -23,6 +23,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * Storage pile behaviour in a live level: deposits filling partial stacks before empty ones, growth
+ * when a pile fills, capability insertion answering for the slot it is handed, obstruction refusing
+ * growth, and settling consolidating, packing, and sorting.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class StoragePileGameTests {

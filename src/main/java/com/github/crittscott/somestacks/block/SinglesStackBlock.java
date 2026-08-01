@@ -31,8 +31,24 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
+/**
+ * The Singles Stack block: the world-facing half of {@link SinglesStackBE}, holding the block
+ * state, the shapes, and the breaking behaviour.
+ *
+ * <p>Its outline and collision follow the occupied cells, so an empty block shows no highlight box
+ * while still answering clicks through a full-block interaction shape. Neither shape lets mobs path
+ * through it, and neither suffocates a player standing in its empty space.
+ *
+ * <p>It also carries the deferred publication tick that content edits schedule on the bottom block
+ * of the column.
+ */
 public class SinglesStackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
+    /**
+     * Light this block emits, derived from the {@code BlockItem}s stored in it and kept in the
+     * block state so lighting updates travel by the ordinary block-state path.
+     */
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 

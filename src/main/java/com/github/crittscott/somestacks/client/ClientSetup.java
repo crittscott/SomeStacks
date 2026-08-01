@@ -11,6 +11,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.GameShuttingDownEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 
+/**
+ * Client-side registration: the three block entity renderers, the key binding, and the resource
+ * reload listeners behind render overrides, bar textures, and measured profiles.
+ *
+ * <p>Also the measured cache's two save points. It is written when the player leaves a world and
+ * when the game shuts down, rather than on every measurement.
+ */
 public final class ClientSetup {
     private ClientSetup() {}
 

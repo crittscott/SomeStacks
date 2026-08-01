@@ -5,9 +5,14 @@ import net.minecraft.client.KeyMapping;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
+/** The mod's key bindings. */
 public final class KeyMappings {
     private KeyMappings(){}
 
+    /**
+     * The stack modifier, {@code V} by default and rebindable. Held rather than pressed: every
+     * gesture asks whether it is down at the moment of the click.
+     */
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
             "key.somestacks.stack_mode",
             KeyConflictContext.IN_GAME,

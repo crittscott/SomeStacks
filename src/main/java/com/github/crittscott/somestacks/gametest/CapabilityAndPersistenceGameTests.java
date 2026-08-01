@@ -23,6 +23,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * The automation surface and the saved state behind it: the item handler answering from every side,
+ * a run advertising its reachable headroom, and each type's update tag round-tripping the contents
+ * and presentation state it is responsible for.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class CapabilityAndPersistenceGameTests {

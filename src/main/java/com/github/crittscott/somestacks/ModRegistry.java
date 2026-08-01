@@ -16,6 +16,16 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+/**
+ * The mod's registered blocks and block entity types.
+ *
+ * <p>There are deliberately no block items, no recipes, and no menus: stacks reach the world only
+ * through a player gesture or capability-driven growth, and their contents are reached by clicking
+ * the rendered cells rather than by opening a screen.
+ *
+ * <p>Singles and Bar declare a dynamic shape, because theirs follows their contents. All three
+ * block piston movement, since a moved stack would leave its block entity behind.
+ */
 public final class ModRegistry {
     private ModRegistry() {}
 

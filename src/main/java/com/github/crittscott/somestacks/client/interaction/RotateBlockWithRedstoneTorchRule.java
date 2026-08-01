@@ -4,6 +4,10 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ClientEvents;
 import net.minecraft.world.item.Items;
 
+/**
+ * Shift plus a redstone torch rotates a Storage or Singles Stack's layout 90 degrees. A Bar Stack
+ * is excluded: its bars are fixed to the orientation of their layer.
+ */
 public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {

@@ -28,6 +28,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
+/**
+ * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
+ * footprint overlap deciding support across the alternating layer orientations, and the difference
+ * between player extraction, which drops what it unsupports, and automated extraction, which
+ * backfills from the top instead.
+ */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class BarColumnGameTests {

@@ -7,6 +7,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
+ * what box it occupies, and which one a player's reach ray hits first. Cells are separated by gaps,
+ * so the grid does not fill the block even when every slot is occupied.
+ *
+ * <p>Positions are computed at the block's layout rotation, which reflects cell coordinates about
+ * the grid's centre rather than moving the contents between slots.
+ */
 public final class StorageCubeIdx {
     private StorageCubeIdx(){}
 
@@ -23,7 +31,7 @@ public final class StorageCubeIdx {
     /** The largest cell coordinate on an axis, which a rotation reflects about. */
     private static final int MAX_COORD = GRID_EDGE - 1;
 
-    // Start pixels per axis for indices 0,1,2
+    /** Start pixel of each cell on an axis, indexed by cell coordinate. */
     private static final int[] STARTS = {1, 6, 11};
 
     public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {

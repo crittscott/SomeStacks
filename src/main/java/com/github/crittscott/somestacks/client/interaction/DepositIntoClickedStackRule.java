@@ -10,6 +10,11 @@ import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.Direction;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * Modifier plus an item deposits into the stack that was clicked, whatever placement mode is
+ * selected. Declining here is how a top-face click on a full Singles or Bar column reaches
+ * {@link PlaceAdjacentGenericRule} and grows the column instead.
+ */
 public final class DepositIntoClickedStackRule implements InteractionRule {
     @Override
     public boolean matches(InteractionContext ctx) {

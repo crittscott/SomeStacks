@@ -13,6 +13,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
+/**
+ * One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
+ * were held, and the placement mode in force. A context built from an empty-hand or held-item click
+ * has no clicked position, block, or face, so the block-shaped queries answer false.
+ *
+ * <p>The context also carries the rules' one output, {@link #cancelEvent()}, which the event
+ * handler reads back after the walk to decide whether the click is taken from vanilla.
+ */
 public final class InteractionContext {
     private final Player player;
     private final Level level;
@@ -95,6 +103,10 @@ public final class InteractionContext {
         return level.isClientSide;
     }
 
+    /**
+     * Whether the player's crosshair is on a block. Distinguishes a click at open air, which cycles
+     * the placement mode, from one that merely missed the block-click event.
+     */
     public boolean isHittingBlock() {
         if (!level.isClientSide) {
             return false;
@@ -137,6 +149,10 @@ public final class InteractionContext {
                 || block == ModRegistry.BAR_STACK_BLOCK.get();
     }
 
+    /**
+     * Whether the placement and deposit rules may claim this click. Holding the modifier in Toggle
+     * Permanent mode is reserved for the toggle gesture, which would otherwise be shadowed by them.
+     */
     public boolean canPlaceOrDeposit() {
         return currentMode != StackMode.TOGGLE_PERMANENT || !isVDown();
     }

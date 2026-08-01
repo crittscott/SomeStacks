@@ -13,6 +13,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
+ * the player, how a broken block sheds its contents, and how stored items add up to a light level.
+ */
 public final class ItemOps {
     private ItemOps(){}
 
@@ -22,12 +26,22 @@ public final class ItemOps {
     /** Share of a stored block's own emission that a cell holding it contributes. */
     private static final int LIGHT_SHARE_DIVISOR = 4;
 
+    /**
+     * Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
+     * with room left. This is the rule that keeps a player's hand from being swapped out mid-gesture.
+     */
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
         if (hand.isEmpty()) return true;
         return ItemStack.isSameItemSameTags(hand, offer) && hand.getCount() < hand.getMaxStackSize();
     }
 
+    /**
+     * Moves as much of {@code incoming} into {@code hand} as it will hold, growing the hand in
+     * place. The caller shrinks the source by the amount reported.
+     *
+     * @return how many items moved, zero when the two do not stack
+     */
     public static int mergeIntoStack(ItemStack hand, ItemStack incoming) {
         if (hand.isEmpty() || incoming.isEmpty()) return 0;
         if (!ItemStack.isSameItemSameTags(hand, incoming)) return 0;
@@ -45,6 +59,10 @@ public final class ItemOps {
         }
     }
 
+    /**
+     * Puts an extracted stack in the player's hand, merging with what is already there, and drops
+     * whatever will not fit at their feet.
+     */
     public static void giveToPlayerOrDrop(Player player, InteractionHand hand, ItemStack taken) {
         ItemStack handStack = player.getItemInHand(hand);
 
