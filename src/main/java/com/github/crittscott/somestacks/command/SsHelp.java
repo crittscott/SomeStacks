@@ -58,8 +58,10 @@ final class SsHelp {
                         "reset drops your entry, so the item goes back to the server, built-in or"
                                 + " measured setting it had before.")),
 
-        TEST("test", "Build walls of Storage Stacks to review item rendering", Gate.SERVER_ADMIN_IN_GAME,
-                List.of("/ss test <modid>", "/ss test all", "/ss test list", "/ss test items"),
+        GALLERY("gallery", "Build galleries of Storage Stacks to review item rendering",
+                Gate.SERVER_ADMIN_IN_GAME,
+                List.of("/ss gallery <modid>", "/ss gallery all", "/ss gallery list",
+                        "/ss gallery items"),
                 List.of("Builds east of you over a sandstone floor, nine items to a stack, rows running"
                                 + " north. Whatever blocks stand in the floor and stack positions are"
                                 + " replaced.",
@@ -74,9 +76,9 @@ final class SsHelp {
                         "all, list and items skip an entry they cannot show and report it; naming one"
                                 + " namespace that cannot be shown fails instead.")),
 
-        TESTINGOT("testingot", "Build walls of Bar Stacks to review bar textures and tints",
+        INGOTGALLERY("ingotgallery", "Build galleries of Bar Stacks to review bar textures and tints",
                 Gate.SERVER_ADMIN_IN_GAME,
-                List.of("/ss testingot <modid>", "/ss testingot all", "/ss testingot list"),
+                List.of("/ss ingotgallery <modid>", "/ss ingotgallery all", "/ss ingotgallery list"),
                 List.of("The same generator over Bar Stacks, covering only the items a Bar Stack accepts,"
                                 + " one bar per ingot and eight to a block.",
                         "Its namespace completions offer only the namespaces that have an ingot.")),
@@ -102,12 +104,12 @@ final class SsHelp {
                         "It does not re-read the server config file. An edit made to that file directly"
                                 + " applies when Forge reports the config reloaded.")),
 
-        GEN("gen", "Edit the mod and item lists the test walls build from", Gate.OPERATOR,
+        GEN("gen", "Edit the mod and item lists the render galleries build from", Gate.OPERATOR,
                 List.of("/ss gen mod add <modid>", "/ss gen mod remove <modid>", "/ss gen mod list",
                         "/ss gen item add <item>", "/ss gen item remove <item>", "/ss gen item list"),
-                List.of("The mod list feeds /ss test list and /ss testingot list, in the order it is"
-                                + " stored, which is the order of the wall's columns.",
-                        "The item list feeds /ss test items. The row is sorted by mod id and then item"
+                List.of("The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is"
+                                + " stored, which is the order of the gallery's columns.",
+                        "The item list feeds /ss gallery items. The row is sorted by mod id and then item"
                                 + " name when it is built, so the stored order carries no meaning.",
                         "An item id is checked against the registry as it is added. A mod id is taken as"
                                 + " typed.")),
@@ -118,8 +120,8 @@ final class SsHelp {
                 List.of("A disabled mod's items are refused by every stack; a disabled item is refused on"
                                 + " the deposit gestures. Contents already stored can still be taken"
                                 + " out.",
-                        "A mod id is taken as typed, because the shipped defaults name mods that need not"
-                                + " be installed. An item id is checked against the registry, because the"
+                        "A mod id is taken as typed, since it may name a mod that is not installed yet."
+                                + " An item id is checked against the registry, because the"
                                 + " list is matched by exact id and a typo would sit in it looking"
                                 + " effective.")),
 
@@ -141,7 +143,7 @@ final class SsHelp {
         HELP("help", "List these commands, or explain one", Gate.ANYONE,
                 List.of("/ss help", "/ss help <command>"),
                 List.of("Every ss subcommand has an entry, and each one names the gate it answers to:"
-                        + " ss is an administrator's tool throughout, and the two test wall commands"
+                        + " ss is an administrator's tool throughout, and the two render gallery commands"
                         + " sit a permission level above the rest because they overwrite the world."));
 
         private final String name;

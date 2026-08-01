@@ -27,22 +27,22 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /**
- * Generates walls of stacks filled with given groups of items, for reviewing render settings in
+ * Generates galleries of stacks filled with given groups of items, for reviewing render settings in
  * the world. One column of stacks per group — a namespace, or a row of hand-picked items — with
  * rows running north, over a uniform floor.
  *
- * <p>A wall spanning every loaded mod runs to tens of thousands of placements, so a
+ * <p>A gallery spanning every loaded mod runs to tens of thousands of placements, so a
  * request is queued and drained a bounded number of placements per server tick rather
  * than built inside the command call.
  */
-public final class TestWallGenerator {
+public final class RenderGalleryGenerator {
     /** Columns between the rows of adjacent mods. */
     private static final int MOD_SPACING = 2;
 
-    private TestWallGenerator() {}
+    private RenderGalleryGenerator() {}
 
     /**
-     * What a wall is built from. A kind decides which items belong in it, how many of them one
+     * What a gallery is built from. A kind decides which items belong in it, how many of them one
      * stack shows, and how that stack is filled.
      */
     public enum Kind {
@@ -51,7 +51,7 @@ public final class TestWallGenerator {
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts
-         * qualify, tested by the block entity itself so that a wall shows what a player could
+         * qualify, tested by the block entity itself so that a gallery shows what a player could
          * actually deposit rather than a second opinion about it.
          */
         BAR("BarStacks", "ingots", BarCubeIdx.LAYER_SIZE);
@@ -118,7 +118,7 @@ public final class TestWallGenerator {
     /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
     private static int barItemsGeneration;
 
-    /** Queued walls. Server thread only: appended by the command, drained by the tick handler. */
+    /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 
     private static Map<String, List<Item>> itemsByNamespace() {
@@ -158,18 +158,18 @@ public final class TestWallGenerator {
         return itemsByNamespace().getOrDefault(modId, List.of());
     }
 
-    /** What a queued wall will consist of, known before any of it is placed. */
+    /** What a queued gallery will consist of, known before any of it is placed. */
     public record Plan(int expectedStacks, int totalItems) {}
 
-    /** What a finished wall actually consists of. */
+    /** What a finished gallery actually consists of. */
     public record Result(int totalStacks, int expectedStacks, int totalItems) {}
 
     /**
-     * Queues a wall for the given groups of items and returns what it will contain. Each group is
-     * one column, filled a stack at a time along a row running north; a namespace wall passes one
-     * group per mod, and a wall of hand-picked items passes a single group. The wall is built over
-     * the following ticks; {@code onComplete} runs on the server thread once the last stack is
-     * placed, and not at all if the player disconnects first.
+     * Queues a gallery for the given groups of items and returns what it will contain. Each group
+     * is one column, filled a stack at a time along a row running north; a namespace gallery passes
+     * one group per mod, and a gallery of hand-picked items passes a single group. The gallery is
+     * built over the following ticks; {@code onComplete} runs on the server thread once the last
+     * stack is placed, and not at all if the player disconnects first.
      */
     public static Plan enqueue(ServerPlayer player, Kind kind, List<List<Item>> groups,
                                Consumer<Result> onComplete) {
@@ -199,13 +199,13 @@ public final class TestWallGenerator {
         return new Plan(stacks.size(), totalItems);
     }
 
-    /** Drains the queued walls, bounded by {@code test_wall.placements_per_tick}. */
+    /** Drains the queued galleries, bounded by {@code render_gallery.placements_per_tick}. */
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END || jobs.isEmpty()) {
             return;
         }
 
-        int budget = ServerConfig.TEST_WALL_PLACEMENTS_PER_TICK.get();
+        int budget = ServerConfig.RENDER_GALLERY_PLACEMENTS_PER_TICK.get();
         while (budget > 0 && !jobs.isEmpty()) {
             Job job = jobs.peek();
 
@@ -226,9 +226,9 @@ public final class TestWallGenerator {
     private record PendingStack(BlockPos pos, List<Item> batch) {}
 
     /**
-     * One queued wall: a floor laid out by a cursor over its extent, then the stacks. Both
+     * One queued gallery: a floor laid out by a cursor over its extent, then the stacks. Both
      * draw from the same per-tick budget, since a floor spanning every loaded mod is itself
-     * far larger than the wall standing on it.
+     * far larger than the gallery standing on it.
      */
     private static final class Job {
         private final ServerPlayer player;
@@ -259,9 +259,9 @@ public final class TestWallGenerator {
             this.totalItems = totalItems;
             this.onComplete = onComplete;
 
-            // The floor extends one block past the stacks on every side, so the whole wall can be
-            // walked around and viewed against a uniform background. Rows advance north, which is
-            // decreasing Z.
+            // The floor extends one block past the stacks on every side, so the whole gallery can
+            // be walked around and viewed against a uniform background. Rows advance north, which
+            // is decreasing Z.
             this.floorMinX = basePos.getX() - 1;
             this.floorMaxX = basePos.getX() + (groupCount - 1) * MOD_SPACING + 1;
             this.floorMinZ = basePos.getZ() - maxRows;
@@ -338,12 +338,12 @@ public final class TestWallGenerator {
      */
     private static boolean placeStack(Level level, BlockPos pos, Block block) {
         if (level.isOutsideBuildHeight(pos)) {
-            SomeStacks.LOGGER.warn("Test stack skipped at {}: outside build height", pos);
+            SomeStacks.LOGGER.warn("Gallery stack skipped at {}: outside build height", pos);
             return false;
         }
 
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
-            SomeStacks.LOGGER.warn("Test stack placement rejected at {}, block there is {}",
+            SomeStacks.LOGGER.warn("Gallery stack placement rejected at {}, block there is {}",
                     pos, level.getBlockState(pos));
             return false;
         }

@@ -40,15 +40,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * The {@code ss} command: render override authoring, test wall generation, server list
+ * The {@code ss} command: render override authoring, render gallery generation, server list
  * editing, and override reloading.
  *
  * <p>Everything here is an administrative tool, so every subcommand but {@code help} answers to a
  * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
- * against the sender's own view and so are player-only on top of that; the two wall generators
- * need a player because a wall is built where the sender stands.
+ * against the sender's own view and so are player-only on top of that; the two gallery generators
+ * need a player because a gallery is built where the sender stands.
  *
- * <p>The wall generators sit a level above the rest. They overwrite a region of the world outright,
+ * <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
  * without the protection consults a placement gesture answers to, which is a wider authority than
  * editing config or tuning how an item is drawn.
  *
@@ -60,11 +60,11 @@ public final class SsCommand {
     private static final int ADMIN_PERMISSION_LEVEL = 2;
 
     /**
-     * Vanilla's server-administration level, the gate on the test wall commands. An operator holds
+     * Vanilla's server-administration level, the gate on the render gallery commands. An operator holds
      * it under the default {@code op-permission-level}, so this costs an admin nothing; it excludes
      * whatever a server has handed the lower level to.
      */
-    private static final int WALL_PERMISSION_LEVEL = 3;
+    private static final int GALLERY_PERMISSION_LEVEL = 3;
     private static final String DISABLED_MODS_LABEL = "disabled mod list";
     private static final String DISABLED_ITEMS_LABEL = "disabled item list";
     private static final String GEN_MODS_LABEL = "gen mod list";
@@ -72,7 +72,7 @@ public final class SsCommand {
     private static final String INGOT_TAGS_LABEL = "ingot tag list";
 
     /** A dump covers every item, which is the namespace and item set the Storage kind holds. */
-    private static final TestWallGenerator.Kind DUMP_KIND = TestWallGenerator.Kind.STORAGE;
+    private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
 
     private SsCommand() {}
 
@@ -100,10 +100,10 @@ public final class SsCommand {
                                                                         .executes(SsCommand::setModeScaleAndXy)
                                                                         .then(Commands.argument("z", offsetArg())
                                                                                 .executes(SsCommand::setModeScaleAndXyz))))))))
-                        .then(testTree("test", TestWallGenerator.Kind.STORAGE)
+                        .then(galleryTree("gallery", RenderGalleryGenerator.Kind.STORAGE)
                                 .then(Commands.literal("items")
-                                        .executes(SsCommand::testItems)))
-                        .then(testTree("testingot", TestWallGenerator.Kind.BAR))
+                                        .executes(SsCommand::galleryItems)))
+                        .then(galleryTree("ingotgallery", RenderGalleryGenerator.Kind.BAR))
                         .then(writeTree())
                         .then(Commands.literal("reload")
                                 .requires(SsCommand::isAdmin)
@@ -131,27 +131,27 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code <modid>|all|list} subtree one wall kind is generated from. The two kinds differ
+     * The {@code <modid>|all|list} subtree one gallery kind is generated from. The two kinds differ
      * only in which items they can show, which is what the kind itself answers. The Storage tree
      * carries an {@code items} form on top of this, which the ingot tree has no use for: the
      * ingots of a pack are few enough to review a namespace at a time.
      *
-     * <p>Held a permission level above the rest of {@code ss}, and player-only because the wall is
-     * built where the sender stands. A wall is not a view: it overwrites a large region of the
+     * <p>Held a permission level above the rest of {@code ss}, and player-only because the gallery
+     * is built where the sender stands. A gallery is not a view: it overwrites a large region of the
      * world outright, without the protection consults a placement gesture answers to. That is a
      * wider authority than editing a server list or tuning how items are drawn for oneself.
      */
-    private static LiteralArgumentBuilder<CommandSourceStack> testTree(
-            String name, TestWallGenerator.Kind kind) {
+    private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
+            String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> isPlayer(source) && source.hasPermission(WALL_PERMISSION_LEVEL))
+                .requires(source -> isPlayer(source) && source.hasPermission(GALLERY_PERMISSION_LEVEL))
                 .then(Commands.literal("all")
-                        .executes(ctx -> testAll(ctx, kind)))
+                        .executes(ctx -> galleryAll(ctx, kind)))
                 .then(Commands.literal("list")
-                        .executes(ctx -> testList(ctx, kind)))
+                        .executes(ctx -> galleryList(ctx, kind)))
                 .then(Commands.argument("modid", StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(kind.modIds(), builder))
-                        .executes(ctx -> testSingle(ctx, kind)));
+                        .executes(ctx -> gallerySingle(ctx, kind)));
     }
 
     /**
@@ -159,7 +159,7 @@ public final class SsCommand {
      * the client loads at startup, so it holds only what {@code ss item} set. The namespace forms
      * dump complete profiles for every item of those namespaces to a folder nothing reads back,
      * which is what keeps a dump of a whole modpack from freezing that pack into the user layer.
-     * Namespaces are named exactly as the wall commands name them.
+     * Namespaces are named exactly as the gallery commands name them.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
         return Commands.literal("write")
@@ -176,16 +176,17 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code ss gen} subtree, editing the two lists the wall commands build from: the
-     * namespaces of {@code ss test list} and {@code ss testingot list}, and the items of
-     * {@code ss test items}. Describing a wall is an ordinary config edit and sits with the other
-     * list editors; building the wall it describes needs the higher level the wall commands hold.
+     * The {@code ss gen} subtree, editing the two lists the gallery commands build from: the
+     * namespaces of {@code ss gallery list} and {@code ss ingotgallery list}, and the items of
+     * {@code ss gallery items}. Describing a gallery is an ordinary config edit and sits with the other
+     * list editors; building the gallery it describes needs the higher level the gallery commands
+     * hold.
      *
      * <p>Adding a namespace completes over those that have items at all rather than over one
      * kind's, since the one list serves both kinds and a namespace with no ingots is still worth
-     * listing for {@code ss test list}. An item id is checked against the registry as
+     * listing for {@code ss gallery list}. An item id is checked against the registry as
      * {@code ss deny item add} checks one, since a typo would otherwise sit in the list and be
-     * skipped by every wall.
+     * skipped by every gallery.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> genTree() {
         return Commands.literal("gen")
@@ -194,7 +195,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                TestWallGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
@@ -232,7 +233,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                TestWallGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
@@ -325,7 +326,7 @@ public final class SsCommand {
         String remaining = builder.getRemaining();
 
         if (!remaining.contains(":")) {
-            List<String> namespaces = TestWallGenerator.getModIdsWithItems()
+            List<String> namespaces = RenderGalleryGenerator.getModIdsWithItems()
                     .stream()
                     .map(ns -> ns + ":")
                     .collect(Collectors.toList());
@@ -333,7 +334,7 @@ public final class SsCommand {
         }
 
         String namespace = remaining.split(":")[0];
-        List<String> itemIds = TestWallGenerator.collectModItems(namespace)
+        List<String> itemIds = RenderGalleryGenerator.collectModItems(namespace)
                 .stream()
                 .map(item -> String.valueOf(ForgeRegistries.ITEMS.getKey(item)))
                 .collect(Collectors.toList());
@@ -410,10 +411,10 @@ public final class SsCommand {
 
     /**
      * The namespaces one invocation acts on, with the ones dropped from the request and why.
-     * The wall commands and the dump select namespaces the same way, so a review session can
+     * The gallery commands and the dump select namespaces the same way, so a review session can
      * dump exactly what it just looked at.
      */
-    private record Selection(TestWallGenerator.Kind kind, List<String> modIds,
+    private record Selection(RenderGalleryGenerator.Kind kind, List<String> modIds,
                              List<String> disabledMods, List<String> unusableMods) {
         private List<Skips> skips() {
             return List.of(new Skips("disabled", disabledMods),
@@ -439,7 +440,7 @@ public final class SsCommand {
      */
     @Nullable
     private static Selection selectSingle(CommandContext<CommandSourceStack> ctx,
-                                          TestWallGenerator.Kind kind, String modId) {
+                                          RenderGalleryGenerator.Kind kind, String modId) {
         if (ServerConfig.isModDisabled(modId)) {
             ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
             return null;
@@ -456,7 +457,7 @@ public final class SsCommand {
 
     /** Every namespace this kind can use, minus those the server disabled; null when none remain. */
     @Nullable
-    private static Selection selectAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind) {
+    private static Selection selectAll(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind) {
         List<String> modIds = new ArrayList<>(kind.modIds());
         Collections.sort(modIds);
 
@@ -486,7 +487,7 @@ public final class SsCommand {
      * kind's items is usually a typo or an entry meant for the other kind.
      */
     @Nullable
-    private static Selection selectList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind) {
+    private static Selection selectList(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind) {
         List<String> modIds = new ArrayList<>();
         List<String> disabledMods = new ArrayList<>();
         List<String> unusableMods = new ArrayList<>();
@@ -568,7 +569,7 @@ public final class SsCommand {
                         new Skips("unknown", unknownItems)));
     }
 
-    private static int testSingle(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+    private static int gallerySingle(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -576,7 +577,7 @@ public final class SsCommand {
         return selection == null ? 0 : generate(ctx, player, selection);
     }
 
-    private static int testAll(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+    private static int galleryAll(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -584,7 +585,7 @@ public final class SsCommand {
         return selection == null ? 0 : generate(ctx, player, selection);
     }
 
-    private static int testList(CommandContext<CommandSourceStack> ctx, TestWallGenerator.Kind kind)
+    private static int galleryList(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -596,11 +597,11 @@ public final class SsCommand {
      * Builds the row of the {@code gen_items} server config list. One group means one column, so a
      * list longer than a stack holds runs on north exactly as a namespace with many items does.
      */
-    private static int testItems(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int galleryItems(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
         ItemSelection selection = selectItems(ctx);
-        return selection == null ? 0 : generate(ctx, player, TestWallGenerator.Kind.STORAGE,
+        return selection == null ? 0 : generate(ctx, player, RenderGalleryGenerator.Kind.STORAGE,
                 List.of(selection.items()), "the " + GEN_ITEMS_LABEL, selection.skips());
     }
 
@@ -626,13 +627,13 @@ public final class SsCommand {
     }
 
     /**
-     * Queues one wall and reports it twice: what it will hold now, and what it did hold once the
+     * Queues one gallery and reports it twice: what it will hold now, and what it did hold once the
      * generator has finished placing it some ticks later.
      */
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
-                                TestWallGenerator.Kind kind, List<List<Item>> groups,
+                                RenderGalleryGenerator.Kind kind, List<List<Item>> groups,
                                 String subject, List<Skips> skips) {
-        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(player, kind, groups, result -> {
+        RenderGalleryGenerator.Plan plan = RenderGalleryGenerator.enqueue(player, kind, groups, result -> {
             StringBuilder done = new StringBuilder("Created ")
                     .append(result.totalStacks()).append(' ').append(kind.stackLabel()).append(" (")
                     .append(result.totalItems()).append(' ').append(kind.itemLabel()).append(") for ").append(subject)
@@ -710,7 +711,7 @@ public final class SsCommand {
 
     /**
      * Reports one of the server's text lists. Sorting is for the lists whose order means nothing;
-     * the gen mod list is shown as stored, because that order is the order of a wall's columns.
+     * the gen mod list is shown as stored, because that order is the order of a gallery's columns.
      */
     private static int listEntries(CommandContext<CommandSourceStack> ctx,
                                    ForgeConfigSpec.ConfigValue<List<? extends String>> list, String label,

@@ -33,7 +33,7 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ITEMS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> INGOT_TAGS;
 
-    public static final ForgeConfigSpec.IntValue TEST_WALL_PLACEMENTS_PER_TICK;
+    public static final ForgeConfigSpec.IntValue RENDER_GALLERY_PLACEMENTS_PER_TICK;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_MODS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> GEN_ITEMS;
 
@@ -80,7 +80,7 @@ public final class ServerConfig {
         DISABLE_MODS = builder
                 .comment("List of mod IDs to disable compatibility with")
                 .defineList("disable_mods",
-                        Arrays.asList("spartanfire", "spartanweaponry"),
+                        Collections.emptyList(),
                         obj -> obj instanceof String);
 
         DISABLE_ITEMS = builder
@@ -108,17 +108,17 @@ public final class ServerConfig {
 
         builder.pop();
 
-        builder.comment("Test Wall Configuration").push("test_wall");
+        builder.comment("Render Gallery Configuration").push("render_gallery");
 
-        TEST_WALL_PLACEMENTS_PER_TICK = builder
-                .comment("Blocks the 'ss test' and 'ss testingot' commands place per tick, counting both stacks and floor.",
-                        "A wall spanning every loaded mod is tens of thousands of placements; lower",
+        RENDER_GALLERY_PLACEMENTS_PER_TICK = builder
+                .comment("Blocks the 'ss gallery' and 'ss ingotgallery' commands place per tick, counting both stacks and floor.",
+                        "A gallery spanning every loaded mod is tens of thousands of placements; lower",
                         "values spread it over more ticks.")
                 .defineInRange("placements_per_tick", 64, 1, Integer.MAX_VALUE);
 
         GEN_MODS = builder
-                .comment("Mod IDs the 'ss test list' and 'ss testingot list' commands build walls for.",
-                        "The order given is the order of the wall's columns.",
+                .comment("Mod IDs the 'ss gallery list' and 'ss ingotgallery list' commands build galleries for.",
+                        "The order given is the order of the gallery's columns.",
                         "Empty by default; editable in game with 'ss gen mod add' and 'ss gen mod remove'.",
                         "Mod IDs must be quoted: [\"create\", \"farmersdelight\"]")
                 .defineList("gen_mods",
@@ -126,7 +126,7 @@ public final class ServerConfig {
                         obj -> obj instanceof String);
 
         GEN_ITEMS = builder
-                .comment("Items the 'ss test items' command builds a row for. The row is sorted by",
+                .comment("Items the 'ss gallery items' command builds a row for. The row is sorted by",
                         "mod id and then item name, so this list may be kept in any order.",
                         "Empty by default; editable in game with 'ss gen item add' and 'ss gen item remove'.",
                         "Format: \"modid:itemname\", quoted: [\"minecraft:torch\", \"alexscaves:sea_staff\"]")

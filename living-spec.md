@@ -199,18 +199,18 @@ Bar appearance is client-side resource data loaded from `assets/*/textures/bars/
 | --- | --- | --- |
 | Maximum pile height | `8` | Limits placement and growth of all vertical runs. |
 | Enable Storage / Singles / Bar | `true` | Prevents new placement and growth of a disabled type. Existing blocks remain usable. |
-| Disabled mods | `spartanfire`, `spartanweaponry` | Rejects new contents from those namespaces. |
+| Disabled mods | empty | Rejects new contents from those namespaces. |
 | Disabled items | empty | Rejects those item ids on player deposit paths. |
 | Ingot tags | `forge:ingots*`, `somestacks:ingots` | Defines Bar-valid items and, by complement, items excluded from Singles. |
-| Test wall placements per tick | `64` | Throttles `ss test` and `ss testingot` world edits. |
-| Gen mods | empty | Ordered namespaces used by test-wall `list` commands. |
-| Gen items | empty | Items used by `ss test items`. |
+| Render gallery placements per tick | `64` | Throttles `ss gallery` and `ss ingotgallery` world edits. |
+| Gen mods | empty | Ordered namespaces used by render-gallery `list` commands. |
+| Gen items | empty | Items used by `ss gallery items`. |
 
 Operators edit the five text lists through `ss gen`, `ss deny`, and `ss ingot`. Command edits update both the running values and the config file. Direct file edits apply through Forge's config reload.
 
 ## The `ss` command
 
-`ss` is an administrative command throughout: render authoring, world-building test walls, server list editing, and unrestricted help.
+`ss` is an administrative command throughout: render authoring, world-building render galleries, server list editing, and unrestricted help.
 
 Gates are vanilla permission levels. Level 2 is the gamerule and world-editing level; level 3 is the server-administration level, which an operator holds under the default `op-permission-level`.
 
@@ -220,15 +220,15 @@ Gates are vanilla permission levels. Level 2 is the gamerule and world-editing l
 | `ss item <item> reset` | Level 2 player | Remove a user render override. |
 | `ss write changed` | Level 2 player | Write user overrides to `config/somestacks/item_overrides.json`. |
 | `ss write <modid\|all\|list>` | Level 2 player | Write resolved namespace profiles under `config/somestacks/generated_overrides/`. |
-| `ss test <modid\|all\|list\|items>` | Level 3 player | Build Storage Stack render-review walls. |
-| `ss testingot <modid\|all\|list>` | Level 3 player | Build Bar Stack render-review walls. |
-| `ss gen mod|item add\|remove\|list` | Level 2 | Edit test-wall namespace and item lists. |
+| `ss gallery <modid\|all\|list\|items>` | Level 3 player | Build Storage Stack render galleries. |
+| `ss ingotgallery <modid\|all\|list>` | Level 3 player | Build Bar Stack render galleries. |
+| `ss gen mod|item add\|remove\|list` | Level 2 | Edit render-gallery namespace and item lists. |
 | `ss deny mod|item add\|remove\|list` | Level 2 | Edit disabled namespace and item lists. |
 | `ss ingot add\|remove\|list` | Level 2 | Edit ingot-tag patterns. |
 | `ss reload` | Level 2 | Reload server render overrides and resend synchronized configuration. |
 | `ss help [command]` | None | Show command forms, gates, and summaries. |
 
-Test-wall commands overwrite their floor and stack positions directly and do not apply ordinary placement protections. Large walls are spread across ticks by the configured placement limit.
+A render gallery is a single-layer field of filled stacks on a uniform floor: one column of stacks per namespace or item group, with that group's rows running north. Gallery commands overwrite their floor and stack positions directly and do not apply ordinary placement protections. Large galleries are spread across ticks by the configured placement limit.
 
 Generated override files are output only; they are not an active override layer. They use the same format as resource and server overrides.
 

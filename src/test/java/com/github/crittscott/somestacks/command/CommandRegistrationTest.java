@@ -22,7 +22,7 @@ class CommandRegistrationTest {
         CommandNode<CommandSourceStack> ss = child(dispatcher.getRoot(), "ss");
 
         assertEquals(Set.of(
-                        "item", "test", "testingot", "write", "reload",
+                        "item", "gallery", "ingotgallery", "write", "reload",
                         "gen", "deny", "ingot", "help"),
                 ss.getChildren().stream()
                         .map(CommandNode::getName)
@@ -61,11 +61,11 @@ class CommandRegistrationTest {
     }
 
     @Test
-    void testWallKindsExposeStablePlayerFacingNames() {
-        assertEquals("StorageStacks", TestWallGenerator.Kind.STORAGE.stackLabel());
-        assertEquals("items", TestWallGenerator.Kind.STORAGE.itemLabel());
-        assertEquals("BarStacks", TestWallGenerator.Kind.BAR.stackLabel());
-        assertEquals("ingots", TestWallGenerator.Kind.BAR.itemLabel());
+    void renderGalleryKindsExposeStablePlayerFacingNames() {
+        assertEquals("StorageStacks", RenderGalleryGenerator.Kind.STORAGE.stackLabel());
+        assertEquals("items", RenderGalleryGenerator.Kind.STORAGE.itemLabel());
+        assertEquals("BarStacks", RenderGalleryGenerator.Kind.BAR.stackLabel());
+        assertEquals("ingots", RenderGalleryGenerator.Kind.BAR.itemLabel());
     }
 
     private static CommandDispatcher<CommandSourceStack> dispatcher() {

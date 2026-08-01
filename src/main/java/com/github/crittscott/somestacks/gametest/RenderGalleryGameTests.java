@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.command.TestWallGenerator;
+import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -22,11 +22,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEqu
 
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
-public final class TestWallGameTests {
-    private TestWallGameTests() {}
+public final class RenderGalleryGameTests {
+    private RenderGalleryGameTests() {}
 
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 100)
-    public static void queuedStorageWallBuildsFloorRowsAndCompletionTotals(
+    public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
         BlockPos playerPos = helper.absolutePos(ORIGIN);
@@ -36,11 +36,11 @@ public final class TestWallGameTests {
                 Items.APPLE, Items.PAPER, Items.STICK,
                 Items.GLASS, Items.SAND, Items.GRAVEL, Items.COAL);
         List<Item> secondGroup = List.of(Items.IRON_INGOT);
-        TestWallGenerator.Result[] completed = new TestWallGenerator.Result[1];
+        RenderGalleryGenerator.Result[] completed = new RenderGalleryGenerator.Result[1];
 
-        TestWallGenerator.Plan plan = TestWallGenerator.enqueue(
+        RenderGalleryGenerator.Plan plan = RenderGalleryGenerator.enqueue(
                 player,
-                TestWallGenerator.Kind.STORAGE,
+                RenderGalleryGenerator.Kind.STORAGE,
                 List.of(firstGroup, secondGroup),
                 result -> completed[0] = result);
 
@@ -48,14 +48,14 @@ public final class TestWallGameTests {
         checkEquals(11, plan.totalItems(), "Planned item count");
 
         helper.runAfterDelay(60, () -> {
-            check(completed[0] != null, "Queued wall did not complete");
+            check(completed[0] != null, "Queued gallery did not complete");
             checkEquals(3, completed[0].totalStacks(), "Placed stack count");
             checkEquals(3, completed[0].expectedStacks(), "Completed expected count");
             checkEquals(11, completed[0].totalItems(), "Completed item count");
 
             BlockPos base = playerPos.east();
             check(helper.getLevel().getBlockState(base.below()).is(Blocks.SMOOTH_SANDSTONE),
-                    "Wall floor was not built");
+                    "Gallery floor was not built");
             check(helper.getLevel().getBlockEntity(base) instanceof StorageStackBE,
                     "First group first row missing");
             check(helper.getLevel().getBlockEntity(base.north()) instanceof StorageStackBE,
