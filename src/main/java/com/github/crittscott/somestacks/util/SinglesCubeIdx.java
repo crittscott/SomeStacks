@@ -29,39 +29,22 @@ public final class SinglesCubeIdx {
     /** The layer a block hands items down from, and the only one that holds up the block above. */
     public static final int TOP_LAYER_Y = LAYERS - 1;
 
-    /** The largest cell coordinate on an axis, which a rotation reflects about. */
-    private static final int MAX_COORD = GRID_EDGE - 1;
-
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.0;
 
+    /** The largest cell coordinate on an axis, which a rotation reflects about. */
+    private static final int MAX_COORD = GRID_EDGE - 1;
+
     private static final int[] STARTS = {0, 4, 8, 12};
 
-    public static int startPixel(int i) {
-        return STARTS[i];
-    }
-
-    public static int[] xyzFromIndex(int idx) {
-        int y = idx / LAYER_SIZE;
-        int rem = idx % LAYER_SIZE;
-        int z = rem / GRID_EDGE;
-        int x = rem % GRID_EDGE;
-        return new int[]{x, y, z};
-    }
-
     /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
-     * in, so both gestures answer a click the same way.
+     * Whether a Singles Stack that does not exist yet could take an item at {@code index}, given the
+     * seam it would stand on. Every cell of such a block is empty, so only the bottom layer can be
+     * supported, and only by the seam. A newly placed block is unrotated, so {@code index} is read in
+     * the visual frame.
      */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return switch (rotation % 4) {
-            case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{z, y, MAX_COORD - x};
-            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
-            case 3 -> new int[]{MAX_COORD - z, y, x};
-            default -> new int[]{x, y, z};
-        };
+    public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
+        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
     }
 
     private static AABB getCubeBox(int visualX, int visualY, int visualZ, BlockPos blockPos) {
@@ -73,6 +56,43 @@ public final class SinglesCubeIdx {
         double maxZ = minZ + CELL_PIXELS / 16.0;
 
         return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /**
+     * Whether a cell rests on something. Cells above the bottom consult the cell under them in the
+     * same column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
+     * Singles Stack underneath; a null seam means the block stands on the world rather than on
+     * another Singles Stack, which grounds the bottom layer outright.
+     */
+    public static boolean isGrounded(int index, IItemHandler handler, int blockRotation, boolean[] seamBelow) {
+        int[] xyz = xyzFromIndex(index);
+        int y = xyz[1];
+
+        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
+
+        int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
+
+        return !handler.getStackInSlot(belowIndex).isEmpty();
+    }
+
+    /**
+     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
+     * weigh a run of placements before any of them happens.
+     */
+    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
+        int y = xyzFromIndex(index)[1];
+
+        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
+
+        return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
+    }
+
+    /** Whether the top layer beneath a block occupies the visual column {@code index} stands in. */
+    public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
+        if (seamBelow == null) {
+            return false;
+        }
+        return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
     }
 
     /** Block-local collision shape of one stored cell. */
@@ -87,33 +107,43 @@ public final class SinglesCubeIdx {
         return Shapes.box(minX, minY, minZ, minX + size, minY + size, minZ + size);
     }
 
-    public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
-        IItemHandler handler = be.getItems();
+    /**
+     * The storage column a visual column occupies under a block rotation, the inverse of
+     * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
+     * {@code r} is {@code (4 - r) % 4}.
+     */
+    public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
+        int[] storage = rotateXYZ(visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE, (4 - blockRotation % 4) % 4);
+        return storage[2] * GRID_EDGE + storage[0];
+    }
 
-        int blockRotation = be.getRotation();
-        double closestDist = Double.MAX_VALUE;
-        int closestIndex = -1;
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            ItemStack stack = handler.getStackInSlot(storageIndex);
-            if (stack.isEmpty()) continue;
-
-            int[] storageXYZ = xyzFromIndex(storageIndex);
-            int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-            AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hit != null) {
-                double dist = hit.distanceTo(ray.eye());
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = storageIndex;
-                }
+    /**
+     * Occupancy of the top layer, the only layer that can hold up the Singles Stack above, recorded
+     * in visual columns so it means the same thing to a block above of any rotation. Taken as a
+     * snapshot so it stays usable once the block it came from is gone.
+     */
+    public static boolean[] topLayerOccupancy(IItemHandler handler, int blockRotation) {
+        boolean[] occupancy = new boolean[LAYER_SIZE];
+        for (int column = 0; column < LAYER_SIZE; column++) {
+            if (!handler.getStackInSlot(indexFromColumn(column, TOP_LAYER_Y)).isEmpty()) {
+                occupancy[visualColumnFromStorage(column, blockRotation)] = true;
             }
         }
+        return occupancy;
+    }
 
-        return closestIndex;
+    /**
+     * The top-layer slice of a block occupancy snapshot, in the visual columns
+     * {@link #seamSupports} takes.
+     */
+    public static boolean[] topLayerOf(boolean[] occupancy, int blockRotation) {
+        boolean[] top = new boolean[LAYER_SIZE];
+        for (int column = 0; column < LAYER_SIZE; column++) {
+            if (occupancy[indexFromColumn(column, TOP_LAYER_Y)]) {
+                top[visualColumnFromStorage(column, blockRotation)] = true;
+            }
+        }
+        return top;
     }
 
     /**
@@ -164,14 +194,33 @@ public final class SinglesCubeIdx {
         return lastEmpty;
     }
 
-    /** The slot holding the cell at {@code y} in a storage column. */
-    public static int indexFromColumn(int storageColumn, int y) {
-        return y * LAYER_SIZE + storageColumn;
-    }
+    public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
+        IItemHandler handler = be.getItems();
 
-    /** The storage column of a slot, the identity a vertical shift works along. */
-    public static int columnFromIndex(int index) {
-        return index % LAYER_SIZE;
+        int blockRotation = be.getRotation();
+        double closestDist = Double.MAX_VALUE;
+        int closestIndex = -1;
+
+        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
+            ItemStack stack = handler.getStackInSlot(storageIndex);
+            if (stack.isEmpty()) continue;
+
+            int[] storageXYZ = xyzFromIndex(storageIndex);
+            int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
+
+            AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
+            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
+
+            if (hit != null) {
+                double dist = hit.distanceTo(ray.eye());
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestIndex = storageIndex;
+                }
+            }
+        }
+
+        return closestIndex;
     }
 
     /**
@@ -183,29 +232,14 @@ public final class SinglesCubeIdx {
         return visual[2] * GRID_EDGE + visual[0];
     }
 
-    /**
-     * The storage column a visual column occupies under a block rotation, the inverse of
-     * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
-     * {@code r} is {@code (4 - r) % 4}.
-     */
-    public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = rotateXYZ(visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE, (4 - blockRotation % 4) % 4);
-        return storage[2] * GRID_EDGE + storage[0];
+    /** The storage column of a slot, the identity a vertical shift works along. */
+    public static int columnFromIndex(int index) {
+        return index % LAYER_SIZE;
     }
 
-    /**
-     * Occupancy of the top layer, the only layer that can hold up the Singles Stack above, recorded
-     * in visual columns so it means the same thing to a block above of any rotation. Taken as a
-     * snapshot so it stays usable once the block it came from is gone.
-     */
-    public static boolean[] topLayerOccupancy(IItemHandler handler, int blockRotation) {
-        boolean[] occupancy = new boolean[LAYER_SIZE];
-        for (int column = 0; column < LAYER_SIZE; column++) {
-            if (!handler.getStackInSlot(indexFromColumn(column, TOP_LAYER_Y)).isEmpty()) {
-                occupancy[visualColumnFromStorage(column, blockRotation)] = true;
-            }
-        }
-        return occupancy;
+    /** The slot holding the cell at {@code y} in a storage column. */
+    public static int indexFromColumn(int storageColumn, int y) {
+        return y * LAYER_SIZE + storageColumn;
     }
 
     /** Snapshot of which of a block's cells hold an item. */
@@ -218,64 +252,30 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * The top-layer slice of a block occupancy snapshot, in the visual columns
-     * {@link #seamSupports} takes.
+     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
+     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
+     * in, so both gestures answer a click the same way.
      */
-    public static boolean[] topLayerOf(boolean[] occupancy, int blockRotation) {
-        boolean[] top = new boolean[LAYER_SIZE];
-        for (int column = 0; column < LAYER_SIZE; column++) {
-            if (occupancy[indexFromColumn(column, TOP_LAYER_Y)]) {
-                top[visualColumnFromStorage(column, blockRotation)] = true;
-            }
-        }
-        return top;
+    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
+        return switch (rotation % 4) {
+            case 0 -> new int[]{x, y, z};
+            case 1 -> new int[]{z, y, MAX_COORD - x};
+            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
+            case 3 -> new int[]{MAX_COORD - z, y, x};
+            default -> new int[]{x, y, z};
+        };
     }
 
-    /** Whether the top layer beneath a block occupies the visual column {@code index} stands in. */
-    public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
-        if (seamBelow == null) {
-            return false;
-        }
-        return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
+    public static int startPixel(int i) {
+        return STARTS[i];
     }
 
-    /**
-     * Whether a cell rests on something. Cells above the bottom consult the cell under them in the
-     * same column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
-     * Singles Stack underneath; a null seam means the block stands on the world rather than on
-     * another Singles Stack, which grounds the bottom layer outright.
-     */
-    public static boolean isGrounded(int index, IItemHandler handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
-        int y = xyz[1];
-
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
-
-        return !handler.getStackInSlot(belowIndex).isEmpty();
-    }
-
-    /**
-     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
-     * weigh a run of placements before any of them happens.
-     */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = xyzFromIndex(index)[1];
-
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
-    }
-
-    /**
-     * Whether a Singles Stack that does not exist yet could take an item at {@code index}, given the
-     * seam it would stand on. Every cell of such a block is empty, so only the bottom layer can be
-     * supported, and only by the seam. A newly placed block is unrotated, so {@code index} is read in
-     * the visual frame.
-     */
-    public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
-        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
+    public static int[] xyzFromIndex(int idx) {
+        int y = idx / LAYER_SIZE;
+        int rem = idx % LAYER_SIZE;
+        int z = rem / GRID_EDGE;
+        int x = rem % GRID_EDGE;
+        return new int[]{x, y, z};
     }
 
     private record Hit(int index, double distance) {

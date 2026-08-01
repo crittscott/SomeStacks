@@ -69,7 +69,7 @@ public class StorageStackBE extends BlockEntity {
     private long cachedPileTick = Long.MIN_VALUE;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
-        super(ModRegistry.STACK_BE.get(), pos, state);
+        super(ModRegistry.STORAGE_STACK_BE.get(), pos, state);
     }
 
     public static boolean isValidStorageItem(ItemStack stack) {

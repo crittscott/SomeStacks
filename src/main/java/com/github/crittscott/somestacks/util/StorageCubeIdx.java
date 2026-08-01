@@ -16,41 +16,15 @@ public final class StorageCubeIdx {
     /** Cells in one layer. */
     public static final int LAYER_SIZE = GRID_EDGE * GRID_EDGE;
 
-    /** The largest cell coordinate on an axis, which a rotation reflects about. */
-    private static final int MAX_COORD = GRID_EDGE - 1;
 
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.0;
 
+    /** The largest cell coordinate on an axis, which a rotation reflects about. */
+    private static final int MAX_COORD = GRID_EDGE - 1;
+
     // Start pixels per axis for indices 0,1,2
     private static final int[] STARTS = {1, 6, 11};
-
-    public static int startPixel(int i) {
-        return STARTS[i];
-    }
-
-    public static int[] xyzFromIndex(int idx) {
-        int y = idx / LAYER_SIZE;
-        int rem = idx % LAYER_SIZE;
-        int z = rem / GRID_EDGE;
-        int x = rem % GRID_EDGE;
-        return new int[]{x, y, z};
-    }
-
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
-     * in, so both gestures answer a click the same way.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return switch (rotation % 4) {
-            case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{z, y, MAX_COORD - x};
-            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
-            case 3 -> new int[]{MAX_COORD - z, y, x};
-            default -> new int[]{x, y, z};
-        };
-    }
 
     public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
         IItemHandler handler = be.getItems();
@@ -85,5 +59,32 @@ public final class StorageCubeIdx {
         }
 
         return closestIndex;
+    }
+
+    /**
+     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
+     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
+     * in, so both gestures answer a click the same way.
+     */
+    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
+        return switch (rotation % 4) {
+            case 0 -> new int[]{x, y, z};
+            case 1 -> new int[]{z, y, MAX_COORD - x};
+            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
+            case 3 -> new int[]{MAX_COORD - z, y, x};
+            default -> new int[]{x, y, z};
+        };
+    }
+
+    public static int startPixel(int i) {
+        return STARTS[i];
+    }
+
+    public static int[] xyzFromIndex(int idx) {
+        int y = idx / LAYER_SIZE;
+        int rem = idx % LAYER_SIZE;
+        int z = rem / GRID_EDGE;
+        int x = rem % GRID_EDGE;
+        return new int[]{x, y, z};
     }
 }
