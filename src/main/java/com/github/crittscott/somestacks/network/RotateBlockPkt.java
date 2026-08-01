@@ -43,10 +43,8 @@ public class RotateBlockPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            // Whether this is the gesture at all is settled before anything is claimed: claiming
-            // fires the right-click event and marks the position, so a packet that turns out to
-            // describe no gesture would otherwise announce an interaction that never happened and
-            // cancel the player's own click at a position the mod does not even own.
+            // Establish that this packet describes the gesture before claiming it. A claim fires
+            // the interaction event and suppresses the vanilla click that follows.
             if (!PacketBoundary.holdsInMainHand(sp, Items.REDSTONE_TORCH)) return;
 
             Level level = sp.level();
@@ -57,9 +55,7 @@ public class RotateBlockPkt {
             boolean storage = block == ModRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE;
             if (!singles && !storage) return;
 
-            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
-            // that item on the block. Claiming the click denies the use-item-on packet that
-            // follows, so the rotation does not also place the torch against the stack.
+            // Claiming suppresses the vanilla attempt to place the redstone torch.
             if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
 
             int newRotation;

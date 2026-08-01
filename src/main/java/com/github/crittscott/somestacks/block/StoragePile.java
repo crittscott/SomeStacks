@@ -31,9 +31,10 @@ import java.util.Map;
  * column: deposits fill from the base upward whatever block or slot they were aimed at, the
  * capability exposes every block's slots as one flat range, and settling consolidates, sorts and
  * packs the entire height down. The base block's {@code permanent} flag is the pile's, and
- * settling propagates it, so a pile that is split or joined heals to one answer.
+ * settling propagates it, so a pile that is split or joined returns to a consistent state.
  *
- * <p>Instances are resolved fresh per operation and are not held across world edits.
+ * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
+ * current tick, and placement or removal invalidates every affected cache immediately.
  */
 public final class StoragePile {
     private final Level level;
@@ -123,7 +124,7 @@ public final class StoragePile {
     /**
      * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum. Testing the
-     * whole resulting column rather than one neighbouring pile is what stops a block placed into
+     * whole resulting column rather than one neighboring pile is what stops a block placed into
      * the gap between two piles from joining them into an over-tall one.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
@@ -185,10 +186,10 @@ public final class StoragePile {
     }
 
     /**
-     * Slots the pile advertises to automation: the ones it holds, plus one block's worth of
-     * headroom while the configured height allows another block. See
-     * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the
-     * real one.
+     * Slots the pile advertises to automation: its current slots plus one block of reachable
+     * headroom while growth is allowed. Advertising the entire potential height would expose
+     * unreachable gaps; advertising only current slots would leave automation no slot through
+     * which to grow the pile.
      */
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
@@ -220,7 +221,7 @@ public final class StoragePile {
 
     /**
      * The comparator output for the whole pile, which is what every block of it reports. Held in one
-     * place so the value a block answers with and the value a settle decides to publish cannot drift
+     * place so the value a block reports and the value a settle publishes cannot drift
      * apart.
      *
      * <p>This is vanilla's container conversion, over a fill level computed the way vanilla computes
@@ -234,13 +235,13 @@ public final class StoragePile {
     }
 
     /**
-     * Tells the pile's neighbours to read the comparator output again, but only when that output has
+     * Tells the pile's neighbors to read the comparator output again, but only when that output has
      * actually changed.
      *
      * <p>Every block of the pile reports the whole pile's fill, so an edit anywhere in it changes
-     * the value every block answers with, including blocks that publish nothing of their own and are
+     * the value every block reports, including blocks that publish nothing of their own and are
      * exactly the ones a comparator may be sitting against. The whole run is notified; the guard is
-     * what keeps that from costing a run-length of neighbour updates per item moved. The base block
+     * what keeps that from costing a run-length of neighbor updates per item moved. The base block
      * holds the last published value, because the base is what identifies a pile.
      */
     private void publishComparatorSignal() {
@@ -255,7 +256,7 @@ public final class StoragePile {
         Block block = ModRegistry.STORAGE_STACK_BLOCK.get();
         for (StorageStackBE sbe : blocks) {
             // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
-            // block further away behind a solid block, which the plain neighbour update does not.
+            // block further away behind a solid block, which the plain neighbor update does not.
             level.updateNeighbourForOutputSignal(sbe.getBlockPos(), block);
         }
     }
@@ -318,9 +319,9 @@ public final class StoragePile {
      * therefore still what a pile ends up doing, just a tick later than a player's own deposit does
      * it. Answering for the slot given rather than for the pile is what makes the handler's slot
      * range mean something: a caller that walks the range and sums what each slot accepts gets the
-     * pile's real capacity, where a whole-pile answer repeated at every slot multiplied it.
+     * pile's real capacity; reporting whole-pile capacity at every slot would multiply it.
      *
-     * <p>A capability insertion carries no player, so growth is weighed against the fake player that
+     * <p>A capability insertion carries no player, so growth is checked against the fake player that
      * would place the block.
      *
      * @param simulate when true, nothing is stored and the pile does not grow
@@ -365,7 +366,7 @@ public final class StoragePile {
     /**
      * How much of {@code stack} the one slot at {@code flatSlot} has room for. A slot in the block
      * above the pile is empty, so it has room for a whole stack — but only where growth would
-     * actually be permitted, which {@link #canGrow} answers without side effects, so a simulation
+     * actually be permitted, which {@link #canGrow} evaluates without side effects, so a simulation
      * cannot promise a slot the commit would refuse.
      */
     private int roomAt(int flatSlot, ItemStack stack) {
@@ -419,12 +420,12 @@ public final class StoragePile {
 
     /**
      * Whether growth is permitted and the space above the pile could take a block: height,
-     * enablement, build height, replaceability, and everything protection can answer without side
+     * enablement, build height, replaceability, and every protection check available without side
      * effects. Planning and committing share this predicate so that a simulated deposit cannot
      * promise a block the deposit itself would refuse.
      *
-     * <p>Spawn protection exempts operators, so the answer depends on who is growing the pile: a
-     * player's own deposit is weighed against that player, and automation against the level's fake
+     * <p>Spawn protection exempts operators, so the result depends on who is growing the pile: a
+     * player's own deposit is checked against that player, and automation against the level's fake
      * player, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
@@ -490,8 +491,8 @@ public final class StoragePile {
 
     /**
      * Consolidates and sorts the whole pile, writes it back from the base upward, propagates the
-     * base's mode, removes the empty blocks that packing leaves at the top, and pays the
-     * publication every edit since the last pass deferred.
+     * base's permanent flag, removes empty blocks left at the top, and publishes all deferred
+     * changes.
      *
      * <p>Slots that already hold what they should are left alone, so an edit that disturbs a few
      * stacks resyncs a few blocks rather than the whole column. Publishing after the trim means a

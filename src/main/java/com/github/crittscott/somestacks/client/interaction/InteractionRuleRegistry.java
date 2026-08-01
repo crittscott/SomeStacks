@@ -7,7 +7,7 @@ import java.util.List;
  *
  * <p>Order is the precedence rule: the first match wins and the walk stops. The block list runs
  * from the most specific gesture to the least, so the torch gestures precede deposit, deposit into
- * the clicked stack precedes deposit into its neighbour, generic placement catches the modified
+ * the clicked stack precedes deposit into its neighbor, generic placement catches the modified
  * clicks none of those claimed, and unmodified extraction sits last.
  */
 public final class InteractionRuleRegistry {

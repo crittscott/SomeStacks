@@ -12,9 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The bar mapping parse. Whether a colour is to be computed is carried apart from the colour
- * itself, so that white — the colour a pack author names to decline tinting — is an answer rather
- * than a request.
+ * Bar mapping parsing, including the distinction between an authored white tint and a request for
+ * automatic tinting.
  */
 class BarTextureParseTest {
     private static JsonElement json(String text) {

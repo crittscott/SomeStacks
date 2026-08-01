@@ -18,12 +18,12 @@ import javax.annotation.Nonnull;
  * lies in the block above it. Refusing rather than choosing elsewhere is what keeps a slot index
  * meaning one place, and no insertion can leave an item hanging in the air.
  *
- * <p>Because insertion answers for one cell, a caller that walks the range and sums what each
+ * <p>Because insertion addresses one cell, a caller that walks the range and sums what each
  * accepts gets the column's real capacity, and {@code getSlotLimit} of one is the truth about how
  * much a single call will take. A caller walking in ascending order still fills the column: each
  * placement stands before the next cell is offered.
  *
- * <p>A mutation refuses outright while another one is running; see {@link RunEdit}.
+ * <p>A mutation is refused while another is running; see {@link RunEdit}.
  *
  * <p>The slot count is what the column holds plus one block's worth of headroom while the
  * configured height allows another block, so it grows and shrinks with the column. See

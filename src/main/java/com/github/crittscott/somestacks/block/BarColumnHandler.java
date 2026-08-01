@@ -17,16 +17,16 @@ import javax.annotation.Nonnull;
  * it. Both leave a standing structure, which is why automation never drops bars the way a player's
  * own extraction does.
  *
- * <p>Because insertion answers for one position, a caller that walks the range and sums what each
+ * <p>Because insertion addresses one position, a caller that walks the range and sums what each
  * accepts gets the column's real capacity, and {@code getSlotLimit} of one is the truth about how
  * much a single call will take. A caller walking in ascending order still fills the column: each
  * placement stands before the next position is offered.
  *
- * <p>A mutation refuses outright while another one is running; see {@link RunEdit}.
+ * <p>A mutation is refused while another is running; see {@link RunEdit}.
  *
  * <p>The slot count is what the column holds plus one block's worth of headroom while the
  * configured height allows another block, so it grows and shrinks with the column. See
- * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
+ * {@link BarColumn#advertisedSlots()} for why it is neither the potential height nor the real
  * one.
  */
 public class BarColumnHandler implements IItemHandler {

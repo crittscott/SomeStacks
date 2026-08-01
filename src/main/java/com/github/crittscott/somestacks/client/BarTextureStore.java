@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * What each item's bar looks like, loaded from {@code assets/*}/{@code textures/bars/*.json} and
+ * What each item's bar looks like, loaded from {@code assets/<namespace>/textures/bars/*.json} and
  * reloaded with the resource packs. A mapping names a texture and an optional tint; an item no
  * mapping covers falls back to the base ingot texture with a tint derived from the item's own
  * sprite.
@@ -43,20 +43,18 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
     /**
-     * A bar's appearance: the texture to draw and the colour to draw it in. {@code autoTint} says
-     * the colour is still to be worked out from the item itself, and is carried apart from the
-     * colour rather than reserved out of it, so that a mapping asking for white — the way a pack
-     * author declines tinting — is not read as a request to compute one.
+     * A bar's texture and tint. {@code autoTint} is separate from {@code color} because white is a
+     * valid authored color meaning "no tint," not a sentinel requesting automatic tinting.
      */
     public record BarTextureData(ResourceLocation texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
-        /** A mapping whose colour is to be computed from the item's own sprite and registered tint. */
+        /** Creates a mapping whose tint will be derived from the item's sprite and registered tint. */
         public static BarTextureData auto(ResourceLocation texture) {
             return new BarTextureData(texture, WHITE, true);
         }
 
-        /** A mapping whose colour is settled: an authored tint, a computed one, or white for none. */
+        /** Creates a mapping with its final authored or computed tint. */
         public static BarTextureData tinted(ResourceLocation texture, int color) {
             return new BarTextureData(texture, color, false);
         }
@@ -117,11 +115,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
     /**
      * One mapping: a bare texture id, or an object with optional {@code texture} and {@code tint}.
-     * A mapping carrying a tint is settled by it, including a white one, which is how a pack author
-     * says to draw the texture as it is; a mapping with no tint asks for one to be computed.
+     * An explicit tint is final, including white to disable tinting. Omitting the tint requests
+     * automatic tinting from the item.
      *
      * @return the mapping, or null when the value is neither a string nor an object.
-     * @throws IllegalArgumentException for a malformed id or colour, which the caller reports.
+     * @throws IllegalArgumentException for a malformed id or color, which the caller reports.
      */
     @Nullable
     static BarTextureData parseEntry(JsonElement value) {
@@ -178,12 +176,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
             ItemStack stack = new ItemStack(item);
 
-            // An item is drawn as its texture multiplied by the tint its mod registers, so the
-            // average has to carry both. Either half alone is white when the item does not use it.
+            // Rendering multiplies the sprite by the item's registered tint, so the derived bar tint
+            // must include both. Either contribution is white when the item does not supply it.
             int spriteColor = averageSpriteColor(stack, resourceManager);
             int itemColor = registeredItemColor(stack);
             int tint = multiplyColors(spriteColor, itemColor);
-            SomeStacks.LOGGER.debug("  Sprite #{} x item colour #{} -> tint #{}",
+            SomeStacks.LOGGER.debug("  Sprite #{} x item color #{} -> tint #{}",
                     String.format("%08X", spriteColor), String.format("%08X", itemColor),
                     String.format("%08X", tint));
             return tint;
@@ -197,7 +195,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
      * The average of the sprite the item's baked model puts on the item atlas, or white when there
      * is none to read. An item drawn by a custom renderer carries its art in that renderer rather
      * than in its model, so its particle resolves to the missing texture and only its registered
-     * tint describes its colour.
+     * tint describes its color.
      */
     private static int averageSpriteColor(ItemStack stack, ResourceManager resourceManager) {
         Minecraft mc = Minecraft.getInstance();
@@ -233,7 +231,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
     }
 
-    /** The colour the item's mod registers for the primary layer, or white when it registers none. */
+    /** The color the item's mod registers for the primary layer, or white when it registers none. */
     private static int registeredItemColor(ItemStack stack) {
         return Minecraft.getInstance().getItemColors().getColor(stack, 0) | 0xFF000000;
     }
@@ -307,7 +305,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
             SomeStacks.LOGGER.debug("    Average RGB (raw): R={}, G={}, B={}", avgR, avgG, avgB);
 
-            // Brighten to compensate for dark outlines in ingot textures
+            // Brighten to compensate for dark outlines in ingot textures.
             int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
             int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
             int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
@@ -329,10 +327,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
 
         if (colorStr.length() == 6) {
-            // RGB format - add full alpha
+            // RGB input: add full alpha.
             return (int) Long.parseLong("FF" + colorStr, 16);
         } else if (colorStr.length() == 8) {
-            // ARGB format
+            // ARGB input.
             return (int) Long.parseLong(colorStr, 16);
         }
 

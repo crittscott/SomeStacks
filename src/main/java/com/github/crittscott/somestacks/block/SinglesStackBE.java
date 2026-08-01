@@ -45,8 +45,8 @@ public class SinglesStackBE extends BlockEntity {
     private boolean batchTouched = false;
 
     /**
-     * Set when a content edit still owes clients this block's contents and the block its light
-     * level. The column's scheduled publication pass clears it; see {@link #schedulePublish()}.
+     * Set when a content edit still requires client synchronization and a light update. The
+     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
      */
     private boolean publishPending = false;
 
@@ -112,7 +112,7 @@ public class SinglesStackBE extends BlockEntity {
         return cachedColumn;
     }
 
-    /** Drops the held column, so the next caller walks the world again. */
+    /** Invalidates the cached column so the next lookup walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
     }
@@ -120,8 +120,7 @@ public class SinglesStackBE extends BlockEntity {
     /**
      * Records the comparator output the column is about to publish.
      *
-     * @return whether it differs from the last one, and so whether the column needs to tell its
-     *         neighbours to read again
+     * @return whether the signal changed and comparator neighbors must be notified
      */
     boolean exchangePublishedSignal(int signal) {
         if (publishedSignal == signal) {
@@ -193,8 +192,8 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /**
-     * The shape, rebuilt only when contents or rotation last invalidated it. Called for every
-     * outline, collision, and pathfinding query, so it is not somewhere to recompute.
+     * Returns the occupied-cell shape, rebuilding it only after contents or rotation invalidates
+     * the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.
      */
     public VoxelShape getCachedShape() {
         if (cachedShape == null) {
@@ -424,7 +423,7 @@ public class SinglesStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
-    /** Pushes this block's contents and presentation state to everyone tracking it. */
+    /** Synchronizes this block's contents and presentation state to tracking clients. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();
@@ -433,11 +432,9 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /**
-     * Opens a run of edits that should publish as one. Per-slot sync is held back and the block
-     * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
-     * blocks a column-wide pass really touched. The gravity paths hold sync back themselves and
-     * publish through their own route, so a batch starts from a clean slate rather than inheriting
-     * what one of them last touched.
+     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
+     * {@link #endBatch()} schedules publication only if this block changed. Gravity publishes
+     * through its own path, so a new batch clears any prior touch state.
      */
     void beginBatch() {
         suppressSync = true;
@@ -453,8 +450,7 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /**
-     * Records that this block owes a publication, and asks the column to schedule the pass that
-     * pays it.
+     * Marks this block for publication and schedules a pass on the column's bottom block.
      *
      * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
      * recompute. A cell holds one item, so a caller moving a stack calls the handler once per item,
@@ -474,9 +470,9 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     /**
-     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
-     * The comparator value belongs to the column rather than to one of its blocks, so
-     * {@link SinglesColumn#publishPending()} settles that once for the whole run.
+     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
+     * to the column and is published once for the whole run by
+     * {@link SinglesColumn#publishPending()}.
      *
      * @return whether anything was owed
      */

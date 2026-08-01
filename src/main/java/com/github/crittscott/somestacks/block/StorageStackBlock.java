@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 
 /**
  * The Storage Stack block: the world-facing half of {@link StorageStackBE}, holding the block
- * state, the shapes, and the breaking behaviour. Unlike its Singles and Bar counterparts it keeps a
- * full-block shape whatever its contents, because its grid always fills the block.
+ * state, shapes, and breaking behavior. Unlike Singles and Bar, Storage keeps a full-block shape
+ * regardless of which cells are occupied.
  *
  * <p>Breaking drops only this block's own contents. What that does to the rest of the pile, which
  * may need to settle or shrink around the gap, belongs to {@link StoragePile}.
@@ -158,7 +158,7 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
             }
             super.onRemove(state, level, pos, newState, isMoving);
 
-            // Before anything resolves a pile again: what the neighbours hold describes a run this
+            // Before anything resolves a pile again: what the neighbors hold describes a run this
             // block was part of.
             StoragePile.invalidateAround(level, pos);
 

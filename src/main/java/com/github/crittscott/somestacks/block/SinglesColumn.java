@@ -31,12 +31,12 @@ import java.util.List;
  * cell lies in the block above it. Refusing an unsupported cell rather than choosing another is what
  * keeps a slot index meaning one place, and no placement can leave an item hanging in the air.
  *
- * <p>Extraction is the player's own removal, unchanged: the cell is emptied and the column shifts
- * down over it, dropping nothing and moving no item across the column horizontally. A Bar column's
- * backfill from the top has no counterpart here, where one item is not interchangeable with the
- * next.
+ * <p>Automation uses the same extraction behavior as the player: the target cell is emptied and
+ * its visual column shifts down without drops or horizontal movement. Singles cannot use the Bar
+ * column's topmost-item backfill because different items are not interchangeable.
  *
- * <p>Instances are resolved fresh per operation and are not held across world edits.
+ * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
+ * current tick, and placement or removal invalidates every affected cache immediately.
  */
 public final class SinglesColumn {
     private final Level level;
@@ -96,8 +96,8 @@ public final class SinglesColumn {
     /**
      * Publishes the comparator output of every run a structural change at {@code pos} could have
      * altered. Adding a block lengthens a column, which changes the fill every one of its blocks
-     * reports; removing one from the middle splits a column into two runs that each answer
-     * differently than the one did. The run a split leaves on top has a bottom block that has
+     * reports; removing one from the middle splits a column into two runs whose values differ from
+     * the original run. The upper run has a new bottom block that has
      * published nothing, so it notifies on its first look.
      *
      * <p>Call after {@link #invalidateAround}, so the runs are walked fresh.
@@ -227,13 +227,13 @@ public final class SinglesColumn {
     }
 
     /**
-     * Tells the column's neighbours to read the comparator output again, but only when that output
+     * Tells the column's neighbors to read the comparator output again, but only when that output
      * has actually changed.
      *
      * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
-     * every block answers with, including blocks that publish nothing of their own and are exactly
+     * every block reports, including blocks that publish nothing of their own and are exactly
      * the ones a comparator may be sitting against. The whole run is notified; the guard is what
-     * keeps that from costing a run-length of neighbour updates per item moved. The bottom block
+     * keeps that from costing a run-length of neighbor updates per item moved. The bottom block
      * holds the last published value, because the bottom is what identifies a column.
      */
     void publishComparatorSignal() {
@@ -248,7 +248,7 @@ public final class SinglesColumn {
         Block block = ModRegistry.SINGLES_STACK_BLOCK.get();
         for (SinglesStackBE be : blocks) {
             // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
-            // block further away behind a solid block, which the plain neighbour update does not.
+            // block further away behind a solid block, which the plain neighbor update does not.
             level.updateNeighbourForOutputSignal(be.getBlockPos(), block);
         }
     }
@@ -261,8 +261,7 @@ public final class SinglesColumn {
      *
      * <p>A cell holds one item, so a caller moving a stack through the capability makes one call
      * per item, and a single removal draws an item down out of every block above. Deferring is what
-     * keeps each of those steps from paying for an update packet, a comparator walk of the whole
-     * column, and a light recompute.
+     * avoids an update packet, a full-column comparator walk, and a light recompute for every step.
      */
     void markDirty() {
         if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
@@ -276,12 +275,12 @@ public final class SinglesColumn {
     }
 
     /**
-     * Pays the publication the edits of an earlier tick deferred: contents and light for each block
-     * that has one outstanding, then the column's comparator output once for the whole run.
+     * Publishes deferred contents and light for changed blocks, then publishes comparator output
+     * once for the whole column.
      *
      * <p>Nothing outstanding means nothing to publish, and the comparator walk is skipped with it: a
      * structural change publishes through {@link #publishAround} at the moment it happens, so this
-     * pass owes only what a content edit left behind.
+     * pass handles only changes deferred by content edits.
      */
     void publishPending() {
         boolean published = false;
@@ -301,8 +300,7 @@ public final class SinglesColumn {
      *
      * <p>Answering for the cell it was given rather than for the column is what makes the handler's
      * slot range mean something: a caller that walks the range and sums what each cell accepts gets
-     * the column's real capacity, where a whole-column answer repeated at every cell multiplied
-     * it.
+     * the column's real capacity; reporting whole-column capacity at every cell would multiply it.
      *
      * <p>A caller walking the range in ascending order still fills the column, because each
      * placement stands before the next cell is offered: a filled layer supports the layer above it
@@ -335,9 +333,9 @@ public final class SinglesColumn {
      * the cell beneath it occupied, which for a bottom layer means the seam with the Singles Stack
      * below, and for the bottom block of all means the world.
      *
-     * <p>A cell in the block above the column is weighed against the block growth would put there —
+     * <p>A cell in the block above the column is checked against the block growth would put there —
      * empty, unrotated as a player's own placement is, standing on the column's current top layer —
-     * and against everything {@link #canGrow(VoxelShape)} can answer without side effects, so a simulation
+     * and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore
      * cannot promise a cell the commit would refuse.
      */
     private boolean cellAccepts(int flatSlot) {
@@ -374,10 +372,10 @@ public final class SinglesColumn {
 
     /**
      * Whether growth is permitted and the space above the column could take a block: height,
-     * enablement, build height, replaceability, and everything protection can answer without side
+     * enablement, build height, replaceability, and every protection check available without side
      * effects. Simulating and committing share this predicate, so a simulated insertion cannot
      * promise a block the insertion itself would refuse. Growth carries no player, so protection
-     * is weighed against the level's fake player, which is never exempt from spawn protection.
+     * is checked against the level's fake player, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
         if (blocks.size() >= maxHeight() || !ServerConfig.ENABLE_SINGLES_STACK_BLOCK.get()
@@ -392,7 +390,7 @@ public final class SinglesColumn {
                 && Protection.isUnobstructed(serverLevel, above, finalCollision);
     }
 
-    /** Adds one block on top. Automation carries no player, so growth answers to the fake player. */
+    /** Adds one block on top, attributing the automated placement to the level's fake player. */
     private boolean grow(int slot) {
         VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
         if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {

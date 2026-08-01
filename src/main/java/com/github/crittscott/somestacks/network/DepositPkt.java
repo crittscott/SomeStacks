@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 /**
  * A deposit into an existing stack. Carries the stack's position and the position actually clicked,
- * which differ when the gesture reached the stack through a neighbouring block; the server checks
+ * which differ when the gesture reached the stack through a neighboring block; the server checks
  * protection at both and writes only the stack.
  *
  * <p>The server recomputes the target cell from the player's current view rather than trusting a
@@ -155,7 +155,7 @@ public class DepositPkt {
 
     /**
      * Writes back what the deposit left of the hand stack. A creative deposit worked from a copy,
-     * so there is nothing to write back and the real stack stands untouched.
+     * so there is nothing to write back and the original hand stack remains unchanged.
      */
     private static void returnToHand(ServerPlayer sp, boolean creative, ItemStack handStack) {
         if (!creative) {

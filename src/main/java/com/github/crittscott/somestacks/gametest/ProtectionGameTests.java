@@ -215,7 +215,7 @@ public final class ProtectionGameTests {
     // Mod-driven removal under protection
     //
     // A settle or a collapse takes down the blocks it empties, and that is a world edit with no
-    // actor left to ask, so it answers to the level's fake player exactly as growth does. A refusal
+    // actor left to ask, so it uses the level's fake player exactly as growth does. A refusal
     // has to leave the block standing without leaving the run's own model out of step with it.
 
     @GameTest(template = GameTestSupport.TEMPLATE)
@@ -312,7 +312,7 @@ public final class ProtectionGameTests {
     // Growth under protection
     //
     // A capability insertion aimed at a slot past what the run holds is the one that grows it, and it
-    // weighs the position above the run before promising the caller anything, so a simulation and the
+    // checks the position above the run before promising the caller anything, so a simulation and the
     // commit that follows agree about a position growth cannot have. The three tests below stage that
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.

@@ -33,11 +33,11 @@ import javax.annotation.Nullable;
 
 /**
  * The Singles Stack block: the world-facing half of {@link SinglesStackBE}, holding the block
- * state, the shapes, and the breaking behaviour.
+ * state, the shapes, and the breaking behavior.
  *
  * <p>Its outline and collision follow the occupied cells, so an empty block shows no highlight box
- * while still answering clicks through a full-block interaction shape. Neither shape lets mobs path
- * through it, and neither suffocates a player standing in its empty space.
+ * while remaining clickable through a full-block interaction shape. Pathfinding always treats the
+ * block as obstructed, while its empty internal space causes no suffocation or camera fog.
  *
  * <p>It also carries the deferred publication tick that content edits schedule on the bottom block
  * of the column.
@@ -111,9 +111,9 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     /**
-     * The whole cube, so the block can be clicked and broken through the gaps between its contents
-     * and while it is empty. An empty block therefore draws no highlight box, having no outline
-     * shape, while still answering a click; that is the intended trade.
+     * Uses the full cube so gaps and empty blocks remain clickable. The separate outline shape may
+     * still be empty, allowing an empty block to omit the highlight box without becoming
+     * unselectable.
      */
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
@@ -121,9 +121,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     /**
-     * Nothing, so standing inside a partly filled block neither suffocates nor fogs the camera.
-     * Collision already keeps a player out of an occupied cell, which leaves the empty space, and
-     * empty space is what a player is entitled to stand in.
+     * Returns no visual occlusion, so empty space inside a partly filled block neither suffocates a
+     * player nor fogs the camera. The occupied cells remain solid through the collision shape.
      */
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos,
@@ -132,10 +131,9 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     /**
-     * Never a way through. The inherited answer is drawn from whether the collision shape fills the
-     * block, which no Singles Stack ever does, so mobs would be routed straight into the items and
-     * left grinding against them. Routing around costs a block of clearance and nothing else: the
-     * only case this overstates is an empty block, and an empty block rarely stands for long.
+     * Prevents pathfinding through the block. The dynamic collision shape never fills the cube, so
+     * the inherited result would route mobs through occupied cells. This deliberately treats an
+     * empty Singles Stack as blocked as well.
      */
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos,
@@ -149,8 +147,8 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
     }
 
     /**
-     * Pays the publication a content edit deferred. Edits schedule this on the column's bottom
-     * block, so a burst of them anywhere in the run collapses into one pass.
+     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
+     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
      */
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
@@ -160,7 +158,7 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
         }
     }
 
-    /** Joining a column changes what its blocks resolve to, so their held columns are dropped. */
+    /** Invalidates cached columns and schedules publication after this block joins a run. */
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);

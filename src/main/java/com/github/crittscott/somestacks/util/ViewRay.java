@@ -13,8 +13,8 @@ import net.minecraft.world.phys.Vec3;
  * of the block they are looking at.
  *
  * <p>The segment runs past the reach limit by the slack vanilla allows a server-side interaction
- * (one block) plus the distance from a block's centre to its farthest corner (about 0.87), because
- * reach is measured to the centre: a segment stopping at the limit itself would leave the far cells
+ * (one block) plus the distance from a block's center to its farthest corner (about 0.87), because
+ * reach is measured to the center: a segment stopping at the limit itself would leave the far cells
  * of a block at maximum range untraceable.
  */
 public record ViewRay(Vec3 eye, Vec3 end) {

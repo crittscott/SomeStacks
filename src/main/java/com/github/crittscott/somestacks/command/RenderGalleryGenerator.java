@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  * than built inside the command call.
  */
 public final class RenderGalleryGenerator {
-    /** Columns between the rows of adjacent mods. */
+    /** Empty columns between adjacent item groups. */
     private static final int MOD_SPACING = 2;
 
     private RenderGalleryGenerator() {}
@@ -111,7 +111,7 @@ public final class RenderGalleryGenerator {
     /**
      * The ingot subset of {@link #itemsByNamespace}, holding only namespaces that have one.
      * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
-     * registry grouping this one is rebuilt whenever that answer can have changed.
+     * registry grouping this one is rebuilt whenever Bar validity can have changed.
      */
     private static Map<String, List<Item>> barItemsByNamespace;
 
@@ -158,10 +158,10 @@ public final class RenderGalleryGenerator {
         return itemsByNamespace().getOrDefault(modId, List.of());
     }
 
-    /** What a queued gallery will consist of, known before any of it is placed. */
+    /** Planned gallery size, known before placement begins. */
     public record Plan(int expectedStacks, int totalItems) {}
 
-    /** What a finished gallery actually consists of. */
+    /** Actual placement totals for a completed gallery. */
     public record Result(int totalStacks, int expectedStacks, int totalItems) {}
 
     /**
@@ -333,9 +333,7 @@ public final class RenderGalleryGenerator {
         return true;
     }
 
-    /**
-     * Puts a stack block at {@code pos}, or logs the rejected placement.
-     */
+    /** Places a stack block at {@code pos}, logging any rejected placement. */
     private static boolean placeStack(Level level, BlockPos pos, Block block) {
         if (level.isOutsideBuildHeight(pos)) {
             SomeStacks.LOGGER.warn("Gallery stack skipped at {}: outside build height", pos);

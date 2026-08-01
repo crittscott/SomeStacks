@@ -14,13 +14,13 @@ import javax.annotation.Nonnull;
  * <p>Every operation is positional: {@code getStackInSlot}, {@code extractItem} and {@code
  * insertItem} all address the slot they are given, so a caller that walks the range and sums what
  * each slot accepts gets the pile's real capacity, and a simulation promises what the commit
- * delivers. A slot in the block above the pile is where insertion grows the column.
+ * delivers. A slot in the block above the pile is where insertion grows the pile.
  *
  * <p>Filling from the base upward is not lost by that: the settle an insertion schedules packs the
  * whole pile down on the next tick. It arrives a tick behind a player's own deposit, which fills
  * from the base outright.
  *
- * <p>A mutation refuses outright while another one is running; see {@link RunEdit}.
+ * <p>A mutation is refused while another is running; see {@link RunEdit}.
  *
  * <p>The slot count is what the pile holds plus one block's worth of headroom while the configured
  * height allows another block, so it grows and shrinks with the pile. See

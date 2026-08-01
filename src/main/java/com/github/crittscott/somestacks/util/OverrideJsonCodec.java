@@ -13,40 +13,34 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Parses and serializes the item render override schema used everywhere overrides are
- * stored: the bundled {@code item_render_overrides} resources, the client's user
- * override file, the client's measured cache, and the server's admin override folder.
+ * Parses and serializes the item render override schema shared by bundled resources, the client
+ * override file, the measured cache, and the server override directory.
  *
- * <p>A document is a JSON object keyed by item id; each value holds optional
- * {@code mode}, {@code scale}, and {@code offset} fields. Malformed entries and fields
- * are logged and skipped.
+ * <p>A document is a JSON object keyed by item id; each value contains optional {@code mode},
+ * {@code scale}, and {@code offset} fields. Malformed entries and fields are logged and skipped.
  */
 public final class OverrideJsonCodec {
     private OverrideJsonCodec() {}
 
     /**
-     * The range a scale may take, matching the range measurement fits a model into, so a measured
-     * profile and an authored one are bounded the same way. An unbounded field admits a value no
-     * transform can use, and the parse is the one place every source of an override passes
-     * through.
+     * Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
+     * measurement.
      */
     public static final float MIN_SCALE = 0.01f;
     public static final float MAX_SCALE = 20.0f;
 
-    /** The range an offset component may take, in cell widths. One cell either way is the limit. */
+    /** Inclusive offset bounds in cell widths. */
     public static final float MIN_OFFSET = -1.0f;
     public static final float MAX_OFFSET = 1.0f;
 
-    /** Whether a field is a usable number: finite, and inside its rail. */
+    /** Whether a value is finite and within the inclusive bounds. */
     public static boolean inRange(float value, float min, float max) {
         return Float.isFinite(value) && value >= min && value <= max;
     }
 
     /**
-     * Drops the fields of an entry that fall outside their rails, the way {@link #parse} drops them
-     * from an authored file. An override that arrives over the network never met the parse, so it
-     * is held to the same bounds here and the rails stay the one description of what a field may
-     * hold.
+     * Applies the file-format bounds to a synchronized override, dropping invalid fields. Network
+     * overrides bypass {@link #parse}, so they require the same validation at the packet boundary.
      */
     public static ItemRenderConfig sanitize(ItemRenderConfig config) {
         Float scale = config.scale();
@@ -68,6 +62,7 @@ public final class OverrideJsonCodec {
         return new ItemRenderConfig(config.mode(), scale, offset);
     }
 
+    /** Parses every valid item entry, logging and skipping malformed entries or fields. */
     public static Map<ResourceLocation, ItemRenderConfig> parse(JsonObject root, String sourceName) {
         Map<ResourceLocation, ItemRenderConfig> map = new TreeMap<>();
 
@@ -87,9 +82,7 @@ public final class OverrideJsonCodec {
         return map;
     }
 
-    /**
-     * @return the parsed entry, or null when no field parsed successfully.
-     */
+    /** Returns the parsed entry, or null if none of its fields are valid. */
     @Nullable
     public static ItemRenderConfig parseEntry(String itemKey, JsonObject json) {
         RenderMode mode = null;
@@ -111,8 +104,6 @@ public final class OverrideJsonCodec {
         if (json.has("scale")) {
             try {
                 scale = json.get("scale").getAsFloat();
-                // NaN compares false against every bound, so inRange tests for finiteness rather
-                // than letting it through to poison the render transform silently.
                 if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
                     SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be between {} and {}",
                             scale, itemKey, MIN_SCALE, MAX_SCALE);

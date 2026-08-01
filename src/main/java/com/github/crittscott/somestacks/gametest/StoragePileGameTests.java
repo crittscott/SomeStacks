@@ -24,8 +24,8 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
 
 /**
- * Storage pile behaviour in a live level: deposits filling partial stacks before empty ones, growth
- * when a pile fills, capability insertion answering for the slot it is handed, obstruction refusing
+ * Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
+ * when a pile fills, capability insertion addressing the specified slot, obstruction refusing
  * growth, and settling consolidating, packing, and sorting.
  */
 @GameTestHolder(SomeStacks.MODID)
@@ -86,7 +86,7 @@ public final class StoragePileGameTests {
         checkEquals(8, storage.getItems().getStackInSlot(20).getCount(),
                 "The slot named should hold the items");
 
-        // An incompatible slot takes nothing, rather than answering with room elsewhere.
+        // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
         ItemStack other = new ItemStack(Items.DIRT, 8);
         checkEquals(8, capability.insertItem(20, other, true).getCount(),
                 "Simulated insertion into an occupied incompatible slot");

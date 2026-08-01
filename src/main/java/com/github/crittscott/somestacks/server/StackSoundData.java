@@ -45,7 +45,7 @@ public final class StackSoundData extends SimpleJsonResourceReloadListener {
     private static final String SINGLES = "singles_stack_block";
     private static final String BAR = "bar_stack_block";
 
-    /** The actions each block type answers to; anything else in a file is not a sound this mod plays. */
+    /** Supported sound actions by block type; other actions in data files are rejected. */
     private static final Map<String, Set<String>> ACTIONS = Map.of(
             STORAGE, Set.of(DEPOSIT, EXTRACT, ROTATE),
             SINGLES, Set.of(DEPOSIT, EXTRACT, ROTATE, ROTATE_ITEM),

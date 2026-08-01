@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * them, written where nothing reads it back.
  */
 public class WriteOverridesPkt {
-    /** More namespaces than a modpack could load. */
+    /** Defensive upper bound on namespace count received from the server. */
     private static final int MAX_NAMESPACES = 4096;
 
     private final List<String> namespaces;
@@ -45,9 +45,8 @@ public class WriteOverridesPkt {
     }
 
     /**
-     * A count naming more namespaces than could be loaded means the stream is not what it claims to
-     * be. The packet is carried through with a null list for {@link #handle} to drop whole, because
-     * an empty list is the user-layer request and a malformed packet must not become one.
+     * Decodes an invalid namespace count to a null-list sentinel for {@link #handle} to reject. An
+     * empty list is a valid request to write the user layer, so it cannot represent failure.
      */
     public static WriteOverridesPkt decode(FriendlyByteBuf buf) {
         int size = buf.readInt();

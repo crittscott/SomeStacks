@@ -400,9 +400,9 @@ public final class BarColumnGameTests {
     }
 
     /**
-     * A cascade that protection stops from taking the emptied block down still brings the column
-     * above it home. Support runs through the seam, which an emptied block leaves bare whether or
-     * not the block itself goes, so only the removal is protection's to refuse.
+     * A cascade still settles the column above an empty block that protection refuses to remove.
+     * Support depends on the seam's occupancy, which is empty whether or not the block remains;
+     * protection controls only the world edit.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {

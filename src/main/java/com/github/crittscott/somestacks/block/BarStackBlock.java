@@ -33,11 +33,11 @@ import javax.annotation.Nullable;
 
 /**
  * The Bar Stack block: the world-facing half of {@link BarStackBE}, holding the block state, the
- * shapes, and the breaking behaviour.
+ * shapes, and the breaking behavior.
  *
  * <p>Its outline and collision follow the occupied bars, so an empty block shows no highlight box
- * while still answering clicks through a full-block interaction shape. Neither shape lets mobs path
- * through it, and neither suffocates a player standing in its empty space.
+ * while remaining clickable through a full-block interaction shape. Pathfinding always treats the
+ * block as obstructed, while its empty internal space causes no suffocation or camera fog.
  *
  * <p>Removing one of these takes the support out from under the bars above, so breaking collapses
  * the column onto the gap. It also carries the deferred publication tick that content edits
@@ -112,9 +112,9 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     /**
-     * The whole cube, so the block can be clicked and broken through the gaps between its bars and
-     * while it is empty. An empty block therefore draws no highlight box, having no outline shape,
-     * while still answering a click; that is the intended trade.
+     * Uses the full cube so gaps and empty blocks remain clickable. The separate outline shape may
+     * still be empty, allowing an empty block to omit the highlight box without becoming
+     * unselectable.
      */
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
@@ -122,9 +122,8 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     /**
-     * Nothing, so standing inside a partly filled block neither suffocates nor fogs the camera.
-     * Collision already keeps a player out of a bar, which leaves the empty space, and empty space
-     * is what a player is entitled to stand in.
+     * Returns no visual occlusion, so empty space inside a partly filled block neither suffocates a
+     * player nor fogs the camera. The bars remain solid through the collision shape.
      */
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos,
@@ -133,10 +132,9 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     /**
-     * Never a way through. The inherited answer is drawn from whether the collision shape fills the
-     * block, which no Bar Stack ever does, so mobs would be routed straight into the bars and left
-     * grinding against them. Routing around costs a block of clearance and nothing else: the only
-     * case this overstates is an empty block, and an empty block rarely stands for long.
+     * Prevents pathfinding through the block. The dynamic collision shape never fills the cube, so
+     * the inherited result would route mobs through occupied bar positions. This deliberately
+     * treats an empty Bar Stack as blocked as well.
      */
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos,
@@ -150,8 +148,8 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     /**
-     * Pays the publication a content edit deferred. Edits schedule this on the column's bottom
-     * block, so a burst of them anywhere in the run collapses into one pass.
+     * Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
+     * column's bottom block, coalescing a burst of changes anywhere in the run into one pass.
      */
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
@@ -161,7 +159,7 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
         }
     }
 
-    /** Joining a column changes what its blocks resolve to, so their held columns are dropped. */
+    /** Invalidates cached columns and schedules publication after this block joins a run. */
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
@@ -185,15 +183,13 @@ public class BarStackBlock extends Block implements EntityBlock, SimpleWaterlogg
             super.onRemove(state, level, pos, newState, isMoving);
             BarColumn.invalidateAround(level, pos);
 
-            // The column above has lost the seam it stood on, so it comes down — the same answer a
-            // cascade gives when it empties a block out from under one. A cascade already walks its
-            // own way up, so only a removal from outside one starts the collapse.
+            // Removing a block removes the supporting seam beneath the column above. A cascade
+            // already walks upward itself, so only an external removal starts another collapse.
             if (!isMoving && !cascading) {
                 BarStackBE.collapseAbove(level, pos, drops);
             }
 
-            // After the collapse, so the runs left standing publish what they settled on rather
-            // than what they held on the way there.
+            // Publish after collapse so surviving runs report their final contents.
             BarColumn.publishAround(level, pos);
 
             // Losing a block from the middle leaves two runs where there was one, and a publication

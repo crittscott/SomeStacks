@@ -12,7 +12,7 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
 
-/** The settle comparator, checked over every component of item identity it orders by. */
+/** Storage settling order across every item-identity component used by the comparator. */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
 public final class StackSortGameTests {

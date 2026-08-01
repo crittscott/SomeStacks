@@ -15,14 +15,14 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The geometry of a Singles Stack's 4 x 4 x 4 grid: where each of the 64 cells sits, what box it
- * occupies, which one a reach ray hits, and which cells hold up which.
+ * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
+ * support.
  *
- * <p>Support is what makes this more than a coordinate table. A cell rests on the one directly
- * below it, and the bottom layer rests on the seam with the block beneath, which callers pass in as
- * that block's top-layer occupancy. Because support follows visual columns rather than slot
- * indexes, the rotation of each block is applied before columns are compared, and two differently
- * rotated blocks still line up.
+ * <p>A block contains a 4 x 4 x 4 grid indexed from the bottom layer upward and row by row within
+ * each layer. Each cell is supported by the cell directly below it. At a block boundary, callers
+ * supply the lower block's top-layer occupancy as the supporting seam. Support follows visual
+ * columns rather than storage indexes, so adjacent blocks remain aligned even when rotated
+ * differently.
  */
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
@@ -48,10 +48,10 @@ public final class SinglesCubeIdx {
     private static final int[] STARTS = {0, 4, 8, 12};
 
     /**
-     * Whether a Singles Stack that does not exist yet could take an item at {@code index}, given the
-     * seam it would stand on. Every cell of such a block is empty, so only the bottom layer can be
-     * supported, and only by the seam. A newly placed block is unrotated, so {@code index} is read in
-     * the visual frame.
+     * Whether a prospective Singles Stack could support an item at {@code index}. Since all of its
+     * slots are still empty, only the bottom layer can be supported. It is grounded when there is no
+     * Singles Stack below; otherwise its visual column must be occupied in {@code seamBelow}. New
+     * blocks are unrotated, so {@code index} is already in the visual frame.
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
         return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
@@ -69,10 +69,10 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Whether a cell rests on something. Cells above the bottom consult the cell under them in the
-     * same column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
-     * Singles Stack underneath; a null seam means the block stands on the world rather than on
-     * another Singles Stack, which grounds the bottom layer outright.
+     * Whether a cell has support. Cells above the bottom consult the cell beneath them in the same
+     * storage column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
+     * Singles Stack underneath. A null seam means there is no Singles Stack below, so the bottom
+     * layer is grounded.
      */
     public static boolean isGrounded(int index, IItemHandler handler, int blockRotation, boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
@@ -86,8 +86,8 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
-     * weigh a run of placements before any of them happens.
+     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Column insertion
+     * uses this to validate a proposed placement without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
         int y = xyzFromIndex(index)[1];
@@ -97,7 +97,7 @@ public final class SinglesCubeIdx {
         return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
     }
 
-    /** Whether the top layer beneath a block occupies the visual column {@code index} stands in. */
+    /** Whether the top layer beneath a block occupies the visual column containing {@code index}. */
     public static boolean seamSupports(int index, int blockRotation, boolean[] seamBelow) {
         if (seamBelow == null) {
             return false;
@@ -105,7 +105,7 @@ public final class SinglesCubeIdx {
         return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
     }
 
-    /** Block-local collision shape of one stored cell. */
+    /** Returns the block-local collision shape of one stored cell. */
     public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
         int[] storageXYZ = xyzFromIndex(storageIndex);
         int[] visualXYZ = rotateXYZ(
@@ -128,9 +128,8 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Occupancy of the top layer, the only layer that can hold up the Singles Stack above, recorded
-     * in visual columns so it means the same thing to a block above of any rotation. Taken as a
-     * snapshot so it stays usable once the block it came from is gone.
+     * Returns top-layer occupancy in visual columns, the coordinate system shared across a block
+     * boundary even when adjacent blocks have different rotations.
      */
     public static boolean[] topLayerOccupancy(IItemHandler handler, int blockRotation) {
         boolean[] occupancy = new boolean[LAYER_SIZE];
@@ -143,8 +142,8 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * The top-layer slice of a block occupancy snapshot, in the visual columns
-     * {@link #seamSupports} takes.
+     * Extracts the top layer of an occupancy snapshot and converts it to the visual columns used by
+     * {@link #seamSupports}.
      */
     public static boolean[] topLayerOf(boolean[] occupancy, int blockRotation) {
         boolean[] top = new boolean[LAYER_SIZE];
@@ -157,18 +156,18 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Deposit targeting for a Singles Stack that does not exist yet, where every cell is empty. Used
-     * to decide, before the block is placed, which cell the deposit that follows would land in. A
-     * newly placed block is unrotated, so the answer is read in the visual frame.
+     * Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
+     * occupied slots. Placement uses this to validate the initial deposit and its resulting
+     * collision shape before adding the block to the world. New blocks are unrotated.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
         return traceAllPositions(ray, blockPos, null, 0);
     }
 
     /**
-     * The cell a deposit aims at: the last empty cell along the view ray before the first occupied
-     * one, or the farthest intersected cell when the ray meets no item. A null handler means every
-     * cell is empty.
+     * Finds the slot a deposit targets: the last empty slot along the view ray before the first
+     * occupied one, or the farthest intersected slot if the ray meets no occupied item. A null
+     * handler describes a prospective, entirely empty block.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
                                         @Nullable IItemHandler handler, int blockRotation) {
@@ -204,6 +203,7 @@ public final class SinglesCubeIdx {
         return lastEmpty;
     }
 
+    /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
         IItemHandler handler = be.getItems();
 
@@ -252,7 +252,7 @@ public final class SinglesCubeIdx {
         return y * LAYER_SIZE + storageColumn;
     }
 
-    /** Snapshot of which of a block's cells hold an item. */
+    /** Returns a snapshot of which slots in a block contain items. */
     public static boolean[] occupancyOf(IItemHandler handler) {
         boolean[] occupancy = new boolean[SinglesStackBE.SLOTS];
         for (int i = 0; i < SinglesStackBE.SLOTS; i++) {
@@ -263,8 +263,7 @@ public final class SinglesCubeIdx {
 
     /**
      * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
-     * in, so both gestures answer a click the same way.
+     * turns counterclockwise seen from above, matching the direction of per-item rotation.
      */
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotation % 4) {
@@ -276,10 +275,12 @@ public final class SinglesCubeIdx {
         };
     }
 
+    /** Returns a cell's origin on one axis in model pixels. */
     public static int startPixel(int i) {
         return STARTS[i];
     }
 
+    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
     public static int[] xyzFromIndex(int idx) {
         int y = idx / LAYER_SIZE;
         int rem = idx % LAYER_SIZE;

@@ -45,8 +45,8 @@ public class BarStackBE extends BlockEntity {
     private boolean batchTouched = false;
 
     /**
-     * Set when a content edit still owes clients this block's contents and the block its light
-     * level. The column's scheduled publication pass clears it; see {@link #schedulePublish()}.
+     * Set when a content edit still requires client synchronization and a light update. The
+     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
      */
     private boolean publishPending = false;
 
@@ -134,7 +134,7 @@ public class BarStackBE extends BlockEntity {
         return cachedColumn;
     }
 
-    /** Drops the held column, so the next caller walks the world again. */
+    /** Invalidates the cached column so the next lookup walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
     }
@@ -142,8 +142,7 @@ public class BarStackBE extends BlockEntity {
     /**
      * Records the comparator output the column is about to publish.
      *
-     * @return whether it differs from the last one, and so whether the column needs to tell its
-     *         neighbours to read again
+     * @return whether the signal changed and comparator neighbors must be notified
      */
     boolean exchangePublishedSignal(int signal) {
         if (publishedSignal == signal) {
@@ -168,8 +167,8 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
-     * The shape, rebuilt only when contents last invalidated it. Called for every outline,
-     * collision, and pathfinding query, so it is not somewhere to recompute.
+     * Returns the occupied-bar shape, rebuilding it only after contents invalidate the cache. Shape
+     * queries occur frequently enough that they must not rebuild it unconditionally.
      */
     public VoxelShape getCachedShape() {
         if (cachedShape == null) {
@@ -376,7 +375,7 @@ public class BarStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
-    /** Pushes this block's contents to everyone tracking it. */
+    /** Synchronizes this block's contents to tracking clients. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();
@@ -385,14 +384,13 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
-     * Opens a run of edits that should publish as one. Per-slot sync is held back and the block
-     * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
-     * blocks a column-wide pass really touched.
+     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
+     * {@link #endBatch()} schedules publication only if this block changed.
      *
      * <p>Batches nest here, so unlike Storage and Singles this does not clear {@code batchTouched}:
      * {@link #extractAt} opens one, takes a bar, and calls {@link #cascadeFrom}, which opens another
-     * on this same block. The flag has to survive the inner open, or a removal that leaves nothing
-     * unsupported closes owing nothing and the taken bar stays drawn.
+     * on this same block. The outer change flag must survive the nested batch even when the cascade
+     * removes nothing else, or clients continue rendering the extracted bar.
      */
     void beginBatch() {
         suppressSync = true;
@@ -407,8 +405,7 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
-     * Records that this block owes a publication, and asks the column to schedule the pass that
-     * pays it.
+     * Marks this block for publication and schedules a pass on the column's bottom block.
      *
      * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
      * recompute. A position holds one bar, so a caller moving a stack calls the handler once per
@@ -428,9 +425,8 @@ public class BarStackBE extends BlockEntity {
     }
 
     /**
-     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
-     * The comparator value belongs to the column rather than to one of its blocks, so
-     * {@link BarColumn#publishPending()} settles that once for the whole run.
+     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
+     * to the column and is published once for the whole run by {@link BarColumn#publishPending()}.
      *
      * @return whether anything was owed
      */

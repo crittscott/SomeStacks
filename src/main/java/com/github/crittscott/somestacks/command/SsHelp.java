@@ -18,9 +18,8 @@ import java.util.Locale;
  * The {@code ss help} subtree: one entry per top-level {@code ss} subcommand, listing its forms,
  * who may run it, and what it does.
  *
- * <p>Help is the one part of {@code ss} that is gated by nothing. A player who cannot run a
- * subcommand is the player most likely to be reading about it, and each entry names the gate it
- * answers to, so being told what a command needs is itself the answer to why it was refused.
+ * <p>Help has no permission gate, allowing users to see a subcommand's required permission even
+ * when they cannot run it.
  */
 final class SsHelp {
     private SsHelp() {}
@@ -183,7 +182,7 @@ final class SsHelp {
                         .executes(SsHelp::topic));
     }
 
-    /** The list of subcommands, each with the one line that says whether it is the one wanted. */
+    /** Builds the command index from each subcommand's summary. */
     private static int index(CommandContext<CommandSourceStack> ctx) {
         send(ctx, Component.literal("Some Stacks commands").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 
@@ -222,7 +221,7 @@ final class SsHelp {
         return 1;
     }
 
-    /** Help answers the sender alone: it changes nothing and is of no interest to the other ops. */
+    /** Sends help only to the requesting source. */
     private static void send(CommandContext<CommandSourceStack> ctx, Component line) {
         ctx.getSource().sendSuccess(() -> line, false);
     }

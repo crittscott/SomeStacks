@@ -200,15 +200,13 @@ public class PlaceAndDepositPkt {
     }
 
     /**
-     * Whether the deposit that justifies this placement would take an item, asked of a block that
-     * does not exist yet. The placement is weighed on this rather than undone behind a deposit that
-     * failed: setting the block fires {@code EntityPlaceEvent}, and a block set and then removed is
-     * a placement the claim and logging mods listening to it were told about and never saw undone.
+     * Validates the initial deposit before placement mutates the world. Rolling back after a failed
+     * deposit would leave {@code EntityPlaceEvent} listeners with a placement event for a block that
+     * no longer exists.
      *
-     * <p>Every cell of a fresh block is empty and the block is unrotated, so what the item is and
-     * what seam the block would stand on are all that remain to ask. The seam is the block below
-     * when it is a stack of the same type, and nothing when it is not, which is the same reading
-     * {@link SinglesStackBE#depositAt} and {@link BarStackBE#depositAt} take once the block stands.
+     * <p>A fresh block is empty and unrotated. Singles and Bar support is computed from the top
+     * layer of a same-type block below, matching {@link SinglesStackBE#depositAt} and
+     * {@link BarStackBE#depositAt} after placement.
      */
     private static boolean firstDepositWouldSucceed(BlockType blockType, Level level, BlockPos pos,
                                                     ItemStack handStack, int depositIndex) {

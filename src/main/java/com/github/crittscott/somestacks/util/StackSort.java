@@ -7,14 +7,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Comparator;
 
-/** The order a settled Storage pile lays its stacks out in. */
+/** Comparator used to lay out the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort(){}
 
     /**
-     * Orders stacks by item id, then damage, then tags, then fullest first, with empties last.
-     * Total and stable in the sense that matters here: two identical piles pack to the same layout,
-     * and a run of one item ends on its single partial stack.
+     * Orders stacks by item id, damage, tags, and descending count, with empty stacks last. This
+     * gives identical piles the same layout and leaves a group's partial stack at its end.
      */
     public static final Comparator<ItemStack> COMPARATOR = (a, b) -> {
         if (a.isEmpty() && b.isEmpty()) return 0;
@@ -30,8 +29,7 @@ public final class StackSort {
         c = Integer.compare(a.getDamageValue(), b.getDamageValue());
         if (c != 0) return c;
 
-        // Untagged variants of an item come first; tagged ones follow in a stable order, so a
-        // repacked pile lays its stacks out the same way every time.
+        // Untagged variants precede tagged variants; tag text gives the latter a stable order.
         CompoundTag aTag = a.getTag();
         CompoundTag bTag = b.getTag();
         if (aTag == null || bTag == null) {
@@ -41,7 +39,7 @@ public final class StackSort {
             if (c != 0) return c;
         }
 
-        // Fullest first, so a run of one item ends on its single partial stack.
+        // Fullest first leaves a group's partial stack at its end.
         return Integer.compare(b.getCount(), a.getCount());
     };
 }

@@ -13,7 +13,7 @@ import net.minecraftforge.items.IItemHandler;
  * so the grid does not fill the block even when every slot is occupied.
  *
  * <p>Positions are computed at the block's layout rotation, which reflects cell coordinates about
- * the grid's centre rather than moving the contents between slots.
+ * the grid's center rather than moving the contents between slots.
  */
 public final class StorageCubeIdx {
     private StorageCubeIdx(){}
@@ -34,6 +34,7 @@ public final class StorageCubeIdx {
     /** Start pixel of each cell on an axis, indexed by cell coordinate. */
     private static final int[] STARTS = {1, 6, 11};
 
+    /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
         IItemHandler handler = be.getItems();
 
@@ -42,7 +43,7 @@ public final class StorageCubeIdx {
 
         for (int i = 0; i < StorageStackBE.SLOTS; i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (stack.isEmpty()) continue; // skip empty cubes
+            if (stack.isEmpty()) continue;
 
             int[] xyz = xyzFromIndex(i);
             int[] visualXYZ = rotateXYZ(xyz[0], xyz[1], xyz[2], rotation);
@@ -71,8 +72,7 @@ public final class StorageCubeIdx {
 
     /**
      * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counter-clockwise seen from above, which is the sense a stored item's own rotation turns
-     * in, so both gestures answer a click the same way.
+     * turns counterclockwise seen from above, matching the direction of per-item rotation.
      */
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return switch (rotation % 4) {
@@ -84,10 +84,12 @@ public final class StorageCubeIdx {
         };
     }
 
+    /** Returns a cell's origin on one axis in model pixels. */
     public static int startPixel(int i) {
         return STARTS[i];
     }
 
+    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
     public static int[] xyzFromIndex(int idx) {
         int y = idx / LAYER_SIZE;
         int rem = idx % LAYER_SIZE;

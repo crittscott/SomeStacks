@@ -15,62 +15,64 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The geometry of a Bar Stack's 64 bar positions: where each bar sits, what box it occupies, which
- * one a reach ray hits, and which bars hold up which.
+ * Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
  *
- * <p>Eight layers of eight alternate orientation. Even layers run East-West, two bars across and
- * four deep; odd layers run North-South, four across and two deep. A bar is supported when its
- * footprint overlaps one in the layer below, so support crosses between the two orientations rather
- * than following a single column, and the bottom layer rests on the seam with the block beneath,
- * which callers pass in as that block's top-layer occupancy.
+ * <p>A block contains eight layers of eight bars. Even layers run east-west, two bars across and
+ * four deep; odd layers run north-south, four across and two deep. Slots are indexed from the bottom
+ * layer upward and row by row within each layer.
+ *
+ * <p>A bar is supported when its footprint overlaps a bar in the layer below. This makes support
+ * cross between the alternating orientations instead of following fixed columns. At a block
+ * boundary, callers supply the lower block's top-layer occupancy as the supporting seam.
  *
  * <p>Bars do not rotate with the block; their orientation belongs to the layer.
  */
 public final class BarCubeIdx {
     private BarCubeIdx(){}
 
+    // Bar geometry is expressed in model pixels (1/16 of a block).
     private static final double BAR_HEIGHT = 2.0;
 
-    /** Start pixels on X, in the even layers, where bars run East-West along their long axis. */
+    /** X origins in even layers, where the bars' long axes run east-west. */
     private static final double[] EW_STARTS_X = {1.0, 9.0};
 
-    /** Start pixels on Z, in the even layers. */
+    /** Z origins in even layers. */
     private static final double[] EW_STARTS_Z = {0.5, 4.5, 8.5, 12.5};
 
-    /** Bar span on X, in pixels, in the even layers. */
+    /** X span in even layers. */
     private static final double EW_WIDTH = 6.0;
 
-    /** Bar span on Z, in pixels, in the even layers. */
+    /** Z span in even layers. */
     private static final double EW_DEPTH = 3.0;
 
-    /** Start pixels on X, in the odd layers, where bars run North-South along their long axis. */
+    /** X origins in odd layers, where the bars' long axes run north-south. */
     private static final double[] NS_STARTS_X = {0.5, 4.5, 8.5, 12.5};
 
-    /** Start pixels on Z, in the odd layers. */
+    /** Z origins in odd layers. */
     private static final double[] NS_STARTS_Z = {1.0, 9.0};
 
-    /** Bar span on X, in pixels, in the odd layers. */
+    /** X span in odd layers. */
     private static final double NS_WIDTH = 3.0;
 
-    /** Bar span on Z, in pixels, in the odd layers. */
+    /** Z span in odd layers. */
     private static final double NS_DEPTH = 6.0;
 
-    /** Start pixel on Y of each layer, one entry per layer. */
+    /** Y origin of each layer. */
     private static final double[] STARTS_Y = {0, 2, 4, 6, 8, 10, 12, 14};
 
-    /** Bars in one layer, the two orientations laying out the same count differently. */
+    /** Slots per layer; the two orientations arrange the same count differently. */
     public static final int LAYER_SIZE = EW_STARTS_X.length * EW_STARTS_Z.length;
 
-    /** Layers in one block. */
+    /** Layers per block. */
     private static final int LAYERS = STARTS_Y.length;
 
     private static final int TOP_LAYER_Y = LAYERS - 1;
     private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 
     /**
-     * Whether a Bar Stack that does not exist yet could take a bar at {@code index}, given the seam
-     * it would stand on. Every cell of such a block is empty, so only the bottom layer can be
-     * supported, and only by the seam.
+     * Whether a prospective Bar Stack could support a bar at {@code index}. Since all of its slots
+     * are still empty, only the bottom layer can be supported. It is grounded when there is no Bar
+     * Stack below; otherwise its footprint must overlap {@code seamBelow}.
      */
     public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
         return isGroundedIn(new boolean[BarStackBE.SLOTS], index, seamBelow);
@@ -98,18 +100,17 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Whether a bar rests on something. Layers above the bottom consult the layer beneath them in
-     * the same block. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
-     * Bar Stack underneath; a null seam means the block stands on the world rather than on another
-     * Bar Stack, which grounds the bottom layer outright.
+     * Whether a bar has support. Layers above the bottom consult the layer beneath them in the same
+     * block. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the Bar Stack
+     * underneath. A null seam means there is no Bar Stack below, so the bottom layer is grounded.
      */
     public static boolean isGrounded(int index, IItemHandler handler, @Nullable boolean[] seamBelow) {
         return isGroundedIn(occupancyOf(handler), index, seamBelow);
     }
 
     /**
-     * {@link #isGrounded} against an occupancy snapshot rather than live slots, for callers that
-     * settle a block in place or weigh a placement that has not happened yet.
+     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Settling and
+     * placement simulation use snapshots to evaluate a proposed state without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
         int[] xyz = xyzFromIndex(index);
@@ -136,9 +137,9 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Whether the top layer beneath a block covers the footprint of {@code index}. Layer 7 runs
-     * north-south and layer 0 east-west, so the alternation carries across a block boundary and the
-     * ordinary footprint overlap describes support at the seam unchanged.
+     * Whether the top layer beneath a block overlaps the footprint of {@code index}. Layer 7 runs
+     * north-south and layer 0 east-west, so the alternating pattern continues across a block
+     * boundary and uses the same footprint test as support within a block.
      */
     public static boolean seamSupports(int index, boolean[] seamBelow) {
         if (seamBelow == null) {
@@ -162,7 +163,7 @@ public final class BarCubeIdx {
         return false;
     }
 
-    /** Block-local collision shape of one bar position. */
+    /** Returns the block-local collision shape of one bar slot. */
     public static VoxelShape shapeFor(int index) {
         int[] xyz = xyzFromIndex(index);
         double minX = startPixelX(xyz[0], xyz[1]) / 16.0;
@@ -178,17 +179,18 @@ public final class BarCubeIdx {
     }
 
     /**
-     * Deposit targeting for a Bar Stack that does not exist yet, where every cell is empty. Used to
-     * decide, before the block is placed, which cell the deposit that follows would land in.
+     * Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
+     * slots. Placement uses this to validate the initial deposit and its resulting collision shape
+     * before adding the block to the world.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos) {
         return traceAllPositions(ray, blockPos, null);
     }
 
     /**
-     * The cell a deposit aims at: the last empty cell along the view ray before the first occupied
-     * one, or the farthest intersected cell when the ray meets no bar. A null handler means every
-     * cell is empty.
+     * Finds the slot a deposit targets: the last empty slot along the view ray before the first
+     * occupied one, or the farthest intersected slot if the ray meets no occupied bar. A null handler
+     * describes a prospective, entirely empty block.
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
                                         @Nullable IItemHandler handler) {
@@ -219,6 +221,7 @@ public final class BarCubeIdx {
         return lastEmpty;
     }
 
+    /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, BarStackBE be) {
         IItemHandler handler = be.getItems();
 
@@ -244,6 +247,7 @@ public final class BarCubeIdx {
         return closestIndex;
     }
 
+    /** Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index. */
     public static int[] xyzFromIndex(int idx) {
         int y = idx / LAYER_SIZE;
         int withinLayer = idx % LAYER_SIZE;
@@ -255,19 +259,22 @@ public final class BarCubeIdx {
         return new int[]{x, y, z};
     }
 
+    /** Returns the bar's Z span in model pixels for layer {@code y}. */
     public static double barDepth(int y) {
         return isEWLayer(y) ? EW_DEPTH : NS_DEPTH;
     }
 
+    /** Returns the bar's Y span in model pixels for layer {@code y}. */
     public static double barHeight(int y) {
         return BAR_HEIGHT;
     }
 
+    /** Returns the bar's X span in model pixels for layer {@code y}. */
     public static double barWidth(int y) {
         return isEWLayer(y) ? EW_WIDTH : NS_WIDTH;
     }
 
-    /** A seam that holds nothing up, which is what a vanished Bar Stack leaves behind. */
+    /** Returns an empty seam used to continue a support cascade after a Bar Stack is removed. */
     public static boolean[] emptySeam() {
         return new boolean[LAYER_SIZE];
     }
@@ -281,7 +288,7 @@ public final class BarCubeIdx {
         return y % 2 == 0;
     }
 
-    /** Snapshot of which of a block's cells hold a bar. */
+    /** Returns a snapshot of which slots in a block contain bars. */
     public static boolean[] occupancyOf(IItemHandler handler) {
         boolean[] occupancy = new boolean[BarStackBE.SLOTS];
         for (int i = 0; i < BarStackBE.SLOTS; i++) {
@@ -290,21 +297,24 @@ public final class BarCubeIdx {
         return occupancy;
     }
 
+    /** Returns a bar's X origin in model pixels from its within-layer X index and layer. */
     public static double startPixelX(int x, int y) {
         return isEWLayer(y) ? EW_STARTS_X[x] : NS_STARTS_X[x];
     }
 
+    /** Returns a layer's Y origin in model pixels. */
     public static double startPixelY(int y) {
         return STARTS_Y[y];
     }
 
+    /** Returns a bar's Z origin in model pixels from its within-layer Z index and layer. */
     public static double startPixelZ(int z, int y) {
         return isEWLayer(y) ? EW_STARTS_Z[z] : NS_STARTS_Z[z];
     }
 
     /**
-     * Occupancy of the top layer, the only layer that can hold up the Bar Stack above. Taken as a
-     * snapshot so a cascade can carry it past the point where the block it came from is emptied and
+     * Returns the top layer's occupancy, which is the supporting seam for the Bar Stack above. The
+     * snapshot lets a support cascade retain the seam after its source block has been emptied and
      * removed from the world.
      */
     public static boolean[] topLayerOccupancy(IItemHandler handler) {
@@ -315,7 +325,7 @@ public final class BarCubeIdx {
         return occupancy;
     }
 
-    /** The top-layer slice of a block occupancy snapshot, in the form {@link #seamSupports} takes. */
+    /** Extracts the top-layer seam from a full block occupancy snapshot. */
     public static boolean[] topLayerOf(boolean[] occupancy) {
         boolean[] top = new boolean[LAYER_SIZE];
         System.arraycopy(occupancy, TOP_LAYER_START, top, 0, LAYER_SIZE);

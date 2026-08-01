@@ -39,15 +39,14 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * The client's item render configuration, layered by authority. {@link #resolve} walks
- * the layers and returns the first entry found, whole: server-synced admin overrides,
- * then the user's own override file, then the bundled resource corpus. An item no layer
- * mentions takes its complete profile from measurement.
+ * The client's item render configuration, layered by authority. The first matching entry owns the
+ * entire presentation: server-synced admin overrides, then the user's override file, then bundled
+ * resource overrides. Items absent from every layer use measured profiles.
  *
  * <p>A corpus file is named for the namespace whose items it covers, and covers no other.
  * The corpus is cross-mod compatibility data, most of which any one client cannot use, so a
- * file naming a namespace this client does not have is skipped unread rather than parsed and
- * retained. A file whose name is not a namespace therefore reaches nothing.
+ * file naming a namespace this client does not have is skipped without parsing or retention. A file
+ * whose name is not a namespace therefore applies to nothing.
  */
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
@@ -104,7 +103,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * The namespaces whose items this client can hold. Neither source can change within a
      * session, so a file naming a namespace outside this set covers nothing that exists here.
      *
-     * <p>The union of both sources is deliberate. The item registry is the exact answer and
+     * <p>The union of both sources is deliberate. The item registry is authoritative and
      * covers a mod that registers items under some other namespace, but reading it depends on
      * registration having run; the mod list is fixed at mod-file discovery, before any mod bus
      * event fires, so it cannot be consulted too early.
@@ -198,11 +197,9 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     /**
      * Dumps the resolved presentation of every item in these namespaces, one file per namespace
      * under {@code generated_overrides}, and reports the result to the player. Entries are
-     * complete, and the folder is a destination rather than a layer: nothing reads it back, so a
-     * dump of a whole modpack neither freezes that pack into the user layer nor stops a later
-     * corpus or measurement change from reaching an item. A file is ready to be hand-corrected
-     * and dropped into a resource pack's {@code item_render_overrides} or a server's override
-     * folder as it stands.
+     * complete. The generated directory is output only, not an active override layer, so dumping a
+     * modpack does not freeze its current profiles into the user layer. Each file can be edited and
+     * copied into a resource pack's {@code item_render_overrides} or the server override directory.
      *
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the
@@ -212,9 +209,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
-            // The namespace names a file, and it arrived over the wire. Only a real namespace may
-            // name one: the character set a namespace allows has no separator in it, so a name that
-            // passes cannot leave the dump folder.
+            // A valid namespace contains no path separator, so it cannot escape the dump directory.
             if (!ResourceLocation.isValidNamespace(namespace)) {
                 SomeStacks.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
@@ -250,8 +245,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
             Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
-            // The namespace check above already forbids a name that could escape; this is the
-            // guarantee stated where the write happens rather than only where the name arrived.
+            // Retain a path-containment check at the filesystem boundary as a final invariant.
             if (!file.startsWith(GENERATED_DIR)) {
                 SomeStacks.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
                 failed.add(entry.getKey());

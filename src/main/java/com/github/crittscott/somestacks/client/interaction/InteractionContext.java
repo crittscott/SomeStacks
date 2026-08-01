@@ -16,7 +16,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 /**
  * One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
  * were held, and the placement mode in force. A context built from an empty-hand or held-item click
- * has no clicked position, block, or face, so the block-shaped queries answer false.
+ * has no clicked position, block, or face, so block-specific queries return false.
  *
  * <p>The context also carries the rules' one output, {@link #cancelEvent()}, which the event
  * handler reads back after the walk to decide whether the click is taken from vanilla.

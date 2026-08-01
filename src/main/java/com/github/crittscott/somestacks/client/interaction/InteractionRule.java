@@ -10,7 +10,7 @@ package com.github.crittscott.somestacks.client.interaction;
  */
 public interface InteractionRule {
     /**
-     * Whether this rule claims the gesture. Called on every rule in turn until one answers true, so
+     * Whether this rule claims the gesture. Called on each rule in turn until one returns true, so
      * it reads state and changes none.
      */
     boolean matches(InteractionContext ctx);

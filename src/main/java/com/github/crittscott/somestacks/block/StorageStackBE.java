@@ -111,7 +111,7 @@ public class StorageStackBE extends BlockEntity {
         return cachedPile;
     }
 
-    /** Drops the held pile, so the next caller walks the world again. */
+    /** Invalidates the cached pile so the next lookup walks the world again. */
     void invalidatePile() {
         cachedPile = null;
     }
@@ -126,7 +126,7 @@ public class StorageStackBE extends BlockEntity {
         syncToClients();
     }
 
-    /** Whether this block survives being emptied. The pile's base block holds the pile's answer. */
+    /** Whether this block survives being emptied. The pile's base block is authoritative. */
     public boolean isPermanent() {
         return permanent;
     }
@@ -143,8 +143,7 @@ public class StorageStackBE extends BlockEntity {
     /**
      * Records the comparator output the pile is about to publish.
      *
-     * @return whether it differs from the last one, and so whether the pile needs to tell its
-     *         neighbours to read again
+     * @return whether the signal changed and comparator neighbors must be notified
      */
     boolean exchangePublishedSignal(int signal) {
         if (publishedSignal == signal) {
@@ -214,7 +213,7 @@ public class StorageStackBE extends BlockEntity {
         return ItemOps.isHandlerEmpty(items);
     }
 
-    /** Pushes this block's contents and presentation state to everyone tracking it. */
+    /** Synchronizes this block's contents and presentation state to tracking clients. */
     public void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();
@@ -223,9 +222,8 @@ public class StorageStackBE extends BlockEntity {
     }
 
     /**
-     * Opens a run of edits that should publish as one. Per-slot sync is held back and the block
-     * remembers whether anything actually changed, so {@link #endBatch()} can settle only the
-     * blocks a pile-wide pass really touched.
+     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
+     * {@link #endBatch()} schedules a settle only if this block changed.
      */
     void beginBatch() {
         suppressSync = true;
@@ -241,8 +239,8 @@ public class StorageStackBE extends BlockEntity {
     }
 
     /**
-     * Closes a batch opened by the settle that is about to publish this block anyway, so the pass
-     * that is already running pays for what it wrote instead of scheduling another one behind it.
+     * Closes a batch from inside the active settle without scheduling another settle. A changed
+     * block remains marked for publication by the current pass.
      */
     void endBatchWithinSettle() {
         suppressSync = false;
@@ -268,12 +266,11 @@ public class StorageStackBE extends BlockEntity {
     }
 
     /**
-     * Records that this block owes a publication, and asks the pile to schedule the settle that
-     * pays it.
+     * Marks this block for publication and schedules a settle on the pile's base.
      *
      * <p>Publishing costs an update packet and a light recompute, and the settle behind it can move
      * a stack into another block first. Deferring both keeps a machine making capability calls all
-     * tick from paying per call, and stops a stack from being sent where it landed and again where
+     * tick from publishing per call, and stops a stack from being sent where it landed and again where
      * it was packed to.
      */
     private void schedulePublish() {
@@ -289,9 +286,8 @@ public class StorageStackBE extends BlockEntity {
     }
 
     /**
-     * Pays what a deferred edit owes this block: contents to clients and the emitted light level.
-     * The comparator value belongs to the pile rather than to one of its blocks, so
-     * {@link StoragePile#settle()} publishes that once for the whole run.
+     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
+     * to the pile and is published once for the whole run by {@link StoragePile#settle()}.
      */
     void publishIfPending() {
         if (level == null || level.isClientSide || !publishPending) {

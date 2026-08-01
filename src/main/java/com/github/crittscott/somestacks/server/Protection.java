@@ -45,7 +45,7 @@ import java.util.function.BiPredicate;
  * <ul>
  *   <li>A gesture that claims a click must mark {@link RightClickBlockSuppressor} for the position
  *       it claimed, so the vanilla click that follows cannot also act there. The mark lives one
- *       tick, which is exactly as long as the click it answers.</li>
+ *       tick, matching the lifetime of the displaced click.</li>
  *   <li>The mark vetoes {@code RightClickBlock} at that position, and the consults here fire that
  *       same event. A consult run after the mark would therefore refuse itself, so the mark is
  *       always placed last.</li>
@@ -82,9 +82,9 @@ public final class Protection {
      *
      * <p>A deposit is not the container access it resembles. Opening a chest costs nothing and its
      * contents are gated again by whatever guards the screen; a deposit takes the stack straight out
-     * of the hand off the click, with nothing in between. So it answers to permission to use an item
-     * here as well as permission to reach the block, which is the pair vanilla weighs for any
-     * item-driven interaction and the pair {@link #claimPlacement} already weighs.
+     * of the hand off the click, with nothing in between. It therefore requires permission to use
+     * an item here as well as permission to reach the block, matching the checks vanilla applies to
+     * item-driven interaction and {@link #claimPlacement} applies to placement.
      */
     public static boolean claimItemUse(ServerPlayer sp, BlockPos markPos, BlockPos... consulted) {
         return claim(sp, markPos, Protection::mayUseItemOn, consulted);
@@ -108,9 +108,9 @@ public final class Protection {
 
     /**
      * Gates an item-driven placement of a block into {@code intoPos} against {@code againstPos} and
-     * claims the click for it. Vanilla weighs both positions, because the block being used answers
-     * for the interaction and the position being filled answers for the placement, and the two can
-     * fall on opposite sides of a protection boundary. The click landed on {@code againstPos}, so
+     * claims the click for it. Vanilla checks both positions: the block being used governs the
+     * interaction, while the position being filled governs placement. They can fall on opposite
+     * sides of a protection boundary. The click landed on {@code againstPos}, so
      * that is what is marked.
      */
     public static boolean claimPlacement(ServerPlayer sp, BlockPos againstPos, BlockPos intoPos) {
@@ -135,7 +135,7 @@ public final class Protection {
     /**
      * Protection as automation sees it: the level's fake player, which is never an operator and so
      * is never exempt from spawn protection. Growth driven by a capability insertion carries no
-     * player and answers to this, both when it is planned and when it is committed.
+     * player and is checked here both when growth is planned and when it is committed.
      */
     public static boolean isProtected(ServerLevel level, BlockPos pos) {
         return isProtected(FakePlayerFactory.getMinecraft(level), pos);
@@ -176,7 +176,7 @@ public final class Protection {
     /**
      * Where the player is actually looking at {@code pos}, taken against the block's interaction
      * shape, which is the full cube every stack block exposes so that it can be clicked through the
-     * gaps between its contents. Falls back to the centre of the block when the ray no longer meets
+     * gaps between its contents. Falls back to the center of the block when the ray no longer meets
      * it, which a player who has turned away since sending the packet can produce; the operation
      * itself has already cleared the reach check, so a missed ray is a stale aim rather than a
      * reason to refuse.
@@ -206,7 +206,7 @@ public final class Protection {
     /**
      * Places a block whose completed placement will have {@code finalCollision}. Block-entity
      * stacks can start empty and acquire their real collision shape with the first deposit, so
-     * their block state alone cannot describe the shape vanilla placement must weigh.
+     * their block state alone cannot describe the shape vanilla placement must test.
      *
      * <p>Restores the previous state and returns {@code false} on an out-of-height or obstructed
      * target, a failed set, or a vetoed event; {@code true} when the block stands.
@@ -236,8 +236,8 @@ public final class Protection {
      * <p>A settle runs on a scheduled tick with no actor left to ask, which is why the fake player
      * stands in. The consequence is that a run inside spawn protection, or under a claim that
      * refuses that player, keeps its empty blocks: the mod may not delete where it may not build.
-     * That is the safe direction, and every caller treats a refusal as "this block stands" and
-     * stops rather than assuming the world matches its own model.
+     * Every caller treats a refusal as "this block stands" and stops rather than assuming the
+     * world matches its own model.
      *
      * @return whether the block was removed
      */

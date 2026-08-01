@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Draws one stored item inside one cell, in whichever way its render profile asks for. The Storage
+ * Draws one stored item inside one cell according to its render profile. The Storage
  * and Singles renderers position a cell and delegate here; everything about how the item itself is
  * presented lives in this class.
  *
@@ -72,13 +72,12 @@ public final class CubeRenderHelper {
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
     public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
 
-    /** The cell's centre in the same units, which a cell's contents are drawn about. */
+    /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
 
     /**
-     * Rotation carrying the +Z face, where a baked item model lays its art out, onto each cube face.
-     * All six are proper rotations, so the art reads the same way round from every side. SOUTH is
-     * where the art already lies and needs none.
+     * Rotations mapping the baked model's +Z art plane onto each cube face. All are proper rotations,
+     * preserving the art's orientation. SOUTH already matches the source plane and needs none.
      */
     private static final Quaternionf[] FACE_ROTATIONS = new Quaternionf[DIRECTIONS.length];
 
@@ -106,16 +105,15 @@ public final class CubeRenderHelper {
     private static final BakedQuad[] NO_PLATES = new BakedQuad[0];
 
     /**
-     * The quads of a render pass that survive the flat projection, keyed by the pass. Baked models
-     * carry no equality beyond identity, which is the right key here anyway: a reload replaces every
-     * instance, so an entry can only ever be read back for the pass it was gathered from.
+     * The quads of each render pass that survive flat projection. Identity keys match baked-model
+     * lifetime: a resource reload replaces every model instance and clears this cache.
      */
     private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
 
     /**
-     * Items whose block form threw when it was drawn. Held so the attempt is made once per bake
+     * Items whose block form threw when drawn. Cached so the attempt is made once per bake
      * rather than once per frame for as long as the item is on screen: a renderer that throws
-     * part way through a quad leaves the shared buffer mid-quad, and repeating that every frame
+     * partway through a quad leaves the shared buffer mid-quad, and repeating that every frame
      * compounds it.
      */
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -198,7 +196,7 @@ public final class CubeRenderHelper {
                                         BlockRenderDispatcher blockRenderer, Level level,
                                         float finalScale, float[] offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
-            // Fallback if someone misconfigured a non-BlockItem as "block" mode
+            // Block mode has no meaningful rendering path for a non-BlockItem.
             return;
         }
 
@@ -316,7 +314,7 @@ public final class CubeRenderHelper {
         }
     }
 
-    /** Drops what was gathered or learned from the baked models a reload is about to replace. */
+    /** Clears geometry and failure state tied to baked models being replaced by a resource reload. */
     public static void onResourceReload() {
         PLATE_CACHE.clear();
         BLOCK_RENDER_FAILURES.clear();
@@ -331,7 +329,7 @@ public final class CubeRenderHelper {
     /**
      * The cube faces the camera can see. The level renderer has already translated by the camera
      * position, so the camera sits at this frame's origin and a face is visible exactly when the
-     * cell centre lies on the face's inward side. The faces that fail the test are behind the
+     * cell center lies on the face's inward side. The faces that fail the test are behind the
      * opaque background cube, so skipping them removes nothing that could be seen.
      */
     private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, float[] offset) {
@@ -355,7 +353,7 @@ public final class CubeRenderHelper {
     /**
      * The transform from a baked quad's own coordinates onto one cube face: turn the +Z face onto
      * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink the
-     * art about the face centre to leave a border and apply the profile's offset.
+     * art about the face center to leave a border and apply the profile's offset.
      */
     private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, float[] offset) {
         pose.pushPose();
@@ -387,8 +385,8 @@ public final class CubeRenderHelper {
         // Both plates are kept and the render type's own back-face culling shows the outward one,
         // exactly as it does for an item in the hand.
         for (BakedQuad quad : plates) {
-            // Every quad of a layer carries that layer's tint index, so a pass resolves its colour
-            // once rather than once per quad. Colour cannot be cached with the geometry: a potion's
+            // Every quad of a layer carries that layer's tint index, so a pass resolves its color
+            // once rather than once per quad. Color cannot be cached with the geometry: a potion's
             // and a coated weapon's are per stack.
             if (quad.getTintIndex() != tintIndex) {
                 tintIndex = quad.getTintIndex();

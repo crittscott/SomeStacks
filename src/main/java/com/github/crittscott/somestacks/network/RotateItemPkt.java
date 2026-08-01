@@ -46,10 +46,8 @@ public class RotateItemPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            // Whether this is the gesture at all is settled before anything is claimed: claiming
-            // fires the right-click event and marks the position, so a packet that turns out to
-            // describe no gesture would otherwise announce an interaction that never happened and
-            // cancel the player's own click at a position the mod does not even own.
+            // Establish that this packet describes the gesture before claiming it. A claim fires
+            // the interaction event and suppresses the vanilla click that follows.
             if (!PacketBoundary.holdsInMainHand(sp, Items.SOUL_TORCH)) return;
 
             Level level = sp.level();
@@ -60,15 +58,11 @@ public class RotateItemPkt {
 
             if (msg.slotIndex < 0 || msg.slotIndex >= SinglesStackBE.SLOTS) return;
 
-            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
-            // that item on the block. Claiming the click denies the use-item-on packet that
-            // follows, so the rotation does not also place the torch against the stack. This holds
-            // even when the click hit an empty cell: the player made the gesture on a Singles Stack
-            // with the torch in hand, and that is the click being answered.
+            // Claim even when the target cell is empty, because the gesture must still suppress
+            // the vanilla attempt to place the soul torch.
             if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
 
-            // An empty cell carries no orientation, so there is nothing to turn: rotating one
-            // would leave a facing behind for whatever is deposited into it next.
+            // Empty cells carry no orientation; a later deposit must not inherit a prior gesture.
             if (ssbe.getItems().getStackInSlot(msg.slotIndex).isEmpty()) return;
 
             int newCubeRot = (ssbe.getCubeRotation(msg.slotIndex) + 1) % 4;

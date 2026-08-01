@@ -33,17 +33,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Per-item cache of measured render profiles, persisted to a client-side cache file so
- * an item is measured once ever rather than once per session.
+ * Per-item cache of measured render profiles, persisted client-side so each item is normally
+ * measured only once across sessions.
  *
- * <p>A measurement describes a baked model, so the cache is only good for as long as the models
- * are. Three things can change them, and the cache answers to all three: a mod update, which the
- * recorded per-namespace mod versions catch, dropping that namespace's entries; a manual resource
- * reload mid-session, which discards the cache entirely; and a change of resource packs between
- * sessions, which neither of those sees, because the reload that happens at startup is the normal
- * one and must not throw the cache away. That last case is what the recorded pack list is for: the
- * packs that produced the measurements are named in the file, and a cache written under a different
- * set is dropped whole at load.
+ * <p>Measurements describe baked models and are invalidated with them:
+ *
+ * <ul>
+ *   <li>A mod-version change drops entries from that mod's namespace.</li>
+ *   <li>A manual resource reload drops the entire cache.</li>
+ *   <li>A different resource-pack selection between sessions rejects the persisted cache.</li>
+ * </ul>
+ *
+ * The initial resource reload must preserve the persisted cache long enough to compare its recorded
+ * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
     private static final Gson GSON = new GsonBuilder().create();
@@ -184,7 +186,7 @@ public final class AutoRenderProfiles {
         }
     }
 
-    /** The enabled resource packs, in the order they apply, which is what decides a baked model. */
+    /** The enabled resource packs in application order, which determines the baked models. */
     private static String selectedPackIds() {
         return String.join("\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
     }
@@ -281,9 +283,8 @@ public final class AutoRenderProfiles {
     }
 
     /**
-     * Scale applied on top of the cell fit. Fitting sizes every model to the same cell,
-     * which reads wrong for block families whose real-world size is much smaller than
-     * the things they sit beside.
+     * Scale applied after fitting a model to the cell. Small block families such as buttons require
+     * a lower factor or automatic fitting exaggerates their size relative to nearby blocks.
      */
     private static float fitScaleFactor(ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem

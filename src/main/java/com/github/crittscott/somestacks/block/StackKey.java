@@ -9,9 +9,8 @@ import javax.annotation.Nullable;
 /**
  * Exact stack identity: two stacks merge if and only if their keys are equal.
  *
- * <p>The tag is copied rather than referenced, so a key stays valid once taken. A caller may key a
- * stack it is about to remove from the world, and the tag it holds belongs to that stack until it
- * does.
+ * <p>The tag is copied so later mutation or removal of the source stack cannot change the key's
+ * equality or hash code.
  */
 record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
     static StackKey of(ItemStack stack) {

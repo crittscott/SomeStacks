@@ -29,7 +29,7 @@ final class PacketBoundary {
      * Returns the sender, or {@code null} if any check fails (the caller returns).
      *
      * <p>{@code pos} is the position the packet would change, and it is the one held to reach here.
-     * A packet naming a second position names a neighbour of this one, consults it for protection,
+     * A packet naming a second position names a neighbor of this one, consults it for protection,
      * and writes nothing there; its distance is bounded by the caller's own reading of what counts
      * as a gesture rather than by a reach test of its own.
      */
@@ -43,7 +43,7 @@ final class PacketBoundary {
         }
         // A spectator passes through the world without touching it. Vanilla stops the interaction
         // that would reach a block at the game mode; the gestures these packets carry take the
-        // place of that interaction, so they answer to it here.
+        // place of that interaction, so they enforce the same restriction here.
         if (sp.isSpectator()) {
             return null;
         }

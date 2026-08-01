@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 
 /**
  * Modifier plus an item, clicking a face of some other block that has a Singles or Bar Stack
- * against it, deposits into that stack. The click reaches the stack through its neighbour, so the
+ * against it, deposits into that stack. The click reaches the stack through its neighbor, so the
  * packet names both positions and the server checks protection at each.
  */
 public final class DepositIntoAdjacentStackRule implements InteractionRule {

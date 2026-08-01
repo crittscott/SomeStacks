@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * never needs to predict them.
  */
 public class ConfigSyncPkt {
-    /** More per-item override entries than any server would configure by hand. */
+    /** Defensive upper bound on synchronized override entries. */
     private static final int MAX_OVERRIDE_ENTRIES = 65536;
 
     private final boolean enableStack;
@@ -70,9 +70,9 @@ public class ConfigSyncPkt {
     }
 
     /**
-     * A count naming more entries than any override set could hold means the stream is not what it
-     * claims to be. The packet is carried through with a null map for {@link #handle} to drop
-     * whole: an empty map would read as "the server has no overrides" and clear the real ones.
+     * Decodes an invalid entry count to a null-map sentinel for {@link #handle} to reject. An empty
+     * map is valid and would clear the client's server override layer, so it cannot represent
+     * failure.
      */
     public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
         boolean enableStack = buf.readBoolean();

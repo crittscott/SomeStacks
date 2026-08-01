@@ -42,9 +42,8 @@ public class TogglePermanentPkt {
 
             if (Protection.isProtected(sp, msg.pos)) return;
 
-            // Consulted but not claimed: the gesture is an empty-hand click, and the vanilla
-            // interaction that follows it reaches the stack's own use handler, which takes the
-            // click and does nothing. There is no held item for it to spend.
+            // Do not claim this empty-hand click. The stack's use handler safely consumes the
+            // vanilla interaction that follows, and there is no held item for it to spend.
             if (!Protection.mayInteract(sp, msg.pos)) return;
 
             if (!PacketBoundary.mainHandEmpty(sp)) return;
@@ -54,7 +53,6 @@ public class TogglePermanentPkt {
                 return;
             }
 
-            // The mode belongs to the pile, not the block that was clicked.
             StoragePile pile = StoragePile.at(level, msg.pos);
             if (pile == null) return;
 

@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
  * The {@code ss} command: render override authoring, render gallery generation, server list
  * editing, and override reloading.
  *
- * <p>Everything here is an administrative tool, so every subcommand but {@code help} answers to a
+ * <p>Everything here is an administrative tool, so every subcommand but {@code help} requires a
  * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
  * against the sender's own view and so are player-only on top of that; the two gallery generators
  * need a player because a gallery is built where the sender stands.
  *
  * <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
- * without the protection consults a placement gesture answers to, which is a wider authority than
+ * without the protection checks applied to placement gestures, which is a wider authority than
  * editing config or tuning how an item is drawn.
  *
  * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
@@ -59,9 +59,8 @@ public final class SsCommand {
     private static final int ADMIN_PERMISSION_LEVEL = 2;
 
     /**
-     * Vanilla's server-administration level, the gate on the render gallery commands. An operator holds
-     * it under the default {@code op-permission-level}, so this costs an admin nothing; it excludes
-     * whatever a server has handed the lower level to.
+     * Vanilla's server-administration level, used for gallery commands that overwrite world
+     * regions without ordinary placement protection.
      */
     private static final int GALLERY_PERMISSION_LEVEL = 3;
     private static final String DISABLED_MODS_LABEL = "disabled mod list";
@@ -70,7 +69,7 @@ public final class SsCommand {
     private static final String GEN_ITEMS_LABEL = "gen item list";
     private static final String INGOT_TAGS_LABEL = "ingot tag list";
 
-    /** A dump covers every item, which is the namespace and item set the Storage kind holds. */
+    /** Override dumps cover all items, matching the Storage gallery's item selection. */
     private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
 
     private SsCommand() {}
@@ -115,11 +114,9 @@ public final class SsCommand {
     }
 
     /**
-     * The rails on the two numeric arguments of {@code ss item}, taken from the override schema so
-     * the command and a hand-written entry accept the same values. Declaring them on the argument
-     * rather than testing after the fact is what makes an out-of-range value a parse error the
-     * player sees against the offending word, and it is also what keeps a run of digits long enough
-     * to overflow a float to infinity from reaching the render transform.
+     * Bounds the numeric {@code ss item} arguments to the override schema. Brigadier reports an
+     * invalid value at the argument itself and rejects overflow before it reaches a render
+     * transform.
      */
     private static FloatArgumentType scaleArg() {
         return FloatArgumentType.floatArg(OverrideJsonCodec.MIN_SCALE, OverrideJsonCodec.MAX_SCALE);
@@ -130,15 +127,10 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code <modid>|all|list} subtree one gallery kind is generated from. The two kinds differ
-     * only in which items they can show, which is what the kind itself answers. The Storage tree
-     * carries an {@code items} form on top of this, which the ingot tree has no use for: the
-     * ingots of a pack are few enough to review a namespace at a time.
-     *
-     * <p>Held a permission level above the rest of {@code ss}, and player-only because the gallery
-     * is built where the sender stands. A gallery is not a view: it overwrites a large region of the
-     * world outright, without the protection consults a placement gesture answers to. That is a
-     * wider authority than editing a server list or tuning how items are drawn for oneself.
+     * Builds the {@code <modid>|all|list} subtree for one gallery kind. Storage adds the separate
+     * {@code items} form; Bar galleries are selected by namespace. Gallery commands require a
+     * player location and the higher world-editing permission because they overwrite blocks without
+     * ordinary placement protection.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
             String name, RenderGalleryGenerator.Kind kind) {
@@ -288,8 +280,8 @@ public final class SsCommand {
     }
 
     /**
-     * Follows an ingot list edit with what it did to the accepted set, which is the answer the
-     * editor is after: the list names tags, and what a Bar Stack holds is the items in them.
+     * Reports how an ingot-list edit changed the accepted item set. The config names tags, while
+     * Bar Stack behavior depends on the items those tags contain.
      */
     private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
         if (result != 0) {
@@ -405,7 +397,7 @@ public final class SsCommand {
         return 1;
     }
 
-    /** Entries an invocation dropped from a request, and the one reason they share. */
+    /** Entries omitted from one request, grouped by reason. */
     private record Skips(String reason, List<String> entries) {}
 
     /**
@@ -429,13 +421,9 @@ public final class SsCommand {
     private record ItemSelection(List<Item> items, List<Skips> skips) {}
 
     /**
-     * The one namespace named, or null when it cannot be used. Naming a single namespace fails
-     * rather than skipping, because the command names one thing and it did not happen.
-     *
-     * <p>Being disabled is reported ahead of having nothing to show, as it is in the bulk forms: a
-     * kind answers what it can show by asking the stack itself, which refuses a disabled mod's
-     * items outright, so a disabled namespace looks empty and the emptiness would be reported as
-     * the typo it is not.
+     * Resolves one explicitly named namespace, failing rather than skipping if it is unusable.
+     * Disabled namespaces are checked before item selection because stack validity would otherwise
+     * make them appear merely empty.
      */
     @Nullable
     private static Selection selectSingle(CommandContext<CommandSourceStack> ctx,
@@ -626,8 +614,8 @@ public final class SsCommand {
     }
 
     /**
-     * Queues one gallery and reports it twice: what it will hold now, and what it did hold once the
-     * generator has finished placing it some ticks later.
+     * Queues one gallery, reports its planned contents immediately, and reports the actual result
+     * when the tick-budgeted generator finishes.
      */
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
                                 RenderGalleryGenerator.Kind kind, List<List<Item>> groups,
@@ -757,9 +745,8 @@ public final class SsCommand {
     }
 
     /**
-     * Hands the client the namespaces to dump. The work is all on that client: it resolves and
-     * measures every item and reports what it wrote, which for a large pack takes long enough to
-     * be worth saying so here.
+     * Sends the requested namespaces to the client, which resolves and measures their items and
+     * reports the files it writes.
      */
     private static int dump(CommandContext<CommandSourceStack> ctx, ServerPlayer player, Selection selection) {
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
