@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,6 +18,9 @@ import java.util.function.Supplier;
  * them, written where nothing reads it back.
  */
 public class WriteOverridesPkt {
+    /** More namespaces than a modpack could load. */
+    private static final int MAX_NAMESPACES = 4096;
+
     private final List<String> namespaces;
 
     private WriteOverridesPkt(List<String> namespaces) {
@@ -40,8 +44,18 @@ public class WriteOverridesPkt {
         }
     }
 
+    /**
+     * A count naming more namespaces than could be loaded means the stream is not what it claims to
+     * be. The packet is carried through with a null list for {@link #handle} to drop whole, because
+     * an empty list is the user-layer request and a malformed packet must not become one.
+     */
     public static WriteOverridesPkt decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
+        if (size < 0 || size > MAX_NAMESPACES) {
+            SomeStacks.LOGGER.warn("Ignoring write request claiming {} namespaces", size);
+            return new WriteOverridesPkt(null);
+        }
+
         List<String> namespaces = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             namespaces.add(buf.readUtf());
@@ -51,6 +65,9 @@ public class WriteOverridesPkt {
 
     public static void handle(WriteOverridesPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            if (msg.namespaces == null) {
+                return;
+            }
             if (msg.namespaces.isEmpty()) {
                 ItemRenderOverrides.handleWriteRequest();
             } else {

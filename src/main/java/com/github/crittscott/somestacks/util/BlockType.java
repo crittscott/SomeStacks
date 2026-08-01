@@ -5,13 +5,18 @@ import com.github.crittscott.somestacks.ServerConfig;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nullable;
+
 public enum BlockType {
     STORAGE_STACK,
     SINGLES_STACK,
     BAR_STACK;
 
+    /** The type with this ordinal, or null when the ordinal names none. */
+    @Nullable
     public static BlockType fromOrdinal(int ordinal) {
-        return values()[ordinal];
+        BlockType[] values = values();
+        return ordinal >= 0 && ordinal < values.length ? values[ordinal] : null;
     }
 
     public Block getBlock() {

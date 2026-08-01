@@ -42,6 +42,32 @@ public final class OverrideJsonCodec {
         return Float.isFinite(value) && value >= min && value <= max;
     }
 
+    /**
+     * Drops the fields of an entry that fall outside their rails, the way {@link #parse} drops them
+     * from an authored file. An override that arrives over the network never met the parse, so it
+     * is held to the same bounds here and the rails stay the one description of what a field may
+     * hold.
+     */
+    public static ItemRenderConfig sanitize(ItemRenderConfig config) {
+        Float scale = config.scale();
+        if (scale != null && !inRange(scale, MIN_SCALE, MAX_SCALE)) {
+            SomeStacks.LOGGER.warn("Dropping out of range scale {} from a synchronized override", scale);
+            scale = null;
+        }
+
+        float[] offset = config.offset();
+        if (offset != null
+                && (offset.length != 3
+                        || !inRange(offset[0], MIN_OFFSET, MAX_OFFSET)
+                        || !inRange(offset[1], MIN_OFFSET, MAX_OFFSET)
+                        || !inRange(offset[2], MIN_OFFSET, MAX_OFFSET))) {
+            SomeStacks.LOGGER.warn("Dropping out of range offset from a synchronized override");
+            offset = null;
+        }
+
+        return new ItemRenderConfig(config.mode(), scale, offset);
+    }
+
     public static Map<ResourceLocation, ItemRenderConfig> parse(JsonObject root, String sourceName) {
         Map<ResourceLocation, ItemRenderConfig> map = new TreeMap<>();
 

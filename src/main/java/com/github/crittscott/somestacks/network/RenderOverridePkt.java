@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderMode;
+import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -68,7 +69,8 @@ public class RenderOverridePkt {
                 ItemRenderOverrides.removeUser(msg.itemId);
             } else {
                 RenderMode mode = RenderMode.fromString(msg.renderMode);
-                ItemRenderOverrides.putUser(msg.itemId, new ItemRenderConfig(mode, msg.scale, msg.offset));
+                ItemRenderOverrides.putUser(msg.itemId,
+                        OverrideJsonCodec.sanitize(new ItemRenderConfig(mode, msg.scale, msg.offset)));
             }
         }));
         ctx.get().setPacketHandled(true);

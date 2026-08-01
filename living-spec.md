@@ -8,7 +8,7 @@ This document is not, and should not become, a prose version of the code, nor do
 
 - Mod id: `somestacks`
 - Minecraft 1.20.1, Forge 47.4.0, Java 17, Parchment mappings
-- Required on both client and server; network protocol `1`
+- Required on both client and server; network protocol `2`
 - Three registered blocks and block entity types: Storage Stack, Singles Stack, and Bar Stack
 - No block items, recipes, menus, or conventional inventory screens
 
@@ -133,9 +133,11 @@ Client-to-server packets cover placement and deposit, deposit, extraction, block
 
 Every gesture is a main-hand gesture. No packet carries a hand.
 
-The server validates the sender, that the sender is not a spectator, the loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. A deposit reached through a click on a neighbouring block consults both that block and the stack. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, whether the first deposit would succeed, and Forge's block-place event.
+The server validates the sender, one gesture per player per tick, that the sender is not a spectator, the loaded position, reach, target block entity, slot, held item, and operation-specific rules. Reach is checked against the position the packet would change; a neighbouring position a packet also names is consulted for protection but never written. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. A deposit reached through a click on a neighbouring block consults both that block and the stack. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, whether the first deposit would succeed, and Forge's block-place event.
 
-A gesture claims the click it displaces, so the vanilla interaction that follows in the same tick cannot act on the same position. The consults above fire the very event that claim suppresses, so they always run first.
+A gesture claims the click it displaces, so the vanilla interaction that follows in the same tick cannot act on the same position. The consults above fire the very event that claim suppresses, so they always run first. A packet claims nothing until the server has confirmed the gesture it describes.
+
+Values arriving over the network are held to the same bounds their file format states. Enum indexes, collection counts, render scale and offset, and the namespaces a write request names are all range-checked on receipt, and a packet failing any of them is dropped whole.
 
 A deposit by a player in creative mode fills the stack without spending the held stack.
 

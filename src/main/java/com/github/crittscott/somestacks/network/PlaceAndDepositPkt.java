@@ -28,6 +28,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkEvent;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class PlaceAndDepositPkt {
@@ -43,20 +44,32 @@ public class PlaceAndDepositPkt {
 
     public static void encode(PlaceAndDepositPkt msg, FriendlyByteBuf buf) {
         buf.writeByte(msg.blockType.ordinal());
-        buf.writeEnum(msg.face);
+        buf.writeByte(msg.face.ordinal());
         buf.writeBlockPos(msg.pos);
     }
 
+    /**
+     * Decoding runs on the network thread, ahead of every check the mod makes. Both enums arrive as
+     * indexes, so each is range-checked here and one naming no constant is carried through as null
+     * for {@link #handle} to drop, rather than thrown out of the decoder.
+     */
     public static PlaceAndDepositPkt decode(FriendlyByteBuf buf) {
-        return new PlaceAndDepositPkt(
-                BlockType.fromOrdinal(buf.readByte()),
-                buf.readEnum(Direction.class),
-                buf.readBlockPos()
-        );
+        BlockType blockType = BlockType.fromOrdinal(buf.readByte());
+        Direction face = faceFromOrdinal(buf.readByte());
+        return new PlaceAndDepositPkt(blockType, face, buf.readBlockPos());
+    }
+
+    @Nullable
+    private static Direction faceFromOrdinal(int ordinal) {
+        Direction[] values = Direction.values();
+        return ordinal >= 0 && ordinal < values.length ? values[ordinal] : null;
     }
 
     public static void handle(PlaceAndDepositPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
+            if (msg.blockType == null || msg.face == null) {
+                return;
+            }
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) {
                 return;

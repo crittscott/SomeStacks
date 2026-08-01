@@ -210,7 +210,16 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      */
     public static void handleDumpRequest(List<String> namespaces) {
         Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
+        List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
+            // The namespace names a file, and it arrived over the wire. Only a real namespace may
+            // name one: the character set a namespace allows has no separator in it, so a name that
+            // passes cannot leave the dump folder.
+            if (!ResourceLocation.isValidNamespace(namespace)) {
+                SomeStacks.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
+                rejected.add(namespace);
+                continue;
+            }
             byNamespace.put(namespace, new HashMap<>());
         }
 
@@ -240,7 +249,14 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
 
         for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
-            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json");
+            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
+            // The namespace check above already forbids a name that could escape; this is the
+            // guarantee stated where the write happens rather than only where the name arrived.
+            if (!file.startsWith(GENERATED_DIR)) {
+                SomeStacks.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
+                failed.add(entry.getKey());
+                continue;
+            }
             try {
                 Files.writeString(file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
                 itemCount += entry.getValue().size();
@@ -254,6 +270,9 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 + (byNamespace.size() - failed.size()) + " namespace(s) to " + GENERATED_DIR;
         if (!failed.isEmpty()) {
             message += ". Failed to write " + failed.size() + ": " + String.join(", ", failed);
+        }
+        if (!rejected.isEmpty()) {
+            message += ". Ignored " + rejected.size() + " invalid namespace(s)";
         }
         report(message);
     }

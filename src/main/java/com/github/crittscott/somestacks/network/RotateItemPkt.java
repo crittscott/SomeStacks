@@ -37,12 +37,10 @@ public class RotateItemPkt {
             ServerPlayer sp = PacketBoundary.validate(ctx, msg.pos);
             if (sp == null) return;
 
-            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
-            // that item on the block. Claiming the click denies the use-item-on packet that
-            // follows, so the rotation does not also place the torch against the stack. This holds
-            // even when the click hit no item: the gesture claimed the click either way.
-            if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
-
+            // Whether this is the gesture at all is settled before anything is claimed: claiming
+            // fires the right-click event and marks the position, so a packet that turns out to
+            // describe no gesture would otherwise announce an interaction that never happened and
+            // cancel the player's own click at a position the mod does not even own.
             if (!PacketBoundary.holdsInMainHand(sp, Items.SOUL_TORCH)) return;
 
             Level level = sp.level();
@@ -52,6 +50,13 @@ public class RotateItemPkt {
             if (block != ModRegistry.SINGLES_STACK_BLOCK.get() || !(be instanceof SinglesStackBE ssbe)) return;
 
             if (msg.slotIndex < 0 || msg.slotIndex >= SinglesStackBE.SLOTS) return;
+
+            // The gesture is a sneaking click holding an item, which vanilla resolves as a use of
+            // that item on the block. Claiming the click denies the use-item-on packet that
+            // follows, so the rotation does not also place the torch against the stack. This holds
+            // even when the click hit an empty cell: the player made the gesture on a Singles Stack
+            // with the torch in hand, and that is the click being answered.
+            if (!Protection.claimInteraction(sp, msg.pos, msg.pos)) return;
 
             // An empty cell carries no orientation, so there is nothing to turn: rotating one
             // would leave a facing behind for whatever is deposited into it next.

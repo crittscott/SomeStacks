@@ -1,10 +1,12 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +18,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class ConfigSyncPkt {
+    /** More per-item override entries than any server would configure by hand. */
+    private static final int MAX_OVERRIDE_ENTRIES = 65536;
+
     private final boolean enableStack;
     private final boolean enableSingles;
     private final boolean enableBar;
@@ -56,12 +61,22 @@ public class ConfigSyncPkt {
         }
     }
 
+    /**
+     * A count naming more entries than any override set could hold means the stream is not what it
+     * claims to be. The packet is carried through with a null map for {@link #handle} to drop
+     * whole: an empty map would read as "the server has no overrides" and clear the real ones.
+     */
     public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
 
         int size = buf.readInt();
+        if (size < 0 || size > MAX_OVERRIDE_ENTRIES) {
+            SomeStacks.LOGGER.warn("Ignoring config sync claiming {} render overrides", size);
+            return new ConfigSyncPkt(enableStack, enableSingles, enableBar, null);
+        }
+
         Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>();
         for (int i = 0; i < size; i++) {
             ResourceLocation itemId = buf.readResourceLocation();
@@ -70,7 +85,8 @@ public class ConfigSyncPkt {
             float[] offset = buf.readBoolean()
                     ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
                     : null;
-            renderOverrides.put(itemId, new ItemRenderConfig(mode, scale, offset));
+            renderOverrides.put(itemId,
+                    OverrideJsonCodec.sanitize(new ItemRenderConfig(mode, scale, offset)));
         }
 
         return new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
@@ -78,6 +94,9 @@ public class ConfigSyncPkt {
 
     public static void handle(ConfigSyncPkt msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
+            if (msg.renderOverrides == null) {
+                return;
+            }
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 StackState.setBlockEnabled(BlockType.STORAGE_STACK, msg.enableStack);
                 StackState.setBlockEnabled(BlockType.SINGLES_STACK, msg.enableSingles);
