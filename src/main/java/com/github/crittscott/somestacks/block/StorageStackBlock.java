@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -108,7 +107,6 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        SomeStacks.LOGGER.debug("StorageStackBlock.use() called.");
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 

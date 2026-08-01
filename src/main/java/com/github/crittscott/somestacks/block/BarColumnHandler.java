@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
  * much a single call will take. A caller walking in ascending order still fills the column: each
  * placement stands before the next position is offered.
  *
+ * <p>A mutation refuses outright while another one is running; see {@link RunEdit}.
+ *
  * <p>The slot count is what the column holds plus one block's worth of headroom while the
  * configured height allows another block, so it grows and shrinks with the column. See
  * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
@@ -63,7 +65,21 @@ public class BarColumnHandler implements IItemHandler {
         }
 
         // A position takes one bar, which is what getSlotLimit says, so one call places at most one.
-        if (!column.insertOneAt(slot, stack, simulate)) {
+        boolean placed;
+        if (simulate) {
+            placed = column.insertOneAt(slot, stack, true);
+        } else {
+            if (!RunEdit.begin()) {
+                return stack;
+            }
+            try {
+                placed = column.insertOneAt(slot, stack, false);
+            } finally {
+                RunEdit.end();
+            }
+        }
+
+        if (!placed) {
             return stack;
         }
         return stack.getCount() == 1
@@ -78,7 +94,17 @@ public class BarColumnHandler implements IItemHandler {
         if (column == null) {
             return ItemStack.EMPTY;
         }
-        return column.extract(slot, amount, simulate);
+        if (simulate) {
+            return column.extract(slot, amount, true);
+        }
+        if (!RunEdit.begin()) {
+            return ItemStack.EMPTY;
+        }
+        try {
+            return column.extract(slot, amount, false);
+        } finally {
+            RunEdit.end();
+        }
     }
 
     @Override

@@ -66,7 +66,10 @@ public class DepositPkt {
         // opposite sides of a protection boundary and the click lands on the latter. The mark goes
         // on the clicked position: a deposit takes at most one item from a Singles or Bar hand and
         // leaves the rest for the vanilla interaction to use there.
-        if (!Protection.claimInteraction(
+        //
+        // Gated as an item use rather than a block access: the deposit spends the held stack off
+        // the click itself, so permission to reach the block is not on its own enough.
+        if (!Protection.claimItemUse(
                 sp, msg.clickedPos, adjacent ? new BlockPos[] {msg.pos, msg.clickedPos}
                                              : new BlockPos[] {msg.pos})) {
             return;

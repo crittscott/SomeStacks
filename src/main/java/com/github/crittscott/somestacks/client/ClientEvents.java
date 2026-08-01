@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.network.DepositPkt;
@@ -31,7 +30,6 @@ public final class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
-        SomeStacks.LOGGER.debug("RightClickEmpty fired");
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forEmptyHand(evt, stackMode);
@@ -44,7 +42,6 @@ public final class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
-        SomeStacks.LOGGER.debug("RightClickItem fired, canceled: " + evt.isCanceled());
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forItemInHand(evt, stackMode);
@@ -64,11 +61,6 @@ public final class ClientEvents {
         if (!evt.getLevel().isClientSide()) {
             return;
         }
-        SomeStacks.LOGGER.debug(
-                "RightClickBlock fired: blockstate {}, hand item {}",
-                evt.getLevel().getBlockState(evt.getPos()),
-                evt.getItemStack()
-        );
         if (evt.isCanceled()) return;
         if (evt.getFace() == null) return;
 

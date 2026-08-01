@@ -20,6 +20,8 @@ import javax.annotation.Nonnull;
  * whole pile down on the next tick. It arrives a tick behind a player's own deposit, which fills
  * from the base outright.
  *
+ * <p>A mutation refuses outright while another one is running; see {@link RunEdit}.
+ *
  * <p>The slot count is what the pile holds plus one block's worth of headroom while the configured
  * height allows another block, so it grows and shrinks with the pile. See
  * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
@@ -60,7 +62,20 @@ public class PileItemHandler implements IItemHandler {
             return stack;
         }
 
-        int accepted = pile.insertAt(slot, stack, simulate);
+        int accepted;
+        if (simulate) {
+            accepted = pile.insertAt(slot, stack, true);
+        } else {
+            if (!RunEdit.begin()) {
+                return stack;
+            }
+            try {
+                accepted = pile.insertAt(slot, stack, false);
+            } finally {
+                RunEdit.end();
+            }
+        }
+
         return accepted >= stack.getCount()
                 ? ItemStack.EMPTY
                 : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - accepted);
@@ -82,7 +97,14 @@ public class PileItemHandler implements IItemHandler {
             return ItemHandlerHelper.copyStackWithSize(inSlot, Math.min(amount, inSlot.getCount()));
         }
 
-        return pile.extract(slot, amount);
+        if (!RunEdit.begin()) {
+            return ItemStack.EMPTY;
+        }
+        try {
+            return pile.extract(slot, amount);
+        } finally {
+            RunEdit.end();
+        }
     }
 
     @Override

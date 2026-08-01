@@ -26,6 +26,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 
+import java.util.function.BiPredicate;
+
 /**
  * Server-authoritative protection consults for the mod's world edits. The mod's custom packets
  * take the place of the vanilla interactions the client suppresses, so these re-run the checks a
@@ -71,13 +73,32 @@ public final class Protection {
      * of a position it was never allowed to touch.
      */
     public static boolean claimInteraction(ServerPlayer sp, BlockPos markPos, BlockPos... consulted) {
+        return claim(sp, markPos, Protection::mayInteract, consulted);
+    }
+
+    /**
+     * Gates a gesture that spends the held item and claims the click for it, the way
+     * {@link #claimInteraction} gates one that only reaches the block.
+     *
+     * <p>A deposit is not the container access it resembles. Opening a chest costs nothing and its
+     * contents are gated again by whatever guards the screen; a deposit takes the stack straight out
+     * of the hand off the click, with nothing in between. So it answers to permission to use an item
+     * here as well as permission to reach the block, which is the pair vanilla weighs for any
+     * item-driven interaction and the pair {@link #claimPlacement} already weighs.
+     */
+    public static boolean claimItemUse(ServerPlayer sp, BlockPos markPos, BlockPos... consulted) {
+        return claim(sp, markPos, Protection::mayUseItemOn, consulted);
+    }
+
+    private static boolean claim(ServerPlayer sp, BlockPos markPos,
+                                 BiPredicate<ServerPlayer, BlockPos> gate, BlockPos... consulted) {
         for (BlockPos pos : consulted) {
             if (isProtected(sp, pos)) {
                 return false;
             }
         }
         for (BlockPos pos : consulted) {
-            if (!mayInteract(sp, pos)) {
+            if (!gate.test(sp, pos)) {
                 return false;
             }
         }
@@ -96,7 +117,7 @@ public final class Protection {
         if (isProtected(sp, againstPos) || isProtected(sp, intoPos)) {
             return false;
         }
-        if (!mayPlaceAgainst(sp, againstPos)) {
+        if (!mayUseItemOn(sp, againstPos)) {
             return false;
         }
         RightClickBlockSuppressor.suppress(sp, againstPos, sp.level());
@@ -135,11 +156,12 @@ public final class Protection {
     }
 
     /**
-     * Fires {@link PlayerInteractEvent.RightClickBlock} for an item-driven placement against
-     * {@code pos}. Placement requires both access to the clicked block and permission to use the
-     * held item on it.
+     * Fires {@link PlayerInteractEvent.RightClickBlock} for an item-driven interaction at
+     * {@code pos}: a placement, or a deposit that spends the held stack. Either requires both access
+     * to the block and permission to use the held item on it, and a listener that refuses only the
+     * item refuses both.
      */
-    public static boolean mayPlaceAgainst(ServerPlayer sp, BlockPos pos) {
+    public static boolean mayUseItemOn(ServerPlayer sp, BlockPos pos) {
         PlayerInteractEvent.RightClickBlock evt = rightClickBlock(sp, pos);
         return !evt.isCanceled()
                 && evt.getUseBlock() != Event.Result.DENY

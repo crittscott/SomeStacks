@@ -293,7 +293,7 @@ public final class ProtectionGameTests {
         try {
             check(Protection.mayInteract(player, clicked),
                     "Item-use denial incorrectly vetoed block access");
-            check(!Protection.mayPlaceAgainst(player, clicked),
+            check(!Protection.mayUseItemOn(player, clicked),
                     "Item-use denial did not veto placement");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyItem);
