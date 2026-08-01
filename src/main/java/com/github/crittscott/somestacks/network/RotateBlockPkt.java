@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.server.StackSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -65,6 +66,8 @@ public class RotateBlockPkt {
                 sbe.setRotation(newRotation);
             }
 
+            StackSounds.playRotation(sp, msg.pos,
+                    singles ? StackSounds.SINGLES_ROTATE : StackSounds.STORAGE_ROTATE);
             sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
         });
         ctx.get().setPacketHandled(true);

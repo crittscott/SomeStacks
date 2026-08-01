@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.ModSounds;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesColumn;
@@ -169,20 +169,20 @@ public class PlaceAndDepositPkt {
             case STORAGE_STACK -> {
                 StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(msg.pos);
                 sbe.deposit(handStack, sp);
-                level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT,
-                        SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.STORAGE_DEPOSIT,
+                        SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
             case SINGLES_STACK -> {
                 SinglesStackBE ssbe = (SinglesStackBE) level.getBlockEntity(msg.pos);
                 ssbe.depositAt(depositIndex, handStack);
-                level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT,
-                        SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.SINGLES_DEPOSIT,
+                        SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
             case BAR_STACK -> {
                 BarStackBE barbe = (BarStackBE) level.getBlockEntity(msg.pos);
                 barbe.depositAt(depositIndex, handStack);
-                level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT,
-                        SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.BAR_DEPOSIT,
+                        SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
         }
         if (!creative) {

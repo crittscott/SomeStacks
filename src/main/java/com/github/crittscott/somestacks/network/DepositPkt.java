@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.ModSounds;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -102,7 +102,7 @@ public class DepositPkt {
             returnToHand(sp, creative, handStack);
 
             if (deposited > 0) {
-                level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
         } else if (block == ModRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
             IItemHandler handler = ssbe.getItems();
@@ -121,7 +121,7 @@ public class DepositPkt {
             returnToHand(sp, creative, handStack);
 
             if (deposited) {
-                level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
         } else if (block == ModRegistry.BAR_STACK_BLOCK.get() && be instanceof BarStackBE barbe) {
             IItemHandler handler = barbe.getItems();
@@ -140,7 +140,7 @@ public class DepositPkt {
             returnToHand(sp, creative, handStack);
 
             if (deposited) {
-                level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
+                level.playSound(null, msg.pos, StackSounds.BAR_DEPOSIT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
         }
     }

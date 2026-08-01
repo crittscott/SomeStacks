@@ -5,10 +5,13 @@
   },
   "singles_stack_block": {
     "deposit": "minecraft:block.wood.place",
-    "extract": "minecraft:block.wood.break"
+    "extract": "minecraft:block.wood.break",
+    "rotate": "minecraft:block.wood.hit",
+    "rotate_item": "minecraft:block.wood.hit"
   },
   "storage_stack_block": {
     "deposit": "minecraft:block.wood.place",
-    "extract": "minecraft:block.wood.break"
+    "extract": "minecraft:block.wood.break",
+    "rotate": "minecraft:block.wood.hit"
   }
 }

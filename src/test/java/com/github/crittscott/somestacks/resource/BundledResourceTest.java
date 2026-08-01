@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -92,15 +93,21 @@ class BundledResourceTest {
                 Path.of("data", "somestacks", "somestacks_sounds", "default.json"));
         JsonObject root = JsonParser.parseString(Files.readString(path)).getAsJsonObject();
 
-        for (String stack : Set.of(
-                "storage_stack_block", "singles_stack_block", "bar_stack_block")) {
-            assertTrue(root.has(stack), stack);
-            JsonObject actions = root.getAsJsonObject(stack);
-            assertTrue(actions.has("deposit"), stack + ".deposit");
-            assertTrue(actions.has("extract"), stack + ".extract");
-            assertEquals(2, actions.size(), stack);
-            assertFalse(actions.get("deposit").getAsString().isBlank());
-            assertFalse(actions.get("extract").getAsString().isBlank());
+        // Rotation reaches Storage and Singles blocks and Singles items, and nothing on a Bar
+        // Stack, so the actions a block type carries are not the same for every type.
+        Map<String, Set<String>> expected = Map.of(
+                "storage_stack_block", Set.of("deposit", "extract", "rotate"),
+                "singles_stack_block", Set.of("deposit", "extract", "rotate", "rotate_item"),
+                "bar_stack_block", Set.of("deposit", "extract"));
+
+        for (var stack : expected.entrySet()) {
+            assertTrue(root.has(stack.getKey()), stack.getKey());
+            JsonObject actions = root.getAsJsonObject(stack.getKey());
+            assertEquals(stack.getValue(), actions.keySet(), stack.getKey());
+            for (String action : stack.getValue()) {
+                assertFalse(actions.get(action).getAsString().isBlank(),
+                        stack.getKey() + "." + action);
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.ModSounds;
+import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -65,7 +65,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         ItemStack taken = sbe.extractAt(index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack);
 
         if (!taken.isEmpty()) {
-            level.playSound(null, pos, ModSounds.STORAGE_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
+            level.playSound(null, pos, StackSounds.STORAGE_EXTRACT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
 
             if (handStack.isEmpty()) {
                 player.setItemInHand(hand, taken);
@@ -96,7 +96,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         ItemStack taken = ssbe.extractAt(index);
 
         if (!taken.isEmpty()) {
-            level.playSound(null, pos, ModSounds.SINGLES_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
+            level.playSound(null, pos, StackSounds.SINGLES_EXTRACT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
 
             ItemOps.giveToPlayerOrDrop(player, hand, taken);
         }
@@ -116,7 +116,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         ItemStack taken = barbe.extractAt(index);
 
         if (!taken.isEmpty()) {
-            level.playSound(null, pos, ModSounds.BAR_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
+            level.playSound(null, pos, StackSounds.BAR_EXTRACT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
 
             ItemOps.giveToPlayerOrDrop(player, hand, taken);
         }

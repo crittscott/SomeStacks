@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.server.StackSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -64,6 +65,7 @@ public class RotateItemPkt {
 
             int newCubeRot = (ssbe.getCubeRotation(msg.slotIndex) + 1) % 4;
             ssbe.setCubeRotation(msg.slotIndex, newCubeRot);
+            StackSounds.playRotation(sp, msg.pos, StackSounds.SINGLES_ROTATE_ITEM);
             sp.displayClientMessage(Component.literal("Item Rotation: " + (newCubeRot * 90) + "°"), true);
         });
         ctx.get().setPacketHandled(true);

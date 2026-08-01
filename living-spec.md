@@ -191,7 +191,19 @@ Bar appearance is client-side resource data loaded from `assets/*/textures/bars/
 
 ### Sound data
 
-`data/*/somestacks_sounds/*.json` maps deposit and extraction sounds for each stack type. It is server-side data-pack state. Later resources override earlier mappings; missing or invalid entries use vanilla fallback sounds.
+`data/*/somestacks_sounds/*.json` maps each stack type's actions to sounds. It is server-side data-pack state, and the server plays and broadcasts the sounds.
+
+The actions a type carries follow the gestures it answers to:
+
+| Type | Actions |
+| --- | --- |
+| Storage Stack | `deposit`, `extract`, `rotate` |
+| Singles Stack | `deposit`, `extract`, `rotate`, `rotate_item` |
+| Bar Stack | `deposit`, `extract` |
+
+The mod registers no sound events of its own, so an entry names one already in the sound registry. Files layer one action at a time, so a file naming a single action leaves that type's other actions standing. The mod's own namespace holds the bundled defaults and is the base layer; every other namespace applies over it, and among those the file whose id sorts last wins. Unrecognized types and actions are ignored, and missing or unresolvable entries use vanilla fallbacks. The defaults are wood sounds throughout.
+
+Deposit and extraction are heard every time. Rotation is limited to one sound per player every four ticks and its pitch varies slightly, because the gesture is repeatable at no cost; the rotation itself is never withheld.
 
 ## Server configuration
 
