@@ -50,6 +50,8 @@ Singles and Bar insertion refuses empty positions without support rather than re
 
 A run advertises its existing positions plus one block of reachable headroom, bounded by `max_pile_height`. Insertion into headroom grows the run if the type is enabled and placement passes build-height, replaceability, entity-obstruction, world-border, and spawn-protection checks. Capability growth uses the level's fake player.
 
+A capability mutation that arrives while another one is still running is refused outright: the insertion keeps its stack and the extraction yields nothing. Simulation is never held off.
+
 Comparators report the fill of the entire vertical run from any block in it:
 
 `0` when empty; otherwise `floor(fill * 14) + 1`
@@ -63,7 +65,7 @@ Storage fill uses the fraction occupied in each ordinary stack slot. Singles and
 | Gesture | Result |
 | --- | --- |
 | Hold `V` and right-click air | Cycle Storage, Singles, Bar, and Toggle Permanent modes. Disabled stack types are skipped. |
-| Hold `V` with an item and right-click a stack | Deposit into that stack, regardless of the selected placement mode. If a targeted Singles or Bar column is full, a top-face click places the selected stack type above it and deposits there. |
+| Hold `V` with an item and right-click a stack | Deposit into that stack, regardless of the selected placement mode. On a top-face click where the targeted Singles or Bar cell cannot take the item, the gesture falls through to placement instead: the selected stack type goes above the block and takes the deposit. |
 | Hold `V` with an item and right-click another block | Deposit into an adjacent Singles or Bar Stack, or place the selected stack type in the adjacent replaceable position and make the first deposit. |
 | Right-click a stack without `V` or Shift | Extract the nearest occupied rendered cell. Storage extracts as much as the hand accepts; Singles and Bar extract one item. |
 | Select Toggle Permanent, hold `V`, and right-click a Storage Stack with an empty hand | Toggle automatic removal for the whole pile. |
@@ -129,7 +131,7 @@ Breaking or replacing any stack block drops the contents of that block. Mod-driv
 
 ## Networking and protection
 
-Client-to-server packets cover placement and deposit, deposit, extraction, block rotation, item rotation, and permanent-mode changes. Server-to-client packets cover synchronized configuration and render-override commands. Packets received from the wrong logical side are rejected.
+Client-to-server packets cover placement and deposit, deposit, extraction, block rotation, item rotation, and permanent-mode changes. Server-to-client packets cover synchronized configuration, render-override commands, and override-write requests. Packets received from the wrong logical side are rejected.
 
 Every gesture is a main-hand gesture. No packet carries a hand.
 
@@ -240,7 +242,7 @@ Gates are vanilla permission levels. Level 2 is the gamerule and world-editing l
 | `ss reload` | Level 2 | Reload server render overrides and resend synchronized configuration. |
 | `ss help [command]` | None | Show command forms, gates, and summaries. |
 
-A render gallery is a single-layer field of filled stacks on a uniform floor: one column of stacks per namespace or item group, with that group's rows running north. Gallery commands overwrite their floor and stack positions directly and do not apply ordinary placement protections. Large galleries are spread across ticks by the configured placement limit.
+A render gallery is a single-layer field of stacks on a uniform floor: one column of stacks per namespace or item group, with that group's rows running north. Each stack shows one layer of its type, nine items for Storage and eight bars for Bar. Gallery commands overwrite their floor and stack positions directly and do not apply ordinary placement protections. Large galleries are spread across ticks by the configured placement limit.
 
 Generated override files are output only; they are not an active override layer. They use the same format as resource and server overrides.
 
@@ -248,7 +250,7 @@ Generated override files are output only; they are not an active override layer.
 
 ## Automated verification
 
-The suite contains 51 JUnit tests and 82 Forge GameTests.
+The suite contains 53 JUnit tests and 91 Forge GameTests.
 
 JUnit covers registry-independent logic under `src/test/java` and runs with `build`. Forge GameTests cover registered game objects, levels, block entities, capabilities, events, packets, persistence, growth, gravity, protection, and synchronization. `runGameTestServer` runs the GameTests.
 
