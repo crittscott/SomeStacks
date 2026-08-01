@@ -26,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -83,7 +82,10 @@ public class PlaceAndDepositPkt {
             return;
         }
 
-        if (Protection.isProtected(sp, msg.pos)) {
+        // Both positions, because vanilla weighs both: the block being used answers for the
+        // interaction and the position being filled answers for the placement, and the two can fall
+        // on opposite sides of a spawn-protection boundary.
+        if (Protection.isProtected(sp, msg.pos) || Protection.isProtected(sp, clicked)) {
             return;
         }
 
@@ -93,7 +95,7 @@ public class PlaceAndDepositPkt {
 
         // The gesture claimed the click, so the vanilla interaction the client still sends for it
         // must not also run against the clicked block: the deposit can leave items in the hand for
-        // it to use, and a placement rolled back below leaves the clicked block exposed to them.
+        // it to use, and a gesture that goes no further leaves the whole hand for them.
         //
         // It goes here rather than earlier because the consult above fires the very event the mark
         // vetoes, and the placement would otherwise refuse itself.
@@ -145,30 +147,8 @@ public class PlaceAndDepositPkt {
             return;
         }
 
-        if (msg.blockType == BlockType.SINGLES_STACK && msg.face == Direction.UP) {
-            BlockPos below = msg.pos.below();
-            var beBelow = level.getBlockEntity(below);
-
-            if (beBelow instanceof SinglesStackBE ssbeBelow) {
-                boolean[] seam = SinglesCubeIdx.topLayerOccupancy(ssbeBelow.getItems(), ssbeBelow.getRotation());
-
-                if (!SinglesCubeIdx.freshBlockSupports(depositIndex, seam)) {
-                    return;
-                }
-            }
-        }
-
-        if (msg.blockType == BlockType.BAR_STACK && msg.face == Direction.UP) {
-            BlockPos below = msg.pos.below();
-            var beBelow = level.getBlockEntity(below);
-
-            if (beBelow instanceof BarStackBE barBeBelow) {
-                boolean[] seam = BarCubeIdx.topLayerOccupancy(barBeBelow.getItems());
-
-                if (!BarCubeIdx.freshBlockSupports(depositIndex, seam)) {
-                    return;
-                }
-            }
+        if (!firstDepositWouldSucceed(msg.blockType, level, msg.pos, handStack, depositIndex)) {
+            return;
         }
 
         BlockState state = msg.blockType.getBlock().defaultBlockState();
@@ -184,65 +164,56 @@ public class PlaceAndDepositPkt {
             return;
         }
 
-        boolean depositSucceeded = switch (msg.blockType) {
+        switch (msg.blockType) {
             case STORAGE_STACK -> {
                 StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(msg.pos);
-
-                int deposited = sbe.deposit(handStack, sp);
-                sp.setItemInHand(msg.hand, handStack);
-
-                if (deposited > 0) {
-                    level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT,
-                            SoundSource.BLOCKS, 0.5f, 1.0f);
-                }
-                yield deposited > 0;
+                sbe.deposit(handStack, sp);
+                level.playSound(null, msg.pos, ModSounds.STORAGE_DEPOSIT,
+                        SoundSource.BLOCKS, 0.5f, 1.0f);
             }
-            case SINGLES_STACK -> depositIntoSingles(
-                    (SinglesStackBE) level.getBlockEntity(msg.pos),
-                    sp, msg, handStack, level, depositIndex);
-            case BAR_STACK -> depositIntoBar(
-                    (BarStackBE) level.getBlockEntity(msg.pos),
-                    sp, msg, handStack, level, depositIndex);
+            case SINGLES_STACK -> {
+                SinglesStackBE ssbe = (SinglesStackBE) level.getBlockEntity(msg.pos);
+                ssbe.depositAt(depositIndex, handStack);
+                level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT,
+                        SoundSource.BLOCKS, 0.5f, 1.0f);
+            }
+            case BAR_STACK -> {
+                BarStackBE barbe = (BarStackBE) level.getBlockEntity(msg.pos);
+                barbe.depositAt(depositIndex, handStack);
+                level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT,
+                        SoundSource.BLOCKS, 0.5f, 1.0f);
+            }
+        }
+        sp.setItemInHand(msg.hand, handStack);
+    }
+
+    /**
+     * Whether the deposit that justifies this placement would take an item, asked of a block that
+     * does not exist yet. The placement is weighed on this rather than undone behind a deposit that
+     * failed: setting the block fires {@code EntityPlaceEvent}, and a block set and then removed is
+     * a placement the claim and logging mods listening to it were told about and never saw undone.
+     *
+     * <p>Every cell of a fresh block is empty and the block is unrotated, so what the item is and
+     * what seam the block would stand on are all that remain to ask. The seam is the block below
+     * when it is a stack of the same type, and nothing when it is not, which is the same reading
+     * {@link SinglesStackBE#depositAt} and {@link BarStackBE#depositAt} take once the block stands.
+     */
+    private static boolean firstDepositWouldSucceed(BlockType blockType, Level level, BlockPos pos,
+                                                    ItemStack handStack, int depositIndex) {
+        return switch (blockType) {
+            case STORAGE_STACK -> StorageStackBE.isValidStorageItem(handStack);
+            case SINGLES_STACK -> SinglesStackBE.isValidSinglesItem(handStack)
+                    && SinglesCubeIdx.freshBlockSupports(
+                            depositIndex,
+                            level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
+                                    ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
+                                    : null);
+            case BAR_STACK -> BarStackBE.isValidBarItem(handStack)
+                    && BarCubeIdx.freshBlockSupports(
+                            depositIndex,
+                            level.getBlockEntity(pos.below()) instanceof BarStackBE below
+                                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
+                                    : null);
         };
-
-        if (!depositSucceeded) {
-            level.removeBlock(msg.pos, false);
-            }
-    }
-
-    private static boolean depositIntoSingles(SinglesStackBE ssbe, ServerPlayer sp, PlaceAndDepositPkt msg,
-                                              ItemStack handStack, Level level, int index) {
-        IItemHandler handler = ssbe.getItems();
-
-        if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
-        // Grounding is left to depositAt, which is the only caller holding the seam beneath.
-        boolean deposited = ssbe.depositAt(index, handStack);
-        sp.setItemInHand(msg.hand, handStack);
-
-        if (deposited) {
-            level.playSound(null, msg.pos, ModSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-        }
-        return deposited;
-    }
-
-    private static boolean depositIntoBar(BarStackBE barbe, ServerPlayer sp, PlaceAndDepositPkt msg,
-                                          ItemStack handStack, Level level, int index) {
-        IItemHandler handler = barbe.getItems();
-
-        if (index < 0 || !handler.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
-        // Grounding is left to depositAt, which is the only caller holding the seam beneath.
-        boolean deposited = barbe.depositAt(index, handStack);
-        sp.setItemInHand(msg.hand, handStack);
-
-        if (deposited) {
-            level.playSound(null, msg.pos, ModSounds.BAR_DEPOSIT, SoundSource.BLOCKS, 0.5f, 1.0f);
-        }
-        return deposited;
     }
 }

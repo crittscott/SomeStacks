@@ -46,6 +46,15 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
             if (!Protection.mayInteract(player, msg.pos, msg.hand())) return;
 
             Level level = player.level();
+
+            // The gesture claimed the click, so the vanilla interaction the client still sends for
+            // it must not also run against the stack: extraction can put an item in a hand that was
+            // empty, at a position a Storage settle or a Bar collapse may be about to clear.
+            //
+            // It goes here rather than earlier because the consult above fires the very event the
+            // mark vetoes, and the extraction would otherwise refuse itself.
+            RightClickBlockSuppressor.suppress(player, msg.pos, level);
+
             BlockEntity be = level.getBlockEntity(msg.pos);
             if (be == null) return;
 
@@ -70,10 +79,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         ItemStack taken = sbe.extractAt(index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack);
 
         if (!taken.isEmpty()) {
-            // Prevent the vanilla use-item-on packet (processed after this pkt) from using the
-            // newly held item at a position the pile's settle may be about to clear.
-            RightClickBlockSuppressor.suppress(player, pos, level);
-
             level.playSound(null, pos, ModSounds.STORAGE_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
 
             if (handStack.isEmpty()) {
@@ -105,8 +110,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         ItemStack taken = ssbe.extractAt(index);
 
         if (!taken.isEmpty()) {
-            RightClickBlockSuppressor.suppress(player, pos, level);
-
             level.playSound(null, pos, ModSounds.SINGLES_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
 
             ItemOps.giveToPlayerOrDrop(player, hand, taken);
@@ -127,8 +130,6 @@ public record ExtractPkt(InteractionHand hand, BlockPos pos, int index) {
         ItemStack taken = barbe.extractAt(index);
 
         if (!taken.isEmpty()) {
-            RightClickBlockSuppressor.suppress(player, pos, level);
-
             level.playSound(null, pos, ModSounds.BAR_EXTRACT, SoundSource.BLOCKS, 0.5f, 1.0f);
 
             ItemOps.giveToPlayerOrDrop(player, hand, taken);

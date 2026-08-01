@@ -129,7 +129,7 @@ Breaking or replacing any stack block drops the contents of that block. Mod-driv
 
 Client-to-server packets cover placement and deposit, deposit, extraction, block rotation, item rotation, and permanent-mode changes. Server-to-client packets cover synchronized configuration and render-override commands. Packets received from the wrong logical side are rejected.
 
-The server validates the sender, loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, and Forge's block-place event.
+The server validates the sender, that the sender is not a spectator, the loaded position, reach, target block entity, slot, held item, and operation-specific rules. Mutations also respect the world border, vanilla spawn protection, and Forge's right-click-block event. Placement additionally checks replaceability, entity obstruction against the collision shape created by the first deposit, type enablement, pile height, item restrictions, whether the first deposit would succeed, and Forge's block-place event.
 
 The server synchronizes stack-type enable flags and server render overrides on login and server-config reload. Blacklists and pile settings remain server-side.
 

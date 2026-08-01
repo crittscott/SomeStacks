@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.server;
 import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -33,16 +32,11 @@ public final class Protection {
     private Protection() {}
 
     /**
-     * World border and vanilla spawn protection (which already exempts operators). {@code true}
-     * means the edit must not proceed.
+     * Vanilla's own gate on a block interaction: world border and spawn protection, which already
+     * exempts operators. {@code true} means the edit must not proceed.
      */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
-        ServerLevel level = sp.serverLevel();
-        if (!level.getWorldBorder().isWithinBounds(pos)) {
-            return true;
-        }
-        MinecraftServer server = level.getServer();
-        return server.isUnderSpawnProtection(level, pos, sp);
+        return !sp.serverLevel().mayInteract(sp, pos);
     }
 
     /**

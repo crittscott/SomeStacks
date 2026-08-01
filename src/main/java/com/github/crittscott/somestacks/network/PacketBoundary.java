@@ -23,12 +23,19 @@ final class PacketBoundary {
     private static final double REACH_PADDING = 1.0;
 
     /**
-     * Common opening chain for a positional C2S packet: non-null sender, loaded target,
-     * and within reach. Returns the sender, or {@code null} if any check fails (the caller returns).
+     * Common opening chain for a positional C2S packet: a non-null sender who may act on the
+     * world, a loaded target, and a target within reach. Returns the sender, or {@code null} if any
+     * check fails (the caller returns).
      */
     static ServerPlayer validate(Supplier<NetworkEvent.Context> ctx, BlockPos pos) {
         ServerPlayer sp = ctx.get().getSender();
         if (sp == null) {
+            return null;
+        }
+        // A spectator passes through the world without touching it. Vanilla stops the interaction
+        // that would reach a block at the game mode; the gestures these packets carry take the
+        // place of that interaction, so they answer to it here.
+        if (sp.isSpectator()) {
             return null;
         }
         if (!sp.serverLevel().isLoaded(pos)) {
