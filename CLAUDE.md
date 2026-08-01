@@ -1,4 +1,7 @@
-###### v4
+###### v5
+
+# Language
+Use American English, not British English.
 
 # Scope of analysis and work
 Your domain of interest is the project at hand. Only if you cannot answer the question by looking here are you to look outside.
