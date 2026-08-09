@@ -60,7 +60,8 @@ public class TogglePermanentPkt {
             pile.setPermanent(newState);
 
             sp.displayClientMessage(
-                    Component.literal("Pile: " + (newState ? "Permanent" : "Temporary")),
+                    Component.translatable("somestacks.message.pile_state", Component.translatable(
+                            newState ? "somestacks.state.permanent" : "somestacks.state.temporary")),
                     true
             );
         });

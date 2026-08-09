@@ -20,6 +20,10 @@ import java.util.TreeMap;
  * {@code scale}, and {@code offset} fields. Malformed entries and fields are logged and skipped.
  */
 public final class OverrideJsonCodec {
+    private static final String FIELD_MODE = "mode";
+    private static final String FIELD_SCALE = "scale";
+    private static final String FIELD_OFFSET = "offset";
+
     private OverrideJsonCodec() {}
 
     /**
@@ -89,9 +93,9 @@ public final class OverrideJsonCodec {
         Float scale = null;
         float[] offset = null;
 
-        if (json.has("mode")) {
+        if (json.has(FIELD_MODE)) {
             try {
-                String modeString = json.get("mode").getAsString();
+                String modeString = json.get(FIELD_MODE).getAsString();
                 mode = RenderMode.fromString(modeString);
                 if (mode == null) {
                     SomeStacks.LOGGER.warn("Invalid render mode '{}' for item '{}'", modeString, itemKey);
@@ -101,9 +105,9 @@ public final class OverrideJsonCodec {
             }
         }
 
-        if (json.has("scale")) {
+        if (json.has(FIELD_SCALE)) {
             try {
-                scale = json.get("scale").getAsFloat();
+                scale = json.get(FIELD_SCALE).getAsFloat();
                 if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
                     SomeStacks.LOGGER.warn("Invalid scale {} for item '{}', must be between {} and {}",
                             scale, itemKey, MIN_SCALE, MAX_SCALE);
@@ -114,9 +118,9 @@ public final class OverrideJsonCodec {
             }
         }
 
-        if (json.has("offset")) {
+        if (json.has(FIELD_OFFSET)) {
             try {
-                JsonArray offsetArray = json.getAsJsonArray("offset");
+                JsonArray offsetArray = json.getAsJsonArray(FIELD_OFFSET);
                 if (offsetArray.size() != 3) {
                     SomeStacks.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
                 } else {
@@ -155,17 +159,17 @@ public final class OverrideJsonCodec {
     public static JsonObject entryToJson(ItemRenderConfig config) {
         JsonObject entry = new JsonObject();
         if (config.mode() != null) {
-            entry.addProperty("mode", config.mode().getId());
+            entry.addProperty(FIELD_MODE, config.mode().getId());
         }
         if (config.scale() != null) {
-            entry.addProperty("scale", config.scale());
+            entry.addProperty(FIELD_SCALE, config.scale());
         }
         if (config.offset() != null) {
             JsonArray offsetArray = new JsonArray();
             for (float component : config.offset()) {
                 offsetArray.add(component);
             }
-            entry.add("offset", offsetArray);
+            entry.add(FIELD_OFFSET, offsetArray);
         }
         return entry;
     }

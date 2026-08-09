@@ -38,6 +38,10 @@ public class SinglesStackBE extends BlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = 64;
 
+    private static final String TAG_ITEMS = "Items";
+    private static final String TAG_ROTATION = "Rotation";
+    private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
+
     private VoxelShape cachedShape = null;
     private int rotation = 0;
     private int[] cubeRotations = new int[SLOTS];
@@ -496,14 +500,14 @@ public class SinglesStackBE extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("Items")) {
-            items.deserializeNBT(tag.getCompound("Items"));
+        if (tag.contains(TAG_ITEMS)) {
+            items.deserializeNBT(tag.getCompound(TAG_ITEMS));
         }
-        if (tag.contains("Rotation")) {
-            rotation = tag.getInt("Rotation");
+        if (tag.contains(TAG_ROTATION)) {
+            rotation = tag.getInt(TAG_ROTATION);
         }
-        if (tag.contains("CubeRotations")) {
-            int[] loaded = tag.getIntArray("CubeRotations");
+        if (tag.contains(TAG_CUBE_ROTATIONS)) {
+            int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS);
             if (loaded.length == SLOTS) {
                 cubeRotations = loaded.clone();
             }
@@ -514,12 +518,12 @@ public class SinglesStackBE extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.put("Items", items.serializeNBT());
-        tag.putInt("Rotation", rotation);
+        tag.put(TAG_ITEMS, items.serializeNBT());
+        tag.putInt(TAG_ROTATION, rotation);
         // IntArrayTag holds the array it is given, and an integrated server hands its update
         // packets to the client unserialized: both sides must get their own copy, or the client
         // renders the server's in-progress rotations against its own not-yet-updated items.
-        tag.putIntArray("CubeRotations", cubeRotations.clone());
+        tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
     }
 
     @Nonnull

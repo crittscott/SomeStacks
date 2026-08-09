@@ -12,6 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
@@ -229,7 +230,7 @@ public final class BarColumnGameTests {
         lower.getItems().insertItem(56, new ItemStack(barItem), false);
         upper.depositAt(upperBottom, new ItemStack(barItem));
 
-        helper.getLevel().setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
+        helper.getLevel().setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
         check(helper.getLevel().getBlockEntity(upper.getBlockPos()) == null,
                 "Dependent upper Bar block remained");
@@ -251,7 +252,7 @@ public final class BarColumnGameTests {
             GameTestSupport.seedSlot(upper.getItems(), slot, new ItemStack(barItem));
         }
 
-        helper.getLevel().setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 3);
+        helper.getLevel().setBlock(lowerPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
         check(helper.getLevel().getBlockEntity(lowerPos) == null,
                 "Broken lower Bar block remained");

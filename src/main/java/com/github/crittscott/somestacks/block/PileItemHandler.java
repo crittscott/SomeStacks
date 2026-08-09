@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  *
  * <p>The slot count is what the pile holds plus one block's worth of headroom while the configured
  * height allows another block, so it grows and shrinks with the pile. See
- * {@link SinglesColumn#advertisedSlots()} for why it is neither the potential height nor the real
+ * {@link StoragePile#advertisedSlots()} for why it is neither the potential height nor the real
  * one.
  */
 public class PileItemHandler implements IItemHandler {

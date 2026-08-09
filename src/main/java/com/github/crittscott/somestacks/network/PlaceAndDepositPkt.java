@@ -141,7 +141,7 @@ public class PlaceAndDepositPkt {
         };
         if (columnFull) {
             sp.displayClientMessage(
-                    Component.literal("Stack is at its maximum height of " + StoragePile.maxHeight()),
+                    Component.translatable("somestacks.message.maximum_height", StoragePile.maxHeight()),
                     true
             );
             return;

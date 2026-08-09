@@ -24,6 +24,8 @@ import java.util.function.Supplier;
  * the torch; a slot index naming no occupied cell simply rotates nothing.
  */
 public class RotateItemPkt {
+    private static final int DEGREES_PER_ROTATION = 90;
+
     private final BlockPos pos;
     private final int slotIndex;
 
@@ -68,7 +70,8 @@ public class RotateItemPkt {
             int newCubeRot = (ssbe.getCubeRotation(msg.slotIndex) + 1) % 4;
             ssbe.setCubeRotation(msg.slotIndex, newCubeRot);
             StackSounds.playRotation(sp, msg.pos, StackSounds.SINGLES_ROTATE_ITEM);
-            sp.displayClientMessage(Component.literal("Item Rotation: " + (newCubeRot * 90) + "°"), true);
+            sp.displayClientMessage(Component.translatable(
+                    "somestacks.message.item_rotation", newCubeRot * DEGREES_PER_ROTATION), true);
         });
         ctx.get().setPacketHandled(true);
     }

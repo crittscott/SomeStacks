@@ -40,6 +40,8 @@ public class BarStackBE extends BlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
     public static final int SLOTS = 64;
 
+    private static final String TAG_ITEMS = "Items";
+
     private VoxelShape cachedShape = null;
     private boolean suppressSync = false;
     private boolean batchTouched = false;
@@ -449,8 +451,8 @@ public class BarStackBE extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("Items")) {
-            items.deserializeNBT(tag.getCompound("Items"));
+        if (tag.contains(TAG_ITEMS)) {
+            items.deserializeNBT(tag.getCompound(TAG_ITEMS));
         }
         cachedShape = null;
     }
@@ -458,7 +460,7 @@ public class BarStackBE extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.put("Items", items.serializeNBT());
+        tag.put(TAG_ITEMS, items.serializeNBT());
     }
 
     @Nonnull

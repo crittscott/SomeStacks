@@ -61,11 +61,15 @@ class CommandRegistrationTest {
     }
 
     @Test
-    void renderGalleryKindsExposeStablePlayerFacingNames() {
-        assertEquals("StorageStacks", RenderGalleryGenerator.Kind.STORAGE.stackLabel());
-        assertEquals("items", RenderGalleryGenerator.Kind.STORAGE.itemLabel());
-        assertEquals("BarStacks", RenderGalleryGenerator.Kind.BAR.stackLabel());
-        assertEquals("ingots", RenderGalleryGenerator.Kind.BAR.itemLabel());
+    void renderGalleryKindsExposeStableTranslationKeys() {
+        assertEquals("somestacks.command.gallery.storage_stacks",
+                RenderGalleryGenerator.Kind.STORAGE.stackLabelKey());
+        assertEquals("somestacks.command.gallery.items",
+                RenderGalleryGenerator.Kind.STORAGE.itemLabelKey());
+        assertEquals("somestacks.command.gallery.bar_stacks",
+                RenderGalleryGenerator.Kind.BAR.stackLabelKey());
+        assertEquals("somestacks.command.gallery.ingots",
+                RenderGalleryGenerator.Kind.BAR.itemLabelKey());
     }
 
     private static CommandDispatcher<CommandSourceStack> dispatcher() {

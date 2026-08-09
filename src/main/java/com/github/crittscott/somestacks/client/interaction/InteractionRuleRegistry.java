@@ -5,10 +5,11 @@ import java.util.List;
 /**
  * The ordered rule lists behind each right-click event, one list per kind of click.
  *
- * <p>Order is the precedence rule: the first match wins and the walk stops. The block list runs
- * from the most specific gesture to the least, so the torch gestures precede deposit, deposit into
- * the clicked stack precedes deposit into its neighbor, generic placement catches the modified
- * clicks none of those claimed, and unmodified extraction sits last.
+ * <p>Order is the precedence rule: the first match wins and the walk stops. The block list starts
+ * with the empty-handed permanence toggle, then runs through the item gestures from the most
+ * specific to the least: the torch gestures precede deposit, deposit into the clicked stack
+ * precedes deposit into its neighbor, generic placement catches the modified clicks none of those
+ * claimed, and unmodified extraction sits last.
  */
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}

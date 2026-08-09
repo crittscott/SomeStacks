@@ -12,10 +12,10 @@ import java.util.function.Supplier;
 /**
  * Shared server-side validation for the mod's client-to-server mutation packets.
  * Every C2S handler runs the same boundary chain here before touching the world:
- * a real sender, one gesture per tick, a loaded target, and a target within
- * interaction range. Gesture prerequisites are exposed as individual checks the
- * handlers apply where they are relevant; world-edit protection consults live in
- * {@link com.github.crittscott.somestacks.server.Protection}.
+ * a real sender, one gesture per tick, nonspectator status, a loaded target, and a
+ * target within interaction range. Gesture prerequisites are exposed as individual
+ * checks the handlers apply where they are relevant; world-edit protection consults
+ * live in {@link com.github.crittscott.somestacks.server.Protection}.
  */
 final class PacketBoundary {
     private PacketBoundary() {}
@@ -24,8 +24,8 @@ final class PacketBoundary {
     private static final double REACH_PADDING = 1.0;
 
     /**
-     * Common opening chain for a positional C2S packet: a non-null sender who may act on the
-     * world, a gesture left in this tick's budget, a loaded target, and a target within reach.
+     * Common opening chain for a positional C2S packet: a non-null sender, a gesture left in this
+     * tick's budget, a sender who is not a spectator, a loaded target, and a target within reach.
      * Returns the sender, or {@code null} if any check fails (the caller returns).
      *
      * <p>{@code pos} is the position the packet would change, and it is the one held to reach here.

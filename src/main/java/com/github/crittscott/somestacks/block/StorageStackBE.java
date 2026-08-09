@@ -32,6 +32,10 @@ public class StorageStackBE extends BlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
     public static final int SLOTS = 27;
 
+    private static final String TAG_ITEMS = "Items";
+    private static final String TAG_ROTATION = "Rotation";
+    private static final String TAG_PERMANENT = "Permanent";
+
     private boolean suppressSync = false;
     private boolean batchTouched = false;
     private boolean publishPending = false;
@@ -306,17 +310,17 @@ public class StorageStackBE extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("Items")) items.deserializeNBT(tag.getCompound("Items"));
-        if (tag.contains("Rotation")) rotation = tag.getInt("Rotation");
-        if (tag.contains("Permanent")) permanent = tag.getBoolean("Permanent");
+        if (tag.contains(TAG_ITEMS)) items.deserializeNBT(tag.getCompound(TAG_ITEMS));
+        if (tag.contains(TAG_ROTATION)) rotation = tag.getInt(TAG_ROTATION);
+        if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.put("Items", items.serializeNBT());
-        tag.putInt("Rotation", rotation);
-        tag.putBoolean("Permanent", permanent);
+        tag.put(TAG_ITEMS, items.serializeNBT());
+        tag.putInt(TAG_ROTATION, rotation);
+        tag.putBoolean(TAG_PERMANENT, permanent);
     }
 
     @Nonnull

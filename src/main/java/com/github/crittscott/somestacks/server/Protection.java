@@ -218,7 +218,7 @@ public final class Protection {
             return false;
         }
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
-        if (!level.setBlock(pos, state, 3)) {
+        if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
             return false;
         }
         if (ForgeEventFactory.onBlockPlace(placer, snapshot, placedAgainst)) {

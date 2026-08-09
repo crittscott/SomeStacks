@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -181,14 +182,16 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     public static void handleWriteRequest() {
         ensureUserFileLoaded();
 
-        String message;
+        Component message;
         try {
             Files.createDirectories(USER_FILE.getParent());
             Files.writeString(USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
-            message = "Wrote " + USER_OVERRIDES.size() + " render override(s) to " + USER_FILE;
+            message = Component.translatable("somestacks.command.write.success",
+                    USER_OVERRIDES.size(), USER_FILE.toString());
         } catch (IOException e) {
             SomeStacks.LOGGER.error("Failed to write {}", USER_FILE, e);
-            message = "Failed to write " + USER_FILE + ": " + e.getMessage();
+            message = Component.translatable("somestacks.command.write.failure",
+                    USER_FILE.toString(), e.getMessage());
         }
 
         report(message);
@@ -239,7 +242,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             Files.createDirectories(GENERATED_DIR);
         } catch (IOException e) {
             SomeStacks.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
-            report("Failed to create " + GENERATED_DIR + ": " + e.getMessage());
+            report(Component.translatable("somestacks.command.dump.create_failure",
+                    GENERATED_DIR.toString(), e.getMessage()));
             return;
         }
 
@@ -260,21 +264,22 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             }
         }
 
-        String message = "Dumped " + itemCount + " render profile(s) for "
-                + (byNamespace.size() - failed.size()) + " namespace(s) to " + GENERATED_DIR;
+        MutableComponent message = Component.translatable("somestacks.command.dump.success",
+                itemCount, byNamespace.size() - failed.size(), GENERATED_DIR.toString());
         if (!failed.isEmpty()) {
-            message += ". Failed to write " + failed.size() + ": " + String.join(", ", failed);
+            message.append(Component.translatable("somestacks.command.dump.failed",
+                    failed.size(), String.join(", ", failed)));
         }
         if (!rejected.isEmpty()) {
-            message += ". Ignored " + rejected.size() + " invalid namespace(s)";
+            message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));
         }
         report(message);
     }
 
-    private static void report(String message) {
+    private static void report(Component message) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            player.displayClientMessage(Component.literal(message), false);
+            player.displayClientMessage(message, false);
         }
     }
 

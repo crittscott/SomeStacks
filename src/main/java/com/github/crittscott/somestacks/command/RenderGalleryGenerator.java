@@ -47,33 +47,35 @@ public final class RenderGalleryGenerator {
      */
     public enum Kind {
         /** Storage Stacks showing nine items each. */
-        STORAGE("StorageStacks", "items", StorageCubeIdx.LAYER_SIZE),
+        STORAGE("somestacks.command.gallery.storage_stacks", "somestacks.command.gallery.items",
+                StorageCubeIdx.LAYER_SIZE),
 
         /**
          * Bar Stacks showing eight ingots each, one bar per ingot. Only items a Bar Stack accepts
          * qualify, tested by the block entity itself so that a gallery shows what a player could
          * actually deposit rather than a second opinion about it.
          */
-        BAR("BarStacks", "ingots", BarCubeIdx.LAYER_SIZE);
+        BAR("somestacks.command.gallery.bar_stacks", "somestacks.command.gallery.ingots",
+                BarCubeIdx.LAYER_SIZE);
 
-        private final String stackLabel;
-        private final String itemLabel;
+        private final String stackLabelKey;
+        private final String itemLabelKey;
         private final int itemsPerStack;
 
-        Kind(String stackLabel, String itemLabel, int itemsPerStack) {
-            this.stackLabel = stackLabel;
-            this.itemLabel = itemLabel;
+        Kind(String stackLabelKey, String itemLabelKey, int itemsPerStack) {
+            this.stackLabelKey = stackLabelKey;
+            this.itemLabelKey = itemLabelKey;
             this.itemsPerStack = itemsPerStack;
         }
 
-        /** How to name this kind's blocks in a message to the player. */
-        public String stackLabel() {
-            return stackLabel;
+        /** Translation key naming this kind's blocks in a message to the player. */
+        public String stackLabelKey() {
+            return stackLabelKey;
         }
 
-        /** How to name this kind's contents in a message to the player. */
-        public String itemLabel() {
-            return itemLabel;
+        /** Translation key naming this kind's contents in a message to the player. */
+        public String itemLabelKey() {
+            return itemLabelKey;
         }
 
         /** Namespaces holding at least one item this kind can show. */

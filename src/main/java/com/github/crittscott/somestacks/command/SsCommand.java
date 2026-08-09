@@ -20,6 +20,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -63,11 +64,11 @@ public final class SsCommand {
      * regions without ordinary placement protection.
      */
     private static final int GALLERY_PERMISSION_LEVEL = 3;
-    private static final String DISABLED_MODS_LABEL = "disabled mod list";
-    private static final String DISABLED_ITEMS_LABEL = "disabled item list";
-    private static final String GEN_MODS_LABEL = "gen mod list";
-    private static final String GEN_ITEMS_LABEL = "gen item list";
-    private static final String INGOT_TAGS_LABEL = "ingot tag list";
+    private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
+    private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
+    private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
+    private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
+    private static final String INGOT_TAGS_LABEL = "somestacks.command.label.ingot_tags";
 
     /** Override dumps cover all items, matching the Storage gallery's item selection. */
     private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
@@ -285,8 +286,8 @@ public final class SsCommand {
      */
     private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
         if (result != 0) {
-            ctx.getSource().sendSuccess(() -> Component.literal(
-                    "Bar Stacks now accept " + ServerConfig.ingotItemCount() + " item(s)"), false);
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "somestacks.command.ingot.accepted", ServerConfig.ingotItemCount()), false);
         }
         return result;
     }
@@ -365,24 +366,24 @@ public final class SsCommand {
 
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
         if (!ForgeRegistries.ITEMS.containsKey(itemId)) {
-            ctx.getSource().sendFailure(Component.literal("Unknown item: " + itemId));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.unknown_item", itemId.toString()));
             return 0;
         }
 
         String modeString = StringArgumentType.getString(ctx, "mode");
         if (RenderMode.fromString(modeString) == null) {
-            ctx.getSource().sendFailure(Component.literal(
-                    "Unknown render mode '" + modeString + "', expected 2d, 3d, block, or gui"));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.unknown_render_mode", modeString));
             return 0;
         }
 
         RenderOverridePkt packet = RenderOverridePkt.set(itemId, modeString, scale, offset);
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
 
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Set render override for " + itemId + ": mode=" + modeString
-                        + ", scale=" + scale + ", offset=["
-                        + offset[0] + "," + offset[1] + "," + offset[2] + "]"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.override_set", itemId.toString(), modeString, scale,
+                offset[0], offset[1], offset[2]), false);
         return 1;
     }
 
@@ -392,13 +393,13 @@ public final class SsCommand {
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), RenderOverridePkt.reset(itemId));
 
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Reset render override for " + itemId + "; it now uses built-in or measured settings"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.override_reset", itemId.toString()), false);
         return 1;
     }
 
     /** Entries omitted from one request, grouped by reason. */
-    private record Skips(String reason, List<String> entries) {}
+    private record Skips(Component reason, List<String> entries) {}
 
     /**
      * The namespaces one invocation acts on, with the ones dropped from the request and why.
@@ -408,8 +409,9 @@ public final class SsCommand {
     private record Selection(RenderGalleryGenerator.Kind kind, List<String> modIds,
                              List<String> disabledMods, List<String> unusableMods) {
         private List<Skips> skips() {
-            return List.of(new Skips("disabled", disabledMods),
-                    new Skips("not loaded or with no " + kind.itemLabel(), unusableMods));
+            return List.of(new Skips(Component.translatable("somestacks.command.skip.disabled"), disabledMods),
+                    new Skips(Component.translatable("somestacks.command.skip.not_loaded",
+                            Component.translatable(kind.itemLabelKey())), unusableMods));
         }
 
         private List<List<Item>> groups() {
@@ -429,13 +431,15 @@ public final class SsCommand {
     private static Selection selectSingle(CommandContext<CommandSourceStack> ctx,
                                           RenderGalleryGenerator.Kind kind, String modId) {
         if (ServerConfig.isModDisabled(modId)) {
-            ctx.getSource().sendFailure(Component.literal(modId + " is disabled in server config"));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.mod_disabled", modId));
             return null;
         }
 
         if (kind.itemsIn(modId).isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal(
-                    modId + " is not loaded or has no " + kind.itemLabel()));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.mod_unusable", modId,
+                    Component.translatable(kind.itemLabelKey())));
             return null;
         }
 
@@ -458,7 +462,8 @@ public final class SsCommand {
         });
 
         if (modIds.isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal("All loaded mods are disabled in server config"));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.all_mods_disabled"));
             return null;
         }
 
@@ -496,11 +501,13 @@ public final class SsCommand {
         }
 
         if (modIds.isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal(seen.isEmpty()
-                    ? "The " + GEN_MODS_LABEL + " is empty; add a mod with /ss gen mod add <modid>"
-                    : "No mod in the " + GEN_MODS_LABEL + " can show " + kind.itemLabel() + ": "
-                            + disabledMods.size() + " disabled, "
-                            + unusableMods.size() + " not loaded or with none"));
+            ctx.getSource().sendFailure(seen.isEmpty()
+                    ? Component.translatable("somestacks.command.gen_mods_empty",
+                            Component.translatable(GEN_MODS_LABEL))
+                    : Component.translatable("somestacks.command.gen_mods_unusable",
+                            Component.translatable(GEN_MODS_LABEL),
+                            Component.translatable(kind.itemLabelKey()), disabledMods.size(),
+                            unusableMods.size()));
             return null;
         }
 
@@ -539,11 +546,12 @@ public final class SsCommand {
         }
 
         if (itemIds.isEmpty()) {
-            ctx.getSource().sendFailure(Component.literal(seen.isEmpty()
-                    ? "The " + GEN_ITEMS_LABEL + " is empty; add an item with /ss gen item add <item>"
-                    : "No item in the " + GEN_ITEMS_LABEL + " can be shown: "
-                            + disabledItems.size() + " from disabled mods, "
-                            + unknownItems.size() + " unknown"));
+            ctx.getSource().sendFailure(seen.isEmpty()
+                    ? Component.translatable("somestacks.command.gen_items_empty",
+                            Component.translatable(GEN_ITEMS_LABEL))
+                    : Component.translatable("somestacks.command.gen_items_unusable",
+                            Component.translatable(GEN_ITEMS_LABEL), disabledItems.size(),
+                            unknownItems.size()));
             return null;
         }
 
@@ -552,8 +560,9 @@ public final class SsCommand {
 
         return new ItemSelection(
                 itemIds.stream().map(ForgeRegistries.ITEMS::getValue).toList(),
-                List.of(new Skips("from disabled mods", disabledItems),
-                        new Skips("unknown", unknownItems)));
+                List.of(new Skips(Component.translatable(
+                                "somestacks.command.skip.from_disabled_mods"), disabledItems),
+                        new Skips(Component.translatable("somestacks.command.skip.unknown"), unknownItems)));
     }
 
     private static int gallerySingle(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind)
@@ -589,20 +598,23 @@ public final class SsCommand {
 
         ItemSelection selection = selectItems(ctx);
         return selection == null ? 0 : generate(ctx, player, RenderGalleryGenerator.Kind.STORAGE,
-                List.of(selection.items()), "the " + GEN_ITEMS_LABEL, selection.skips());
+                List.of(selection.items()), Component.translatable(
+                        "somestacks.command.subject.list", Component.translatable(GEN_ITEMS_LABEL)),
+                selection.skips());
     }
 
-    private static String subject(List<String> modIds) {
-        return modIds.size() == 1 ? modIds.get(0) : modIds.size() + " mods";
+    private static Component subject(List<String> modIds) {
+        return modIds.size() == 1
+                ? Component.translatable("somestacks.command.subject.mod", modIds.get(0))
+                : Component.translatable("somestacks.command.subject.mods", modIds.size());
     }
 
     /** Reports what a bulk form dropped, one clause per reason and none for a reason with nothing. */
-    private static void appendSkips(StringBuilder message, List<Skips> skips) {
+    private static void appendSkips(MutableComponent message, List<Skips> skips) {
         for (Skips skip : skips) {
             if (!skip.entries().isEmpty()) {
-                message.append(" Skipped ").append(skip.entries().size()).append(' ')
-                        .append(skip.reason()).append(": ")
-                        .append(String.join(", ", skip.entries())).append('.');
+                message.append(Component.translatable("somestacks.command.skipped",
+                        skip.entries().size(), skip.reason(), String.join(", ", skip.entries())));
             }
         }
     }
@@ -619,37 +631,34 @@ public final class SsCommand {
      */
     private static int generate(CommandContext<CommandSourceStack> ctx, ServerPlayer player,
                                 RenderGalleryGenerator.Kind kind, List<List<Item>> groups,
-                                String subject, List<Skips> skips) {
+                                Component subject, List<Skips> skips) {
         RenderGalleryGenerator.Plan plan = RenderGalleryGenerator.enqueue(player, kind, groups, result -> {
-            StringBuilder done = new StringBuilder("Created ")
-                    .append(result.totalStacks()).append(' ').append(kind.stackLabel()).append(" (")
-                    .append(result.totalItems()).append(' ').append(kind.itemLabel()).append(") for ").append(subject)
-                    .append(". Rows run north.");
+            MutableComponent done = Component.translatable("somestacks.command.gallery_created",
+                    result.totalStacks(), Component.translatable(kind.stackLabelKey()),
+                    result.totalItems(), Component.translatable(kind.itemLabelKey()), subject);
 
             if (result.totalStacks() < result.expectedStacks()) {
-                done.append(" WARNING: ").append(result.expectedStacks() - result.totalStacks()).append(" of ")
-                        .append(result.expectedStacks()).append(" placements failed; see log for positions and reasons.");
+                done.append(Component.translatable("somestacks.command.gallery_warning",
+                        result.expectedStacks() - result.totalStacks(), result.expectedStacks()));
             }
 
-            player.sendSystemMessage(Component.literal(done.toString()));
+            player.sendSystemMessage(done);
         });
 
-        StringBuilder message = new StringBuilder("Building ")
-                .append(plan.expectedStacks()).append(' ').append(kind.stackLabel()).append(" (")
-                .append(plan.totalItems()).append(' ').append(kind.itemLabel()).append(") for ")
-                .append(subject).append('.');
+        MutableComponent message = Component.translatable("somestacks.command.gallery_building",
+                plan.expectedStacks(), Component.translatable(kind.stackLabelKey()), plan.totalItems(),
+                Component.translatable(kind.itemLabelKey()), subject);
 
         appendSkips(message, skips);
 
-        final String finalMessage = message.toString();
-        ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), true);
+        ctx.getSource().sendSuccess(() -> message, true);
         return 1;
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
         int synced = SomeStacks.syncAllPlayers(ctx.getSource().getServer());
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Reloaded Some Stacks server overrides and synced " + synced + " player(s)"), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.reloaded", synced), true);
         return synced;
     }
 
@@ -662,7 +671,8 @@ public final class SsCommand {
                                     ForgeConfigSpec.ConfigValue<List<? extends String>> list, String label) {
         ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
         if (!ForgeRegistries.ITEMS.containsKey(itemId)) {
-            ctx.getSource().sendFailure(Component.literal("Unknown item: " + itemId));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.unknown_item", itemId.toString()));
             return 0;
         }
         return addEntry(ctx, list, label, itemId.toString());
@@ -672,13 +682,13 @@ public final class SsCommand {
                                 ForgeConfigSpec.ConfigValue<List<? extends String>> list,
                                 String label, String entry) {
         if (!ServerConfig.addListEntry(list, entry)) {
-            ctx.getSource().sendFailure(Component.literal(
-                    "The " + label + " already contains " + entry));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.list_contains", Component.translatable(label), entry));
             return 0;
         }
 
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Added " + entry + " to the " + label), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.list_added", entry, Component.translatable(label)), true);
         return 1;
     }
 
@@ -686,13 +696,13 @@ public final class SsCommand {
                                    ForgeConfigSpec.ConfigValue<List<? extends String>> list,
                                    String label, String entry) {
         if (!ServerConfig.removeListEntry(list, entry)) {
-            ctx.getSource().sendFailure(Component.literal(
-                    "The " + label + " does not contain " + entry));
+            ctx.getSource().sendFailure(Component.translatable(
+                    "somestacks.command.list_missing", Component.translatable(label), entry));
             return 0;
         }
 
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Removed " + entry + " from the " + label), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.list_removed", entry, Component.translatable(label)), true);
         return 1;
     }
 
@@ -705,15 +715,17 @@ public final class SsCommand {
                                    boolean sort) {
         List<String> entries = new ArrayList<>(list.get());
         if (entries.isEmpty()) {
-            ctx.getSource().sendSuccess(() -> Component.literal("The " + label + " is empty"), false);
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "somestacks.command.list_empty", Component.translatable(label)), false);
             return 0;
         }
 
         if (sort) {
             Collections.sort(entries);
         }
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "The " + label + " holds " + entries.size() + ": " + String.join(", ", entries)), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "somestacks.command.list_entries", Component.translatable(label), entries.size(),
+                String.join(", ", entries)), false);
         return entries.size();
     }
 
@@ -752,13 +764,11 @@ public final class SsCommand {
         ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 WriteOverridesPkt.dump(selection.modIds()));
 
-        StringBuilder message = new StringBuilder("Dumping render profiles for ")
-                .append(subject(selection.modIds()))
-                .append("; unmeasured items are measured now, and the client reports what it wrote.");
+        MutableComponent message = Component.translatable(
+                "somestacks.command.dumping", subject(selection.modIds()));
         appendSkips(message, selection.skips());
 
-        final String finalMessage = message.toString();
-        ctx.getSource().sendSuccess(() -> Component.literal(finalMessage), false);
+        ctx.getSource().sendSuccess(() -> message, false);
         return 1;
     }
 }

@@ -24,6 +24,8 @@ import java.util.function.Supplier;
  * placing that torch, so the handler claims the click to deny the placement that would follow.
  */
 public class RotateBlockPkt {
+    private static final int DEGREES_PER_ROTATION = 90;
+
     private final BlockPos pos;
 
     public RotateBlockPkt(BlockPos pos) {
@@ -71,7 +73,8 @@ public class RotateBlockPkt {
 
             StackSounds.playRotation(sp, msg.pos,
                     singles ? StackSounds.SINGLES_ROTATE : StackSounds.STORAGE_ROTATE);
-            sp.displayClientMessage(Component.literal("Rotation: " + (newRotation * 90) + "°"), true);
+            sp.displayClientMessage(Component.translatable(
+                    "somestacks.message.rotation", newRotation * DEGREES_PER_ROTATION), true);
         });
         ctx.get().setPacketHandled(true);
     }

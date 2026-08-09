@@ -125,7 +125,7 @@ public final class ItemOps {
             if (itemId != null) {
                 String modId = itemId.getNamespace();
                 player.displayClientMessage(
-                        Component.literal("Items from mod '" + modId + "' are disabled in server config"),
+                        Component.translatable("somestacks.message.disabled_mod", modId),
                         true
                 );
             }
@@ -154,7 +154,7 @@ public final class ItemOps {
             ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
             if (itemId != null) {
                 player.displayClientMessage(
-                        Component.literal("Item '" + itemId + "' is disabled in server config"),
+                        Component.translatable("somestacks.message.disabled_item", itemId),
                         true
                 );
             }

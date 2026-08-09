@@ -109,7 +109,7 @@ public final class StoragePileGameTests {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
         BlockPos above = helper.absolutePos(ORIGIN.above());
-        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         IItemHandler capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
