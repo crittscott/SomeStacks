@@ -12,6 +12,7 @@ repositories {
     // is pulled in. Small compile-only utility libraries need it here too.
     mavenCentral()
     maven { url = 'https://maven.architectury.dev/' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     // Add every other optional-integration repository every loader module needs here, once,
     // instead of duplicating it in forge/build.gradle and fabric/build.gradle separately.
 }

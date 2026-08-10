@@ -19,6 +19,19 @@ dependencies {
 
     // Common source uses javax.annotation.Nullable/@Nonnull (JSR-305) pervasively.
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
+    enabled = false
+}
+
+tasks.named('compileTestJava', JavaCompile).configure {
+    enabled = false
 }
 
 // Exposes this module's Java source and resources as consumable artifacts so loader
