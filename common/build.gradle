@@ -1,0 +1,41 @@
+plugins {
+    id 'multiloader-common'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+legacyForge {
+    mcpVersion = minecraft_version
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+}
+
+dependencies {
+    // No mixins exist yet; kept ready so a mixin accessor can be added without extra
+    // toolchain wiring later.
+    compileOnly 'org.spongepowered:mixin:0.8.5'
+    modCompileOnly "dev.architectury:architectury:${architectury_api_version}"
+
+    // Common source uses javax.annotation.Nullable/@Nonnull (JSR-305) pervasively.
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+// Exposes this module's Java source and resources as consumable artifacts so loader
+// modules can compile them directly into their own jars. common is never packaged or
+// published as a distributable mod on its own.
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+}

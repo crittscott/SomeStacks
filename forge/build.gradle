@@ -1,0 +1,31 @@
+plugins {
+    id 'net.neoforged.moddev.legacyforge'
+    id 'multiloader-loader'
+}
+
+// No mixin config exists yet. Once one does, wire up the annotation processor's refmap
+// output and add 'MixinConfigs': "${mod_id}.mixins.json" to the jar manifest below.
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+    parchment {
+        minecraftVersion = parchment_minecraft
+        mappingsVersion = parchment_version
+    }
+    runs {
+        client { client() }
+        server { server() }
+    }
+    mods {
+        "${mod_id}" { sourceSet sourceSets.main }
+    }
+}
+
+dependencies {
+    modImplementation "dev.architectury:architectury-forge:${architectury_api_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
+}
+
+jar {
+    finalizedBy('reobfJar')
+}

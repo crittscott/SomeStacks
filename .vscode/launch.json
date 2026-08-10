@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "forge - Client",
+      "presentation": {
+        "group": "Mod Development - forge",
+        "order": 0
+      },
+      "projectName": "forge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsomestacks%%D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\forge\\run",
+      "env": {
+        "MOD_CLASSES": "somestacks%%D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "forge - Server",
+      "presentation": {
+        "group": "Mod Development - forge",
+        "order": 1
+      },
+      "projectName": "forge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsomestacks%%D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\forge\\run",
+      "env": {
+        "MOD_CLASSES": "somestacks%%D:\\Dropbox\\Vault\\code\\minecraft\\intellijprojects\\SomeStacks\\forge\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

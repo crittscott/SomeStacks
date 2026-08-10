@@ -1,0 +1,41 @@
+version = rootProject.property('mod_version')
+group = rootProject.property('mod_group_id')
+
+base {
+    archivesName = "${rootProject.property('mod_id')}-${project.name}"
+}
+
+repositories {
+    // Not implied by the Forge/Fabric loader plugins for regular dependency resolution —
+    // only the common convention plugin declares this by default, and it does not carry
+    // over to loader modules since only common's source (not its dependency declarations)
+    // is pulled in. Small compile-only utility libraries need it here too.
+    mavenCentral()
+    maven { url = 'https://maven.architectury.dev/' }
+    // Add every other optional-integration repository every loader module needs here, once,
+    // instead of duplicating it in forge/build.gradle and fabric/build.gradle separately.
+}
+
+configurations {
+    commonJava { canBeResolved = true }
+    commonResources { canBeResolved = true }
+}
+
+dependencies {
+    commonJava project(path: ':common', configuration: 'commonJava')
+    commonResources project(path: ':common', configuration: 'commonResources')
+}
+
+tasks.named('compileJava', JavaCompile) {
+    dependsOn(configurations.commonJava)
+    source(configurations.commonJava)
+}
+
+processResources {
+    dependsOn(configurations.commonResources)
+    from(configurations.commonResources)
+}
+
+tasks.matching { it.name == 'sourcesJar' }.configureEach {
+    from(configurations.commonJava)
+}

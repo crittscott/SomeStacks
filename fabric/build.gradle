@@ -1,0 +1,38 @@
+plugins {
+    id 'fabric-loom'
+    id 'multiloader-loader'
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
+    }
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "dev.architectury:architectury-fabric:${architectury_api_version}"
+
+    // common's source uses javax.annotation.Nullable. Only common's source (not its
+    // dependency jars) is pulled into this module, so this must be redeclared here even
+    // though common itself already depends on it. Forge doesn't need this line: it gets
+    // javax.annotation.Nullable transitively through ModDevGradle's own dependency chain,
+    // which Fabric Loom's does not provide.
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+loom {
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            runDir('run')
+        }
+        server {
+            server()
+            runDir('run')
+        }
+    }
+}
