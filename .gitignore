@@ -14,8 +14,8 @@ out
 .idea
 
 # gradle
-build
-.gradle
+**/build
+**/.gradle
 
 # other
 eclipse
@@ -30,3 +30,6 @@ forge*changelog.txt
 
 # work files
 /code-review*
+
+# other
+/functional-gradle-files/
