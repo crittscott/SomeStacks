@@ -12,9 +12,7 @@ import com.github.crittscott.somestacks.network.TogglePermanentPkt;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -31,16 +29,20 @@ import net.minecraftforge.fml.common.Mod;
  * what the player is holding.
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public final class ClientEvents {
+public final class ClientEvents implements ClientGestures.Sender {
     private ClientEvents() {}
 
-    private static StackMode stackMode = StackMode.STORAGE_STACK;
+    public static void init() {
+        ClientGestures.setSender(new ClientEvents());
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         if (evt.isCanceled()) return;
 
-        InteractionContext ctx = InteractionContext.forEmptyHand(evt, stackMode);
+        InteractionContext ctx = InteractionContext.forAirClick(
+                evt.getEntity(), evt.getLevel(), evt.getHand(),
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -52,7 +54,9 @@ public final class ClientEvents {
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
         if (evt.isCanceled()) return;
 
-        InteractionContext ctx = InteractionContext.forItemInHand(evt, stackMode);
+        InteractionContext ctx = InteractionContext.forAirClick(
+                evt.getEntity(), evt.getLevel(), evt.getHand(),
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processItemRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -72,7 +76,9 @@ public final class ClientEvents {
         if (evt.isCanceled()) return;
         if (evt.getFace() == null) return;
 
-        InteractionContext ctx = InteractionContext.forBlockClick(evt, stackMode);
+        InteractionContext ctx = InteractionContext.forBlockClick(
+                evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -86,45 +92,35 @@ public final class ClientEvents {
         }
     }
 
-    public static void cycleModeAllFour(Player player) {
-        StackMode startMode = stackMode;
-        do {
-            stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
-            if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
-            if (stackMode == startMode) break;
-        } while (true);
-    }
-
-    public static void displayModeMessage(Player player) {
-        Component modeComponent = Component.translatable(stackMode.getTranslationKey());
-        Component message = Component.translatable("somestacks.message.storage_mode", modeComponent);
-        player.displayClientMessage(message, true);
-    }
-
-    public static void sendTogglePermanent(BlockPos pos) {
+    @Override
+    public void sendTogglePermanent(BlockPos pos) {
         ModNetworking.CHANNEL.sendToServer(new TogglePermanentPkt(pos));
     }
 
-    public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
+    @Override
+    public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
         ModNetworking.CHANNEL.sendToServer(
-                new PlaceAndDepositPkt(stackMode.toBlockType(), face, placePos)
+                new PlaceAndDepositPkt(mode.toBlockType(), face, placePos)
         );
     }
 
-    public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
+    @Override
+    public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
         ModNetworking.CHANNEL.sendToServer(new DepositPkt(pos, clickedPos));
     }
 
-    public static void sendExtract(BlockPos pos, int index) {
+    @Override
+    public void sendExtract(BlockPos pos, int index) {
         ModNetworking.CHANNEL.sendToServer(new ExtractPkt(pos, index));
     }
 
-    public static void sendRotateBlock(BlockPos pos) {
+    @Override
+    public void sendRotateBlock(BlockPos pos) {
         ModNetworking.CHANNEL.sendToServer(new RotateBlockPkt(pos));
     }
 
-    public static void sendRotateItem(BlockPos pos, int slotIndex) {
+    @Override
+    public void sendRotateItem(BlockPos pos, int slotIndex) {
         ModNetworking.CHANNEL.sendToServer(new RotateItemPkt(pos, slotIndex));
     }
 }

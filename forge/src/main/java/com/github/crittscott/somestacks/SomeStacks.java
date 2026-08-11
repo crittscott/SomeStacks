@@ -2,12 +2,18 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
+import com.github.crittscott.somestacks.command.CommandNetwork;
+import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
+import com.github.crittscott.somestacks.server.ForgePlayerEditAuthority;
+import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -16,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,14 +48,18 @@ public class SomeStacks {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         WorldEdits.setAuthority(new ForgeEditAuthority());
+        PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
+        PlayerReach.setProvider(player -> player.getBlockReach());
 
         ModRegistry.init(modBus);
         ModNetworking.init();
+        CommandNetwork.setHandler(new ForgeCommandNetwork());
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
-        MinecraftForge.EVENT_BUS.addListener(RenderGalleryGenerator::onServerTick);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
         MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }
@@ -75,8 +86,18 @@ public class SomeStacks {
         sendConfigSync((ServerPlayer) event.getEntity());
     }
 
+    private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        GestureThrottle.clear(event.getEntity().getUUID());
+    }
+
     private void onRegisterCommands(RegisterCommandsEvent event) {
         SsCommand.register(event.getDispatcher());
+    }
+
+    private void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            RenderGalleryGenerator.onServerTick();
+        }
     }
 
     private void sendConfigSync(ServerPlayer player) {

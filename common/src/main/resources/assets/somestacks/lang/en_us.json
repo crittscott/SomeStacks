@@ -18,6 +18,7 @@
   "somestacks.message.maximum_height": "Stack is at its maximum height of %s",
   "somestacks.message.disabled_mod": "Items from mod '%s' are disabled in server config",
   "somestacks.message.disabled_item": "Item '%s' is disabled in server config",
+  "somestacks.disconnect.protocol": "Some Stacks protocol mismatch: the mod is required on both client and server",
 
   "somestacks.command.label.disabled_mods": "disabled mod list",
   "somestacks.command.label.disabled_items": "disabled item list",

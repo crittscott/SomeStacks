@@ -107,6 +107,13 @@ public final class ServerConfig {
         return renderGalleryPlacementsPerTick;
     }
 
+    /** Selects Fabric convention tags for a new config; an existing file remains authoritative. */
+    public static void useFabricIngotTagDefaults() {
+        if (configFile == null) {
+            ingotTagsRaw = new ArrayList<>(List.of("c:ingots*", "somestacks:ingots"));
+        }
+    }
+
     // --- Loading and saving ---
 
     /**

@@ -36,3 +36,22 @@ loom {
         }
     }
 }
+
+processResources {
+    def replaceProperties = [
+            version: project.version,
+            mod_name: mod_name,
+            mod_description: mod_description,
+            mod_authors: mod_authors,
+            mod_license: mod_license,
+            fabric_loader_version: fabric_loader_version,
+            fabric_version: fabric_version,
+            architectury_api_version: architectury_api_version,
+            minecraft_version: minecraft_version,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties
+    }
+}

@@ -22,6 +22,7 @@ public final class ClientSetup {
     private ClientSetup() {}
 
     public static void init(IEventBus modBus) {
+        ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
         modBus.addListener(ClientSetup::onRegisterReloadListeners);

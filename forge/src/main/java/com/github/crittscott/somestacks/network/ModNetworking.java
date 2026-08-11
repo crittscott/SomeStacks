@@ -34,22 +34,22 @@ public final class ModNetworking {
 
         int id = 0;
         CHANNEL.registerMessage(id++, PlaceAndDepositPkt.class, PlaceAndDepositPkt::encode,
-                PlaceAndDepositPkt::decode, PlaceAndDepositPkt::handle, toServer);
+                PlaceAndDepositPkt::decode, ForgePacketHandlers::handlePlaceAndDeposit, toServer);
         CHANNEL.registerMessage(id++, DepositPkt.class, DepositPkt::encode,
-                DepositPkt::decode, DepositPkt::handle, toServer);
+                DepositPkt::decode, ForgePacketHandlers::handleDeposit, toServer);
         CHANNEL.registerMessage(id++, TogglePermanentPkt.class, TogglePermanentPkt::encode,
-                TogglePermanentPkt::decode, TogglePermanentPkt::handle, toServer);
+                TogglePermanentPkt::decode, ForgePacketHandlers::handleTogglePermanent, toServer);
         CHANNEL.registerMessage(id++, ConfigSyncPkt.class, ConfigSyncPkt::encode,
-                ConfigSyncPkt::decode, ConfigSyncPkt::handle, toClient);
+                ConfigSyncPkt::decode, ForgePacketHandlers::handleConfigSync, toClient);
         CHANNEL.registerMessage(id++, RenderOverridePkt.class, RenderOverridePkt::encode,
-                RenderOverridePkt::decode, RenderOverridePkt::handle, toClient);
+                RenderOverridePkt::decode, ForgePacketHandlers::handleRenderOverride, toClient);
         CHANNEL.registerMessage(id++, RotateBlockPkt.class, RotateBlockPkt::encode,
-                RotateBlockPkt::decode, RotateBlockPkt::handle, toServer);
+                RotateBlockPkt::decode, ForgePacketHandlers::handleRotateBlock, toServer);
         CHANNEL.registerMessage(id++, RotateItemPkt.class, RotateItemPkt::encode,
-                RotateItemPkt::decode, RotateItemPkt::handle, toServer);
+                RotateItemPkt::decode, ForgePacketHandlers::handleRotateItem, toServer);
         CHANNEL.registerMessage(id++, ExtractPkt.class, ExtractPkt::encode,
-                ExtractPkt::decode, ExtractPkt::handle, toServer);
+                ExtractPkt::decode, ForgePacketHandlers::handleExtract, toServer);
         CHANNEL.registerMessage(id++, WriteOverridesPkt.class, WriteOverridesPkt::encode,
-                WriteOverridesPkt::decode, WriteOverridesPkt::handle, toClient);
+                WriteOverridesPkt::decode, ForgePacketHandlers::handleWriteOverrides, toClient);
     }
 }
