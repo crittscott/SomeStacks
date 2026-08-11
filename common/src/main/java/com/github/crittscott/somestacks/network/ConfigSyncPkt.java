@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Server-to-client synchronization of the settings the client must agree with the server about:
  * which stack types are enabled, and the server's item render overrides. Sent on login and on
- * server-config reload.
+ * an explicit server resynchronization such as {@code /ss reload}.
  *
  * <p>Blacklists and pile limits are not sent. They gate server-side decisions only, and the client
  * never needs to predict them.

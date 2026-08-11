@@ -6,19 +6,22 @@ behavior; the code is authoritative when either document is wrong.
 
 ## Project shape
 
-Some Stacks targets Minecraft 1.20.1, Forge 47.4.0, and Java 17. The mod id is `somestacks` and the
-root package is `com.github.crittscott.somestacks`.
+Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.0 and Fabric Loader 0.16.9 / Fabric
+API 0.92.2 targets. The mod id is `somestacks` and the root package is
+`com.github.crittscott.somestacks`.
 
-The working implementation is split between two modules:
+The implementation is split between three modules:
 
 ```text
-common/   loader-neutral mechanics and shared resources
-forge/    Forge registration, integration, networking, commands, and client code
+common/   loader-neutral mechanics, rendering, commands, and shared resources
+forge/    Forge registration, lifecycle, networking, gestures, and automation adapter
+fabric/   Fabric registration, lifecycle, networking, gestures, mixin, and automation adapter
 ```
 
-`common` is not a separate runtime artifact. Its Java and resources are compiled into the Forge
-JAR. Common source contains no Forge imports; loader services enter through small seams such as
-`CommonRegistry`, `EditAuthority`, and the item-handler adapters.
+`common` is not a separate runtime artifact. Its Java and resources are included in both loader
+JARs. Common source contains no Forge or Fabric imports; loader services enter through small seams
+such as `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, and the
+loader-native automation adapters.
 
 The mod registers three blocks and their block entity types, but no block items, menus, recipes, or
 portable containers.
@@ -36,19 +39,21 @@ portable containers.
 | `common/.../block/*StackBlock` | Block state, shape, waterlogging, removal, comparators, and scheduled publication |
 | `common/.../block/*StackBE` | Local inventory, NBT, rotations, ray-selected cells, and run caches |
 | `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, and structural rules |
-| `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage and handler contract |
+| `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage and automation contract |
 | `util/*CubeIdx`, `ViewRay` | Cell geometry, rotation, support, seams, and targeting |
 | `ServerConfig` | Per-world policy, deny sets, and resolved ingot membership |
 | `WorldEdits`, `EditAuthority` | Shared world-edit mechanics and loader protection seam |
-| `forge/.../SomeStacks`, `ModRegistry` | Forge entrypoint, event wiring, and registry population |
-| `forge/.../network` | Client/server messages and server-side validation |
-| Forge capability handlers | Whole-run `IItemHandler` views over common storage |
-| `forge/.../client` | Gestures, block entity renderers, item profiles, and bar textures |
+| Loader entry points and registries | Registry population, lifecycle wiring, and common service installation |
+| Loader network packages | Native packet transport around common request validation and payloads |
+| Forge capability / Fabric Transfer API adapters | Whole-run loader-native views over common storage |
+| `common/.../client` | Block entity renderers, item profiles, model measurement, and bar textures |
+| Loader client packages | Renderer registration, gestures, keys, client events, and packet transport |
 | `SsCommand`, `RenderGalleryGenerator` | Administration, render-profile authoring, and galleries |
 
-`SomeStacks` installs the Forge edit authority, registers the blocks and block entities, initializes
-networking, and attaches the lifecycle listeners. `ModRegistry` supplies the common registry
-handles before common world objects are created.
+Each loader entry point registers the blocks and block entities, initializes native networking and
+automation, and attaches lifecycle listeners. Forge installs its event-backed edit authority;
+Fabric uses the shared vanilla authority. Each loader's registry adapter supplies the common
+registry handles before common world objects are created.
 
 ## Runtime model
 
@@ -120,26 +125,31 @@ Singles accepts allowed items that are not Bar items.
 
 The two deny lists have different scope:
 
-- `disable_mods` applies to player deposits and capability insertion.
+- `disable_mods` applies to player deposits and automated insertion.
 - `disable_items` applies only to player deposits.
 
 Policy changes do not invalidate existing contents. Internal settlement, gravity, and backfill must
 continue to move stored items without reapplying admission rules.
 
-Forge attaches an item capability externally to each common block entity. From any block, the
-handler represents the entire run plus one block of potential headroom when growth is allowed.
-Storage slots accept normal stack sizes; Singles and Bar slots accept one item. `RunEdit` prevents
-reentrant capability mutations.
+Forge attaches an `IItemHandler` capability and Fabric registers a Transfer API
+`Storage<ItemVariant>` for each common block entity. From any block, the loader-native view
+represents the entire run plus one block of potential headroom when growth is allowed. Storage
+slots accept normal stack sizes; Singles and Bar slots accept one item. Fabric stages mutations in
+the caller's transaction and commits structural changes only when the outer transaction commits.
+Singles and Bar allow one structural extraction position per Fabric transaction. `RunEdit`
+prevents reentrant automation mutations.
 
-Growth and automatic cleanup pass through `WorldEdits`. The Forge authority applies build limits,
-replaceability, obstruction, border and spawn checks, and Forge place or break events. Automated
-edits are attributed to the level's fake player.
+Growth and automatic cleanup pass through `WorldEdits`. Both loaders apply build limits,
+replaceability, obstruction, border, and spawn checks using an automation actor. Forge also fires
+place or break events for claim and logging integrations. Fabric has no general claim-event hook in
+the initial port and therefore applies only the vanilla checks.
 
 ## Player interaction and networking
 
-The Forge client recognizes gestures in an ordered rule set: permanence, block rotation, item
-rotation, deposit, placement, and extraction. Placement mode is client state sent with a placement
-request.
+The shared client gesture rules recognize permanence, block rotation, item rotation, deposit,
+placement, and extraction in that order. Loader event glue supplies clicks, keys, and native packet
+transport. Placement mode is client state sent with a placement request; Fabric's air-click mixin
+captures the modifier gesture that has no equivalent Fabric API callback.
 
 The server treats every client message as a request. Common checks cover sender state, per-tick
 gesture pacing, loaded chunks, and reach; each operation then validates its hand, target, index,
@@ -150,8 +160,9 @@ a client-supplied cell index, which is checked for range and occupancy but is no
 the server ray.
 
 Custom gestures displace the ordinary Minecraft use action. Forge protection events are consulted
-before `RightClickBlockSuppressor` marks the trailing vanilla click for cancellation. Adjacent
-Singles and Bar deposits validate both the clicked block and the destination.
+before `RightClickBlockSuppressor` marks the trailing vanilla click for cancellation. Fabric
+performs its available vanilla edit checks before consuming the interaction. Adjacent Singles and
+Bar deposits validate both the clicked block and the destination.
 
 ## Configuration and data
 
@@ -202,7 +213,7 @@ placement protection.
 - Preserve the different Storage, Singles, and Bar movement models.
 - Preserve rotation-aware Singles seam mapping and item-rotation transport.
 - Do not revalidate owned items during internal movement.
-- Keep capability simulation and commit subject to the same feasibility rules.
+- Keep Forge simulation and Fabric transactional commit subject to the same feasibility rules.
 - Route structural world edits through `WorldEdits` and the installed authority.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.

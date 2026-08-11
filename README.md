@@ -6,7 +6,7 @@
 
 ▶ **[Watch the one-minute tour](https://www.youtube.com/watch?v=REPLACE_ME)**
 
-- **Minecraft** 1.20.1 · **Forge** 47+ · **required on both client and server**
+- **Minecraft** 1.20.1 · **Forge** 47+ or **Fabric Loader** 0.16.9+ · **required on both client and server**
 
 ---
 
@@ -43,7 +43,7 @@ That is the whole mod. Everything below is detail.
 
 ## Automation and redstone
 
-Every stack block exposes a standard Forge item handler on **every side**, and a block in a vertical run exposes the **entire run** — so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** — so a hopper under the bottom and a pipe halfway up address the same inventory.
 
 - Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -52,7 +52,7 @@ Every stack block exposes a standard Forge item handler on **every side**, and a
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage, and the render galleries are throttled per tick. Blocks that grow and remove themselves answer to spawn protection, the world border, and Forge's place/break events, so claim mods see the same events they would see from a player.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage, and the render galleries are throttled per tick. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric currently applies the vanilla checks only.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 
@@ -62,11 +62,11 @@ See **[Server administration](docs/server-admin.md)** for the config file and th
 - **[Automation](docs/automation.md)** — item handlers, slot layout, comparators, growth
 - **[Server administration](docs/server-admin.md)** — config settings and the full `/ss` command reference
 - **[Pack authors](docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
-- **[Living specification](living-spec.md)** — the mod's behaviour in full, for the curious
+- **[As-built player view](player-view.md)** — the mod's observable behaviour in full
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server — see [Pack authors](docs/pack-authors.md).
+Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. The Forge build requires Architectury API; the Fabric build requires Fabric API and Architectury API. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server — see [Pack authors](docs/pack-authors.md).
 
 It must be installed on both the client and the server; they negotiate a protocol version and refuse to connect on a mismatch.
 

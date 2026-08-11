@@ -4,10 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Shared mod identity for common code. The Forge entry point ({@code SomeStacks}, forge-only)
- * aliases its own {@code MODID}/{@code LOGGER} to these so loader-specific code that already
- * references them (including {@code @Mod.EventBusSubscriber(modid = ...)} annotations, which need a
- * compile-time constant) needs no changes.
+ * Shared mod identity for common code. Loader entry points use these constants so registry names,
+ * logging, and metadata remain identical on Forge and Fabric.
  */
 public final class SomeStacksCommon {
     private SomeStacksCommon() {

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks;
 
+import com.github.crittscott.somestacks.block.FabricItemStorage;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
@@ -25,6 +26,7 @@ public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         FabricRegistry.init();
+        FabricItemStorage.init();
         ServerConfig.useFabricIngotTagDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         FabricNetworking.initServer();

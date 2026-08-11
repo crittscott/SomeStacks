@@ -151,6 +151,6 @@ The dump runs on your own client and holds it busy until it finishes, so name a 
 
 ## Server-imposed overrides
 
-`config/somestacks/server_item_overrides/*.json` uses the same format and takes precedence over everything a client has locally. The server sends these to each player on login and on a server-config reload; `/ss reload` re-reads the folder and pushes them again.
+`config/somestacks/server_item_overrides/*.json` uses the same format and takes precedence over everything a client has locally. The server sends these to each player on login; `/ss reload` re-reads the folder and pushes it to every connected player again.
 
 Use this when a pack needs every player to see the same thing regardless of what they have in their own config.

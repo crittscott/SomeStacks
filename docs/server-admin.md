@@ -2,7 +2,7 @@
 
 ## The config file
 
-Some Stacks uses a Forge **server** config, so it lives with the world at `<world>/serverconfig/somestacks-server.toml` and travels with it. Editing the file directly takes effect when Forge reports the config reloaded.
+Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestacks-server.json`, so it travels with the world. `/ss` list edits update the running values and save the file immediately. A direct file edit takes effect after restarting the server; `/ss reload` does not reread this JSON.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@ Some Stacks uses a Forge **server** config, so it lives with the world at `<worl
 | `enable_bar_stack_block` | `stacks` | `true` | The same for Bar Stacks. |
 | `disable_mods` | `compatibility` | empty | Namespaces whose items no stack will accept. |
 | `disable_items` | `compatibility` | empty | Item ids refused on the player deposit gestures. |
-| `ingot_tags` | `compatibility` | `forge:ingots*`, `somestacks:ingots` | Item tags whose contents a Bar Stack accepts. |
+| `ingot_tags` | `compatibility` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Item tags whose contents a Bar Stack accepts. |
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms build, in the order given. |
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
@@ -23,7 +23,7 @@ Disabling a mod or an item bars *new* contents. Anything already stored can stil
 
 `ingot_tags` decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much.
 
-An entry may contain `*`, matching a run of any characters. That is why the default `forge:ingots*` works so broadly: it covers `forge:ingots` itself and every `forge:ingots/<metal>` beneath it, which reaches mods that tag their ingots only under the child tag without adding to the parent.
+An entry may contain `*`, matching a run of any characters. The Forge default `forge:ingots*` covers `forge:ingots` itself and every `forge:ingots/<metal>` beneath it. Fabric uses the corresponding conventional `c:ingots*` default.
 
 To accept a hand-picked set of items, declare an item tag holding them in a data pack and add that tag here. The mod ships `somestacks:ingots` for exactly this purpose.
 
@@ -64,7 +64,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. It does **not** re-read the Forge server config file — a direct edit to that applies through Forge's own config reload.
+Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. It does **not** re-read `<world>/serverconfig/somestacks-server.json`; restart the server after editing that file directly.
 
 ### Render galleries
 
@@ -74,12 +74,12 @@ Galleries **overwrite** their floor and stack positions directly and do not appl
 
 ## What the server tells the client
 
-On login, and on a server-config reload, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot tags, and the pile settings stay server-side and are never sent.
+On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot tags, and the pile settings stay server-side and are never sent.
 
 ## Protection and claim mods
 
-The mod's gestures replace the vanilla interactions the client suppresses, so the server re-runs the checks a vanilla interaction would have triggered: world border, spawn protection, Forge's `RightClickBlock`, `EntityPlaceEvent`, and `BreakEvent`. Claim and logging mods see the events they expect, describing the position and face actually involved.
+On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Forge also re-runs `RightClickBlock`, `EntityPlaceEvent`, and `BreakEvent`, so claim and logging mods using those hooks see the position and face involved. The initial Fabric port has no general claim-event integration and applies the vanilla checks only.
 
-Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are reported as a break by the level's fake player. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
+Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are attributed to the loader's automation actor. On Forge they are also reported through the break event. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
 
 The server validates every packet independently of the client: the sender, one gesture per player per tick, that the sender is not a spectator, that the target is loaded and within reach, and every operation-specific rule. Deposit targeting and support are recomputed from the player's current view rather than trusted from the packet.

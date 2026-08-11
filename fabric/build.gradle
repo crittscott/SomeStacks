@@ -40,6 +40,7 @@ loom {
 processResources {
     def replaceProperties = [
             version: project.version,
+            mod_id: mod_id,
             mod_name: mod_name,
             mod_description: mod_description,
             mod_authors: mod_authors,
@@ -51,7 +52,7 @@ processResources {
     ]
     inputs.properties replaceProperties
 
-    filesMatching('fabric.mod.json') {
+    filesMatching(['fabric.mod.json', 'pack.mcmeta']) {
         expand replaceProperties
     }
 }

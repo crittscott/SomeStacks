@@ -12,8 +12,8 @@ legacyForge {
 }
 
 dependencies {
-    // No mixins exist yet; kept ready so a mixin accessor can be added without extra
-    // toolchain wiring later.
+    // Common has no mixins, but keeping the annotations available preserves the mapped compile
+    // environment if a loader-neutral accessor is added later.
     compileOnly 'org.spongepowered:mixin:0.8.5'
     modCompileOnly "dev.architectury:architectury:${architectury_api_version}"
 

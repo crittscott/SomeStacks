@@ -7,7 +7,9 @@ Some Stacks turns held items directly into visible world storage. It adds three 
 block items, recipes, creative-tab entries, or storage screens. A stack exists because an item was
 deposited into the world, and it normally disappears when its last contents are removed.
 
-The mod requires Minecraft 1.20.1, Forge 47.x, and installation on both the client and server.
+The mod requires Minecraft 1.20.1 and either Forge 47.x or Fabric Loader 0.16.9 with Fabric API
+0.92.2. Architectury API is required on both loaders. Some Stacks must be installed on both the
+client and server.
 
 ## The three stack types
 
@@ -172,23 +174,24 @@ Bar Stacks have no rotation gesture. Their alternating layer directions are fixe
 
 ## Automation
 
-Every block exposes a Forge item handler on all six sides. The handler covers the entire contiguous
-vertical run, no matter which block a hopper, pipe, or other machine connects to. Slots are numbered
-from the bottom block upward.
+Every block exposes loader-native item storage on all six sides: `IItemHandler` on Forge and
+Transfer API `Storage<ItemVariant>` on Fabric. The view covers the entire contiguous vertical run,
+no matter which block a hopper, pipe, or other machine connects to. Slots are numbered from the
+bottom block upward.
 
-| Type | One handler slot means | Slot limit |
+| Type | One automation slot means | Slot limit |
 | --- | --- | ---: |
 | Storage | One ordinary inventory slot | 64 advertised; the item's own maximum still applies |
 | Singles | One physical display cell | 1 |
 | Bar | One physical bar position | 1 |
 
-The advertised handler contains every current position plus one block of headroom while the run is
+The advertised storage contains every current position plus one block of headroom while the run is
 below the configured maximum height. Inserting into a headroom position can grow the run. Growth is
 refused when the type is disabled, the space cannot be replaced, an entity obstructs the final
-shape, build height or maximum run height is reached, or world/claim protection refuses the fake
-player responsible for automation.
+shape, build height or maximum run height is reached, or the loader's world-edit authority refuses
+the automation actor.
 
-Storage capability insertion is positional at the moment of the call, then the next settlement
+Storage automation insertion is positional at the moment of the call, then the next settlement
 packs and sorts the pile. Singles and Bar insertion accepts only the exact empty supported position
 named. A machine that walks positions from bottom to top builds their structures layer by layer.
 
@@ -199,8 +202,10 @@ Automated extraction differs by type:
 - Bar removes the named bar and moves the whole column's topmost bar into the hole. This avoids the
   item-dropping collapse caused by player extraction.
 
-A reentrant capability mutation triggered during another structural mutation is refused with the
-ordinary handler failure result and can be retried on a later tick.
+A reentrant automation mutation triggered during another structural mutation is refused with the
+ordinary loader failure result and can be retried on a later tick. On Fabric, mutations are staged
+until the outer Transfer API transaction commits; Singles and Bar permit one structural extraction
+position per transaction, so bulk callers should retry for subsequent items.
 
 ## Comparators
 
@@ -215,8 +220,8 @@ positions. Signal 0 therefore means empty and nothing else; a completely full cu
 
 ## Server configuration
 
-Each world stores its Forge server config at
-`<world>/serverconfig/somestacks-server.toml`.
+Each world stores its loader-neutral JSON policy at
+`<world>/serverconfig/somestacks-server.json`.
 
 | Setting | Default | Player-visible effect |
 | --- | ---: | --- |
@@ -226,7 +231,7 @@ Each world stores its Forge server config at
 | `stacks.enable_bar_stack_block` | `true` | Prevents new Bar placement and growth when false |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
 | `compatibility.disable_items` | empty | Refuses exact items in player deposit gestures only |
-| `compatibility.ingot_tags` | `forge:ingots*`, `somestacks:ingots` | Defines what Bar accepts and Singles refuses |
+| `compatibility.ingot_tags` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Defines what Bar accepts and Singles refuses |
 | `render_gallery.placements_per_tick` | `64` | Throttles administrator gallery construction |
 | `render_gallery.gen_mods` | empty | Namespaces used by the `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
@@ -235,8 +240,9 @@ Disabling a type does not remove existing blocks or prevent extraction from them
 mod, or ingot category does not eject existing contents. The client receives the three enable flags
 on login and skips disabled types while cycling placement modes.
 
-An ingot-tag entry may contain `*`. The default `forge:ingots*` matches `forge:ingots` and child tags
-such as `forge:ingots/copper`. Data-pack tag changes are picked up on reload.
+An ingot-tag entry may contain `*`. For example, `forge:ingots*` matches `forge:ingots` and child
+tags such as `forge:ingots/copper`; Fabric uses the corresponding `c:ingots*` convention by
+default. Data-pack tag changes are picked up on reload.
 
 ## Commands
 
@@ -260,7 +266,8 @@ replace their floor and stack positions directly and do not perform the protecti
 ordinary placement, which is why they require permission level 3. Large galleries are spread across
 server ticks.
 
-`/ss reload` does not reload the Forge server TOML; Forge's own config reload does that.
+`/ss reload` does not reread the world-policy JSON. Command edits are saved immediately; direct
+file edits take effect after restarting the server.
 
 ## Item appearance and render overrides
 
@@ -303,15 +310,15 @@ different resource packs may see different bars.
 - A resource pack can add Bar textures and tints through
   `assets/<namespace>/textures/bars/*.json`.
 - A server can impose Storage/Singles profiles through
-  `config/somestacks/server_item_overrides/*.json`, synchronized on login, config reload, or
-  `/ss reload`.
+  `config/somestacks/server_item_overrides/*.json`, synchronized on login or `/ss reload`.
 
 ## Multiplayer protection and packet validation
 
-Player placement, deposit, extraction, and rotation answer to the world border, spawn protection,
-and Forge's ordinary interaction/place events. Automatic growth and automatic removal use the
-level's Minecraft fake player and fire Forge place or break events, allowing claim and logging mods
-that use those hooks to allow, deny, or record the edit.
+Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world
+border, and spawn protection on both loaders. On Forge, interaction and structural edits also fire
+the ordinary Forge events, allowing claim and logging mods that use those hooks to allow, deny, or
+record the edit. The initial Fabric port has no general claim-event integration and applies the
+vanilla checks only. Automatic growth and removal use a loader-provided automation actor.
 
 The server independently validates every gesture packet: one attempt per player per tick,
 nonspectator status, loaded target, reach, held item, target block and index, adjacency, support,
@@ -329,3 +336,5 @@ from the player's current view.
   mappings.
 - Existing contents remain legal to extract and to move internally after a config or tag change
   that would reject a new deposit.
+- Fabric protection currently covers vanilla build, obstruction, border, and spawn rules, but not
+  loader-specific claim or logging APIs.

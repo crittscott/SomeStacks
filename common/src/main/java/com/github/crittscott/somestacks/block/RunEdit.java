@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 /**
- * Holds off a capability edit that arrives while another one is still running.
+ * Holds off an automation edit that arrives while another one is still running.
  *
  * <p>A run's item handler is not only a bag: an insertion can place a block on top of the run and an
  * extraction can take blocks off it. Those world edits notify neighbors, and a neighbor woken in
@@ -11,9 +11,9 @@ package com.github.crittscott.somestacks.block;
  * written to survive it.
  *
  * <p>The inner call is refused instead: an insertion keeps its stack and an extraction yields
- * nothing, both standard failure results for the capability. The run remains in the state the outer
- * call is building. Only mutations are blocked; simulations remain available because they do not
- * touch the world.
+ * nothing, both standard failure results for automation. The run remains in the state the outer
+ * call is building. Forge's explicit simulations remain available because they do not touch the
+ * world; Fabric offers are refused because their transaction does not reveal whether it will commit.
  *
  * <p>One flag serves the whole server: every path through it is a world mutation and therefore runs
  * on the server thread.
@@ -31,6 +31,10 @@ public final class RunEdit {
         }
         inProgress = true;
         return true;
+    }
+
+    public static boolean isInProgress() {
+        return inProgress;
     }
 
     public static void end() {

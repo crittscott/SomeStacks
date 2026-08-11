@@ -65,9 +65,9 @@ public class SomeStacks {
     }
 
     /**
-     * Loads the world-specific server config, the way Forge's own per-world {@code ModConfig} used
-     * to. There is no automatic file-watch reload behind this hand-rolled reader/writer; {@code
-     * /ss reload} is the supported way to pick up a manual edit while the server runs.
+     * Loads the world-specific server config. There is no automatic file-watch reload behind this
+     * hand-rolled reader/writer; command edits are saved immediately, while manual file edits take
+     * effect on the next server start.
      */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");

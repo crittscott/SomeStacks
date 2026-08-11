@@ -106,7 +106,7 @@
 
   "somestacks.command.help.reload.summary": "Re-read the server override folder and re-sync players",
   "somestacks.command.help.reload.detail.1": "Reads config/somestacks/server_item_overrides/ again and pushes the current server config to every player.",
-  "somestacks.command.help.reload.detail.2": "It does not re-read the server config file. An edit made to that file directly applies when Forge reports the config reloaded.",
+  "somestacks.command.help.reload.detail.2": "It does not re-read the world-policy JSON. Restart the server after editing that file directly.",
 
   "somestacks.command.help.gen.summary": "Edit the mod and item lists the render galleries build from",
   "somestacks.command.help.gen.detail.1": "The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is stored, which is the order of the gallery's columns.",
