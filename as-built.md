@@ -7,8 +7,8 @@ behavior; the code is authoritative when either document is wrong.
 ## Project shape
 
 Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.0 and Fabric Loader 0.16.9 / Fabric
-API 0.92.2 targets. The mod id is `somestacks` and the root package is
-`com.github.crittscott.somestacks`.
+API 0.92.2 targets. Both loaders require Architectury API 9.2.14. The mod id is `somestacks` and the
+root package is `com.github.crittscott.somestacks`.
 
 The implementation is split between three modules:
 
@@ -22,6 +22,17 @@ fabric/   Fabric registration, lifecycle, networking, gestures, mixin, and autom
 JARs. Common source contains no Forge or Fabric imports; loader services enter through small seams
 such as `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, and the
 loader-native automation adapters.
+
+Release artifacts are loader-local:
+
+```text
+forge/build/libs/somestacks-forge-<version>.jar
+fabric/build/libs/somestacks-fabric-<version>.jar
+```
+
+The root `build/libs` directory is not a current loader output. Each release JAR contains common
+classes and resources plus its loader metadata. Fabric's remapped JAR also contains
+`somestacks.mixins.json`, `somestacks.refmap.json`, and the expanded shared `pack.mcmeta`.
 
 The mod registers three blocks and their block entity types, but no block items, menus, recipes, or
 portable containers.
@@ -51,9 +62,28 @@ portable containers.
 | `SsCommand`, `RenderGalleryGenerator` | Administration, render-profile authoring, and galleries |
 
 Each loader entry point registers the blocks and block entities, initializes native networking and
-automation, and attaches lifecycle listeners. Forge installs its event-backed edit authority;
-Fabric uses the shared vanilla authority. Each loader's registry adapter supplies the common
-registry handles before common world objects are created.
+automation, and attaches lifecycle listeners. Forge installs event-backed player and automation
+authorities. Fabric installs `FabricEditAuthority` for its automation actor and leaves
+`PlayerEdits` on the shared vanilla player authority. Each loader's registry adapter supplies the
+common registry handles before common world objects are created.
+
+## Loader integration
+
+| Concern | Forge | Fabric |
+| --- | --- | --- |
+| Metadata | `META-INF/mods.toml` | `fabric.mod.json` and `somestacks.mixins.json` |
+| Entrypoints | `SomeStacks`, with `ClientSetup` on the client | `SomeStacksFabric` and `SomeStacksFabricClient` |
+| Networking | `SimpleChannel` | `ServerPlayNetworking` and `ClientPlayNetworking` |
+| Protocol | Channel compatibility rejects a version mismatch | A versioned handshake channel gates all play packets |
+| Gestures | Forge interaction and input events | Fabric interaction callbacks plus the air-click mixin |
+| Rendering | Shared BERs through Forge registration and render seams | Shared BERs through Fabric registration and Renderer API-aware seams |
+| Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
+| Player protection | Vanilla checks plus Forge interaction/place events | Shared vanilla border and spawn checks |
+| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks through `FabricEditAuthority` |
+
+Both builds are required on the client and server. The loaders own transport and callbacks, but
+packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain
+shared.
 
 ## Runtime model
 
@@ -218,3 +248,10 @@ placement protection.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
+
+## Verified baseline
+
+At this revision, common, Forge, and Fabric compilation succeeds; the configured tests and both
+loader builds succeed; and the built Forge and Fabric JARs have both been exercised successfully in
+game. The Fabric release JAR has been inspected for its entrypoints, common classes, mixin config,
+refmap, dependency metadata, and expanded `pack.mcmeta`.
