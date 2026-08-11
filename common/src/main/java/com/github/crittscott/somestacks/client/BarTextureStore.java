@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,13 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -96,16 +96,16 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                         ResourceLocation itemLoc = new ResourceLocation(key);
                         BarTextureData data = parseEntry(root.get(key));
                         if (data == null) {
-                            SomeStacks.LOGGER.warn("Invalid format for '{}': expected string or object", key);
+                            SomeStacksCommon.LOGGER.warn("Invalid format for '{}': expected string or object", key);
                             continue;
                         }
                         configMap.put(itemLoc, data);
                     } catch (Exception e) {
-                        SomeStacks.LOGGER.warn("Invalid mapping for '{}': {}", key, e.getMessage());
+                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}': {}", key, e.getMessage());
                     }
                 }
             } catch (Exception e) {
-                SomeStacks.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
             }
         });
 
@@ -157,16 +157,16 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             textureMap.put(itemLoc, data);
         }
 
-        SomeStacks.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
+        SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
                 textureMap.size(), autoTinted);
     }
 
     private static int calculateTintFromItemTexture(ResourceLocation itemLoc, ResourceManager resourceManager) {
         try {
-            Item item = ForgeRegistries.ITEMS.getValue(itemLoc);
-            if (item == null) {
+            if (!BuiltInRegistries.ITEM.containsKey(itemLoc)) {
                 return BarTextureData.WHITE;
             }
+            Item item = BuiltInRegistries.ITEM.get(itemLoc);
 
             ItemStack stack = new ItemStack(item);
 
@@ -177,7 +177,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             int tint = multiplyColors(spriteColor, itemColor);
             return tint;
         } catch (Exception e) {
-            SomeStacks.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
+            SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
             return BarTextureData.WHITE;
         }
     }
@@ -218,7 +218,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
     /** The color the item's mod registers for the primary layer, or white when it registers none. */
     private static int registeredItemColor(ItemStack stack) {
-        return Minecraft.getInstance().getItemColors().getColor(stack, 0) | 0xFF000000;
+        return ClientRenderPlatform.itemColor(stack, 0) | 0xFF000000;
     }
 
     private static int multiplyColors(int left, int right) {
@@ -287,7 +287,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
             return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
         } catch (Exception e) {
-            SomeStacks.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);
+            SomeStacksCommon.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);
             return BarTextureData.WHITE;
         }
     }
@@ -311,7 +311,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
 
-        ResourceLocation itemLoc = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (itemLoc == null) return FALLBACK;
 
         BarTextureData mapped = textureMap.get(itemLoc);

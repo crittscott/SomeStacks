@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
@@ -10,7 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -20,9 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -50,7 +50,7 @@ import java.util.TreeMap;
 public final class AutoRenderProfiles {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CACHE_FILE = FMLPaths.CONFIGDIR.get().resolve("somestacks/measured_cache.json");
+    private static final Path CACHE_FILE = Platform.getConfigFolder().resolve("somestacks/measured_cache.json");
 
     /** Fraction of a stack cell the fitted model should span. */
     private static final float TARGET_FILL = 0.9f;
@@ -97,7 +97,7 @@ public final class AutoRenderProfiles {
         try {
             Files.deleteIfExists(CACHE_FILE);
         } catch (IOException e) {
-            SomeStacks.LOGGER.warn("Failed to delete {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to delete {}: {}", CACHE_FILE, e.getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ public final class AutoRenderProfiles {
         Map<ResourceLocation, ItemRenderConfig> entries = new TreeMap<>();
         JsonObject versions = new JsonObject();
         for (Map.Entry<Item, RenderProfile> entry : CACHE.entrySet()) {
-            ResourceLocation id = ForgeRegistries.ITEMS.getKey(entry.getKey());
+            ResourceLocation id = BuiltInRegistries.ITEM.getKey(entry.getKey());
             if (id == null) {
                 continue;
             }
@@ -130,7 +130,7 @@ public final class AutoRenderProfiles {
             Files.writeString(CACHE_FILE, PRETTY_GSON.toJson(root));
             dirty = false;
         } catch (IOException e) {
-            SomeStacks.LOGGER.warn("Failed to write {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", CACHE_FILE, e.getMessage());
         }
     }
 
@@ -174,15 +174,15 @@ public final class AutoRenderProfiles {
                     dirty = true;
                     continue;
                 }
-                Item item = ForgeRegistries.ITEMS.getValue(id);
-                if (item == null) {
+                if (!BuiltInRegistries.ITEM.containsKey(id)) {
                     dirty = true;
                     continue;
                 }
+                Item item = BuiltInRegistries.ITEM.get(id);
                 CACHE.put(item, new RenderProfile(config.mode(), config.scale(), config.offset()));
             }
         } catch (Exception e) {
-            SomeStacks.LOGGER.warn("Failed to read {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", CACHE_FILE, e.getMessage());
         }
     }
 
@@ -192,9 +192,7 @@ public final class AutoRenderProfiles {
     }
 
     private static String modVersion(String namespace) {
-        return ModList.get().getModContainerById(namespace)
-                .map(container -> container.getModInfo().getVersion().toString())
-                .orElse("unknown");
+        return ClientRenderPlatform.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {
@@ -203,14 +201,14 @@ public final class AutoRenderProfiles {
         float scaleFactor = fitScaleFactor(stack);
 
         if (wantsGuiPresentation(stack)) {
-            ModelMeasurer.Result guiResult = ModelMeasurer.measureGui(stack);
+            ModelMeasurement.Result guiResult = ModelMeasurement.measureGui(stack);
             RenderProfile fitted = fit(guiResult, RenderMode.GUI, scaleFactor);
             if (fitted != null) {
                 return fitted;
             }
         }
 
-        ModelMeasurer.Result result = ModelMeasurer.measure(stack);
+        ModelMeasurement.Result result = ModelMeasurement.measure(stack);
         AABB bounds = result.bounds();
 
         if (bounds == null) {
@@ -248,8 +246,8 @@ public final class AutoRenderProfiles {
     }
 
     private static void logFallback(ItemStack stack, String reason) {
-        SomeStacks.LOGGER.debug("Render measurement fell back to 2d for {}: {}",
-                ForgeRegistries.ITEMS.getKey(stack.getItem()), reason);
+        SomeStacksCommon.LOGGER.debug("Render measurement fell back to 2d for {}: {}",
+                BuiltInRegistries.ITEM.getKey(stack.getItem()), reason);
     }
 
     /**
@@ -257,7 +255,7 @@ public final class AutoRenderProfiles {
      * nothing usable, leaving the caller to fall back.
      */
     @Nullable
-    private static RenderProfile fit(ModelMeasurer.Result result, RenderMode mode, float scaleFactor) {
+    private static RenderProfile fit(ModelMeasurement.Result result, RenderMode mode, float scaleFactor) {
         AABB bounds = result.bounds();
         if (bounds == null) {
             return null;

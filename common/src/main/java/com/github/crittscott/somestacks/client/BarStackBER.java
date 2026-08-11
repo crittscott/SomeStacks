@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Draws a Bar Stack's 64 bars. Alone among the three renderers this ignores the stored item's model
+ * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
  * entirely: every bar is the same cuboid, drawn with a texture and tint looked up per item in
  * {@link BarTextureStore}, so a Bar Stack looks like bars rather than like stacked ingot items.
  *

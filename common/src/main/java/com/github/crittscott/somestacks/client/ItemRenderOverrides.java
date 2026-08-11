@@ -1,27 +1,25 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -52,8 +50,8 @@ import java.util.TreeMap;
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = FMLPaths.CONFIGDIR.get().resolve("somestacks/item_overrides.json");
-    private static final Path GENERATED_DIR = FMLPaths.CONFIGDIR.get().resolve("somestacks/generated_overrides");
+    private static final Path USER_FILE = Platform.getConfigFolder().resolve("somestacks/item_overrides.json");
+    private static final Path GENERATED_DIR = Platform.getConfigFolder().resolve("somestacks/generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
     /** Bundled corpus, from client resource reload. */
@@ -85,11 +83,11 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
                 configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {
-                SomeStacks.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
             }
         }
 
-        SomeStacks.LOGGER.info("Loaded {} render override(s) from {} file(s); skipped {} for absent namespaces",
+        SomeStacksCommon.LOGGER.info("Loaded {} render override(s) from {} file(s); skipped {} for absent namespaces",
                 configMap.size(), resources.size() - skipped, skipped);
         return configMap;
     }
@@ -101,21 +99,13 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     /**
-     * The namespaces whose items this client can hold. Neither source can change within a
-     * session, so a file naming a namespace outside this set covers nothing that exists here.
-     *
-     * <p>The union of both sources is deliberate. The item registry is authoritative and
-     * covers a mod that registers items under some other namespace, but reading it depends on
-     * registration having run; the mod list is fixed at mod-file discovery, before any mod bus
-     * event fires, so it cannot be consulted too early.
+     * The namespaces represented in the item registry. Client resource reloads run after item
+     * registration, so a corpus file outside this set covers nothing the client can render.
      */
     private static Set<String> presentNamespaces() {
         Set<String> namespaces = new HashSet<>();
-        for (ResourceLocation itemId : ForgeRegistries.ITEMS.getKeys()) {
+        for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             namespaces.add(itemId.getNamespace());
-        }
-        for (IModInfo mod : ModList.get().getMods()) {
-            namespaces.add(mod.getModId());
         }
         return namespaces;
     }
@@ -156,7 +146,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         ensureUserFileLoaded();
 
-        ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = USER_OVERRIDES.get(itemId);
@@ -189,7 +179,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             message = Component.translatable("somestacks.command.write.success",
                     USER_OVERRIDES.size(), USER_FILE.toString());
         } catch (IOException e) {
-            SomeStacks.LOGGER.error("Failed to write {}", USER_FILE, e);
+            SomeStacksCommon.LOGGER.error("Failed to write {}", USER_FILE, e);
             message = Component.translatable("somestacks.command.write.failure",
                     USER_FILE.toString(), e.getMessage());
         }
@@ -213,15 +203,15 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (!ResourceLocation.isValidNamespace(namespace)) {
-                SomeStacks.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
+            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
+                SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;
             }
             byNamespace.put(namespace, new HashMap<>());
         }
 
-        for (Map.Entry<ResourceKey<Item>, Item> entry : ForgeRegistries.ITEMS.getEntries()) {
+        for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
             ResourceLocation itemId = entry.getKey().location();
             Map<ResourceLocation, ItemRenderConfig> namespaceEntries = byNamespace.get(itemId.getNamespace());
             if (namespaceEntries == null) {
@@ -241,7 +231,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         try {
             Files.createDirectories(GENERATED_DIR);
         } catch (IOException e) {
-            SomeStacks.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
+            SomeStacksCommon.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
             report(Component.translatable("somestacks.command.dump.create_failure",
                     GENERATED_DIR.toString(), e.getMessage()));
             return;
@@ -251,7 +241,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
             // Retain a path-containment check at the filesystem boundary as a final invariant.
             if (!file.startsWith(GENERATED_DIR)) {
-                SomeStacks.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
+                SomeStacksCommon.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
                 failed.add(entry.getKey());
                 continue;
             }
@@ -259,7 +249,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 Files.writeString(file, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(entry.getValue())));
                 itemCount += entry.getValue().size();
             } catch (IOException e) {
-                SomeStacks.LOGGER.error("Failed to write {}", file, e);
+                SomeStacksCommon.LOGGER.error("Failed to write {}", file, e);
                 failed.add(entry.getKey());
             }
         }
@@ -298,7 +288,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, USER_FILE.toString()));
             }
         } catch (Exception e) {
-            SomeStacks.LOGGER.error("Failed to read {}", USER_FILE, e);
+            SomeStacksCommon.LOGGER.error("Failed to read {}", USER_FILE, e);
         }
     }
 }

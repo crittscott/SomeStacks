@@ -22,7 +22,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,17 +31,11 @@ import java.util.List;
  * renderer's -0.5 origin shift, and all Forge render passes. Custom-renderer (BEWLR)
  * items are probed by running their renderer once against a vertex-capturing buffer.
  */
-public final class ModelMeasurer {
-    private ModelMeasurer() {}
-
-    /**
-     * @param gui3d the resolved model's {@code isGui3d()}, vanilla's own flat-sprite signal:
-     *              false for generated item models ({@code gui_light: front}), true for block models.
-     */
-    public record Result(boolean customRenderer, boolean gui3d, @Nullable AABB bounds, @Nullable String failure) {}
+public final class ModelMeasurer implements ModelMeasurement.Backend {
 
     /** Measures as the {@code 3d} path draws: the FIXED display context. */
-    public static Result measure(ItemStack stack) {
+    @Override
+    public ModelMeasurement.Result measure(ItemStack stack) {
         return measure(stack, ItemDisplayContext.FIXED, false);
     }
 
@@ -50,11 +43,13 @@ public final class ModelMeasurer {
      * Measures as the {@code gui} path draws: the GUI display context behind the same
      * counter-rotation that path applies, so the fit accounts for the tilted presentation.
      */
-    public static Result measureGui(ItemStack stack) {
+    @Override
+    public ModelMeasurement.Result measureGui(ItemStack stack) {
         return measure(stack, ItemDisplayContext.GUI, true);
     }
 
-    private static Result measure(ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
+    private static ModelMeasurement.Result measure(
+            ItemStack stack, ItemDisplayContext context, boolean counterRotate) {
         boolean gui3d = true;
         try {
             BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0);
@@ -75,11 +70,11 @@ public final class ModelMeasurer {
             }
             return measureQuads(stack, model, gui3d, context, pose);
         } catch (Exception e) {
-            return new Result(false, gui3d, null, "measurement threw: " + e);
+            return new ModelMeasurement.Result(false, gui3d, null, "measurement threw: " + e);
         }
     }
 
-    private static Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d,
+    private static ModelMeasurement.Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d,
                                        ItemDisplayContext context, PoseStack pose) {
         BoundsCollector collector = new BoundsCollector();
         Matrix4f matrix = pose.last().pose();
@@ -96,9 +91,9 @@ public final class ModelMeasurer {
         }
 
         if (!collector.hasAny()) {
-            return new Result(false, gui3d, null, "model has no quads");
+            return new ModelMeasurement.Result(false, gui3d, null, "model has no quads");
         }
-        return new Result(false, gui3d, collector.toAABB(), null);
+        return new ModelMeasurement.Result(false, gui3d, collector.toAABB(), null);
     }
 
     private static void collectQuads(List<BakedQuad> quads, Matrix4f matrix, BoundsCollector collector) {
@@ -117,7 +112,8 @@ public final class ModelMeasurer {
         }
     }
 
-    private static Result probeCustomRenderer(ItemStack stack, boolean gui3d, ItemDisplayContext context, PoseStack pose) {
+    private static ModelMeasurement.Result probeCustomRenderer(
+            ItemStack stack, boolean gui3d, ItemDisplayContext context, PoseStack pose) {
         BoundsCollector collector = new BoundsCollector();
         CapturingBufferSource buffers = new CapturingBufferSource(collector);
         try {
@@ -125,12 +121,12 @@ public final class ModelMeasurer {
                     stack, context, pose, buffers,
                     LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            return new Result(true, gui3d, null, "custom renderer threw: " + e);
+            return new ModelMeasurement.Result(true, gui3d, null, "custom renderer threw: " + e);
         }
         if (!collector.hasAny()) {
-            return new Result(true, gui3d, null, "custom renderer emitted no vertices");
+            return new ModelMeasurement.Result(true, gui3d, null, "custom renderer emitted no vertices");
         }
-        return new Result(true, gui3d, collector.toAABB(), null);
+        return new ModelMeasurement.Result(true, gui3d, collector.toAABB(), null);
     }
 
     private static final class BoundsCollector {

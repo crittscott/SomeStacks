@@ -2,6 +2,8 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
+import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
+import com.github.crittscott.somestacks.client.measure.ModelMeasurer;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -22,6 +24,9 @@ public final class ClientSetup {
     private ClientSetup() {}
 
     public static void init(IEventBus modBus) {
+        ClientRenderPlatform.setBackend(new ForgeRenderPlatform());
+        ModelMeasurement.setBackend(new ModelMeasurer());
+        ClientRenderPacketSink.setHandler(new DefaultClientRenderPacketHandler());
         ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);

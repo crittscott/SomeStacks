@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Draws a Storage Stack's 27 stored stacks in their cells. Each occupied slot is placed at its
+ * Loader-neutral renderer for a Storage Stack's 27 stored stacks. Each occupied slot is placed at its
  * cell's corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
  * applies the item's own render profile.
  *

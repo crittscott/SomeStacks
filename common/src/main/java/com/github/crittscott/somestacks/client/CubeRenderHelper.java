@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -227,8 +227,8 @@ public final class CubeRenderHelper {
             // works from the pose it is handed and never pushes, so the stack is where we left it.
             pose.popPose();
             if (BLOCK_RENDER_FAILURES.add(stack.getItem())) {
-                SomeStacks.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
-                        ForgeRegistries.ITEMS.getKey(stack.getItem()), e);
+                SomeStacksCommon.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
+                        BuiltInRegistries.ITEM.getKey(stack.getItem()), e);
             }
             render3DItem(stack, pose, buffers, light, level, finalScale, offset);
             return;
@@ -238,8 +238,8 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * The flag {@code ItemRenderer.render} passes to {@link BakedModel#getRenderPasses}, which
-     * selects a model's passes and their render types: false only for the translucent blocks
+     * The flag Forge's item renderer uses when selecting a model's passes and render types:
+     * false only for the translucent blocks
      * vanilla draws through the indirect buffers outside GUI and first-person contexts.
      */
     public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
@@ -267,12 +267,11 @@ public final class CubeRenderHelper {
         }
 
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
-        boolean fabulous = fabulousFlag(stack, ItemDisplayContext.FIXED);
-
         // Resolving the model and its passes stays here, so a stack's own state still chooses both:
         // a charged crossbow draws charged, a coated weapon draws its coating. Only the step from a
         // pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
-        List<BakedModel> passes = model.getRenderPasses(stack, fabulous);
+        List<BakedModel> passes = ClientRenderPlatform.renderPasses(
+                model, stack, ItemDisplayContext.FIXED);
         for (int i = 0; i < passes.size(); i++) {
             emitQuads(vc, stack, plates(passes.get(i)), light, faces);
         }
@@ -391,7 +390,7 @@ public final class CubeRenderHelper {
             if (quad.getTintIndex() != tintIndex) {
                 tintIndex = quad.getTintIndex();
                 int color = tintIndex >= 0
-                        ? Minecraft.getInstance().getItemColors().getColor(stack, tintIndex)
+                        ? ClientRenderPlatform.itemColor(stack, tintIndex)
                         : 0xFFFFFFFF;
                 r = (color >> 16) & 0xFF;
                 g = (color >> 8) & 0xFF;

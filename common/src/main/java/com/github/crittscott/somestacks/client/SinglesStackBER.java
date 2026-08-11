@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Draws a Singles Stack's 64 stored items in their cells. Each occupied cell is placed at its
+ * Loader-neutral renderer for a Singles Stack's 64 stored items. Each occupied cell is placed at its
  * corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which applies
  * the item's own render profile.
  *
