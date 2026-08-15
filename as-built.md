@@ -251,6 +251,8 @@ placement protection.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
+- Keep Storage's `STORAGE_CELL_RENDER_SCALE` separate from Singles' cell-render scale in
+  `CubeRenderHelper`; Singles' cells tile edge to edge with no gap to absorb if the two are unified.
 
 ## Build and test layout
 
