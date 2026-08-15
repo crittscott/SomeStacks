@@ -6,9 +6,10 @@ behavior; the code is authoritative when either document is wrong.
 
 ## Project shape
 
-Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.0 and Fabric Loader 0.16.9 / Fabric
-API 0.92.2 targets. Both loaders require Architectury API 9.2.14. The mod id is `somestacks` and the
-root package is `com.github.crittscott.somestacks`.
+Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.10 and Fabric Loader 0.19.3 /
+Fabric API 0.92.11+1.20.1 build baselines. Both loaders require Architectury API 9.2.14. The mod id
+is `somestacks` and the root package is `com.github.crittscott.somestacks`. See
+`build-env.md` for the complete toolchain, dependency constraints, and build commands.
 
 The implementation is split between three modules:
 
@@ -249,9 +250,14 @@ placement protection.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
 
-## Verified baseline
+## Build and test layout
 
-At this revision, common, Forge, and Fabric compilation succeeds; the configured tests and both
-loader builds succeed; and the built Forge and Fabric JARs have both been exercised successfully in
-game. The Fabric release JAR has been inspected for its entrypoints, common classes, mixin config,
-refmap, dependency metadata, and expanded `pack.mcmeta`.
+The root `build` lifecycle builds all three subprojects, runs the JUnit suite under
+`common/src/test`, and produces both loader JARs. The conventional Forge and Fabric `test` source
+sets are empty. Test classes and dependencies are not included in the production JARs.
+
+Forge's in-game tests live under `forge/src/gametest`, outside the production source set. Gradle
+loads them as the separate development-only `somestacks_gametest` mod, generates their empty NBT
+structure from the checked-in Base64 fixture, and runs them through `:forge:runGameTestServer`.
+Forge GameTests are not part of `build` and must be invoked separately. There is no Fabric GameTest
+source set or run yet.
