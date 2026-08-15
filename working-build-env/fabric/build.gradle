@@ -1,0 +1,121 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        compileClasspath += project(':common').sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+        runtimeClasspath += project(':common').sourceSets.main.output
+    }
+}
+
+loom {
+    mods {
+        main {
+            sourceSet sourceSets.main
+            sourceSet project(':common').sourceSets.main
+        }
+        'somebuckets-gametest' {
+            sourceSet sourceSets.gametest
+        }
+    }
+
+    runs {
+        gameTestServer {
+            server()
+            name 'Game Test Server'
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.get().asFile}/gametest-report.xml"
+            source sourceSets.gametest
+        }
+    }
+}
+
+def gameTestWorldDirectory = layout.projectDirectory.dir('run/world')
+tasks.named('runGameTestServer').configure {
+    doFirst {
+        project.delete(gameTestWorldDirectory)
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+
+    // Files in this configuration will be bundled into your mod using the Shadow plugin.
+    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${ftb_chunks_version}"
+
+    // common's source uses javax.annotation.Nullable. Forge gets this transitively through its own
+    // dependency chain; Fabric Loom's does not provide it, so it must be redeclared here even though
+    // common itself already depends on it.
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+// Expands ${...} placeholders in fabric.mod.json (this module's own resource).
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, fabric_loader_version: fabric_loader_version,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties + [project: project]
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+}
+
+// GameTest structure templates are binary NBT. Keep the reviewable source as base64 and
+// materialize it in build/ so the generated binary is never edited by hand.
+def gameTestStructureSource = layout.projectDirectory.file('src/gametest/fixtures/empty_9x6x9.nbt.b64')
+def gameTestStructureOutput = layout.buildDirectory.file(
+        'generated/gametest/resources/data/somebuckets/structures/empty_9x6x9.nbt')
+
+tasks.register('generateGameTestStructures') {
+    inputs.file(gameTestStructureSource)
+    outputs.file(gameTestStructureOutput)
+
+    doLast {
+        def output = gameTestStructureOutput.get().asFile
+        output.parentFile.mkdirs()
+        output.bytes = Base64.getDecoder().decode(gameTestStructureSource.asFile.text.trim())
+    }
+}
+
+sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
+tasks.named('processGametestResources').configure { dependsOn tasks.named('generateGameTestStructures') }

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_authors}"
+  ],
+  "contact": {
+    "issues": "https://github.com/crittscott/SomeBuckets/issues/"
+  },
+  "license": "${mod_license}",
+  "icon": "somebuckets-logo-1.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.github.crittscott.somebuckets.SomeBucketsFabric"
+    ],
+    "client": [
+      "com.github.crittscott.somebuckets.client.SomeBucketsFabricClient"
+    ]
+  },
+  "mixins": [
+    "somebuckets.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "ftbchunks": "*"
+  }
+}
