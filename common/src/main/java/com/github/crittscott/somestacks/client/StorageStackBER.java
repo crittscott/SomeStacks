@@ -49,8 +49,8 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
 
             pose.pushPose();
             pose.translate(sx, sy, sz);
-            pose.scale(CubeRenderHelper.CELL_RENDER_SCALE, CubeRenderHelper.CELL_RENDER_SCALE,
-                    CubeRenderHelper.CELL_RENDER_SCALE);
+            pose.scale(CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, CubeRenderHelper.STORAGE_CELL_RENDER_SCALE,
+                    CubeRenderHelper.STORAGE_CELL_RENDER_SCALE);
             CubeRenderHelper.renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, be.getLevel());
             pose.popPose();
         }

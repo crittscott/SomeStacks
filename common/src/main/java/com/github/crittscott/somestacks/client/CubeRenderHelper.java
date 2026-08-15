@@ -63,11 +63,21 @@ public final class CubeRenderHelper {
     /** Fraction of the face the art spans, leaving a one-pixel border. */
     private static final float ART_INSET = 0.875f;
 
+    /** Fraction of the cell the 2d background cube spans, leaving it visibly separated from its neighbors. */
+    private static final float CUBE_INSET = 0.9f;
+
     /**
      * Scale a stack block's renderer applies before handing a cell's contents here: an item's unit
      * cube becomes eight pixels.
      */
     public static final float CELL_RENDER_SCALE = 8.0f / 16.0f;
+
+    /**
+     * Storage's own cell-render scale, grown so a cell's rendered content fills more of its
+     * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
+     * tile edge to edge with no gap to absorb growth into.
+     */
+    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
 
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
     public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
@@ -187,6 +197,9 @@ public final class CubeRenderHelper {
                                      float scale, float[] offset) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
+        pose.translate(0.5f, 0.5f, 0.5f);
+        pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
+        pose.translate(-0.5f, -0.5f, -0.5f);
         BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
         render2DItemCube(pose, buffers, stack, model, light, scale, offset);
         pose.popPose();
