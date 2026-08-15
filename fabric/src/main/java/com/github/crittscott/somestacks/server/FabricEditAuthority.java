@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.mojang.authlib.GameProfile;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,7 +11,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** Fabric's vanilla-only automation actor and edit authority. */
+/**
+ * Fabric's {@link EditAuthority}: the automation actor is a synthetic {@link ServerPlayer}, and
+ * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
+ * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
+ *
+ * <p>Placement stays vanilla-only: automated growth has no click for the mod's
+ * placement-protection hook ({@link FabricPlayerEditAuthority}) to consult, and Fabric API has no
+ * generic "a block was placed" event the way Forge's block-place event is.
+ */
 public final class FabricEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(
             java.util.UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
@@ -31,6 +40,8 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
-        return false;
+        ServerPlayer breaker = automationActor(level);
+        return !PlayerBlockBreakEvents.BEFORE.invoker()
+                .beforeBlockBreak(level, breaker, pos, state, level.getBlockEntity(pos));
     }
 }

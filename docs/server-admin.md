@@ -78,8 +78,8 @@ On login and `/ss reload`, the server sends each player the three stack-type ena
 
 ## Protection and claim mods
 
-On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Forge also re-runs `RightClickBlock`, `EntityPlaceEvent`, and `BreakEvent`, so claim and logging mods using those hooks see the position and face involved. The initial Fabric port has no general claim-event integration and applies the vanilla checks only.
+On both loaders, the mod checks build limits, replaceability, entity obstruction, the world border, and spawn protection before structural edits. Player gestures — deposit, extract, place, rotate, toggle-permanent — also re-run a real interaction event on both loaders, so claim and protection mods using that hook can veto the action: Forge's `RightClickBlock`, Fabric API's `UseBlockCallback`. Automated growth additionally fires Forge's `EntityPlaceEvent`; Fabric has no equivalent placement event for automation to trigger, so Fabric growth answers to the vanilla checks only.
 
-Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are attributed to the loader's automation actor. On Forge they are also reported through the break event. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
+Blocks the mod removes on its own — an emptied block a settle or a collapse leaves behind — are attributed to the loader's automation actor and reported through a real break event on both loaders: Forge's `BreakEvent`, Fabric API's `PlayerBlockBreakEvents`. **A refused removal leaves the block standing**, and the run carries on around it: the mod will not delete where it may not build.
 
 The server validates every packet independently of the client: the sender, one gesture per player per tick, that the sender is not a spectator, that the target is loaded and within reach, and every operation-specific rule. Deposit targeting and support are recomputed from the player's current view rather than trusted from the packet.

@@ -63,10 +63,11 @@ portable containers.
 | `SsCommand`, `RenderGalleryGenerator` | Administration, render-profile authoring, and galleries |
 
 Each loader entry point registers the blocks and block entities, initializes native networking and
-automation, and attaches lifecycle listeners. Forge installs event-backed player and automation
-authorities. Fabric installs `FabricEditAuthority` for its automation actor and leaves
-`PlayerEdits` on the shared vanilla player authority. Each loader's registry adapter supplies the
-common registry handles before common world objects are created.
+automation, and attaches lifecycle listeners. Both loaders install event-backed player and
+automation authorities: Forge's fire Forge's own interaction/place/break events, Fabric's
+`FabricPlayerEditAuthority` and `FabricEditAuthority` fire Fabric API's `UseBlockCallback` and
+`PlayerBlockBreakEvents`. Each loader's registry adapter supplies the common registry handles
+before common world objects are created.
 
 ## Loader integration
 
@@ -79,8 +80,8 @@ common registry handles before common world objects are created.
 | Gestures | Forge interaction and input events | Fabric interaction callbacks plus the air-click mixin |
 | Rendering | Shared BERs through Forge registration and render seams | Shared BERs through Fabric registration and Renderer API-aware seams |
 | Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
-| Player protection | Vanilla checks plus Forge interaction/place events | Shared vanilla border and spawn checks |
-| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks through `FabricEditAuthority` |
+| Player protection | Vanilla checks plus Forge interaction/place events | Vanilla checks plus Fabric API `UseBlockCallback` |
+| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal also fires Fabric API `PlayerBlockBreakEvents` |
 
 Both builds are required on the client and server. The loaders own transport and callbacks, but
 packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain
@@ -172,8 +173,9 @@ prevents reentrant automation mutations.
 
 Growth and automatic cleanup pass through `WorldEdits`. Both loaders apply build limits,
 replaceability, obstruction, border, and spawn checks using an automation actor. Forge also fires
-place or break events for claim and logging integrations. Fabric has no general claim-event hook in
-the initial port and therefore applies only the vanilla checks.
+place and break events for claim and logging integrations. Fabric fires the matching break event
+(`PlayerBlockBreakEvents`) for automation-driven removal; growth has no Fabric API equivalent to
+fire and therefore stays on the vanilla checks only.
 
 ## Player interaction and networking
 
@@ -263,6 +265,7 @@ Fabric mirrors this under `fabric/src/gametest` as an independent set of test cl
 shared code: registration uses a `fabric-gametest` entrypoint list in the dev-mod's own
 `fabric.mod.json` in place of Forge's per-class annotations, capability-driven tests run against the
 Transfer API instead of `IItemHandler`, and Fabric API's `FakePlayer` stands in for
-`FakePlayerFactory`. The Fabric suite omits the Forge-only claim/event-bus protection tests, since
-Fabric has no hook to exercise them yet. Neither GameTest suite is part of `build`; each is invoked
-separately through its own loader's `runGameTestServer` task.
+`FakePlayerFactory`. The Fabric suite omits the Forge-only claim/event-bus protection tests; a
+Fabric hook now exists to exercise them (`FabricPlayerEditAuthority`, `FabricEditAuthority`), but
+the tests themselves have not been ported yet. Neither GameTest suite is part of `build`; each is
+invoked separately through its own loader's `runGameTestServer` task.

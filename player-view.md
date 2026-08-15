@@ -315,10 +315,12 @@ different resource packs may see different bars.
 ## Multiplayer protection and packet validation
 
 Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world
-border, and spawn protection on both loaders. On Forge, interaction and structural edits also fire
-the ordinary Forge events, allowing claim and logging mods that use those hooks to allow, deny, or
-record the edit. The initial Fabric port has no general claim-event integration and applies the
-vanilla checks only. Automatic growth and removal use a loader-provided automation actor.
+border, and spawn protection on both loaders. Interaction and structural edits also fire a real
+protection event on both loaders, allowing claim and logging mods that use those hooks to allow,
+deny, or record the edit — Forge's own interaction, place, and break events, and Fabric API's
+`UseBlockCallback` and `PlayerBlockBreakEvents`. Automatic growth and removal use a loader-provided
+automation actor; automated growth is the one action Fabric still checks against vanilla protection
+only, since Fabric API has no placement event for automation to trigger.
 
 The server independently validates every gesture packet: one attempt per player per tick,
 nonspectator status, loaded target, reach, held item, target block and index, adjacency, support,
@@ -336,5 +338,7 @@ from the player's current view.
   mappings.
 - Existing contents remain legal to extract and to move internally after a config or tag change
   that would reject a new deposit.
-- Fabric protection currently covers vanilla build, obstruction, border, and spawn rules, but not
-  loader-specific claim or logging APIs.
+- Fabric protection now includes a real interaction event for player gestures and a real break
+  event for automation-driven removal, matching Forge. Automated growth is the one action still
+  limited to vanilla build, obstruction, border, and spawn rules, since Fabric API has no
+  placement-event equivalent for automation to trigger.
