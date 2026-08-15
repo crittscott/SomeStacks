@@ -1,54 +1,23 @@
-plugins {
-    id 'multiloader-common'
-    id 'net.neoforged.moddev.legacyforge'
-}
-
-legacyForge {
-    mcpVersion = minecraft_version
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
+architectury {
+    common rootProject.enabled_platforms.split(',')
 }
 
 dependencies {
-    // Common has no mixins, but keeping the annotations available preserves the mapped compile
-    // environment if a loader-neutral accessor is added later.
-    compileOnly 'org.spongepowered:mixin:0.8.5'
-    modCompileOnly "dev.architectury:architectury:${architectury_api_version}"
+    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
+    // which get remapped to the correct annotations on each platform.
+    // Do NOT use other classes from Fabric Loader.
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
-    // Common source uses javax.annotation.Nullable/@Nonnull (JSR-305) pervasively.
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
-
-    testImplementation platform('org.junit:junit-bom:5.10.2')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    modCompileOnly "dev.architectury:architectury:$rootProject.architectury_api_version"
 }
 
-tasks.named('test', Test).configure {
-    useJUnitPlatform()
-    enabled = false
-}
+// Expands the ${mod_id} placeholder in pack.mcmeta once here, rather than duplicating the same
+// filesMatching block in every loader that bundles this module's resources.
+tasks.named('processResources', ProcessResources).configure {
+    inputs.property 'mod_id', mod_id
 
-tasks.named('compileTestJava', JavaCompile).configure {
-    enabled = false
-}
-
-// Exposes this module's Java source and resources as consumable artifacts so loader
-// modules can compile them directly into their own jars. common is never packaged or
-// published as a distributable mod on its own.
-configurations {
-    commonJava {
-        canBeResolved = false
-        canBeConsumed = true
+    filesMatching('pack.mcmeta') {
+        expand mod_id: mod_id
     }
-    commonResources {
-        canBeResolved = false
-        canBeConsumed = true
-    }
-}
-
-artifacts {
-    commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
