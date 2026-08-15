@@ -7,9 +7,9 @@ Some Stacks turns held items directly into visible world storage. It adds three 
 block items, recipes, creative-tab entries, or storage screens. A stack exists because an item was
 deposited into the world, and it normally disappears when its last contents are removed.
 
-The mod requires Minecraft 1.20.1 and either Forge 47.x or Fabric Loader 0.16.9 with Fabric API
-0.92.2. Architectury API is required on both loaders. Some Stacks must be installed on both the
-client and server.
+The mod requires Minecraft 1.20.1 and either Forge 47.x or Fabric Loader 0.19.3 with Fabric API
+0.92.11+1.20.1. Architectury API is required on both loaders. Some Stacks must be installed on both
+the client and server.
 
 ## The three stack types
 

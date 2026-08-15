@@ -1,14 +1,10 @@
-# Some Stacks
-
-**Storage you can see.** Some Stacks turns the items you are holding into blocks made of those items. No screens, no recipes, no chests — hold a key, right-click, and what is in your hand becomes part of the world.
-
 ![Some Stacks](https://placeholder.invalid/somestacks/banner.png)
 
-▶ **[Watch the one-minute tour](https://www.youtube.com/watch?v=REPLACE_ME)**
+# Some Stacks
 
-- **Minecraft** 1.20.1 · **Forge** 47+ or **Fabric Loader** 0.16.9+ · **required on both client and server**
+**Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
----
+An extension and complete rewrite of [Stackable](https://www.curseforge.com/minecraft/mc-mods/stackable) by [KidsDontPlay](https://www.curseforge.com/members/kidsdontplay/projects) from the good old days of 1.12.2.
 
 ## The three stacks
 
@@ -23,11 +19,13 @@ There are no block items and no recipes. A stack exists because you put somethin
 ## Getting started
 
 1. Hold **V** (rebindable) and **right-click the air** to cycle the placement mode: Storage, Singles, Bar, Toggle Permanent.
-2. Hold **V** and **right-click a block** with something in your hand. A stack of the selected type appears in the empty space you clicked toward, holding what you deposited.
-3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills.
+2. Hold **V** and **right-click a block** with something in your hand to create a stack.
+3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height.
 4. **Right-click without V** to take an item back out.
 
-That is the whole mod. Everything below is detail.
+That's all you need to know.
+
+## Details
 
 ### Every gesture
 
@@ -67,8 +65,6 @@ See **[Server administration](docs/server-admin.md)** for the config file and th
 ## Compatibility
 
 Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. The Forge build requires Architectury API; the Fabric build requires Fabric API and Architectury API. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server — see [Pack authors](docs/pack-authors.md).
-
-It must be installed on both the client and the server; they negotiate a protocol version and refuse to connect on a mismatch.
 
 ## Issues and suggestions
 
