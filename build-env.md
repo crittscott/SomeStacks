@@ -84,15 +84,16 @@ not release JARs. Common's transformed JARs are intermediate inputs to the loade
 
 ## Current IntelliJ run configurations
 
-`.idea/runConfigurations/` currently contains five Architectury-generated application runs:
+`.idea/runConfigurations/` currently contains six Architectury-generated application runs:
 
 - `Minecraft Client (:forge)` and `Minecraft Server (:forge)`
 - `Game Test Server (:forge)`
 - `Minecraft Client (:fabric)` and `Minecraft Server (:fabric)`
+- `Game Test Server (:fabric)`
 
-All five launch through `dev.architectury.transformer.TransformerRuntime`. Forge uses
-`BootstrapLauncher`; Fabric uses Knot. There are no plain Fabric Loom runs, Fabric GameTest run, or
-data-generation run in the current project.
+All six launch through `dev.architectury.transformer.TransformerRuntime`. Forge uses
+`BootstrapLauncher`; Fabric uses Knot. There are no plain Fabric Loom runs or data-generation run in
+the current project.
 
 The Forge GameTest run is configured by `forge/build.gradle`. It loads ordinary Forge and common
 production output as `somestacks`, and `forge/src/gametest` as the separate development-only
@@ -100,6 +101,11 @@ production output as `somestacks`, and `forge/src/gametest` as the separate deve
 structure is stored as the textual fixture
 `forge/src/gametest/fixtures/somestacks_empty.nbt.b64`; `generateGameTestStructures` decodes it into
 the build directory before GameTest resources are processed.
+
+Fabric's GameTest run is configured the same way by `fabric/build.gradle`: `fabric/src/gametest`
+becomes the separate development-only `somestacks_gametest` mod, and the run passes
+`-Dfabric-api.gametest`. Its empty test structure uses the same fixture mechanism as Forge's, from
+its own checked-in Base64 fixture at `fabric/src/gametest/fixtures/somestacks_empty.nbt.b64`.
 
 ## Environment traps
 
@@ -121,8 +127,11 @@ the build directory before GameTest resources are processed.
 - **The generated GameTest NBT is not a source file.** Edit the Base64 fixture under
   `forge/src/gametest/fixtures`; the decoded file under `forge/build/generated` is disposable build
   output.
-- **There is no Fabric GameTest source set or task configuration.** The automated in-game suite is
-  Forge-only; loader-neutral unit tests live under `common/src/test`.
+- **Forge and Fabric register GameTest classes differently.** Forge discovers test methods by
+  scanning the loaded mod for classes annotated `@GameTestHolder`; Fabric instead requires each
+  class to implement `FabricGameTest` and to be listed under a `fabric-gametest` entrypoint in the
+  dev-mod's own `fabric.mod.json`. A new Fabric GameTest class that is not added to that entrypoint
+  list will not run.
 - **`working-build-env/` is an inactive reference tree.** Changing files there does not change the
   root build.
 
@@ -136,7 +145,8 @@ Use the wrapper from the repository root in PowerShell:
 .\gradlew :fabric:build
 .\gradlew :common:test
 .\gradlew :forge:runGameTestServer
+.\gradlew :fabric:runGameTestServer
 ```
 
-The root `build` covers the configured subproject builds and common JUnit tests. The Forge GameTest
-server is a separate development run and is not a Fabric test substitute.
+The root `build` covers the configured subproject builds and common JUnit tests. The Forge and
+Fabric GameTest servers are separate development runs, each covering only its own loader.
