@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[47,48)"
+license="GNU GPLv3"
+
+[[mods]]
+modId="somestacks_gametest"
+version="1"
+displayName="Some Stacks GameTests"
+description='''Development-only Forge GameTests for Some Stacks.'''
+
+[[dependencies.somestacks_gametest]]
+modId="somestacks"
+mandatory=true
+versionRange="[1,)"
+ordering="AFTER"
+side="SERVER"

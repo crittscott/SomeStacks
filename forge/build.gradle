@@ -7,11 +7,21 @@ architectury {
     forge()
 }
 
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
 loom {
     mods {
         main {
             sourceSet sourceSets.main
             sourceSet project(':common').sourceSets.main
+        }
+        somestacks_gametest {
+            sourceSet sourceSets.gametest
         }
     }
 
@@ -22,6 +32,7 @@ loom {
             forgeTemplate 'gameTestServer'
             name 'Game Test Server'
             property 'forge.enabledGameTestNamespaces', mod_id
+            source sourceSets.gametest
         }
     }
 }
@@ -48,6 +59,27 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
     modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
+}
+
+def gameTestStructureSource = layout.projectDirectory.file(
+        'src/gametest/fixtures/somestacks_empty.nbt.b64')
+def gameTestStructureOutput = layout.buildDirectory.file(
+        'generated/gametest/resources/data/somestacks/structures/somestacks_empty.nbt')
+
+tasks.register('generateGameTestStructures') {
+    inputs.file(gameTestStructureSource)
+    outputs.file(gameTestStructureOutput)
+
+    doLast {
+        def output = gameTestStructureOutput.get().asFile
+        output.parentFile.mkdirs()
+        output.bytes = Base64.getDecoder().decode(gameTestStructureSource.asFile.text.trim())
+    }
+}
+
+sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
+tasks.named('processGametestResources').configure {
+    dependsOn tasks.named('generateGameTestStructures')
 }
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).

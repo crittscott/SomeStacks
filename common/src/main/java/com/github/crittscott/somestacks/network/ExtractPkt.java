@@ -53,7 +53,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         }
     }
 
-    static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
+    public static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
         ItemStack handStack = player.getItemInHand(hand);
 
         int maxCanTake = handStack.isEmpty()
@@ -80,7 +80,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         }
     }
 
-    static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
+    public static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
         if (index < 0 || index >= SinglesStackBE.SLOTS) return;
 
         ItemStack cubeStack = ssbe.getItems().getStackInSlot(index);
@@ -100,7 +100,7 @@ public record ExtractPkt(BlockPos pos, int index) {
         }
     }
 
-    static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
+    public static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
         if (index < 0 || index >= BarStackBE.SLOTS) return;
 
         ItemStack barStack = barbe.getItems().getStackInSlot(index);

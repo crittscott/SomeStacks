@@ -10,6 +10,14 @@ dependencies {
 
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     modCompileOnly "dev.architectury:architectury:$rootProject.architectury_api_version"
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 // Expands the ${mod_id} placeholder in pack.mcmeta once here, rather than duplicating the same

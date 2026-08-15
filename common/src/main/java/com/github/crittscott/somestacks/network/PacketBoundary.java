@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
  * checks the handlers apply where they are relevant; world-edit protection consults
  * live behind {@link com.github.crittscott.somestacks.server.PlayerEdits}.
  */
-final class PacketBoundary {
+public final class PacketBoundary {
     private PacketBoundary() {}
 
     /** Extra range beyond the attribute, matching vanilla's server-side interaction slack. */
@@ -50,16 +50,16 @@ final class PacketBoundary {
         return sp;
     }
 
-    static boolean withinReach(ServerPlayer sp, BlockPos pos) {
+    public static boolean withinReach(ServerPlayer sp, BlockPos pos) {
         double reach = PlayerReach.blockReach(sp) + REACH_PADDING;
         return Vec3.atCenterOf(pos).distanceToSqr(sp.getEyePosition(1.0f)) <= reach * reach;
     }
 
-    static boolean holdsInMainHand(ServerPlayer sp, Item item) {
+    public static boolean holdsInMainHand(ServerPlayer sp, Item item) {
         return sp.getMainHandItem().is(item);
     }
 
-    static boolean mainHandEmpty(ServerPlayer sp) {
+    public static boolean mainHandEmpty(ServerPlayer sp) {
         return sp.getMainHandItem().isEmpty();
     }
 }

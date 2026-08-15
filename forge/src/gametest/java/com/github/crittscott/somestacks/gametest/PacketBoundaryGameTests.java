@@ -1,10 +1,11 @@
-package com.github.crittscott.somestacks.network;
+package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.gametest.GameTestSupport;
+import com.github.crittscott.somestacks.network.ExtractPkt;
+import com.github.crittscott.somestacks.network.PacketBoundary;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -27,9 +28,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEqu
 /**
  * What the server refuses at the packet boundary: out-of-reach targets, hands other than the main
  * one, cells holding nothing, and extractions into a hand that cannot take what is offered.
- *
- * <p>Lives beside the packets rather than in the gametest package because it tests their validation
- * directly.
  */
 @GameTestHolder(SomeStacks.MODID)
 @PrefixGameTestTemplate(false)
