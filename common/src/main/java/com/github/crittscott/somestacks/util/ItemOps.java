@@ -110,24 +110,17 @@ public final class ItemOps {
         }
 
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        if (itemId == null) {
-            return false;
-        }
-
         return ServerConfig.isModDisabled(itemId.getNamespace());
     }
 
     /** {@link #isItemFromDisabledMod} for a deposit path, telling the player when it refuses. */
     public static boolean checkDisabledModAndNotify(ItemStack stack, Player player) {
         if (isItemFromDisabledMod(stack)) {
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-            if (itemId != null) {
-                String modId = itemId.getNamespace();
-                player.displayClientMessage(
-                        Component.translatable("somestacks.message.disabled_mod", modId),
-                        true
-                );
-            }
+            String modId = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
+            player.displayClientMessage(
+                    Component.translatable("somestacks.message.disabled_mod", modId),
+                    true
+            );
             return true;
         }
         return false;
@@ -140,10 +133,6 @@ public final class ItemOps {
         }
 
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        if (itemId == null) {
-            return false;
-        }
-
         return ServerConfig.isItemDisabled(itemId);
     }
 
@@ -151,12 +140,10 @@ public final class ItemOps {
     public static boolean checkDisabledItemAndNotify(ItemStack stack, Player player) {
         if (isItemDisabled(stack)) {
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-            if (itemId != null) {
-                player.displayClientMessage(
-                        Component.translatable("somestacks.message.disabled_item", itemId),
-                        true
-                );
-            }
+            player.displayClientMessage(
+                    Component.translatable("somestacks.message.disabled_item", itemId),
+                    true
+            );
             return true;
         }
         return false;

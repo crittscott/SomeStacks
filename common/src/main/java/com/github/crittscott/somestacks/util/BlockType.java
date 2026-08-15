@@ -22,6 +22,17 @@ public enum BlockType {
         return ordinal >= 0 && ordinal < values.length ? values[ordinal] : null;
     }
 
+    /** The type whose block this is, or null when it names none of the three. */
+    @Nullable
+    public static BlockType of(Block block) {
+        for (BlockType type : values()) {
+            if (type.getBlock() == block) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public Block getBlock() {
         return switch (this) {
             case STORAGE_STACK -> CommonRegistry.STORAGE_STACK_BLOCK.get();

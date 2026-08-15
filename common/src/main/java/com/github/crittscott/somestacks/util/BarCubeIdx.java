@@ -324,13 +324,6 @@ public final class BarCubeIdx {
         return occupancy;
     }
 
-    /** Extracts the top-layer seam from a full block occupancy snapshot. */
-    public static boolean[] topLayerOf(boolean[] occupancy) {
-        boolean[] top = new boolean[LAYER_SIZE];
-        System.arraycopy(occupancy, TOP_LAYER_START, top, 0, LAYER_SIZE);
-        return top;
-    }
-
     private record Hit(int index, double distance) {
     }
 }

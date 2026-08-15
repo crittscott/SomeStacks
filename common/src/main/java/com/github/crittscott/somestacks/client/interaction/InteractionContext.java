@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -109,19 +109,11 @@ public final class InteractionContext {
     }
 
     public boolean isAnyStackBlock() {
-        if (clickedBlock == null) {
-            return false;
-        }
-        return clickedBlock == CommonRegistry.STORAGE_STACK_BLOCK.get()
-                || clickedBlock == CommonRegistry.SINGLES_STACK_BLOCK.get()
-                || clickedBlock == CommonRegistry.BAR_STACK_BLOCK.get();
+        return clickedBlock != null && BlockType.of(clickedBlock) != null;
     }
 
     public boolean isStorageStack() {
-        if (clickedBlock == null) {
-            return false;
-        }
-        return clickedBlock == CommonRegistry.STORAGE_STACK_BLOCK.get();
+        return clickedBlock != null && BlockType.of(clickedBlock) == BlockType.STORAGE_STACK;
     }
 
     /** The stacks that rotate as a whole block; a Bar Stack's bars are fixed to their layer. */
@@ -129,17 +121,17 @@ public final class InteractionContext {
         if (clickedBlock == null) {
             return false;
         }
-        return clickedBlock == CommonRegistry.STORAGE_STACK_BLOCK.get()
-                || clickedBlock == CommonRegistry.SINGLES_STACK_BLOCK.get();
+        BlockType type = BlockType.of(clickedBlock);
+        return type == BlockType.STORAGE_STACK || type == BlockType.SINGLES_STACK;
     }
 
     public boolean isSinglesStack() {
-        return clickedBlock != null && clickedBlock == CommonRegistry.SINGLES_STACK_BLOCK.get();
+        return clickedBlock != null && BlockType.of(clickedBlock) == BlockType.SINGLES_STACK;
     }
 
     public boolean isSinglesOrBarStack(Block block) {
-        return block == CommonRegistry.SINGLES_STACK_BLOCK.get()
-                || block == CommonRegistry.BAR_STACK_BLOCK.get();
+        BlockType type = BlockType.of(block);
+        return type == BlockType.SINGLES_STACK || type == BlockType.BAR_STACK;
     }
 
     /**

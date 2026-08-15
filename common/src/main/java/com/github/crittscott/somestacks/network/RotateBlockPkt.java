@@ -1,10 +1,10 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -48,8 +48,9 @@ public class RotateBlockPkt {
         Block block = level.getBlockState(msg.pos).getBlock();
         var be = level.getBlockEntity(msg.pos);
 
-        boolean singles = block == CommonRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE;
-        boolean storage = block == CommonRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE;
+        BlockType type = BlockType.of(block);
+        boolean singles = type == BlockType.SINGLES_STACK && be instanceof SinglesStackBE;
+        boolean storage = type == BlockType.STORAGE_STACK && be instanceof StorageStackBE;
         if (!singles && !storage) return;
 
             // Claiming suppresses the vanilla attempt to place the redstone torch.

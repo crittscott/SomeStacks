@@ -110,9 +110,6 @@ public final class AutoRenderProfiles {
         JsonObject versions = new JsonObject();
         for (Map.Entry<Item, RenderProfile> entry : CACHE.entrySet()) {
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(entry.getKey());
-            if (id == null) {
-                continue;
-            }
             RenderProfile profile = entry.getValue();
             entries.put(id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {

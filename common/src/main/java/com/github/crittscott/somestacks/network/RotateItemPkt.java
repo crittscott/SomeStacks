@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -51,7 +51,7 @@ public class RotateItemPkt {
         Block block = level.getBlockState(msg.pos).getBlock();
         var be = level.getBlockEntity(msg.pos);
 
-        if (block != CommonRegistry.SINGLES_STACK_BLOCK.get() || !(be instanceof SinglesStackBE ssbe)) return;
+        if (BlockType.of(block) != BlockType.SINGLES_STACK || !(be instanceof SinglesStackBE ssbe)) return;
 
         if (msg.slotIndex < 0 || msg.slotIndex >= SinglesStackBE.SLOTS) return;
 

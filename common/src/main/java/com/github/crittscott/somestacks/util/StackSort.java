@@ -22,7 +22,6 @@ public final class StackSort {
 
         ResourceLocation aKey = BuiltInRegistries.ITEM.getKey(a.getItem());
         ResourceLocation bKey = BuiltInRegistries.ITEM.getKey(b.getItem());
-        if (aKey == null || bKey == null) return 0;
         int c = aKey.compareTo(bKey);
         if (c != 0) return c;
 

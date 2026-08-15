@@ -17,6 +17,13 @@ import java.util.Arrays;
  * {@link #getSlotLimit(int)} the way a Forge {@code ItemStackHandler} anonymous subclass would.
  */
 public class StackItemStorage implements SlotAccess {
+    private static final String TAG_SLOT = "Slot";
+    private static final String TAG_SIZE = "Size";
+    private static final String TAG_ITEMS = "Items";
+
+    /** Per-slot max-stack-size cap, mirroring Forge {@code ItemStackHandler}'s default. */
+    private static final int DEFAULT_SLOT_LIMIT = 64;
+
     private final ItemStack[] stacks;
 
     public StackItemStorage(int size) {
@@ -110,7 +117,7 @@ public class StackItemStorage implements SlotAccess {
 
     @Override
     public int getSlotLimit(int slot) {
-        return 64;
+        return DEFAULT_SLOT_LIMIT;
     }
 
     @Override
@@ -136,23 +143,23 @@ public class StackItemStorage implements SlotAccess {
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
-                itemTag.putInt("Slot", i);
+                itemTag.putInt(TAG_SLOT, i);
                 stacks[i].save(itemTag);
                 list.add(itemTag);
             }
         }
         CompoundTag nbt = new CompoundTag();
-        nbt.put("Items", list);
-        nbt.putInt("Size", stacks.length);
+        nbt.put(TAG_ITEMS, list);
+        nbt.putInt(TAG_SIZE, stacks.length);
         return nbt;
     }
 
     public void deserializeNBT(CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
-        ListTag list = nbt.getList("Items", Tag.TAG_COMPOUND);
+        ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
-            int slot = itemTag.getInt("Slot");
+            int slot = itemTag.getInt(TAG_SLOT);
             if (slot >= 0 && slot < stacks.length) {
                 stacks[slot] = ItemStack.of(itemTag);
             }

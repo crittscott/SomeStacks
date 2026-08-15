@@ -51,7 +51,7 @@ import java.util.Set;
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
-    public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation("somestacks", "block/stack_cube");
+    public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube");
 
     /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
     private static final Direction[] DIRECTIONS = Direction.values();

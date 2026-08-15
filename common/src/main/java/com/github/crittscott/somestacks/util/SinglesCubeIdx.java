@@ -141,20 +141,6 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Extracts the top layer of an occupancy snapshot and converts it to the visual columns used by
-     * {@link #seamSupports}.
-     */
-    public static boolean[] topLayerOf(boolean[] occupancy, int blockRotation) {
-        boolean[] top = new boolean[LAYER_SIZE];
-        for (int column = 0; column < LAYER_SIZE; column++) {
-            if (occupancy[indexFromColumn(column, TOP_LAYER_Y)]) {
-                top[visualColumnFromStorage(column, blockRotation)] = true;
-            }
-        }
-        return top;
-    }
-
-    /**
      * Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
      * occupied slots. Placement uses this to validate the initial deposit and its resulting
      * collision shape before adding the block to the world. New blocks are unrotated.

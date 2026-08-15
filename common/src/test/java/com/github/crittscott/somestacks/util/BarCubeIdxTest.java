@@ -50,22 +50,6 @@ class BarCubeIdxTest {
     }
 
     @Test
-    void topLayerIsSlotsFiftySixThroughSixtyThree() {
-        boolean[] occupancy = new boolean[64];
-        occupancy[55] = true;
-        occupancy[56] = true;
-        occupancy[63] = true;
-
-        boolean[] top = BarCubeIdx.topLayerOf(occupancy);
-
-        assertTrue(top[0]);
-        assertTrue(top[7]);
-        for (int i = 1; i < 7; i++) {
-            assertFalse(top[i]);
-        }
-    }
-
-    @Test
     void standaloneBottomLayerIsGroundedButEmptySeamIsNot() {
         boolean[] occupancy = new boolean[64];
 

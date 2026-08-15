@@ -38,7 +38,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
     private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
-    private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("somestacks", "block/minecraft/base_ingot");
+    private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
@@ -312,7 +312,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         if (stack.isEmpty()) return FALLBACK;
 
         ResourceLocation itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        if (itemLoc == null) return FALLBACK;
 
         BarTextureData mapped = textureMap.get(itemLoc);
         if (mapped != null) return mapped;

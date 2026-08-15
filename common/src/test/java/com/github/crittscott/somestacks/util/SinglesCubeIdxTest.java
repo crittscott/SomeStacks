@@ -87,24 +87,6 @@ class SinglesCubeIdxTest {
     }
 
     @Test
-    void topLayerIsReportedInVisualCoordinates() {
-        for (int lowerRotation = 0; lowerRotation < 4; lowerRotation++) {
-            for (int storageColumn = 0; storageColumn < 16; storageColumn++) {
-                boolean[] occupancy = new boolean[64];
-                occupancy[SinglesCubeIdx.indexFromColumn(storageColumn, 3)] = true;
-
-                boolean[] top = SinglesCubeIdx.topLayerOf(occupancy, lowerRotation);
-                int expectedVisual =
-                        SinglesCubeIdx.visualColumnFromStorage(storageColumn, lowerRotation);
-
-                for (int visual = 0; visual < 16; visual++) {
-                    assertEquals(visual == expectedVisual, top[visual]);
-                }
-            }
-        }
-    }
-
-    @Test
     void standaloneBottomLayerIsGrounded() {
         boolean[] occupancy = new boolean[64];
 

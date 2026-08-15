@@ -1,12 +1,12 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
@@ -98,15 +98,16 @@ public class DepositPkt {
         }
 
         var be = level.getBlockEntity(msg.pos);
+        BlockType type = BlockType.of(block);
 
-        if (block == CommonRegistry.STORAGE_STACK_BLOCK.get() && be instanceof StorageStackBE sbe) {
+        if (type == BlockType.STORAGE_STACK && be instanceof StorageStackBE sbe) {
             int deposited = sbe.deposit(handStack, sp);
             returnToHand(sp, creative, handStack);
 
             if (deposited > 0) {
                 level.playSound(null, msg.pos, StackSounds.STORAGE_DEPOSIT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
-        } else if (block == CommonRegistry.SINGLES_STACK_BLOCK.get() && be instanceof SinglesStackBE ssbe) {
+        } else if (type == BlockType.SINGLES_STACK && be instanceof SinglesStackBE ssbe) {
             SlotAccess handler = ssbe.getItems();
             int index = SinglesCubeIdx.traceAllPositions(ViewRays.of(sp), msg.pos, handler, ssbe.getRotation());
 
@@ -125,7 +126,7 @@ public class DepositPkt {
             if (deposited) {
                 level.playSound(null, msg.pos, StackSounds.SINGLES_DEPOSIT, SoundSource.BLOCKS, StackSounds.VOLUME, 1.0f);
             }
-        } else if (block == CommonRegistry.BAR_STACK_BLOCK.get() && be instanceof BarStackBE barbe) {
+        } else if (type == BlockType.BAR_STACK && be instanceof BarStackBE barbe) {
             SlotAccess handler = barbe.getItems();
             int index = BarCubeIdx.traceAllPositions(ViewRays.of(sp), msg.pos, handler);
 

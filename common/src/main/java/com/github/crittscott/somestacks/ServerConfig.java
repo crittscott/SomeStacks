@@ -44,6 +44,9 @@ public final class ServerConfig {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
+    private static final int MAX_PILE_HEIGHT_LIMIT = 64;
+
     private static int maxPileHeight = 8;
     private static boolean enableStorageStackBlock = true;
     private static boolean enableSinglesStackBlock = true;
@@ -141,7 +144,7 @@ public final class ServerConfig {
 
     private static void applyJson(JsonObject root) {
         JsonObject piles = obj(root, "piles");
-        maxPileHeight = clamp(intOr(piles, "max_pile_height", maxPileHeight), 1, 64);
+        maxPileHeight = clamp(intOr(piles, "max_pile_height", maxPileHeight), 1, MAX_PILE_HEIGHT_LIMIT);
 
         JsonObject stacks = obj(root, "stacks");
         enableStorageStackBlock = boolOr(stacks, "enable_storage_stack_block", enableStorageStackBlock);

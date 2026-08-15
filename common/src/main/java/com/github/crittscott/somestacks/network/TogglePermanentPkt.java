@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -45,7 +45,7 @@ public class TogglePermanentPkt {
         if (!PacketBoundary.mainHandEmpty(sp)) return;
 
         Level level = sp.level();
-        if (level.getBlockState(msg.pos).getBlock() != CommonRegistry.STORAGE_STACK_BLOCK.get()) {
+        if (BlockType.of(level.getBlockState(msg.pos).getBlock()) != BlockType.STORAGE_STACK) {
             return;
         }
 
