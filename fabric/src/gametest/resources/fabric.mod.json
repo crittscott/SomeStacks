@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "somestacks_gametest",
+  "version": "1",
+  "name": "Some Stacks GameTests",
+  "description": "Development-only Fabric GameTests for Some Stacks.",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-gametest": [
+      "com.github.crittscott.somestacks.gametest.StackSortGameTests",
+      "com.github.crittscott.somestacks.gametest.ItemOpsGameTests",
+      "com.github.crittscott.somestacks.gametest.RenderGalleryGameTests",
+      "com.github.crittscott.somestacks.gametest.PacketBoundaryGameTests",
+      "com.github.crittscott.somestacks.gametest.CapabilityAndPersistenceGameTests",
+      "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
+      "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
+      "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
+      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"
+    ]
+  },
+  "depends": {
+    "somestacks": "${mod_version}",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}"
+  }
+}
