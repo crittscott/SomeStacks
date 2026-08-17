@@ -85,7 +85,7 @@ before common world objects are created.
 | Rendering | Shared BERs through Forge registration and render seams | Shared BERs through Fabric registration and Renderer API-aware seams |
 | Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
 | Player protection | Vanilla checks plus Forge interaction/place events | Vanilla checks plus Fabric API `UseBlockCallback` |
-| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal also fires Fabric API `PlayerBlockBreakEvents` |
+| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal fires Fabric API `PlayerBlockBreakEvents`; growth optionally consults FTB Chunks/OPAC |
 
 Both builds are required on the client and server. The loaders own transport and callbacks, but
 packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain
@@ -177,9 +177,13 @@ prevents reentrant automation mutations.
 
 Growth and automatic cleanup pass through `WorldEdits`. Both loaders apply build limits,
 replaceability, obstruction, border, and spawn checks using an automation actor. Forge also fires
-place and break events for claim and logging integrations. Fabric fires the matching break event
-(`PlayerBlockBreakEvents`) for automation-driven removal; growth has no Fabric API equivalent to
-fire and therefore stays on the vanilla checks only.
+place and break events for claim and logging integrations, covering growth and removal alike.
+Fabric fires the matching break event (`PlayerBlockBreakEvents`) for automation-driven removal, but
+has no generic placement event; on growth, `FabricEditAuthority` instead consults FTB Chunks and
+Open Parties and Claims directly, through `FtbChunksProtection` and `OpacProtection`, when either is
+present as an optional compile-time dependency. Each mod's types are referenced only inside its own
+compat class, gated on the mod being loaded, so a server running neither is unaffected and never
+touches either mod's classes. No other Fabric claim mod is consulted.
 
 ## Player interaction and networking
 
@@ -252,6 +256,9 @@ placement protection.
 - Do not revalidate owned items during internal movement.
 - Keep Forge simulation and Fabric transactional commit subject to the same feasibility rules.
 - Route structural world edits through `WorldEdits` and the installed authority.
+- Keep FTB Chunks and Open Parties and Claims references confined to `FtbChunksProtection` and
+  `OpacProtection` respectively, each gated on the mod being loaded; a server running neither must
+  never touch either mod's classes.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
