@@ -4,6 +4,10 @@ This guide identifies the code boundaries and invariants a maintainer should und
 changing Some Stacks. It is deliberately selective. `player-view.md` describes observable
 behavior; the code is authoritative when either document is wrong.
 
+It should not contain history and it is not part of a conversation with the user. It should describe the code as it is. It is not a prose version of the code, it is an orientation.
+
+This document describes what is, not necessarily what is desired. Do not take is to be a driving design document.
+
 ## Project shape
 
 Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.10 and Fabric Loader 0.19.3 /
