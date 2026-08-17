@@ -19,8 +19,8 @@ import java.util.WeakHashMap;
  * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
  * for the mod's placement-protection hook ({@link FabricPlayerEditAuthority}) to fire, and Fabric
  * API has no generic "a block was placed" event the way Forge's block-place event is. FTB Chunks
- * is consulted directly instead, through {@link FtbChunksProtection}, when it is installed; other
- * claim mods are not covered.
+ * and Open Parties and Claims are consulted directly instead, through {@link FtbChunksProtection}
+ * and {@link OpacProtection}, when either is installed; other claim mods are not covered.
  */
 public final class FabricEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(
@@ -37,10 +37,11 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
-        if (!FtbChunksProtection.isLoaded()) {
-            return (placer, placedAgainst) -> false;
-        }
-        return (placer, placedAgainst) -> FtbChunksProtection.prevents((ServerPlayer) placer, pos);
+        return (placer, placedAgainst) -> {
+            ServerPlayer actor = (ServerPlayer) placer;
+            return (FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos))
+                    || (OpacProtection.isLoaded() && OpacProtection.prevents(level, actor, pos));
+        };
     }
 
     @Override
