@@ -35,6 +35,9 @@ public final class SinglesCubeIdx {
     /** Layers in one block. */
     public static final int LAYERS = GRID_EDGE;
 
+    /** Cells in one block, and therefore slots in one {@link SinglesStackBE}. */
+    public static final int CELLS = LAYER_SIZE * LAYERS;
+
     /** The layer a block hands items down from, and the only one that holds up the block above. */
     public static final int TOP_LAYER_Y = LAYERS - 1;
 

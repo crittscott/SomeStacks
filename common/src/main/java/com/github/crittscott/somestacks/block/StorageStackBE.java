@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
  */
 public class StorageStackBE extends BlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
-    public static final int SLOTS = 27;
+    public static final int SLOTS = StorageCubeIdx.CELLS;
 
     private static final String TAG_ITEMS = "Items";
     private static final String TAG_ROTATION = "Rotation";

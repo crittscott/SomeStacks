@@ -68,6 +68,9 @@ public final class BarCubeIdx {
     private static final int TOP_LAYER_Y = LAYERS - 1;
     private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 
+    /** Slots in one block, and therefore slots in one {@link BarStackBE}. */
+    public static final int CELLS = LAYER_SIZE * LAYERS;
+
     /**
      * Whether a prospective Bar Stack could support a bar at {@code index}. Since all of its slots
      * are still empty, only the bottom layer can be supported. It is grounded when there is no Bar

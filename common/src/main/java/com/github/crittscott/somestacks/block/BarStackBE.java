@@ -35,7 +35,7 @@ import java.util.Arrays;
  */
 public class BarStackBE extends BlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
-    public static final int SLOTS = 64;
+    public static final int SLOTS = BarCubeIdx.CELLS;
 
     private static final String TAG_ITEMS = "Items";
 

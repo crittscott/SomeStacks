@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 public class SinglesStackBE extends BlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
-    public static final int SLOTS = 64;
+    public static final int SLOTS = SinglesCubeIdx.CELLS;
 
     private static final String TAG_ITEMS = "Items";
     private static final String TAG_ROTATION = "Rotation";

@@ -9,25 +9,30 @@ public final class PlayerEdits {
 
     private static PlayerEditAuthority authority = new VanillaPlayerEditAuthority();
 
+    /** Installs the loader-specific implementation; called once during mod setup. */
     public static void setAuthority(PlayerEditAuthority authority) {
         PlayerEdits.authority = authority;
     }
 
+    /** @see PlayerEditAuthority#claimInteraction */
     public static boolean claimInteraction(
             ServerPlayer player, BlockPos markPos, BlockPos... consulted) {
         return authority.claimInteraction(player, markPos, consulted);
     }
 
+    /** @see PlayerEditAuthority#claimItemUse */
     public static boolean claimItemUse(
             ServerPlayer player, BlockPos markPos, BlockPos... consulted) {
         return authority.claimItemUse(player, markPos, consulted);
     }
 
+    /** @see PlayerEditAuthority#claimPlacement */
     public static boolean claimPlacement(
             ServerPlayer player, BlockPos againstPos, BlockPos intoPos) {
         return authority.claimPlacement(player, againstPos, intoPos);
     }
 
+    /** @see PlayerEditAuthority#mayInteract */
     public static boolean mayInteract(ServerPlayer player, BlockPos pos) {
         return authority.mayInteract(player, pos);
     }

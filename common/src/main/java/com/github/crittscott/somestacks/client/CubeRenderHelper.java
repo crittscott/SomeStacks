@@ -128,6 +128,12 @@ public final class CubeRenderHelper {
      */
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
+    /**
+     * Draws {@code stack} inside the current cell, in whichever presentation
+     * {@link ItemRenderOverrides#resolve} selects for it, or draws nothing if {@code stack} is
+     * empty. {@code pose} must already be positioned at the cell being drawn; this method only
+     * pushes/pops the transforms needed for the item's own presentation within it.
+     */
     public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level) {
         RenderProfile profile = ItemRenderOverrides.resolve(stack);

@@ -23,6 +23,9 @@ public final class StorageCubeIdx {
     /** Cells in one layer. */
     public static final int LAYER_SIZE = GRID_EDGE * GRID_EDGE;
 
+    /** Cells in one block, and therefore slots in one {@link StorageStackBE}. */
+    public static final int CELLS = LAYER_SIZE * GRID_EDGE;
+
 
     /** Edge of one cell, in pixels. */
     private static final double CELL_PIXELS = 4.5;

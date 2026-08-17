@@ -14,10 +14,17 @@ public final class ClientRenderPacketSink {
     private ClientRenderPacketSink() {}
 
     public interface Handler {
+        /** Replaces the server-synced render overrides with the newly received set. */
         void setServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides);
 
+        /** Applies or clears one item's local user override, per {@code packet}. */
         void setUserOverride(RenderOverridePkt packet);
 
+        /**
+         * Writes the user override layer to disk if {@code namespaces} is empty, or dumps the
+         * resolved render profile of every item in the given namespaces to per-namespace files
+         * otherwise.
+         */
         void writeOverrides(List<String> namespaces);
     }
 

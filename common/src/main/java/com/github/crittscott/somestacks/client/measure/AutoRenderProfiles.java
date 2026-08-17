@@ -70,6 +70,10 @@ public final class AutoRenderProfiles {
 
     private AutoRenderProfiles() {}
 
+    /**
+     * The measured render profile for {@code stack}'s item, computing and caching it on first
+     * request. Later calls for the same item return the cached profile without re-measuring.
+     */
     public static RenderProfile get(ItemStack stack) {
         loadCacheOnce();
         RenderProfile profile = CACHE.get(stack.getItem());
