@@ -253,6 +253,10 @@ placement protection.
 - Preserve render-profile precedence across files, commands, and synchronization.
 - Keep Storage's `STORAGE_CELL_RENDER_SCALE` separate from Singles' cell-render scale in
   `CubeRenderHelper`; Singles' cells tile edge to edge with no gap to absorb if the two are unified.
+- Keep GameTest logic that touches no loader-native storage API in `common/src/gametest`, keyed off
+  `CommonRegistry`; keep `IItemHandler`- and Transfer-API-facing assertions in each loader's own
+  test file. Do not force a shared body onto a test that differs between loaders, as
+  `ProtectionGameTests` does.
 
 ## Build and test layout
 
@@ -263,11 +267,21 @@ sets are empty. Test classes and dependencies are not included in the production
 Forge's in-game tests live under `forge/src/gametest`, outside the production source set. Gradle
 loads them as the separate development-only `somestacks_gametest` mod, generates their empty NBT
 structure from the checked-in Base64 fixture, and runs them through `:forge:runGameTestServer`.
-Fabric mirrors this under `fabric/src/gametest` as an independent set of test classes rather than
-shared code: registration uses a `fabric-gametest` entrypoint list in the dev-mod's own
-`fabric.mod.json` in place of Forge's per-class annotations, capability-driven tests run against the
-Transfer API instead of `IItemHandler`, and Fabric API's `FakePlayer` stands in for
-`FakePlayerFactory`. The Fabric suite omits the Forge-only claim/event-bus protection tests; a
-Fabric hook now exists to exercise them (`FabricPlayerEditAuthority`, `FabricEditAuthority`), but
+Fabric mirrors this under `fabric/src/gametest`, registering test classes through a `fabric-gametest`
+entrypoint list in the dev-mod's own `fabric.mod.json` in place of Forge's per-class annotations.
+
+Both loaders' `gametest` source sets also pull in `common/src/gametest/java` as an extra source
+directory, added in each loader's `build.gradle`; `common`'s own build does not compile it. A
+`GameTestScaffold` class and one `*Checks` class per test area hold the assertion logic that touches
+no loader-native storage API, resolving blocks and block entities through `CommonRegistry` rather
+than either loader's own registry. Each loader keeps one thin `@GameTest`-annotated class per area —
+Forge's static methods under `@GameTestHolder`, Fabric's instance methods implementing
+`FabricGameTest` — that delegates into the shared checks; where a test exercises `IItemHandler` or
+the Transfer API directly, it stays loader-native instead, with `FakePlayer` standing in for
+`FakePlayerFactory` on Fabric. `ProtectionGameTests` is not shared at all: several of its
+same-named tests touch loader-native storage or differ in fake-player hand-reset behavior between
+loaders, so both loaders keep an independent file, using the shared scaffold only for its
+loader-neutral helpers. The Fabric suite also omits the Forge-only claim/event-bus protection tests;
+a Fabric hook now exists to exercise them (`FabricPlayerEditAuthority`, `FabricEditAuthority`), but
 the tests themselves have not been ported yet. Neither GameTest suite is part of `build`; each is
 invoked separately through its own loader's `runGameTestServer` task.

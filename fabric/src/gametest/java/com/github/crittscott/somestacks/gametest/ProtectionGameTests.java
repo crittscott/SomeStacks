@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.FabricRegistry;
+import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -30,9 +30,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
 
-import static com.github.crittscott.somestacks.gametest.FabricGameTestSupport.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.FabricGameTestSupport.check;
-import static com.github.crittscott.somestacks.gametest.FabricGameTestSupport.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
@@ -81,7 +81,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
-        FabricGameTestSupport.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, ORIGIN);
 
         player.getAbilities().instabuild = true;
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
@@ -89,7 +89,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         checkEquals(64, player.getMainHandItem().getCount(),
                 "A creative deposit spent the held stack");
 
-        checkEquals(64, FabricGameTestSupport.heldAt(helper, target, Items.DIRT),
+        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Creative deposit did not reach the stack");
         helper.succeed();
     }
@@ -105,7 +105,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
                 BlockType.STORAGE_STACK, Direction.UP, target));
 
-        helper.assertBlockPresent(FabricRegistry.STORAGE_STACK_BLOCK, ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
                 "A stack placed into water was not waterlogged");
         check(level.getFluidState(target).getType() == Fluids.WATER,
@@ -123,7 +123,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        StorageStackBE storage = FabricGameTestSupport.placeStorage(helper, ORIGIN);
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
@@ -143,13 +143,13 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.STORAGE_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        SinglesStackBE singles = FabricGameTestSupport.placeSingles(helper, ORIGIN);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
         }
@@ -170,14 +170,14 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.SINGLES_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = FabricGameTestSupport.placeBar(helper, ORIGIN);
-        Item bar = FabricGameTestSupport.firstBarItem();
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
         }
@@ -198,7 +198,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.BAR_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -207,7 +207,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = FabricGameTestSupport.placeStorage(helper, ORIGIN);
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
@@ -222,14 +222,14 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.STORAGE_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = FabricGameTestSupport.placeSingles(helper, ORIGIN);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
         }
@@ -244,14 +244,14 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.SINGLES_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = FabricGameTestSupport.placeBar(helper, ORIGIN);
-        Item bar = FabricGameTestSupport.firstBarItem();
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar), false);
         }
@@ -266,7 +266,7 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                FabricRegistry.BAR_STACK_BLOCK, ORIGIN.above());
+                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 

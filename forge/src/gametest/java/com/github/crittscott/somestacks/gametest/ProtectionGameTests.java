@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
@@ -39,9 +39,9 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
 
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.ORIGIN;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.check;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
@@ -128,12 +128,12 @@ public final class ProtectionGameTests {
         ServerPlayer player = FakePlayerFactory.getMinecraft(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos clicked = target.north();
-        GameTestSupport.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, ORIGIN);
 
         withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
                 DepositPkt.apply(player, new DepositPkt(target, clicked)));
 
-        checkEquals(64, GameTestSupport.heldAt(helper, target, Items.DIRT),
+        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Deposit did not reach the stack");
         check(!Protection.mayInteract(player, clicked),
                 "The clicked block was left open to the vanilla interaction");
@@ -153,7 +153,7 @@ public final class ProtectionGameTests {
                 PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
                         BlockType.STORAGE_STACK, Direction.UP, target)));
 
-        helper.assertBlockPresent(ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         check(!Protection.mayInteract(player, clicked),
                 "The clicked block was left open to the vanilla interaction");
         check(Protection.mayInteract(player, target),
@@ -167,7 +167,7 @@ public final class ProtectionGameTests {
         ServerPlayer player = FakePlayerFactory.getMinecraft(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos clicked = target.north();
-        GameTestSupport.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, ORIGIN);
 
         // The stack itself is open; the block the player put their cursor on is not. The deposit
         // reaches the stack through that click, so refusing the click refuses the deposit.
@@ -185,7 +185,7 @@ public final class ProtectionGameTests {
             MinecraftForge.EVENT_BUS.unregister(denyClicked);
         }
 
-        checkEquals(0, GameTestSupport.heldAt(helper, target, Items.DIRT),
+        checkEquals(0, GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Deposit ran despite the clicked block being denied");
         helper.succeed();
     }
@@ -195,7 +195,7 @@ public final class ProtectionGameTests {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayerFactory.getMinecraft(level);
         BlockPos target = helper.absolutePos(ORIGIN);
-        GameTestSupport.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, ORIGIN);
 
         player.getAbilities().instabuild = true;
         try {
@@ -208,7 +208,7 @@ public final class ProtectionGameTests {
             player.getAbilities().instabuild = false;
         }
 
-        checkEquals(64, GameTestSupport.heldAt(helper, target, Items.DIRT),
+        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Creative deposit did not reach the stack");
         helper.succeed();
     }
@@ -222,8 +222,8 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
-        StorageStackBE base = GameTestSupport.placeStorage(helper, ORIGIN);
-        GameTestSupport.placeStorage(helper, topRelative);
+        StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, topRelative);
         base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1), false);
 
         BlockPos top = helper.absolutePos(topRelative);
@@ -238,7 +238,7 @@ public final class ProtectionGameTests {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
             pile.settle();
-            helper.assertBlockPresent(ModRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyTop);
@@ -248,7 +248,7 @@ public final class ProtectionGameTests {
         StoragePile pile = base.pile();
         check(pile != null, "Pile did not resolve after the refusal");
         pile.settle();
-        helper.assertBlockNotPresent(ModRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
         helper.succeed();
     }
 
@@ -265,7 +265,7 @@ public final class ProtectionGameTests {
                 PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
                         BlockType.STORAGE_STACK, Direction.UP, target)));
 
-        helper.assertBlockPresent(ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
                 "A stack placed into water was not waterlogged");
         check(level.getFluidState(target).getType() == Fluids.WATER,
@@ -320,7 +320,7 @@ public final class ProtectionGameTests {
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
@@ -340,13 +340,13 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
         }
@@ -367,14 +367,14 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
-        Item bar = GameTestSupport.firstBarItem();
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
         }
@@ -395,7 +395,7 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -404,7 +404,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestSupport.placeStorage(helper, ORIGIN);
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
@@ -419,14 +419,14 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        SinglesStackBE singles = GameTestSupport.placeSingles(helper, ORIGIN);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
         }
@@ -441,15 +441,15 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        BarStackBE bars = GameTestSupport.placeBar(helper, ORIGIN);
-        Item bar = GameTestSupport.firstBarItem();
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar), false);
         }
@@ -464,7 +464,7 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
         helper.succeed();
     }
 
