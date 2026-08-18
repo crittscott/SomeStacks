@@ -46,7 +46,9 @@ import java.util.stream.Collectors;
  *
  * <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
  * without the protection checks applied to placement gestures, which is a wider authority than
- * editing config or tuning how an item is drawn.
+ * editing config or tuning how an item is drawn. Because of that, they are also the one pair of
+ * subcommands gated by server config rather than a fixed level: {@code render_gallery.enabled}
+ * (off by default) and {@code render_gallery.required_permission_level} (default 3).
  *
  * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
  * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
@@ -55,11 +57,6 @@ public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
     private static final int ADMIN_PERMISSION_LEVEL = 2;
 
-    /**
-     * Vanilla's server-administration level, used for gallery commands that overwrite world
-     * regions without ordinary placement protection.
-     */
-    private static final int GALLERY_PERMISSION_LEVEL = 3;
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
     private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
@@ -132,7 +129,8 @@ public final class SsCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
             String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> isPlayer(source) && source.hasPermission(GALLERY_PERMISSION_LEVEL))
+                .requires(source -> isPlayer(source) && ServerConfig.galleryEnabled()
+                        && source.hasPermission(ServerConfig.galleryRequiredPermissionLevel()))
                 .then(Commands.literal("all")
                         .executes(ctx -> galleryAll(ctx, kind)))
                 .then(Commands.literal("list")

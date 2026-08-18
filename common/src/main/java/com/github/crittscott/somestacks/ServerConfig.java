@@ -47,6 +47,9 @@ public final class ServerConfig {
     /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
     private static final int MAX_PILE_HEIGHT_LIMIT = 64;
 
+    /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
+    private static final int GALLERY_PERMISSION_LEVEL_MAX = 4;
+
     private static int maxPileHeight = 8;
     private static boolean enableStorageStackBlock = true;
     private static boolean enableSinglesStackBlock = true;
@@ -55,6 +58,8 @@ public final class ServerConfig {
     private static List<String> disableItemsRaw = new ArrayList<>();
     private static List<String> ingotTagsRaw = new ArrayList<>(List.of("forge:ingots*", "somestacks:ingots"));
     private static int renderGalleryPlacementsPerTick = 64;
+    private static boolean galleryEnabled = false;
+    private static int galleryPermissionLevel = 3;
     private static List<String> genModsRaw = new ArrayList<>();
     private static List<String> genItemsRaw = new ArrayList<>();
 
@@ -110,6 +115,16 @@ public final class ServerConfig {
         return renderGalleryPlacementsPerTick;
     }
 
+    /** Whether {@code ss gallery} and {@code ss ingotgallery} may be run at all. Off by default. */
+    public static boolean galleryEnabled() {
+        return galleryEnabled;
+    }
+
+    /** The vanilla permission level {@code ss gallery} and {@code ss ingotgallery} require. */
+    public static int galleryRequiredPermissionLevel() {
+        return galleryPermissionLevel;
+    }
+
     /** Selects Fabric convention tags for a new config; an existing file remains authoritative. */
     public static void useFabricIngotTagDefaults() {
         if (configFile == null) {
@@ -159,6 +174,9 @@ public final class ServerConfig {
         JsonObject gallery = obj(root, "render_gallery");
         renderGalleryPlacementsPerTick =
                 Math.max(1, intOr(gallery, "placements_per_tick", renderGalleryPlacementsPerTick));
+        galleryEnabled = boolOr(gallery, "enabled", galleryEnabled);
+        galleryPermissionLevel = clamp(
+                intOr(gallery, "required_permission_level", galleryPermissionLevel), 0, GALLERY_PERMISSION_LEVEL_MAX);
         genModsRaw = stringListOr(gallery, "gen_mods", genModsRaw);
         genItemsRaw = stringListOr(gallery, "gen_items", genItemsRaw);
     }
@@ -184,6 +202,8 @@ public final class ServerConfig {
 
         JsonObject gallery = new JsonObject();
         gallery.addProperty("placements_per_tick", renderGalleryPlacementsPerTick);
+        gallery.addProperty("enabled", galleryEnabled);
+        gallery.addProperty("required_permission_level", galleryPermissionLevel);
         gallery.add("gen_mods", stringArray(genModsRaw));
         gallery.add("gen_items", stringArray(genItemsRaw));
 

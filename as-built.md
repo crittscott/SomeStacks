@@ -218,6 +218,12 @@ gallery settings. It loads at server startup. `/ss deny`, `/ss ingot`, and `/ss 
 their lists immediately. `/ss reload` reloads server render overrides and resynchronizes players;
 it does not reread the world-policy JSON.
 
+`render_gallery.enabled` and `render_gallery.required_permission_level` gate `/ss gallery` and
+`/ss ingotgallery` themselves, on top of the vanilla permission check every other subcommand answers
+to. Both default to the safer state: gallery access off, and the level that would apply once enabled
+set to 3. Neither has a command editor; like `piles.max_pile_height` and the stack-type enable flags,
+they are read from `ServerConfig` and only ever change through a direct file edit.
+
 Ingot patterns match complete item-tag names and may contain `*`. The resolved item set is rebuilt
 when relevant configuration changes and when item tags reload.
 
@@ -262,6 +268,9 @@ placement protection.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
+- Read the gallery commands' enablement and permission level from `ServerConfig`
+  (`render_gallery.enabled`, `render_gallery.required_permission_level`) rather than a hardcoded
+  constant; they are the one pair of subcommands gated by config instead of a fixed vanilla level.
 - Keep Storage's `STORAGE_CELL_RENDER_SCALE` separate from Singles' cell-render scale in
   `CubeRenderHelper`; Singles' cells tile edge to edge with no gap to absorb if the two are unified.
 - Keep GameTest logic that touches no loader-native storage API in `common/src/gametest`, keyed off

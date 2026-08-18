@@ -14,6 +14,8 @@ Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestac
 | `disable_items` | `compatibility` | empty | Item ids refused on the player deposit gestures. |
 | `ingot_tags` | `compatibility` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Item tags whose contents a Bar Stack accepts. |
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
+| `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
+| `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
 | `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms build, in the order given. |
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
 
@@ -31,10 +33,9 @@ The item set is re-resolved whenever the config changes *and* whenever tags are 
 
 ## Permissions
 
-The `/ss` command is an administrator's tool throughout. Gates are vanilla permission levels:
+The `/ss` command is an administrator's tool throughout. Most of it is gated by vanilla's **Level 2**, the gamerule and world-editing level.
 
-- **Level 2** — the gamerule and world-editing level. Most of `ss`.
-- **Level 3** — the server-administration level, which an operator holds under the default `op-permission-level`. The two gallery commands, because they overwrite a region of the world outright without the protection checks a placement gesture answers to.
+The two gallery commands overwrite a region of the world outright without the protection checks a placement gesture answers to, so they answer to server config instead of a fixed level: `render_gallery.enabled` (`false` by default — both commands are refused until an admin turns this on) and `render_gallery.required_permission_level` (default `3`, the server-administration level an operator holds under the default `op-permission-level`).
 
 Some subcommands additionally require a **player** rather than the console, because they act on the sender's own client view or build where the sender stands.
 
@@ -48,8 +49,8 @@ Some subcommands additionally require a **player** rather than the console, beca
 | `/ss item <item> reset` | Level 2, in game | Drop your entry for that item. |
 | `/ss write changed` | Level 2, in game | Save what `/ss item` set to `config/somestacks/item_overrides.json`. |
 | `/ss write <modid \| all \| list>` | Level 2, in game | Dump resolved profiles to `config/somestacks/generated_overrides/`. |
-| `/ss gallery <modid \| all \| list \| items>` | Level 3, in game | Build Storage Stack render galleries. |
-| `/ss ingotgallery <modid \| all \| list>` | Level 3, in game | Build Bar Stack render galleries. |
+| `/ss gallery <modid \| all \| list \| items>` | `render_gallery.required_permission_level` (default 3), in game; disabled by default | Build Storage Stack render galleries. |
+| `/ss ingotgallery <modid \| all \| list>` | `render_gallery.required_permission_level` (default 3), in game; disabled by default | Build Bar Stack render galleries. |
 | `/ss gen mod add\|remove\|list <modid>` | Level 2 | Edit the gallery namespace list. |
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
@@ -70,7 +71,7 @@ Re-reads `config/somestacks/server_item_overrides/` and pushes the current synch
 
 A gallery is a review tool: a single-layer field of stacks over a uniform sandstone floor, built east of you, one column per namespace or item group with that group's rows running north. Each stack shows one layer — nine items for Storage, eight bars for Bar.
 
-Galleries **overwrite** their floor and stack positions directly and do not apply the protection checks a placement gesture answers to. That is why they sit a permission level above the rest of `ss`. A gallery covering every loaded mod in a large pack is tens of thousands of placements; `placements_per_tick` spreads that over ticks.
+Galleries **overwrite** their floor and stack positions directly and do not apply the protection checks a placement gesture answers to. That is why they are disabled by default and, once enabled, default to a permission level above the rest of `ss`. A gallery covering every loaded mod in a large pack is tens of thousands of placements; `placements_per_tick` spreads that over ticks.
 
 ## What the server tells the client
 

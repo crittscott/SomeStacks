@@ -233,6 +233,8 @@ Each world stores its loader-neutral JSON policy at
 | `compatibility.disable_items` | empty | Refuses exact items in player deposit gestures only |
 | `compatibility.ingot_tags` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Defines what Bar accepts and Singles refuses |
 | `render_gallery.placements_per_tick` | `64` | Throttles administrator gallery construction |
+| `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery`; both are refused while false |
+| `render_gallery.required_permission_level` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require, 0-4 |
 | `render_gallery.gen_mods` | empty | Namespaces used by the `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
@@ -254,8 +256,8 @@ default. Data-pack tag changes are picked up on reload.
 | `/ss item <item> <mode> ...` and `reset` | Level 2, player | Change how one item appears on that client |
 | `/ss write changed` | Level 2, player | Save that client's changed item profiles |
 | `/ss write <modid|all|list>` | Level 2, player | Generate complete profile files on that client |
-| `/ss gallery <modid|all|list|items>` | Level 3, player | Build Storage render galleries |
-| `/ss ingotgallery <modid|all|list>` | Level 3, player | Build Bar render galleries |
+| `/ss gallery <modid|all|list|items>` | `render_gallery.required_permission_level` (default 3), player; disabled by default | Build Storage render galleries |
+| `/ss ingotgallery <modid|all|list>` | `render_gallery.required_permission_level` (default 3), player; disabled by default | Build Bar render galleries |
 | `/ss gen ...` | Level 2 | Edit gallery namespace and item lists |
 | `/ss deny ...` | Level 2 | Edit disabled namespace and exact-item lists |
 | `/ss ingot ...` | Level 2 | Edit the ingot tag-pattern list |
@@ -263,8 +265,8 @@ default. Data-pack tag changes are picked up on reload.
 
 Gallery commands build east of the player over a sandstone floor, with rows running north. They
 replace their floor and stack positions directly and do not perform the protection checks used by
-ordinary placement, which is why they require permission level 3. Large galleries are spread across
-server ticks.
+ordinary placement, which is why they are disabled by default and, once enabled, default to
+permission level 3. Large galleries are spread across server ticks.
 
 `/ss reload` does not reread the world-policy JSON. Command edits are saved immediately; direct
 file edits take effect after restarting the server.
