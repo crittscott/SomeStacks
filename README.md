@@ -50,7 +50,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage, and the render galleries are throttled per tick. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal, but growth stays on the vanilla checks only since Fabric has no equivalent placement event.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage, and the render galleries are throttled per tick. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 

@@ -37,7 +37,9 @@ fabric/build/libs/somestacks-fabric-<version>.jar
 
 The root `build/libs` directory is not a current loader output. Each release JAR contains common
 classes and resources plus its loader metadata. Fabric's remapped JAR also contains
-`somestacks.mixins.json`, `somestacks.refmap.json`, and the expanded shared `pack.mcmeta`.
+`somestacks.mixins.json` and the expanded shared `pack.mcmeta`. Mixin string references are remapped
+statically into the class files by Loom's `remapJar` step; the config declares no runtime refmap,
+since none is produced or needed.
 
 The mod registers three blocks and their block entity types, but no block items, menus, recipes, or
 portable containers.
