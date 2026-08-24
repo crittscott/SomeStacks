@@ -9,6 +9,7 @@ architectury {
 
 sourceSets {
     gametest {
+        java { srcDir project(':common').file('src/gametest/java') }
         compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
         runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
     }
@@ -20,7 +21,7 @@ loom {
             sourceSet sourceSets.main
             sourceSet project(':common').sourceSets.main
         }
-        somebuckets_gametest {
+        somestacks_gametest {
             sourceSet sourceSets.gametest
         }
     }
@@ -58,14 +59,13 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
-    modCompileOnly "dev.ftb.mods:ftb-chunks-forge:${ftb_chunks_version}"
+    modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 }
 
-// GameTest structure templates are binary NBT. Keep the reviewable source as base64 and
-// materialize it in build/ so the generated binary is never edited by hand.
-def gameTestStructureSource = layout.projectDirectory.file('src/gametest/fixtures/empty_9x6x9.nbt.b64')
+def gameTestStructureSource = layout.projectDirectory.file(
+        'src/gametest/fixtures/somestacks_empty.nbt.b64')
 def gameTestStructureOutput = layout.buildDirectory.file(
-        'generated/gametest/resources/data/somebuckets/structures/empty_9x6x9.nbt')
+        'generated/gametest/resources/data/somestacks/structures/somestacks_empty.nbt')
 
 tasks.register('generateGameTestStructures') {
     inputs.file(gameTestStructureSource)
@@ -79,13 +79,16 @@ tasks.register('generateGameTestStructures') {
 }
 
 sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
-tasks.named('processGametestResources').configure { dependsOn tasks.named('generateGameTestStructures') }
+tasks.named('processGametestResources').configure {
+    dependsOn tasks.named('generateGameTestStructures')
+}
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
             forge_version_range: forge_version_range, loader_version_range: loader_version_range,
+            architectury_version_range: architectury_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
     ]
