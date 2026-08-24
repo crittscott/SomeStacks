@@ -321,8 +321,9 @@ border, and spawn protection on both loaders. Interaction and structural edits a
 protection event on both loaders, allowing claim and logging mods that use those hooks to allow,
 deny, or record the edit — Forge's own interaction, place, and break events, and Fabric API's
 `UseBlockCallback` and `PlayerBlockBreakEvents`. Automatic growth and removal use a loader-provided
-automation actor; automated growth is the one action Fabric still checks against vanilla protection
-only, since Fabric API has no placement event for automation to trigger.
+automation actor. Fabric API has no placement event for automation to trigger, so on Fabric,
+automated growth additionally consults FTB Chunks and Open Parties and Claims directly, when either
+is installed, on top of vanilla protection.
 
 The server independently validates every gesture packet: one attempt per player per tick,
 nonspectator status, loaded target, reach, held item, target block and index, adjacency, support,
@@ -341,6 +342,7 @@ from the player's current view.
 - Existing contents remain legal to extract and to move internally after a config or tag change
   that would reject a new deposit.
 - Fabric protection now includes a real interaction event for player gestures and a real break
-  event for automation-driven removal, matching Forge. Automated growth is the one action still
-  limited to vanilla build, obstruction, border, and spawn rules, since Fabric API has no
-  placement-event equivalent for automation to trigger.
+  event for automation-driven removal, matching Forge. Fabric API still has no placement-event
+  equivalent for automation to trigger; on Fabric, automated growth checks vanilla build,
+  obstruction, border, and spawn rules plus FTB Chunks and Open Parties and Claims directly when
+  either is installed.
