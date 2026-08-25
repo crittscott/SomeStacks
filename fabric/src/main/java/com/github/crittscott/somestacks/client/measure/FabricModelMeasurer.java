@@ -15,9 +15,9 @@ import org.joml.Vector4f;
 
 import java.util.List;
 
-/** Measures Fabric item models after their vanilla display transform. */
+/** Measures ordinary quads exposed by Fabric item models after their display transform. */
 public final class FabricModelMeasurer implements ModelMeasurement.Backend {
-    private static final AABB CUSTOM_RENDERER_BOUNDS =
+    private static final AABB SAFE_FALLBACK_BOUNDS =
             new AABB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
 
     @Override
@@ -38,8 +38,9 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
                     .getModel(stack, null, null, 0);
             gui3d = model.isGui3d();
 
-            if (model.isCustomRenderer() || !model.isVanillaAdapter()) {
-                return new ModelMeasurement.Result(true, gui3d, CUSTOM_RENDERER_BOUNDS, null);
+            if (model.isCustomRenderer()) {
+                return new ModelMeasurement.Result(
+                        gui3d, false, SAFE_FALLBACK_BOUNDS, "custom renderer is not measured");
             }
 
             PoseStack pose = new PoseStack();
@@ -52,7 +53,7 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
             return measureQuads(model, gui3d, pose);
         } catch (Exception e) {
             return new ModelMeasurement.Result(
-                    false, gui3d, null, "measurement threw: " + e);
+                    gui3d, false, null, "measurement threw: " + e);
         }
     }
 
@@ -70,12 +71,12 @@ public final class FabricModelMeasurer implements ModelMeasurement.Backend {
         collectQuads(model.getQuads(null, null, random), matrix, collector);
 
         if (!collector.hasAny()) {
-            // A vanilla-adapter model with no directly exposed geometry is still safer through
-            // ItemRenderer than through the shared 2-D projection, which would draw nothing.
+            // A model with no directly exposed geometry may draw only through Fabric's enhanced
+            // item-quad path. ItemRenderer remains safe; the shared 2-D projection would be blank.
             return new ModelMeasurement.Result(
-                    true, gui3d, CUSTOM_RENDERER_BOUNDS, "model exposes no vanilla quads");
+                    gui3d, false, SAFE_FALLBACK_BOUNDS, "model exposes no ordinary quads");
         }
-        return new ModelMeasurement.Result(false, gui3d, collector.toAABB(), null);
+        return new ModelMeasurement.Result(gui3d, true, collector.toAABB(), null);
     }
 
     private static void collectQuads(

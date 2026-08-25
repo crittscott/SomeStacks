@@ -39,6 +39,7 @@ import java.util.TreeMap;
  * <p>Measurements describe baked models and are invalidated with them:
  *
  * <ul>
+ *   <li>A measurement-format change rejects the previous algorithm's entries.</li>
  *   <li>A mod-version change drops entries from that mod's namespace.</li>
  *   <li>A manual resource reload drops the entire cache.</li>
  *   <li>A different resource-pack selection between sessions rejects the persisted cache.</li>
@@ -48,9 +49,9 @@ import java.util.TreeMap;
  * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
+    static final int CACHE_FORMAT_VERSION = 1;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CACHE_FILE = Platform.getConfigFolder().resolve("somestacks/measured_cache.json");
 
     /** Fraction of a stack cell the fitted model should span. */
     private static final float TARGET_FILL = 0.9f;
@@ -98,10 +99,11 @@ public final class AutoRenderProfiles {
         CACHE.clear();
         cacheLoaded = true;
         dirty = false;
+        Path cacheFile = cacheFile();
         try {
-            Files.deleteIfExists(CACHE_FILE);
+            Files.deleteIfExists(cacheFile);
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to delete {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to delete {}: {}", cacheFile, e.getMessage());
         }
     }
 
@@ -122,16 +124,18 @@ public final class AutoRenderProfiles {
         }
 
         JsonObject root = new JsonObject();
+        root.addProperty("format", CACHE_FORMAT_VERSION);
         root.addProperty("packs", selectedPackIds());
         root.add("versions", versions);
         root.add("entries", OverrideJsonCodec.toJson(entries));
 
+        Path cacheFile = cacheFile();
         try {
-            Files.createDirectories(CACHE_FILE.getParent());
-            Files.writeString(CACHE_FILE, PRETTY_GSON.toJson(root));
+            Files.createDirectories(cacheFile.getParent());
+            Files.writeString(cacheFile, PRETTY_GSON.toJson(root));
             dirty = false;
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", cacheFile, e.getMessage());
         }
     }
 
@@ -141,12 +145,14 @@ public final class AutoRenderProfiles {
         }
         cacheLoaded = true;
 
-        if (!Files.exists(CACHE_FILE)) {
+        Path cacheFile = cacheFile();
+        if (!Files.exists(cacheFile)) {
             return;
         }
         try {
-            JsonObject root = GSON.fromJson(Files.readString(CACHE_FILE), JsonObject.class);
-            if (root == null || !root.has("entries")) {
+            JsonObject root = GSON.fromJson(Files.readString(cacheFile), JsonObject.class);
+            if (!isCurrentCacheFormat(root) || !root.has("entries")) {
+                dirty = true;
                 return;
             }
 
@@ -162,7 +168,7 @@ public final class AutoRenderProfiles {
             JsonObject versions = root.has("versions") ? root.getAsJsonObject("versions") : new JsonObject();
 
             Map<ResourceLocation, ItemRenderConfig> entries =
-                    OverrideJsonCodec.parse(root.getAsJsonObject("entries"), CACHE_FILE.toString());
+                    OverrideJsonCodec.parse(root.getAsJsonObject("entries"), cacheFile.toString());
             for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
                 ResourceLocation id = entry.getKey();
                 ItemRenderConfig config = entry.getValue();
@@ -183,7 +189,22 @@ public final class AutoRenderProfiles {
                 CACHE.put(item, new RenderProfile(config.mode(), config.scale(), config.offset()));
             }
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", CACHE_FILE, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", cacheFile, e.getMessage());
+        }
+    }
+
+    private static Path cacheFile() {
+        return Platform.getConfigFolder().resolve("somestacks/measured_cache.json");
+    }
+
+    static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
+        if (root == null || !root.has("format")) {
+            return false;
+        }
+        try {
+            return root.get("format").getAsInt() == CACHE_FORMAT_VERSION;
+        } catch (RuntimeException e) {
+            return false;
         }
     }
 
@@ -210,11 +231,33 @@ public final class AutoRenderProfiles {
         }
 
         ModelMeasurement.Result result = ModelMeasurement.measure(stack);
-        AABB bounds = result.bounds();
-
-        if (bounds == null) {
-            logFallback(stack, result.failure() != null ? result.failure() : "no geometry");
+        RenderMode mode = selectMode(result);
+        if (mode == RenderMode.TWO_D) {
             return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
+        }
+
+        if (result.failure() != null) {
+            logFallback(stack, result.failure());
+        }
+        RenderProfile fitted = fit(result, RenderMode.THREE_D, scaleFactor);
+        if (fitted == null) {
+            if (result.failure() == null) {
+                logFallback(stack, "3d fit failed");
+            }
+            return new RenderProfile(RenderMode.THREE_D, 1.0f, new float[3]);
+        }
+        return fitted;
+    }
+
+    /** Chooses a mode only from measurement facts, separate from item lookup and caching. */
+    static RenderMode selectMode(ModelMeasurement.Result result) {
+        if (!result.flatProjectionAvailable()) {
+            return RenderMode.THREE_D;
+        }
+
+        AABB bounds = result.bounds();
+        if (bounds == null) {
+            return RenderMode.THREE_D;
         }
 
         double xSize = bounds.getXsize();
@@ -222,32 +265,17 @@ public final class AutoRenderProfiles {
         double zSize = bounds.getZsize();
         double minExtent = Math.min(xSize, Math.min(ySize, zSize));
         double maxExtent = Math.max(xSize, Math.max(ySize, zSize));
-
         if (maxExtent < MIN_EXTENT) {
-            logFallback(stack, "degenerate bounds");
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
+            return RenderMode.THREE_D;
         }
 
-        // Vanilla's own signal: a generated item sprite reports gui3d false. For custom
-        // renderers the flag describes the placeholder model rather than the drawn
-        // geometry, so only the measured shape is trusted there.
-        boolean flatByModel = !result.customRenderer() && !result.gui3d();
+        boolean flatByModel = !result.gui3d();
         boolean flatByShape = minExtent / maxExtent < FLAT_RATIO;
-
-        if (flatByModel || flatByShape) {
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
-        }
-
-        RenderProfile fitted = fit(result, RenderMode.THREE_D, scaleFactor);
-        if (fitted == null) {
-            logFallback(stack, "fit failed");
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
-        }
-        return fitted;
+        return flatByModel || flatByShape ? RenderMode.TWO_D : RenderMode.THREE_D;
     }
 
     private static void logFallback(ItemStack stack, String reason) {
-        SomeStacksCommon.LOGGER.debug("Render measurement fell back to 2d for {}: {}",
+        SomeStacksCommon.LOGGER.debug("Render measurement used default 3d profile for {}: {}",
                 BuiltInRegistries.ITEM.getKey(stack.getItem()), reason);
     }
 

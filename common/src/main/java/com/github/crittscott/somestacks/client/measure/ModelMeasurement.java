@@ -9,8 +9,13 @@ import javax.annotation.Nullable;
 public final class ModelMeasurement {
     private ModelMeasurement() {}
 
+    /**
+     * @param gui3d the resolved baked model's own dimensionality signal
+     * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
+     *                                produced these bounds
+     */
     public record Result(
-            boolean customRenderer, boolean gui3d,
+            boolean gui3d, boolean flatProjectionAvailable,
             @Nullable AABB bounds, @Nullable String failure) {}
 
     public interface Backend {

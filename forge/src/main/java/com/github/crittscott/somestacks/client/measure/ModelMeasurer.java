@@ -70,7 +70,7 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
             }
             return measureQuads(stack, model, gui3d, context, pose);
         } catch (Exception e) {
-            return new ModelMeasurement.Result(false, gui3d, null, "measurement threw: " + e);
+            return new ModelMeasurement.Result(gui3d, false, null, "measurement threw: " + e);
         }
     }
 
@@ -91,9 +91,9 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         }
 
         if (!collector.hasAny()) {
-            return new ModelMeasurement.Result(false, gui3d, null, "model has no quads");
+            return new ModelMeasurement.Result(gui3d, false, null, "model has no quads");
         }
-        return new ModelMeasurement.Result(false, gui3d, collector.toAABB(), null);
+        return new ModelMeasurement.Result(gui3d, true, collector.toAABB(), null);
     }
 
     private static void collectQuads(List<BakedQuad> quads, Matrix4f matrix, BoundsCollector collector) {
@@ -121,12 +121,12 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
                     stack, context, pose, buffers,
                     LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         } catch (Exception e) {
-            return new ModelMeasurement.Result(true, gui3d, null, "custom renderer threw: " + e);
+            return new ModelMeasurement.Result(gui3d, false, null, "custom renderer threw: " + e);
         }
         if (!collector.hasAny()) {
-            return new ModelMeasurement.Result(true, gui3d, null, "custom renderer emitted no vertices");
+            return new ModelMeasurement.Result(gui3d, false, null, "custom renderer emitted no vertices");
         }
-        return new ModelMeasurement.Result(true, gui3d, collector.toAABB(), null);
+        return new ModelMeasurement.Result(gui3d, false, collector.toAABB(), null);
     }
 
     private static final class BoundsCollector {
