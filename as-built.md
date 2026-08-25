@@ -253,8 +253,19 @@ Storage and Singles profiles select a render mode, scale, and offset. Profile pr
 3. Resource-pack overrides
 4. Automatic model measurement
 
-Measured profiles are cached under `config/somestacks`. Bar appearance data is client-only and is
-not synchronized by the server.
+Automatic measurement distinguishes geometry that the shared 2-D projector can reproduce from
+geometry that only the loader's item renderer can draw. Projectable models use 2-D when their baked
+model reports a flat GUI presentation or their measured bounds are flat; other models use 3-D.
+Forge measures all render passes and probes custom-renderer vertices for 3-D fitting, but custom
+renderer output is not eligible for the 2-D projector. Fabric measures ordinary baked quads from
+every non-custom model without treating a non-vanilla Renderer API adapter as inherently 3-D. A
+Fabric model that exposes no ordinary quads remains on the 3-D ItemRenderer path, where its enhanced
+item-quad output can still be drawn instead of producing an empty 2-D projection.
+
+Measured profiles are cached at `config/somestacks/measured_cache.json`. The cache records its
+measurement-format version, selected resource packs, and owning-mod versions; a mismatch rejects
+the affected cached measurements. Bar appearance data is client-only and is not synchronized by the
+server.
 
 `/ss` includes policy-list editing, render-profile authoring, and gallery generation. Gallery jobs
 are spread across server ticks, but they write their display area directly and do not use ordinary
@@ -274,6 +285,9 @@ placement protection.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
+- Keep automatic 2-D selection conditional on geometry the shared projector can actually draw; a
+  Fabric model's `isVanillaAdapter` value describes its rendering API, not its visual dimensionality.
+- Increment the measured-profile cache format whenever profile-selection or fitting semantics change.
 - Read the gallery commands' enablement and permission level from `ServerConfig`
   (`render_gallery.enabled`, `render_gallery.required_permission_level`) rather than a hardcoded
   constant; they are the one pair of subcommands gated by config instead of a fixed vanilla level.
