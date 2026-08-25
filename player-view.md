@@ -8,7 +8,7 @@ block items, recipes, creative-tab entries, or storage screens. A stack exists b
 deposited into the world, and it normally disappears when its last contents are removed.
 
 The mod requires Minecraft 1.20.1 and either Forge 47.x or Fabric Loader 0.19.3 with Fabric API
-0.92.11+1.20.1. Architectury API is required on both loaders. Some Stacks must be installed on both
+0.92.7+1.20.1. Architectury API is required on both loaders. Some Stacks must be installed on both
 the client and server.
 
 ## The three stack types

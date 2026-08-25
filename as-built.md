@@ -11,9 +11,13 @@ This document describes what is, not necessarily what is desired. Do not take is
 ## Project shape
 
 Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.10 and Fabric Loader 0.19.3 /
-Fabric API 0.92.11+1.20.1 build baselines. Both loaders require Architectury API 9.2.14. The mod id
+Fabric API 0.92.7+1.20.1 build baselines. Both loaders require Architectury API 9.2.14. The mod id
 is `somestacks` and the root package is `com.github.crittscott.somestacks`. See
 `build-env.md` for the complete toolchain, dependency constraints, and build commands.
+
+The Fabric API baseline is currently lowered from 0.92.11+1.20.1 to 0.92.7+1.20.1 as an in-progress
+test of compatibility with a modpack pinned to the older version. Revert `fabric_api_version` in
+`gradle.properties` if the test does not pan out.
 
 The implementation is split between three modules:
 

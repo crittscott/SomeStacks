@@ -1,0 +1,56 @@
+{
+  "somebuckets:big_bucket_64": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "somebuckets:big_bucket_8": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "somebuckets:junk_bucket": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "somebuckets:mob_bucket": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "somebuckets:source_bucket": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "somebuckets:trash_bucket": {
+    "mode": "gui",
+    "scale": 0.5,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

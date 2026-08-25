@@ -45,7 +45,7 @@ Architectury Plugin are pinned to numbered versions rather than moving snapshot 
 | Mappings | Mojang official plus Parchment **2023.09.03-1.20.1** | development only |
 | Forge | **1.20.1-47.4.10** | Forge `[47.4.10,48)`; FML `[47,48)` |
 | Fabric Loader | **0.19.3** | `>=0.19.3` |
-| Fabric API | **0.92.11+1.20.1** | `>=0.92.11+1.20.1` |
+| Fabric API | **0.92.7+1.20.1** | `>=0.92.7+1.20.1` |
 | Architectury API | **9.2.14** | `>=9.2.14` / `[9.2.14,)` |
 | JUnit | BOM **5.10.2**, Jupiter | common-module tests only |
 | JSR-305 | **3.0.2** | compile-only annotation dependency |
@@ -53,6 +53,10 @@ Architectury Plugin are pinned to numbered versions rather than moving snapshot 
 `forge_compile_version` is both Forge's compile dependency and the minimum accepted Forge runtime.
 The production metadata requires Architectury API on both loaders and Fabric API on Fabric. There
 are no optional third-party mod integrations or third-party mod repositories in the active build.
+
+The Fabric API baseline is currently lowered from 0.92.11+1.20.1 to 0.92.7+1.20.1 as an in-progress
+test of compatibility with a modpack pinned to the older version. Revert `fabric_api_version` in
+`gradle.properties` if the test does not pan out.
 
 Plugin resolution uses the Fabric, Architectury, and Forge Maven repositories plus the Gradle
 Plugin Portal. Subprojects use the Architectury and Parchment repositories. All active version pins
