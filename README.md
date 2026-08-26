@@ -1,4 +1,5 @@
-![Some Stacks](https://placeholder.invalid/somestacks/banner.png)
+![Some Stacks](images/somestacks-splash.png)
+![Loaders: Fabric + Forge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge-5C7C8A?style=for-the-badge) ![Requires: Architectury API](https://img.shields.io/badge/Requires-Architectury%20API-8A5A9B?style=for-the-badge)
 
 # Some Stacks
 
@@ -14,16 +15,14 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 | **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
 | **Bar Stack** | 64 ingots as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
-There are no block items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out.
+No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out, unless you set it permanent for connection to inventory management systems.
 
 ## Getting started
 
-1. Hold **V** (rebindable) and **right-click the air** to cycle the placement mode: Storage, Singles, Bar, Toggle Permanent.
+1. Hold **V** and **right-click the air** to cycle the placement mode: Storage, Singles, Bar, Toggle Permanent.
 2. Hold **V** and **right-click a block** with something in your hand to create a stack.
-3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height.
+3. Keep holding **V** and clicking to add more. The stack grows upward on its own when it fills, to a server-config-determined maximum height. Singles and Bar stacks require you to choose the placement location.
 4. **Right-click without V** to take an item back out.
-
-That's all you need to know.
 
 ## Details
 
@@ -32,7 +31,7 @@ That's all you need to know.
 | Gesture | Result |
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode. Stack types the server has disabled are skipped. |
-| Hold `V` + item, right-click a stack | Deposit into it, whatever mode is selected. |
+| Hold `V` + item, right-click a stack | Deposit into it. |
 | Hold `V` + item, right-click any other block | Deposit into an adjacent Singles or Bar Stack, or place the selected type in the empty space and make the first deposit. |
 | Right-click a stack, no `V`, no Shift | Take from the nearest item you are looking at. Storage gives you as much as your hand will hold; Singles and Bar give one. |
 | Select Toggle Permanent, hold `V`, right-click a Storage Stack empty-handed | Stop that pile from removing itself when emptied. |
@@ -41,7 +40,7 @@ That's all you need to know.
 
 ## Automation and redstone
 
-Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** — so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
 
 - Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -50,7 +49,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage, and the render galleries are throttled per tick. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 
@@ -64,7 +63,7 @@ See **[Server administration](docs/server-admin.md)** for the config file and th
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. The Forge build requires Architectury API; the Fabric build requires Fabric API and Architectury API. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server — see [Pack authors](docs/pack-authors.md).
+Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server. See [Pack authors](docs/pack-authors.md).
 
 ## Issues and suggestions
 

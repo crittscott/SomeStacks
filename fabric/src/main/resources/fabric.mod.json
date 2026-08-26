@@ -6,6 +6,7 @@
   "description": "${mod_description}",
   "authors": ["${mod_authors}"],
   "license": "${mod_license}",
+  "icon": "assets/somestacks/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
