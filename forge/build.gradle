@@ -79,7 +79,14 @@ tasks.register('generateGameTestStructures') {
 }
 
 sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
-tasks.named('processGametestResources').configure {
+tasks.named('processGametestResources', ProcessResources).configure {
+    var replaceProperties = [mod_version: mod_version]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties + [project: project]
+    }
+
     dependsOn tasks.named('generateGameTestStructures')
 }
 

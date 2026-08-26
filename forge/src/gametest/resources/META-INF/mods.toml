@@ -11,6 +11,6 @@ description='''Development-only Forge GameTests for Some Stacks.'''
 [[dependencies.somestacks_gametest]]
 modId="somestacks"
 mandatory=true
-versionRange="[1,)"
+versionRange="[${mod_version}]"
 ordering="AFTER"
 side="SERVER"
