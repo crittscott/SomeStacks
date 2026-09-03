@@ -1,0 +1,153 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+sourceSets {
+    gametest {
+        java.srcDir rootProject.file('common/src/gametest/java')
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
+loom {
+    mods {
+        main {
+            sourceSet sourceSets.main
+            sourceSet project(':common').sourceSets.main
+        }
+        somebuckets_gametest {
+            sourceSet sourceSets.gametest
+        }
+    }
+
+    runs {
+        gameTestServer {
+            server()
+            environment 'gametestserver'
+            forgeTemplate 'gameTestServer'
+            name 'Game Test Server'
+            property 'forge.enabledGameTestNamespaces', mod_id
+            source sourceSets.gametest
+        }
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+
+    // Files in this configuration will be bundled into your mod using the Shadow plugin.
+    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:$rootProject.forge_compile_version"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+
+}
+
+// The common manifest is the only bucket-loot policy. Forge's data-driven modifier resources are
+// materialized for every resource-processing run so they cannot drift from Fabric's runtime rules.
+def bucketLootManifest = project(':common').layout.projectDirectory.file(
+        'src/main/resources/somebuckets/bucket_loot.json')
+def bucketLootOutput = layout.buildDirectory.dir('generated/loot/resources')
+
+tasks.register('generateBucketLootModifiers') {
+    inputs.file(bucketLootManifest)
+    outputs.dir(bucketLootOutput)
+
+    doLast {
+        def rewards = new groovy.json.JsonSlurper().parse(bucketLootManifest.asFile).rewards
+        def outputRoot = bucketLootOutput.get().asFile
+        project.delete(outputRoot)
+
+        def writeJson = { String relativePath, Object value ->
+            def output = new File(outputRoot, relativePath)
+            output.parentFile.mkdirs()
+            output.text = groovy.json.JsonOutput.prettyPrint(
+                    groovy.json.JsonOutput.toJson(value)) + System.lineSeparator()
+        }
+
+        rewards.each { reward ->
+            def name = reward.id
+            def modifier = [
+                    type: 'somebuckets:add_bucket',
+                    conditions: [
+                            [
+                                    condition: 'minecraft:any_of',
+                                    terms: reward.targets.collect { target ->
+                                        [condition: 'forge:loot_table_id', loot_table_id: target]
+                                    }
+                            ],
+                            [condition: 'minecraft:random_chance', chance: reward.chance]
+                    ],
+                    item: reward.item
+            ]
+            if (reward.powder_units != null) modifier.powder_units = reward.powder_units
+            writeJson("data/somebuckets/loot_modifiers/${name}.json", modifier)
+        }
+
+        writeJson('data/forge/loot_modifiers/global_loot_modifiers.json', [
+                replace: false,
+                entries: rewards.collect { reward -> "somebuckets:${reward.id}" }
+        ])
+    }
+}
+
+sourceSets.main.resources { srcDir bucketLootOutput }
+tasks.named('processResources').configure { dependsOn tasks.named('generateBucketLootModifiers') }
+tasks.named('sourcesJar').configure { dependsOn tasks.named('generateBucketLootModifiers') }
+
+rootProject.configureGameTestStructures(project)
+
+// Expands ${...} placeholders in mods.toml (this module's own resource).
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version_range: forge_version_range,
+            forge_loader_version_range: forge_loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties + [project: project]
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+}
