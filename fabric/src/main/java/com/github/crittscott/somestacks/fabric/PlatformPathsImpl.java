@@ -1,6 +1,6 @@
-package com.github.crittscott.somestacks;
+package com.github.crittscott.somestacks.fabric;
 
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.nio.file.Path;
 
@@ -8,6 +8,6 @@ public final class PlatformPathsImpl {
     private PlatformPathsImpl() {}
 
     public static Path configFolder() {
-        return FMLPaths.CONFIGDIR.get();
+        return FabricLoader.getInstance().getConfigDir();
     }
 }

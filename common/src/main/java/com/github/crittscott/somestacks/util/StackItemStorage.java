@@ -145,8 +145,7 @@ public class StackItemStorage implements SlotAccess {
             if (!stacks[i].isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt(TAG_SLOT, i);
-                stacks[i].save(registries, itemTag);
-                list.add(itemTag);
+                list.add(stacks[i].save(registries, itemTag));
             }
         }
         CompoundTag nbt = new CompoundTag();

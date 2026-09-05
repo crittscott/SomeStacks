@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks;
+package com.github.crittscott.somestacks.neoforge;
 
 import net.neoforged.fml.loading.FMLPaths;
 
