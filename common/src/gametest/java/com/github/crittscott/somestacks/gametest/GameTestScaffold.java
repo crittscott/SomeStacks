@@ -155,7 +155,7 @@ public final class GameTestScaffold {
     public static int signalAt(GameTestHelper helper, BlockPos relative) {
         BlockPos absolute = helper.absolutePos(relative);
         BlockState state = helper.getLevel().getBlockState(absolute);
-        return state.getBlock().getAnalogOutputSignal(state, helper.getLevel(), absolute);
+        return state.getAnalogOutputSignal(helper.getLevel(), absolute);
     }
 
     public static void check(boolean condition, String message) {

@@ -100,7 +100,7 @@ tasks.named('processGametestResources', ProcessResources).configure {
 def gameTestStructureSource = layout.projectDirectory.file(
         'src/gametest/fixtures/somestacks_empty.nbt.b64')
 def gameTestStructureOutput = layout.buildDirectory.file(
-        'generated/gametest/resources/data/somestacks/structures/somestacks_empty.nbt')
+        'generated/gametest/resources/data/somestacks/structure/somestacks_empty.nbt')
 
 tasks.register('generateGameTestStructures') {
     inputs.file(gameTestStructureSource)

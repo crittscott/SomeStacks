@@ -144,10 +144,10 @@ public final class StoragePileChecks {
         check(pile != null, "Pile did not resolve");
 
         int expected = pile.comparatorSignal();
-        int lowerSignal = lower.getBlockState().getBlock().getAnalogOutputSignal(
-                lower.getBlockState(), helper.getLevel(), lower.getBlockPos());
-        int upperSignal = upper.getBlockState().getBlock().getAnalogOutputSignal(
-                upper.getBlockState(), helper.getLevel(), upper.getBlockPos());
+        int lowerSignal = lower.getBlockState().getAnalogOutputSignal(
+                helper.getLevel(), lower.getBlockPos());
+        int upperSignal = upper.getBlockState().getAnalogOutputSignal(
+                helper.getLevel(), upper.getBlockPos());
 
         checkEquals(expected, lowerSignal, "Lower comparator signal");
         checkEquals(expected, upperSignal, "Upper comparator signal");
