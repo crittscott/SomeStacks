@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -61,7 +62,7 @@ public class StackItemStorage implements SlotAccess {
         int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 
         if (!existing.isEmpty()) {
-            if (!ItemStack.isSameItemSameTags(existing, stack) || !existing.isStackable()) {
+            if (!ItemStack.isSameItemSameComponents(existing, stack) || !existing.isStackable()) {
                 return stack;
             }
             limit -= existing.getCount();
@@ -138,13 +139,13 @@ public class StackItemStorage implements SlotAccess {
         return copy;
     }
 
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider registries) {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt(TAG_SLOT, i);
-                stacks[i].save(itemTag);
+                stacks[i].save(registries, itemTag);
                 list.add(itemTag);
             }
         }
@@ -154,14 +155,14 @@ public class StackItemStorage implements SlotAccess {
         return nbt;
     }
 
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
         ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(TAG_SLOT);
             if (slot >= 0 && slot < stacks.length) {
-                stacks[slot] = ItemStack.of(itemTag);
+                stacks[slot] = ItemStack.parse(registries, itemTag).orElse(ItemStack.EMPTY);
             }
         }
     }

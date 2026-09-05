@@ -135,12 +135,12 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                              float u0,float v0,float u1,float v1,
                              float nx,float ny,float nz,
                              int r, int g, int b, int a) {
-        var m = pose.last().pose();
-        var n = pose.last().normal();
-        vc.vertex(m, x1,y1,z1).color(r,g,b,a).uv(u0,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x2,y2,z2).color(r,g,b,a).uv(u1,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x3,y3,z3).color(r,g,b,a).uv(u1,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x4,y4,z4).color(r,g,b,a).uv(u0,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
+        var last = pose.last();
+        var m = last.pose();
+        vc.addVertex(m, x1,y1,z1).setColor(r,g,b,a).setUv(u0,v0).setOverlay(overlay).setLight(light).setNormal(last, nx,ny,nz);
+        vc.addVertex(m, x2,y2,z2).setColor(r,g,b,a).setUv(u1,v0).setOverlay(overlay).setLight(light).setNormal(last, nx,ny,nz);
+        vc.addVertex(m, x3,y3,z3).setColor(r,g,b,a).setUv(u1,v1).setOverlay(overlay).setLight(light).setNormal(last, nx,ny,nz);
+        vc.addVertex(m, x4,y4,z4).setColor(r,g,b,a).setUv(u0,v1).setOverlay(overlay).setLight(light).setNormal(last, nx,ny,nz);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
     private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
-    private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
+    private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
 
@@ -93,7 +93,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                     if (key.startsWith("_comment")) continue;
 
                     try {
-                        ResourceLocation itemLoc = new ResourceLocation(key);
+                        ResourceLocation itemLoc = ResourceLocation.parse(key);
                         BarTextureData data = parseEntry(root.get(key));
                         if (data == null) {
                             SomeStacksCommon.LOGGER.warn("Invalid format for '{}': expected string or object", key);
@@ -123,7 +123,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     @Nullable
     static BarTextureData parseEntry(JsonElement value) {
         if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
-            return BarTextureData.auto(new ResourceLocation(value.getAsString()));
+            return BarTextureData.auto(ResourceLocation.parse(value.getAsString()));
         }
         if (!value.isJsonObject()) {
             return null;
@@ -131,7 +131,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
         JsonObject obj = value.getAsJsonObject();
         ResourceLocation texture = obj.has("texture")
-                ? new ResourceLocation(obj.get("texture").getAsString())
+                ? ResourceLocation.parse(obj.get("texture").getAsString())
                 : DEFAULT_TEXTURE;
         return obj.has("tint")
                 ? BarTextureData.tinted(texture, parseColor(obj.get("tint").getAsString()))
@@ -231,7 +231,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {
         String namespace = spriteName.getNamespace();
         String path = spriteName.getPath();
-        return new ResourceLocation(namespace, "textures/" + path + ".png");
+        return ResourceLocation.fromNamespaceAndPath(namespace, "textures/" + path + ".png");
     }
 
     private static NativeImage loadTextureImage(ResourceLocation texturePath, ResourceManager resourceManager) {

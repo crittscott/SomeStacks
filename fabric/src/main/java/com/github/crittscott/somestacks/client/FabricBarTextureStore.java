@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class FabricBarTextureStore extends BarTextureStore
         implements IdentifiableResourceReloadListener {
     private static final ResourceLocation ID =
-            new ResourceLocation(SomeStacksCommon.MODID, "bar_textures");
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
 
     @Override
     public ResourceLocation getFabricId() {

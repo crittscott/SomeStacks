@@ -147,7 +147,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
     }
 
     private int capacity(ItemVariant resource) {
-        return blockEntity instanceof StorageStackBE ? resource.getItem().getMaxStackSize() : 1;
+        return blockEntity instanceof StorageStackBE ? resource.toStack().getMaxStackSize() : 1;
     }
 
     private boolean isStructural() {
@@ -226,7 +226,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
                 int slot = entry.getKey();
                 ItemStack original = entry.getValue();
                 ItemStack result = committedStacks.get(slot);
-                if (ItemStack.isSameItemSameTags(original, result)) {
+                if (ItemStack.isSameItemSameComponents(original, result)) {
                     int difference = result.getCount() - original.getCount();
                     if (difference > 0) {
                         ItemStack inserted = result.copy();

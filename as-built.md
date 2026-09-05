@@ -1,36 +1,40 @@
 # Some Stacks As-Built Orientation
 
-This guide identifies the code boundaries and invariants a maintainer should understand before
-changing Some Stacks. It is deliberately selective. `player-view.md` describes observable
-behavior; the code is authoritative when either document is wrong.
+Orientation to the repository's build structure, subsystem ownership, persistent data, cross-loader boundaries, and maintenance invariants. `player-view.md` covers observable behavior. Not a spec, not a prose restatement of the code; the code wins when they disagree. No history.
 
-It should not contain history and it is not part of a conversation with the user. It should describe the code as it is. It is not a prose version of the code, it is an orientation.
+Length budget: 150 lines / 12k characters. If an edit pushes past that, cut something — don't append.
 
-This document describes what is, not necessarily what is desired. Do not take is to be a driving design document.
+Per-sentence test: every sentence either (a) names the file/class to open to change a behavior, or (b) names an invariant not visible from any single file — a cross-module contract, an ordering requirement, a "keep these in sync". Sentences that only restate what the code does get deleted, as do enumerations of a method's branches or steps. Update in place.
+
+This is an orientation to the current code, not a history, conversation, or prose rendering of the implementation. It describes what exists, not necessarily what should exist, and is not a design specification.
 
 ## Project shape
 
-Some Stacks targets Minecraft 1.20.1 and Java 17, with Forge 47.4.10 and Fabric Loader 0.19.3 /
-Fabric API 0.92.7+1.20.1 build baselines. Both loaders require Architectury API 9.2.14. The mod id
-is `somestacks` and the root package is `com.github.crittscott.somestacks`. See
-`build-env.md` for the complete toolchain, dependency constraints, and build commands.
+Some Stacks targets Minecraft 1.21.1 and Java 21, with Fabric Loader 0.19.3 / Fabric API
+0.116.15+1.21.1, Forge 52.1.16, and NeoForge 21.1.248 build baselines. Architectury is a build-time
+plugin and transformation dependency only; no loader carries an Architectury API runtime
+dependency. The mod id is `somestacks` and the root package is `com.github.crittscott.somestacks`.
+See `build-env.md` for the complete toolchain, dependency constraints, and build commands.
 
-The Fabric API baseline is currently lowered from 0.92.11+1.20.1 to 0.92.7+1.20.1 as an in-progress
-test of compatibility with a modpack pinned to the older version. Revert `fabric_api_version` in
-`gradle.properties` if the test does not pan out.
+Only `common` and `fabric` are ported to 1.21.1. The `forge` and `neoforge` modules are wired into
+the build but their source still targets 1.20.1 APIs and does not compile; the sections below that
+describe Forge behavior describe the not-yet-ported 1.20.1 source. `neoforge` holds only a
+build-script skeleton and one `@ExpectPlatform` implementation.
 
-The implementation is split between three modules:
+The implementation is split between four modules:
 
 ```text
-common/   loader-neutral mechanics, rendering, commands, and shared resources
-forge/    Forge registration, lifecycle, networking, gestures, and automation adapter
-fabric/   Fabric registration, lifecycle, networking, gestures, mixin, and automation adapter
+common/     loader-neutral mechanics, rendering, commands, and shared resources
+forge/      Forge registration, lifecycle, networking, gestures, and automation adapter
+fabric/     Fabric registration, lifecycle, networking, gestures, mixin, and automation adapter
+neoforge/   NeoForge module (build skeleton only; source not yet written)
 ```
 
-`common` is not a separate runtime artifact. Its Java and resources are included in both loader
-JARs. Common source contains no Forge or Fabric imports; loader services enter through small seams
-such as `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, and the
-loader-native automation adapters.
+`common` is not a separate runtime artifact. Its Java and resources are included in each loader
+JAR. Common source contains no Forge or Fabric imports; loader services enter through small seams
+such as `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, the
+loader-native automation adapters, and the `@ExpectPlatform` helper `PlatformPaths` (config-directory
+lookup, one `PlatformPathsImpl` per loader).
 
 Release artifacts are loader-local:
 
@@ -85,13 +89,13 @@ before common world objects are created.
 | --- | --- | --- |
 | Metadata | `META-INF/mods.toml` | `fabric.mod.json` and `somestacks.mixins.json` |
 | Entrypoints | `SomeStacks`, with `ClientSetup` on the client | `SomeStacksFabric` and `SomeStacksFabricClient` |
-| Networking | `SimpleChannel` | `ServerPlayNetworking` and `ClientPlayNetworking` |
-| Protocol | Channel compatibility rejects a version mismatch | A versioned handshake channel gates all play packets |
+| Networking | `SimpleChannel` | `CustomPacketPayload` types registered through `PayloadTypeRegistry`, sent via `ServerPlayNetworking`/`ClientPlayNetworking` |
+| Protocol | Channel compatibility rejects a version mismatch | The `ProtocolPkt` handshake payload gates all play packets |
 | Gestures | Forge interaction and input events | Fabric interaction callbacks plus the air-click mixin |
 | Rendering | Shared BERs through Forge registration and render seams | Shared BERs through Fabric registration and Renderer API-aware seams |
 | Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
 | Player protection | Vanilla checks plus Forge interaction/place events | Vanilla checks plus Fabric API `UseBlockCallback` |
-| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal fires Fabric API `PlayerBlockBreakEvents`; growth optionally consults FTB Chunks/OPAC |
+| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal fires Fabric API `PlayerBlockBreakEvents`; growth optionally consults FTB Chunks |
 
 Both builds are required on the client and server. The loaders own transport and callbacks, but
 packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain
@@ -114,7 +118,10 @@ the same signal.
 
 ### Persistent state
 
-Inventory data is stored by `StackItemStorage` in block entity NBT.
+Inventory data is stored by `StackItemStorage` in block entity NBT. Item elements serialize through
+the Data Components system: `StackItemStorage.serializeNBT`/`deserializeNBT` and each block entity's
+`loadAdditional`/`saveAdditional`/`getUpdateTag` take a `HolderLookup.Provider`. Pre-1.21 saved data
+is not migrated.
 
 | Type | Saved data |
 | --- | --- |
@@ -185,18 +192,20 @@ Growth and automatic cleanup pass through `WorldEdits`. Both loaders apply build
 replaceability, obstruction, border, and spawn checks using an automation actor. Forge also fires
 place and break events for claim and logging integrations, covering growth and removal alike.
 Fabric fires the matching break event (`PlayerBlockBreakEvents`) for automation-driven removal, but
-has no generic placement event; on growth, `FabricEditAuthority` instead consults FTB Chunks and
-Open Parties and Claims directly, through `FtbChunksProtection` and `OpacProtection`, when either is
-present as an optional compile-time dependency. Each mod's types are referenced only inside its own
-compat class, gated on the mod being loaded, so a server running neither is unaffected and never
-touches either mod's classes. No other Fabric claim mod is consulted.
+has no generic placement event; on growth, `FabricEditAuthority` instead consults FTB Chunks
+directly through `FtbChunksProtection` when it is present as an optional compile-time dependency.
+FTB Chunks' types are referenced only inside that compat class, gated on the mod being loaded, so a
+server without it is unaffected and never touches its classes. No other Fabric claim mod is
+consulted; Open Parties and Claims support was removed with the 1.21.1 port.
 
 ## Player interaction and networking
 
 The shared client gesture rules recognize permanence, block rotation, item rotation, deposit,
 placement, and extraction in that order. Loader event glue supplies clicks, keys, and native packet
-transport. Placement mode is client state sent with a placement request; Fabric's air-click mixin
-captures the modifier gesture that has no equivalent Fabric API callback.
+transport. The shared packet classes in `common/.../network` implement `CustomPacketPayload`, each
+with a `StreamCodec` wrapping its byte-buffer encode/decode. Placement mode is client state sent
+with a placement request; Fabric's air-click mixin captures the modifier gesture that has no
+equivalent Fabric API callback.
 
 The server treats every client message as a request. Common checks cover sender state, per-tick
 gesture pacing, loaded chunks, and reach; each operation then validates its hand, target, index,
@@ -279,9 +288,8 @@ placement protection.
 - Do not revalidate owned items during internal movement.
 - Keep Forge simulation and Fabric transactional commit subject to the same feasibility rules.
 - Route structural world edits through `WorldEdits` and the installed authority.
-- Keep FTB Chunks and Open Parties and Claims references confined to `FtbChunksProtection` and
-  `OpacProtection` respectively, each gated on the mod being loaded; a server running neither must
-  never touch either mod's classes.
+- Keep FTB Chunks references confined to `FtbChunksProtection`, gated on the mod being loaded; a
+  server without it must never touch its classes.
 - Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
 - Validate every client request independently of gesture recognition.
 - Preserve render-profile precedence across files, commands, and synchronization.
@@ -300,9 +308,11 @@ placement protection.
 
 ## Build and test layout
 
-The root `build` lifecycle builds all three subprojects, runs the JUnit suite under
-`common/src/test`, and produces both loader JARs. The conventional Forge and Fabric `test` source
-sets are empty. Test classes and dependencies are not included in the production JARs.
+The root `build` lifecycle is meant to build every subproject, run the JUnit suite under
+`common/src/test`, and produce each loader JAR; while Forge and NeoForge are unported it succeeds
+only for `:fabric:build`. The conventional Forge and Fabric `test` source sets are empty. Test
+classes and dependencies are not included in the production JARs. `common/src/test` also holds
+1.20.1 API and is not yet ported.
 
 Forge's in-game tests live under `forge/src/gametest`, outside the production source set. Gradle
 loads them as the separate development-only `somestacks_gametest` mod, generates their empty NBT
@@ -324,4 +334,6 @@ loaders, so both loaders keep an independent file, using the shared scaffold onl
 loader-neutral helpers. The Fabric suite also omits the Forge-only claim/event-bus protection tests;
 a Fabric hook now exists to exercise them (`FabricPlayerEditAuthority`, `FabricEditAuthority`), but
 the tests themselves have not been ported yet. Neither GameTest suite is part of `build`; each is
-invoked separately through its own loader's `runGameTestServer` task.
+invoked separately through its own loader's `runGameTestServer` task. Test code that needs distinct
+otherwise-identical stacks attaches a `CUSTOM_DATA` component; the checked-in structure fixture may
+need regeneration for 1.21.1.

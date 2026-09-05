@@ -6,82 +6,86 @@ project settings. See [as-built.md](as-built.md) for the runtime architecture; t
 environment that builds and launches it.
 
 The `working-build-env/` directory is not part of the active Gradle build. The root
-`settings.gradle` includes only `common`, `forge`, and `fabric`; declarations under
+`settings.gradle` includes `common`, `forge`, `fabric`, and `neoforge`; declarations under
 `working-build-env/` are therefore not authoritative for this project.
+
+Only the `common` module and the `fabric` loader are ported to Minecraft 1.21.1. The `forge` and
+`neoforge` modules configure and their dependencies resolve, but their source still targets 1.20.1
+APIs and does not compile; `neoforge` carries only a build-script skeleton and one `@ExpectPlatform`
+implementation.
 
 ## Toolchain
 
-| Tool | Active declaration | Present in this machine's environment |
-| --- | --- | --- |
-| Gradle | Wrapper pinned in `gradle/wrapper/gradle-wrapper.properties` | **9.5.1** |
-| Java toolchain | Language version 17; source/target 17; `--release 17` | Temurin **17.0.15+6** from `JAVA_HOME` |
-| IntelliJ Gradle JVM | `.idea/gradle.xml` sets `gradleJvm="21"` | Temurin **21.0.2+13** |
-| Architectury Loom | `1.17.491` | 1.17.491 cached |
-| Architectury Plugin | `3.5.169` | 3.5.169 cached |
-| Shadow (`com.gradleup.shadow`) | `9.4.3` | 9.4.3 cached |
-| Mixin patched by Loom | transitive | `dev.architectury:mixin-patched:0.8.5.12` cached |
+| Tool | Active declaration |
+| --- | --- |
+| Gradle | Wrapper pinned in `gradle/wrapper/gradle-wrapper.properties` at **9.5.1** |
+| Java toolchain | Language version 21; source/target 21; `--release 21` |
+| IntelliJ Gradle JVM | `.idea/gradle.xml` sets `gradleJvm="21"` |
+| Architectury Loom | `1.17.491` |
+| Architectury Plugin | `3.5.169` |
+| Shadow (`com.gradleup.shadow`) | `9.4.3` |
 
-The command-line environment resolves `java` through:
+The project toolchain forces compilation and every Gradle `JavaExec` task, including Minecraft
+development runs, onto Java 21, so a JDK 21 must be discoverable (IntelliJ already runs Gradle on
+one; command-line wrapper invocations need `JAVA_HOME` or `org.gradle.java.home` pointed at a 21).
+There is no global `gradle` command; the wrapper is the build entry point.
 
-```text
-C:\Users\Dad\AppData\Local\Programs\Eclipse Adoptium\jdk-17.0.15.6-hotspot
-```
-
-The machine also has Temurin 21.0.2+13, Oracle JDK 17.0.9+11, and a Java 8 JRE installed. IntelliJ
-uses JDK 21 to run Gradle, while the project toolchain forces compilation and every Gradle
-`JavaExec` task, including Minecraft development runs, onto Java 17. Command-line wrapper
-invocations use the Java 17 `JAVA_HOME`. There is no global `gradle` command; the wrapper is the
-build entry point.
-
-`gradle.properties` gives Gradle 3 GiB with `org.gradle.jvmargs=-Xmx3G` and disables the persistent
-daemon with `org.gradle.daemon=false`. It does not enable parallel execution. Loom and the
-Architectury Plugin are pinned to numbered versions rather than moving snapshot aliases.
+`gradle.properties` gives Gradle 3 GiB with `org.gradle.jvmargs=-Xmx3G`, disables the persistent
+daemon with `org.gradle.daemon=false`, and enables parallel execution. Loom and the Architectury
+Plugin are pinned to numbered versions rather than moving snapshot aliases.
 
 ## Minecraft and library versions
 
 | Component | Build version | Declared runtime constraint |
 | --- | --- | --- |
-| Minecraft | **1.20.1** | exactly `[1.20.1]` on Forge; exactly `1.20.1` on Fabric |
-| Mappings | Mojang official plus Parchment **2023.09.03-1.20.1** | development only |
-| Forge | **1.20.1-47.4.10** | Forge `[47.4.10,48)`; FML `[47,48)` |
+| Minecraft | **1.21.1** | exactly `[1.21.1]` on Forge and NeoForge; exactly `1.21.1` on Fabric |
+| Mappings | Mojang official plus Parchment **2024.11.17-1.21.1** | development only |
+| Forge | **1.21.1-52.1.16** | Forge `[52.1.16,53)`; FML `[52,53)` |
+| NeoForge | **21.1.248** | NeoForge `[21.1.248,22)`; JavaFML `[1,)` |
 | Fabric Loader | **0.19.3** | `>=0.19.3` |
-| Fabric API | **0.92.7+1.20.1** | `>=0.92.7+1.20.1` |
-| Architectury API | **9.2.14** | `>=9.2.14` / `[9.2.14,)` |
+| Fabric API | **0.116.15+1.21.1** | `>=0.116.15+1.21.1` |
+| FTB Chunks (Fabric/NeoForge) | **2101.1.21** | `[2101,2102)`, optional compile-only |
 | JUnit | BOM **5.10.2**, Jupiter | common-module tests only |
 | JSR-305 | **3.0.2** | compile-only annotation dependency |
 
-`forge_compile_version` is both Forge's compile dependency and the minimum accepted Forge runtime.
-The production metadata requires Architectury API on both loaders and Fabric API on Fabric. There
-are no optional third-party mod integrations or third-party mod repositories in the active build.
+`forge_compile_version` / `neoforge_compile_version` are each both the compile dependency and the
+minimum accepted runtime for that loader. Architectury is a build-time dependency only: the
+Architectury Plugin and Loom supply `@ExpectPlatform` / `@Environment` transformation, and no loader
+carries an Architectury API runtime dependency. FTB Chunks is the only optional third-party mod
+integration and is never bundled. Open Parties and Claims support was removed with the 1.21.1 port
+(no 1.21.1 build exists).
 
-The Fabric API baseline is currently lowered from 0.92.11+1.20.1 to 0.92.7+1.20.1 as an in-progress
-test of compatibility with a modpack pinned to the older version. Revert `fabric_api_version` in
-`gradle.properties` if the test does not pan out.
-
-Plugin resolution uses the Fabric, Architectury, and Forge Maven repositories plus the Gradle
-Plugin Portal. Subprojects use the Architectury and Parchment repositories. All active version pins
-are in the root build scripts and `gradle.properties`; there is no `buildSrc`, version catalog, or
-dependency locking.
+Plugin resolution uses the Fabric, Architectury, Forge, and NeoForged Maven repositories plus the
+Gradle Plugin Portal. Subprojects additionally use the NeoForged, Parchment, and FTB Maven
+repositories. All active version pins are in the root build scripts and `gradle.properties`
+(`maven_group`, `archives_name`, `forge_loader_version_range`, `neoforge_*` among them); there is no
+`buildSrc`, version catalog, or dependency locking.
 
 ## Module and packaging setup
 
-The active build has three subprojects:
+The active build has four subprojects:
 
 ```text
-common/   shared source and resources; transformed into each loader artifact
-forge/    Forge entry points and integration
-fabric/   Fabric entry points and integration
+common/     shared source and resources; transformed into each loader artifact
+forge/      Forge entry points and integration
+fabric/     Fabric entry points and integration
+neoforge/   NeoForge entry points and integration
 ```
 
-Both loader modules compile against `common` through Architectury's `common` configuration and
-bundle its transformed production output through `shadowBundle`. Development runs instead group
+Each loader module compiles against `common` through Architectury's `common` configuration and
+bundles its transformed production output through `shadowBundle`. Development runs instead group
 the common and loader source sets into one logical mod under `loom.mods.main`. The production
 artifacts are:
 
 ```text
 forge/build/libs/somestacks-forge-<version>.jar
 fabric/build/libs/somestacks-fabric-<version>.jar
+neoforge/build/libs/somestacks-neoforge-<version>.jar
 ```
+
+Common's only Architectury API usage, the config-directory lookup, resolves through the
+`@ExpectPlatform` helper `com.github.crittscott.somestacks.PlatformPaths`, with a per-loader
+`PlatformPathsImpl`.
 
 The `*-dev-shadow.jar` and `*-sources.jar` files in those directories are development artifacts,
 not release JARs. Common's transformed JARs are intermediate inputs to the loader builds.
@@ -97,7 +101,8 @@ not release JARs. Common's transformed JARs are intermediate inputs to the loade
 
 All six launch through `dev.architectury.transformer.TransformerRuntime`. Forge uses
 `BootstrapLauncher`; Fabric uses Knot. There are no plain Fabric Loom runs or data-generation run in
-the current project.
+the current project. NeoForge run configurations have not been regenerated, and the Forge ones will
+not start until that loader's source is ported.
 
 The Forge GameTest run is configured by `forge/build.gradle`. It loads ordinary Forge and common
 production output as `somestacks`, and `forge/src/gametest` as the separate development-only
@@ -144,13 +149,13 @@ its own checked-in Base64 fixture at `fabric/src/gametest/fixtures/somestacks_em
 Use the wrapper from the repository root in PowerShell:
 
 ```powershell
-.\gradlew build
-.\gradlew :forge:build
 .\gradlew :fabric:build
 .\gradlew :common:test
-.\gradlew :forge:runGameTestServer
 .\gradlew :fabric:runGameTestServer
 ```
 
-The root `build` covers the configured subproject builds and common JUnit tests. The Forge and
-Fabric GameTest servers are separate development runs, each covering only its own loader.
+`.\gradlew :fabric:build` produces the Fabric artifact. The root `build` and `:forge:build` /
+`:neoforge:build` currently fail because the Forge and NeoForge source is not yet on 1.21.1. Each
+GameTest server is a separate development run covering only its own loader, and the GameTest source
+sets are not part of `build`. The `common/src/gametest` structure fixture may need regeneration for
+1.21.1 before `:fabric:runGameTestServer` passes.

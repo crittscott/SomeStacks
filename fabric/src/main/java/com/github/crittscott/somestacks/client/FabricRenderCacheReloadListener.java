@@ -11,7 +11,7 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 public final class FabricRenderCacheReloadListener
         implements IdentifiableResourceReloadListener, ResourceManagerReloadListener {
     private static final ResourceLocation ID =
-            new ResourceLocation(SomeStacksCommon.MODID, "render_caches");
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_caches");
 
     @Override
     public ResourceLocation getFabricId() {

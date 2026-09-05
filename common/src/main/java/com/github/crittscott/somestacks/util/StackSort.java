@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,13 +28,16 @@ public final class StackSort {
         c = Integer.compare(a.getDamageValue(), b.getDamageValue());
         if (c != 0) return c;
 
-        // Untagged variants precede tagged variants; tag text gives the latter a stable order.
-        CompoundTag aTag = a.getTag();
-        CompoundTag bTag = b.getTag();
-        if (aTag == null || bTag == null) {
-            if (aTag != bTag) return aTag != null ? 1 : -1;
+        // Component-free variants precede variants carrying components; patch text gives the latter
+        // a stable order.
+        DataComponentPatch aPatch = a.getComponentsPatch();
+        DataComponentPatch bPatch = b.getComponentsPatch();
+        boolean aPlain = aPatch.isEmpty();
+        boolean bPlain = bPatch.isEmpty();
+        if (aPlain || bPlain) {
+            if (aPlain != bPlain) return aPlain ? -1 : 1;
         } else {
-            c = aTag.toString().compareTo(bTag.toString());
+            c = aPatch.toString().compareTo(bPatch.toString());
             if (c != 0) return c;
         }
 

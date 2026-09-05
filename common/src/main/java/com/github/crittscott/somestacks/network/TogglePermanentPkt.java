@@ -4,8 +4,12 @@ import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -18,11 +22,21 @@ import net.minecraft.world.level.Level;
  * gesture is empty-handed, and the vanilla interaction that follows reaches the stack's own use
  * handler, which absorbs it harmlessly.
  */
-public class TogglePermanentPkt {
+public class TogglePermanentPkt implements CustomPacketPayload {
+    public static final Type<TogglePermanentPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "toggle_permanent"));
+    public static final StreamCodec<FriendlyByteBuf, TogglePermanentPkt> STREAM_CODEC =
+            StreamCodec.ofMember(TogglePermanentPkt::encode, TogglePermanentPkt::decode);
+
     private final BlockPos pos;
 
     public TogglePermanentPkt(BlockPos pos) {
         this.pos = pos;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(TogglePermanentPkt msg, FriendlyByteBuf buf) {

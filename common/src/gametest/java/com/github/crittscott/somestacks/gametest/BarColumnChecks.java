@@ -3,12 +3,14 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -209,9 +211,9 @@ public final class BarColumnChecks {
         checkEquals(2, upper.length, "Test support fan-out");
 
         ItemStack first = new ItemStack(barItem);
-        first.getOrCreateTag().putInt("somestacks_test_variant", 1);
+        CustomData.update(DataComponents.CUSTOM_DATA, first, t -> t.putInt("somestacks_test_variant", 1));
         ItemStack second = new ItemStack(barItem);
-        second.getOrCreateTag().putInt("somestacks_test_variant", 2);
+        CustomData.update(DataComponents.CUSTOM_DATA, second, t -> t.putInt("somestacks_test_variant", 2));
         seedSlot(bars.getItems(), 0, new ItemStack(barItem));
         seedSlot(bars.getItems(), upper[0], first);
         seedSlot(bars.getItems(), upper[1], second);
@@ -317,7 +319,7 @@ public final class BarColumnChecks {
     }
 
     private static int testVariant(ItemEntity entity) {
-        CompoundTag tag = entity.getItem().getTag();
-        return tag == null ? -1 : tag.getInt("somestacks_test_variant");
+        CustomData data = entity.getItem().get(DataComponents.CUSTOM_DATA);
+        return data == null ? -1 : data.copyTag().getInt("somestacks_test_variant");
     }
 }

@@ -3,11 +3,15 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -21,7 +25,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * and is range-checked against the block entity it names. What the cell yields follows the type:
  * Storage gives as much as the hand accepts, Singles and Bar give one item.
  */
-public record ExtractPkt(BlockPos pos, int index) {
+public record ExtractPkt(BlockPos pos, int index) implements CustomPacketPayload {
+
+    public static final Type<ExtractPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "extract"));
+    public static final StreamCodec<FriendlyByteBuf, ExtractPkt> STREAM_CODEC =
+            StreamCodec.ofMember(ExtractPkt::encode, ExtractPkt::decode);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
     public static void encode(ExtractPkt msg, FriendlyByteBuf buf) {
         buf.writeBlockPos(msg.pos);

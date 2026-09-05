@@ -51,7 +51,7 @@ import java.util.Set;
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
-    public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube");
+    public static final ResourceLocation STACK_CUBE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube");
 
     /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -445,20 +445,19 @@ public final class CubeRenderHelper {
 
     /**
      * Writes one vertex. The position is transformed here rather than through
-     * {@link VertexConsumer#vertex(Matrix4f, float, float, float)}, which allocates a vector per
+     * {@link VertexConsumer#addVertex(Matrix4f, float, float, float)}, which allocates a vector per
      * call, and the normal is the cube face's rather than the source quad's, so lighting reads the
      * surface the art lies on instead of the direction of an extruded sprite edge.
      */
     private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,
                                int r, int g, int b, int light, FaceTarget target) {
-        vc.vertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
+        vc.addVertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
                         m.m01() * x + m.m11() * y + m.m21() * z + m.m31(),
                         m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
-                .color(r, g, b, 0xFF)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(target.nx(), target.ny(), target.nz())
-                .endVertex();
+                .setColor(r, g, b, 0xFF)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(target.nx(), target.ny(), target.nz());
     }
 }

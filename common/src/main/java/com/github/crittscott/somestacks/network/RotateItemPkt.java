@@ -4,8 +4,12 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Items;
@@ -20,7 +24,12 @@ import net.minecraft.world.level.block.Block;
  * client sends this even when its ray hit no item, because claiming the click is what suppresses
  * the torch; a slot index naming no occupied cell simply rotates nothing.
  */
-public class RotateItemPkt {
+public class RotateItemPkt implements CustomPacketPayload {
+    public static final Type<RotateItemPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "rotate_item"));
+    public static final StreamCodec<FriendlyByteBuf, RotateItemPkt> STREAM_CODEC =
+            StreamCodec.ofMember(RotateItemPkt::encode, RotateItemPkt::decode);
+
     private static final int DEGREES_PER_ROTATION = 90;
 
     private final BlockPos pos;
@@ -29,6 +38,11 @@ public class RotateItemPkt {
     public RotateItemPkt(BlockPos pos, int slotIndex) {
         this.pos = pos;
         this.slotIndex = slotIndex;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(RotateItemPkt msg, FriendlyByteBuf buf) {

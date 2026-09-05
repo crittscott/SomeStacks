@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class FabricItemRenderOverrides extends ItemRenderOverrides
         implements IdentifiableResourceReloadListener {
     private static final ResourceLocation ID =
-            new ResourceLocation(SomeStacksCommon.MODID, "item_render_overrides");
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_render_overrides");
 
     @Override
     public ResourceLocation getFabricId() {

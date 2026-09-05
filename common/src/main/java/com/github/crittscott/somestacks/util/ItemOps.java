@@ -32,7 +32,7 @@ public final class ItemOps {
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
         if (hand.isEmpty()) return true;
-        return ItemStack.isSameItemSameTags(hand, offer) && hand.getCount() < hand.getMaxStackSize();
+        return ItemStack.isSameItemSameComponents(hand, offer) && hand.getCount() < hand.getMaxStackSize();
     }
 
     /**
@@ -43,7 +43,7 @@ public final class ItemOps {
      */
     public static int mergeIntoStack(ItemStack hand, ItemStack incoming) {
         if (hand.isEmpty() || incoming.isEmpty()) return 0;
-        if (!ItemStack.isSameItemSameTags(hand, incoming)) return 0;
+        if (!ItemStack.isSameItemSameComponents(hand, incoming)) return 0;
         int can = Math.min(incoming.getCount(), hand.getMaxStackSize() - hand.getCount());
         hand.grow(can);
         return can;

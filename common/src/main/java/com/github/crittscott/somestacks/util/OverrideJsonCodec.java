@@ -72,7 +72,7 @@ public final class OverrideJsonCodec {
 
         for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
             try {
-                ResourceLocation itemId = new ResourceLocation(entry.getKey());
+                ResourceLocation itemId = ResourceLocation.parse(entry.getKey());
                 ItemRenderConfig config = parseEntry(entry.getKey(), entry.getValue().getAsJsonObject());
                 if (config != null) {
                     map.put(itemId, config);

@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class FabricStackSoundData extends StackSoundData
         implements IdentifiableResourceReloadListener {
     private static final ResourceLocation ID =
-            new ResourceLocation(SomeStacksCommon.MODID, "stack_sounds");
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "stack_sounds");
 
     @Override
     public ResourceLocation getFabricId() {

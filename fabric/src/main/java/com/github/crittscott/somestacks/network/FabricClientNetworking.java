@@ -5,15 +5,12 @@ import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /** Fabric client receivers and the packet sender used by the shared gesture rules. */
 public final class FabricClientNetworking implements ClientGestures.Sender {
@@ -22,17 +19,13 @@ public final class FabricClientNetworking implements ClientGestures.Sender {
     public static void init() {
         ClientGestures.setSender(new FabricClientNetworking());
 
-        ClientPlayNetworking.registerGlobalReceiver(FabricNetworking.PROTOCOL,
-                (client, handler, buf, responseSender) -> { });
-        registerClient(FabricNetworking.CONFIG_SYNC, ConfigSyncPkt::decode,
-                ClientRenderPacketSink::apply);
-        registerClient(FabricNetworking.RENDER_OVERRIDE, RenderOverridePkt::decode,
-                ClientRenderPacketSink::apply);
-        registerClient(FabricNetworking.WRITE_OVERRIDES, WriteOverridesPkt::decode,
-                ClientRenderPacketSink::apply);
+        ClientPlayNetworking.registerGlobalReceiver(ProtocolPkt.TYPE, (payload, context) -> { });
+        registerClient(ConfigSyncPkt.TYPE, ClientRenderPacketSink::apply);
+        registerClient(RenderOverridePkt.TYPE, ClientRenderPacketSink::apply);
+        registerClient(WriteOverridesPkt.TYPE, ClientRenderPacketSink::apply);
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (!ClientPlayNetworking.canSend(FabricNetworking.PLACE_AND_DEPOSIT)) {
+            if (!ClientPlayNetworking.canSend(PlaceAndDepositPkt.TYPE)) {
                 handler.getConnection().disconnect(
                         Component.translatable("somestacks.disconnect.protocol"));
             }
@@ -41,51 +34,37 @@ public final class FabricClientNetworking implements ClientGestures.Sender {
 
     @Override
     public void sendTogglePermanent(BlockPos pos) {
-        send(FabricNetworking.TOGGLE_PERMANENT, new TogglePermanentPkt(pos),
-                TogglePermanentPkt::encode);
+        ClientPlayNetworking.send(new TogglePermanentPkt(pos));
     }
 
     @Override
     public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
-        send(FabricNetworking.PLACE_AND_DEPOSIT,
-                new PlaceAndDepositPkt(mode.toBlockType(), face, placePos),
-                PlaceAndDepositPkt::encode);
+        ClientPlayNetworking.send(new PlaceAndDepositPkt(mode.toBlockType(), face, placePos));
     }
 
     @Override
     public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        send(FabricNetworking.DEPOSIT, new DepositPkt(pos, clickedPos), DepositPkt::encode);
+        ClientPlayNetworking.send(new DepositPkt(pos, clickedPos));
     }
 
     @Override
     public void sendExtract(BlockPos pos, int index) {
-        send(FabricNetworking.EXTRACT, new ExtractPkt(pos, index), ExtractPkt::encode);
+        ClientPlayNetworking.send(new ExtractPkt(pos, index));
     }
 
     @Override
     public void sendRotateBlock(BlockPos pos) {
-        send(FabricNetworking.ROTATE_BLOCK, new RotateBlockPkt(pos), RotateBlockPkt::encode);
+        ClientPlayNetworking.send(new RotateBlockPkt(pos));
     }
 
     @Override
     public void sendRotateItem(BlockPos pos, int slotIndex) {
-        send(FabricNetworking.ROTATE_ITEM, new RotateItemPkt(pos, slotIndex), RotateItemPkt::encode);
+        ClientPlayNetworking.send(new RotateItemPkt(pos, slotIndex));
     }
 
-    private static <T> void registerClient(
-            ResourceLocation channel, Function<FriendlyByteBuf, T> decoder,
-            java.util.function.Consumer<T> handler) {
-        ClientPlayNetworking.registerGlobalReceiver(channel,
-                (client, networkHandler, buf, responseSender) -> {
-                    T packet = decoder.apply(buf);
-                    client.execute(() -> handler.accept(packet));
-                });
-    }
-
-    private static <T> void send(
-            ResourceLocation channel, T packet, BiConsumer<T, FriendlyByteBuf> encoder) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        encoder.accept(packet, buf);
-        ClientPlayNetworking.send(channel, buf);
+    private static <T extends CustomPacketPayload> void registerClient(
+            CustomPacketPayload.Type<T> type, Consumer<T> handler) {
+        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
+                context.client().execute(() -> handler.accept(payload)));
     }
 }

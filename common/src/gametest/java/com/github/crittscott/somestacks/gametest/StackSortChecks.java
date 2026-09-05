@@ -1,10 +1,12 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.util.StackSort;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 
@@ -43,7 +45,7 @@ public final class StackSortChecks {
         ItemStack stack = new ItemStack(Items.STONE, count);
         CompoundTag tag = new CompoundTag();
         tag.putInt("variant", variant);
-        stack.setTag(tag);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         return stack;
     }
 }

@@ -75,6 +75,6 @@ public final class FabricRegistry {
     }
 
     private static ResourceLocation id(String path) {
-        return new ResourceLocation(SomeStacksCommon.MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, path);
     }
 }

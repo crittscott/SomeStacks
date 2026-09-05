@@ -26,7 +26,6 @@
     "java": ">=21"
   },
   "suggests": {
-    "ftbchunks": "*",
-    "openpartiesandclaims": "*"
+    "ftbchunks": "*"
   }
 }

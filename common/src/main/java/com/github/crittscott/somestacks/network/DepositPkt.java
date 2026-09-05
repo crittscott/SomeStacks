@@ -12,8 +12,12 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -29,13 +33,23 @@ import net.minecraft.world.level.block.Block;
  * <p>The server recomputes the target cell from the player's current view rather than trusting a
  * cell index from the client, so the packet names none.
  */
-public class DepositPkt {
+public class DepositPkt implements CustomPacketPayload {
+    public static final Type<DepositPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "deposit"));
+    public static final StreamCodec<FriendlyByteBuf, DepositPkt> STREAM_CODEC =
+            StreamCodec.ofMember(DepositPkt::encode, DepositPkt::decode);
+
     private final BlockPos pos;
     private final BlockPos clickedPos;
 
     public DepositPkt(BlockPos pos, BlockPos clickedPos) {
         this.pos = pos;
         this.clickedPos = clickedPos;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(DepositPkt msg, FriendlyByteBuf buf) {

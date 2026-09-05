@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -261,7 +262,7 @@ public class StorageStackBE extends BlockEntity {
         if (current.isEmpty() && desired.isEmpty()) {
             return;
         }
-        if (current.getCount() == desired.getCount() && ItemStack.isSameItemSameTags(current, desired)) {
+        if (current.getCount() == desired.getCount() && ItemStack.isSameItemSameComponents(current, desired)) {
             return;
         }
         items.setStackInSlot(slot, desired);
@@ -306,17 +307,17 @@ public class StorageStackBE extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        if (tag.contains(TAG_ITEMS)) items.deserializeNBT(tag.getCompound(TAG_ITEMS));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains(TAG_ITEMS)) items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS));
         if (tag.contains(TAG_ROTATION)) rotation = tag.getInt(TAG_ROTATION);
         if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put(TAG_ITEMS, items.serializeNBT(registries));
         tag.putInt(TAG_ROTATION, rotation);
         tag.putBoolean(TAG_PERMANENT, permanent);
     }
@@ -332,9 +333,9 @@ public class StorageStackBE extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, registries);
         return tag;
     }
 

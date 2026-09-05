@@ -5,6 +5,8 @@ import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -18,7 +20,12 @@ import java.util.Map;
  * <p>Blacklists and pile limits are not sent. They gate server-side decisions only, and the client
  * never needs to predict them.
  */
-public class ConfigSyncPkt {
+public class ConfigSyncPkt implements CustomPacketPayload {
+    public static final Type<ConfigSyncPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
+    public static final StreamCodec<FriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
+            StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
+
     /** Defensive upper bound on synchronized override entries. */
     private static final int MAX_OVERRIDE_ENTRIES = 65536;
 
@@ -33,6 +40,11 @@ public class ConfigSyncPkt {
         this.enableSingles = enableSingles;
         this.enableBar = enableBar;
         this.renderOverrides = renderOverrides;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(ConfigSyncPkt msg, FriendlyByteBuf buf) {

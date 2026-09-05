@@ -1,23 +1,20 @@
 package com.github.crittscott.somestacks.block;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nullable;
 
 /**
  * Exact stack identity: two stacks merge if and only if their keys are equal.
  *
- * <p>The tag is copied so later mutation or removal of the source stack cannot change the key's
- * equality or hash code.
+ * <p>The component patch is immutable, so later mutation or removal of the source stack cannot
+ * change the key's equality or hash code.
  */
-record StackKey(Item item, int damage, @Nullable CompoundTag tag) {
+record StackKey(Item item, int damage, DataComponentPatch components) {
     static StackKey of(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
         return new StackKey(
                 stack.getItem(),
                 stack.getDamageValue(),
-                tag == null ? null : tag.copy());
+                stack.getComponentsPatch());
     }
 }

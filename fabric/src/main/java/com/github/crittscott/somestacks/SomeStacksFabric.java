@@ -32,6 +32,7 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerConfig.useFabricIngotTagDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
+        FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
         CommandNetwork.setHandler(new FabricCommandNetwork());
 

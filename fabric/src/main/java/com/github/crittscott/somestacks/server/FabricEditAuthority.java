@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.server;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,8 +20,8 @@ import java.util.WeakHashMap;
  * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
  * for the mod's placement-protection hook ({@link FabricPlayerEditAuthority}) to fire, and Fabric
  * API has no generic "a block was placed" event the way Forge's block-place event is. FTB Chunks
- * and Open Parties and Claims are consulted directly instead, through {@link FtbChunksProtection}
- * and {@link OpacProtection}, when either is installed; other claim mods are not covered.
+ * is consulted directly instead, through {@link FtbChunksProtection}, when it is installed; other
+ * claim mods are not covered.
  */
 public final class FabricEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(
@@ -32,15 +33,14 @@ public final class FabricEditAuthority implements EditAuthority {
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return actors.computeIfAbsent(level,
-                key -> new ServerPlayer(key.getServer(), key, PROFILE));
+                key -> new ServerPlayer(key.getServer(), key, PROFILE, ClientInformation.createDefault()));
     }
 
     @Override
     public PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
         return (placer, placedAgainst) -> {
             ServerPlayer actor = (ServerPlayer) placer;
-            return (FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos))
-                    || (OpacProtection.isLoaded() && OpacProtection.prevents(level, actor, pos));
+            return FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos);
         };
     }
 

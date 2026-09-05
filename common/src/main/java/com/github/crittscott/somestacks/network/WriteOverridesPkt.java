@@ -2,6 +2,9 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,12 @@ import java.util.List;
  * to the file the client loads at startup; carrying namespaces means a dump of every item in
  * them, written where nothing reads it back.
  */
-public class WriteOverridesPkt {
+public class WriteOverridesPkt implements CustomPacketPayload {
+    public static final Type<WriteOverridesPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "write_overrides"));
+    public static final StreamCodec<FriendlyByteBuf, WriteOverridesPkt> STREAM_CODEC =
+            StreamCodec.ofMember(WriteOverridesPkt::encode, WriteOverridesPkt::decode);
+
     /** Defensive upper bound on namespace count received from the server. */
     private static final int MAX_NAMESPACES = 4096;
 
@@ -20,6 +28,11 @@ public class WriteOverridesPkt {
 
     private WriteOverridesPkt(List<String> namespaces) {
         this.namespaces = namespaces;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     /** Writes the entries {@code ss item} set. */

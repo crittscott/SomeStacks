@@ -1,13 +1,21 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
  * Server to client: applies or resets one entry in the receiving client's user render
  * override layer, as directed by the {@code ss item} command.
  */
-public class RenderOverridePkt {
+public class RenderOverridePkt implements CustomPacketPayload {
+    public static final Type<RenderOverridePkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_override"));
+    public static final StreamCodec<FriendlyByteBuf, RenderOverridePkt> STREAM_CODEC =
+            StreamCodec.ofMember(RenderOverridePkt::encode, RenderOverridePkt::decode);
+
     private final ResourceLocation itemId;
     private final boolean reset;
     private final String renderMode;
@@ -20,6 +28,11 @@ public class RenderOverridePkt {
         this.renderMode = renderMode;
         this.scale = scale;
         this.offset = offset;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static RenderOverridePkt set(ResourceLocation itemId, String renderMode, float scale, float[] offset) {

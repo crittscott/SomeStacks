@@ -2,10 +2,12 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -32,11 +34,11 @@ public final class ItemOpsChecks {
                 "Different item was accepted");
 
         ItemStack taggedHand = new ItemStack(Items.STONE);
-        taggedHand.setTag(tag("variant", 1));
+        taggedHand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
         ItemStack taggedOffer = new ItemStack(Items.STONE);
-        taggedOffer.setTag(tag("variant", 2));
+        taggedOffer.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
         check(!ItemOps.canTakeIntoHand(taggedHand, taggedOffer),
-                "Different tags were accepted");
+                "Different components were accepted");
         helper.succeed();
     }
 
@@ -58,11 +60,11 @@ public final class ItemOpsChecks {
                 "Different-item merge");
 
         ItemStack hand = new ItemStack(Items.STONE);
-        hand.setTag(tag("variant", 1));
+        hand.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 1)));
         ItemStack incoming = new ItemStack(Items.STONE);
-        incoming.setTag(tag("variant", 2));
+        incoming.set(DataComponents.CUSTOM_DATA, CustomData.of(tag("variant", 2)));
         checkEquals(0, ItemOps.mergeIntoStack(hand, incoming),
-                "Different-tag merge");
+                "Different-component merge");
         helper.succeed();
     }
 

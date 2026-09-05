@@ -5,10 +5,12 @@ import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -71,11 +73,11 @@ public final class StoragePileChecks {
         secondTag.putInt("variant", 2);
 
         ItemStack first = new ItemStack(Items.STONE, 40);
-        first.setTag(firstTag);
+        first.set(DataComponents.CUSTOM_DATA, CustomData.of(firstTag));
         ItemStack compatible = new ItemStack(Items.STONE, 30);
-        compatible.setTag(firstTag.copy());
+        compatible.set(DataComponents.CUSTOM_DATA, CustomData.of(firstTag.copy()));
         ItemStack distinct = new ItemStack(Items.STONE, 5);
-        distinct.setTag(secondTag);
+        distinct.set(DataComponents.CUSTOM_DATA, CustomData.of(secondTag));
         storage.getItems().insertItem(10, first, false);
         storage.getItems().insertItem(20, compatible, false);
         storage.getItems().insertItem(25, distinct, false);
@@ -88,8 +90,10 @@ public final class StoragePileChecks {
         checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
         checkEquals(5, pile.getSlot(2).getCount(), "Distinct tagged stack");
         check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
-        checkEquals(firstTag, pile.getSlot(0).getTag(), "First tag identity");
-        checkEquals(secondTag, pile.getSlot(2).getTag(), "Distinct tag identity");
+        checkEquals(CustomData.of(firstTag), pile.getSlot(0).get(DataComponents.CUSTOM_DATA),
+                "First component identity");
+        checkEquals(CustomData.of(secondTag), pile.getSlot(2).get(DataComponents.CUSTOM_DATA),
+                "Distinct component identity");
         helper.succeed();
     }
 

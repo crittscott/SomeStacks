@@ -377,7 +377,7 @@ public final class StoragePile {
         if (inSlot.isEmpty()) {
             return stack.getMaxStackSize();
         }
-        if (!ItemStack.isSameItemSameTags(inSlot, stack)) {
+        if (!ItemStack.isSameItemSameComponents(inSlot, stack)) {
             return 0;
         }
         return Math.max(0, inSlot.getMaxStackSize() - inSlot.getCount());
@@ -389,7 +389,7 @@ public final class StoragePile {
 
         for (int i = 0; i < totalSlots() && !from.isEmpty(); i++) {
             ItemStack slot = getSlot(i);
-            if (slot.isEmpty() || !ItemStack.isSameItemSameTags(slot, from)) {
+            if (slot.isEmpty() || !ItemStack.isSameItemSameComponents(slot, from)) {
                 continue;
             }
             int room = slot.getMaxStackSize() - slot.getCount();

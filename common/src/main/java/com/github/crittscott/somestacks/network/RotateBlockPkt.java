@@ -5,8 +5,12 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSounds;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Items;
@@ -20,13 +24,23 @@ import net.minecraft.world.level.block.Block;
  * <p>The gesture is a sneaking click with a redstone torch in hand, which vanilla would resolve as
  * placing that torch, so the handler claims the click to deny the placement that would follow.
  */
-public class RotateBlockPkt {
+public class RotateBlockPkt implements CustomPacketPayload {
+    public static final Type<RotateBlockPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "rotate_block"));
+    public static final StreamCodec<FriendlyByteBuf, RotateBlockPkt> STREAM_CODEC =
+            StreamCodec.ofMember(RotateBlockPkt::encode, RotateBlockPkt::decode);
+
     private static final int DEGREES_PER_ROTATION = 90;
 
     private final BlockPos pos;
 
     public RotateBlockPkt(BlockPos pos) {
         this.pos = pos;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(RotateBlockPkt msg, FriendlyByteBuf buf) {

@@ -16,9 +16,13 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +44,12 @@ import javax.annotation.Nullable;
  * checks: replaceability, entity obstruction, type enablement, pile height, and the block-place
  * event.
  */
-public class PlaceAndDepositPkt {
+public class PlaceAndDepositPkt implements CustomPacketPayload {
+    public static final Type<PlaceAndDepositPkt> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "place_and_deposit"));
+    public static final StreamCodec<FriendlyByteBuf, PlaceAndDepositPkt> STREAM_CODEC =
+            StreamCodec.ofMember(PlaceAndDepositPkt::encode, PlaceAndDepositPkt::decode);
+
     private final BlockType blockType;
     private final Direction face;
     private final BlockPos pos;
@@ -49,6 +58,11 @@ public class PlaceAndDepositPkt {
         this.blockType = blockType;
         this.face = face;
         this.pos = pos;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static void encode(PlaceAndDepositPkt msg, FriendlyByteBuf buf) {
