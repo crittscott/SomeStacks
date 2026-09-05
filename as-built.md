@@ -15,9 +15,10 @@ Targets Minecraft 1.21.1 and Java 21. Build baselines: Fabric Loader 0.19.3 / Fa
 transformation dependency only; no loader carries an Architectury API runtime dependency. Mod id
 `somestacks`, root package `com.github.crittscott.somestacks`. Toolchain detail is in `build-env.md`.
 
-Only `common` and `fabric` are ported to 1.21.1. `forge` and `neoforge` are wired into the build
-but their source still targets 1.20.1 and does not compile, so every "Forge" description below is of
-that unported source; `neoforge` is a build-script skeleton plus one `@ExpectPlatform` impl.
+All four modules are ported to 1.21.1 and compile. `forge` keeps the classic Forge API
+(`DeferredRegister`/`RegistryObject`, capability attachment, `MinecraftForge.EVENT_BUS`);
+`neoforge` is the parallel port on the NeoForge equivalents. `neoforge/src/gametest` holds only the
+shared `common` sources with no per-area `@GameTest` classes yet.
 
 `common` is not a runtime artifact; its Java and resources fold into each loader JAR and hold no
 Forge or Fabric imports. Loader services enter through seams: `CommonRegistry`, `EditAuthority`,
@@ -201,9 +202,9 @@ directly, bypassing ordinary placement protection.
 
 ## Build and test layout
 
-Root `build` compiles every subproject, runs the `common/src/test` JUnit suite, and produces each
-loader JAR, but only `:fabric:build` currently succeeds; the Forge and Fabric `test` source sets are
-empty and `common/src/test` still holds 1.20.1 API. Test code is not in the production JARs.
+Root `build` compiles every subproject and produces each loader JAR. There is no JUnit suite; all
+automated testing is the GameTest suites below, and no `test` source set exists. Test code is not in
+the production JARs.
 
 Each loader's in-game tests live under `<loader>/src/gametest` as a development-only
 `somestacks_gametest` mod with its own Base64 NBT fixture, run through `:<loader>:runGameTestServer`;
@@ -213,9 +214,10 @@ each loader's `build.gradle`; `common`'s own build ignores it. Assertion logic t
 loader-native storage API lives in `GameTestScaffold` and one `*Checks` class per area, resolving
 blocks and block entities through `CommonRegistry`; each loader keeps a thin per-area `@GameTest`
 class delegating to those checks. A test that calls `IItemHandler` or the Transfer API directly
-stays loader-native, with `FakePlayer` replacing `FakePlayerFactory` on Fabric. `ProtectionGameTests`
-is loader-specific in both modules and shares only the scaffold's neutral helpers; the Fabric copy
-omits the unported Forge claim/event-bus tests, whose hooks `FabricPlayerEditAuthority` and
-`FabricEditAuthority` already exist. Neither suite is part of `build`; each runs through its own
-`runGameTestServer`. A test needing distinct but otherwise identical stacks attaches a `CUSTOM_DATA`
-component; the checked-in 1.21.1 structure fixture may still need regeneration.
+stays loader-native. A synthetic player comes from `FabricGameTestSupport`'s `FakePlayer` on Fabric
+and from `GameTestSupport.fakePlayer` on Forge, which builds a bare `ServerPlayer` the way
+`ForgeEditAuthority` does because Forge 1.21.1 dropped `FakePlayerFactory`. `ProtectionGameTests` is
+loader-specific in both modules and shares only the scaffold's neutral helpers; the Fabric copy
+omits the Forge claim/event-bus tests, which have no Fabric claim-event counterpart. Neither suite
+is part of `build`; each runs through its own `runGameTestServer`. A test needing distinct but
+otherwise identical stacks attaches a `CUSTOM_DATA` component.

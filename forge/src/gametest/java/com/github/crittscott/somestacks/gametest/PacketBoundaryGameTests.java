@@ -6,9 +6,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.util.function.Function;
 
@@ -17,45 +15,42 @@ import java.util.function.Function;
  * one, cells holding nothing, and extractions into a hand that cannot take what is offered.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class PacketBoundaryGameTests {
-    private static final String TEMPLATE = "somestacks_empty";
-
     private PacketBoundaryGameTests() {}
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper helper) {
         PacketBoundaryChecks.reachCheckAcceptsNearTargetAndRejectsFarTarget(
                 helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void gestureChecksReadOnlyTheMainHand(GameTestHelper helper) {
         PacketBoundaryChecks.gestureChecksReadOnlyTheMainHand(helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractIgnoresAnEmptyCell(GameTestHelper helper) {
         PacketBoundaryChecks.extractIgnoresAnEmptyCell(helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractRefusesAHandHoldingSomethingElse(GameTestHelper helper) {
         PacketBoundaryChecks.extractRefusesAHandHoldingSomethingElse(helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractRefusesAFullHandOfTheSameItem(GameTestHelper helper) {
         PacketBoundaryChecks.extractRefusesAFullHandOfTheSameItem(helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void refusedBarExtractionLeavesTheBlockStanding(GameTestHelper helper) {
         PacketBoundaryChecks.refusedBarExtractionLeavesTheBlockStanding(
                 helper, playerFactory(helper));
     }
 
-    @GameTest(template = TEMPLATE)
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractIgnoresAnIndexOutsideTheBlocksOwnSlots(GameTestHelper helper) {
         PacketBoundaryChecks.extractIgnoresAnIndexOutsideTheBlocksOwnSlots(
                 helper, playerFactory(helper));
@@ -65,7 +60,7 @@ public final class PacketBoundaryGameTests {
     private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
-            ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+            ServerPlayer player = GameTestSupport.fakePlayer(level);
             player.setItemInHand(PacketBoundaryChecks.HAND, mainHand);
             return player;
         };

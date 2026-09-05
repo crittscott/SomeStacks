@@ -29,12 +29,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
@@ -52,7 +50,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * follows must agree on.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
@@ -60,7 +57,7 @@ public final class ProtectionGameTests {
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(
                 valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
@@ -79,7 +76,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
@@ -93,7 +90,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void sameTickSuppressionVetoesOnlyTheMarkedPosition(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos marked = helper.absolutePos(ORIGIN);
         BlockPos other = marked.east();
 
@@ -110,7 +107,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void suppressionExpiresOnTheNextTick(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos marked = helper.absolutePos(ORIGIN);
 
         check(Protection.claimInteraction(player, marked, marked),
@@ -125,7 +122,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositSuppressesTheClickedBlockAndStillDeposits(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos clicked = target.north();
         GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -145,7 +142,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementSuppressesTheClickedBlockAndStillPlaces(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos clicked = target.below();
 
@@ -164,7 +161,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositConsultsTheAdjacentBlockThatWasActuallyClicked(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         BlockPos clicked = target.north();
         GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -193,7 +190,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         GameTestScaffold.placeStorage(helper, ORIGIN);
 
@@ -257,7 +254,7 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
 
@@ -290,7 +287,7 @@ public final class ProtectionGameTests {
     public static void placementHonorsUseItemDenyWithoutChangingBlockAccess(
             GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos clicked = helper.absolutePos(ORIGIN);
         Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
             if (event.getEntity() == player && event.getPos().equals(clicked)) {

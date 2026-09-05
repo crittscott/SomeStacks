@@ -11,7 +11,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -26,7 +25,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * growth, and settling consolidating, packing, and sorting.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class StoragePileGameTests {
     private StoragePileGameTests() {}
 

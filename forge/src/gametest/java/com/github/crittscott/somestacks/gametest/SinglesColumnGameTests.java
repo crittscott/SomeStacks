@@ -8,7 +8,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -24,7 +23,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
  * shifting a column down while carrying each item's rotation with it.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class SinglesColumnGameTests {
     private SinglesColumnGameTests() {}
 

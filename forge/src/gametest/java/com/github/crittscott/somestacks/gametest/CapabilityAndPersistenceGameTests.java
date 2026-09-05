@@ -14,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -31,7 +30,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * and presentation state it is responsible for.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class CapabilityAndPersistenceGameTests {
     private CapabilityAndPersistenceGameTests() {}
 

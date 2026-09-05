@@ -12,7 +12,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -36,7 +35,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
  * backfills from the top instead.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class BarColumnGameTests {
     private BarColumnGameTests() {}
 

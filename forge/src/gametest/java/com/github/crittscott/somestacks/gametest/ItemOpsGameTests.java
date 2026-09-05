@@ -4,14 +4,12 @@ import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.gametest.GameTestHolder;
-import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 /**
  * The shared item helpers, exercised against real registry items: what a hand will accept, what a
  * merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.
  */
 @GameTestHolder(SomeStacks.MODID)
-@PrefixGameTestTemplate(false)
 public final class ItemOpsGameTests {
     private ItemOpsGameTests() {}
 
