@@ -17,8 +17,8 @@ transformation dependency only; no loader carries an Architectury API runtime de
 
 All four modules are ported to 1.21.1 and compile. `forge` keeps the classic Forge API
 (`DeferredRegister`/`RegistryObject`, capability attachment, `MinecraftForge.EVENT_BUS`);
-`neoforge` is the parallel port on the NeoForge equivalents. `neoforge/src/gametest` holds only the
-shared `common` sources with no per-area `@GameTest` classes yet.
+`neoforge` is the parallel port on the NeoForge equivalents. All three loaders carry a full GameTest
+suite.
 
 `common` is not a runtime artifact; its Java and resources fold into each loader JAR and hold no
 Forge or Fabric imports. Loader services enter through seams: `CommonRegistry`, `EditAuthority`,
@@ -208,16 +208,19 @@ the production JARs.
 
 Each loader's in-game tests live under `<loader>/src/gametest` as a development-only
 `somestacks_gametest` mod with its own Base64 NBT fixture, run through `:<loader>:runGameTestServer`;
-Forge discovers `@GameTestHolder` classes, Fabric uses a `fabric-gametest` entrypoint list in the
-dev mod's `fabric.mod.json`. `common/src/gametest/java` is added as an extra source directory by
-each loader's `build.gradle`; `common`'s own build ignores it. Assertion logic that touches no
-loader-native storage API lives in `GameTestScaffold` and one `*Checks` class per area, resolving
-blocks and block entities through `CommonRegistry`; each loader keeps a thin per-area `@GameTest`
-class delegating to those checks. A test that calls `IItemHandler` or the Transfer API directly
-stays loader-native. A synthetic player comes from `FabricGameTestSupport`'s `FakePlayer` on Fabric
-and from `GameTestSupport.fakePlayer` on Forge, which builds a bare `ServerPlayer` the way
+Forge and NeoForge discover `@GameTestHolder` classes, Fabric uses a `fabric-gametest` entrypoint
+list in the dev mod's `fabric.mod.json`. Every NeoForge holder also carries
+`@PrefixGameTestTemplate(false)` and names the fixture by bare path, since NeoForge prepends the
+holder namespace and, by default, the class name. `common/src/gametest/java` is an extra source
+directory in each loader's `build.gradle`; `common`'s own build ignores it.
+Assertion logic that touches no loader-native storage API lives in `GameTestScaffold` and one
+`*Checks` class per area, resolving blocks and block entities through `CommonRegistry`; each loader
+keeps a thin per-area `@GameTest` class delegating to those checks. A test that calls `IItemHandler`
+or the Transfer API directly stays loader-native. A synthetic player comes from
+`FabricGameTestSupport`'s `FakePlayer` on Fabric, from `FakePlayerFactory` on NeoForge, and from
+`GameTestSupport.fakePlayer` on Forge, which builds a bare `ServerPlayer` the way
 `ForgeEditAuthority` does because Forge 1.21.1 dropped `FakePlayerFactory`. `ProtectionGameTests` is
-loader-specific in both modules and shares only the scaffold's neutral helpers; the Fabric copy
-omits the Forge claim/event-bus tests, which have no Fabric claim-event counterpart. Neither suite
-is part of `build`; each runs through its own `runGameTestServer`. A test needing distinct but
-otherwise identical stacks attaches a `CUSTOM_DATA` component.
+loader-specific in all three modules and shares only the scaffold's neutral helpers; the Fabric copy
+omits the claim/event-bus tests, which have no Fabric claim-event counterpart. No suite is part of
+`build`; each runs through its own `runGameTestServer`. A test needing distinct but otherwise
+identical stacks attaches a `CUSTOM_DATA` component.

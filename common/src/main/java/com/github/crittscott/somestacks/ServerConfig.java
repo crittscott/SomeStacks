@@ -125,8 +125,11 @@ public final class ServerConfig {
         return galleryPermissionLevel;
     }
 
-    /** Selects Fabric convention tags for a new config; an existing file remains authoritative. */
-    public static void useFabricIngotTagDefaults() {
+    /**
+     * Selects the {@code c:} common-tag convention for a new config, used by loaders that do not
+     * populate the {@code forge:} tags (Fabric and NeoForge). An existing file remains authoritative.
+     */
+    public static void useCommonIngotTagDefaults() {
         if (configFile == null) {
             ingotTagsRaw = new ArrayList<>(List.of("c:ingots*", "somestacks:ingots"));
         }

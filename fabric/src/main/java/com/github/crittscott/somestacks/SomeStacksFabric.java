@@ -29,7 +29,7 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useFabricIngotTagDefaults();
+        ServerConfig.useCommonIngotTagDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.registerPayloads();

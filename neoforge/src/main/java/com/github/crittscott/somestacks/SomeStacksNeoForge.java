@@ -47,6 +47,7 @@ public class SomeStacksNeoForge {
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         PlayerEdits.setAuthority(new NeoForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.blockInteractionRange());
+        ServerConfig.useCommonIngotTagDefaults();
 
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
