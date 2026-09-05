@@ -1,348 +1,259 @@
-# Some Stacks — as-built player-facing description
+# Some Stacks — player-facing behavior
 
-This describes the mod's current observable behavior. It is not a design specification; where it
-disagrees with the code, the code is authoritative.
+As-built description of the mod's observable behavior. Where this disagrees with the code, the code
+wins. An orientation, not a full spec and not a history.
 
-Some Stacks turns held items directly into visible world storage. It adds three stack blocks, but no
-block items, recipes, creative-tab entries, or storage screens. A stack exists because an item was
-deposited into the world, and it normally disappears when its last contents are removed.
+Some Stacks turns held items directly into visible world storage. It adds three stack blocks and
+nothing else: no block items, recipes, creative-tab entries, or storage screens. A stack exists
+because an item was deposited into the world and normally disappears when its last contents are
+removed.
 
-The mod requires Minecraft 1.20.1 and either Forge 47.x or Fabric Loader 0.19.3 with Fabric API
-0.92.7+1.20.1. Architectury API is required on both loaders. Some Stacks must be installed on both
-the client and server.
+Requires Minecraft 1.21.1 and Fabric Loader 0.19.3+ with Fabric API 0.116.15+1.21.1. Forge and
+NeoForge builds are planned but not yet available. Must be installed on both client and server.
 
 ## The three stack types
 
 | Type | Capacity per block | Contents | Character |
-| --- | ---: | --- | --- |
-| **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, grows, and shrinks |
-| **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid with one supported item per cell |
-| **Bar Stack** | 64 items | Server-defined ingots | Eight alternating layers of supported bars |
+| --- | --- | --- | --- |
+| **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, and grows or shrinks |
+| **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
+| **Bar Stack** | 64 items | Server-defined ingots | Eight alternating layers of bars |
 
-A vertical run of the same stack type is one pile or column. The default maximum height is eight
-blocks, so the default capacities are 216 ordinary slots for Storage and 512 individual positions
-for Singles or Bar.
+A vertical run of one stack type is a single pile or column with one shared inventory. Default
+maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
 
-## Controls and placement modes
+## Controls
 
-The Stack Modifier is `V` by default. It is a held modifier and can be rebound under
-**Options -> Controls -> Some Stacks -> Stack Modifier (Hold)**.
+The Stack Modifier is held `V` by default, rebindable under **Options -> Controls -> Some Stacks**.
 
-Hold `V` and right-click the air to cycle through:
-
-1. Storage Stack
-2. Singles Stack
-3. Bar Stack
-4. Toggle Permanent
-
-The selected mode is displayed above the hotbar. A stack type disabled by the server is skipped;
-Toggle Permanent is always included. The mode controls what a new block will be. It does not change
-the type of a stack already in the world.
-
-## Gesture reference
+Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The
+selected mode shows above the hotbar; server-disabled types are skipped. The mode sets what a new
+block becomes; it never changes an existing stack.
 
 | Gesture | Result |
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode |
-| Hold `V` with an item, right-click an existing stack | Deposit into the clicked stack, regardless of selected mode |
-| Hold `V` with an item, right-click another block | Deposit into an adjacent Singles/Bar Stack when applicable; otherwise place the selected type against that face and make the first deposit |
-| Right-click a stack with no `V` and no Shift | Extract from the nearest visible stored item on the view ray |
-| Select Toggle Permanent, then hold `V` and right-click a Storage Stack empty-handed | Toggle whether that whole pile keeps empty blocks |
-| Shift-right-click a Storage or Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
+| Hold `V` + item, right-click a stack | Deposit into that stack, whatever the selected mode |
+| Hold `V` + item, right-click another block | Deposit into an adjacent Singles/Bar Stack if applicable, otherwise place the selected type against that face and make the first deposit |
+| Right-click a stack, no `V`, no Shift | Extract the nearest stored item on the view ray |
+| Toggle Permanent mode, hold `V`, empty hand, right-click a Storage Stack | Toggle whether that pile keeps empty blocks |
+| Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only main-hand gestures act. The modifier gestures do not spend either torch. Rotation reports the
-new angle above the hotbar. Rotation itself may happen every tick, but its sound is limited to once
-per player every four ticks.
-
-Sneaking keeps ordinary item/block interaction available except where one of the two torch gestures
-claims the click.
+Only the main hand acts. Torch gestures do not spend the torch. Rotation reports the new angle
+above the hotbar; its sound is limited to once per player every 4 ticks. Sneaking keeps ordinary
+interaction available except where a torch gesture claims the click.
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic. The block is not placed unless the item is valid, the
-targeted first cell is supported, the final shape is unobstructed, the space is replaceable, the run
-would remain within its height limit, and protection allows the edit. Failed placement therefore
-does not leave an empty stack block behind.
+A placement and its first deposit are atomic: the block is not placed unless the item is valid, the
+target cell is supported, the final shape is unobstructed and replaceable, the run stays within its
+height limit, and protection allows the edit. Failed placement leaves nothing behind.
 
-Placement into water creates a waterlogged stack and preserves the water. A new block can also be
-added on top of an existing run when a top-face deposit targets an occupied or unsupported cell in
-the clicked block.
-What appears above is the currently selected stack type, so different types can be placed next to or
-on top of one another; only contiguous blocks of the same type share a run.
+Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied
+or unsupported top cell adds a new block above the run, of the currently selected type; different
+types can therefore sit beside or atop one another, and only contiguous same-type blocks share a
+run.
 
-In creative mode, deposits fill stacks without reducing the item stack in the player's hand.
+In creative mode, deposits do not reduce the held stack.
 
-Deposits are rejected when the server has disabled the item's mod or exact item id. Existing stored
-items remain extractable. Items rejected by the selected type simply do nothing: Bar accepts only
-configured ingots, and Singles accepts everything allowed that Bar does not.
+Deposits are rejected when the server has disabled the item's mod or exact item id; existing
+contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes
+only configured ingots, Singles takes everything allowed that Bar does not.
 
 ## Extracting
 
-Plain right-click traces the items rendered inside the clicked block and targets the nearest one on
-the player's view ray.
+Plain right-click targets the nearest rendered item on the view ray inside the clicked block.
 
-- Storage extracts as much of the targeted ordinary stack as the hand can hold.
-- Singles extracts one item.
-- Bar extracts one bar and may collapse unsupported bars above it.
+- Storage: as much of the targeted stack as the hand can hold.
+- Singles: one item.
+- Bar: one bar, and any bars left unsupported above it collapse and drop.
 
-The main hand must be empty or already contain the exact same item, damage, and NBT data with room in
-the stack. A plain click on a stack is consumed even when extraction fails, so an unrelated held
-item is not accidentally used against the stack.
+The main hand must be empty or hold the same item (matching damage and components) with room. A
+plain click on a stack is consumed even when extraction fails, so an unrelated held item is not
+used against the stack.
 
-Breaking or replacing any stack block drops that block's local contents. No stack block item drops.
-The Storage runs left above and below the gap settle independently in place. Singles leaves the
-separated runs as they stand. Removing a Bar Stack also removes the support seam beneath the Bar
-Stacks above, so unsupported bars there collapse and drop.
+Breaking or replacing any stack block drops that block's local contents; no stack block item drops.
+Storage runs above and below the gap settle independently. Removing a Bar Stack also removes the
+support seam beneath the Bars above it, so those collapse.
 
-## Storage Stacks
+## Per-type behavior
 
-A Storage Stack holds 27 ordinary item stacks displayed as a 3 x 3 x 3 grid. The displayed art does
-not change with the stack count: a slot holding one item and a full slot each show one item model.
+### Storage
 
-A contiguous vertical pile is one inventory. Deposit into any block and the pile:
+27 stacks shown as a 3 x 3 x 3 grid; the art does not change with count. A contiguous pile is one
+inventory: deposits merge into compatible partial stacks first, fill from the base up, and grow
+upward when full and allowed. Each scheduled settlement merges exact identities, restores stack
+sizes, sorts, packs down, and removes empty top blocks.
 
-- merges into compatible partial stacks before opening new slots;
-- fills from the base upward;
-- grows upward when all current slots are full and growth is allowed;
-- merges every exact item/damage/NBT identity during settlement;
-- sorts its resulting stacks into a stable order; and
-- removes empty blocks from the top.
+Storage is the only type with a permanence mode. A permanent pile keeps empty blocks; a temporary
+pile trims empty blocks from the top and vanishes when emptied. The setting belongs to the whole
+pile. A redstone torch rotates one block's 3 x 3 x 3 layout, not the pile.
 
-Extraction is from the aimed cell first. On the following scheduled block tick, the whole pile packs
-down and sorts over the gap.
+### Singles
 
-Storage is the only type with a permanence mode. In Toggle Permanent mode, use the modifier and an
-empty hand on any block in the pile. A permanent pile retains empty blocks; a temporary pile removes
-empty blocks from its top and disappears completely when emptied. The setting belongs to the whole
-pile and is shown above the hotbar when toggled.
+64 items, one per cell in a 4 x 4 x 4 grid. An item currently valid for Bar is invalid here. Every
+item needs support: the lowest block's bottom layer rests on the world, every other cell rests on
+the one directly below, and support follows the same visible column across a block seam even when
+the two blocks have different rotations.
 
-A redstone torch rotates one Storage block's visible 3 x 3 x 3 layout. It does not rotate the entire
-vertical pile.
+A deposit goes only into the cell the view selects; it does not search the column. Removing an item
+drops every occupied cell above it in that visible column down one layer, across seams, keeping each
+item's own rotation; it does not compact other columns or close preexisting gaps. Empty top blocks
+remove themselves.
 
-## Singles Stacks
+A redstone torch rotates a whole block; a soul torch rotates only the aimed item. Per-item rotation
+stays with the item when gravity moves it.
 
-A Singles Stack holds 64 items, one per cell in a 4 x 4 x 4 grid. An item that the server currently
-classifies as valid for Bar is invalid for Singles.
+### Bar
 
-Every item needs support:
+64 server-approved ingots rendered as fixed bar cuboids in eight layers of eight, each layer across
+the one below. The item model is not drawn; a resource pack supplies the bar texture and tint.
 
-- the bottom layer of the lowest Singles block rests on the world;
-- any other cell rests on the cell directly beneath it; and
-- across a boundary between two Singles blocks, support follows the same visible column even if the
-  two blocks have different rotations.
-
-A deposit goes into the cell selected by the view through the grid. It does not search the rest of
-the column if that named cell is occupied or unsupported.
-
-Removing an item shifts every occupied cell above it in that visible column down one layer. The
-shift crosses block boundaries and preserves each item's own rotation. It does not horizontally
-compact other columns or erase preexisting gaps. Empty blocks left at the top remove themselves.
-
-A redstone torch rotates a whole Singles block. A soul torch rotates only the aimed item. Both are
-quarter-turns. Per-item rotation remains attached to the item when gravity moves it.
-
-## Bar Stacks
-
-A Bar Stack holds 64 server-approved ingots rendered as fixed bar-shaped cuboids. It has eight
-layers of eight bars; each layer lies across the layer below it. The item model itself is not drawn.
-A resource pack supplies or derives the bar texture and tint.
-
-Every bar above the bottom layer must overlap a bar immediately below it. The bottom of a Bar column
-rests on the world, and support crosses a boundary between two adjacent Bar blocks.
-
-When a player removes a bar, every bar that loses support drops as an item. That loss of support can
-travel through multiple layers and blocks. Bars that still overlap support stay in place. Breaking
-or replacing a Bar block produces the same support collapse above it.
-
-Bar Stacks have no rotation gesture. Their alternating layer directions are fixed.
+Every bar above the bottom layer must overlap a bar directly below, and support crosses a seam
+between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses
+support, possibly cascading through layers and blocks. Bar Stacks have no rotation gesture.
 
 ## Shared block behavior
 
-- **Water:** All three blocks are waterloggable.
-- **Light:** Each occupied cell containing a glowing `BlockItem` contributes one quarter of that
-  block's default light level, using integer division. Contributions add and the block is capped at
-  light level 15. Item count within one Storage slot does not multiply its contribution.
-- **Pistons:** All three blocks block piston movement.
-- **Collision:** Storage has a full-block physical shape. Singles and Bar collision follows their
-  occupied cells or bars. Their empty internal space does not suffocate the player or fog the
-  camera, but mobs treat the entire block as unavailable for pathfinding.
-- **Empty dynamic blocks:** An empty Singles or Bar block has no outline shape, but its full-block
-  interaction shape still makes it clickable and breakable.
-- **Sounds:** Deposits, extraction, and rotations play server-selected sounds. Data packs can replace
-  those sounds per type and action.
+- **Water:** all three are waterloggable.
+- **Light:** each cell holding a glowing `BlockItem` contributes a quarter of that block's light
+  level by integer division; contributions add, capped at 15. Item count in a Storage slot does not
+  matter.
+- **Pistons:** all three block piston movement.
+- **Collision:** Storage is a full block. Singles and Bar collide only on occupied cells or bars;
+  their empty space does not suffocate or fog the camera, but mobs treat the whole block as
+  unpathable.
+- **Empty dynamic blocks:** an empty Singles or Bar block has no outline but stays clickable and
+  breakable.
+- **Sounds:** deposits, extraction, and rotations play server-selected sounds; data packs can
+  replace them per type and action.
 
 ## Automation
 
-Every block exposes loader-native item storage on all six sides: `IItemHandler` on Forge and
-Transfer API `Storage<ItemVariant>` on Fabric. The view covers the entire contiguous vertical run,
-no matter which block a hopper, pipe, or other machine connects to. Slots are numbered from the
-bottom block upward.
+Every block exposes loader-native item storage on all six sides (`IItemHandler` on Forge, Transfer
+API `Storage<ItemVariant>` on Fabric) covering the entire contiguous run, whichever block a machine
+connects to. Slots number from the bottom block up.
 
-| Type | One automation slot means | Slot limit |
-| --- | --- | ---: |
-| Storage | One ordinary inventory slot | 64 advertised; the item's own maximum still applies |
-| Singles | One physical display cell | 1 |
-| Bar | One physical bar position | 1 |
+| Type | One slot | Slot limit |
+| --- | --- | --- |
+| Storage | one inventory slot | 64 advertised; the item's own max still applies |
+| Singles | one display cell | 1 |
+| Bar | one bar position | 1 |
 
-The advertised storage contains every current position plus one block of headroom while the run is
-below the configured maximum height. Inserting into a headroom position can grow the run. Growth is
-refused when the type is disabled, the space cannot be replaced, an entity obstructs the final
-shape, build height or maximum run height is reached, or the loader's world-edit authority refuses
-the automation actor.
+The advertised storage includes every current position plus one block of headroom while below the
+max height; inserting into headroom can grow the run. Growth is refused when the type is disabled,
+the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the
+loader's edit authority refuses the automation actor.
 
-Storage automation insertion is positional at the moment of the call, then the next settlement
-packs and sorts the pile. Singles and Bar insertion accepts only the exact empty supported position
-named. A machine that walks positions from bottom to top builds their structures layer by layer.
+Storage insertion is positional at the moment of the call, then the next settlement packs and
+sorts. Singles and Bar accept only the exact empty supported position named. For extraction,
+Storage removes from the named slot then settles, Singles uses the same one-column gravity as player
+extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction
+collapse.
 
-Automated extraction differs by type:
-
-- Storage removes from the named slot, then the pile settles.
-- Singles uses the same vertical one-column gravity as player extraction.
-- Bar removes the named bar and moves the whole column's topmost bar into the hole. This avoids the
-  item-dropping collapse caused by player extraction.
-
-A reentrant automation mutation triggered during another structural mutation is refused with the
-ordinary loader failure result and can be retried on a later tick. On Fabric, mutations are staged
-until the outer Transfer API transaction commits; Singles and Bar permit one structural extraction
-position per transaction, so bulk callers should retry for subsequent items.
+Reentrant automation during another structural mutation is refused with the ordinary loader failure
+and can be retried next tick. On Fabric, mutations stage until the transaction commits, and Singles
+and Bar allow one structural extraction position per transaction.
 
 ## Comparators
 
-A comparator against any block reads the fill of the entire contiguous run, not just that block.
+A comparator reads the fill of the entire run, not just one block:
 
 ```text
 0 when empty, otherwise floor(fill * 14) + 1
 ```
 
-Storage counts each slot as a fraction of its legal stack size. Singles and Bar count occupied
-positions. Signal 0 therefore means empty and nothing else; a completely full current run gives 15.
+Storage counts each slot as a fraction of its legal stack size; Singles and Bar count occupied
+positions. 0 means empty; a full run gives 15.
 
 ## Server configuration
 
-Each world stores its loader-neutral JSON policy at
-`<world>/serverconfig/somestacks-server.json`.
+Per-world JSON policy at `<world>/serverconfig/somestacks-server.json`.
 
-| Setting | Default | Player-visible effect |
-| --- | ---: | --- |
-| `piles.max_pile_height` | `8` | Maximum height of every same-type run, from 1 through 64 |
-| `stacks.enable_storage_stack_block` | `true` | Prevents new Storage placement and growth when false |
-| `stacks.enable_singles_stack_block` | `true` | Prevents new Singles placement and growth when false |
-| `stacks.enable_bar_stack_block` | `true` | Prevents new Bar placement and growth when false |
+| Setting | Default | Effect |
+| --- | --- | --- |
+| `piles.max_pile_height` | `8` | Maximum height of every same-type run, 1-64 |
+| `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
-| `compatibility.disable_items` | empty | Refuses exact items in player deposit gestures only |
-| `compatibility.ingot_tags` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Defines what Bar accepts and Singles refuses |
-| `render_gallery.placements_per_tick` | `64` | Throttles administrator gallery construction |
-| `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery`; both are refused while false |
-| `render_gallery.required_permission_level` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require, 0-4 |
-| `render_gallery.gen_mods` | empty | Namespaces used by the `list` gallery/write forms |
-| `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
+| `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
+| `compatibility.ingot_tags` | `forge:ingots*` / `c:ingots*`, plus `somestacks:ingots` | What Bar accepts and Singles refuses; entries may contain `*` |
+| `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
+| `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
+| `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
+| `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling a type does not remove existing blocks or prevent extraction from them. Disabling an item,
-mod, or ingot category does not eject existing contents. The client receives the three enable flags
-on login and skips disabled types while cycling placement modes.
-
-An ingot-tag entry may contain `*`. For example, `forge:ingots*` matches `forge:ingots` and child
-tags such as `forge:ingots/copper`; Fabric uses the corresponding `c:ingots*` convention by
-default. Data-pack tag changes are picked up on reload.
+Disabling a type, item, mod, or ingot category never removes or ejects existing contents. The
+client receives the enable flags on login and skips disabled types when cycling modes. Data-pack
+tag changes are picked up on reload.
 
 ## Commands
 
-`/ss` is primarily an administrator and render-authoring tool.
+`/ss` is mainly an admin and render-authoring tool.
 
-| Command family | Permission | Purpose |
+| Command | Permission | Purpose |
 | --- | --- | --- |
-| `/ss help [command]` | Anyone | List commands or explain one |
-| `/ss item <item> <mode> ...` and `reset` | Level 2, player | Change how one item appears on that client |
-| `/ss write changed` | Level 2, player | Save that client's changed item profiles |
-| `/ss write <modid|all|list>` | Level 2, player | Generate complete profile files on that client |
-| `/ss gallery <modid|all|list|items>` | `render_gallery.required_permission_level` (default 3), player; disabled by default | Build Storage render galleries |
-| `/ss ingotgallery <modid|all|list>` | `render_gallery.required_permission_level` (default 3), player; disabled by default | Build Bar render galleries |
-| `/ss gen ...` | Level 2 | Edit gallery namespace and item lists |
-| `/ss deny ...` | Level 2 | Edit disabled namespace and exact-item lists |
-| `/ss ingot ...` | Level 2 | Edit the ingot tag-pattern list |
-| `/ss reload` | Level 2 | Reload server item-render overrides and resync players |
+| `/ss help [command]` | anyone | List or explain commands |
+| `/ss item ...` / `reset` | level 2 | Change how one item appears on that client |
+| `/ss write changed\|<modid>\|all\|list` | level 2 | Save changed item profiles, or generate complete profile files |
+| `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
+| `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
+| `/ss reload` | level 2 | Reload server item-render overrides and resync players |
 
-Gallery commands build east of the player over a sandstone floor, with rows running north. They
-replace their floor and stack positions directly and do not perform the protection checks used by
-ordinary placement, which is why they are disabled by default and, once enabled, default to
-permission level 3. Large galleries are spread across server ticks.
+Gallery commands build east of the player over a replaced sandstone floor, skip the protection
+checks ordinary placement uses (hence off by default), and spread large jobs across ticks.
+`/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on
+restart.
 
-`/ss reload` does not reread the world-policy JSON. Command edits are saved immediately; direct
-file edits take effect after restarting the server.
+## Item appearance
 
-## Item appearance and render overrides
+Storage and Singles can show an item in four modes: `2d` (flat art on a small cube), `3d` (the
+item's FIXED renderer), `gui` (its inventory renderer), and `block` (a BlockItem's block state,
+falling back to `3d`). Each profile can also set scale and a three-component offset.
 
-Storage and Singles can show an item in four modes:
+Resolution order: server override, the player's local override file, resource-pack data, then
+automatic measurement from the baked model. A server override therefore wins over local
+preferences. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated
+by resource-pack, mod-version, or resource-reload changes.
 
-| Mode | Appearance |
-| --- | --- |
-| `2d` | Flat item art projected onto visible faces of a small background cube |
-| `3d` | The item's renderer in FIXED context |
-| `gui` | Its inventory-style renderer, adjusted to sit in the cell |
-| `block` | A BlockItem's block state, with fallback to `3d` when that cannot be drawn safely |
+`/ss item` changes the client's in-memory layer immediately; `/ss write changed` saves those
+changes to `config/somestacks/item_overrides.json`. The namespace forms write complete files to
+`config/somestacks/generated_overrides/`, which is output only and not loaded.
 
-Each profile can also set scale and a three-component offset. Resolution order is server override,
-the player's local override file, resource-pack compatibility data, then automatic measurement. A
-server override therefore wins over local preferences for Storage and Singles presentation.
+Bar appearance is separate and client-side: resource packs map item ids to bar textures and tints
+under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite
+and color. Bar mappings are not synchronized, so players with different packs may see different
+bars.
 
-Unconfigured items are measured from their actual baked model and fitted into a cell. Results are
-cached at `config/somestacks/measured_cache.json`. Changing selected resource packs between sessions,
-changing the owning mod's version, or manually reloading resources invalidates relevant cached
-measurements.
+## Extension points
 
-`/ss item` changes the player's in-memory local layer immediately. `/ss write changed` saves only
-those explicit changes to `config/somestacks/item_overrides.json`. The namespace forms of `/ss write`
-produce complete files in `config/somestacks/generated_overrides/`; that directory is output only
-and is not loaded automatically.
-
-Bar appearance is separate. Resource packs map item ids to bar textures and optional tints under
-`assets/<namespace>/textures/bars/*.json`. Missing tints are derived from the item's sprite and
-registered item color. Bar mappings are client-side and are not synchronized, so two players with
-different resource packs may see different bars.
-
-## Data-pack and resource-pack extension points
-
-- A data pack can add items to tags selected by `ingot_tags`, including the shipped
-  `somestacks:ingots` tag.
-- A data pack can replace stack action sounds through
-  `data/<namespace>/somestacks_sounds/*.json`.
-- A resource pack can add Storage/Singles profiles through
-  `assets/<namespace>/item_render_overrides/*.json`.
-- A resource pack can add Bar textures and tints through
+- Data pack: add items to the tags named by `ingot_tags`, including `somestacks:ingots`; replace
+  action sounds via `data/<namespace>/somestacks_sounds/*.json`.
+- Resource pack: add Storage/Singles profiles via
+  `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via
   `assets/<namespace>/textures/bars/*.json`.
-- A server can impose Storage/Singles profiles through
-  `config/somestacks/server_item_overrides/*.json`, synchronized on login or `/ss reload`.
+- Server: impose Storage/Singles profiles via `config/somestacks/server_item_overrides/*.json`,
+  synced on login and `/ss reload`.
 
-## Multiplayer protection and packet validation
+## Protection and validation
 
 Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world
-border, and spawn protection on both loaders. Interaction and structural edits also fire a real
-protection event on both loaders, allowing claim and logging mods that use those hooks to allow,
-deny, or record the edit — Forge's own interaction, place, and break events, and Fabric API's
-`UseBlockCallback` and `PlayerBlockBreakEvents`. Automatic growth and removal use a loader-provided
-automation actor. Fabric API has no placement event for automation to trigger, so on Fabric,
-automated growth additionally consults FTB Chunks and Open Parties and Claims directly, when either
-is installed, on top of vanilla protection.
+border, and spawn protection, and fire a real protection event that claim and logging mods can hook
+(Forge's interaction/place/break events; Fabric API's `UseBlockCallback` and
+`PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has
+no placement event, so on Fabric automated growth also consults FTB Chunks directly when it is
+installed.
 
-The server independently validates every gesture packet: one attempt per player per tick,
-nonspectator status, loaded target, reach, held item, target block and index, adjacency, support,
-type enablement, height, and protection as applicable. Cell selection for deposits is recomputed
-from the player's current view.
+The server independently validates every gesture packet: one per player per tick, nonspectator,
+loaded target, reach, held item, target block and index, adjacency, support, type enablement,
+height, and protection. Deposit cell selection is recomputed from the player's current view;
+extraction and Singles item rotation trust a range- and occupancy-checked client cell index.
 
-## Current boundaries
+## Boundaries
 
-- There is no inventory screen, portable stack item, recipe, creative-tab entry, or block-item
-  drop.
-- Only Storage piles can be permanent. Empty Singles and Bar blocks are normally removed by their
-  structural cleanup.
-- Exact-item denial applies to player gestures, not automation; namespace denial applies to both.
-- Server item-render overrides govern Storage and Singles profiles, not client-only Bar texture
-  mappings.
-- Existing contents remain legal to extract and to move internally after a config or tag change
-  that would reject a new deposit.
-- Fabric protection now includes a real interaction event for player gestures and a real break
-  event for automation-driven removal, matching Forge. Fabric API still has no placement-event
-  equivalent for automation to trigger; on Fabric, automated growth checks vanilla build,
-  obstruction, border, and spawn rules plus FTB Chunks and Open Parties and Claims directly when
-  either is installed.
+- No inventory screen, portable stack item, recipe, creative-tab entry, or block-item drop.
+- Only Storage piles can be permanent; empty Singles and Bar blocks are cleaned up.
+- Exact-item denial applies to player gestures only; namespace denial applies to automation too.
+- Server render overrides govern Storage and Singles profiles, not client-only Bar mappings.
+- Existing contents stay legal to extract and move internally after a config or tag change that
+  would reject a new deposit.

@@ -10,239 +10,153 @@ This is an orientation to the current code, not a history, conversation, or pros
 
 ## Project shape
 
-Some Stacks targets Minecraft 1.21.1 and Java 21, with Fabric Loader 0.19.3 / Fabric API
-0.116.15+1.21.1, Forge 52.1.16, and NeoForge 21.1.248 build baselines. Architectury is a build-time
-plugin and transformation dependency only; no loader carries an Architectury API runtime
-dependency. The mod id is `somestacks` and the root package is `com.github.crittscott.somestacks`.
-See `build-env.md` for the complete toolchain, dependency constraints, and build commands.
+Targets Minecraft 1.21.1 and Java 21. Build baselines: Fabric Loader 0.19.3 / Fabric API
+0.116.15+1.21.1, Forge 52.1.16, NeoForge 21.1.248. Architectury is a build-time plugin and
+transformation dependency only; no loader carries an Architectury API runtime dependency. Mod id
+`somestacks`, root package `com.github.crittscott.somestacks`. Toolchain detail is in `build-env.md`.
 
-Only `common` and `fabric` are ported to 1.21.1. The `forge` and `neoforge` modules are wired into
-the build but their source still targets 1.20.1 APIs and does not compile; the sections below that
-describe Forge behavior describe the not-yet-ported 1.20.1 source. `neoforge` holds only a
-build-script skeleton and one `@ExpectPlatform` implementation.
+Only `common` and `fabric` are ported to 1.21.1. `forge` and `neoforge` are wired into the build
+but their source still targets 1.20.1 and does not compile, so every "Forge" description below is of
+that unported source; `neoforge` is a build-script skeleton plus one `@ExpectPlatform` impl.
 
-The implementation is split between four modules:
+`common` is not a runtime artifact; its Java and resources fold into each loader JAR and hold no
+Forge or Fabric imports. Loader services enter through seams: `CommonRegistry`, `EditAuthority`,
+networking callbacks, client gesture adapters, the automation adapters, and the `@ExpectPlatform`
+helper `PlatformPaths` (one `PlatformPathsImpl` per loader). Release JARs are per loader under
+`<loader>/build/libs/`; root `build/libs` is not an output. Fabric's remapped JAR also carries
+`somestacks.mixins.json`; Loom's `remapJar` writes mixin references statically, so the config
+declares no runtime refmap.
 
-```text
-common/     loader-neutral mechanics, rendering, commands, and shared resources
-forge/      Forge registration, lifecycle, networking, gestures, and automation adapter
-fabric/     Fabric registration, lifecycle, networking, gestures, mixin, and automation adapter
-neoforge/   NeoForge module (build skeleton only; source not yet written)
-```
-
-`common` is not a separate runtime artifact. Its Java and resources are included in each loader
-JAR. Common source contains no Forge or Fabric imports; loader services enter through small seams
-such as `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, the
-loader-native automation adapters, and the `@ExpectPlatform` helper `PlatformPaths` (config-directory
-lookup, one `PlatformPathsImpl` per loader).
-
-Release artifacts are loader-local:
-
-```text
-forge/build/libs/somestacks-forge-<version>.jar
-fabric/build/libs/somestacks-fabric-<version>.jar
-```
-
-The root `build/libs` directory is not a current loader output. Each release JAR contains common
-classes and resources plus its loader metadata. Fabric's remapped JAR also contains
-`somestacks.mixins.json` and the expanded shared `pack.mcmeta`. Mixin string references are remapped
-statically into the class files by Loom's `remapJar` step; the config declares no runtime refmap,
-since none is produced or needed.
-
-The mod registers three blocks and their block entity types, but no block items, menus, recipes, or
+Three blocks and their block entity types are registered; no block items, menus, recipes, or
 portable containers.
 
-| Block | Block entity | Local storage | Purpose |
-| --- | --- | ---: | --- |
-| `storage_stack_block` | `stack_be` | 27 item stacks | Dense bulk storage |
-| `singles_stack_block` | `singles_stack_be` | 64 single items | Supported 4 x 4 x 4 display grid |
-| `bar_stack_block` | `bar_stack_be` | 64 single items | Eight alternating layers of bars |
+| Block | Block entity | Local storage |
+| --- | --- | --- |
+| `storage_stack_block` | `stack_be` | 27 item stacks |
+| `singles_stack_block` | `singles_stack_be` | 64 single items, 4 x 4 x 4 grid |
+| `bar_stack_block` | `bar_stack_be` | 64 single items, eight alternating bar layers |
 
 ## Code map
 
 | Area | Responsibility |
 | --- | --- |
-| `common/.../block/*StackBlock` | Block state, shape, waterlogging, removal, comparators, and scheduled publication |
-| `common/.../block/*StackBE` | Local inventory, NBT, rotations, ray-selected cells, and run caches |
-| `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, and structural rules |
+| `block/*StackBlock` | Block state, shape, waterlogging, removal, comparators, scheduled publication |
+| `block/*StackBE` | Local inventory, NBT, rotations, ray-selected cells, run caches |
+| `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, structural rules |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage and automation contract |
-| `util/*CubeIdx`, `ViewRay` | Cell geometry, rotation, support, seams, and targeting |
-| `ServerConfig` | Per-world policy, deny sets, and resolved ingot membership |
-| `WorldEdits`, `EditAuthority` | Shared world-edit mechanics and loader protection seam |
-| Loader entry points and registries | Registry population, lifecycle wiring, and common service installation |
-| Loader network packages | Native packet transport around common request validation and payloads |
+| `util/*CubeIdx`, `ViewRay` | Cell geometry, rotation, support, seams, targeting |
+| `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
+| `WorldEdits`, `EditAuthority` | World-edit mechanics and loader protection seam |
+| `network/*` | Packet payloads and shared request validation |
+| `client/*` | Block entity renderers, item profiles, model measurement, bar textures |
+| `SsCommand`, `RenderGalleryGenerator` | Administration, render-profile authoring, galleries |
+| Loader entry points / registries / network / client packages | Registration, lifecycle, native transport, renderer and gesture glue |
 | Forge capability / Fabric Transfer API adapters | Whole-run loader-native views over common storage |
-| `common/.../client` | Block entity renderers, item profiles, model measurement, and bar textures |
-| Loader client packages | Renderer registration, gestures, keys, client events, and packet transport |
-| `SsCommand`, `RenderGalleryGenerator` | Administration, render-profile authoring, and galleries |
 
-Each loader entry point registers the blocks and block entities, initializes native networking and
-automation, and attaches lifecycle listeners. Both loaders install event-backed player and
-automation authorities: Forge's fire Forge's own interaction/place/break events, Fabric's
-`FabricPlayerEditAuthority` and `FabricEditAuthority` fire Fabric API's `UseBlockCallback` and
-`PlayerBlockBreakEvents`. Each loader's registry adapter supplies the common registry handles
-before common world objects are created.
+Each loader's registry adapter supplies common registry handles before common world objects exist.
+Both install event-backed player and automation authorities; on Fabric these are
+`FabricPlayerEditAuthority` and `FabricEditAuthority`, firing `UseBlockCallback` and
+`PlayerBlockBreakEvents`.
 
 ## Loader integration
 
 | Concern | Forge | Fabric |
 | --- | --- | --- |
-| Metadata | `META-INF/mods.toml` | `fabric.mod.json` and `somestacks.mixins.json` |
-| Entrypoints | `SomeStacks`, with `ClientSetup` on the client | `SomeStacksFabric` and `SomeStacksFabricClient` |
-| Networking | `SimpleChannel` | `CustomPacketPayload` types registered through `PayloadTypeRegistry`, sent via `ServerPlayNetworking`/`ClientPlayNetworking` |
-| Protocol | Channel compatibility rejects a version mismatch | The `ProtocolPkt` handshake payload gates all play packets |
-| Gestures | Forge interaction and input events | Fabric interaction callbacks plus the air-click mixin |
-| Rendering | Shared BERs through Forge registration and render seams | Shared BERs through Fabric registration and Renderer API-aware seams |
-| Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
-| Player protection | Vanilla checks plus Forge interaction/place events | Vanilla checks plus Fabric API `UseBlockCallback` |
-| Automated edits | Vanilla checks plus Forge place/break events | Vanilla checks; removal fires Fabric API `PlayerBlockBreakEvents`; growth optionally consults FTB Chunks |
+| Metadata | `META-INF/mods.toml` | `fabric.mod.json`, `somestacks.mixins.json` |
+| Entrypoints | `SomeStacks` (+ `ClientSetup`) | `SomeStacksFabric`, `SomeStacksFabricClient` |
+| Networking | `SimpleChannel` | `CustomPacketPayload` via `PayloadTypeRegistry` |
+| Protocol gate | channel version check | `ProtocolPkt` handshake gates all play packets |
+| Gestures | Forge interaction/input events | interaction callbacks + air-click mixin |
+| Automation | whole-run `IItemHandler` | whole-run Transfer API `Storage<ItemVariant>` |
+| Automated edits | vanilla + Forge place/break events | vanilla; `PlayerBlockBreakEvents` on removal; FTB Chunks on growth |
 
-Both builds are required on the client and server. The loaders own transport and callbacks, but
-packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain
-shared.
+Both builds are required on client and server. Loaders own transport and callbacks; packet codecs,
+request handlers, gesture rules, rendering, commands, and storage mechanics stay in `common`.
 
 ## Runtime model
 
 The central abstraction is the maximal contiguous vertical run of one stack type. A block entity
-owns only its local slots; pile and column objects coordinate operations that cross block
-boundaries. Run resolution is cached for the current game tick and invalidated by structural
-changes.
+owns only its local slots; `StoragePile`, `SinglesColumn`, and `BarColumn` coordinate cross-block
+operations. Run resolution is cached per game tick and invalidated by structural changes.
 
-Block entities do not tick. Mutations schedule work on the bottom block of the run. That deferred
-pass coalesces client updates, lighting, and comparator publication; Storage also settles during
-the pass.
+Block entities do not tick. Mutations schedule one deferred pass on the run's bottom block that
+coalesces client updates, lighting, comparator publication, and Storage settlement. Comparator
+strength is computed over the whole run, so every block in it reports the same signal. All blocks
+are waterloggable and store a derived light value from local contents.
 
-All blocks are waterloggable. Their block state stores a derived light value based on local
-contents. Comparator strength is calculated over the entire run, so every block in a run reports
-the same signal.
-
-### Persistent state
-
-Inventory data is stored by `StackItemStorage` in block entity NBT. Item elements serialize through
-the Data Components system: `StackItemStorage.serializeNBT`/`deserializeNBT` and each block entity's
+`StackItemStorage` holds inventory in block entity NBT. Serialization runs through Data Components:
+`StackItemStorage.serializeNBT`/`deserializeNBT` and each block entity's
 `loadAdditional`/`saveAdditional`/`getUpdateTag` take a `HolderLookup.Provider`. Pre-1.21 saved data
-is not migrated.
-
-| Type | Saved data |
-| --- | --- |
-| Storage | `Items`, block `Rotation`, and `Permanent` |
-| Singles | `Items`, block `Rotation`, and one `CubeRotations` entry per cell |
-| Bar | `Items` |
-
-Storage permanence belongs logically to the base block and is propagated during settlement.
-Storage and Singles block rotations are local to each block. A Singles item's rotation moves with
-the item through gravity and across block seams.
+is not migrated. Saved keys: Storage `Items` + block `Rotation` + `Permanent`; Singles the same plus
+one `CubeRotations` entry per cell; Bar `Items` only. Storage permanence belongs to the base block
+and propagates during settlement; Storage and Singles block rotations are block-local; a Singles
+item's rotation travels with the item through gravity and across seams.
 
 ## Run behavior
 
-### Storage
+The three movement models are deliberately different and must stay distinct:
 
-A Storage pile presents one flat inventory ordered from its base upward. Player deposits merge
-compatible partial stacks and then use empty slots, growing the run when necessary. Settlement
-groups exact stack identities, restores legal stack sizes, sorts the contents, and packs them
-downward. Empty top blocks are removed unless the pile is permanent or removal is refused.
-
-Player extraction targets one rendered cell and then schedules settlement. Breaking a block drops
-only that block's local contents; any surviving runs settle independently.
-
-### Singles
-
-A Singles column is positional. Each occupied cell needs the cell immediately below it, with
-rotation-aware mapping across block seams. Insertion accepts only the named empty, supported cell;
-headroom slots may grow the column.
-
-Extraction shifts the selected visual column down one layer while preserving unrelated gaps.
-Cross-seam moves translate between the blocks' rotations and carry item rotation. Empty blocks are
-removed only from the top. Breaking a Singles block does not collapse the column above it.
-
-### Bar
-
-A Bar column is also positional. Adjacent layers run along alternating axes, and a bar is supported
-when its footprint overlaps a bar in the layer below.
-
-Player extraction and block removal cascade through bars that lose support. Automation extraction
-instead moves the topmost bar into the opened position, preserving the structure. Insertion accepts
-only a named empty, supported position.
-
-These distinctions are intentional: Storage behaves like a settling bag, Singles applies gravity
-to one visible column, and Bar uses structural support.
+- **Storage** (`StoragePile`): one flat inventory from the base up. Settlement groups exact
+  identities, restores legal stack sizes, sorts, and packs downward; empty top blocks go unless the
+  pile is permanent or removal is refused. Breaking a block drops only that block's contents.
+- **Singles** (`SinglesColumn`): positional. Each occupied cell needs the one directly below, with
+  rotation-aware seam mapping that carries item rotation. Extraction shifts one visual column down a
+  layer and preserves unrelated gaps; breaking a block does not collapse the column above.
+- **Bar** (`BarColumn`): positional. A bar is supported when its footprint overlaps a bar below.
+  Player extraction and block removal cascade through unsupported bars; automation extraction
+  instead moves the topmost bar into the opened position.
 
 ## Admission and automation
 
-Storage accepts ordinary nonempty items. Bar accepts items resolved from configured ingot tags;
-Singles accepts allowed items that are not Bar items.
-
-The two deny lists have different scope:
-
-- `disable_mods` applies to player deposits and automated insertion.
-- `disable_items` applies only to player deposits.
-
-Policy changes do not invalidate existing contents. Internal settlement, gravity, and backfill must
-continue to move stored items without reapplying admission rules.
+Storage accepts ordinary nonempty items; Bar accepts items resolved from configured ingot tags;
+Singles accepts allowed non-Bar items. `disable_mods` applies to player deposits and automated
+insertion; `disable_items` to player deposits only. Policy changes never invalidate stored
+contents, and internal settlement, gravity, and backfill must not reapply admission rules.
 
 Forge attaches an `IItemHandler` capability and Fabric registers a Transfer API
-`Storage<ItemVariant>` for each common block entity. From any block, the loader-native view
-represents the entire run plus one block of potential headroom when growth is allowed. Storage
-slots accept normal stack sizes; Singles and Bar slots accept one item. Fabric stages mutations in
-the caller's transaction and commits structural changes only when the outer transaction commits.
-Singles and Bar allow one structural extraction position per Fabric transaction. `RunEdit`
-prevents reentrant automation mutations.
+`Storage<ItemVariant>` per block entity. From any block the loader-native view spans the whole run
+plus one headroom block while growth is allowed; Storage slots take normal stack sizes, Singles and
+Bar one item. Fabric stages mutations in the caller's transaction and commits structural changes
+only on outer commit, allowing one structural extraction position per transaction for Singles and
+Bar. `RunEdit` blocks reentrant automation mutations.
 
-Growth and automatic cleanup pass through `WorldEdits`. Both loaders apply build limits,
-replaceability, obstruction, border, and spawn checks using an automation actor. Forge also fires
-place and break events for claim and logging integrations, covering growth and removal alike.
-Fabric fires the matching break event (`PlayerBlockBreakEvents`) for automation-driven removal, but
-has no generic placement event; on growth, `FabricEditAuthority` instead consults FTB Chunks
-directly through `FtbChunksProtection` when it is present as an optional compile-time dependency.
-FTB Chunks' types are referenced only inside that compat class, gated on the mod being loaded, so a
-server without it is unaffected and never touches its classes. No other Fabric claim mod is
-consulted; Open Parties and Claims support was removed with the 1.21.1 port.
+Growth and cleanup route through `WorldEdits` with an automation actor (build limits,
+replaceability, obstruction, border, spawn). Forge also fires place and break events. Fabric fires
+`PlayerBlockBreakEvents` for automation removal but has no placement event; on growth
+`FabricEditAuthority` consults FTB Chunks through `FtbChunksProtection` when that optional
+compile-time dependency is present, and FTB Chunks types are referenced nowhere else. Open Parties
+and Claims support was removed with the 1.21.1 port.
 
 ## Player interaction and networking
 
-The shared client gesture rules recognize permanence, block rotation, item rotation, deposit,
-placement, and extraction in that order. Loader event glue supplies clicks, keys, and native packet
-transport. The shared packet classes in `common/.../network` implement `CustomPacketPayload`, each
-with a `StreamCodec` wrapping its byte-buffer encode/decode. Placement mode is client state sent
-with a placement request; Fabric's air-click mixin captures the modifier gesture that has no
-equivalent Fabric API callback.
+Shared client gesture rules recognize permanence, block rotation, item rotation, deposit,
+placement, and extraction, in that order. Shared packet classes in `common/.../network` implement
+`CustomPacketPayload`, each with a `StreamCodec` over its byte-buffer encode/decode. Placement mode
+is client state sent with the placement request; Fabric's air-click mixin captures the modifier
+gesture that has no Fabric API callback.
 
-The server treats every client message as a request. Common checks cover sender state, per-tick
-gesture pacing, loaded chunks, and reach; each operation then validates its hand, target, index,
-support, and edit permissions. Placement and its first deposit are one transaction.
-
-Deposit and placement recompute ray targets on the server. Extraction and Singles item rotation use
-a client-supplied cell index, which is checked for range and occupancy but is not reconstructed from
-the server ray.
-
-Custom gestures displace the ordinary Minecraft use action. Forge protection events are consulted
-before `RightClickBlockSuppressor` marks the trailing vanilla click for cancellation. Fabric
-performs its available vanilla edit checks before consuming the interaction. Adjacent Singles and
-Bar deposits validate both the clicked block and the destination.
+The server treats every message as a request: common checks cover sender state, per-tick pacing,
+loaded chunks, and reach, then each operation validates hand, target, index, support, and edit
+permission. Placement and its first deposit are one transaction. Deposit and placement recompute
+ray targets server-side; extraction and Singles item rotation trust a client-supplied cell index
+checked only for range and occupancy. Custom gestures displace the vanilla use action: Forge
+consults protection events before `RightClickBlockSuppressor` cancels the trailing vanilla click,
+Fabric runs vanilla edit checks before consuming the interaction. Adjacent Singles and Bar deposits
+validate both the clicked block and the destination.
 
 ## Configuration and data
 
-World policy is stored at:
+World policy lives at `<world>/serverconfig/somestacks-server.json`. `ServerConfig` owns maximum
+run height, type enable flags, deny lists, ingot-tag patterns, and gallery settings, and loads at
+server startup. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` reloads
+server render overrides and resyncs players but does not reread the policy JSON.
+`piles.max_pile_height`, the stack-type enable flags, `render_gallery.enabled`, and
+`render_gallery.required_permission_level` have no command editor and change only by direct file
+edit; the last two gate `/ss gallery` and `/ss ingotgallery` on top of the vanilla permission
+check. Ingot patterns match complete item-tag names, may contain `*`, and their resolved set is
+rebuilt on config change and tag reload.
 
-```text
-<world>/serverconfig/somestacks-server.json
-```
-
-`ServerConfig` owns maximum run height, type enable flags, deny lists, ingot-tag patterns, and
-gallery settings. It loads at server startup. `/ss deny`, `/ss ingot`, and `/ss gen` update and save
-their lists immediately. `/ss reload` reloads server render overrides and resynchronizes players;
-it does not reread the world-policy JSON.
-
-`render_gallery.enabled` and `render_gallery.required_permission_level` gate `/ss gallery` and
-`/ss ingotgallery` themselves, on top of the vanilla permission check every other subcommand answers
-to. Both default to the safer state: gallery access off, and the level that would apply once enabled
-set to 3. Neither has a command editor; like `piles.max_pile_height` and the stack-type enable flags,
-they are read from `ServerConfig` and only ever change through a direct file edit.
-
-Ingot patterns match complete item-tag names and may contain `*`. The resolved item set is rebuilt
-when relevant configuration changes and when item tags reload.
-
-Shared resources are under `common/src/main/resources`. The main extension points are:
+Shared resources are under `common/src/main/resources`. Extension points:
 
 - item tags selected by `ingot_tags` for Bar admission;
 - `data/<namespace>/somestacks_sounds/*.json` for action sounds;
@@ -252,88 +166,56 @@ Shared resources are under `common/src/main/resources`. The main extension point
 
 ## Client presentation
 
-All three types use block entity renderers. Storage and Singles render stored item models through
-`CubeRenderHelper`; Bar renders fixed cuboids using resource-defined textures and tints.
+All three types use block entity renderers. Storage and Singles render item models through
+`CubeRenderHelper`; Bar renders fixed cuboids from resource-defined textures and tints. Storage and
+Singles profiles carry a render mode, scale, and offset, resolved in precedence order: server
+overrides, user overrides, resource-pack overrides, automatic model measurement.
 
-Storage and Singles profiles select a render mode, scale, and offset. Profile precedence is:
-
-1. Server overrides
-2. User overrides
-3. Resource-pack overrides
-4. Automatic model measurement
-
-Automatic measurement distinguishes geometry that the shared 2-D projector can reproduce from
-geometry that only the loader's item renderer can draw. Projectable models use 2-D when their baked
-model reports a flat GUI presentation or their measured bounds are flat; other models use 3-D.
-Forge measures all render passes and probes custom-renderer vertices for 3-D fitting, but custom
-renderer output is not eligible for the 2-D projector. Fabric measures ordinary baked quads from
-every non-custom model without treating a non-vanilla Renderer API adapter as inherently 3-D. A
-Fabric model that exposes no ordinary quads remains on the 3-D ItemRenderer path, where its enhanced
-item-quad output can still be drawn instead of producing an empty 2-D projection.
-
-Measured profiles are cached at `config/somestacks/measured_cache.json`. The cache records its
-measurement-format version, selected resource packs, and owning-mod versions; a mismatch rejects
-the affected cached measurements. Bar appearance data is client-only and is not synchronized by the
-server.
-
-`/ss` includes policy-list editing, render-profile authoring, and gallery generation. Gallery jobs
-are spread across server ticks, but they write their display area directly and do not use ordinary
-placement protection.
+Automatic measurement uses the shared 2-D projector only for geometry it can reproduce (flat GUI
+presentation or flat measured bounds) and 3-D otherwise; a Fabric model's `isVanillaAdapter`
+reports its rendering API, not its dimensionality, so a Fabric model exposing no ordinary quads
+stays on the 3-D `ItemRenderer` path. Measured profiles are cached at
+`config/somestacks/measured_cache.json`, keyed by measurement-format version, selected resource
+packs, and owning-mod versions; a mismatch rejects the affected entries. Bar appearance data is
+client-only and unsynchronized. `/ss` gallery jobs spread across ticks but write their display area
+directly, bypassing ordinary placement protection.
 
 ## Maintenance invariants
 
-- Keep persistent state block-local and run-wide behavior in the pile or column layer.
-- Preserve the different Storage, Singles, and Bar movement models.
-- Preserve rotation-aware Singles seam mapping and item-rotation transport.
+- Keep persistent state block-local; keep run-wide behavior in the pile or column layer.
+- Preserve the distinct Storage, Singles, and Bar movement models and Singles' rotation-aware seam
+  mapping with item-rotation transport.
 - Do not revalidate owned items during internal movement.
-- Keep Forge simulation and Fabric transactional commit subject to the same feasibility rules.
+- Hold Forge simulation and Fabric transactional commit to the same feasibility rules.
 - Route structural world edits through `WorldEdits` and the installed authority.
-- Keep FTB Chunks references confined to `FtbChunksProtection`, gated on the mod being loaded; a
-  server without it must never touch its classes.
-- Batch synchronization, lighting, comparator work, and Storage settlement through scheduled ticks.
+- Confine FTB Chunks references to `FtbChunksProtection`, gated on the mod being loaded.
+- Batch synchronization, lighting, comparator work, and Storage settlement through the scheduled tick.
 - Validate every client request independently of gesture recognition.
-- Preserve render-profile precedence across files, commands, and synchronization.
-- Keep automatic 2-D selection conditional on geometry the shared projector can actually draw; a
-  Fabric model's `isVanillaAdapter` value describes its rendering API, not its visual dimensionality.
-- Increment the measured-profile cache format whenever profile-selection or fitting semantics change.
-- Read the gallery commands' enablement and permission level from `ServerConfig`
-  (`render_gallery.enabled`, `render_gallery.required_permission_level`) rather than a hardcoded
-  constant; they are the one pair of subcommands gated by config instead of a fixed vanilla level.
+- Preserve render-profile precedence across files, commands, and sync; bump the `measured_cache.json`
+  format version whenever profile-selection or fitting semantics change.
+- Read gallery enablement and permission level from `ServerConfig`, not a constant.
 - Keep Storage's `STORAGE_CELL_RENDER_SCALE` separate from Singles' cell-render scale in
-  `CubeRenderHelper`; Singles' cells tile edge to edge with no gap to absorb if the two are unified.
-- Keep GameTest logic that touches no loader-native storage API in `common/src/gametest`, keyed off
-  `CommonRegistry`; keep `IItemHandler`- and Transfer-API-facing assertions in each loader's own
-  test file. Do not force a shared body onto a test that differs between loaders, as
-  `ProtectionGameTests` does.
+  `CubeRenderHelper`; Singles' cells tile edge to edge with no gap to absorb.
+- Keep loader-neutral GameTest logic in `common/src/gametest` keyed off `CommonRegistry`; keep
+  `IItemHandler`- and Transfer-API-facing assertions in each loader's own test file.
 
 ## Build and test layout
 
-The root `build` lifecycle is meant to build every subproject, run the JUnit suite under
-`common/src/test`, and produce each loader JAR; while Forge and NeoForge are unported it succeeds
-only for `:fabric:build`. The conventional Forge and Fabric `test` source sets are empty. Test
-classes and dependencies are not included in the production JARs. `common/src/test` also holds
-1.20.1 API and is not yet ported.
+Root `build` compiles every subproject, runs the `common/src/test` JUnit suite, and produces each
+loader JAR, but only `:fabric:build` currently succeeds; the Forge and Fabric `test` source sets are
+empty and `common/src/test` still holds 1.20.1 API. Test code is not in the production JARs.
 
-Forge's in-game tests live under `forge/src/gametest`, outside the production source set. Gradle
-loads them as the separate development-only `somestacks_gametest` mod, generates their empty NBT
-structure from the checked-in Base64 fixture, and runs them through `:forge:runGameTestServer`.
-Fabric mirrors this under `fabric/src/gametest`, registering test classes through a `fabric-gametest`
-entrypoint list in the dev-mod's own `fabric.mod.json` in place of Forge's per-class annotations.
-
-Both loaders' `gametest` source sets also pull in `common/src/gametest/java` as an extra source
-directory, added in each loader's `build.gradle`; `common`'s own build does not compile it. A
-`GameTestScaffold` class and one `*Checks` class per test area hold the assertion logic that touches
-no loader-native storage API, resolving blocks and block entities through `CommonRegistry` rather
-than either loader's own registry. Each loader keeps one thin `@GameTest`-annotated class per area —
-Forge's static methods under `@GameTestHolder`, Fabric's instance methods implementing
-`FabricGameTest` — that delegates into the shared checks; where a test exercises `IItemHandler` or
-the Transfer API directly, it stays loader-native instead, with `FakePlayer` standing in for
-`FakePlayerFactory` on Fabric. `ProtectionGameTests` is not shared at all: several of its
-same-named tests touch loader-native storage or differ in fake-player hand-reset behavior between
-loaders, so both loaders keep an independent file, using the shared scaffold only for its
-loader-neutral helpers. The Fabric suite also omits the Forge-only claim/event-bus protection tests;
-a Fabric hook now exists to exercise them (`FabricPlayerEditAuthority`, `FabricEditAuthority`), but
-the tests themselves have not been ported yet. Neither GameTest suite is part of `build`; each is
-invoked separately through its own loader's `runGameTestServer` task. Test code that needs distinct
-otherwise-identical stacks attaches a `CUSTOM_DATA` component; the checked-in structure fixture may
-need regeneration for 1.21.1.
+Each loader's in-game tests live under `<loader>/src/gametest` as a development-only
+`somestacks_gametest` mod with its own Base64 NBT fixture, run through `:<loader>:runGameTestServer`;
+Forge discovers `@GameTestHolder` classes, Fabric uses a `fabric-gametest` entrypoint list in the
+dev mod's `fabric.mod.json`. `common/src/gametest/java` is added as an extra source directory by
+each loader's `build.gradle`; `common`'s own build ignores it. Assertion logic that touches no
+loader-native storage API lives in `GameTestScaffold` and one `*Checks` class per area, resolving
+blocks and block entities through `CommonRegistry`; each loader keeps a thin per-area `@GameTest`
+class delegating to those checks. A test that calls `IItemHandler` or the Transfer API directly
+stays loader-native, with `FakePlayer` replacing `FakePlayerFactory` on Fabric. `ProtectionGameTests`
+is loader-specific in both modules and shares only the scaffold's neutral helpers; the Fabric copy
+omits the unported Forge claim/event-bus tests, whose hooks `FabricPlayerEditAuthority` and
+`FabricEditAuthority` already exist. Neither suite is part of `build`; each runs through its own
+`runGameTestServer`. A test needing distinct but otherwise identical stacks attaches a `CUSTOM_DATA`
+component; the checked-in 1.21.1 structure fixture may still need regeneration.
