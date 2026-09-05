@@ -16,7 +16,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -24,24 +24,19 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Measures the geometry an item will actually produce in the FIXED display context,
- * mirroring the vanilla/Forge {@code ItemRenderer.render} pipeline: item-override
- * resolution, {@code applyTransform} (which may substitute another model), the
- * renderer's -0.5 origin shift, and all Forge render passes. Custom-renderer (BEWLR)
- * items are probed by running their renderer once against a vertex-capturing buffer.
+ * Measures the geometry an item will actually produce in the FIXED display context, mirroring the
+ * vanilla/NeoForge {@code ItemRenderer.render} pipeline: item-override resolution,
+ * {@code applyTransform} (which may substitute another model), the renderer's -0.5 origin shift, and
+ * all render passes. Custom-renderer (BEWLR) items are probed by running their renderer once against
+ * a vertex-capturing buffer.
  */
 public final class ModelMeasurer implements ModelMeasurement.Backend {
 
-    /** Measures as the {@code 3d} path draws: the FIXED display context. */
     @Override
     public ModelMeasurement.Result measure(ItemStack stack) {
         return measure(stack, ItemDisplayContext.FIXED, false);
     }
 
-    /**
-     * Measures as the {@code gui} path draws: the GUI display context behind the same
-     * counter-rotation that path applies, so the fit accounts for the tilted presentation.
-     */
     @Override
     public ModelMeasurement.Result measureGui(ItemStack stack) {
         return measure(stack, ItemDisplayContext.GUI, true);
@@ -61,7 +56,6 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
             }
             model = model.applyTransform(context, pose, false);
             pose.translate(-0.5f, -0.5f, -0.5f);
-            // Read the flag off the substituted model, which is the one that gets drawn.
             gui3d = model.isGui3d();
 
             if (model.isCustomRenderer()) {
@@ -81,7 +75,6 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
 
         for (BakedModel pass : model.getRenderPasses(stack, CubeRenderHelper.fabulousFlag(stack, context))) {
             for (Direction direction : Direction.values()) {
-                // Seed 42 per group matches ItemRenderer.renderModelLists.
                 random.setSeed(42L);
                 collectQuads(pass.getQuads(null, direction, random), matrix, collector);
             }

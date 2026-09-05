@@ -49,7 +49,7 @@ public class SomeStacks {
 
         WorldEdits.setAuthority(new ForgeEditAuthority());
         PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
-        PlayerReach.setProvider(player -> player.getBlockReach());
+        PlayerReach.setProvider(player -> player.blockInteractionRange());
 
         ModRegistry.init(modBus);
         ModNetworking.init();
@@ -101,7 +101,7 @@ public class SomeStacks {
     }
 
     private void sendConfigSync(ServerPlayer player) {
-        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), buildConfigSync());
+        ModNetworking.CHANNEL.send(buildConfigSync(), PacketDistributor.PLAYER.with(player));
     }
 
     /**
@@ -111,8 +111,7 @@ public class SomeStacks {
      * @return the number of players synced
      */
     public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = buildConfigSync();
-        ModNetworking.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+        ModNetworking.CHANNEL.send(buildConfigSync(), PacketDistributor.ALL.noArg());
         return server.getPlayerList().getPlayerCount();
     }
 

@@ -30,7 +30,8 @@ import javax.annotation.Nullable;
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {
-    private static final ResourceLocation ITEM_HANDLER_ID = new ResourceLocation(SomeStacks.MODID, "item_handler");
+    private static final ResourceLocation ITEM_HANDLER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, "item_handler");
 
     private ForgeCapabilityAttachment() {
     }

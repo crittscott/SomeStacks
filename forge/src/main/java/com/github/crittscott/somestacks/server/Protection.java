@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -142,7 +142,10 @@ public final class Protection {
 
     private static PlayerInteractEvent.RightClickBlock rightClickBlock(
             ServerPlayer sp, BlockPos pos) {
-        return ForgeHooks.onRightClickBlock(sp, GESTURE_HAND, pos, lookHit(sp, pos));
+        PlayerInteractEvent.RightClickBlock evt =
+                new PlayerInteractEvent.RightClickBlock(sp, GESTURE_HAND, pos, lookHit(sp, pos));
+        MinecraftForge.EVENT_BUS.post(evt);
+        return evt;
     }
 
     /**
