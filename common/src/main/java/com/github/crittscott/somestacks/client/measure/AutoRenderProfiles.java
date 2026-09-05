@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.PlatformPaths;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
@@ -11,7 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -194,7 +194,7 @@ public final class AutoRenderProfiles {
     }
 
     private static Path cacheFile() {
-        return Platform.getConfigFolder().resolve("somestacks/measured_cache.json");
+        return PlatformPaths.configFolder().resolve("somestacks/measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {

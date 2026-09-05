@@ -4,7 +4,7 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 sourceSets {
@@ -32,7 +32,7 @@ loom {
             environment 'gametestserver'
             forgeTemplate 'gameTestServer'
             name 'Game Test Server'
-            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'neoforge.enabledGameTestNamespaces', mod_id
             source sourceSets.gametest
         }
     }
@@ -54,10 +54,12 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:$rootProject.forge_compile_version"
+    neoForge "net.neoforged:neoforge:$rootProject.neoforge_compile_version"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
+
+    modCompileOnly "dev.ftb.mods:ftb-chunks-neoforge:$rootProject.ftb_chunks_version"
 }
 
 def gameTestStructureSource = layout.projectDirectory.file(
@@ -81,25 +83,25 @@ tasks.named('processGametestResources', ProcessResources).configure {
     var replaceProperties = [mod_version: mod_version]
     inputs.properties replaceProperties
 
-    filesMatching('META-INF/mods.toml') {
+    filesMatching('META-INF/neoforge.mods.toml') {
         expand replaceProperties + [project: project]
     }
 
     dependsOn tasks.named('generateGameTestStructures')
 }
 
-// Expands ${...} placeholders in mods.toml (this module's own resource).
+// Expands ${...} placeholders in neoforge.mods.toml (this module's own resource).
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version_range: forge_version_range,
-            forge_loader_version_range: forge_loader_version_range,
+            neoforge_version_range: neoforge_version_range,
+            neoforge_loader_version_range: neoforge_loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
-    filesMatching('META-INF/mods.toml') {
+    filesMatching('META-INF/neoforge.mods.toml') {
         expand replaceProperties + [project: project]
     }
 }

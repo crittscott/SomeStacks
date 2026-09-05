@@ -11,7 +11,7 @@ architectury {
 }
 
 allprojects {
-    group = rootProject.mod_group_id
+    group = rootProject.maven_group
     version = rootProject.mod_version
 }
 
@@ -21,12 +21,14 @@ subprojects {
     apply plugin: 'maven-publish'
 
     base {
-        archivesName = "$rootProject.mod_id-$project.name"
+        archivesName = "$rootProject.archives_name-$project.name"
     }
 
     repositories {
         maven { url = 'https://maven.architectury.dev/' }
         maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://maven.neoforged.net/releases/' }
+        maven { url = 'https://maven.ftb.dev/releases' }
     }
 
     loom {
@@ -47,20 +49,20 @@ subprojects {
         withSourcesJar()
 
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
         }
 
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 17
+        it.options.release = 21
     }
 
     tasks.withType(JavaExec).configureEach {
         javaLauncher.set(javaToolchains.launcherFor {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
         })
     }
 

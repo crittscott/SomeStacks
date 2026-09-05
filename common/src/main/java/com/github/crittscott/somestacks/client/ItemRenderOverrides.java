@@ -1,12 +1,12 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.PlatformPaths;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -50,8 +50,8 @@ import java.util.TreeMap;
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = Platform.getConfigFolder().resolve("somestacks/item_overrides.json");
-    private static final Path GENERATED_DIR = Platform.getConfigFolder().resolve("somestacks/generated_overrides");
+    private static final Path USER_FILE = PlatformPaths.configFolder().resolve("somestacks/item_overrides.json");
+    private static final Path GENERATED_DIR = PlatformPaths.configFolder().resolve("somestacks/generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
     /** Bundled corpus, from client resource reload. */

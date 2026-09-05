@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ import java.util.stream.Stream;
  */
 public final class ServerOverridesLoader {
     private static final Gson GSON = new GsonBuilder().create();
-    private static final Path DIR = Platform.getConfigFolder().resolve("somestacks/server_item_overrides");
+    private static final Path DIR = PlatformPaths.configFolder().resolve("somestacks/server_item_overrides");
 
     private ServerOverridesLoader() {}
 
