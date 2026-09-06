@@ -20,4 +20,16 @@ public final class RenderGalleryGameTests {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
     }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void queuedStorageGallerySpreadsWorkAcrossTicks(GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        RenderGalleryChecks.queuedStorageGallerySpreadsWorkAcrossTicks(helper, player);
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void queuedBarGalleryBuildsRowsAndFillsBars(GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        RenderGalleryChecks.queuedBarGalleryBuildsRowsAndFillsBars(helper, player);
+    }
 }

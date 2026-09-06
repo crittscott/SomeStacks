@@ -11,8 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Function;
 
 /**
- * What the server refuses at the packet boundary: out-of-reach targets, hands other than the main
- * one, cells holding nothing, and extractions into a hand that cannot take what is offered.
+ * Fabric delegates for loader-neutral packet entry-point, validation, and pacing checks.
  */
 public final class PacketBoundaryGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
@@ -26,6 +25,36 @@ public final class PacketBoundaryGameTests implements FabricGameTest {
     @GameTest(template = TEMPLATE)
     public void gestureChecksReadOnlyTheMainHand(GameTestHelper helper) {
         PacketBoundaryChecks.gestureChecksReadOnlyTheMainHand(helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void rotateBlockHandlerValidatesTheHeldItemAndBlockType(GameTestHelper helper) {
+        PacketBoundaryChecks.rotateBlockHandlerValidatesTheHeldItemAndBlockType(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void mutationPacketEntryPointsReachTheirValidatedOperations(GameTestHelper helper) {
+        PacketBoundaryChecks.mutationPacketEntryPointsReachTheirValidatedOperations(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void rotateItemHandlerLeavesEmptyCellsUnoriented(GameTestHelper helper) {
+        PacketBoundaryChecks.rotateItemHandlerLeavesEmptyCellsUnoriented(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(GameTestHelper helper) {
+        PacketBoundaryChecks.togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 20)
+    public void gestureThrottleEnforcesTickAndRotationSoundIntervals(GameTestHelper helper) {
+        PacketBoundaryChecks.gestureThrottleEnforcesTickAndRotationSoundIntervals(
+                helper);
     }
 
     @GameTest(template = TEMPLATE)

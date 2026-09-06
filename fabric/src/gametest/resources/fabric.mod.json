@@ -9,6 +9,7 @@
     "fabric-gametest": [
       "com.github.crittscott.somestacks.gametest.StackSortGameTests",
       "com.github.crittscott.somestacks.gametest.ItemOpsGameTests",
+      "com.github.crittscott.somestacks.gametest.ConfigurationGameTests",
       "com.github.crittscott.somestacks.gametest.RenderGalleryGameTests",
       "com.github.crittscott.somestacks.gametest.PacketBoundaryGameTests",
       "com.github.crittscott.somestacks.gametest.CapabilityAndPersistenceGameTests",

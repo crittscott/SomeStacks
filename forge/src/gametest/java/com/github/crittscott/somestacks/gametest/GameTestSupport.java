@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -62,6 +63,12 @@ public final class GameTestSupport {
      */
     public static ServerPlayer fakePlayer(ServerLevel level) {
         return FAKE_PLAYERS.computeIfAbsent(level, key -> new ServerPlayer(
-                key.getServer(), key, FAKE_PLAYER_PROFILE, ClientInformation.createDefault()));
+                key.getServer(), key, FAKE_PLAYER_PROFILE, ClientInformation.createDefault()) {
+            @Override
+            public void displayClientMessage(Component message, boolean actionBar) {
+                // GameTest players have no network connection; action-bar output is not the
+                // behavior these server-side tests observe.
+            }
+        });
     }
 }

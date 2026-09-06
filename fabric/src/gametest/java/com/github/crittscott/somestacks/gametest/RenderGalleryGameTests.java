@@ -16,4 +16,16 @@ public final class RenderGalleryGameTests implements FabricGameTest {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
     }
+
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void queuedStorageGallerySpreadsWorkAcrossTicks(GameTestHelper helper) {
+        ServerPlayer player = FakePlayer.get(helper.getLevel());
+        RenderGalleryChecks.queuedStorageGallerySpreadsWorkAcrossTicks(helper, player);
+    }
+
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void queuedBarGalleryBuildsRowsAndFillsBars(GameTestHelper helper) {
+        ServerPlayer player = FakePlayer.get(helper.getLevel());
+        RenderGalleryChecks.queuedBarGalleryBuildsRowsAndFillsBars(helper, player);
+    }
 }

@@ -3,9 +3,18 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.network.DepositPkt;
 import com.github.crittscott.somestacks.network.ExtractPkt;
 import com.github.crittscott.somestacks.network.PacketBoundary;
+import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
+import com.github.crittscott.somestacks.network.RotateBlockPkt;
+import com.github.crittscott.somestacks.network.RotateItemPkt;
+import com.github.crittscott.somestacks.network.TogglePermanentPkt;
+import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,16 +22,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.border.WorldBorder;
 
 import java.util.function.Function;
+import java.util.UUID;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
 
 /**
- * What the server refuses at the packet boundary: out-of-reach targets, hands other than the main
- * one, cells holding nothing, and extractions into a hand that cannot take what is offered.
+ * The shared packet boundary and the mutation handlers behind it: accepted entry-point dispatch,
+ * gesture pacing, held-item requirements, cell bounds, and refused extraction states.
  *
  * <p>Each test is handed a {@code playerFactory} that builds a fake player holding the given main
  * hand item; the loader shell supplies it, since obtaining a fake player is loader-native.
@@ -64,6 +75,204 @@ public final class PacketBoundaryChecks {
                 "Held main-hand item was rejected");
         check(!PacketBoundary.holdsInMainHand(player, Items.DIRT),
                 "Wrong main-hand item was accepted");
+        helper.succeed();
+    }
+
+    public static void rotateBlockHandlerValidatesTheHeldItemAndBlockType(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET.east(3));
+        BarStackBE bars = GameTestScaffold.placeBar(helper, TARGET.east(6));
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.REDSTONE_TORCH));
+
+        try {
+            placeBy(player, storage.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            RotateBlockPkt.handleServer(new RotateBlockPkt(storage.getBlockPos()), player);
+            checkEquals(1, storage.getRotation(), "Storage rotation");
+
+            placeBy(player, singles.getBlockPos());
+            player.setItemInHand(HAND, new ItemStack(Items.SOUL_TORCH));
+            GestureThrottle.clear(player.getUUID());
+            RotateBlockPkt.handleServer(new RotateBlockPkt(singles.getBlockPos()), player);
+            checkEquals(0, singles.getRotation(), "Wrong torch rotated Singles");
+
+            player.setItemInHand(HAND, new ItemStack(Items.REDSTONE_TORCH));
+            RotateBlockPkt.handleServer(new RotateBlockPkt(singles.getBlockPos()), player);
+            checkEquals(0, singles.getRotation(),
+                    "Rejected gesture did not spend the same-tick packet allowance");
+
+            GestureThrottle.clear(player.getUUID());
+            RotateBlockPkt.handleServer(new RotateBlockPkt(singles.getBlockPos()), player);
+            checkEquals(1, singles.getRotation(), "Singles rotation");
+
+            placeBy(player, bars.getBlockPos());
+            player.setItemInHand(HAND, new ItemStack(Items.REDSTONE_TORCH));
+            GestureThrottle.clear(player.getUUID());
+            RotateBlockPkt.handleServer(new RotateBlockPkt(bars.getBlockPos()), player);
+            check(helper.getLevel().getBlockEntity(bars.getBlockPos()) == bars,
+                    "Rotate-block handler changed a Bar Stack");
+        } finally {
+            GestureThrottle.clear(player.getUUID());
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+        }
+        helper.succeed();
+    }
+
+    public static void mutationPacketEntryPointsReachTheirValidatedOperations(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        StorageStackBE depositTarget = GameTestScaffold.placeStorage(helper, TARGET);
+        StorageStackBE extractTarget = GameTestScaffold.placeStorage(helper, TARGET.east(3));
+        extractTarget.getItems().insertItem(0, new ItemStack(Items.STICK, 3), false);
+        BlockPos placementTarget = helper.absolutePos(TARGET.east(6));
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 4));
+
+        try {
+            placeBy(player, depositTarget.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            DepositPkt.handleServer(
+                    new DepositPkt(depositTarget.getBlockPos(), depositTarget.getBlockPos()), player);
+            checkEquals(4, GameTestScaffold.count(depositTarget.getItems(), Items.STONE),
+                    "Deposit handler contents");
+
+            placeBy(player, extractTarget.getBlockPos());
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            GestureThrottle.clear(player.getUUID());
+            ExtractPkt.handleServer(new ExtractPkt(extractTarget.getBlockPos(), 0), player);
+            checkEquals(Items.STICK, player.getMainHandItem().getItem(),
+                    "Extract handler item");
+            checkEquals(3, player.getMainHandItem().getCount(), "Extract handler count");
+
+            placeBy(player, placementTarget);
+            player.setItemInHand(HAND, new ItemStack(Items.DIRT, 2));
+            GestureThrottle.clear(player.getUUID());
+            PlaceAndDepositPkt.handleServer(new PlaceAndDepositPkt(
+                    BlockType.STORAGE_STACK, Direction.UP, placementTarget), player);
+            check(helper.getLevel().getBlockState(placementTarget)
+                            .is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Place-and-deposit handler did not place Storage");
+            checkEquals(2, GameTestScaffold.heldAt(helper, placementTarget, Items.DIRT),
+                    "Place-and-deposit handler contents");
+            check(player.getMainHandItem().isEmpty(),
+                    "Place-and-deposit handler left a hand remainder");
+        } finally {
+            GestureThrottle.clear(player.getUUID());
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+        }
+        helper.succeed();
+    }
+
+    public static void rotateItemHandlerLeavesEmptyCellsUnoriented(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        SinglesStackBE emptySingles = GameTestScaffold.placeSingles(helper, TARGET);
+        SinglesStackBE occupiedSingles = GameTestScaffold.placeSingles(helper, TARGET.east(3));
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.SOUL_TORCH));
+        int emptyCell = 0;
+
+        try {
+            placeBy(player, emptySingles.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            RotateItemPkt.handleServer(
+                    new RotateItemPkt(emptySingles.getBlockPos(), emptyCell), player);
+            checkEquals(0, emptySingles.getCubeRotation(emptyCell), "Empty cell retained rotation");
+
+            check(emptySingles.depositAt(emptyCell, new ItemStack(Items.STICK)),
+                    "Singles fixture deposit failed");
+            checkEquals(0, emptySingles.getCubeRotation(emptyCell),
+                    "Deposit inherited an empty-cell rotation");
+
+            check(occupiedSingles.depositAt(emptyCell, new ItemStack(Items.STICK)),
+                    "Occupied Singles fixture deposit failed");
+            placeBy(player, occupiedSingles.getBlockPos());
+            player.setItemInHand(HAND, new ItemStack(Items.REDSTONE_TORCH));
+            GestureThrottle.clear(player.getUUID());
+            RotateItemPkt.handleServer(
+                    new RotateItemPkt(occupiedSingles.getBlockPos(), emptyCell), player);
+            checkEquals(0, occupiedSingles.getCubeRotation(emptyCell),
+                    "Wrong torch rotated a Singles item");
+
+            player.setItemInHand(HAND, new ItemStack(Items.SOUL_TORCH));
+            GestureThrottle.clear(player.getUUID());
+            RotateItemPkt.handleServer(
+                    new RotateItemPkt(occupiedSingles.getBlockPos(), emptyCell), player);
+            checkEquals(1, occupiedSingles.getCubeRotation(emptyCell), "Occupied item rotation");
+
+            GestureThrottle.clear(player.getUUID());
+            RotateItemPkt.handleServer(
+                    new RotateItemPkt(occupiedSingles.getBlockPos(), SinglesStackBE.SLOTS), player);
+            checkEquals(1, occupiedSingles.getCubeRotation(emptyCell),
+                    "Out-of-range rotation changed an occupied item");
+        } finally {
+            GestureThrottle.clear(player.getUUID());
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+        }
+        helper.succeed();
+    }
+
+    public static void togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET.east(3));
+        StorageStackBE protectedStorage = GameTestScaffold.placeStorage(helper, TARGET.east(6));
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE));
+
+        try {
+            placeBy(player, storage.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            TogglePermanentPkt.handleServer(new TogglePermanentPkt(storage.getBlockPos()), player);
+            check(!storage.pile().isPermanent(), "Occupied hand toggled permanence");
+
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            GestureThrottle.clear(player.getUUID());
+            TogglePermanentPkt.handleServer(new TogglePermanentPkt(storage.getBlockPos()), player);
+            check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
+
+            placeBy(player, singles.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            TogglePermanentPkt.handleServer(new TogglePermanentPkt(singles.getBlockPos()), player);
+            check(storage.pile().isPermanent(), "Non-Storage target changed permanence");
+
+            placeBy(player, protectedStorage.getBlockPos());
+            GestureThrottle.clear(player.getUUID());
+            outsideWorldBorder(helper, protectedStorage.getBlockPos(), () ->
+                    TogglePermanentPkt.handleServer(
+                            new TogglePermanentPkt(protectedStorage.getBlockPos()), player));
+            check(!protectedStorage.pile().isPermanent(),
+                    "Protected Storage pile changed permanence");
+        } finally {
+            GestureThrottle.clear(player.getUUID());
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+        }
+        helper.succeed();
+    }
+
+    public static void gestureThrottleEnforcesTickAndRotationSoundIntervals(
+            GameTestHelper helper) {
+        UUID id = UUID.randomUUID();
+        long tick = 100L;
+        try {
+            check(GestureThrottle.claimTick(id, tick), "First gesture claim was refused");
+            check(!GestureThrottle.claimTick(id, tick),
+                    "Second same-tick gesture claim succeeded");
+            check(GestureThrottle.claimTick(id, tick + 1),
+                    "Next-tick gesture claim was refused");
+
+            check(GestureThrottle.claimRotationSound(id, tick),
+                    "First rotation sound was refused");
+            check(!GestureThrottle.claimRotationSound(id, tick + 1),
+                    "Rotation sound succeeded after one tick");
+            check(!GestureThrottle.claimRotationSound(id, tick + 3),
+                    "Rotation sound succeeded after three ticks");
+            check(GestureThrottle.claimRotationSound(id, tick + 4),
+                    "Rotation sound was refused after four ticks");
+
+            GestureThrottle.clear(id);
+            check(GestureThrottle.claimTick(id, tick), "Clear did not reset gesture claims");
+            check(GestureThrottle.claimRotationSound(id, tick),
+                    "Clear did not reset rotation-sound claims");
+        } finally {
+            GestureThrottle.clear(id);
+        }
         helper.succeed();
     }
 
@@ -234,5 +443,27 @@ public final class PacketBoundaryChecks {
         ItemStack stack = new ItemStack(item);
         stack.setCount(stack.getMaxStackSize());
         return stack;
+    }
+
+    private static void placeBy(ServerPlayer player, BlockPos pos) {
+        player.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    }
+
+    private static void outsideWorldBorder(
+            GameTestHelper helper, BlockPos target, Runnable action) {
+        WorldBorder border = helper.getLevel().getWorldBorder();
+        double centerX = border.getCenterX();
+        double centerZ = border.getCenterZ();
+        double size = border.getSize();
+        try {
+            border.setCenter(target.getX() + 1000.0, target.getZ());
+            border.setSize(16.0);
+            check(!border.isWithinBounds(target),
+                    "Test setup left protected target inside the world border");
+            action.run();
+        } finally {
+            border.setCenter(centerX, centerZ);
+            border.setSize(size);
+        }
     }
 }

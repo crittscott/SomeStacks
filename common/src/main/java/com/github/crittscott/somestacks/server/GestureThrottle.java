@@ -34,8 +34,12 @@ public final class GestureThrottle {
      * @return whether the gesture may proceed
      */
     public static boolean claimTick(ServerPlayer sp) {
-        long tick = sp.serverLevel().getGameTime();
-        Long last = lastGestureTick.put(sp.getUUID(), tick);
+        return claimTick(sp.getUUID(), sp.serverLevel().getGameTime());
+    }
+
+    /** Claims a gesture allowance for an explicit identity and game tick. */
+    public static boolean claimTick(UUID id, long tick) {
+        Long last = lastGestureTick.put(id, tick);
         return last == null || last != tick;
     }
 
@@ -46,12 +50,16 @@ public final class GestureThrottle {
      * @return whether the sound may play
      */
     public static boolean claimRotationSound(ServerPlayer sp) {
-        long tick = sp.serverLevel().getGameTime();
-        Long last = lastRotationSoundTick.get(sp.getUUID());
+        return claimRotationSound(sp.getUUID(), sp.serverLevel().getGameTime());
+    }
+
+    /** Claims a rotation-sound allowance for an explicit identity and game tick. */
+    public static boolean claimRotationSound(UUID id, long tick) {
+        Long last = lastRotationSoundTick.get(id);
         if (last != null && tick - last < ROTATION_SOUND_INTERVAL) {
             return false;
         }
-        lastRotationSoundTick.put(sp.getUUID(), tick);
+        lastRotationSoundTick.put(id, tick);
         return true;
     }
 

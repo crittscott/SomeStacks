@@ -9,6 +9,9 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.network.DepositPkt;
 import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
+import com.github.crittscott.somestacks.network.RotateItemPkt;
+import com.github.crittscott.somestacks.network.TogglePermanentPkt;
+import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BlockType;
@@ -119,6 +122,63 @@ public final class ProtectionGameTests {
                     "Expired suppression still vetoed interaction");
             helper.succeed();
         });
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void rotationClaimsButPermanenceDoesNotClaimTheTrailingClick(
+            GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN.east(3));
+        BlockPos singlesPos = singles.getBlockPos();
+        BlockPos storagePos = storage.getBlockPos();
+
+        try {
+            player.setPos(singlesPos.getX() + 0.5, singlesPos.getY(), singlesPos.getZ() + 0.5);
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.SOUL_TORCH));
+            GestureThrottle.clear(player.getUUID());
+            RotateItemPkt.handleServer(new RotateItemPkt(singlesPos, 0), player);
+            check(!Protection.mayInteract(player, singlesPos),
+                    "Empty-cell rotation did not suppress the trailing torch click");
+
+            player.setPos(storagePos.getX() + 0.5, storagePos.getY(), storagePos.getZ() + 0.5);
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            GestureThrottle.clear(player.getUUID());
+            TogglePermanentPkt.handleServer(new TogglePermanentPkt(storagePos), player);
+            check(storage.pile().isPermanent(), "Permanence toggle did not run");
+            check(Protection.mayInteract(player, storagePos),
+                    "Permanence toggle suppressed its trailing empty-hand click");
+        } finally {
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            GestureThrottle.clear(player.getUUID());
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void permanenceToggleHonorsInteractionDenial(GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        BlockPos target = storage.getBlockPos();
+        Consumer<PlayerInteractEvent.RightClickBlock> denyTarget = event -> {
+            if (event.getEntity() == player && event.getPos().equals(target)) {
+                event.setUseBlock(TriState.FALSE);
+            }
+        };
+
+        player.setPos(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        GestureThrottle.clear(player.getUUID());
+        NeoForge.EVENT_BUS.addListener(denyTarget);
+        try {
+            TogglePermanentPkt.handleServer(new TogglePermanentPkt(target), player);
+            check(!storage.pile().isPermanent(),
+                    "Interaction-denied permanence toggle changed the pile");
+        } finally {
+            NeoForge.EVENT_BUS.unregister(denyTarget);
+            GestureThrottle.clear(player.getUUID());
+        }
+        helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)

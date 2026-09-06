@@ -11,8 +11,7 @@ import net.minecraftforge.gametest.GameTestHolder;
 import java.util.function.Function;
 
 /**
- * What the server refuses at the packet boundary: out-of-reach targets, hands other than the main
- * one, cells holding nothing, and extractions into a hand that cannot take what is offered.
+ * Forge delegates for loader-neutral packet entry-point, validation, and pacing checks.
  */
 @GameTestHolder(SomeStacks.MODID)
 public final class PacketBoundaryGameTests {
@@ -27,6 +26,39 @@ public final class PacketBoundaryGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void gestureChecksReadOnlyTheMainHand(GameTestHelper helper) {
         PacketBoundaryChecks.gestureChecksReadOnlyTheMainHand(helper, playerFactory(helper));
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void rotateBlockHandlerValidatesTheHeldItemAndBlockType(GameTestHelper helper) {
+        PacketBoundaryChecks.rotateBlockHandlerValidatesTheHeldItemAndBlockType(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void mutationPacketEntryPointsReachTheirValidatedOperations(
+            GameTestHelper helper) {
+        PacketBoundaryChecks.mutationPacketEntryPointsReachTheirValidatedOperations(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void rotateItemHandlerLeavesEmptyCellsUnoriented(GameTestHelper helper) {
+        PacketBoundaryChecks.rotateItemHandlerLeavesEmptyCellsUnoriented(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(
+            GameTestHelper helper) {
+        PacketBoundaryChecks.togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(
+                helper, playerFactory(helper));
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
+    public static void gestureThrottleEnforcesTickAndRotationSoundIntervals(
+            GameTestHelper helper) {
+        PacketBoundaryChecks.gestureThrottleEnforcesTickAndRotationSoundIntervals(
+                helper);
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
