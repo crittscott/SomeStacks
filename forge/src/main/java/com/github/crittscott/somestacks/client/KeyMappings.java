@@ -14,10 +14,10 @@ public final class KeyMappings {
      * gesture asks whether it is down at the moment of the click.
      */
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
-            "key.somestacks.stack_mode",
+            ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_V,
-            "key.categories.somestacks"
+            ClientGestures.KEY_CATEGORY_TRANSLATION_KEY
     );
 }

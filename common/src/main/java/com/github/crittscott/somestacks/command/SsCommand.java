@@ -57,6 +57,26 @@ public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
     private static final int ADMIN_PERMISSION_LEVEL = 2;
 
+    static final String COMMAND_ROOT = "ss";
+    static final String COMMAND_ITEM = "item";
+    static final String COMMAND_GALLERY = "gallery";
+    static final String COMMAND_INGOT_GALLERY = "ingotgallery";
+    static final String COMMAND_WRITE = "write";
+    static final String COMMAND_RELOAD = "reload";
+    static final String COMMAND_GEN = "gen";
+    static final String COMMAND_DENY = "deny";
+    static final String COMMAND_INGOT = "ingot";
+    static final String COMMAND_HELP = "help";
+
+    private static final String ARG_ITEM = "item";
+    private static final String ARG_MODE = "mode";
+    private static final String ARG_SCALE = "scale";
+    private static final String ARG_X = "x";
+    private static final String ARG_Y = "y";
+    private static final String ARG_Z = "z";
+    private static final String ARG_MODID = "modid";
+    private static final String ARG_TAG = "tag";
+
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
     private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
@@ -70,14 +90,14 @@ public final class SsCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
-                Commands.literal("ss")
-                        .then(Commands.literal("item")
+                Commands.literal(COMMAND_ROOT)
+                        .then(Commands.literal(COMMAND_ITEM)
                                 .requires(SsCommand::isAdminPlayer)
-                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .then(Commands.literal("reset")
                                                 .executes(SsCommand::resetItem))
-                                        .then(Commands.argument("mode", StringArgumentType.word())
+                                        .then(Commands.argument(ARG_MODE, StringArgumentType.word())
                                                 .suggests((ctx, builder) -> {
                                                     for (RenderMode mode : RenderMode.values()) {
                                                         builder.suggest(mode.getId());
@@ -85,19 +105,19 @@ public final class SsCommand {
                                                     return builder.buildFuture();
                                                 })
                                                 .executes(SsCommand::setMode)
-                                                .then(Commands.argument("scale", scaleArg())
+                                                .then(Commands.argument(ARG_SCALE, scaleArg())
                                                         .executes(SsCommand::setModeAndScale)
-                                                        .then(Commands.argument("x", offsetArg())
-                                                                .then(Commands.argument("y", offsetArg())
+                                                        .then(Commands.argument(ARG_X, offsetArg())
+                                                                .then(Commands.argument(ARG_Y, offsetArg())
                                                                         .executes(SsCommand::setModeScaleAndXy)
-                                                                        .then(Commands.argument("z", offsetArg())
+                                                                        .then(Commands.argument(ARG_Z, offsetArg())
                                                                                 .executes(SsCommand::setModeScaleAndXyz))))))))
-                        .then(galleryTree("gallery", RenderGalleryGenerator.Kind.STORAGE)
+                        .then(galleryTree(COMMAND_GALLERY, RenderGalleryGenerator.Kind.STORAGE)
                                 .then(Commands.literal("items")
                                         .executes(SsCommand::galleryItems)))
-                        .then(galleryTree("ingotgallery", RenderGalleryGenerator.Kind.BAR))
+                        .then(galleryTree(COMMAND_INGOT_GALLERY, RenderGalleryGenerator.Kind.BAR))
                         .then(writeTree())
-                        .then(Commands.literal("reload")
+                        .then(Commands.literal(COMMAND_RELOAD)
                                 .requires(SsCommand::isAdmin)
                                 .executes(SsCommand::reload))
                         .then(genTree())
@@ -135,7 +155,7 @@ public final class SsCommand {
                         .executes(ctx -> galleryAll(ctx, kind)))
                 .then(Commands.literal("list")
                         .executes(ctx -> galleryList(ctx, kind)))
-                .then(Commands.argument("modid", StringArgumentType.word())
+                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(kind.modIds(), builder))
                         .executes(ctx -> gallerySingle(ctx, kind)));
     }
@@ -148,7 +168,7 @@ public final class SsCommand {
      * Namespaces are named exactly as the gallery commands name them.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
-        return Commands.literal("write")
+        return Commands.literal(COMMAND_WRITE)
                 .requires(SsCommand::isAdminPlayer)
                 .then(Commands.literal("changed")
                         .executes(SsCommand::writeChanged))
@@ -156,7 +176,7 @@ public final class SsCommand {
                         .executes(SsCommand::dumpAll))
                 .then(Commands.literal("list")
                         .executes(SsCommand::dumpList))
-                .then(Commands.argument("modid", StringArgumentType.word())
+                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DUMP_KIND.modIds(), builder))
                         .executes(SsCommand::dumpSingle));
     }
@@ -175,33 +195,33 @@ public final class SsCommand {
      * skipped by every gallery.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> genTree() {
-        return Commands.literal("gen")
+        return Commands.literal(COMMAND_GEN)
                 .requires(SsCommand::isAdmin)
                 .then(Commands.literal("mod")
                         .then(Commands.literal("add")
-                                .then(Commands.argument("modid", StringArgumentType.word())
+                                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
-                                                StringArgumentType.getString(ctx, "modid")))))
+                                                StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument("modid", StringArgumentType.word())
+                                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
-                                                StringArgumentType.getString(ctx, "modid")))))
+                                                StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
-                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
-                                                ResourceLocationArgument.getId(ctx, "item").toString()))))
+                                                ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
@@ -213,33 +233,33 @@ public final class SsCommand {
      * registry, where a typo would otherwise sit in the list looking effective.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> denyTree() {
-        return Commands.literal("deny")
+        return Commands.literal(COMMAND_DENY)
                 .requires(SsCommand::isAdmin)
                 .then(Commands.literal("mod")
                         .then(Commands.literal("add")
-                                .then(Commands.argument("modid", StringArgumentType.word())
+                                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
-                                                StringArgumentType.getString(ctx, "modid")))))
+                                                StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument("modid", StringArgumentType.word())
+                                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_MODS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
-                                                StringArgumentType.getString(ctx, "modid")))))
+                                                StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
-                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument("item", ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
-                                                ResourceLocationArgument.getId(ctx, "item").toString()))))
+                                                ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
@@ -255,21 +275,21 @@ public final class SsCommand {
      * accepts, so an entry that did nothing says so.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> ingotTree() {
-        return Commands.literal("ingot")
+        return Commands.literal(COMMAND_INGOT)
                 .requires(SsCommand::isAdmin)
                 .then(Commands.literal("add")
-                        .then(Commands.argument("tag", StringArgumentType.greedyString())
+                        .then(Commands.argument(ARG_TAG, StringArgumentType.greedyString())
                                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                         ServerConfig.itemTagNames(), builder))
                                 .executes(ctx -> reportIngotEdit(ctx, addEntry(ctx, ServerConfig.INGOT_TAGS,
                                         INGOT_TAGS_LABEL,
-                                        StringArgumentType.getString(ctx, "tag").trim())))))
+                                        StringArgumentType.getString(ctx, ARG_TAG).trim())))))
                 .then(Commands.literal("remove")
-                        .then(Commands.argument("tag", StringArgumentType.greedyString())
+                        .then(Commands.argument(ARG_TAG, StringArgumentType.greedyString())
                                 .suggests((ctx, builder) -> suggestEntries(ServerConfig.INGOT_TAGS, builder))
                                 .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.INGOT_TAGS,
                                         INGOT_TAGS_LABEL,
-                                        StringArgumentType.getString(ctx, "tag").trim())))))
+                                        StringArgumentType.getString(ctx, ARG_TAG).trim())))))
                 .then(Commands.literal("list")
                         .executes(ctx -> listEntries(ctx, ServerConfig.INGOT_TAGS, INGOT_TAGS_LABEL, true)));
     }
@@ -339,33 +359,33 @@ public final class SsCommand {
     }
 
     private static int setModeAndScale(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[3]);
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[3]);
     }
 
     private static int setModeScaleAndXy(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
-                FloatArgumentType.getFloat(ctx, "x"), FloatArgumentType.getFloat(ctx, "y"), 0.0f});
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[]{
+                FloatArgumentType.getFloat(ctx, ARG_X), FloatArgumentType.getFloat(ctx, ARG_Y), 0.0f});
     }
 
     private static int setModeScaleAndXyz(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
-                FloatArgumentType.getFloat(ctx, "x"),
-                FloatArgumentType.getFloat(ctx, "y"),
-                FloatArgumentType.getFloat(ctx, "z")});
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[]{
+                FloatArgumentType.getFloat(ctx, ARG_X),
+                FloatArgumentType.getFloat(ctx, ARG_Y),
+                FloatArgumentType.getFloat(ctx, ARG_Z)});
     }
 
     private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, float[] offset)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
+        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.unknown_item", itemId.toString()));
             return 0;
         }
 
-        String modeString = StringArgumentType.getString(ctx, "mode");
+        String modeString = StringArgumentType.getString(ctx, ARG_MODE);
         if (RenderMode.fromString(modeString) == null) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.unknown_render_mode", modeString));
@@ -384,7 +404,7 @@ public final class SsCommand {
     private static int resetItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
+        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
         CommandNetwork.send(player, RenderOverridePkt.reset(itemId));
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
@@ -563,7 +583,7 @@ public final class SsCommand {
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        Selection selection = selectSingle(ctx, kind, StringArgumentType.getString(ctx, "modid"));
+        Selection selection = selectSingle(ctx, kind, StringArgumentType.getString(ctx, ARG_MODID));
         return selection == null ? 0 : generate(ctx, player, selection);
     }
 
@@ -663,7 +683,7 @@ public final class SsCommand {
      */
     private static int addItemEntry(CommandContext<CommandSourceStack> ctx,
                                     ServerConfig.ListSetting list, String label) {
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, "item");
+        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
             ctx.getSource().sendFailure(Component.translatable(
                     "somestacks.command.unknown_item", itemId.toString()));
@@ -732,7 +752,7 @@ public final class SsCommand {
     private static int dumpSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        Selection selection = selectSingle(ctx, DUMP_KIND, StringArgumentType.getString(ctx, "modid"));
+        Selection selection = selectSingle(ctx, DUMP_KIND, StringArgumentType.getString(ctx, ARG_MODID));
         return selection == null ? 0 : dump(ctx, player, selection);
     }
 

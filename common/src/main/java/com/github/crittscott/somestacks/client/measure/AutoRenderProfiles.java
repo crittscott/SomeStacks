@@ -52,6 +52,10 @@ public final class AutoRenderProfiles {
     static final int CACHE_FORMAT_VERSION = 1;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String FIELD_FORMAT = "format";
+    private static final String FIELD_PACKS = "packs";
+    private static final String FIELD_VERSIONS = "versions";
+    private static final String FIELD_ENTRIES = "entries";
 
     /** Fraction of a stack cell the fitted model should span. */
     private static final float TARGET_FILL = 0.9f;
@@ -124,10 +128,10 @@ public final class AutoRenderProfiles {
         }
 
         JsonObject root = new JsonObject();
-        root.addProperty("format", CACHE_FORMAT_VERSION);
-        root.addProperty("packs", selectedPackIds());
-        root.add("versions", versions);
-        root.add("entries", OverrideJsonCodec.toJson(entries));
+        root.addProperty(FIELD_FORMAT, CACHE_FORMAT_VERSION);
+        root.addProperty(FIELD_PACKS, selectedPackIds());
+        root.add(FIELD_VERSIONS, versions);
+        root.add(FIELD_ENTRIES, OverrideJsonCodec.toJson(entries));
 
         Path cacheFile = cacheFile();
         try {
@@ -151,7 +155,7 @@ public final class AutoRenderProfiles {
         }
         try {
             JsonObject root = GSON.fromJson(Files.readString(cacheFile), JsonObject.class);
-            if (!isCurrentCacheFormat(root) || !root.has("entries")) {
+            if (!isCurrentCacheFormat(root) || !root.has(FIELD_ENTRIES)) {
                 dirty = true;
                 return;
             }
@@ -159,16 +163,18 @@ public final class AutoRenderProfiles {
             // Measurements read baked models, which a resource pack rewrites as surely as a mod
             // update does. A cache written under a different set of packs describes models that are
             // no longer loaded, so none of it is kept.
-            String packs = root.has("packs") ? root.get("packs").getAsString() : null;
+            String packs = root.has(FIELD_PACKS) ? root.get(FIELD_PACKS).getAsString() : null;
             if (packs == null || !packs.equals(selectedPackIds())) {
                 dirty = true;
                 return;
             }
 
-            JsonObject versions = root.has("versions") ? root.getAsJsonObject("versions") : new JsonObject();
+            JsonObject versions = root.has(FIELD_VERSIONS)
+                    ? root.getAsJsonObject(FIELD_VERSIONS)
+                    : new JsonObject();
 
             Map<ResourceLocation, ItemRenderConfig> entries =
-                    OverrideJsonCodec.parse(root.getAsJsonObject("entries"), cacheFile.toString());
+                    OverrideJsonCodec.parse(root.getAsJsonObject(FIELD_ENTRIES), cacheFile.toString());
             for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
                 ResourceLocation id = entry.getKey();
                 ItemRenderConfig config = entry.getValue();
@@ -194,15 +200,15 @@ public final class AutoRenderProfiles {
     }
 
     private static Path cacheFile() {
-        return PlatformPaths.configFolder().resolve("somestacks/measured_cache.json");
+        return PlatformPaths.modConfigFolder().resolve("measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
-        if (root == null || !root.has("format")) {
+        if (root == null || !root.has(FIELD_FORMAT)) {
             return false;
         }
         try {
-            return root.get("format").getAsInt() == CACHE_FORMAT_VERSION;
+            return root.get(FIELD_FORMAT).getAsInt() == CACHE_FORMAT_VERSION;
         } catch (RuntimeException e) {
             return false;
         }

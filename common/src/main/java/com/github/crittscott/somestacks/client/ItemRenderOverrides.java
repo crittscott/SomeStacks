@@ -50,8 +50,8 @@ import java.util.TreeMap;
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformPaths.configFolder().resolve("somestacks/item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformPaths.configFolder().resolve("somestacks/generated_overrides");
+    private static final Path USER_FILE = PlatformPaths.modConfigFolder().resolve("item_overrides.json");
+    private static final Path GENERATED_DIR = PlatformPaths.modConfigFolder().resolve("generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
     /** Bundled resource overrides, from client resource reload. */

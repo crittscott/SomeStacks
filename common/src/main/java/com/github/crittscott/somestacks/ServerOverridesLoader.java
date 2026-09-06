@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  */
 public final class ServerOverridesLoader {
     private static final Gson GSON = new GsonBuilder().create();
-    private static final Path DIR = PlatformPaths.configFolder().resolve("somestacks/server_item_overrides");
+    private static final Path DIR = PlatformPaths.modConfigFolder().resolve("server_item_overrides");
 
     private ServerOverridesLoader() {}
 

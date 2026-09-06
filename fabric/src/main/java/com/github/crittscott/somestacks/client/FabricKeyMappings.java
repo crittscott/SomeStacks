@@ -10,10 +10,10 @@ public final class FabricKeyMappings {
     private FabricKeyMappings() {}
 
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
-            "key.somestacks.stack_mode",
+            ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_V,
-            "key.categories.somestacks");
+            ClientGestures.KEY_CATEGORY_TRANSLATION_KEY);
 
     public static void init() {
         KeyBindingHelper.registerKeyBinding(STACK_MODE_KEY);

@@ -22,6 +22,8 @@ import java.util.Locale;
  * when they cannot run it.
  */
 final class SsHelp {
+    private static final String ARG_COMMAND = "command";
+
     private SsHelp() {}
 
     /** Who may run a subcommand, phrased for the player reading about it. */
@@ -43,64 +45,82 @@ final class SsHelp {
      * forms, and the detail is what a player needs to know before running it.
      */
     private enum Topic {
-        ITEM("item", "somestacks.command.help.item.summary", Gate.OPERATOR_IN_GAME,
-                List.of("/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]",
-                        "/ss item <item> reset"),
+        ITEM(SsCommand.COMMAND_ITEM, "somestacks.command.help.item.summary", Gate.OPERATOR_IN_GAME,
+                List.of(usage(SsCommand.COMMAND_ITEM + " <item> <mode> [<scale> [<x> <y> [<z>]]]"),
+                        usage(SsCommand.COMMAND_ITEM + " <item> reset")),
                 List.of("somestacks.command.help.item.detail.1",
                         "somestacks.command.help.item.detail.2",
                         "somestacks.command.help.item.detail.3",
                         "somestacks.command.help.item.detail.4")),
 
-        GALLERY("gallery", "somestacks.command.help.gallery.summary",
+        GALLERY(SsCommand.COMMAND_GALLERY, "somestacks.command.help.gallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
-                List.of("/ss gallery <modid>", "/ss gallery all", "/ss gallery list",
-                        "/ss gallery items"),
+                List.of(usage(SsCommand.COMMAND_GALLERY + " <modid>"),
+                        usage(SsCommand.COMMAND_GALLERY + " all"),
+                        usage(SsCommand.COMMAND_GALLERY + " list"),
+                        usage(SsCommand.COMMAND_GALLERY + " items")),
                 List.of("somestacks.command.help.gallery.detail.1",
                         "somestacks.command.help.gallery.detail.2",
                         "somestacks.command.help.gallery.detail.3",
                         "somestacks.command.help.gallery.detail.4",
                         "somestacks.command.help.gallery.detail.5")),
 
-        INGOTGALLERY("ingotgallery", "somestacks.command.help.ingotgallery.summary",
+        INGOTGALLERY(SsCommand.COMMAND_INGOT_GALLERY, "somestacks.command.help.ingotgallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
-                List.of("/ss ingotgallery <modid>", "/ss ingotgallery all", "/ss ingotgallery list"),
+                List.of(usage(SsCommand.COMMAND_INGOT_GALLERY + " <modid>"),
+                        usage(SsCommand.COMMAND_INGOT_GALLERY + " all"),
+                        usage(SsCommand.COMMAND_INGOT_GALLERY + " list")),
                 List.of("somestacks.command.help.ingotgallery.detail.1",
                         "somestacks.command.help.ingotgallery.detail.2")),
 
-        WRITE("write", "somestacks.command.help.write.summary", Gate.OPERATOR_IN_GAME,
-                List.of("/ss write changed", "/ss write <modid>", "/ss write all", "/ss write list"),
+        WRITE(SsCommand.COMMAND_WRITE, "somestacks.command.help.write.summary", Gate.OPERATOR_IN_GAME,
+                List.of(usage(SsCommand.COMMAND_WRITE + " changed"),
+                        usage(SsCommand.COMMAND_WRITE + " <modid>"),
+                        usage(SsCommand.COMMAND_WRITE + " all"),
+                        usage(SsCommand.COMMAND_WRITE + " list")),
                 List.of("somestacks.command.help.write.detail.1",
                         "somestacks.command.help.write.detail.2",
                         "somestacks.command.help.write.detail.3",
                         "somestacks.command.help.write.detail.4")),
 
-        RELOAD("reload", "somestacks.command.help.reload.summary", Gate.OPERATOR,
-                List.of("/ss reload"),
+        RELOAD(SsCommand.COMMAND_RELOAD, "somestacks.command.help.reload.summary", Gate.OPERATOR,
+                List.of(usage(SsCommand.COMMAND_RELOAD)),
                 List.of("somestacks.command.help.reload.detail.1",
                         "somestacks.command.help.reload.detail.2")),
 
-        GEN("gen", "somestacks.command.help.gen.summary", Gate.OPERATOR,
-                List.of("/ss gen mod add <modid>", "/ss gen mod remove <modid>", "/ss gen mod list",
-                        "/ss gen item add <item>", "/ss gen item remove <item>", "/ss gen item list"),
+        GEN(SsCommand.COMMAND_GEN, "somestacks.command.help.gen.summary", Gate.OPERATOR,
+                List.of(usage(SsCommand.COMMAND_GEN + " mod add <modid>"),
+                        usage(SsCommand.COMMAND_GEN + " mod remove <modid>"),
+                        usage(SsCommand.COMMAND_GEN + " mod list"),
+                        usage(SsCommand.COMMAND_GEN + " item add <item>"),
+                        usage(SsCommand.COMMAND_GEN + " item remove <item>"),
+                        usage(SsCommand.COMMAND_GEN + " item list")),
                 List.of("somestacks.command.help.gen.detail.1",
                         "somestacks.command.help.gen.detail.2",
                         "somestacks.command.help.gen.detail.3")),
 
-        DENY("deny", "somestacks.command.help.deny.summary", Gate.OPERATOR,
-                List.of("/ss deny mod add <modid>", "/ss deny mod remove <modid>", "/ss deny mod list",
-                        "/ss deny item add <item>", "/ss deny item remove <item>", "/ss deny item list"),
+        DENY(SsCommand.COMMAND_DENY, "somestacks.command.help.deny.summary", Gate.OPERATOR,
+                List.of(usage(SsCommand.COMMAND_DENY + " mod add <modid>"),
+                        usage(SsCommand.COMMAND_DENY + " mod remove <modid>"),
+                        usage(SsCommand.COMMAND_DENY + " mod list"),
+                        usage(SsCommand.COMMAND_DENY + " item add <item>"),
+                        usage(SsCommand.COMMAND_DENY + " item remove <item>"),
+                        usage(SsCommand.COMMAND_DENY + " item list")),
                 List.of("somestacks.command.help.deny.detail.1",
                         "somestacks.command.help.deny.detail.2")),
 
-        INGOT("ingot", "somestacks.command.help.ingot.summary", Gate.OPERATOR,
-                List.of("/ss ingot add <tag>", "/ss ingot remove <tag>", "/ss ingot list"),
+        INGOT(SsCommand.COMMAND_INGOT, "somestacks.command.help.ingot.summary", Gate.OPERATOR,
+                List.of(usage(SsCommand.COMMAND_INGOT + " add <tag>"),
+                        usage(SsCommand.COMMAND_INGOT + " remove <tag>"),
+                        usage(SsCommand.COMMAND_INGOT + " list")),
                 List.of("somestacks.command.help.ingot.detail.1",
                         "somestacks.command.help.ingot.detail.2",
                         "somestacks.command.help.ingot.detail.3",
                         "somestacks.command.help.ingot.detail.4")),
 
-        HELP("help", "somestacks.command.help.help.summary", Gate.ANYONE,
-                List.of("/ss help", "/ss help <command>"),
+        HELP(SsCommand.COMMAND_HELP, "somestacks.command.help.help.summary", Gate.ANYONE,
+                List.of(usage(SsCommand.COMMAND_HELP),
+                        usage(SsCommand.COMMAND_HELP + " <command>")),
                 List.of("somestacks.command.help.help.detail.1"));
 
         private final String name;
@@ -134,11 +154,15 @@ final class SsHelp {
     }
 
     static LiteralArgumentBuilder<CommandSourceStack> tree() {
-        return Commands.literal("help")
+        return Commands.literal(SsCommand.COMMAND_HELP)
                 .executes(SsHelp::index)
-                .then(Commands.argument("command", StringArgumentType.word())
+                .then(Commands.argument(ARG_COMMAND, StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Topic.names(), builder))
                         .executes(SsHelp::topic));
+    }
+
+    private static String usage(String form) {
+        return "/" + SsCommand.COMMAND_ROOT + " " + form;
     }
 
     /** Builds the command index from each subcommand's summary. */
@@ -158,7 +182,7 @@ final class SsHelp {
     }
 
     private static int topic(CommandContext<CommandSourceStack> ctx) {
-        String name = StringArgumentType.getString(ctx, "command");
+        String name = StringArgumentType.getString(ctx, ARG_COMMAND);
         Topic topic = Topic.byName(name);
 
         if (topic == null) {

@@ -41,6 +41,9 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
+    private static final String COMMENT_PREFIX = "_comment";
+    private static final String FIELD_TEXTURE = "texture";
+    private static final String FIELD_TINT = "tint";
 
     /**
      * A bar's texture and tint. {@code autoTint} is separate from {@code color} because white is a
@@ -90,7 +93,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 JsonObject root = GSON.fromJson(reader, JsonObject.class);
 
                 for (String key : root.keySet()) {
-                    if (key.startsWith("_comment")) continue;
+                    if (key.startsWith(COMMENT_PREFIX)) continue;
 
                     try {
                         ResourceLocation itemLoc = ResourceLocation.parse(key);
@@ -130,11 +133,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
 
         JsonObject obj = value.getAsJsonObject();
-        ResourceLocation texture = obj.has("texture")
-                ? ResourceLocation.parse(obj.get("texture").getAsString())
+        ResourceLocation texture = obj.has(FIELD_TEXTURE)
+                ? ResourceLocation.parse(obj.get(FIELD_TEXTURE).getAsString())
                 : DEFAULT_TEXTURE;
-        return obj.has("tint")
-                ? BarTextureData.tinted(texture, parseColor(obj.get("tint").getAsString()))
+        return obj.has(FIELD_TINT)
+                ? BarTextureData.tinted(texture, parseColor(obj.get(FIELD_TINT).getAsString()))
                 : BarTextureData.auto(texture);
     }
 

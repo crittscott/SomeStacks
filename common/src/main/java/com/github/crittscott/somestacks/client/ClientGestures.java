@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,6 +10,11 @@ import net.minecraft.world.entity.player.Player;
 /** Shared client gesture state and the loader-specific packet sender behind its rules. */
 public final class ClientGestures {
     private ClientGestures() {}
+
+    public static final String STACK_MODE_KEY_TRANSLATION_KEY =
+            "key." + SomeStacksCommon.MODID + ".stack_mode";
+    public static final String KEY_CATEGORY_TRANSLATION_KEY =
+            "key.categories." + SomeStacksCommon.MODID;
 
     public interface Sender {
         void sendTogglePermanent(BlockPos pos);

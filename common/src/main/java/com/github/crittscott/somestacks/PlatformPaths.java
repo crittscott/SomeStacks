@@ -13,4 +13,9 @@ public final class PlatformPaths {
     public static Path configFolder() {
         throw new AssertionError();
     }
+
+    /** This mod's directory beneath the game's {@code config} directory. */
+    public static Path modConfigFolder() {
+        return configFolder().resolve(SomeStacksCommon.MODID);
+    }
 }
