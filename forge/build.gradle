@@ -11,7 +11,8 @@ sourceSets {
     gametest {
         java { srcDir project(':common').file('src/gametest/java') }
         compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
-        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output +
+                project(':common').sourceSets.main.output
     }
 }
 
@@ -38,20 +39,7 @@ loom {
     }
 }
 
-configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-    compileClasspath.extendsFrom common
-
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-}
+rootProject.configureLoaderBuild(project)
 
 dependencies {
     forge "net.minecraftforge:forge:$rootProject.forge_compile_version"
@@ -60,32 +48,17 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 }
 
-def gameTestStructureSource = layout.projectDirectory.file(
-        'src/gametest/fixtures/somestacks_empty.nbt.b64')
-def gameTestStructureOutput = layout.buildDirectory.file(
-        'generated/gametest/resources/data/somestacks/structure/somestacks_empty.nbt')
-
-tasks.register('generateGameTestStructures') {
-    inputs.file(gameTestStructureSource)
-    outputs.file(gameTestStructureOutput)
-
-    doLast {
-        def output = gameTestStructureOutput.get().asFile
-        output.parentFile.mkdirs()
-        output.bytes = Base64.getDecoder().decode(gameTestStructureSource.asFile.text.trim())
-    }
-}
-
-sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
 tasks.named('processGametestResources', ProcessResources).configure {
-    var replaceProperties = [mod_version: mod_version]
+    var replaceProperties = [
+            forge_loader_version_range: forge_loader_version_range,
+            mod_license: mod_license,
+            mod_version: mod_version,
+    ]
     inputs.properties replaceProperties
 
     filesMatching('META-INF/mods.toml') {
         expand replaceProperties + [project: project]
     }
-
-    dependsOn tasks.named('generateGameTestStructures')
 }
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).
@@ -102,25 +75,4 @@ tasks.named('processResources', ProcessResources).configure {
     filesMatching('META-INF/mods.toml') {
         expand replaceProperties + [project: project]
     }
-}
-
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
-
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.version,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-remapJar {
-    inputFile.set shadowJar.archiveFile
 }

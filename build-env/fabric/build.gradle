@@ -8,15 +8,11 @@ architectury {
 }
 
 sourceSets {
-    main {
-        java.srcDir rootProject.file('common/src/compat/java')
-    }
     gametest {
-        java.srcDir rootProject.file('common/src/gametest/java')
+        java { srcDir project(':common').file('src/gametest/java') }
         compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
-        compileClasspath += project(':common').sourceSets.main.output
-        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
-        runtimeClasspath += project(':common').sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output +
+                project(':common').sourceSets.main.output
     }
 }
 
@@ -26,7 +22,7 @@ loom {
             sourceSet sourceSets.main
             sourceSet project(':common').sourceSets.main
         }
-        'somebuckets-gametest' {
+        somestacks_gametest {
             sourceSet sourceSets.gametest
         }
     }
@@ -36,55 +32,35 @@ loom {
             server()
             name 'Game Test Server'
             vmArg '-Dfabric-api.gametest'
-            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.get().asFile}/gametest-report.xml"
             source sourceSets.gametest
         }
     }
 }
 
-def gameTestWorldDirectory = layout.projectDirectory.dir('run/world')
-tasks.named('runGameTestServer').configure {
-    doFirst {
-        project.delete(gameTestWorldDirectory)
-    }
-}
-
-configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-    compileClasspath.extendsFrom common
-
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-}
+rootProject.configureLoaderBuild(project)
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${ftb_chunks_version}"
-
     // common's source uses javax.annotation.Nullable. Forge gets this transitively through its own
     // dependency chain; Fabric Loom's does not provide it, so it must be redeclared here even though
     // common itself already depends on it.
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
+    // Optional: lets FtbChunksProtection compile against FTB Chunks' claim API. Never bundled and
+    // not required at runtime; consulted only when the mod is actually installed.
+    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:$rootProject.ftb_chunks_version"
 }
 
 // Expands ${...} placeholders in fabric.mod.json (this module's own resource).
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, fabric_loader_version: fabric_loader_version,
+            fabric_api_version: fabric_api_version,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
     ]
@@ -95,13 +71,15 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
-}
+// Expands ${...} placeholders in the gametest dev-mod's own fabric.mod.json.
+tasks.named('processGametestResources', ProcessResources).configure {
+    var replaceProperties = [
+            fabric_loader_version: fabric_loader_version, fabric_api_version: fabric_api_version,
+            mod_version: mod_version,
+    ]
+    inputs.properties replaceProperties
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties + [project: project]
+    }
 }
-
-rootProject.configureGameTestStructures(project)

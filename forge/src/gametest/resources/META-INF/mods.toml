@@ -1,6 +1,6 @@
 modLoader="javafml"
-loaderVersion="[52,53)"
-license="GNU GPLv3"
+loaderVersion="${forge_loader_version_range}"
+license="${mod_license}"
 
 [[mods]]
 modId="somestacks_gametest"

@@ -1,6 +1,6 @@
 modLoader="javafml"
-loaderVersion="[1,)"
-license="GNU GPLv3"
+loaderVersion="${neoforge_loader_version_range}"
+license="${mod_license}"
 
 [[mods]]
 modId="somestacks_gametest"

@@ -5,9 +5,11 @@ Gradle configuration, this machine's installed JDKs and Gradle cache, and the cu
 project settings. See [as-built.md](as-built.md) for the runtime architecture; this file covers the
 environment that builds and launches it.
 
-The `working-build-env/` directory is not part of the active Gradle build. The root
-`settings.gradle` includes `common`, `forge`, `fabric`, and `neoforge`; declarations under
-`working-build-env/` are therefore not authoritative for this project.
+The `build-env/` directory is a synchronized reference snapshot of this repository's build scripts
+and wrapper. It is not part of the active Gradle build: the root `settings.gradle` includes
+`common`, `forge`, `fabric`, and `neoforge`, while nothing includes `build-env/`. Make build changes
+in the active root files first, verify them there, and then refresh the matching files under
+`build-env/` so the snapshot does not drift.
 
 All four modules — `common`, `fabric`, `forge`, and `neoforge` — are ported to Minecraft 1.21.1 and
 compile. `forge` keeps the classic Forge API; `neoforge` is the parallel port on the NeoForge
@@ -18,7 +20,7 @@ development-only `somestacks_gametest` suite.
 
 | Tool | Active declaration |
 | --- | --- |
-| Gradle | Wrapper pinned in `gradle/wrapper/gradle-wrapper.properties` at **9.5.1** |
+| Gradle | Regenerated wrapper pinned at **9.5.1**, with distribution-URL validation enabled |
 | Java toolchain | Language version 21; source/target 21; `--release 21` |
 | IntelliJ Gradle JVM | `.idea/gradle.xml` sets `gradleJvm="21"` |
 | Architectury Loom | `1.17.491` |
@@ -26,9 +28,10 @@ development-only `somestacks_gametest` suite.
 | Shadow (`com.gradleup.shadow`) | `9.4.3` |
 
 The project toolchain forces compilation and every Gradle `JavaExec` task, including Minecraft
-development runs, onto Java 21, so a JDK 21 must be discoverable (IntelliJ already runs Gradle on
-one; command-line wrapper invocations need `JAVA_HOME` or `org.gradle.java.home` pointed at a 21).
-There is no global `gradle` command; the wrapper is the build entry point.
+development runs, onto Java 21, so a JDK 21 must be discoverable. The wrapper itself may launch on a
+Gradle-compatible JVM: on this machine `JAVA_HOME` points to JDK 17 and Gradle discovers the JDK 21
+toolchain separately. IntelliJ runs Gradle with its configured JDK 21. There is no global `gradle`
+command; the wrapper is the build entry point.
 
 `gradle.properties` gives Gradle 3 GiB with `org.gradle.jvmargs=-Xmx3G`, disables the persistent
 daemon with `org.gradle.daemon=false`, and enables parallel execution. Loom and the Architectury
@@ -56,8 +59,9 @@ integration and is never bundled. Open Parties and Claims support was removed wi
 (no 1.21.1 build exists).
 
 Plugin resolution uses the Fabric, Architectury, Forge, and NeoForged Maven repositories plus the
-Gradle Plugin Portal. Subprojects additionally use the NeoForged, Parchment, and FTB Maven
-repositories. All active version pins are in the root build scripts and `gradle.properties`
+Gradle Plugin Portal. All subprojects additionally use the Architectury, NeoForged, and Parchment
+repositories; the FTB repository is limited to Fabric and NeoForge, the two modules that declare
+FTB Chunks. All active version pins are in the root build scripts and `gradle.properties`
 (`maven_group`, `archives_name`, `forge_loader_version_range`, `neoforge_*` among them); there is no
 `buildSrc`, version catalog, or dependency locking.
 
@@ -73,9 +77,11 @@ neoforge/   NeoForge entry points and integration
 ```
 
 Each loader module compiles against `common` through Architectury's `common` configuration and
-bundles its transformed production output through `shadowBundle`. Development runs instead group
-the common and loader source sets into one logical mod under `loom.mods.main`. The production
-artifacts are:
+bundles its transformed production output through `shadowBundle`. The root
+`configureLoaderBuild` helper owns those configurations, GameTest structure generation, generated
+resource registration, Shadow classification, and remap input wiring. Development runs group the
+common and loader source sets into one logical mod under `loom.mods.main`. The production artifacts
+are:
 
 ```text
 forge/build/libs/somestacks-forge-<version>.jar
@@ -86,6 +92,9 @@ neoforge/build/libs/somestacks-neoforge-<version>.jar
 Common's only Architectury API usage, the config-directory lookup, resolves through the
 `@ExpectPlatform` helper `com.github.crittscott.somestacks.PlatformPaths`, with a per-loader
 `PlatformPathsImpl`.
+
+The common `pack.mcmeta` declares resource-pack format 34 and a supported range of 34-48 so the same
+built-in pack is accepted as Minecraft 1.21.1 resource content (34) and data content (48).
 
 The `*-dev-shadow.jar` and `*-sources.jar` files in those directories are development artifacts,
 not release JARs. Common's transformed JARs are intermediate inputs to the loader builds.
@@ -99,13 +108,18 @@ All nine launch through `dev.architectury.transformer.TransformerRuntime`. Forge
 `cpw.mods.bootstraplauncher.BootstrapLauncher`; Fabric uses Knot. There are no plain Fabric Loom
 runs or data-generation run in the current project.
 
-Each loader's GameTest run is configured by its own `build.gradle` the same way: `<loader>/src/gametest`
-becomes the separate development-only `somestacks_gametest` mod, and `common/src/gametest/java` is
-added as an extra source directory. Forge and NeoForge enable their GameTest namespace through
+Each loader's GameTest run makes `<loader>/src/gametest` a separate development-only
+`somestacks_gametest` mod and adds `common/src/gametest/java` as an extra source directory. Forge
+and NeoForge enable their GameTest namespace through
 `forge.enabledGameTestNamespaces` / `neoforge.enabledGameTestNamespaces`; Fabric passes
 `-Dfabric-api.gametest`. Each loader keeps its own checked-in Base64 fixture at
 `<loader>/src/gametest/fixtures/somestacks_empty.nbt.b64`, which `generateGameTestStructures` decodes
 into the build directory before GameTest resources are processed.
+
+Fabric's empty-hand air-click hook is a Fabric-only Mixin declared by `somestacks.mixins.json`, so
+only Fabric carries that Mixin configuration and refmap handling. All three GameTest source sets
+explicitly include `project(':common').sourceSets.main.output` on their runtime classpath; the full
+suites pass with that uniform setup.
 
 ## Environment traps
 
@@ -117,9 +131,9 @@ into the build directory before GameTest resources are processed.
   `loom.mods.main` includes both source sets. Adding common as a separate runtime mod can produce
   duplicate loading or Forge JPMS split-package failures; production bundling belongs in
   `shadowBundle`.
-- **The Forge `gametest` source set needs main output on both classpaths.** Main's dependency
-  classpath alone does not contain the mod's own compiled classes. The explicit
-  `sourceSets.main.output` additions in `forge/build.gradle` are required.
+- **A loader's `gametest` source set needs main output on both classpaths.** Main's dependency
+  classpath alone does not contain the mod's own compiled classes. Each loader also names common
+  main output explicitly on its GameTest runtime classpath.
 - **Forge scans GameTests only from registered Loom mod output.** The `somestacks_gametest`
   `loom.mods` entry, its `mods.toml`, stub `@Mod` class, and `pack.mcmeta` are all part of making the
   custom source set visible to FML and making its structure resource load. A launch that discovers
@@ -133,8 +147,11 @@ into the build directory before GameTest resources are processed.
   namespace and class name. Fabric instead requires each class to implement `FabricGameTest` and to
   be listed under a `fabric-gametest` entrypoint in the dev-mod's own `fabric.mod.json`; a new Fabric
   GameTest class not added to that entrypoint list will not run.
-- **`working-build-env/` is an inactive reference tree.** Changing files there does not change the
-  root build.
+- **`build-env/` is an inactive reference snapshot.** Changing files there does not change the root
+  build. Change and verify the active files first, then synchronize the snapshot.
+- **Dropbox can briefly lock freshly written JARs on Windows.** An aggregate `build` may fail while
+  replacing a loader's final JAR even though configuration and compilation succeeded. Retrying the
+  affected `:<loader>:build` after the sync/indexing lock clears has succeeded consistently.
 
 ## Build and test commands
 

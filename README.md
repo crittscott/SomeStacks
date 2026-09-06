@@ -1,5 +1,5 @@
 ![Some Stacks](images/somestacks-splash.png)
-![Loaders: Fabric + Forge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge-5C7C8A?style=for-the-badge) ![Requires: Architectury API](https://img.shields.io/badge/Requires-Architectury%20API-8A5A9B?style=for-the-badge)
+![Loaders: Fabric + Forge + NeoForge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge%20%2B%20NeoForge-5C7C8A?style=for-the-badge)
 
 # Some Stacks
 
@@ -40,7 +40,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 ## Automation and redstone
 
-Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and NeoForge, Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
 
 - Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -49,7 +49,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so Fabric also checks FTB Chunks directly when it is installed.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 

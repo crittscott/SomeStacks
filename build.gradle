@@ -10,6 +10,67 @@ architectury {
     minecraft = project.minecraft_version
 }
 
+// Shared loader-module packaging and GameTest resource wiring. Loader-specific dependencies,
+// metadata expansion, run arguments, and Architectury transform names stay in each module.
+ext.configureLoaderBuild = { Project loaderProject ->
+    loaderProject.configurations {
+        common {
+            canBeResolved = true
+            canBeConsumed = false
+        }
+        compileClasspath.extendsFrom common
+
+        shadowBundle {
+            canBeResolved = true
+            canBeConsumed = false
+        }
+    }
+
+    def structureSource = loaderProject.layout.projectDirectory.file(
+            'src/gametest/fixtures/somestacks_empty.nbt.b64')
+    def structureOutput = loaderProject.layout.buildDirectory.file(
+            'generated/gametest/resources/data/somestacks/structure/somestacks_empty.nbt')
+
+    loaderProject.tasks.register('generateGameTestStructures') {
+        inputs.file(structureSource)
+        outputs.file(structureOutput)
+
+        doLast {
+            def output = structureOutput.get().asFile
+            output.parentFile.mkdirs()
+            output.bytes = Base64.getDecoder().decode(structureSource.asFile.text.trim())
+        }
+    }
+
+    loaderProject.sourceSets.gametest.resources {
+        srcDir loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
+    }
+    loaderProject.tasks.named('processGametestResources').configure {
+        dependsOn loaderProject.tasks.named('generateGameTestStructures')
+    }
+
+    loaderProject.tasks.named('shadowJar').configure {
+        configurations = [loaderProject.configurations.shadowBundle]
+        archiveClassifier = 'dev-shadow'
+
+        if (loaderProject.name in ['forge', 'neoforge']) {
+            manifest {
+                attributes([
+                        'Specification-Title'   : mod_id,
+                        'Specification-Vendor'  : mod_authors,
+                        'Specification-Version' : '1',
+                        'Implementation-Title'  : loaderProject.name,
+                        'Implementation-Version': loaderProject.version,
+                        'Implementation-Vendor' : mod_authors,
+                ])
+            }
+        }
+    }
+    loaderProject.tasks.named('remapJar').configure {
+        inputFile.set(loaderProject.tasks.named('shadowJar').flatMap { it.archiveFile })
+    }
+}
+
 allprojects {
     group = rootProject.maven_group
     version = rootProject.mod_version
@@ -28,7 +89,9 @@ subprojects {
         maven { url = 'https://maven.architectury.dev/' }
         maven { url = 'https://maven.parchmentmc.org' }
         maven { url = 'https://maven.neoforged.net/releases/' }
-        maven { url = 'https://maven.ftb.dev/releases' }
+        if (project.name in ['fabric', 'neoforge']) {
+            maven { url = 'https://maven.ftb.dev/releases' }
+        }
     }
 
     loom {

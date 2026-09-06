@@ -37,20 +37,7 @@ loom {
     }
 }
 
-configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-    compileClasspath.extendsFrom common
-
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-}
+rootProject.configureLoaderBuild(project)
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
@@ -95,34 +82,4 @@ tasks.named('processGametestResources', ProcessResources).configure {
     filesMatching('fabric.mod.json') {
         expand replaceProperties + [project: project]
     }
-}
-
-def gameTestStructureSource = layout.projectDirectory.file(
-        'src/gametest/fixtures/somestacks_empty.nbt.b64')
-def gameTestStructureOutput = layout.buildDirectory.file(
-        'generated/gametest/resources/data/somestacks/structure/somestacks_empty.nbt')
-
-tasks.register('generateGameTestStructures') {
-    inputs.file(gameTestStructureSource)
-    outputs.file(gameTestStructureOutput)
-
-    doLast {
-        def output = gameTestStructureOutput.get().asFile
-        output.parentFile.mkdirs()
-        output.bytes = Base64.getDecoder().decode(gameTestStructureSource.asFile.text.trim())
-    }
-}
-
-sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
-tasks.named('processGametestResources').configure {
-    dependsOn tasks.named('generateGameTestStructures')
-}
-
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
-}
-
-remapJar {
-    inputFile.set shadowJar.archiveFile
 }
