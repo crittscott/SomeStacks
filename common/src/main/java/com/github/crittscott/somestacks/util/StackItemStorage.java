@@ -10,19 +10,19 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. Loader-neutral replacement for
- * Forge's {@code ItemStackHandler}, matching its insert/extract semantics and its NBT shape
- * ({@code {Size, Items:[{Slot, ...stack}]}}) exactly, so existing world saves keep loading.
+ * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
+ * item-handler insert/extract semantics and NBT shape
+ * ({@code {Size, Items:[{Slot, ...stack}]}}) used by the block entities.
  *
  * <p>Subclasses override {@link #onContentsChanged(int)}, {@link #isItemValid(int, ItemStack)}, and
- * {@link #getSlotLimit(int)} the way a Forge {@code ItemStackHandler} anonymous subclass would.
+ * {@link #getSlotLimit(int)} to specialize notification, admission, and capacity.
  */
 public class StackItemStorage implements SlotAccess {
     private static final String TAG_SLOT = "Slot";
     private static final String TAG_SIZE = "Size";
     private static final String TAG_ITEMS = "Items";
 
-    /** Per-slot max-stack-size cap, mirroring Forge {@code ItemStackHandler}'s default. */
+    /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
 
     private final ItemStack[] stacks;

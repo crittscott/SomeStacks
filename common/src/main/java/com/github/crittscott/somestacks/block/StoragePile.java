@@ -202,7 +202,14 @@ public final class StoragePile {
         return handlerOf(flatSlot).getStackInSlot(flatSlot % StorageStackBE.SLOTS);
     }
 
-    /** Extracts from one pile slot and schedules the settle that packs the rest down over it. */
+    /**
+     * Extracts up to {@code amount} items from one pile slot and schedules the settle that packs the
+     * rest down over it.
+     *
+     * @param flatSlot the pile slot to extract, numbered from the bottom block upward
+     * @param amount the requested maximum
+     * @return the extracted items, or an empty stack when the slot is invalid or empty
+     */
     public ItemStack extract(int flatSlot, int amount) {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
@@ -260,6 +267,7 @@ public final class StoragePile {
         }
     }
 
+    /** The sum of every slot's fractional fullness, divided by the pile's current slot count. */
     public double fillLevel() {
         double sum = 0.0;
         for (int i = 0; i < totalSlots(); i++) {

@@ -434,8 +434,8 @@ public class SinglesStackBE extends BlockEntity {
 
     /**
      * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules publication only if this block changed. Gravity publishes
-     * through its own path, so a new batch clears any prior touch state.
+     * {@link #endBatch()} schedules publication only if this block changed. Column draw-down
+     * publishes through its own path, so a new batch clears any prior touch state.
      */
     void beginBatch() {
         suppressSync = true;
@@ -523,7 +523,7 @@ public class SinglesStackBE extends BlockEntity {
         tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
     }
 
-    /** This block's 64 slots, for callers that already hold the block entity. */
+    /** This block's local slots, for callers that already hold the block entity. */
     public StackItemStorage getItems() {
         return items;
     }

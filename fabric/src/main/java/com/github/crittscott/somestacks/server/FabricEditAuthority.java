@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,12 @@ public final class FabricEditAuthority implements EditAuthority {
             "[SomeStacks]");
 
     private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
+
+    public FabricEditAuthority() {
+        if (FtbChunksProtection.isLoaded()) {
+            SomeStacksCommon.LOGGER.info("Enabled direct FTB Chunks protection for automated growth on Fabric");
+        }
+    }
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {

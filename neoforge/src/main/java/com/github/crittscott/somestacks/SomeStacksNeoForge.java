@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -30,7 +31,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.apache.logging.log4j.Logger;
 
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
@@ -41,7 +41,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(SomeStacksNeoForge.MODID)
 public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
-    public static final Logger LOGGER = SomeStacksCommon.LOGGER;
 
     public SomeStacksNeoForge(IEventBus modBus) {
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
@@ -65,6 +64,14 @@ public class SomeStacksNeoForge {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientSetup.init(modBus);
         }
+
+        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for NeoForge", modVersion());
+    }
+
+    private static String modVersion() {
+        return ModList.get().getModContainerById(MODID)
+                .map(container -> container.getModInfo().getVersion().toString())
+                .orElse("unknown");
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

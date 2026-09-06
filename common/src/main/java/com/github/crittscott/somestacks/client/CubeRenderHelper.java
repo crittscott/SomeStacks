@@ -257,7 +257,7 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * The flag Forge's item renderer uses when selecting a model's passes and render types:
+     * The flag Forge and NeoForge item renderers use when selecting a model's passes and render types:
      * false only for the translucent blocks
      * vanilla draws through the indirect buffers outside GUI and first-person contexts.
      */

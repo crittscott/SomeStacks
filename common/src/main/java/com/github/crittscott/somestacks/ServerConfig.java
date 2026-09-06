@@ -147,14 +147,16 @@ public final class ServerConfig {
         if (Files.exists(file)) {
             try {
                 JsonObject root = GSON.fromJson(Files.readString(file), JsonObject.class);
-                if (root != null) {
-                    applyJson(root);
+                if (root == null) {
+                    throw new IllegalArgumentException("root is null");
                 }
+                applyJson(root);
+                SomeStacksCommon.LOGGER.info("Loaded server config from {}", displayPath(file));
             } catch (Exception e) {
                 SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", file, e.getMessage());
             }
-        } else {
-            save();
+        } else if (save()) {
+            SomeStacksCommon.LOGGER.info("Created default server config at {}", displayPath(file));
         }
 
         bakeServerLists();
@@ -184,10 +186,14 @@ public final class ServerConfig {
         genItemsRaw = stringListOr(gallery, "gen_items", genItemsRaw);
     }
 
-    /** Writes the current values to the file {@link #load} was given. A no-op before the first load. */
-    public static void save() {
+    /**
+     * Writes the current values to the file {@link #load} was given.
+     *
+     * @return whether the file was written; false before the first load or after a write failure
+     */
+    public static boolean save() {
         if (configFile == null) {
-            return;
+            return false;
         }
 
         JsonObject piles = new JsonObject();
@@ -219,9 +225,15 @@ public final class ServerConfig {
         try {
             Files.createDirectories(configFile.getParent());
             Files.writeString(configFile, GSON.toJson(root));
+            return true;
         } catch (IOException e) {
             SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", configFile, e.getMessage());
+            return false;
         }
+    }
+
+    private static Path displayPath(Path file) {
+        return file.toAbsolutePath().normalize();
     }
 
     private static JsonObject obj(JsonObject parent, String key) {
@@ -287,7 +299,7 @@ public final class ServerConfig {
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
 
-        SomeStacksCommon.LOGGER.info("Baked server lists: {} disabled mod(s), {} disabled item(s)",
+        SomeStacksCommon.LOGGER.debug("Baked server lists: {} disabled mod(s), {} disabled item(s)",
                 disabledMods.size(), disabledItems.size());
 
         bakeIngotItems();

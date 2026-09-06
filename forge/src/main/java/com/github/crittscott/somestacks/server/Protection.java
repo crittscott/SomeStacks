@@ -24,7 +24,7 @@ import java.util.function.BiPredicate;
  * loader-neutral {@link WorldEdits} instead; this class is only the player-packet-facing half,
  * which stays Forge-specific because it fires {@code PlayerInteractEvent.RightClickBlock}.
  *
- * <h2>The vanilla click a gesture displaces</h2>
+ * <h3>The vanilla click a gesture displaces</h3>
  *
  * A gesture reaches the server twice. The client sends the mod's own packet from inside its
  * {@code RightClickBlock} handler, and then the vanilla {@code ServerboundUseItemOnPacket} for the

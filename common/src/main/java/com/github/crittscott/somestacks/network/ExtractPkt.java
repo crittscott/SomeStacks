@@ -67,6 +67,7 @@ public record ExtractPkt(BlockPos pos, int index) implements CustomPacketPayload
         }
     }
 
+    /** Applies a validated player extraction to one local Storage slot. */
     public static void handleStorageExtract(Level level, BlockPos pos, Player player, InteractionHand hand, StorageStackBE sbe, int index) {
         ItemStack handStack = player.getItemInHand(hand);
 
@@ -94,6 +95,7 @@ public record ExtractPkt(BlockPos pos, int index) implements CustomPacketPayload
         }
     }
 
+    /** Applies a validated player extraction and draw-down to one local Singles cell. */
     public static void handleSinglesExtract(Level level, BlockPos pos, Player player, InteractionHand hand, SinglesStackBE ssbe, int index) {
         if (index < 0 || index >= SinglesStackBE.SLOTS) return;
 
@@ -114,6 +116,7 @@ public record ExtractPkt(BlockPos pos, int index) implements CustomPacketPayload
         }
     }
 
+    /** Applies a validated player extraction and support cascade to one local Bar position. */
     public static void handleBarExtract(Level level, BlockPos pos, Player player, InteractionHand hand, BarStackBE barbe, int index) {
         if (index < 0 || index >= BarStackBE.SLOTS) return;
 

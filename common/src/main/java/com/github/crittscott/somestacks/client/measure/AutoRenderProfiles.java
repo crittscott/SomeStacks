@@ -218,10 +218,10 @@ public final class AutoRenderProfiles {
     }
 
     private static RenderProfile compute(ItemStack stack) {
-        // Blocks whose art lies in the horizontal plane read as a one-pixel edge when
-        // projected flat, so they are presented the way an inventory slot shows them.
         float scaleFactor = fitScaleFactor(stack);
 
+        // Blocks whose art lies in the horizontal plane read as a one-pixel edge when
+        // projected flat, so they are presented the way an inventory slot shows them.
         if (wantsGuiPresentation(stack)) {
             ModelMeasurement.Result guiResult = ModelMeasurement.measureGui(stack);
             RenderProfile fitted = fit(guiResult, RenderMode.GUI, scaleFactor);

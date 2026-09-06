@@ -25,16 +25,23 @@ import java.util.function.BiPredicate;
  * the player-packet-facing half, which stays loader-specific because it fires
  * {@code PlayerInteractEvent.RightClickBlock}. See {@link RightClickBlockSuppressor} for why a
  * claimed click marks the position last, after every consult.
+ *
+ * <p>The custom packet arrives before the vanilla use-item-on packet for the same click. A successful
+ * claim therefore runs every protection consult first and only then marks the clicked position so
+ * the trailing vanilla action cannot act a second time or cause a later consult to veto itself.
  */
 public final class Protection {
     private Protection() {}
 
+    /** Custom gesture packets represent only the main-hand gestures recognized by the client. */
     private static final InteractionHand GESTURE_HAND = InteractionHand.MAIN_HAND;
 
+    /** @see PlayerEditAuthority#claimInteraction */
     public static boolean claimInteraction(ServerPlayer sp, BlockPos markPos, BlockPos... consulted) {
         return claim(sp, markPos, Protection::mayInteract, consulted);
     }
 
+    /** @see PlayerEditAuthority#claimItemUse */
     public static boolean claimItemUse(ServerPlayer sp, BlockPos markPos, BlockPos... consulted) {
         return claim(sp, markPos, Protection::mayUseItemOn, consulted);
     }
@@ -55,6 +62,7 @@ public final class Protection {
         return true;
     }
 
+    /** @see PlayerEditAuthority#claimPlacement */
     public static boolean claimPlacement(ServerPlayer sp, BlockPos againstPos, BlockPos intoPos) {
         if (WorldEdits.isProtected(sp, againstPos) || WorldEdits.isProtected(sp, intoPos)) {
             return false;
@@ -66,11 +74,13 @@ public final class Protection {
         return true;
     }
 
+    /** @see PlayerEditAuthority#mayInteract */
     public static boolean mayInteract(ServerPlayer sp, BlockPos pos) {
         PlayerInteractEvent.RightClickBlock evt = rightClickBlock(sp, pos);
         return !evt.isCanceled() && evt.getUseBlock() != TriState.FALSE;
     }
 
+    /** Whether NeoForge permits both block interaction and held-item use at {@code pos}. */
     public static boolean mayUseItemOn(ServerPlayer sp, BlockPos pos) {
         PlayerInteractEvent.RightClickBlock evt = rightClickBlock(sp, pos);
         return !evt.isCanceled()
@@ -85,6 +95,7 @@ public final class Protection {
         return evt;
     }
 
+    /** Returns the viewed point on the interaction shape, or the block center for stale aim. */
     private static BlockHitResult lookHit(ServerPlayer sp, BlockPos pos) {
         var level = sp.serverLevel();
         ViewRay ray = ViewRays.of(sp);

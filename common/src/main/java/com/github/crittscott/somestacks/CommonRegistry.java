@@ -9,9 +9,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.function.Supplier;
 
 /**
- * Loader-neutral access to the registered blocks and block entity types. The loader's own
- * registration glue (Forge's {@code ModRegistry}, or its Fabric equivalent) assigns these once
- * registration is set up; common code never registers anything itself, only reads these back.
+ * Loader-neutral access to the registered blocks and block entity types. Each loader's registration
+ * glue assigns these once registration is set up; common code never registers anything itself, only
+ * reads these back.
  */
 public final class CommonRegistry {
     private CommonRegistry() {

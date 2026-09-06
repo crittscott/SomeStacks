@@ -42,8 +42,8 @@ import java.util.TreeMap;
  * entire presentation: server-synced admin overrides, then the user's override file, then bundled
  * resource overrides. Items absent from every layer use measured profiles.
  *
- * <p>A corpus file is named for the namespace whose items it covers, and covers no other.
- * The corpus is cross-mod compatibility data, most of which any one client cannot use, so a
+ * <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
+ * no other. The bundled data spans mods, most of which any one client cannot use, so a
  * file naming a namespace this client does not have is skipped without parsing or retention. A file
  * whose name is not a namespace therefore applies to nothing.
  */
@@ -54,7 +54,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     private static final Path GENERATED_DIR = PlatformPaths.configFolder().resolve("somestacks/generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
-    /** Bundled corpus, from client resource reload. */
+    /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
     /** Admin overrides synced from the server. */
     public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
@@ -92,7 +92,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         return configMap;
     }
 
-    /** The namespace a corpus file covers: its file name without the {@code .json}. */
+    /** The namespace a bundled override file covers: its file name without the {@code .json}. */
     private static String coveredNamespace(ResourceLocation fileLocation) {
         String path = fileLocation.getPath();
         return path.substring(path.lastIndexOf('/') + 1, path.length() - ".json".length());
@@ -100,7 +100,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     /**
      * The namespaces represented in the item registry. Client resource reloads run after item
-     * registration, so a corpus file outside this set covers nothing the client can render.
+     * registration, so a bundled override file outside this set covers nothing the client can render.
      */
     private static Set<String> presentNamespaces() {
         Set<String> namespaces = new HashSet<>();

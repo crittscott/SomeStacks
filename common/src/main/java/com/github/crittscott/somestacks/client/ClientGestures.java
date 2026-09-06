@@ -35,6 +35,7 @@ public final class ClientGestures {
         return stackMode;
     }
 
+    /** Advances to the next mode, skipping disabled block types but always retaining permanence. */
     public static void cycleMode() {
         StackMode startMode = stackMode;
         do {

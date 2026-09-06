@@ -420,6 +420,11 @@ public final class SinglesColumn {
      * Takes the item at {@code flatSlot} through the block's own removal, so automation and the
      * player leave the column in the same state: the cells above the hole shift down one layer in
      * that column, drawing from the Singles Stacks above and removing any block the walk empties.
+     *
+     * @param flatSlot the position to extract, numbered from the bottom block upward
+     * @param amount the requested maximum; any positive value can extract the position's one item
+     * @param simulate whether to report the result without changing the column
+     * @return the one item at {@code flatSlot}, or an empty stack when extraction is not possible
      */
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {

@@ -24,10 +24,15 @@ import java.util.Map;
  */
 final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
         implements SlottedStorage<ItemVariant> {
+    private static final int EMPTY_STORAGE_SLOT_CAPACITY = 64;
+
     private final BlockEntity blockEntity;
     private final Map<Integer, RunSlot> slotViews = new HashMap<>();
+    /** First live value observed for each touched slot, in the order its final diff must replay. */
     private LinkedHashMap<Integer, ItemStack> originals = new LinkedHashMap<>();
+    /** Latest transaction-visible value for each touched slot. */
     private Map<Integer, ItemStack> staged = new HashMap<>();
+    /** The one Singles or Bar position whose structural extraction this transaction may stage. */
     private int structuralExtractionSlot = -1;
 
     FabricRunItemStorage(BlockEntity blockEntity) {
@@ -154,6 +159,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         return !(blockEntity instanceof StorageStackBE);
     }
 
+    /** Records a slot's original live value once, then replaces its transaction-visible value. */
     private void stage(int slot, ItemStack stack, TransactionContext transaction) {
         updateSnapshots(transaction);
         originals.computeIfAbsent(slot, ignored -> liveStack(slot).copy());
@@ -210,6 +216,10 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         structuralExtractionSlot = snapshot.structuralExtractionSlot();
     }
 
+    /**
+     * Replays each touched slot's net difference through shared run mutations after the outer
+     * transaction commits. Insertion order matters for positional and structural mutations.
+     */
     @Override
     protected void onFinalCommit() {
         LinkedHashMap<Integer, ItemStack> committedOriginals = originals;
@@ -255,6 +265,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         return copy;
     }
 
+    /** Transaction rollback state, including the structural-position restriction. */
     record State(
             LinkedHashMap<Integer, ItemStack> originals,
             LinkedHashMap<Integer, ItemStack> staged,
@@ -344,7 +355,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         public long getCapacity() {
             ItemVariant resource = getResource();
             return resource.isBlank() && blockEntity instanceof StorageStackBE
-                    ? 64
+                    ? EMPTY_STORAGE_SLOT_CAPACITY
                     : capacity(resource);
         }
     }

@@ -250,46 +250,41 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     private static int analyzePixelsForTint(NativeImage image) {
-        try {
-            long sumR = 0, sumG = 0, sumB = 0;
-            int count = 0;
+        long sumR = 0, sumG = 0, sumB = 0;
+        int count = 0;
 
-            for (int y = 0; y < image.getHeight(); y++) {
-                for (int x = 0; x < image.getWidth(); x++) {
-                    int abgr = image.getPixelRGBA(x, y);
-                    int a = (abgr >> 24) & 0xFF;
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int abgr = image.getPixelRGBA(x, y);
+                int a = (abgr >> 24) & 0xFF;
 
-                    if (a > 127) {
-                        int r = abgr & 0xFF;
-                        int g = (abgr >> 8) & 0xFF;
-                        int b = (abgr >> 16) & 0xFF;
+                if (a > 127) {
+                    int r = abgr & 0xFF;
+                    int g = (abgr >> 8) & 0xFF;
+                    int b = (abgr >> 16) & 0xFF;
 
-                        sumR += r;
-                        sumG += g;
-                        sumB += b;
-                        count++;
-                    }
+                    sumR += r;
+                    sumG += g;
+                    sumB += b;
+                    count++;
                 }
             }
+        }
 
-            if (count == 0) {
-                return BarTextureData.WHITE;
-            }
-
-            int avgR = (int) (sumR / count);
-            int avgG = (int) (sumG / count);
-            int avgB = (int) (sumB / count);
-
-            // Brighten to compensate for dark outlines in ingot textures.
-            int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
-            int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
-            int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
-
-            return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
-        } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("    Failed to analyze pixels: {}", e.getMessage(), e);
+        if (count == 0) {
             return BarTextureData.WHITE;
         }
+
+        int avgR = (int) (sumR / count);
+        int avgG = (int) (sumG / count);
+        int avgB = (int) (sumB / count);
+
+        // Brighten to compensate for dark outlines in ingot textures.
+        int brightR = (int) Math.min(255, avgR + (255 - avgR) * BRIGHTEN_FACTOR);
+        int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
+        int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
+
+        return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
     }
 
     private static int parseColor(String colorStr) {

@@ -460,7 +460,7 @@ public class BarStackBE extends BlockEntity {
         tag.put(TAG_ITEMS, items.serializeNBT(registries));
     }
 
-    /** This block's 64 slots, for callers that already hold the block entity. */
+    /** This block's local slots, for callers that already hold the block entity. */
     public StackItemStorage getItems() {
         return items;
     }

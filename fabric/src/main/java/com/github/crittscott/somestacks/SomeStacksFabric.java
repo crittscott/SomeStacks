@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -57,6 +58,9 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.player;
             if (!FabricNetworking.supportsClient(player)) {
+                SomeStacksCommon.LOGGER.warn(
+                        "Disconnected {}: compatible Some Stacks client protocol was not advertised",
+                        player.getGameProfile().getName());
                 handler.disconnect(Component.translatable("somestacks.disconnect.protocol"));
                 return;
             }
@@ -65,5 +69,13 @@ public final class SomeStacksFabric implements ModInitializer {
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
                 GestureThrottle.clear(handler.player.getUUID()));
+
+        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for Fabric", modVersion());
+    }
+
+    private static String modVersion() {
+        return FabricLoader.getInstance().getModContainer(SomeStacksCommon.MODID)
+                .map(container -> container.getMetadata().getVersion().getFriendlyString())
+                .orElse("unknown");
     }
 }

@@ -27,10 +27,10 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
-import org.apache.logging.log4j.Logger;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
@@ -42,7 +42,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(SomeStacks.MODID)
 public class SomeStacks {
     public static final String MODID = SomeStacksCommon.MODID;
-    public static final Logger LOGGER = SomeStacksCommon.LOGGER;
 
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -62,6 +61,14 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
         MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
+
+        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for Forge", modVersion());
+    }
+
+    private static String modVersion() {
+        return ModList.get().getModContainerById(MODID)
+                .map(container -> container.getModInfo().getVersion().toString())
+                .orElse("unknown");
     }
 
     /**

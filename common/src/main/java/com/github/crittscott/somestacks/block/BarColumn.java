@@ -442,6 +442,11 @@ public final class BarColumn {
      * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
      * deposit may add rather than what the column may carry, so a bar stored before an
      * {@code ss ingot} edit or a data pack reload narrowed the ingot set still moves.
+     *
+     * @param flatSlot the position to extract, numbered from the bottom block upward
+     * @param amount the requested maximum; any positive value can extract the position's one bar
+     * @param simulate whether to report the result without changing the column
+     * @return the one bar at {@code flatSlot}, or an empty stack when extraction is not possible
      */
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {

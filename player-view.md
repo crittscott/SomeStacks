@@ -8,8 +8,8 @@ nothing else: no block items, recipes, creative-tab entries, or storage screens.
 because an item was deposited into the world and normally disappears when its last contents are
 removed.
 
-Requires Minecraft 1.21.1 and Fabric Loader 0.19.3+ with Fabric API 0.116.15+1.21.1. Forge and
-NeoForge builds are planned but not yet available. Must be installed on both client and server.
+Requires Minecraft 1.21.1 and one of Fabric Loader 0.19.3+ with Fabric API 0.116.15+1.21.1,
+Forge 52.1.16, or NeoForge 21.1.248. Must be installed on both client and server.
 
 ## The three stack types
 
@@ -131,9 +131,9 @@ support, possibly cascading through layers and blocks. Bar Stacks have no rotati
 
 ## Automation
 
-Every block exposes loader-native item storage on all six sides (`IItemHandler` on Forge, Transfer
-API `Storage<ItemVariant>` on Fabric) covering the entire contiguous run, whichever block a machine
-connects to. Slots number from the bottom block up.
+Every block exposes loader-native item storage on all six sides (`IItemHandler` on Forge and
+NeoForge, Transfer API `Storage<ItemVariant>` on Fabric) covering the entire contiguous run,
+whichever block a machine connects to. Slots number from the bottom block up.
 
 | Type | One slot | Slot limit |
 | --- | --- | --- |
@@ -239,7 +239,7 @@ bars.
 
 Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world
 border, and spawn protection, and fire a real protection event that claim and logging mods can hook
-(Forge's interaction/place/break events; Fabric API's `UseBlockCallback` and
+(Forge/NeoForge interaction, place, and break events; Fabric API's `UseBlockCallback` and
 `PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has
 no placement event, so on Fabric automated growth also consults FTB Chunks directly when it is
 installed.

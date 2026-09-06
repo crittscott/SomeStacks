@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,6 +17,12 @@ import net.neoforged.neoforge.event.level.BlockEvent;
  * and break events. FTB Chunks is additionally consulted directly for placement when installed.
  */
 public final class NeoForgeEditAuthority implements EditAuthority {
+    public NeoForgeEditAuthority() {
+        if (FtbChunksProtection.isLoaded()) {
+            SomeStacksCommon.LOGGER.info("Enabled direct FTB Chunks protection for automated growth on NeoForge");
+        }
+    }
+
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return FakePlayerFactory.getMinecraft(level);

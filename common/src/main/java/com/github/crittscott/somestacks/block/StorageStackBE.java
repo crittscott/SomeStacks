@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
  * {@link StoragePile}, and deposits, capability access, sorting and packing all act on the whole
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
- * <p>Capability exposure ({@code ForgeCapabilities.ITEM_HANDLER} or its Fabric equivalent) is
- * loader-specific and lives outside this class; {@link #getItems()} is what a loader-specific
- * capability view adapts.
+ * <p>Automation exposure is loader-specific and lives outside this class: Forge and NeoForge use
+ * item-handler capabilities, while Fabric uses the Transfer API. {@link #getItems()} is the local
+ * storage each loader-specific whole-pile view adapts.
  */
 public class StorageStackBE extends BlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
@@ -322,7 +322,7 @@ public class StorageStackBE extends BlockEntity {
         tag.putBoolean(TAG_PERMANENT, permanent);
     }
 
-    /** This block's own 27 slots, for callers that hold the block entity and need no pile-wide view. */
+    /** This block's local slots, for callers that hold the block entity and need no pile-wide view. */
     public StackItemStorage getItems() {
         return items;
     }

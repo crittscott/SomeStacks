@@ -37,7 +37,7 @@ public final class PlayerEdits {
         return authority.mayInteract(player, pos);
     }
 
-    /** Fabric's initial parity level: vanilla world, spawn, and build permissions only. */
+    /** Safe setup-time default: vanilla world, spawn, and build permissions only. */
     private static final class VanillaPlayerEditAuthority implements PlayerEditAuthority {
         @Override
         public boolean claimInteraction(

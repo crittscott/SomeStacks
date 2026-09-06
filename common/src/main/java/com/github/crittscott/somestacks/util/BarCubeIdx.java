@@ -266,7 +266,7 @@ public final class BarCubeIdx {
         return isEWLayer(y) ? EW_DEPTH : NS_DEPTH;
     }
 
-    /** Returns the bar's Y span in model pixels for layer {@code y}. */
+    /** Returns a bar's constant Y span in model pixels; {@code y} keeps all span helpers layer-indexed. */
     public static double barHeight(int y) {
         return BAR_HEIGHT;
     }
