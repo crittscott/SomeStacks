@@ -154,10 +154,6 @@ public final class SinglesColumn {
         return length;
     }
 
-    public int height() {
-        return blocks.size();
-    }
-
     /** Positions the column actually holds: 64 per block, indexed from the bottom block upward. */
     public int totalSlots() {
         return blocks.size() * SinglesStackBE.SLOTS;
@@ -235,7 +231,7 @@ public final class SinglesColumn {
      * keeps that from costing a run-length of neighbor updates per item moved. The bottom block
      * holds the last published value, because the bottom is what identifies a column.
      */
-    void publishComparatorSignal() {
+    private void publishComparatorSignal() {
         if (blocks.isEmpty()) {
             return;
         }

@@ -162,10 +162,6 @@ public final class InteractionContext {
         return level;
     }
 
-    public InteractionHand getHand() {
-        return hand;
-    }
-
     public void cancelEvent() {
         shouldCancel = true;
     }

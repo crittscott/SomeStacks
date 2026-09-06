@@ -164,10 +164,6 @@ public final class BarColumn {
         return length;
     }
 
-    public int height() {
-        return blocks.size();
-    }
-
     /** Positions the column actually holds: 64 per block, indexed from the bottom block upward. */
     public int totalSlots() {
         return blocks.size() * BarStackBE.SLOTS;
@@ -245,7 +241,7 @@ public final class BarColumn {
      * collapse crossing several signal values to the one update that outlives it. The bottom block
      * holds the last published value, because the bottom is what identifies a column.
      */
-    void publishComparatorSignal() {
+    private void publishComparatorSignal() {
         if (blocks.isEmpty()) {
             return;
         }
@@ -302,7 +298,7 @@ public final class BarColumn {
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
-    public int topmostOccupied() {
+    private int topmostOccupied() {
         for (int flatSlot = totalSlots() - 1; flatSlot >= 0; flatSlot--) {
             if (!getSlot(flatSlot).isEmpty()) {
                 return flatSlot;

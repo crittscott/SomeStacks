@@ -17,7 +17,6 @@ public final class FabricClientRendering {
     public static void init() {
         ClientRenderPlatform.setBackend(new FabricRenderPlatform());
         ModelMeasurement.setBackend(new FabricModelMeasurer());
-        ClientRenderPacketSink.setHandler(new DefaultClientRenderPacketHandler());
 
         BlockEntityRendererRegistry.register(
                 FabricRegistry.STORAGE_STACK_BE, StorageStackBER::new);

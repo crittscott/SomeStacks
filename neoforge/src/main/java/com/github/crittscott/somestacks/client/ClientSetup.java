@@ -29,7 +29,6 @@ public final class ClientSetup {
     public static void init(IEventBus modBus) {
         ClientRenderPlatform.setBackend(new NeoForgeRenderPlatform());
         ModelMeasurement.setBackend(new ModelMeasurer());
-        ClientRenderPacketSink.setHandler(new DefaultClientRenderPacketHandler());
         ModNetworking.setClientReceiver(ClientSetup::deliverRenderPacket);
         ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);

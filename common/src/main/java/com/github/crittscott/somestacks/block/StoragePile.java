@@ -108,7 +108,7 @@ public final class StoragePile {
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
-    public static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
         StoragePile pile = at(level, pos);
         if (pile != null) {
             pile.markDirty();
@@ -486,7 +486,7 @@ public final class StoragePile {
      * coalesces into one pass. Ticking there also means the pile settles once for a burst of
      * automation traffic rather than once per item moved.
      */
-    public void markDirty() {
+    void markDirty() {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }

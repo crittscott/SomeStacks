@@ -1,17 +1,11 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.ItemRenderOverrides;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.client.StackState;
-import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -48,41 +42,15 @@ final class ForgePacketHandlers {
     }
 
     static void handleConfigSync(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
-        if (!msg.isValid()) {
-            return;
-        }
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            StackState.setBlockEnabled(BlockType.STORAGE_STACK, msg.enableStack());
-            StackState.setBlockEnabled(BlockType.SINGLES_STACK, msg.enableSingles());
-            StackState.setBlockEnabled(BlockType.BAR_STACK, msg.enableBar());
-            ItemRenderOverrides.setSyncedServerOverrides(msg.renderOverrides());
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
     }
 
     static void handleRenderOverride(RenderOverridePkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            if (msg.isReset()) {
-                ItemRenderOverrides.removeUser(msg.itemId());
-                return;
-            }
-            RenderMode mode = RenderMode.fromString(msg.renderMode());
-            ItemRenderOverrides.putUser(msg.itemId(), OverrideJsonCodec.sanitize(
-                    new ItemRenderConfig(mode, msg.scale(), msg.offset())));
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
     }
 
     static void handleWriteOverrides(WriteOverridesPkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            List<String> namespaces = msg.namespaces();
-            if (namespaces == null) {
-                return;
-            }
-            if (namespaces.isEmpty()) {
-                ItemRenderOverrides.handleWriteRequest();
-            } else {
-                ItemRenderOverrides.handleDumpRequest(namespaces);
-            }
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
     }
 
     private static void server(CustomPayloadEvent.Context ctx, Consumer<ServerPlayer> work) {

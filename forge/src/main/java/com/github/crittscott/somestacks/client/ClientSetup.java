@@ -26,7 +26,6 @@ public final class ClientSetup {
     public static void init(IEventBus modBus) {
         ClientRenderPlatform.setBackend(new ForgeRenderPlatform());
         ModelMeasurement.setBackend(new ModelMeasurer());
-        ClientRenderPacketSink.setHandler(new DefaultClientRenderPacketHandler());
         ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
