@@ -1,5 +1,5 @@
-![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.20.1/images/somestacks-splash.png)
-![Loaders: Fabric + Forge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge-5C7C8A?style=for-the-badge) ![Requires: Architectury API](https://img.shields.io/badge/Requires-Architectury%20API-8A5A9B?style=for-the-badge)
+![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
+![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.1%201.20.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
@@ -40,7 +40,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 ## Automation and redstone
 
-Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Neoforge/Forge and Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
 
 - Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -49,21 +49,20 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Neoforge/Forge additionally fires its place/break events so claim mods using those hooks can allow, deny, or record the edit; Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so there it also checks FTB Chunks and Open Parties and Claims directly when either is installed.
 
-See **[Server administration](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/server-admin.md)** for the config file and the `/ss` command.
+See **[Server administration](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/server-admin.md)** for the config file and the `/ss` command.
 
 ## Documentation
 
-- **[Player guide](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/player-guide.md)** — every gesture, how each stack behaves, gravity and support rules
-- **[Automation](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/automation.md)** — item handlers, slot layout, comparators, growth
-- **[Server administration](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/server-admin.md)** — config settings and the full `/ss` command reference
-- **[Pack authors](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
-- **[As-built player view](https://github.com/crittscott/SomeStacks/blob/1.20.1/player-view.md)** — the mod's observable behaviour in full
+- **[Player guide](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/player-guide.md)** — every gesture, how each stack behaves, gravity and support rules
+- **[Automation](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/automation.md)** — item handlers, slot layout, comparators, growth
+- **[Server administration](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/server-admin.md)** — config settings and the full `/ss` command reference
+- **[Pack authors](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server. See [Pack authors](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/pack-authors.md).
+Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server. See [Pack authors](https://github.com/crittscott/SomeStacks/blob/1.21.1/docs/pack-authors.md).
 
 ## Issues and suggestions
 
@@ -71,4 +70,4 @@ Please report bugs and ideas on the [issue tracker](https://github.com/crittscot
 
 ## License
 
-[GNU General Public License v3.0](https://github.com/crittscott/SomeStacks/blob/1.20.1/LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.
+[GNU General Public License v3.0](https://github.com/crittscott/SomeStacks/blob/1.21.1/LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.

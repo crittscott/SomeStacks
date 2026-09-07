@@ -5,6 +5,11 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": ["${mod_authors}"],
+  "contact": {
+    "homepage": "https://github.com/crittscott/SomeStacks/tree/1.21.1",
+    "sources": "https://github.com/crittscott/SomeStacks/tree/1.21.1",
+    "issues": "https://github.com/crittscott/SomeStacks/issues"
+  },
   "license": "${mod_license}",
   "icon": "assets/somestacks/icon.png",
   "environment": "*",

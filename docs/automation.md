@@ -1,6 +1,6 @@
 # Automation
 
-Every stack block exposes loader-native storage on every side: Forge `IItemHandler` and Fabric Transfer API `Storage<ItemVariant>`. A block that is part of a vertical run exposes the **whole run**. A hopper under the bottom block and a pipe attached halfway up address the same inventory and see the same contents.
+Every stack block exposes loader-native storage on every side: Neoforge/Forge `IItemHandler` and Fabric Transfer API `Storage<ItemVariant>`. A block that is part of a vertical run exposes the **whole run**. A hopper under the bottom block and a pipe attached halfway up address the same inventory and see the same contents.
 
 ## Slots are positions
 
