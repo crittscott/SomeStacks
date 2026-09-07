@@ -1,5 +1,5 @@
-![Some Stacks](images/somestacks-splash.png)
-![Loaders: Fabric + Forge + NeoForge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge%20%2B%20NeoForge-5C7C8A?style=for-the-badge)
+![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
+![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.1%201.20.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
