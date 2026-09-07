@@ -1,4 +1,4 @@
-![Some Stacks](images/somestacks-splash.png)
+![Some Stacks]([images/somestacks-splash.png](https://github.com/crittscott/SomeStacks/blob/1.21.1/images/somestacks-splash.png))
 ![Loaders: Fabric + Forge + NeoForge](https://img.shields.io/badge/Loaders-Fabric%20%2B%20Forge%20%2B%20NeoForge-5C7C8A?style=for-the-badge)
 
 # Some Stacks
