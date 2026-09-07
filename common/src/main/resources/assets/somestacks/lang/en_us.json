@@ -24,7 +24,7 @@
   "somestacks.command.label.disabled_items": "disabled item list",
   "somestacks.command.label.gen_mods": "gen mod list",
   "somestacks.command.label.gen_items": "gen item list",
-  "somestacks.command.label.ingot_tags": "ingot tag list",
+  "somestacks.command.label.ingots": "ingot list",
 
   "somestacks.command.gallery.storage_stacks": "StorageStacks",
   "somestacks.command.gallery.bar_stacks": "BarStacks",
@@ -117,11 +117,11 @@
   "somestacks.command.help.deny.detail.1": "A disabled mod's items are refused by every stack; a disabled item is refused on the deposit gestures. Contents already stored can still be taken out.",
   "somestacks.command.help.deny.detail.2": "A mod id is taken as typed, since it may name a mod that is not installed yet. An item id is checked against the registry, because the list is matched by exact id and a typo would sit in it looking effective.",
 
-  "somestacks.command.help.ingot.summary": "Edit which item tags a Bar Stack accepts",
-  "somestacks.command.help.ingot.detail.1": "A Bar Stack holds the items in these tags, and a Singles Stack holds everything else, so widening this list narrows Singles by as much. Contents already stored can still be taken out either way.",
-  "somestacks.command.help.ingot.detail.2": "An entry may contain * to match a run of any characters. The default forge:ingots* covers forge:ingots and every forge:ingots/<metal> beneath it, which reaches a mod that tags its ingots only under the child tag.",
-  "somestacks.command.help.ingot.detail.3": "To accept a hand-picked set of items, make an item tag holding them in a data pack and add it here.",
-  "somestacks.command.help.ingot.detail.4": "An entry is taken as typed, since it may name a tag no data pack has declared yet. An edit reports how many items are accepted afterwards, and an entry matching no tag at all is logged when the list is read.",
+  "somestacks.command.help.ingot.summary": "Edit which tags and items a Bar Stack accepts",
+  "somestacks.command.help.ingot.detail.1": "A Bar Stack holds the items these entries resolve to, and a Singles Stack holds everything else, so widening this list narrows Singles by as much. Contents already stored can still be taken out either way.",
+  "somestacks.command.help.ingot.detail.2": "A # entry names an item tag and may contain * to match a run of any characters. The default #forge:ingots* covers #forge:ingots and every forge:ingots/<metal> beneath it, which reaches a mod that tags its ingots only under the child tag.",
+  "somestacks.command.help.ingot.detail.3": "Any other entry is a single item id, which accepts one hand-picked item without a data pack tag.",
+  "somestacks.command.help.ingot.detail.4": "A # entry is taken as typed, since it may name a tag no data pack has declared yet; a bare item id is rejected when the registry does not know it. An edit reports how many items are accepted afterwards, and a # entry matching no tag is logged when the list is read.",
 
   "somestacks.command.help.help.summary": "List these commands, or explain one",
   "somestacks.command.help.help.detail.1": "Every ss subcommand has an entry, and each one names the gate it answers to: ss is an administrator's tool throughout, and the two render gallery commands sit a permission level above the rest because they overwrite the world."

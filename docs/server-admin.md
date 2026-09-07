@@ -12,7 +12,7 @@ Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestac
 | `enable_bar_stack_block` | `stacks` | `true` | The same for Bar Stacks. |
 | `disable_mods` | `compatibility` | empty | Namespaces whose items no stack will accept. |
 | `disable_items` | `compatibility` | empty | Item ids refused on the player deposit gestures. |
-| `ingot_tags` | `compatibility` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Item tags whose contents a Bar Stack accepts. |
+| `ingots` | `compatibility` | Forge: `#forge:ingots*`; Fabric and NeoForge: `#c:ingots*`; all: `#somestacks:ingots` | What a Bar Stack accepts: `#name` is an item-tag pattern, a bare id is one item. |
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
 | `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
@@ -21,13 +21,13 @@ Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestac
 
 Disabling a mod or an item bars *new* contents. Anything already stored can still be taken out.
 
-### Ingot tags
+### Ingots
 
-`ingot_tags` decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much.
+`ingots` decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much.
 
-An entry may contain `*`, matching a run of any characters. The Forge default `forge:ingots*` covers `forge:ingots` itself and every `forge:ingots/<metal>` beneath it. Fabric uses the corresponding conventional `c:ingots*` default.
+An entry beginning with `#` names an item tag and may contain `*`, matching a run of any characters. The Forge default `#forge:ingots*` covers `#forge:ingots` itself and every `forge:ingots/<metal>` beneath it. Fabric and NeoForge use the corresponding conventional `#c:ingots*` default.
 
-To accept a hand-picked set of items, declare an item tag holding them in a data pack and add that tag here. The mod ships `somestacks:ingots` for exactly this purpose.
+Any other entry is a single item id, for accepting one hand-picked item without a data pack tag. A bare id is checked against the registry when added; a `#` tag entry is taken as typed, since it may name a tag no loaded data pack declares. To hand-pick a larger set, declare an item tag in a data pack and add it here with `#` — the mod ships `#somestacks:ingots` for exactly this.
 
 The item set is re-resolved whenever the config changes *and* whenever tags are bound, so a data pack reload is picked up without touching the config.
 
@@ -55,7 +55,7 @@ Some subcommands additionally require a **player** rather than the console, beca
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
-| `/ss ingot add\|remove\|list <tag>` | Level 2 | Edit the ingot tag patterns. |
+| `/ss ingot add\|remove\|list <#tag \| item>` | Level 2 | Edit the ingot list — `#` tag patterns and item ids. |
 | `/ss reload` | Level 2 | Re-read server render overrides and re-sync every player. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
@@ -75,7 +75,7 @@ Galleries **overwrite** their floor and stack positions directly and do not appl
 
 ## What the server tells the client
 
-On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot tags, and the pile settings stay server-side and are never sent.
+On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot list, and the pile settings stay server-side and are never sent.
 
 ## Protection and claim mods
 

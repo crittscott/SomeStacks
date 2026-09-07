@@ -86,7 +86,7 @@ public class SomeStacks {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngotTags();
+        ServerConfig.rebakeIngots();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

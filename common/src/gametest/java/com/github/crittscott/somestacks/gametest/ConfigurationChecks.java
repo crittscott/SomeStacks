@@ -148,7 +148,7 @@ public final class ConfigurationChecks {
 
         try {
             Files.createDirectories(serverConfigDir);
-            Files.writeString(fixture, configJson(999, -3, 0, glob));
+            Files.writeString(fixture, configJson(999, -3, 0, "#" + glob));
             ServerConfig.load(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
@@ -178,7 +178,7 @@ public final class ConfigurationChecks {
             }
             check(foundNonIngot, "Ingot glob unexpectedly admitted every registered item");
 
-            Files.writeString(fixture, configJson(-9, 99, 7, matchingTag));
+            Files.writeString(fixture, configJson(-9, 99, 7, "#" + matchingTag));
             ServerConfig.load(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
@@ -186,6 +186,12 @@ public final class ConfigurationChecks {
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
             check(ServerConfig.isIngotItem(knownIngot), "Exact ingot tag did not admit its item");
+
+            Files.writeString(fixture, configJson(8, 2, 8,
+                    String.valueOf(BuiltInRegistries.ITEM.getKey(knownIngot))));
+            ServerConfig.load(fixture);
+            check(ServerConfig.isIngotItem(knownIngot), "Bare item id did not admit its own item");
+            checkEquals(1, ServerConfig.ingotItemCount(), "Bare item id admitted more than itself");
         } catch (IOException e) {
             throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
         } finally {
@@ -199,7 +205,7 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
-    private static String configJson(int height, int permission, int placements, String ingotTag) {
+    private static String configJson(int height, int permission, int placements, String ingotEntry) {
         return """
                 {
                   "piles": {"max_pile_height": %d},
@@ -211,7 +217,7 @@ public final class ConfigurationChecks {
                   "compatibility": {
                     "disable_mods": [" MineCraft ", "ExampleMod"],
                     "disable_items": ["minecraft:stone", "not an item id"],
-                    "ingot_tags": ["%s"]
+                    "ingots": ["%s"]
                   },
                   "render_gallery": {
                     "placements_per_tick": %d,
@@ -221,7 +227,7 @@ public final class ConfigurationChecks {
                     "gen_items": ["minecraft:stone"]
                   }
                 }
-                """.formatted(height, ingotTag, placements, permission);
+                """.formatted(height, ingotEntry, placements, permission);
     }
 
     private static String tagContaining(Item item) {

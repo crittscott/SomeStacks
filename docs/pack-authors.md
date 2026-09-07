@@ -6,7 +6,7 @@ Some Stacks is extensible from data packs, resource packs, and the server config
 
 | What | Where | Side |
 | --- | --- | --- |
-| Which items a Bar Stack accepts | `data/<ns>/tags/items/…` + the `ingot_tags` config | server |
+| Which items a Bar Stack accepts | `data/<ns>/tags/item/…` + the `ingots` config | server |
 | Sounds per stack type and action | `data/<ns>/somestacks_sounds/*.json` | server (data pack) |
 | Bar textures and tints | `assets/<ns>/textures/bars/*.json` | client (resource pack) |
 | How items are drawn in cells | `assets/<ns>/item_render_overrides/*.json` | client (resource pack) |
@@ -14,9 +14,9 @@ Some Stacks is extensible from data packs, resource packs, and the server config
 
 ## Bar-valid items (data pack)
 
-A Bar Stack holds whatever the server's `ingot_tags` list resolves to. The mod ships an item tag for packs to extend:
+A Bar Stack holds whatever the server's `ingots` list resolves to. The mod ships an item tag for packs to extend:
 
-`data/<yourpack>/tags/items/ingots.json`, added to `somestacks:ingots`:
+`data/<yourpack>/tags/item/ingots.json`, added to `somestacks:ingots`:
 
 ```json
 {

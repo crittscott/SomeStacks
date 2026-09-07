@@ -30,10 +30,10 @@ import java.util.regex.Pattern;
  * per-world JSON file the loader's entry point locates and hands to {@link #load(Path)}.
  *
  * <p>The text lists are stored as patterns and baked into sets that the hot paths can test cheaply.
- * Baking happens on load and whenever a list is edited, and for the ingot tags, whenever item tags
- * are rebuilt with {@link #rebakeIngotTags()}, since those name item tags whose membership a data
- * pack decides. The baked sets are volatile because a rebake can run off the main thread relative to
- * gameplay reads.
+ * Baking happens on load and whenever a list is edited, and for the ingot list, whenever item tags
+ * are rebuilt with {@link #rebakeIngots()}, since its {@code #} entries name item tags whose
+ * membership a data pack decides. The baked sets are volatile because a rebake can run off the main
+ * thread relative to gameplay reads.
  *
  * <p>Everything here is server-side. Only the stack-type enable flags reach the client, through the
  * configuration sync.
@@ -56,7 +56,7 @@ public final class ServerConfig {
     private static boolean enableBarStackBlock = true;
     private static List<String> disableModsRaw = new ArrayList<>();
     private static List<String> disableItemsRaw = new ArrayList<>();
-    private static List<String> ingotTagsRaw = new ArrayList<>(List.of("forge:ingots*", "somestacks:ingots"));
+    private static List<String> ingotsRaw = new ArrayList<>(List.of("#forge:ingots*", "#somestacks:ingots"));
     private static int renderGalleryPlacementsPerTick = 64;
     private static boolean galleryEnabled = false;
     private static int galleryPermissionLevel = 3;
@@ -91,7 +91,7 @@ public final class ServerConfig {
 
     public static final ListSetting DISABLE_MODS = new ListSetting(() -> disableModsRaw, v -> disableModsRaw = v);
     public static final ListSetting DISABLE_ITEMS = new ListSetting(() -> disableItemsRaw, v -> disableItemsRaw = v);
-    public static final ListSetting INGOT_TAGS = new ListSetting(() -> ingotTagsRaw, v -> ingotTagsRaw = v);
+    public static final ListSetting INGOTS = new ListSetting(() -> ingotsRaw, v -> ingotsRaw = v);
     public static final ListSetting GEN_MODS = new ListSetting(() -> genModsRaw, v -> genModsRaw = v);
     public static final ListSetting GEN_ITEMS = new ListSetting(() -> genItemsRaw, v -> genItemsRaw = v);
 
@@ -129,9 +129,9 @@ public final class ServerConfig {
      * Selects the {@code c:} common-tag convention for a new config, used by loaders that do not
      * populate the {@code forge:} tags (Fabric and NeoForge). An existing file remains authoritative.
      */
-    public static void useCommonIngotTagDefaults() {
+    public static void useCommonIngotDefaults() {
         if (configFile == null) {
-            ingotTagsRaw = new ArrayList<>(List.of("c:ingots*", "somestacks:ingots"));
+            ingotsRaw = new ArrayList<>(List.of("#c:ingots*", "#somestacks:ingots"));
         }
     }
 
@@ -174,7 +174,7 @@ public final class ServerConfig {
         JsonObject compatibility = obj(root, "compatibility");
         disableModsRaw = stringListOr(compatibility, "disable_mods", disableModsRaw);
         disableItemsRaw = stringListOr(compatibility, "disable_items", disableItemsRaw);
-        ingotTagsRaw = stringListOr(compatibility, "ingot_tags", ingotTagsRaw);
+        ingotsRaw = stringListOr(compatibility, "ingots", ingotsRaw);
 
         JsonObject gallery = obj(root, "render_gallery");
         renderGalleryPlacementsPerTick =
@@ -207,7 +207,7 @@ public final class ServerConfig {
         JsonObject compatibility = new JsonObject();
         compatibility.add("disable_mods", stringArray(disableModsRaw));
         compatibility.add("disable_items", stringArray(disableItemsRaw));
-        compatibility.add("ingot_tags", stringArray(ingotTagsRaw));
+        compatibility.add("ingots", stringArray(ingotsRaw));
 
         JsonObject gallery = new JsonObject();
         gallery.addProperty("placements_per_tick", renderGalleryPlacementsPerTick);
@@ -273,7 +273,7 @@ public final class ServerConfig {
 
     /**
      * Resolves the server's free-form text lists into lookup sets: the disabled-mod and
-     * disabled-item compatibility lists, and the ingot tag list. Mod ids are lowercased and item ids
+     * disabled-item compatibility lists, and the ingot list. Mod ids are lowercased and item ids
      * are parsed once here; a malformed item id is reported and dropped rather than being re-parsed
      * and swallowed on every deposit.
      */
@@ -306,23 +306,31 @@ public final class ServerConfig {
     }
 
     /**
-     * Resolves the ingot tag list into the set of items a Bar Stack accepts, by walking the item
-     * tags once and unioning the contents of every tag whose name a list entry matches.
+     * Resolves the ingot list into the set of items a Bar Stack accepts. A {@code #}-prefixed entry
+     * is an item-tag name that may carry {@code *} wildcards, and contributes the contents of every
+     * bound tag whose name it matches; any other entry is an item id and contributes that one item.
      */
     private static void bakeIngotItems() {
-        List<Pattern> patterns = new ArrayList<>();
-        List<String> names = new ArrayList<>();
-        for (String entry : INGOT_TAGS.get()) {
-            String glob = entry.trim().toLowerCase(Locale.ROOT);
-            if (!glob.isEmpty()) {
-                patterns.add(globToPattern(glob));
-                names.add(glob);
+        List<Pattern> tagPatterns = new ArrayList<>();
+        List<String> tagGlobs = new ArrayList<>();
+        List<String> itemEntries = new ArrayList<>();
+        for (String raw : INGOTS.get()) {
+            String entry = raw.trim().toLowerCase(Locale.ROOT);
+            if (entry.isEmpty()) {
+                continue;
+            }
+            if (entry.startsWith("#")) {
+                String glob = entry.substring(1);
+                tagPatterns.add(globToPattern(glob));
+                tagGlobs.add(glob);
+            } else {
+                itemEntries.add(entry);
             }
         }
 
         Registry<Item> itemRegistry = BuiltInRegistries.ITEM;
         Set<Item> items = new HashSet<>();
-        int[] matchedTags = new int[patterns.size()];
+        int[] matchedTags = new int[tagPatterns.size()];
         int knownTags = 0;
 
         for (TagKey<Item> tagKey : itemRegistry.getTagNames().toList()) {
@@ -332,12 +340,22 @@ public final class ServerConfig {
             }
             knownTags++;
             String tagName = tagKey.location().toString();
-            for (int i = 0; i < patterns.size(); i++) {
-                if (!patterns.get(i).matcher(tagName).matches()) {
+            for (int i = 0; i < tagPatterns.size(); i++) {
+                if (!tagPatterns.get(i).matcher(tagName).matches()) {
                     continue;
                 }
                 matchedTags[i]++;
                 tag.forEach(holder -> items.add(holder.value()));
+            }
+        }
+
+        List<String> unknownItems = new ArrayList<>();
+        for (String entry : itemEntries) {
+            ResourceLocation id = ResourceLocation.tryParse(entry);
+            if (id != null && itemRegistry.containsKey(id)) {
+                items.add(itemRegistry.get(id));
+            } else {
+                unknownItems.add(entry);
             }
         }
 
@@ -349,19 +367,23 @@ public final class ServerConfig {
             return;
         }
 
-        for (int i = 0; i < patterns.size(); i++) {
+        for (int i = 0; i < tagPatterns.size(); i++) {
             if (matchedTags[i] == 0) {
-                SomeStacksCommon.LOGGER.warn("Ingot tag entry \"{}\" matches no item tag", names.get(i));
+                SomeStacksCommon.LOGGER.warn("Ingot entry \"#{}\" matches no item tag", tagGlobs.get(i));
             }
         }
+        for (String entry : unknownItems) {
+            SomeStacksCommon.LOGGER.warn("Ingot entry \"{}\" is not a registered item", entry);
+        }
 
-        SomeStacksCommon.LOGGER.info("Baked ingot tags: {} entr(ies) over {} item tag(s) accept {} item(s)",
-                patterns.size(), knownTags, ingotItems.size());
+        SomeStacksCommon.LOGGER.info(
+                "Baked ingots: {} tag pattern(s) + {} item(s) over {} item tag(s) accept {} item(s)",
+                tagPatterns.size(), itemEntries.size(), knownTags, ingotItems.size());
     }
 
     /**
-     * Compiles one ingot tag entry into a matcher over whole tag names, where {@code *} stands for
-     * a run of any characters and every other character is literal.
+     * Compiles one {@code #} ingot entry into a matcher over whole tag names, where {@code *} stands
+     * for a run of any characters and every other character is literal.
      */
     private static Pattern globToPattern(String glob) {
         StringBuilder regex = new StringBuilder();
@@ -377,11 +399,11 @@ public final class ServerConfig {
     }
 
     /**
-     * Re-resolves the ingot tag list against the tags just bound. Item tags are data pack state, so
-     * the set of items a Bar Stack accepts changes with a data pack reload even though the config
-     * naming those tags has not. The loader's entry point calls this from its own tags-updated hook.
+     * Re-resolves the ingot list against the tags just bound. Item tags are data pack state, so the
+     * set of items a Bar Stack accepts changes with a data pack reload even though the config naming
+     * those tags has not. The loader's entry point calls this from its own tags-updated hook.
      */
-    public static void rebakeIngotTags() {
+    public static void rebakeIngots() {
         if (configFile == null) {
             return;
         }
@@ -440,13 +462,13 @@ public final class ServerConfig {
         return ingotItems.contains(item);
     }
 
-    /** How many items the ingot tag list currently resolves to. */
+    /** How many items the ingot list currently resolves to. */
     public static int ingotItemCount() {
         return ingotItems.size();
     }
 
     /**
-     * Every item tag name the server knows, for completing an ingot tag list entry. Read on demand
+     * Every item tag name the server knows, for completing a {@code #} ingot entry. Read on demand
      * rather than cached: tags change with a data pack reload, and a completion request is rare
      * next to the deposits the baked set serves.
      */

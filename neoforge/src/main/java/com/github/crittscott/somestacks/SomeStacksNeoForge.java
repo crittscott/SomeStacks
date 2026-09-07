@@ -46,7 +46,7 @@ public class SomeStacksNeoForge {
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         PlayerEdits.setAuthority(new NeoForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.blockInteractionRange());
-        ServerConfig.useCommonIngotTagDefaults();
+        ServerConfig.useCommonIngotDefaults();
 
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
@@ -84,7 +84,7 @@ public class SomeStacksNeoForge {
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngotTags();
+        ServerConfig.rebakeIngots();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

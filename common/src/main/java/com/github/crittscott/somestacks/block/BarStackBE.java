@@ -97,9 +97,10 @@ public class BarStackBE extends BlockEntity {
 
     /**
      * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is the server's {@code ingot_tags} list
-     * resolved against the loaded item tags, so an admin widens or narrows it without a data pack;
-     * because the Singles rule is this rule's complement, widening it narrows Singles by as much.
+     * insertion and capability path consults. Ingot-ness is the server's {@code ingots} list
+     * resolved against the loaded item tags and named item ids, so an admin widens or narrows it
+     * without a data pack; because the Singles rule is this rule's complement, widening it narrows
+     * Singles by as much.
      */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {

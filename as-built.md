@@ -82,8 +82,8 @@ but stored on the base; block rotations are local; Singles item rotation travels
 
 ## Admission, automation, and edits
 
-Storage accepts ordinary nonempty items; Bar accepts configured ingot tags; Singles accepts allowed
-non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only
+Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; Singles accepts
+allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only
 to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
 
 Every loader-native view spans the whole run plus one headroom block while growth is allowed. Storage
@@ -115,10 +115,11 @@ deposits validate both the clicked position and destination.
 
 World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded at
 server startup. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` reloads server
-render overrides and resyncs players but does not reread policy JSON. Tag patterns match complete tag
-names, may contain `*`, and resolve again on configuration or tag reload.
+render overrides and resyncs players but does not reread policy JSON. Ingot-list entries are either a
+`#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and
+resolve again on configuration or tag reload.
 
-Extension points are configured ingot tags; `data/<namespace>/somestacks_sounds/*.json`;
+Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`;
 `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and
 `config/somestacks/server_item_overrides/*.json`.
 

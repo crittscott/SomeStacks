@@ -177,7 +177,7 @@ Per-world JSON policy at `<world>/serverconfig/somestacks-server.json`.
 | `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
 | `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
-| `compatibility.ingot_tags` | `forge:ingots*` / `c:ingots*`, plus `somestacks:ingots` | What Bar accepts and Singles refuses; entries may contain `*` |
+| `compatibility.ingots` | `#forge:ingots*` / `#c:ingots*`, plus `#somestacks:ingots` | What Bar accepts and Singles refuses; `#name` is a tag pattern (`*` allowed), a bare id is one item |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
@@ -227,8 +227,8 @@ bars.
 
 ## Extension points
 
-- Data pack: add items to the tags named by `ingot_tags`, including `somestacks:ingots`; replace
-  action sounds via `data/<namespace>/somestacks_sounds/*.json`.
+- Data pack: add items to the tags listed in `compatibility.ingots`, including `somestacks:ingots`;
+  replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
 - Resource pack: add Storage/Singles profiles via
   `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via
   `assets/<namespace>/textures/bars/*.json`.

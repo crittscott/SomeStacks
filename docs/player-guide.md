@@ -73,7 +73,7 @@ Sixty-four items, one per cell, in a 4×4×4 grid. Anything a Bar Stack accepts,
 
 Sixty-four ingots rendered as bars: eight layers of eight, each layer laid across the one beneath it.
 
-Which items count as ingots is a server setting (see [Server administration](server-admin.md)) — by default, everything under the `forge:ingots` tags on Forge or `c:ingots` on Fabric, plus the mod's own `somestacks:ingots` tag, which a data pack can extend.
+Which items count as ingots is a server setting (see [Server administration](server-admin.md)) — by default, everything under the `forge:ingots` tags on Forge or `c:ingots` on Fabric and NeoForge, plus the mod's own `somestacks:ingots` tag, which a data pack can extend.
 
 **Support:** every bar above the bottom layer must overlap a bar in the layer below.
 

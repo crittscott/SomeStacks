@@ -30,7 +30,7 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useCommonIngotTagDefaults();
+        ServerConfig.useCommonIngotDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.registerPayloads();
@@ -51,7 +51,7 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {
-                        ServerConfig.rebakeIngotTags();
+                        ServerConfig.rebakeIngots();
                     }
                 });
 

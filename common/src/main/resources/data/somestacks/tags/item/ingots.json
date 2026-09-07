@@ -1,0 +1,49 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#forge:ingots",
+      "required": false
+    },
+    {
+      "id": "#c:ingots",
+      "required": false
+    },
+    {
+      "id": "betterend:aeternium_ingot",
+      "required": false
+    },
+    {
+      "id": "betterend:terminite_ingot",
+      "required": false
+    },
+    {
+      "id": "betterend:thallasium_ingot",
+      "required": false
+    },
+    {
+      "id": "betternether:cincinnasite_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:gold_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:iron_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "required": false
+    },
+    {
+      "id": "mobs_of_mythology:bronze_ingot",
+      "required": false
+    }
+  ]
+}
