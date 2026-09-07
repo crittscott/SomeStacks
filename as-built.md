@@ -6,9 +6,9 @@ ownership pointers and cross-module invariants, current rather than historical, 
 
 ## Project shape
 
-Targets Minecraft 1.21.1 and Java 21. Loader baselines are Fabric Loader 0.19.3 with Fabric API
-0.116.15+1.21.1, Forge 52.1.16, and NeoForge 21.1.248. Architectury is build-time only; no loader
-has an Architectury API runtime dependency. Mod id is `somestacks`; the root package is
+Targets Minecraft 1.21.1 and Java 21. Loader baselines are Fabric Loader 0.16.0 with Fabric API
+0.102.0+1.21.1, Forge 52.0.0, and NeoForge 21.1.100; the Forge dev/build pin stays at 52.1.16.
+Architectury is build-time only; no loader has an Architectury API runtime dependency. Mod id is `somestacks`; the root package is
 `com.github.crittscott.somestacks`. Toolchain details are in `build-env.md`.
 
 `common` folds into each loader JAR and is not a runtime artifact. It has no loader imports;

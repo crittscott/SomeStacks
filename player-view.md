@@ -8,8 +8,8 @@ nothing else: no block items, recipes, creative-tab entries, or storage screens.
 because an item was deposited into the world and normally disappears when its last contents are
 removed.
 
-Requires Minecraft 1.21.1 and one of Fabric Loader 0.19.3+ with Fabric API 0.116.15+1.21.1,
-Forge 52.1.16, or NeoForge 21.1.248. Must be installed on both client and server.
+Requires Minecraft 1.21.1 and one of Fabric Loader 0.16.0+ with Fabric API 0.102.0+1.21.1,
+Forge 52.0.0+, or NeoForge 21.1.100+. Must be installed on both client and server.
 
 ## The three stack types
 

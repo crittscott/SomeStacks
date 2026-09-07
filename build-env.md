@@ -43,16 +43,19 @@ Plugin are pinned to numbered versions rather than moving snapshot aliases.
 | --- | --- | --- |
 | Minecraft | **1.21.1** | exactly `[1.21.1]` on Forge and NeoForge; exactly `1.21.1` on Fabric |
 | Mappings | Mojang official plus Parchment **2024.11.17-1.21.1** | development only |
-| Forge | **1.21.1-52.1.16** | Forge `[52.1.16,53)`; FML `[52,53)` |
-| NeoForge | **21.1.248** | NeoForge `[21.1.248,22)`; JavaFML `[1,)` |
-| Fabric Loader | **0.19.3** | `>=0.19.3` |
-| Fabric API | **0.116.15+1.21.1** | `>=0.116.15+1.21.1` |
+| Forge | **1.21.1-52.1.16** | Forge `[52.0.0,53)`; FML `[52,53)` |
+| NeoForge | **21.1.100** | NeoForge `[21.1.100,22)`; JavaFML `[1,)` |
+| Fabric Loader | **0.16.0** | `>=0.16.0` |
+| Fabric API | **0.102.0+1.21.1** | `>=0.102.0+1.21.1` |
 | FTB Chunks (Fabric/NeoForge) | **2101.1.21** | `[2101,2102)`, optional compile-only |
 | JSR-305 | **3.0.2** | compile-only annotation dependency |
 
 There is no JUnit suite; all automated testing is the per-loader GameTest suites.
-`forge_compile_version` / `neoforge_compile_version` are each both the compile dependency and the
-minimum accepted runtime for that loader. Architectury is a build-time dependency only: the
+`neoforge_compile_version` is both the compile dependency and the minimum accepted runtime.
+`forge_compile_version` stays at the newest 52.x because early 52.0.x userdev omits jopt-simple
+from the dev module path and breaks `runGameTestServer`; the mod only uses classic Forge API from
+52.0.0, so `forge_version_range` declares the wider `[52.0.0,53)`. Architectury is a build-time
+dependency only: the
 Architectury Plugin and Loom supply `@ExpectPlatform` / `@Environment` transformation, and no loader
 carries an Architectury API runtime dependency. FTB Chunks is the only optional third-party mod
 integration and is never bundled. Open Parties and Claims support was removed with the 1.21.1 port
