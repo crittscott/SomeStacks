@@ -2655,155 +2655,155 @@
     ]
   },
   "betterend:iron_bulb_lantern": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_black": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_brown": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_cyan": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_green": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_light_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_light_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_lime": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_magenta": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_orange": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_pink": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_purple": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_red": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_white": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:iron_bulb_lantern_yellow": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
@@ -5490,155 +5490,155 @@
     ]
   },
   "betterend:terminite_bulb_lantern": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_black": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_brown": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_cyan": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_green": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_light_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_light_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_lime": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_magenta": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_orange": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_pink": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_purple": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_red": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_white": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:terminite_bulb_lantern_yellow": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
@@ -5922,155 +5922,155 @@
     ]
   },
   "betterend:thallasium_bulb_lantern": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_black": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_brown": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_cyan": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_green": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_light_blue": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_light_gray": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_lime": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_magenta": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_orange": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_pink": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_purple": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_red": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_white": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },
   "betterend:thallasium_bulb_lantern_yellow": {
-    "mode": "3d",
-    "scale": 1.2,
+    "mode": "block",
+    "scale": 0.5,
     "offset": [
       0.0,
-      0.075,
+      0.1,
       0.0
     ]
   },

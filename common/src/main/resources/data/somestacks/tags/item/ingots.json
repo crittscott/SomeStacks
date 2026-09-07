@@ -10,6 +10,30 @@
       "required": false
     },
     {
+      "id": "advancednetherite:netherite_diamond_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_emerald_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_gold_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_iron_ingot",
+      "required": false
+    },
+    {
+      "id": "aether_treasure_reforging:pyral_ingot",
+      "required": false
+    },
+    {
+      "id": "aether_treasure_reforging:valkyrum_ingot",
+      "required": false
+    },
+    {
       "id": "betterend:aeternium_ingot",
       "required": false
     },
