@@ -1,0 +1,254 @@
+{
+  "mcwstairs:acacia_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:andesite_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:birch_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:blackstone_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:cherry_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:cobbled_deepslate_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:cobblestone_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:crimson_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:dark_oak_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:deepslate_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:diorite_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:granite_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:jungle_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:mangrove_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:mossy_cobblestone_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:mossy_stone_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:mud_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:nether_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:oak_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:prismarine_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:quartz_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:red_nether_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:red_sandstone_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:sandstone_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:spruce_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:stone_brick_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "mcwstairs:warped_railing": {
+    "mode": "3d",
+    "scale": 0.55,
+    "offset": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
