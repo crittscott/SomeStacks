@@ -76,9 +76,11 @@ The three movement models must remain distinct:
   automation extraction moves the topmost bar into the opened position instead.
 
 `StackItemStorage` persists local inventory through each block entity's NBT methods using Data
-Components and a `HolderLookup.Provider`. Pre-1.21 data is not migrated. Storage saves `Items`,
-`Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `Items`. Permanence is pile-wide
-but stored on the base; block rotations are local; Singles item rotation travels with the item.
+Components and a `HolderLookup.Provider`, upgrading a pre-1.21 item tag once via vanilla's
+DataFixerUpper on first load and marking the block entity dirty to persist the rewrite. Storage saves
+`Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `Items`. Permanence is
+pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the
+item.
 
 ## Admission, automation, and edits
 

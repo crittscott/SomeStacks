@@ -449,8 +449,8 @@ public class BarStackBE extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS));
+        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) {
+            setChanged();
         }
         cachedShape = null;
     }

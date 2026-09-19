@@ -1,9 +1,15 @@
 package com.github.crittscott.somestacks.util;
 
+import com.mojang.serialization.Dynamic;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -24,6 +30,9 @@ public class StackItemStorage implements SlotAccess {
 
     /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
+
+    /** Data version of Minecraft 1.20.1, the last release before the item Data Components rewrite. */
+    private static final int LEGACY_ITEM_DATA_VERSION = 3465;
 
     private final ItemStack[] stacks;
 
@@ -154,15 +163,41 @@ public class StackItemStorage implements SlotAccess {
         return nbt;
     }
 
-    public void deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
+    /**
+     * Loads slot contents from NBT. A pre-1.21 item tag is upgraded through vanilla's
+     * DataFixerUpper before parsing; the return value tells the caller whether any such
+     * upgrade happened, so it can mark the owning block entity dirty and persist the rewrite.
+     */
+    public boolean deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
+        boolean upgraded = false;
         ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(TAG_SLOT);
+            if (isLegacyItemTag(itemTag)) {
+                itemTag = upgradeLegacyItemTag(registries, itemTag);
+                itemTag.putInt(TAG_SLOT, slot);
+                upgraded = true;
+            }
             if (slot >= 0 && slot < stacks.length) {
                 stacks[slot] = ItemStack.parse(registries, itemTag).orElse(ItemStack.EMPTY);
             }
         }
+        return upgraded;
+    }
+
+    /** A pre-1.21 item tag has a byte {@code Count}; the Data Components format has an int {@code count}. */
+    private static boolean isLegacyItemTag(CompoundTag itemTag) {
+        return !itemTag.contains("count");
+    }
+
+    private static CompoundTag upgradeLegacyItemTag(HolderLookup.Provider registries, CompoundTag itemTag) {
+        Dynamic<Tag> fixed = DataFixers.getDataFixer().update(
+                References.ITEM_STACK,
+                new Dynamic<>(RegistryOps.create(NbtOps.INSTANCE, registries), itemTag),
+                LEGACY_ITEM_DATA_VERSION,
+                SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+        return (CompoundTag) fixed.getValue();
     }
 }
