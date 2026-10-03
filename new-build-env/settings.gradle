@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'somestacks'
+rootProject.name = 'somebuckets'
 
 include 'common'
 enabled_platforms.split(',').each { include it }

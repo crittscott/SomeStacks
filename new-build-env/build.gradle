@@ -8,38 +8,15 @@ architectury {
     minecraft = project.minecraft_version
 }
 
-// Creates a loader's `gametest` source set over the shared scenarios and resources, decodes the
-// shared GameTest structure into it, and registers its GameTest Javadoc task.
+// Creates a loader's `gametest` source set over the shared scenarios and resources, and registers
+// its GameTest Javadoc task.
 ext.configureGameTests = { Project loaderProject ->
     def main = loaderProject.sourceSets.main
     def gametest = loaderProject.sourceSets.create('gametest')
-    def generatedResources = loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
     gametest.java.srcDir rootProject.file('common/src/gametest/java')
     gametest.resources.srcDir rootProject.file('common/src/gametest/resources')
-    gametest.resources.srcDir generatedResources
     gametest.compileClasspath += main.compileClasspath + main.output
     gametest.runtimeClasspath += main.runtimeClasspath + main.output
-
-    // The empty structure is checked in as Base64 text; the decoded NBT is build output.
-    def structureSource = rootProject.layout.projectDirectory.file(
-            'common/src/gametest/fixtures/somestacks_empty.nbt.b64')
-    def structureOutput = generatedResources.map {
-        it.file('data/somestacks/structure/somestacks_empty.nbt')
-    }
-
-    def generateStructures = loaderProject.tasks.register('generateGameTestStructures') {
-        inputs.file(structureSource)
-        outputs.file(structureOutput)
-
-        doLast {
-            def output = structureOutput.get().asFile
-            output.parentFile.mkdirs()
-            output.bytes = Base64.getDecoder().decode(structureSource.asFile.text.trim())
-        }
-    }
-    loaderProject.tasks.named(gametest.processResourcesTaskName).configure {
-        dependsOn generateStructures
-    }
 
     loaderProject.tasks.register('gametestJavadoc', Javadoc) {
         group = 'documentation'
@@ -49,8 +26,8 @@ ext.configureGameTests = { Project loaderProject ->
         classpath = gametest.compileClasspath
         destinationDir = loaderProject.layout.buildDirectory.dir('docs/gametestJavadoc').get().asFile
 
-        // Shared scenarios and helpers are package-private; document them alongside the public
-        // loader test holders.
+        // Shared scenarios and helpers are deliberately package-private; they contain the
+        // authoritative manual and automation-only procedures linked by the public test wrappers.
         options.addBooleanOption('package', true)
     }
 }

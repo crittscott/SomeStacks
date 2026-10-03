@@ -1,8 +1,6 @@
 plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'dev.architectury.loom' version '1.17.491' apply false
-    id 'architectury-plugin' version '3.5.169'
+    id 'dev.architectury.loom' version '1.17.493' apply false
+    id 'architectury-plugin' version '3.5.170'
     id 'com.gradleup.shadow' version '9.4.3' apply false
 }
 
@@ -10,28 +8,26 @@ architectury {
     minecraft = project.minecraft_version
 }
 
-// Shared loader-module packaging and GameTest resource wiring. Loader-specific dependencies,
-// metadata expansion, run arguments, and Architectury transform names stay in each module.
-ext.configureLoaderBuild = { Project loaderProject ->
-    loaderProject.configurations {
-        common {
-            canBeResolved = true
-            canBeConsumed = false
-        }
-        compileClasspath.extendsFrom common
+// Creates a loader's `gametest` source set over the shared scenarios and resources, decodes the
+// shared GameTest structure into it, and registers its GameTest Javadoc task.
+ext.configureGameTests = { Project loaderProject ->
+    def main = loaderProject.sourceSets.main
+    def gametest = loaderProject.sourceSets.create('gametest')
+    def generatedResources = loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
+    gametest.java.srcDir rootProject.file('common/src/gametest/java')
+    gametest.resources.srcDir rootProject.file('common/src/gametest/resources')
+    gametest.resources.srcDir generatedResources
+    gametest.compileClasspath += main.compileClasspath + main.output
+    gametest.runtimeClasspath += main.runtimeClasspath + main.output
 
-        shadowBundle {
-            canBeResolved = true
-            canBeConsumed = false
-        }
+    // The empty structure is checked in as Base64 text; the decoded NBT is build output.
+    def structureSource = rootProject.layout.projectDirectory.file(
+            'common/src/gametest/fixtures/somestacks_empty.nbt.b64')
+    def structureOutput = generatedResources.map {
+        it.file('data/somestacks/structure/somestacks_empty.nbt')
     }
 
-    def structureSource = loaderProject.layout.projectDirectory.file(
-            'src/gametest/fixtures/somestacks_empty.nbt.b64')
-    def structureOutput = loaderProject.layout.buildDirectory.file(
-            'generated/gametest/resources/data/somestacks/structure/somestacks_empty.nbt')
-
-    loaderProject.tasks.register('generateGameTestStructures') {
+    def generateStructures = loaderProject.tasks.register('generateGameTestStructures') {
         inputs.file(structureSource)
         outputs.file(structureOutput)
 
@@ -41,35 +37,35 @@ ext.configureLoaderBuild = { Project loaderProject ->
             output.bytes = Base64.getDecoder().decode(structureSource.asFile.text.trim())
         }
     }
-
-    loaderProject.sourceSets.gametest.resources {
-        srcDir loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
-    }
-    loaderProject.tasks.named('processGametestResources').configure {
-        dependsOn loaderProject.tasks.named('generateGameTestStructures')
+    loaderProject.tasks.named(gametest.processResourcesTaskName).configure {
+        dependsOn generateStructures
     }
 
-    loaderProject.tasks.named('shadowJar').configure {
-        configurations = [loaderProject.configurations.shadowBundle]
-        archiveClassifier = 'dev-shadow'
+    loaderProject.tasks.register('gametestJavadoc', Javadoc) {
+        group = 'documentation'
+        description = "Generates ${loaderProject.name} GameTest Javadoc."
 
-        if (loaderProject.name in ['forge', 'neoforge']) {
-            manifest {
-                attributes([
-                        'Specification-Title'   : mod_id,
-                        'Specification-Vendor'  : mod_authors,
-                        'Specification-Version' : '1',
-                        'Implementation-Title'  : loaderProject.name,
-                        'Implementation-Version': loaderProject.version,
-                        'Implementation-Vendor' : mod_authors,
-                ])
-            }
-        }
-    }
-    loaderProject.tasks.named('remapJar').configure {
-        inputFile.set(loaderProject.tasks.named('shadowJar').flatMap { it.archiveFile })
+        source gametest.allJava
+        classpath = gametest.compileClasspath
+        destinationDir = loaderProject.layout.buildDirectory.dir('docs/gametestJavadoc').get().asFile
+
+        // Shared scenarios and helpers are package-private; document them alongside the public
+        // loader test holders.
+        options.addBooleanOption('package', true)
     }
 }
+
+// Placeholder values shared by every loader's `${...}` resource expansion. Each loader adds its own
+// loader-specific version ranges on top of this.
+ext.sharedModProperties = [
+        mod_id           : mod_id,
+        mod_name         : mod_name,
+        mod_license      : mod_license,
+        mod_version      : mod_version,
+        mod_authors      : mod_authors,
+        mod_description  : mod_description,
+        minecraft_version: minecraft_version,
+]
 
 allprojects {
     group = rootProject.maven_group
@@ -79,19 +75,14 @@ allprojects {
 subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
-    apply plugin: 'maven-publish'
 
     base {
-        archivesName = "$rootProject.archives_name-$project.name"
+        // Give every loader jar a platform and Minecraft-version suffix.
+        archivesName = "$rootProject.archives_name-$project.name-$rootProject.minecraft_version"
     }
 
     repositories {
-        maven { url = 'https://maven.architectury.dev/' }
         maven { url = 'https://maven.parchmentmc.org' }
-        maven { url = 'https://maven.neoforged.net/releases/' }
-        if (project.name in ['fabric', 'neoforge']) {
-            maven { url = 'https://maven.ftb.dev/releases' }
-        }
     }
 
     loom {
@@ -104,6 +95,10 @@ subprojects {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
         }
+
+        // common and every loader's source uses javax.annotation.Nullable. Neither Loom nor the
+        // loader dependencies reliably provide it, so declare it for all modules here.
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     }
 
     java {
@@ -114,31 +109,33 @@ subprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
-
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
+}
 
-    tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
-    }
+def documentedGameTestProjects = enabled_platforms.split(',').collect { project(":$it") }
+def documentedProjects = [project(':common')] + documentedGameTestProjects
 
-    tasks.withType(JavaExec).configureEach {
-        javaLauncher.set(javaToolchains.launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-        })
-    }
+tasks.register('generateDocs', Sync) {
+    group = 'documentation'
+    description = 'Generates the committed production and GameTest Javadoc under docs/javadoc.'
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = base.archivesName.get()
-                from components.java
-            }
+    into layout.projectDirectory.dir('docs/javadoc')
+
+    documentedProjects.each { documentedProject ->
+        def moduleJavadoc = documentedProject.tasks.named('javadoc', Javadoc)
+        dependsOn moduleJavadoc
+
+        from(moduleJavadoc.map { it.destinationDir }) {
+            into documentedProject.name
         }
+    }
 
-        repositories {
-            // Add repositories to publish to here.
+    documentedGameTestProjects.each { documentedProject ->
+        def gametestJavadoc = documentedProject.tasks.named('gametestJavadoc', Javadoc)
+        dependsOn gametestJavadoc
+
+        from(gametestJavadoc.map { it.destinationDir }) {
+            into "${documentedProject.name}-gametest"
         }
     }
 }

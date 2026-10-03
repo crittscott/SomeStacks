@@ -8,6 +8,7 @@ architectury {
 }
 
 rootProject.configureGameTests(project)
+sourceSets.main.resources.srcDir 'src/generated/resources'
 
 loom {
     mods {
@@ -15,12 +16,21 @@ loom {
             sourceSet sourceSets.main
             sourceSet project(':common').sourceSets.main
         }
-        somestacks_gametest {
+        somebuckets_gametest {
             sourceSet sourceSets.gametest
         }
     }
 
     runs {
+        data {
+            data()
+            name 'Data'
+            source sourceSets.main
+            programArgs '--mod', mod_id, '--all',
+                    '--output', file('src/generated/resources').absolutePath,
+                    '--existing', rootProject.file('common/src/main/resources').absolutePath
+        }
+
         gameTestServer {
             server()
             environment 'gametestserver'
@@ -54,6 +64,41 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+
+}
+
+def commonAccessWidener = rootProject.file('common/src/main/resources/somebuckets.accesswidener')
+def forgeAccessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+def commonAccessMirror = [
+        'accessible field net/minecraft/world/entity/item/ItemEntity target Ljava/util/UUID;':
+                'public net.minecraft.world.entity.item.ItemEntity target',
+]
+
+tasks.register('verifyCommonAccessMirror') {
+    inputs.files(commonAccessWidener, forgeAccessTransformer)
+
+    doLast {
+        def commonEntries = commonAccessWidener.readLines('UTF-8')
+                .collect { it.trim() }
+                .findAll { it && !it.startsWith('#') && !it.startsWith('accessWidener ') }
+                .toSet()
+        if (commonEntries != commonAccessMirror.keySet()) {
+            throw new GradleException('Update verifyCommonAccessMirror for the changed common access widener')
+        }
+
+        def forgeEntries = forgeAccessTransformer.readLines('UTF-8')
+                .collect { it.trim() }
+                .findAll { it && !it.startsWith('#') }
+                .toSet()
+        def missing = commonAccessMirror.values().findAll { !forgeEntries.contains(it) }
+        if (!missing.isEmpty()) {
+            throw new GradleException("Forge access transformer is missing common entries: $missing")
+        }
+    }
+}
+
+tasks.named('check').configure {
+    dependsOn tasks.named('verifyCommonAccessMirror')
 }
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).
@@ -74,8 +119,9 @@ tasks.named('processResources', ProcessResources).configure {
 tasks.named('processGametestResources', ProcessResources).configure {
     var replaceProperties = [
             mod_license               : mod_license,
-            mod_version               : mod_version,
+            forge_version_range       : forge_version_range,
             forge_loader_version_range: forge_loader_version_range,
+            minecraft_version_range   : minecraft_version_range,
     ]
     inputs.properties replaceProperties
 

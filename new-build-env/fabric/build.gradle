@@ -10,9 +10,11 @@ architectury {
 rootProject.configureGameTests(project)
 
 loom {
+    accessWidenerPath = project(':common').loom.accessWidenerPath
+
     mixin {
         useLegacyMixinAp = true
-        defaultRefmapName = 'somestacks.refmap.json'
+        defaultRefmapName = 'somebuckets.refmap.json'
     }
 
     mods {
@@ -20,7 +22,7 @@ loom {
             sourceSet sourceSets.main
             sourceSet project(':common').sourceSets.main
         }
-        somestacks_gametest {
+        somebuckets_gametest {
             sourceSet sourceSets.gametest
         }
     }
@@ -36,8 +38,8 @@ loom {
     }
 }
 
-// The GameTest server reuses run/world between launches; clear it so blocks and entities left by
-// one GameTest run cannot leak into the next.
+// The GameTest server reuses run/world between launches; clear it so entities placed or captured
+// by one GameTest run cannot leak into the next.
 def gameTestWorldDirectory = layout.projectDirectory.dir('run/world')
 tasks.named('runGameTestServer').configure {
     doFirst {
@@ -88,20 +90,6 @@ tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = rootProject.sharedModProperties + [
             fabric_loader_version: fabric_loader_version,
             fabric_api_version: fabric_api_version,
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching('fabric.mod.json') {
-        expand replaceProperties
-    }
-}
-
-// Expands ${...} placeholders in the gametest fabric.mod.json (this module's own resource).
-tasks.named('processGametestResources', ProcessResources).configure {
-    var replaceProperties = [
-            mod_version          : mod_version,
-            fabric_loader_version: fabric_loader_version,
-            fabric_api_version   : fabric_api_version,
     ]
     inputs.properties replaceProperties
 
