@@ -50,13 +50,13 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 | Architectury Gradle plugin | `3.5.170` | Common/Fabric/Forge/NeoForge project organization |
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `21` | Compilation, Javadoc, and Java execution |
-| Minecraft | `1.21.3` | Compile and runtime target |
-| Mojang mappings | Official mappings for `1.21.3` | Base mapping layer; no separate mapping version is declared |
-| Parchment mappings | `org.parchmentmc.data:parchment-1.21.3:2024.12.07@zip` | Layer over the official mappings |
-| Forge | `net.minecraftforge:forge:1.21.3-53.1.12` | Exact Forge compile and development-run baseline |
-| NeoForge | `net.neoforged:neoforge:21.3.97` | Exact NeoForge compile and development-run baseline |
+| Minecraft | `1.21.4` | Compile and runtime target |
+| Mojang mappings | Official mappings for `1.21.4` | Base mapping layer; no separate mapping version is declared |
+| Parchment mappings | `org.parchmentmc.data:parchment-1.21.4:2025.03.23@zip` | Layer over the official mappings |
+| Forge | `net.minecraftforge:forge:1.21.4-54.1.18` | Exact Forge compile and development-run baseline |
+| NeoForge | `net.neoforged:neoforge:21.4.158` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency; also supplies the common annotation dependency |
-| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.114.1+1.21.3` | Fabric runtime and development API |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.119.4+1.21.4` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Fabric compile-only optional claim-mod integration, also on Fabric development runs |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
@@ -70,13 +70,13 @@ These values do not select build tools, but they are versioned inputs consumed b
 | --- | --- |
 | Some Stacks artifact | `0.8.2` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
-| Minecraft compatibility | exactly `1.21.3`; Forge and NeoForge syntax `[1.21.3]`, Fabric syntax `1.21.3` |
-| Forge compatibility | `[53.1.12,54)` |
-| Forge JavaFML loader compatibility | `[53,54)` |
-| NeoForge compatibility | `[21.3.97,22)` |
+| Minecraft compatibility | exactly `1.21.4`; Forge and NeoForge syntax `[1.21.4]`, Fabric syntax `1.21.4` |
+| Forge compatibility | `[54.1.18,55)` |
+| Forge JavaFML loader compatibility | `[54,55)` |
+| NeoForge compatibility | `[21.4.158,22)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.19.5` |
-| Fabric API runtime declaration | `>=0.114.1+1.21.3`; compilation uses `0.114.1+1.21.3` |
+| Fabric API runtime declaration | `>=0.119.4+1.21.4`; compilation uses `0.119.4+1.21.4` |
 
 ## Resolution and version authorities
 
