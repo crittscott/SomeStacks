@@ -1,172 +1,85 @@
 # Some Stacks Build Environment
 
-This records the toolchain and dependency versions used by this repository, based on the active
-Gradle configuration, this machine's installed JDKs and Gradle cache, and the current IntelliJ
-project settings. See [as-built.md](as-built.md) for the runtime architecture; this file covers the
-environment that builds and launches it.
+This document is an orientation to the repository's build environment: its entry points, module layout, version authorities, dependency baselines, and packaging flow. It describes the setup as it exists. It is not build history, a troubleshooting log, release documentation, or a conversation.
 
-The `build-env/` directory is a synchronized reference snapshot of this repository's build scripts
-and wrapper. It is not part of the active Gradle build: the root `settings.gradle` includes
-`common`, `forge`, `fabric`, and `neoforge`, while nothing includes `build-env/`. Make build changes
-in the active root files first, verify them there, and then refresh the matching files under
-`build-env/` so the snapshot does not drift.
+`build-env/` is a reference snapshot of every checked-in Gradle build input, including the wrapper. It preserves repository-relative paths so that files can be compared or restored without guessing where they belong. The active files at the repository root and under `common/`, `fabric/`, `forge/`, `neoforge/`, and `gradle/` remain authoritative; Gradle does not read the copies. Keep the snapshot and this description synchronized whenever an active build file changes.
 
-All four modules — `common`, `fabric`, `forge`, and `neoforge` — are ported to Minecraft 1.21.1 and
-compile. `forge` keeps the classic Forge API; `neoforge` is the parallel port on the NeoForge
-equivalents and carries a full loader source tree, not a skeleton. Each loader also builds a
-development-only `somestacks_gametest` suite.
+The snapshot should contain only manually maintained files that define or launch this Gradle build: Gradle scripts, Gradle properties, wrapper launchers, and wrapper files. It should not contain caches, generated output, IDE state, run directories, resolved dependency JARs, mod source or resources, GameTest fixtures, loader manifests, release notes, or personal convenience scripts such as `gradlews.ps1`. The wrapper JAR is the sole binary because it is itself a checked-in build launcher.
 
-## Toolchain
+## Snapshot contents
 
-| Tool | Active declaration |
+| Active path | Reference copy |
 | --- | --- |
-| Gradle | Regenerated wrapper pinned at **9.5.1**, with distribution-URL validation enabled |
-| Java toolchain | Language version 21; source/target 21; `--release 21` |
-| IntelliJ Gradle JVM | `.idea/gradle.xml` sets `gradleJvm="21"` |
-| Architectury Loom | `1.17.491` |
-| Architectury Plugin | `3.5.169` |
-| Shadow (`com.gradleup.shadow`) | `9.4.3` |
+| `settings.gradle` | `build-env/settings.gradle` |
+| `build.gradle` | `build-env/build.gradle` |
+| `gradle.properties` | `build-env/gradle.properties` |
+| `common/build.gradle` | `build-env/common/build.gradle` |
+| `fabric/build.gradle` | `build-env/fabric/build.gradle` |
+| `fabric/gradle.properties` | `build-env/fabric/gradle.properties` |
+| `forge/build.gradle` | `build-env/forge/build.gradle` |
+| `forge/gradle.properties` | `build-env/forge/gradle.properties` |
+| `neoforge/build.gradle` | `build-env/neoforge/build.gradle` |
+| `neoforge/gradle.properties` | `build-env/neoforge/gradle.properties` |
+| `gradlew` | `build-env/gradlew` |
+| `gradlew.bat` | `build-env/gradlew.bat` |
+| `gradle/wrapper/gradle-wrapper.properties` | `build-env/gradle/wrapper/gradle-wrapper.properties` |
+| `gradle/wrapper/gradle-wrapper.jar` | `build-env/gradle/wrapper/gradle-wrapper.jar` |
 
-The project toolchain forces compilation and every Gradle `JavaExec` task, including Minecraft
-development runs, onto Java 21, so a JDK 21 must be discoverable. The wrapper itself may launch on a
-Gradle-compatible JVM: on this machine `JAVA_HOME` points to JDK 17 and Gradle discovers the JDK 21
-toolchain separately. IntelliJ runs Gradle with its configured JDK 21. There is no global `gradle`
-command; the wrapper is the build entry point.
+## Build shape
 
-`gradle.properties` gives Gradle 3 GiB with `org.gradle.jvmargs=-Xmx3G`, disables the persistent
-daemon with `org.gradle.daemon=false`, and enables parallel execution. Loom and the Architectury
-Plugin are pinned to numbered versions rather than moving snapshot aliases.
+The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom and the Architectury plugin to each subproject and establishes shared Minecraft mappings and Java settings. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric, Forge, and NeoForge; each loader module bundles its transformed common output with Shadow and then remaps the resulting production JAR. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
 
-## Minecraft and library versions
+`common` expands `${mod_id}` in its `pack.mcmeta`; each loader expands its own metadata (`fabric.mod.json`, `META-INF/mods.toml`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
-| Component | Build version | Declared runtime constraint |
+Fabric Loom uses the legacy Mixin annotation processor and writes the fixed `somestacks.refmap.json` refmap. Forge and NeoForge use their loader-specific Loom setup without that Fabric-only Mixin block.
+
+Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric additionally compiles against the Common Protection API (`modCompileOnly`) so claim mods that ship it can be consulted when present, and puts it on its development runs (`modLocalRuntime`); both declarations are non-transitive, and the API is neither bundled nor required at runtime.
+
+Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and wires it into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run.
+
+On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions.
+
+Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
+
+## Exact build versions
+
+| Component | Exact version or coordinate | Build role |
 | --- | --- | --- |
-| Minecraft | **1.21.1** | exactly `[1.21.1]` on Forge and NeoForge; exactly `1.21.1` on Fabric |
-| Mappings | Mojang official plus Parchment **2024.11.17-1.21.1** | development only |
-| Forge | **1.21.1-52.1.16** | Forge `[52.0.0,53)`; FML `[52,53)` |
-| NeoForge | **21.1.100** | NeoForge `[21.1.100,22)`; JavaFML `[1,)` |
-| Fabric Loader | **0.16.0** | `>=0.16.0` |
-| Fabric API | **0.102.0+1.21.1** | `>=0.102.0+1.21.1` |
-| FTB Chunks (Fabric/NeoForge) | **2101.1.21** | `[2101,2102)`, optional compile-only |
-| JSR-305 | **3.0.2** | compile-only annotation dependency |
+| Gradle | `9.5.1` (`gradle-9.5.1-bin.zip`) | Wrapper-selected build engine |
+| Architectury Loom | `1.17.493` | Minecraft development, mappings, runs, transforms, and remapping |
+| Architectury Gradle plugin | `3.5.170` | Common/Fabric/Forge/NeoForge project organization |
+| GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
+| Java toolchain level | `21` | Compilation, Javadoc, and Java execution |
+| Minecraft | `1.21.3` | Compile and runtime target |
+| Mojang mappings | Official mappings for `1.21.3` | Base mapping layer; no separate mapping version is declared |
+| Parchment mappings | `org.parchmentmc.data:parchment-1.21.3:2024.12.07@zip` | Layer over the official mappings |
+| Forge | `net.minecraftforge:forge:1.21.3-53.1.12` | Exact Forge compile and development-run baseline |
+| NeoForge | `net.neoforged:neoforge:21.3.97` | Exact NeoForge compile and development-run baseline |
+| Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency; also supplies the common annotation dependency |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.114.1+1.21.3` | Fabric runtime and development API |
+| Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Fabric compile-only optional claim-mod integration, also on Fabric development runs |
+| JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
-There is no JUnit suite; all automated testing is the per-loader GameTest suites.
-`neoforge_compile_version` is both the compile dependency and the minimum accepted runtime.
-`forge_compile_version` stays at the newest 52.x because early 52.0.x userdev omits jopt-simple
-from the dev module path and breaks `runGameTestServer`; the mod only uses classic Forge API from
-52.0.0, so `forge_version_range` declares the wider `[52.0.0,53)`. Architectury is a build-time
-dependency only: the
-Architectury Plugin and Loom supply `@ExpectPlatform` / `@Environment` transformation, and no loader
-carries an Architectury API runtime dependency. FTB Chunks is the only optional third-party mod
-integration and is never bundled. Open Parties and Claims support was removed with the 1.21.1 port
-(no 1.21.1 build exists).
+The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
 
-Plugin resolution uses the Fabric, Architectury, Forge, and NeoForged Maven repositories plus the
-Gradle Plugin Portal. All subprojects additionally use the Architectury, NeoForged, and Parchment
-repositories; the FTB repository is limited to Fabric and NeoForge, the two modules that declare
-FTB Chunks. All active version pins are in the root build scripts and `gradle.properties`
-(`maven_group`, `archives_name`, `forge_loader_version_range`, `neoforge_*` among them); there is no
-`buildSrc`, version catalog, or dependency locking.
+## Artifact and runtime version declarations
 
-## Module and packaging setup
+These values do not select build tools, but they are versioned inputs consumed by resource expansion and are relevant when reproducing the produced artifacts.
 
-The active build has four subprojects:
+| Subject | Declaration |
+| --- | --- |
+| Some Stacks artifact | `0.8.2` |
+| Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
+| Minecraft compatibility | exactly `1.21.3`; Forge and NeoForge syntax `[1.21.3]`, Fabric syntax `1.21.3` |
+| Forge compatibility | `[53.1.12,54)` |
+| Forge JavaFML loader compatibility | `[53,54)` |
+| NeoForge compatibility | `[21.3.97,22)` |
+| NeoForge JavaFML loader compatibility | `[1,)` |
+| Fabric Loader compatibility | `>=0.19.5` |
+| Fabric API runtime declaration | `>=0.114.1+1.21.3`; compilation uses `0.114.1+1.21.3` |
 
-```text
-common/     shared source and resources; transformed into each loader artifact
-forge/      Forge entry points and integration
-fabric/     Fabric entry points and integration
-neoforge/   NeoForge entry points and integration
-```
+## Resolution and version authorities
 
-Each loader module compiles against `common` through Architectury's `common` configuration and
-bundles its transformed production output through `shadowBundle`. The root
-`configureLoaderBuild` helper owns those configurations, GameTest structure generation, generated
-resource registration, Shadow classification, and remap input wiring. Development runs group the
-common and loader source sets into one logical mod under `loom.mods.main`. The production artifacts
-are:
+`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties rather than restating dependency versions.
 
-```text
-forge/build/libs/somestacks-forge-<version>.jar
-fabric/build/libs/somestacks-fabric-<version>.jar
-neoforge/build/libs/somestacks-neoforge-<version>.jar
-```
-
-Common's only Architectury API usage, the config-directory lookup, resolves through the
-`@ExpectPlatform` helper `com.github.crittscott.somestacks.PlatformPaths`, with a per-loader
-`PlatformPathsImpl`.
-
-The common `pack.mcmeta` declares resource-pack format 34 and a supported range of 34-48 so the same
-built-in pack is accepted as Minecraft 1.21.1 resource content (34) and data content (48).
-
-The `*-dev-shadow.jar` and `*-sources.jar` files in those directories are development artifacts,
-not release JARs. Common's transformed JARs are intermediate inputs to the loader builds.
-
-## Current IntelliJ run configurations
-
-`.idea/runConfigurations/` currently contains nine Architectury-generated application runs — a
-client, a server, and a Game Test Server for each of `:forge`, `:fabric`, and `:neoforge`.
-
-All nine launch through `dev.architectury.transformer.TransformerRuntime`. Forge and NeoForge use
-`cpw.mods.bootstraplauncher.BootstrapLauncher`; Fabric uses Knot. There are no plain Fabric Loom
-runs or data-generation run in the current project.
-
-Each loader's GameTest run makes `<loader>/src/gametest` a separate development-only
-`somestacks_gametest` mod and adds `common/src/gametest/java` as an extra source directory. Forge
-and NeoForge enable their GameTest namespace through
-`forge.enabledGameTestNamespaces` / `neoforge.enabledGameTestNamespaces`; Fabric passes
-`-Dfabric-api.gametest`. Each loader keeps its own checked-in Base64 fixture at
-`<loader>/src/gametest/fixtures/somestacks_empty.nbt.b64`, which `generateGameTestStructures` decodes
-into the build directory before GameTest resources are processed.
-
-Fabric's empty-hand air-click hook is a Fabric-only Mixin declared by `somestacks.mixins.json`, so
-only Fabric carries that Mixin configuration and refmap handling. All three GameTest source sets
-explicitly include `project(':common').sourceSets.main.output` on their runtime classpath; the full
-suites pass with that uniform setup.
-
-## Environment traps
-
-- **Compile-only dependencies from `common` do not automatically reach loader compilation.**
-  Architectury's `common` and `shadowBundle` configurations carry common output, not all of its
-  dependency declarations. Fabric therefore redeclares JSR-305 for `javax.annotation.Nullable`;
-  Forge and NeoForge receive it through their dependency graphs.
-- **Development must expose common and loader output as one logical mod.** Each loader's
-  `loom.mods.main` includes both source sets. Adding common as a separate runtime mod can produce
-  duplicate loading or Forge JPMS split-package failures; production bundling belongs in
-  `shadowBundle`.
-- **A loader's `gametest` source set needs main output on both classpaths.** Main's dependency
-  classpath alone does not contain the mod's own compiled classes. Each loader also names common
-  main output explicitly on its GameTest runtime classpath.
-- **Forge scans GameTests only from registered Loom mod output.** The `somestacks_gametest`
-  `loom.mods` entry, its `mods.toml`, stub `@Mod` class, and `pack.mcmeta` are all part of making the
-  custom source set visible to FML and making its structure resource load. A launch that discovers
-  zero tests can otherwise look like a successful run.
-- **The generated GameTest NBT is not a source file.** Edit the Base64 fixture under
-  `<loader>/src/gametest/fixtures`; the decoded file under `<loader>/build/generated` is disposable
-  build output.
-- **The loaders register GameTest classes differently.** Forge and NeoForge discover test methods by
-  scanning the loaded mod for classes annotated `@GameTestHolder`; NeoForge holders additionally need
-  `@PrefixGameTestTemplate(false)` and a bare fixture path so the id is not prefixed with the holder
-  namespace and class name. Fabric instead requires each class to implement `FabricGameTest` and to
-  be listed under a `fabric-gametest` entrypoint in the dev-mod's own `fabric.mod.json`; a new Fabric
-  GameTest class not added to that entrypoint list will not run.
-- **`build-env/` is an inactive reference snapshot.** Changing files there does not change the root
-  build. Change and verify the active files first, then synchronize the snapshot.
-- **Dropbox can briefly lock freshly written JARs on Windows.** An aggregate `build` may fail while
-  replacing a loader's final JAR even though configuration and compilation succeeded. Retrying the
-  affected `:<loader>:build` after the sync/indexing lock clears has succeeded consistently.
-
-## Build and test commands
-
-Use the wrapper from the repository root in PowerShell:
-
-```powershell
-.\gradlew build
-.\gradlew :fabric:build
-.\gradlew :fabric:runGameTestServer
-```
-
-`.\gradlew build` compiles every subproject and produces all three loader artifacts;
-`.\gradlew :<loader>:build` builds one. There is no JUnit suite and no `test` task — all automated
-testing is the per-loader GameTest suites, each run through its own `:<loader>:runGameTestServer`,
-none of which is part of `build`.
+Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. Consequently, the table above records every exact version deliberately declared by the build, but it is not a lock of every transitive artifact selected by Gradle and Loom.

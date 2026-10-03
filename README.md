@@ -59,7 +59,7 @@ See **[Server administration](docs/server-admin.md)** for the config file and th
 - **[Automation](docs/automation.md)** — item handlers, slot layout, comparators, growth
 - **[Server administration](docs/server-admin.md)** — config settings and the full `/ss` command reference
 - **[Pack authors](docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
-- **[As-built player view](player-view.md)** — the mod's observable behaviour in full
+- **[Player-facing behavior](orientation-player.md)** — the mod's observable behavior in full
 
 ## Compatibility
 
