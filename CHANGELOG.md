@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.2 — Minecraft 1.21.1 port (2026-09-07)
+## 0.8.2 — Minecraft 1.21.1 port 
 
 1.21.1 for Fabric, Forge, and Neoforge.
 
