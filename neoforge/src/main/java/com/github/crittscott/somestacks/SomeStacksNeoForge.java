@@ -15,6 +15,7 @@ import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -24,7 +25,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -79,8 +80,8 @@ public class SomeStacksNeoForge {
         ServerConfig.load(configDir.resolve(MODID + "-server.json"));
     }
 
-    private void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new StackSoundData());
+    private void onAddReloadListeners(AddServerReloadListenersEvent event) {
+        event.addListener(ResourceLocation.fromNamespaceAndPath(MODID, "stack_sounds"), new StackSoundData());
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {

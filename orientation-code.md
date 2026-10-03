@@ -8,7 +8,7 @@ Subsystem ownership, persistent data, loader boundaries, and invariants the code
 
 ## Project shape
 
-Some Stacks is a Java 21 mod for Minecraft 1.21.3 under `com.github.crittscott.somestacks`, mod id `somestacks`. Development builds against Forge 53.1.12, NeoForge 21.3.97, and Fabric Loader 0.19.5 with Fabric API 0.114.1+1.21.3. Architectury is build-time only; no loader has an Architectury API runtime dependency.
+Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Development builds against Forge 54.1.18, NeoForge 21.4.158, and Fabric Loader 0.19.5 with Fabric API 0.119.4+1.21.4. Architectury is build-time only; no loader has an Architectury API runtime dependency.
 
 `common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformPaths` are the loader seams. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
 
@@ -87,7 +87,7 @@ World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerC
 
 Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
 
-All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
+All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `ItemCapture` resolves a stack through vanilla's item model resolver and records the draw: baked quads with their resolved layer tint, plus bounds of anything written vertex by vertex. Measurement and the `2d` projector both read it; only items drawn entirely as baked quads may use the 2-D projector, and Bar auto-tint reads the first captured quad's sprite and tint. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
 
 ## GameTests
 

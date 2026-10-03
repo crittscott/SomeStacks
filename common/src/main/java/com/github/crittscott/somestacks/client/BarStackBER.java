@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -47,7 +47,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
             BarTextureStore.BarTextureData textureData = BarTextureStore.getTexture(stack);
             TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                    .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
                     .apply(textureData.texture());
 
             int[] xyz = BarCubeIdx.xyzFromIndex(idx);

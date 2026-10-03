@@ -8,7 +8,7 @@ What a player currently observes. `orientation-code.md` covers the code structur
 
 Some Stacks turns held items directly into visible world storage. It adds three stack blocks and nothing else: no block items, recipes, creative-tab entries, or storage screens. A stack exists because an item was deposited into the world and normally disappears when its last contents are removed.
 
-Requires Minecraft 1.21.3 and one of Fabric Loader 0.19.5+ with Fabric API 0.114.1+1.21.3, Forge 53.1.12+, or NeoForge 21.3.97+. Must be installed on both client and server.
+Requires Minecraft 1.21.4 and one of Fabric Loader 0.19.5+ with Fabric API 0.119.4+1.21.4, Forge 54.1.18+, or NeoForge 21.4.158+. Must be installed on both client and server.
 
 ## The three stack types
 
@@ -148,13 +148,13 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
 | `/ss reload` | level 2 | Reload server item-render overrides and resync players |
 
-Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. `/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on restart.
+Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. Galleries are alphabetical: one column per mod in id order, each running north through that mod's items in id order. `/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on restart.
 
 ## Item appearance
 
 Storage and Singles can show an item in four modes: `2d` (flat art on a small cube), `3d` (the item's FIXED renderer), `gui` (its inventory renderer), and `block` (a BlockItem's block state, falling back to `3d`). Each profile can also set scale and a three-component offset.
 
-Resolution order: server override, the player's local override file, resource-pack data, then automatic measurement from the baked model. A server override therefore wins over local preferences. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by resource-pack, mod-version, or resource-reload changes.
+Resolution order: server override, the player's local override file, resource-pack data, then automatic measurement of how the item actually draws. A server override therefore wins over local preferences. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by resource-pack, mod-version, or resource-reload changes.
 
 `/ss item` changes the client's in-memory layer immediately; `/ss write changed` saves those changes to `config/somestacks/item_overrides.json`. The namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only and not loaded.
 

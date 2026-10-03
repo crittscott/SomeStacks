@@ -5,16 +5,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -52,7 +53,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     public record BarTextureData(ResourceLocation texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
-        /** Creates a mapping whose tint will be derived from the item's sprite and registered tint. */
+        /** Creates a mapping whose tint will be derived from the sprite and tint the item draws with. */
         public static BarTextureData auto(ResourceLocation texture) {
             return new BarTextureData(texture, WHITE, true);
         }
@@ -171,35 +172,24 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             }
             Item item = BuiltInRegistries.ITEM.getValue(itemLoc);
 
-            ItemStack stack = new ItemStack(item);
-
-            // Rendering multiplies the sprite by the item's registered tint, so the derived bar tint
-            // must include both. Either contribution is white when the item does not supply it.
-            int spriteColor = averageSpriteColor(stack, resourceManager);
-            int itemColor = registeredItemColor(stack);
-            int tint = multiplyColors(spriteColor, itemColor);
-            return tint;
+            // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint
+            // must include both. The first quad drawn stands for the item.
+            ItemCapture capture = ItemCapture.capture(
+                    new ItemStack(item), ItemDisplayContext.GUI, null, new PoseStack());
+            if (capture.quads().isEmpty()) {
+                return BarTextureData.WHITE;
+            }
+            ItemCapture.TintedQuad first = capture.quads().getFirst();
+            return multiplyColors(averageSpriteColor(first.quad().getSprite(), resourceManager),
+                    first.color() | 0xFF000000);
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
             return BarTextureData.WHITE;
         }
     }
 
-    /**
-     * The average of the sprite the item's baked model puts on the item atlas, or white when there
-     * is none to read. An item drawn by a custom renderer carries its art in that renderer rather
-     * than in its model, so its particle resolves to the missing texture and only its registered
-     * tint describes its color.
-     */
-    private static int averageSpriteColor(ItemStack stack, ResourceManager resourceManager) {
-        Minecraft mc = Minecraft.getInstance();
-        BakedModel model = mc.getItemRenderer().getModel(stack, null, null, 0);
-
-        TextureAtlasSprite sprite = model.getParticleIcon();
-        if (sprite == null) {
-            return BarTextureData.WHITE;
-        }
-
+    /** The average color of {@code sprite}'s source texture, or white when there is none to read. */
+    private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) {
         ResourceLocation spriteName = sprite.contents().name();
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
             return BarTextureData.WHITE;
@@ -217,11 +207,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         } finally {
             image.close();
         }
-    }
-
-    /** The color the item's mod registers for the primary layer, or white when it registers none. */
-    private static int registeredItemColor(ItemStack stack) {
-        return ClientRenderPlatform.itemColor(stack, 0) | 0xFF000000;
     }
 
     private static int multiplyColors(int left, int right) {

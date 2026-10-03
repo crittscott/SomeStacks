@@ -85,7 +85,7 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Nullable

@@ -122,12 +122,16 @@ public final class RenderGalleryGenerator {
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 
+    /**
+     * Every item grouped by namespace, with namespaces and each namespace's items in id order, so
+     * a gallery reads alphabetically and an item's place in it can be guessed from its name.
+     */
     private static Map<String, List<Item>> itemsByNamespace() {
         if (itemsByNamespace == null) {
             Map<String, List<Item>> map = new TreeMap<>();
-            BuiltInRegistries.ITEM.entrySet().forEach(entry -> map
-                    .computeIfAbsent(entry.getKey().location().getNamespace(), ns -> new ArrayList<>())
-                    .add(entry.getValue()));
+            BuiltInRegistries.ITEM.keySet().stream().sorted().forEach(id -> map
+                    .computeIfAbsent(id.getNamespace(), ns -> new ArrayList<>())
+                    .add(BuiltInRegistries.ITEM.getValue(id)));
             itemsByNamespace = map;
         }
         return itemsByNamespace;

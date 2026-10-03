@@ -49,7 +49,7 @@ import java.util.TreeMap;
  * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
-    static final int CACHE_FORMAT_VERSION = 1;
+    static final int CACHE_FORMAT_VERSION = 2;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String FIELD_FORMAT = "format";

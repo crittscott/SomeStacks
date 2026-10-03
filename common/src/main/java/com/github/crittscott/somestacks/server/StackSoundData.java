@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -51,7 +52,7 @@ public class StackSoundData extends SimpleJsonResourceReloadListener<JsonElement
             BAR, Set.of(DEPOSIT, EXTRACT));
 
     public StackSoundData() {
-        super(ExtraCodecs.JSON, DIRECTORY);
+        super(ExtraCodecs.JSON, FileToIdConverter.json(DIRECTORY));
     }
 
     @Override

@@ -518,7 +518,7 @@ public final class SsCommand {
     }
 
     /**
-     * The namespaces of the {@code gen_mods} server config list, in the order that list holds.
+     * The namespaces of the {@code gen_mods} server config list, in id order like every gallery.
      * Like {@code all} and unlike a single namespace, an entry that cannot be used is skipped and
      * reported rather than failing the command, since the list is edited ahead of use and one bad
      * entry should not withhold the rest. The two reasons are reported apart: a namespace the
@@ -558,6 +558,7 @@ public final class SsCommand {
             return null;
         }
 
+        Collections.sort(modIds);
         return new Selection(kind, modIds, disabledMods, unusableMods);
     }
 

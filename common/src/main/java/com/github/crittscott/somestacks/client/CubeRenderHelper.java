@@ -10,22 +10,17 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -36,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -109,17 +103,6 @@ public final class CubeRenderHelper {
         FACE_CORNERS[Direction.DOWN.ordinal()] = new float[]{0,0,0, 1,0,0, 1,0,1, 0,0,1};
     }
 
-    /** Reseeded before every quad group, so one instance serves the whole render thread. */
-    private static final RandomSource RANDOM = RandomSource.create();
-
-    private static final BakedQuad[] NO_PLATES = new BakedQuad[0];
-
-    /**
-     * The quads of each render pass that survive flat projection. Identity keys match baked-model
-     * lifetime: a resource reload replaces every model instance and clears this cache.
-     */
-    private static final Map<BakedModel, BakedQuad[]> PLATE_CACHE = new IdentityHashMap<>();
-
     /**
      * Items whose block form threw when drawn. Cached so the attempt is made once per bake
      * rather than once per frame for as long as the item is on screen: a renderer that throws
@@ -127,6 +110,9 @@ public final class CubeRenderHelper {
      * compounds it.
      */
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+
+    /** The pose {@code 2d} captures run under; render-thread only, and never pushed. */
+    private static final PoseStack SCRATCH_POSE = new PoseStack();
 
     /**
      * Draws {@code stack} inside the current cell, in whichever presentation
@@ -206,8 +192,9 @@ public final class CubeRenderHelper {
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-        render2DItemCube(pose, buffers, stack, model, light, scale, offset);
+        // The capture's own pose only feeds bounds, which this path does not use.
+        ItemCapture capture = ItemCapture.capture(stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE);
+        render2DItemCube(pose, buffers, capture.quads(), light, scale, offset);
         pose.popPose();
     }
 
@@ -256,29 +243,15 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    /**
-     * The flag Forge and NeoForge item renderers use when selecting a model's passes and render types:
-     * false only for the translucent blocks
-     * vanilla draws through the indirect buffers outside GUI and first-person contexts.
-     */
-    public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
-        if (context == ItemDisplayContext.GUI || context.firstPerson()
-                || !(stack.getItem() instanceof BlockItem blockItem)) {
-            return true;
-        }
-        Block block = blockItem.getBlock();
-        return !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
-    }
-
-    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
-                                         float scale, float[] offset) {
+    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, List<ItemCapture.TintedQuad> quads,
+                                         int light, float scale, float[] offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
         }
 
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
-                .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
                 .apply(STACK_CUBE_TEXTURE);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         for (FaceTarget target : faces) {
@@ -286,55 +259,11 @@ public final class CubeRenderHelper {
         }
 
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
-        // Resolving the model and its passes stays here, so a stack's own state still chooses both:
-        // a charged crossbow draws charged, a coated weapon draws its coating. Only the step from a
-        // pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
-        List<BakedModel> passes = ClientRenderPlatform.renderPasses(
-                model, stack, ItemDisplayContext.FIXED);
-        for (int i = 0; i < passes.size(); i++) {
-            emitQuads(vc, stack, plates(passes.get(i)), light, faces);
-        }
+        emitPlates(vc, quads, light, faces);
     }
 
-    private static BakedQuad[] plates(BakedModel pass) {
-        BakedQuad[] cached = PLATE_CACHE.get(pass);
-        if (cached == null) {
-            cached = gatherPlates(pass);
-            PLATE_CACHE.put(pass, cached);
-        }
-        return cached;
-    }
-
-    /**
-     * Collects the quads of one pass that the flat projection can show. An item model lays its art on
-     * a front and a back plate and hangs a sliver off every span of the sprite's outline. The slivers
-     * stand perpendicular to the plates to give a held item its thickness; flattened onto a cell face
-     * they are edge-on and cover nothing, and they outnumber the plates by up to a hundred to one.
-     */
-    private static BakedQuad[] gatherPlates(BakedModel pass) {
-        // Walk the pass as ItemRenderer.renderModelLists does: each culled direction group and then
-        // the unculled group, reseeding per group.
-        List<BakedQuad> plates = new ArrayList<>(2);
-        for (Direction bucket : DIRECTIONS) {
-            RANDOM.setSeed(42L);
-            collectPlates(pass.getQuads(null, bucket, RANDOM), plates);
-        }
-        RANDOM.setSeed(42L);
-        collectPlates(pass.getQuads(null, null, RANDOM), plates);
-        return plates.isEmpty() ? NO_PLATES : plates.toArray(NO_PLATES);
-    }
-
-    private static void collectPlates(List<BakedQuad> quads, List<BakedQuad> plates) {
-        for (BakedQuad quad : quads) {
-            if (quad.getDirection().getAxis() == Direction.Axis.Z) {
-                plates.add(quad);
-            }
-        }
-    }
-
-    /** Clears geometry and failure state tied to baked models being replaced by a resource reload. */
+    /** Clears failure state tied to models being replaced by a resource reload. */
     public static void onResourceReload() {
-        PLATE_CACHE.clear();
         BLOCK_RENDER_FAILURES.clear();
     }
 
@@ -395,26 +324,25 @@ public final class CubeRenderHelper {
         return art;
     }
 
-    private static void emitQuads(VertexConsumer vc, ItemStack stack, BakedQuad[] plates, int light,
-                                  List<FaceTarget> faces) {
-        int tintIndex = Integer.MIN_VALUE;
-        int r = 0xFF, g = 0xFF, b = 0xFF;
-
-        // Both plates are kept and the render type's own back-face culling shows the outward one,
-        // exactly as it does for an item in the hand.
-        for (BakedQuad quad : plates) {
-            // Every quad of a layer carries that layer's tint index, so a pass resolves its color
-            // once rather than once per quad. Color cannot be cached with the geometry: a potion's
-            // and a coated weapon's are per stack.
-            if (quad.getTintIndex() != tintIndex) {
-                tintIndex = quad.getTintIndex();
-                int color = tintIndex >= 0
-                        ? ClientRenderPlatform.itemColor(stack, tintIndex)
-                        : 0xFFFFFFFF;
-                r = (color >> 16) & 0xFF;
-                g = (color >> 8) & 0xFF;
-                b = color & 0xFF;
+    /**
+     * Lays the item's plates onto each visible face. An item model lays its art on a front and a
+     * back plate and hangs a sliver off every span of the sprite's outline. The slivers stand
+     * perpendicular to the plates to give a held item its thickness; flattened onto a cell face they
+     * are edge-on and cover nothing, so only quads facing along Z are drawn. Both plates are kept
+     * and the render type's own back-face culling shows the outward one, exactly as it does for an
+     * item in the hand.
+     */
+    private static void emitPlates(VertexConsumer vc, List<ItemCapture.TintedQuad> quads, int light,
+                                   List<FaceTarget> faces) {
+        for (ItemCapture.TintedQuad tinted : quads) {
+            BakedQuad quad = tinted.quad();
+            if (quad.getDirection().getAxis() != Direction.Axis.Z) {
+                continue;
             }
+            int color = tinted.color();
+            int r = (color >> 16) & 0xFF;
+            int g = (color >> 8) & 0xFF;
+            int b = color & 0xFF;
 
             int[] vertices = quad.getVertices();
             for (FaceTarget target : faces) {

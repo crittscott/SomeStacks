@@ -149,27 +149,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fabulousFlag(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext)" class="member-name-link">fabulousFlag</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.item.ItemDisplayContext&nbsp;context)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The flag Forge and NeoForge item renderers use when selecting a model's passes and render types:
- false only for the translucent blocks
- vanilla draws through the indirect buffers outside GUI and first-person contexts.</div>
+<div class="block">Clears failure state tied to models being replaced by a resource reload.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Clears geometry and failure state tied to baked models being replaced by a resource reload.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderItemInCube(net.minecraft.world.item.ItemStack,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,int,net.minecraft.client.renderer.block.BlockRenderDispatcher,net.minecraft.world.level.Level)" class="member-name-link">renderItemInCube</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderItemInCube(net.minecraft.world.item.ItemStack,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,int,net.minecraft.client.renderer.block.BlockRenderDispatcher,net.minecraft.world.level.Level)" class="member-name-link">renderItemInCube</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
  com.mojang.blaze3d.vertex.PoseStack&nbsp;pose,
  net.minecraft.client.renderer.MultiBufferSource&nbsp;buffers,
  int&nbsp;light,
  net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer,
  net.minecraft.world.level.Level&nbsp;level)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Draws <code>stack</code> inside the current cell, in whichever presentation
  <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is
  empty.</div>
@@ -284,20 +276,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fabulousFlag(net.minecraft.world.item.ItemStack,net.minecraft.world.item.ItemDisplayContext)">
-<h3>fabulousFlag</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">fabulousFlag</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.item.ItemDisplayContext&nbsp;context)</span></div>
-<div class="block">The flag Forge and NeoForge item renderers use when selecting a model's passes and render types:
- false only for the translucent blocks
- vanilla draws through the indirect buffers outside GUI and first-person contexts.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="onResourceReload()">
 <h3>onResourceReload</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onResourceReload</span>()</div>
-<div class="block">Clears geometry and failure state tied to baked models being replaced by a resource reload.</div>
+<div class="block">Clears failure state tied to models being replaced by a resource reload.</div>
 </section>
 </li>
 </ul>
