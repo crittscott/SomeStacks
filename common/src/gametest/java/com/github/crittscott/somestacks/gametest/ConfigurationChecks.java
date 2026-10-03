@@ -7,11 +7,11 @@ import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.LevelResource;
 
@@ -231,14 +231,10 @@ public final class ConfigurationChecks {
     }
 
     private static String tagContaining(Item item) {
-        for (TagKey<Item> tagKey : BuiltInRegistries.ITEM.getTagNames().toList()) {
-            var tag = BuiltInRegistries.ITEM.getTag(tagKey).orElse(null);
-            if (tag == null) {
-                continue;
-            }
+        for (HolderSet.Named<Item> tag : BuiltInRegistries.ITEM.getTags().toList()) {
             for (var holder : tag) {
                 if (holder.value() == item) {
-                    return tagKey.location().toString();
+                    return tag.key().location().toString();
                 }
             }
         }

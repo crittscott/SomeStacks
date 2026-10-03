@@ -168,9 +168,13 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world border, and spawn protection, and fire a real protection event that claim and logging mods can hook (Forge/NeoForge interaction, place, and break events; Fabric API's `UseBlockCallback` and `PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has no placement event, so on Fabric automated growth also consults FTB Chunks directly when it is installed.
+Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world border, and spawn protection, and fire a real protection event that claim and logging mods can hook (Forge/NeoForge interaction, place, and break events; Fabric API's `UseBlockCallback` and `PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has no placement event, so on Fabric automated growth also asks claim mods that implement Common Protection API directly.
 
 The server independently validates every gesture packet: one per player per tick, nonspectator, loaded target, reach, held item, target block and index, adjacency, support, type enablement, height, and protection. Deposit cell selection is recomputed from the player's current view; extraction and Singles item rotation trust a range- and occupancy-checked client cell index.
+
+## Saved worlds
+
+A world saved with the 1.21.1 version of the mod loads with its stack contents upgraded to the current item format. A stored item that cannot be read, such as one from a removed mod, is not dropped: it stays in the block's saved data, is logged, and returns if it becomes readable again.
 
 ## Boundaries
 

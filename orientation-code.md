@@ -45,7 +45,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Networking | `SimpleChannel` | payload registrar | payload registry plus `ProtocolPkt` handshake |
 | Gestures | interaction/input events | interaction/input events | callbacks plus air-click mixin |
 | Automation | whole-run `IItemHandler` | whole-run `IItemHandler` | Transfer API `Storage<ItemVariant>` |
-| Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, FTB Chunks growth check |
+| Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
 
 The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins build with the legacy annotation processor into the fixed `somestacks.refmap.json` refmap.
 
@@ -61,7 +61,9 @@ The three movement models are distinct:
 - `SinglesColumn` is positional. Extraction shifts one visual column down across rotation-aware seams, transports item rotation, preserves unrelated gaps, and does not collapse above a broken block.
 - `BarColumn` is positional and overlap-supported. Player extraction and block removal cascade; automation extraction moves the topmost bar into the opened position instead.
 
-`StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`, upgrading a pre-1.21 item tag once via vanilla's DataFixerUpper on first load and marking the block entity dirty to persist the rewrite. Storage saves `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `Items`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
+`StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`. Storage saves `DataVersion`, `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `DataVersion` and `Items`.
+
+`StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); an older tag has each stored item tag run through vanilla's DataFixerUpper (`References.ITEM_STACK`), is restamped, and marks the block entity dirty. That flag is a no-op during chunk load, when the block entity has no level yet, so an unsaved chunk simply re-migrates on its next load. Item tags that fail to parse or have no free slot go to a `SetAside` list in the storage tag, are saved back, retried on every load, and logged with the block position. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
 
 ## Admission, automation, and edits
 
@@ -69,7 +71,7 @@ Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; 
 
 Every loader-native view spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-Growth and cleanup use `WorldEdits` with an automation actor and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge and NeoForge fire native place/break events. Fabric fires `PlayerBlockBreakEvents` on removal and routes optional FTB Chunks growth checks only through `FtbChunksProtection`.
+Growth and cleanup use `WorldEdits` with an automation actor and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge and NeoForge fire native place/break events. Fabric fires `PlayerBlockBreakEvents` on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`.
 
 ## Player interaction and networking
 

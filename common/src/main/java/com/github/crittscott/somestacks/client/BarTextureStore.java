@@ -169,7 +169,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
             if (!BuiltInRegistries.ITEM.containsKey(itemLoc)) {
                 return BarTextureData.WHITE;
             }
-            Item item = BuiltInRegistries.ITEM.get(itemLoc);
+            Item item = BuiltInRegistries.ITEM.getValue(itemLoc);
 
             ItemStack stack = new ItemStack(item);
 
@@ -258,13 +258,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
-                int abgr = image.getPixelRGBA(x, y);
-                int a = (abgr >> 24) & 0xFF;
+                int argb = image.getPixel(x, y);
+                int a = (argb >> 24) & 0xFF;
 
                 if (a > 127) {
-                    int r = abgr & 0xFF;
-                    int g = (abgr >> 8) & 0xFF;
-                    int b = (abgr >> 16) & 0xFF;
+                    int r = (argb >> 16) & 0xFF;
+                    int g = (argb >> 8) & 0xFF;
+                    int b = argb & 0xFF;
 
                     sumR += r;
                     sumG += g;

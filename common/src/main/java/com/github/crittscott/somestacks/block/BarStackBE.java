@@ -449,8 +449,11 @@ public class BarStackBE extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) {
+        if (StackDataMigration.upgrade(tag, registries)) {
             setChanged();
+        }
+        if (tag.contains(TAG_ITEMS)) {
+            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
         }
         cachedShape = null;
     }
@@ -458,6 +461,7 @@ public class BarStackBE extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        StackDataMigration.stampVersion(tag);
         tag.put(TAG_ITEMS, items.serializeNBT(registries));
     }
 
@@ -475,6 +479,7 @@ public class BarStackBE extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag, registries);
+        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
         return tag;
     }
 

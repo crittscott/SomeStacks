@@ -16,6 +16,8 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Set;
+
 /**
  * The mod's registered blocks and block entity types, and the NeoForge registration glue behind
  * them. Common code never registers anything itself; {@link CommonRegistry} is populated below so it
@@ -29,43 +31,43 @@ public final class ModRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, SomeStacksNeoForge.MODID);
 
-    public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
-            () -> new BarStackBlock(BlockBehaviour.Properties.of()
+    public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock("bar_stack_block", BarStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .dynamicShape()
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL)));
 
-    public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
-            () -> new SinglesStackBlock(BlockBehaviour.Properties.of()
+    public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock("singles_stack_block", SinglesStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .dynamicShape()
                     .mapColor(MapColor.WOOD)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL)));
 
-    public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
-            () -> new StorageStackBlock(BlockBehaviour.Properties.of()
+    public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock("storage_stack_block", StorageStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL)));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register("bar_stack_be",
-                    () -> BlockEntityType.Builder.of(BarStackBE::new, BAR_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(BarStackBE::new, Set.of(BAR_STACK_BLOCK.get())));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
             BLOCK_ENTITIES.register("singles_stack_be",
-                    () -> BlockEntityType.Builder.of(SinglesStackBE::new, SINGLES_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(SinglesStackBE::new, Set.of(SINGLES_STACK_BLOCK.get())));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
             BLOCK_ENTITIES.register("stack_be",
-                    () -> BlockEntityType.Builder.of(StorageStackBE::new, STORAGE_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
     static {
         CommonRegistry.STORAGE_STACK_BLOCK = STORAGE_STACK_BLOCK::get;

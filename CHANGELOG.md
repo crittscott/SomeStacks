@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased — Minecraft 1.21.3 port
+
+1.21.3 for Fabric, Forge, and Neoforge.
+
+### Platform
+
+- Forge **53.x** (accepts `[53.1.12,54)`), NeoForge **21.3.x** (accepts `[21.3.97,22)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.114.1+1.21.3**.
+- Mappings updated to Mojang official + Parchment **2024.12.07-1.21.3**.
+
+### Removed
+
+- **FTB Chunks integration.** No 1.21.3 build of FTB Chunks exists. On NeoForge, automated growth answers to the ordinary block-place event alone.
+
+### Changed
+
+- **Fabric automated growth checks Common Protection API.** When a claim mod that implements Patbox's Common Protection API is installed, it can refuse growth of a stack into its claims.
+- **Stack contents from 1.21.1 migrate automatically.** Saved stack blocks now record their data version. The first time a 1.21.1 block entity loads, its stored items are run through vanilla's DataFixerUpper so item component changes made in 1.21.2 apply. No player action needed.
+- **Unreadable stored items are kept, not dropped.** An item that cannot be loaded, such as one from a removed mod, is set aside in the block's saved data with a log warning, and returns on a later load if the item becomes readable again.
+
 ## 0.8.2 — Minecraft 1.21.1 port 
 
 1.21.1 for Fabric, Forge, and Neoforge.

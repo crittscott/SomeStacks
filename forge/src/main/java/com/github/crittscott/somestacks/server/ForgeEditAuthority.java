@@ -19,8 +19,8 @@ import java.util.WeakHashMap;
 /**
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
  * automation, and claim, protection, and logging mods are given the chance to veto through the
- * ordinary Forge placement and break events. Forge 1.21.1 no longer ships a FakePlayer helper, so
- * this constructs a bare {@code ServerPlayer} the same way the Fabric authority does.
+ * ordinary Forge placement and break events. Forge ships no FakePlayer helper, so this constructs
+ * a bare {@code ServerPlayer} the same way the Fabric authority does.
  */
 public final class ForgeEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(

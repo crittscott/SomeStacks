@@ -606,7 +606,7 @@ public final class SsCommand {
                 .thenComparing(ResourceLocation::getPath));
 
         return new ItemSelection(
-                itemIds.stream().map(BuiltInRegistries.ITEM::get).toList(),
+                itemIds.stream().map(BuiltInRegistries.ITEM::getValue).toList(),
                 List.of(new Skips(Component.translatable(
                                 "somestacks.command.skip.from_disabled_mods"), disabledItems),
                         new Skips(Component.translatable("somestacks.command.skip.unknown"), unknownItems)));

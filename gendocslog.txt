@@ -1,0 +1,27 @@
+
+> Configure project :
+Architect Plugin: 3.5.170
+Architectury Loom: 1.17.493
+
+> Task :fabric:processResources UP-TO-DATE
+> Task :neoforge:processResources UP-TO-DATE
+> Task :forge:processResources UP-TO-DATE
+> Task :common:compileJava UP-TO-DATE
+> Task :common:processResources UP-TO-DATE
+> Task :common:classes UP-TO-DATE
+> Task :common:javadoc UP-TO-DATE
+> Task :common:jar UP-TO-DATE
+> Task :forge:compileJava UP-TO-DATE
+> Task :forge:classes UP-TO-DATE
+> Task :neoforge:compileJava UP-TO-DATE
+> Task :neoforge:classes UP-TO-DATE
+> Task :fabric:compileJava UP-TO-DATE
+> Task :forge:gametestJavadoc UP-TO-DATE
+> Task :fabric:classes UP-TO-DATE
+> Task :neoforge:gametestJavadoc UP-TO-DATE
+> Task :neoforge:javadoc UP-TO-DATE
+> Task :fabric:gametestJavadoc UP-TO-DATE
+> Task :fabric:javadoc UP-TO-DATE
+
+> Task :forge:javadoc FAILED
+16 actionable tasks: 1 executed, 15 up-to-date

@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 import java.io.IOException;
@@ -333,13 +333,9 @@ public final class ServerConfig {
         int[] matchedTags = new int[tagPatterns.size()];
         int knownTags = 0;
 
-        for (TagKey<Item> tagKey : itemRegistry.getTagNames().toList()) {
-            var tag = itemRegistry.getTag(tagKey).orElse(null);
-            if (tag == null) {
-                continue;
-            }
+        for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
             knownTags++;
-            String tagName = tagKey.location().toString();
+            String tagName = tag.key().location().toString();
             for (int i = 0; i < tagPatterns.size(); i++) {
                 if (!tagPatterns.get(i).matcher(tagName).matches()) {
                     continue;
@@ -353,7 +349,7 @@ public final class ServerConfig {
         for (String entry : itemEntries) {
             ResourceLocation id = ResourceLocation.tryParse(entry);
             if (id != null && itemRegistry.containsKey(id)) {
-                items.add(itemRegistry.get(id));
+                items.add(itemRegistry.getValue(id));
             } else {
                 unknownItems.add(entry);
             }
@@ -474,9 +470,7 @@ public final class ServerConfig {
      */
     public static List<String> itemTagNames() {
         List<String> names = new ArrayList<>();
-        for (TagKey<Item> tagKey : BuiltInRegistries.ITEM.getTagNames().toList()) {
-            names.add(tagKey.location().toString());
-        }
+        BuiltInRegistries.ITEM.getTags().forEach(tag -> names.add(tag.key().location().toString()));
         Collections.sort(names);
         return names;
     }

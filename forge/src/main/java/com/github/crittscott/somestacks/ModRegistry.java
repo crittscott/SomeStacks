@@ -6,6 +6,9 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,6 +18,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Set;
 
 /**
  * The mod's registered blocks and block entity types, and the Forge registration glue behind them.
@@ -38,6 +43,7 @@ public final class ModRegistry {
 
     public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
             () -> new BarStackBlock(BlockBehaviour.Properties.of()
+                    .setId(blockKey("bar_stack_block"))
                     .dynamicShape()
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
@@ -48,6 +54,7 @@ public final class ModRegistry {
 
     public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
             () -> new SinglesStackBlock(BlockBehaviour.Properties.of()
+                    .setId(blockKey("singles_stack_block"))
                     .dynamicShape()
                     .mapColor(MapColor.WOOD)
                     .noOcclusion()
@@ -58,6 +65,7 @@ public final class ModRegistry {
 
     public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
             () -> new StorageStackBlock(BlockBehaviour.Properties.of()
+                    .setId(blockKey("storage_stack_block"))
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
@@ -67,15 +75,15 @@ public final class ModRegistry {
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register("bar_stack_be",
-                    () -> BlockEntityType.Builder.of(BarStackBE::new, BAR_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(BarStackBE::new, Set.of(BAR_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
             BLOCK_ENTITIES.register("singles_stack_be",
-                    () -> BlockEntityType.Builder.of(SinglesStackBE::new, SINGLES_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(SinglesStackBE::new, Set.of(SINGLES_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
             BLOCK_ENTITIES.register("stack_be",
-                    () -> BlockEntityType.Builder.of(StorageStackBE::new, STORAGE_STACK_BLOCK.get()).build(null));
+                    () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
     static {
         // Populated eagerly, not lazily: the method references are cheap and deferred by
@@ -87,6 +95,10 @@ public final class ModRegistry {
         CommonRegistry.STORAGE_STACK_BE = STORAGE_STACK_BE::get;
         CommonRegistry.SINGLES_STACK_BE = SINGLES_STACK_BE::get;
         CommonRegistry.BAR_STACK_BE = BAR_STACK_BE::get;
+    }
+
+    private static ResourceKey<Block> blockKey(String path) {
+        return ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, path));
     }
 
     public static void init(IEventBus modBus) {

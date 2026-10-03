@@ -13,7 +13,7 @@ public final class NeoForgeRenderPlatform implements ClientRenderPlatform.Backen
     @Override
     public List<BakedModel> renderPasses(
             BakedModel model, ItemStack stack, ItemDisplayContext context) {
-        return model.getRenderPasses(stack, CubeRenderHelper.fabulousFlag(stack, context));
+        return model.getRenderPasses(stack);
     }
 
     @Override

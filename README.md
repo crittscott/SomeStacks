@@ -1,5 +1,5 @@
 ![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
-![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.1%201.20.1-8a5a9b?style=for-the-badge)
+![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.3 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.3%201.21.1%201.20.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
@@ -49,7 +49,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so Fabric also checks FTB Chunks directly when it is installed.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so Fabric also asks claim mods that support Common Protection API directly.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 

@@ -95,6 +95,11 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
+    }
+
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(helper);
     }

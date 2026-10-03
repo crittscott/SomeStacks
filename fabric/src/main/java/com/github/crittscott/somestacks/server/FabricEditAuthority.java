@@ -20,9 +20,9 @@ import java.util.WeakHashMap;
  *
  * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
  * for the mod's placement-protection hook ({@link FabricPlayerEditAuthority}) to fire, and Fabric
- * API has no generic "a block was placed" event the way Forge's block-place event is. FTB Chunks
- * is consulted directly instead, through {@link FtbChunksProtection}, when it is installed; other
- * claim mods are not covered.
+ * API has no generic "a block was placed" event the way Forge's block-place event is. Claim mods
+ * that implement Common Protection API are consulted directly instead, through
+ * {@link CommonProtectionCheck}, when the API is installed; other claim mods are not covered.
  */
 public final class FabricEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(
@@ -32,8 +32,8 @@ public final class FabricEditAuthority implements EditAuthority {
     private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
 
     public FabricEditAuthority() {
-        if (FtbChunksProtection.isLoaded()) {
-            SomeStacksCommon.LOGGER.info("Enabled direct FTB Chunks protection for automated growth on Fabric");
+        if (CommonProtectionCheck.isLoaded()) {
+            SomeStacksCommon.LOGGER.info("Enabled Common Protection API checks for automated growth on Fabric");
         }
     }
 
@@ -47,7 +47,7 @@ public final class FabricEditAuthority implements EditAuthority {
     public PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
         return (placer, placedAgainst) -> {
             ServerPlayer actor = (ServerPlayer) placer;
-            return FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos);
+            return CommonProtectionCheck.isLoaded() && CommonProtectionCheck.prevents(level, actor, pos);
         };
     }
 

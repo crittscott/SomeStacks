@@ -497,8 +497,11 @@ public class SinglesStackBE extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) {
+        if (StackDataMigration.upgrade(tag, registries)) {
             setChanged();
+        }
+        if (tag.contains(TAG_ITEMS)) {
+            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
         }
         if (tag.contains(TAG_ROTATION)) {
             rotation = tag.getInt(TAG_ROTATION);
@@ -515,6 +518,7 @@ public class SinglesStackBE extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        StackDataMigration.stampVersion(tag);
         tag.put(TAG_ITEMS, items.serializeNBT(registries));
         tag.putInt(TAG_ROTATION, rotation);
         // IntArrayTag holds the array it is given, and an integrated server hands its update
@@ -537,6 +541,7 @@ public class SinglesStackBE extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag, registries);
+        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
         return tag;
     }
 

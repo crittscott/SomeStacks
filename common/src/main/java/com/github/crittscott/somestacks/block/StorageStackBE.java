@@ -309,7 +309,12 @@ public class StorageStackBE extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains(TAG_ITEMS) && items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS))) setChanged();
+        if (StackDataMigration.upgrade(tag, registries)) {
+            setChanged();
+        }
+        if (tag.contains(TAG_ITEMS)) {
+            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
+        }
         if (tag.contains(TAG_ROTATION)) rotation = tag.getInt(TAG_ROTATION);
         if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
@@ -317,6 +322,7 @@ public class StorageStackBE extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        StackDataMigration.stampVersion(tag);
         tag.put(TAG_ITEMS, items.serializeNBT(registries));
         tag.putInt(TAG_ROTATION, rotation);
         tag.putBoolean(TAG_PERMANENT, permanent);
@@ -336,6 +342,7 @@ public class StorageStackBE extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag, registries);
+        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
         return tag;
     }
 

@@ -8,10 +8,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -23,7 +25,8 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 
 /**
  * The saved-state half of the automation surface: each type's update tag round-tripping the
- * contents and presentation state it is responsible for, and cached-shape invalidation. The
+ * contents and presentation state it is responsible for, upgrading a world saved by the previous
+ * release, and cached-shape invalidation. The
  * automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in each
  * loader's own {@code CapabilityAndPersistenceGameTests}, since it addresses the loader-native
  * storage view directly.
@@ -87,6 +90,48 @@ public final class CapabilityAndPersistenceChecks {
                 "Restored Bar item");
         checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
                 "Restored Bar count");
+        helper.succeed();
+    }
+
+    /**
+     * A Storage Stack saved by Some Stacks for Minecraft 1.21.1 keeps its contents in the current
+     * item format, and the block is marked for saving in that format. To reproduce in-game: in a
+     * 1.21.1 world, {@code /give @s stone[fire_resistant={}] 5}, deposit it into a Storage Stack,
+     * and quit; open the world with this version and extract the stone. It is still there, and is
+     * still fire resistant through the {@code damage_resistant} component that replaced
+     * {@code fire_resistant} in 1.21.2.
+     */
+    public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        StorageStackBE loaded = placeStorage(helper, ORIGIN);
+
+        CompoundTag components = new CompoundTag();
+        components.put("minecraft:fire_resistant", new CompoundTag());
+        CompoundTag item = new CompoundTag();
+        item.putString("id", "minecraft:stone");
+        item.putInt("count", 5);
+        item.put("components", components);
+        item.putInt("Slot", 4);
+        ListTag list = new ListTag();
+        list.add(item);
+        CompoundTag storage = new CompoundTag();
+        storage.put("Items", list);
+        storage.putInt("Size", StorageStackBE.SLOTS);
+        CompoundTag saved = new CompoundTag();
+        saved.put("Items", storage);
+        saved.putInt("Rotation", 0);
+        saved.putBoolean("Permanent", false);
+
+        ChunkAccess chunk = helper.getLevel().getChunk(loaded.getBlockPos());
+        chunk.tryMarkSaved();
+        loaded.loadCustomOnly(saved, registries);
+
+        ItemStack restored = loaded.getItems().getStackInSlot(4);
+        checkEquals(Items.STONE, restored.getItem(), "Upgraded Storage item");
+        checkEquals(5, restored.getCount(), "Upgraded Storage count");
+        check(restored.has(DataComponents.DAMAGE_RESISTANT),
+                "The 1.21.1 fire_resistant component was not upgraded to damage_resistant");
+        check(chunk.isUnsaved(), "Upgrading saved contents did not mark the block for saving");
         helper.succeed();
     }
 

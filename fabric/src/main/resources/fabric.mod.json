@@ -6,8 +6,8 @@
   "description": "${mod_description}",
   "authors": ["${mod_authors}"],
   "contact": {
-    "homepage": "https://github.com/crittscott/SomeStacks/tree/1.21.1",
-    "sources": "https://github.com/crittscott/SomeStacks/tree/1.21.1",
+    "homepage": "https://github.com/crittscott/SomeStacks/tree/1.21.3",
+    "sources": "https://github.com/crittscott/SomeStacks/tree/1.21.3",
     "issues": "https://github.com/crittscott/SomeStacks/issues"
   },
   "license": "${mod_license}",
@@ -29,8 +29,5 @@
     "fabric-api": ">=${fabric_api_version}",
     "minecraft": "${minecraft_version}",
     "java": ">=21"
-  },
-  "suggests": {
-    "ftbchunks": "*"
   }
 }

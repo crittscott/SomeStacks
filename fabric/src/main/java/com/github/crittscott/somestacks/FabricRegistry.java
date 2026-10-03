@@ -9,6 +9,8 @@ import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,35 +18,37 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.function.Function;
+
 /** Fabric registration for the shared blocks and block entities. */
 public final class FabricRegistry {
     private FabricRegistry() {}
 
-    public static final Block BAR_STACK_BLOCK = registerBlock("bar_stack_block",
-            new BarStackBlock(BlockBehaviour.Properties.of()
+    public static final Block BAR_STACK_BLOCK = registerBlock("bar_stack_block", BarStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .dynamicShape()
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL)));
 
-    public static final Block SINGLES_STACK_BLOCK = registerBlock("singles_stack_block",
-            new SinglesStackBlock(BlockBehaviour.Properties.of()
+    public static final Block SINGLES_STACK_BLOCK = registerBlock("singles_stack_block", SinglesStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .dynamicShape()
                     .mapColor(MapColor.WOOD)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL)));
 
-    public static final Block STORAGE_STACK_BLOCK = registerBlock("storage_stack_block",
-            new StorageStackBlock(BlockBehaviour.Properties.of()
+    public static final Block STORAGE_STACK_BLOCK = registerBlock("storage_stack_block", StorageStackBlock::new,
+            BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL))));
+                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL)));
 
     public static final BlockEntityType<BarStackBE> BAR_STACK_BE = registerBlockEntity(
             "bar_stack_be", FabricBlockEntityTypeBuilder.create(BarStackBE::new, BAR_STACK_BLOCK).build());
@@ -66,8 +70,10 @@ public final class FabricRegistry {
         CommonRegistry.BAR_STACK_BE = () -> BAR_STACK_BE;
     }
 
-    private static Block registerBlock(String path, Block block) {
-        return Registry.register(BuiltInRegistries.BLOCK, id(path), block);
+    private static Block registerBlock(String path, Function<BlockBehaviour.Properties, Block> factory,
+                                       BlockBehaviour.Properties properties) {
+        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, id(path));
+        return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
     }
 
     private static <T extends BlockEntityType<?>> T registerBlockEntity(String path, T type) {

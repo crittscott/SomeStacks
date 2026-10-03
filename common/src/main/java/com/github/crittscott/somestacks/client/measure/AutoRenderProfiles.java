@@ -191,7 +191,7 @@ public final class AutoRenderProfiles {
                     dirty = true;
                     continue;
                 }
-                Item item = BuiltInRegistries.ITEM.get(id);
+                Item item = BuiltInRegistries.ITEM.getValue(id);
                 CACHE.put(item, new RenderProfile(config.mode(), config.scale(), config.offset()));
             }
         } catch (Exception e) {

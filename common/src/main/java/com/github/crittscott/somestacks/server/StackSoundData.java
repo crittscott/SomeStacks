@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,6 +9,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import javax.annotation.Nonnull;
@@ -32,8 +32,7 @@ import java.util.Set;
  * <p>Actions are per block type rather than uniform: only the types a rotation gesture reaches
  * carry rotation sounds.
  */
-public class StackSoundData extends SimpleJsonResourceReloadListener {
-    private static final Gson GSON = new Gson();
+public class StackSoundData extends SimpleJsonResourceReloadListener<JsonElement> {
     private static final String DIRECTORY = "somestacks_sounds";
 
     private static final String DEPOSIT = "deposit";
@@ -52,7 +51,7 @@ public class StackSoundData extends SimpleJsonResourceReloadListener {
             BAR, Set.of(DEPOSIT, EXTRACT));
 
     public StackSoundData() {
-        super(GSON, DIRECTORY);
+        super(ExtraCodecs.JSON, DIRECTORY);
     }
 
     @Override

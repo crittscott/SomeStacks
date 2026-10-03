@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegist
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 
 /** Feeds Fabric interaction callbacks into the shared ordered gesture rules. */
 public final class FabricClientEvents {
@@ -26,7 +25,7 @@ public final class FabricClientEvents {
 
         UseItemCallback.EVENT.register((player, level, hand) -> {
             if (!level.isClientSide) {
-                return InteractionResultHolder.pass(player.getItemInHand(hand));
+                return InteractionResult.PASS;
             }
 
             InteractionContext context = InteractionContext.forAirClick(
@@ -38,8 +37,8 @@ public final class FabricClientEvents {
                 InteractionRuleRegistry.processItemRules(context);
             }
             return context.shouldCancel()
-                    ? InteractionResultHolder.fail(player.getItemInHand(hand))
-                    : InteractionResultHolder.pass(player.getItemInHand(hand));
+                    ? InteractionResult.FAIL
+                    : InteractionResult.PASS;
         });
     }
 }

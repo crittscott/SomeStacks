@@ -58,7 +58,7 @@ public final class GameTestSupport {
 
     /**
      * A synthetic {@link ServerPlayer} for {@code level}, one per level for the run, standing in for
-     * the {@code FakePlayerFactory} Forge 1.21.1 no longer ships. Built the same way
+     * the {@code FakePlayerFactory} Forge does not ship. Built the same way
      * {@link com.github.crittscott.somestacks.server.ForgeEditAuthority} builds its automation actor.
      */
     public static ServerPlayer fakePlayer(ServerLevel level) {

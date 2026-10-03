@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -61,19 +60,19 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
             if (model.isCustomRenderer()) {
                 return probeCustomRenderer(stack, gui3d, context, pose);
             }
-            return measureQuads(stack, model, gui3d, context, pose);
+            return measureQuads(stack, model, gui3d, pose);
         } catch (Exception e) {
             return new ModelMeasurement.Result(gui3d, false, null, "measurement threw: " + e);
         }
     }
 
     private static ModelMeasurement.Result measureQuads(ItemStack stack, BakedModel model, boolean gui3d,
-                                       ItemDisplayContext context, PoseStack pose) {
+                                       PoseStack pose) {
         BoundsCollector collector = new BoundsCollector();
         Matrix4f matrix = pose.last().pose();
         RandomSource random = RandomSource.create();
 
-        for (BakedModel pass : model.getRenderPasses(stack, CubeRenderHelper.fabulousFlag(stack, context))) {
+        for (BakedModel pass : model.getRenderPasses(stack)) {
             for (Direction direction : Direction.values()) {
                 random.setSeed(42L);
                 collectQuads(pass.getQuads(null, direction, random), matrix, collector);

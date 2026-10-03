@@ -96,6 +96,11 @@ public final class CapabilityAndPersistenceGameTests {
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(helper);
     }

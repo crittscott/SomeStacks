@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.server;
 
-import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,15 +13,9 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 /**
  * NeoForge's {@link EditAuthority}: the level's fake player stands in for automation, and claim,
  * protection, and logging mods are given the chance to veto through the ordinary NeoForge placement
- * and break events. FTB Chunks is additionally consulted directly for placement when installed.
+ * and break events.
  */
 public final class NeoForgeEditAuthority implements EditAuthority {
-    public NeoForgeEditAuthority() {
-        if (FtbChunksProtection.isLoaded()) {
-            SomeStacksCommon.LOGGER.info("Enabled direct FTB Chunks protection for automated growth on NeoForge");
-        }
-    }
-
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return FakePlayerFactory.getMinecraft(level);
@@ -31,14 +24,7 @@ public final class NeoForgeEditAuthority implements EditAuthority {
     @Override
     public EditAuthority.PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
-        return (placer, placedAgainst) -> {
-            if (EventHooks.onBlockPlace(placer, snapshot, placedAgainst)) {
-                return true;
-            }
-            return FtbChunksProtection.isLoaded()
-                    && placer instanceof ServerPlayer actor
-                    && FtbChunksProtection.prevents(actor, pos);
-        };
+        return (placer, placedAgainst) -> EventHooks.onBlockPlace(placer, snapshot, placedAgainst);
     }
 
     @Override

@@ -20,6 +20,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.item.Item;
@@ -50,7 +51,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(
-                valid.getX(), level.getMinBuildHeight() - 1, valid.getZ());
+                valid.getX(), level.getMinY() - 1, valid.getZ());
 
         check(WorldEdits.placeChecked(
                         player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
@@ -277,7 +278,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     private static void putCowIn(GameTestHelper helper, BlockPos relative) {
         ServerLevel level = helper.getLevel();
         BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level);
+        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
         check(cow != null, "Could not create obstruction cow");
         check(cow.blocksBuilding, "Cow does not block building");
         cow.moveTo(
