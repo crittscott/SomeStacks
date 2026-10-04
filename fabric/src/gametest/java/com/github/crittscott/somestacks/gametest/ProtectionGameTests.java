@@ -4,17 +4,12 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BlockType;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -26,10 +21,9 @@ import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.material.Fluids;
+
+import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -46,72 +40,41 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  */
 public final class ProtectionGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayer.get(helper.getLevel());
-        BlockPos valid = helper.absolutePos(ORIGIN);
-        BlockPos invalid = new BlockPos(
-                valid.getX(), level.getMinY() - 1, valid.getZ());
-
-        check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Valid checked placement was rejected");
-        check(level.getBlockState(valid).is(Blocks.STONE),
-                "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Out-of-height checked placement was accepted");
+    public void automationUsesFabricFakePlayer(GameTestHelper helper) {
+        check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
+                "Fabric automation actor was not a Fabric API FakePlayer");
         helper.succeed();
+    }
+
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(GameTestHelper helper) {
+        ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
+                helper, playerFactory(helper));
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayer.get(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        putCowIn(helper, ORIGIN);
-
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Entity-obstructed checked placement was accepted");
-        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
-        helper.succeed();
+        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(helper, playerFactory(helper));
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
-        ServerPlayer player = FakePlayer.get(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        player.getAbilities().instabuild = true;
-        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
-        DepositPkt.apply(player, new DepositPkt(target, target));
-        checkEquals(64, player.getMainHandItem().getCount(),
-                "A creative deposit spent the held stack");
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Creative deposit did not reach the stack");
-        helper.succeed();
+        ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
+                helper, playerFactory(helper));
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
+        ProtectionChecks.placementIntoWaterKeepsTheWater(helper, playerFactory(helper));
+    }
+
+    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayer.get(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
-        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
-
-        PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                BlockType.STORAGE_STACK, Direction.UP, target));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
-                "A stack placed into water was not waterlogged");
-        check(level.getFluidState(target).getType() == Fluids.WATER,
-                "A stack placed into water swallowed the water");
-        helper.succeed();
+        return stack -> {
+            ServerPlayer player = FakePlayer.get(level);
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            return player;
+        };
     }
 
     // Growth under protection

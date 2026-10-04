@@ -2,11 +2,8 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
-import com.github.crittscott.somestacks.util.StackMode;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -33,33 +30,8 @@ public final class FabricClientNetworking implements ClientGestures.Sender {
     }
 
     @Override
-    public void sendTogglePermanent(BlockPos pos) {
-        ClientPlayNetworking.send(new TogglePermanentPkt(pos));
-    }
-
-    @Override
-    public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
-        ClientPlayNetworking.send(new PlaceAndDepositPkt(mode.toBlockType(), face, placePos));
-    }
-
-    @Override
-    public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        ClientPlayNetworking.send(new DepositPkt(pos, clickedPos));
-    }
-
-    @Override
-    public void sendExtract(BlockPos pos, int index) {
-        ClientPlayNetworking.send(new ExtractPkt(pos, index));
-    }
-
-    @Override
-    public void sendRotateBlock(BlockPos pos) {
-        ClientPlayNetworking.send(new RotateBlockPkt(pos));
-    }
-
-    @Override
-    public void sendRotateItem(BlockPos pos, int slotIndex) {
-        ClientPlayNetworking.send(new RotateItemPkt(pos, slotIndex));
+    public void send(CustomPacketPayload payload) {
+        ClientPlayNetworking.send(payload);
     }
 
     private static <T extends CustomPacketPayload> void registerClient(

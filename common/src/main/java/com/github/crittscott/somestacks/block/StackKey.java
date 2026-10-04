@@ -10,11 +10,10 @@ import net.minecraft.world.item.ItemStack;
  * <p>The component patch is immutable, so later mutation or removal of the source stack cannot
  * change the key's equality or hash code.
  */
-record StackKey(Item item, int damage, DataComponentPatch components) {
+record StackKey(Item item, DataComponentPatch components) {
     static StackKey of(ItemStack stack) {
         return new StackKey(
                 stack.getItem(),
-                stack.getDamageValue(),
                 stack.getComponentsPatch());
     }
 }

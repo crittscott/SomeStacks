@@ -101,7 +101,7 @@ Every block exposes loader-native item storage on all six sides (`IItemHandler` 
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor.
+The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Fabric presents that actor as Fabric API's standard fake player so machine policies can recognize it.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
@@ -170,7 +170,7 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world border, and spawn protection, and fire a real protection event that claim and logging mods can hook (Forge/NeoForge interaction, place, and break events; Fabric API's `UseBlockCallback` and `PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has no placement event, so on Fabric automated growth also asks claim mods that implement Common Protection API directly.
 
-The server independently validates every gesture packet: one per player per tick, nonspectator, loaded target, reach, held item, target block and index, adjacency, support, type enablement, height, and protection. Deposit cell selection is recomputed from the player's current view; extraction and Singles item rotation trust a range- and occupancy-checked client cell index.
+The server independently validates every gesture packet: one per player per tick, nonspectator, loaded target, the player's current vanilla block-interaction range, held item, target block and index, adjacency, support, type enablement, height, and protection. Deposit cell selection is recomputed from the player's current view using the same current range; extraction and Singles item rotation trust a range- and occupancy-checked client cell index.
 
 ## Saved worlds
 

@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
-import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.network.WriteOverridesPkt;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -12,9 +11,7 @@ public final class CommandNetwork {
     public interface Handler {
         int syncAllPlayers(MinecraftServer server);
 
-        void send(ServerPlayer player, RenderOverridePkt packet);
-
-        void send(ServerPlayer player, WriteOverridesPkt packet);
+        void send(ServerPlayer player, CustomPacketPayload packet);
     }
 
     private static Handler handler;
@@ -27,11 +24,7 @@ public final class CommandNetwork {
         return handler.syncAllPlayers(server);
     }
 
-    public static void send(ServerPlayer player, RenderOverridePkt packet) {
-        handler.send(player, packet);
-    }
-
-    public static void send(ServerPlayer player, WriteOverridesPkt packet) {
+    public static void send(ServerPlayer player, CustomPacketPayload packet) {
         handler.send(player, packet);
     }
 }

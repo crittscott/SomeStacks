@@ -5,21 +5,16 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
@@ -34,29 +29,11 @@ import java.util.Arrays;
  * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
  * what a loader-specific capability view adapts.
  */
-public class BarStackBE extends BlockEntity {
+public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
     public static final int SLOTS = BarCubeIdx.CELLS;
 
-    private static final String TAG_ITEMS = "Items";
-
     private VoxelShape cachedShape = null;
-    private boolean suppressSync = false;
-    private boolean batchTouched = false;
-
-    /**
-     * Set when a content edit still requires client synchronization and a light update. The
-     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
-     */
-    private boolean publishPending = false;
-
-    /**
-     * The comparator output last published for the column this block is the bottom of, or -1 before
-     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
-     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
-     * should notify.
-     */
-    private int publishedSignal = -1;
 
     /**
      * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
@@ -68,31 +45,31 @@ public class BarStackBE extends BlockEntity {
     private BarColumn cachedColumn;
     private long cachedColumnTick = Long.MIN_VALUE;
 
-    private final StackItemStorage items = new StackItemStorage(SLOTS) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            cachedShape = null;
-            if (suppressSync) {
-                batchTouched = true;
-            } else {
-                schedulePublish();
-            }
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return isValidBarItem(stack);
-        }
-    };
-
     public BarStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.BAR_STACK_BE.get(), pos, state);
+        super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS);
+    }
+
+    @Override
+    protected boolean isStoredItemValid(ItemStack stack) {
+        return isValidBarItem(stack);
+    }
+
+    @Override
+    protected int localSlotLimit() {
+        return 1;
+    }
+
+    @Override
+    protected void onLocalContentsChanged(int slot) {
+        cachedShape = null;
+    }
+
+    @Override
+    protected void markRunDirty() {
+        BarColumn column = column();
+        if (column != null) {
+            column.markDirty();
+        }
     }
 
     /**
@@ -134,22 +111,14 @@ public class BarStackBE extends BlockEntity {
         return cachedColumn;
     }
 
+    @Override
+    public StackRunItemAccess itemRun() {
+        return column();
+    }
+
     /** Invalidates the cached column so the next lookup walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
-    }
-
-    /**
-     * Records the comparator output the column is about to publish.
-     *
-     * @return whether the signal changed and comparator neighbors must be notified
-     */
-    boolean exchangePublishedSignal(int signal) {
-        if (publishedSignal == signal) {
-            return false;
-        }
-        publishedSignal = signal;
-        return true;
     }
 
     /** Builds the union of the occupied bars' boxes. */
@@ -371,116 +340,9 @@ public class BarStackBE extends BlockEntity {
         }
     }
 
-    public boolean isEmpty() {
-        return ItemOps.isHandlerEmpty(items);
-    }
-
-    /** Synchronizes this block's contents to tracking clients. */
-    public void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
-    }
-
-    /**
-     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules publication only if this block changed.
-     *
-     * <p>Batches nest here, so unlike Storage and Singles this does not clear {@code batchTouched}:
-     * {@link #extractAt} opens one, takes a bar, and calls {@link #cascadeFrom}, which opens another
-     * on this same block. The outer change flag must survive the nested batch even when the cascade
-     * removes nothing else, or clients continue rendering the extracted bar.
-     */
-    void beginBatch() {
-        suppressSync = true;
-    }
-
-    void endBatch() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            schedulePublish();
-        }
-    }
-
-    /**
-     * Marks this block for publication and schedules a pass on the column's bottom block.
-     *
-     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
-     * recompute. A position holds one bar, so a caller moving a stack calls the handler once per
-     * bar; deferring to a block tick on the column's bottom keeps one stack from costing all of
-     * that sixty-four times over.
-     */
-    private void schedulePublish() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-        publishPending = true;
-
-        BarColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    /**
-     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
-     * to the column and is published once for the whole run by {@link BarColumn#publishPending()}.
-     *
-     * @return whether anything was owed
-     */
-    boolean publishIfPending() {
-        Level columnLevel = level;
-        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
-            return false;
-        }
-        publishPending = false;
-        syncToClients();
-
-        int newLight = ItemOps.calculateLightLevelFromItems(items);
-        BlockState state = getBlockState();
-        if (state.getValue(BarStackBlock.LIGHT_LEVEL) != newLight) {
-            columnLevel.setBlock(getBlockPos(), state.setValue(BarStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-        }
-        return true;
-    }
-
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (StackDataMigration.upgrade(tag, registries)) {
-            setChanged();
-        }
-        if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
-        }
+    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         cachedShape = null;
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        StackDataMigration.stampVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
-    }
-
-    /** This block's local slots, for callers that already hold the block entity. */
-    public StackItemStorage getItems() {
-        return items;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
-        return tag;
     }
 
 }

@@ -25,6 +25,8 @@ public final class StackSort {
         int c = aKey.compareTo(bKey);
         if (c != 0) return c;
 
+        // Damage is already part of the component patch, but comparing it numerically first gives
+        // damaged variants a deliberate, human-readable order instead of patch-text order.
         c = Integer.compare(a.getDamageValue(), b.getDamageValue());
         if (c != 0) return c;
 

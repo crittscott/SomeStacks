@@ -2,19 +2,14 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -28,51 +23,22 @@ import javax.annotation.Nullable;
  * item-handler capabilities, while Fabric uses the Transfer API. {@link #getItems()} is the local
  * storage each loader-specific whole-pile view adapts.
  */
-public class StorageStackBE extends BlockEntity {
+public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
     public static final int SLOTS = StorageCubeIdx.CELLS;
 
-    private static final String TAG_ITEMS = "Items";
     private static final String TAG_ROTATION = "Rotation";
     private static final String TAG_PERMANENT = "Permanent";
 
-    private boolean suppressSync = false;
-    private boolean batchTouched = false;
-    private boolean publishPending = false;
-
-    private final StackItemStorage items = new StackItemStorage(SLOTS) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            if (suppressSync) {
-                batchTouched = true;
-            } else {
-                schedulePublish();
-            }
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return isValidStorageItem(stack);
-        }
-    };
-
     private int rotation = 0;
     private boolean permanent = false;
-
-    /**
-     * The comparator output last published for the pile this block is the base of, or -1 before the
-     * first settle. Only the base's copy is consulted, and it is runtime state rather than saved
-     * NBT: a freshly loaded pile has published nothing, so its first settle should notify.
-     */
-    private int publishedSignal = -1;
 
     /** The pile resolved for this block, good for the tick it was taken on. See {@link #pile()}. */
     private StoragePile cachedPile;
     private long cachedPileTick = Long.MIN_VALUE;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state);
+        super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS);
     }
 
     /**
@@ -87,6 +53,19 @@ public class StorageStackBE extends BlockEntity {
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected boolean isStoredItemValid(ItemStack stack) {
+        return isValidStorageItem(stack);
+    }
+
+    @Override
+    protected void markRunDirty() {
+        StoragePile pile = pile();
+        if (pile != null) {
+            pile.markDirty();
+        }
     }
 
     /**
@@ -112,6 +91,11 @@ public class StorageStackBE extends BlockEntity {
         cachedPile = StoragePile.resolve(level, getBlockPos());
         cachedPileTick = now;
         return cachedPile;
+    }
+
+    @Override
+    public StackRunItemAccess itemRun() {
+        return pile();
     }
 
     /** Invalidates the cached pile so the next lookup walks the world again. */
@@ -141,19 +125,6 @@ public class StorageStackBE extends BlockEntity {
             setChanged();
             syncToClients();
         }
-    }
-
-    /**
-     * Records the comparator output the pile is about to publish.
-     *
-     * @return whether the signal changed and comparator neighbors must be notified
-     */
-    boolean exchangePublishedSignal(int signal) {
-        if (publishedSignal == signal) {
-            return false;
-        }
-        publishedSignal = signal;
-        return true;
     }
 
     /** Gives a block that has just joined a pile the pile's presentation and mode. */
@@ -212,47 +183,6 @@ public class StorageStackBE extends BlockEntity {
         return taken;
     }
 
-    public boolean isEmpty() {
-        return ItemOps.isHandlerEmpty(items);
-    }
-
-    /** Synchronizes this block's contents and presentation state to tracking clients. */
-    public void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
-    }
-
-    /**
-     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules a settle only if this block changed.
-     */
-    void beginBatch() {
-        suppressSync = true;
-        batchTouched = false;
-    }
-
-    void endBatch() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            schedulePublish();
-        }
-    }
-
-    /**
-     * Closes a batch from inside the active settle without scheduling another settle. A changed
-     * block remains marked for publication by the current pass.
-     */
-    void endBatchWithinSettle() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            publishPending = true;
-        }
-    }
-
     /**
      * Writes a slot only when it does not already hold exactly that stack, so a pile-wide rewrite
      * leaves untouched blocks clean and unsynced.
@@ -268,82 +198,16 @@ public class StorageStackBE extends BlockEntity {
         items.setStackInSlot(slot, desired);
     }
 
-    /**
-     * Marks this block for publication and schedules a settle on the pile's base.
-     *
-     * <p>Publishing costs an update packet and a light recompute, and the settle behind it can move
-     * a stack into another block first. Deferring both keeps a machine making storage calls all
-     * tick from publishing per call, and stops a stack from being sent where it landed and again where
-     * it was packed to.
-     */
-    private void schedulePublish() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-        publishPending = true;
-
-        StoragePile pile = pile();
-        if (pile != null) {
-            pile.markDirty();
-        }
-    }
-
-    /**
-     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
-     * to the pile and is published once for the whole run by {@link StoragePile#settle()}.
-     */
-    void publishIfPending() {
-        if (level == null || level.isClientSide || !publishPending) {
-            return;
-        }
-        publishPending = false;
-        syncToClients();
-
-        int newLight = ItemOps.calculateLightLevelFromItems(items);
-        BlockState state = getBlockState();
-        if (state.getValue(StorageStackBlock.LIGHT_LEVEL) != newLight) {
-            level.setBlock(getBlockPos(), state.setValue(StorageStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-        }
-    }
-
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (StackDataMigration.upgrade(tag, registries)) {
-            setChanged();
-        }
-        if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
-        }
+    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains(TAG_ROTATION)) rotation = tag.getInt(TAG_ROTATION);
         if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        StackDataMigration.stampVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
+    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt(TAG_ROTATION, rotation);
         tag.putBoolean(TAG_PERMANENT, permanent);
-    }
-
-    /** This block's local slots, for callers that hold the block entity and need no pile-wide view. */
-    public StackItemStorage getItems() {
-        return items;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
-        return tag;
     }
 
 }

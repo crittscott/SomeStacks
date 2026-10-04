@@ -61,11 +61,7 @@ public final class FabricNetworking {
         return server.getPlayerList().getPlayerCount();
     }
 
-    public static void sendRenderOverride(ServerPlayer player, RenderOverridePkt packet) {
-        ServerPlayNetworking.send(player, packet);
-    }
-
-    public static void sendWriteOverrides(ServerPlayer player, WriteOverridesPkt packet) {
+    public static void send(ServerPlayer player, CustomPacketPayload packet) {
         ServerPlayNetworking.send(player, packet);
     }
 

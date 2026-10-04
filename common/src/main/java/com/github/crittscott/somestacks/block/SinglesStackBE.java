@@ -4,21 +4,16 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -32,63 +27,45 @@ import javax.annotation.Nullable;
  * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
  * what a loader-specific capability view adapts.
  */
-public class SinglesStackBE extends BlockEntity {
+public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = SinglesCubeIdx.CELLS;
 
-    private static final String TAG_ITEMS = "Items";
     private static final String TAG_ROTATION = "Rotation";
     private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
     private int rotation = 0;
     private int[] cubeRotations = new int[SLOTS];
-    private boolean suppressSync = false;
-    private boolean batchTouched = false;
-
-    /**
-     * Set when a content edit still requires client synchronization and a light update. The
-     * column's scheduled publication pass clears it; see {@link #schedulePublish()}.
-     */
-    private boolean publishPending = false;
-
-    /**
-     * The comparator output last published for the column this block is the bottom of, or -1 before
-     * the first publication. Only the bottom block's copy is consulted, and it is runtime state
-     * rather than saved NBT: a freshly loaded column has published nothing, so its first change
-     * should notify.
-     */
-    private int publishedSignal = -1;
-
     /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
     private SinglesColumn cachedColumn;
     private long cachedColumnTick = Long.MIN_VALUE;
 
-    private final StackItemStorage items = new StackItemStorage(SLOTS) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            cachedShape = null;
-            if (suppressSync) {
-                batchTouched = true;
-            } else {
-                schedulePublish();
-            }
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return isValidSinglesItem(stack);
-        }
-    };
-
     public SinglesStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state);
+        super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state, SLOTS);
+    }
+
+    @Override
+    protected boolean isStoredItemValid(ItemStack stack) {
+        return isValidSinglesItem(stack);
+    }
+
+    @Override
+    protected int localSlotLimit() {
+        return 1;
+    }
+
+    @Override
+    protected void onLocalContentsChanged(int slot) {
+        cachedShape = null;
+    }
+
+    @Override
+    protected void markRunDirty() {
+        SinglesColumn column = column();
+        if (column != null) {
+            column.markDirty();
+        }
     }
 
     /**
@@ -113,22 +90,14 @@ public class SinglesStackBE extends BlockEntity {
         return cachedColumn;
     }
 
+    @Override
+    public StackRunItemAccess itemRun() {
+        return column();
+    }
+
     /** Invalidates the cached column so the next lookup walks the world again. */
     void invalidateColumn() {
         cachedColumn = null;
-    }
-
-    /**
-     * Records the comparator output the column is about to publish.
-     *
-     * @return whether the signal changed and comparator neighbors must be notified
-     */
-    boolean exchangePublishedSignal(int signal) {
-        if (publishedSignal == signal) {
-            return false;
-        }
-        publishedSignal = signal;
-        return true;
     }
 
     /**
@@ -153,7 +122,7 @@ public class SinglesStackBE extends BlockEntity {
         this.rotation = rotation % 4;
         setChanged();
         cachedShape = null;
-        if (!suppressSync) {
+        if (!isBatching()) {
             syncToClients();
         }
     }
@@ -172,7 +141,7 @@ public class SinglesStackBE extends BlockEntity {
         }
         cubeRotations[index] = cubeRot % 4;
         setChanged();
-        if (!suppressSync) {
+        if (!isBatching()) {
             syncToClients();
         }
     }
@@ -254,7 +223,7 @@ public class SinglesStackBE extends BlockEntity {
         int y = SinglesCubeIdx.xyzFromIndex(index)[1];
 
         ItemStack extracted;
-        suppressSync = true;
+        beginBatch();
         try {
             extracted = items.extractItem(index, 1, false);
             if (extracted.isEmpty()) {
@@ -262,13 +231,13 @@ public class SinglesStackBE extends BlockEntity {
             }
             shiftColumnDown(column, y);
         } finally {
-            suppressSync = false;
+            endBatchWithoutPublish();
         }
 
         if (level == null || level.isClientSide) {
             clearEmptyCubeRotations();
             setChanged();
-            schedulePublish();
+            requestPublish();
             return extracted;
         }
 
@@ -344,8 +313,8 @@ public class SinglesStackBE extends BlockEntity {
                 if (!above.items.getStackInSlot(sourceIndex).isEmpty()) {
                     int targetIndex = SinglesCubeIdx.indexFromColumn(col, SinglesCubeIdx.TOP_LAYER_Y);
 
-                    be.suppressSync = true;
-                    above.suppressSync = true;
+                    be.beginBatch();
+                    above.beginBatch();
                     try {
                         be.items.setStackInSlot(targetIndex,
                                 above.items.extractItem(sourceIndex, 1, false));
@@ -354,8 +323,8 @@ public class SinglesStackBE extends BlockEntity {
                         be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
                         above.shiftColumnDown(aboveColumn, 0);
                     } finally {
-                        above.suppressSync = false;
-                        be.suppressSync = false;
+                        above.endBatchWithoutPublish();
+                        be.endBatchWithoutPublish();
                     }
 
                     next = above;
@@ -393,7 +362,7 @@ public class SinglesStackBE extends BlockEntity {
         }
 
         setChanged();
-        schedulePublish();
+        requestPublish();
     }
 
     /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
@@ -420,89 +389,8 @@ public class SinglesStackBE extends BlockEntity {
         }
     }
 
-    public boolean isEmpty() {
-        return ItemOps.isHandlerEmpty(items);
-    }
-
-    /** Synchronizes this block's contents and presentation state to tracking clients. */
-    public void syncToClients() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
-        }
-    }
-
-    /**
-     * Opens a batch of edits that should publish once. Per-slot synchronization is suppressed, and
-     * {@link #endBatch()} schedules publication only if this block changed. Column draw-down
-     * publishes through its own path, so a new batch clears any prior touch state.
-     */
-    void beginBatch() {
-        suppressSync = true;
-        batchTouched = false;
-    }
-
-    void endBatch() {
-        suppressSync = false;
-        if (batchTouched) {
-            batchTouched = false;
-            schedulePublish();
-        }
-    }
-
-    /**
-     * Marks this block for publication and schedules a pass on the column's bottom block.
-     *
-     * <p>Publishing costs an update packet, a comparator walk of the whole column, and a light
-     * recompute. A cell holds one item, so a caller moving a stack calls the handler once per item,
-     * and one removal draws an item down out of every block above it; deferring to a block tick on
-     * the column's bottom keeps either from paying that at each step.
-     */
-    private void schedulePublish() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-        publishPending = true;
-
-        SinglesColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    /**
-     * Publishes this block's deferred contents and emitted light level. Comparator output belongs
-     * to the column and is published once for the whole run by
-     * {@link SinglesColumn#publishPending()}.
-     *
-     * @return whether anything was owed
-     */
-    boolean publishIfPending() {
-        Level columnLevel = level;
-        if (columnLevel == null || columnLevel.isClientSide || !publishPending) {
-            return false;
-        }
-        publishPending = false;
-        syncToClients();
-
-        int newLight = ItemOps.calculateLightLevelFromItems(items);
-        BlockState state = getBlockState();
-        if (state.getValue(SinglesStackBlock.LIGHT_LEVEL) != newLight) {
-            columnLevel.setBlock(getBlockPos(),
-                    state.setValue(SinglesStackBlock.LIGHT_LEVEL, newLight), Block.UPDATE_ALL);
-        }
-        return true;
-    }
-
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (StackDataMigration.upgrade(tag, registries)) {
-            setChanged();
-        }
-        if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
-        }
+    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains(TAG_ROTATION)) {
             rotation = tag.getInt(TAG_ROTATION);
         }
@@ -516,33 +404,12 @@ public class SinglesStackBE extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        StackDataMigration.stampVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
+    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt(TAG_ROTATION, rotation);
         // IntArrayTag holds the array it is given, and an integrated server hands its update
         // packets to the client unserialized: both sides must get their own copy, or the client
         // renders the server's in-progress rotations against its own not-yet-updated items.
         tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
-    }
-
-    /** This block's local slots, for callers that already hold the block entity. */
-    public StackItemStorage getItems() {
-        return items;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
-        return tag;
     }
 
 }

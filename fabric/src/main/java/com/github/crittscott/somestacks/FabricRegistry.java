@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -31,7 +32,7 @@ public final class FabricRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final Block SINGLES_STACK_BLOCK = registerBlock("singles_stack_block", SinglesStackBlock::new,
             BlockBehaviour.Properties.of()
@@ -40,7 +41,7 @@ public final class FabricRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final Block STORAGE_STACK_BLOCK = registerBlock("storage_stack_block", StorageStackBlock::new,
             BlockBehaviour.Properties.of()
@@ -48,7 +49,7 @@ public final class FabricRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final BlockEntityType<BarStackBE> BAR_STACK_BE = registerBlockEntity(
             "bar_stack_be", FabricBlockEntityTypeBuilder.create(BarStackBE::new, BAR_STACK_BLOCK).build());

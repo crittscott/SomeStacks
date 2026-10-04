@@ -38,12 +38,8 @@ public final class ForgeCapabilityAttachment {
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof StorageStackBE sbe) {
-            attach(event, () -> new PileItemHandler(sbe));
-        } else if (event.getObject() instanceof SinglesStackBE ssbe) {
-            attach(event, () -> new SinglesColumnHandler(ssbe));
-        } else if (event.getObject() instanceof BarStackBE bbe) {
-            attach(event, () -> new BarColumnHandler(bbe));
+        if (event.getObject() instanceof StackBlockEntity stack) {
+            attach(event, () -> new RunItemHandler(stack));
         }
     }
 

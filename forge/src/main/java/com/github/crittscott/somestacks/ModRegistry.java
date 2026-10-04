@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.registries.Registries;
@@ -49,7 +50,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL))
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
             ));
 
     public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
@@ -60,7 +61,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL))
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
             ));
 
     public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
@@ -70,7 +71,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL))
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
             ));
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =

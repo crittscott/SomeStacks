@@ -37,7 +37,7 @@ import java.util.List;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class SinglesColumn {
+public final class SinglesColumn implements StackRunItemAccess {
     private final Level level;
     private final List<SinglesStackBE> blocks;
 
@@ -167,14 +167,16 @@ public final class SinglesColumn {
      * empty, and a caller polling its inventory re-derives that emptiness every tick. Only what the
      * column holds is worse: a caller offers items to the positions the range names and no others,
      * so a full column is never offered the insertion that grows it and automation cannot build
-     * past the first block. One block of headroom is what one growth adds, and {@link #insertOneAt}
+     * past the first block. One block of headroom is what one growth adds, and {@link #insertAt}
      * grows once for the cell it was given, so the range is reachable capacity and nothing more.
      */
+    @Override
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
         return SinglesStackBE.SLOTS * levels;
     }
 
+    @Override
     public ItemStack getSlot(int flatSlot) {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
@@ -302,25 +304,27 @@ public final class SinglesColumn {
      * by the time the walk arrives there.
      *
      * @param simulate when true, nothing is placed
-     * @return whether an item was, or would be, taken from {@code stack}
+     * @return how many items were, or would be, taken from {@code stack}
      */
-    public boolean insertOneAt(int flatSlot, ItemStack stack, boolean simulate) {
+    @Override
+    public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
-            return false;
+            return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot)) {
-            return false;
+            return 0;
         }
         if (simulate) {
-            return true;
+            return 1;
         }
         if (flatSlot >= totalSlots() && !grow(flatSlot % SinglesStackBE.SLOTS)) {
-            return false;
+            return 0;
         }
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty();
+        return handlerOf(flatSlot).insertItem(
+                flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -422,6 +426,7 @@ public final class SinglesColumn {
      * @param simulate whether to report the result without changing the column
      * @return the one item at {@code flatSlot}, or an empty stack when extraction is not possible
      */
+    @Override
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {
             return ItemStack.EMPTY;

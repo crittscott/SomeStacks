@@ -1,8 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.SomeStacksNeoForge;
-import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.network.WriteOverridesPkt;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -15,12 +14,7 @@ public final class NeoForgeCommandNetwork implements CommandNetwork.Handler {
     }
 
     @Override
-    public void send(ServerPlayer player, RenderOverridePkt packet) {
-        PacketDistributor.sendToPlayer(player, packet);
-    }
-
-    @Override
-    public void send(ServerPlayer player, WriteOverridesPkt packet) {
+    public void send(ServerPlayer player, CustomPacketPayload packet) {
         PacketDistributor.sendToPlayer(player, packet);
     }
 }

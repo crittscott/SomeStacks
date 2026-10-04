@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
  * item-handler insert/extract semantics and NBT shape
- * ({@code {Size, Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
+ * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
  *
  * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
  * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the
@@ -28,7 +28,6 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_SLOT = "Slot";
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
-    private static final String TAG_SIZE = "Size";
 
     /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
@@ -159,7 +158,6 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        nbt.putInt(TAG_SIZE, stacks.length);
         if (!setAside.isEmpty()) {
             nbt.put(TAG_SET_ASIDE, setAside.copy());
         }

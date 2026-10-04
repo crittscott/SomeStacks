@@ -2,15 +2,7 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.ExtractPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateBlockPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
-import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -86,32 +78,7 @@ public final class ClientEvents implements ClientGestures.Sender {
     }
 
     @Override
-    public void sendTogglePermanent(BlockPos pos) {
-        PacketDistributor.sendToServer(new TogglePermanentPkt(pos));
-    }
-
-    @Override
-    public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
-        PacketDistributor.sendToServer(new PlaceAndDepositPkt(mode.toBlockType(), face, placePos));
-    }
-
-    @Override
-    public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        PacketDistributor.sendToServer(new DepositPkt(pos, clickedPos));
-    }
-
-    @Override
-    public void sendExtract(BlockPos pos, int index) {
-        PacketDistributor.sendToServer(new ExtractPkt(pos, index));
-    }
-
-    @Override
-    public void sendRotateBlock(BlockPos pos) {
-        PacketDistributor.sendToServer(new RotateBlockPkt(pos));
-    }
-
-    @Override
-    public void sendRotateItem(BlockPos pos, int slotIndex) {
-        PacketDistributor.sendToServer(new RotateItemPkt(pos, slotIndex));
+    public void send(CustomPacketPayload payload) {
+        PacketDistributor.sendToServer(payload);
     }
 }

@@ -13,8 +13,6 @@ public final class FabricClientRendering {
     private FabricClientRendering() {}
 
     public static void init() {
-        ClientRenderPlatform.setBackend(new FabricRenderPlatform());
-
         BlockEntityRendererRegistry.register(
                 FabricRegistry.STORAGE_STACK_BE, StorageStackBER::new);
         BlockEntityRendererRegistry.register(

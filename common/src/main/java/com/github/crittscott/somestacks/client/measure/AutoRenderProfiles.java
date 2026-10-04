@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.client.measure;
 
 import com.github.crittscott.somestacks.PlatformPaths;
+import com.github.crittscott.somestacks.PlatformInfo;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
@@ -220,7 +220,7 @@ public final class AutoRenderProfiles {
     }
 
     private static String modVersion(String namespace) {
-        return ClientRenderPlatform.modVersion(namespace);
+        return PlatformInfo.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {

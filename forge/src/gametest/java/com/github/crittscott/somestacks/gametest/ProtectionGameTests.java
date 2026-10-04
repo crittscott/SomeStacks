@@ -6,14 +6,12 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.network.DepositPkt;
 import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
 import com.github.crittscott.somestacks.network.RotateItemPkt;
 import com.github.crittscott.somestacks.network.TogglePermanentPkt;
 import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,9 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -40,6 +36,7 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -55,40 +52,20 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  */
 @GameTestHolder(SomeStacks.MODID)
 public final class ProtectionGameTests {
+    private static final Protection PROTECTION = new Protection();
+
     private ProtectionGameTests() {}
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos valid = helper.absolutePos(ORIGIN);
-        BlockPos invalid = new BlockPos(
-                valid.getX(), level.getMinY() - 1, valid.getZ());
-
-        check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Valid checked placement was rejected");
-        check(level.getBlockState(valid).is(Blocks.STONE),
-                "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Out-of-height checked placement was accepted");
-        helper.succeed();
+        ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
+                helper, playerFactory(helper));
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        putCowIn(helper, ORIGIN);
-
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Entity-obstructed checked placement was accepted");
-        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
-        helper.succeed();
+        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(helper, playerFactory(helper));
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
@@ -98,12 +75,12 @@ public final class ProtectionGameTests {
         BlockPos marked = helper.absolutePos(ORIGIN);
         BlockPos other = marked.east();
 
-        check(Protection.claimInteraction(player, marked, marked),
+        check(PROTECTION.claimInteraction(player, marked, marked),
                 "The claim itself was refused");
 
-        check(!Protection.mayInteract(player, marked),
+        check(!PROTECTION.mayInteract(player, marked),
                 "Marked same-tick interaction was not suppressed");
-        check(Protection.mayInteract(player, other),
+        check(PROTECTION.mayInteract(player, other),
                 "Different position was suppressed");
         helper.succeed();
     }
@@ -114,10 +91,10 @@ public final class ProtectionGameTests {
         ServerPlayer player = GameTestSupport.fakePlayer(level);
         BlockPos marked = helper.absolutePos(ORIGIN);
 
-        check(Protection.claimInteraction(player, marked, marked),
+        check(PROTECTION.claimInteraction(player, marked, marked),
                 "The claim itself was refused");
         helper.runAfterDelay(1, () -> {
-            check(Protection.mayInteract(player, marked),
+            check(PROTECTION.mayInteract(player, marked),
                     "Expired suppression still vetoed interaction");
             helper.succeed();
         });
@@ -137,7 +114,7 @@ public final class ProtectionGameTests {
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.SOUL_TORCH));
             GestureThrottle.clear(player.getUUID());
             RotateItemPkt.handleServer(new RotateItemPkt(singlesPos, 0), player);
-            check(!Protection.mayInteract(player, singlesPos),
+            check(!PROTECTION.mayInteract(player, singlesPos),
                     "Empty-cell rotation did not suppress the trailing torch click");
 
             player.setPos(storagePos.getX() + 0.5, storagePos.getY(), storagePos.getZ() + 0.5);
@@ -145,7 +122,7 @@ public final class ProtectionGameTests {
             GestureThrottle.clear(player.getUUID());
             TogglePermanentPkt.handleServer(new TogglePermanentPkt(storagePos), player);
             check(storage.pile().isPermanent(), "Permanence toggle did not run");
-            check(Protection.mayInteract(player, storagePos),
+            check(PROTECTION.mayInteract(player, storagePos),
                     "Permanence toggle suppressed its trailing empty-hand click");
         } finally {
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -193,9 +170,9 @@ public final class ProtectionGameTests {
 
         checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
                 "Deposit did not reach the stack");
-        check(!Protection.mayInteract(player, clicked),
+        check(!PROTECTION.mayInteract(player, clicked),
                 "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
+        check(PROTECTION.mayInteract(player, target),
                 "The deposit target was suppressed instead of the clicked block");
         helper.succeed();
     }
@@ -212,9 +189,9 @@ public final class ProtectionGameTests {
                         BlockType.STORAGE_STACK, Direction.UP, target)));
 
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(!Protection.mayInteract(player, clicked),
+        check(!PROTECTION.mayInteract(player, clicked),
                 "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
+        check(PROTECTION.mayInteract(player, target),
                 "The placed position was suppressed instead of the clicked block");
         helper.succeed();
     }
@@ -250,25 +227,8 @@ public final class ProtectionGameTests {
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        player.getAbilities().instabuild = true;
-        try {
-            withMainHand(player, new ItemStack(Items.DIRT, 64), () -> {
-                DepositPkt.apply(player, new DepositPkt(target, target));
-                checkEquals(64, player.getMainHandItem().getCount(),
-                        "A creative deposit spent the held stack");
-            });
-        } finally {
-            player.getAbilities().instabuild = false;
-        }
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Creative deposit did not reach the stack");
-        helper.succeed();
+        ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
+                helper, playerFactory(helper));
     }
 
     // Mod-driven removal under protection
@@ -314,21 +274,16 @@ public final class ProtectionGameTests {
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
+        ProtectionChecks.placementIntoWaterKeepsTheWater(helper, playerFactory(helper));
+    }
+
+    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
-                "A stack placed into water was not waterlogged");
-        check(level.getFluidState(target).getType() == Fluids.WATER,
-                "A stack placed into water swallowed the water");
-        helper.succeed();
+        return stack -> {
+            ServerPlayer player = GameTestSupport.fakePlayer(level);
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            return player;
+        };
     }
 
     /**
@@ -358,9 +313,9 @@ public final class ProtectionGameTests {
 
         MinecraftForge.EVENT_BUS.addListener(denyItem);
         try {
-            check(Protection.mayInteract(player, clicked),
+            check(PROTECTION.mayInteract(player, clicked),
                     "Item-use denial incorrectly vetoed block access");
-            check(!Protection.mayUseItemOn(player, clicked),
+            check(!PROTECTION.mayUseItemOn(player, clicked),
                     "Item-use denial did not veto placement");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyItem);

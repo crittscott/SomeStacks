@@ -10,7 +10,7 @@ Subsystem ownership, persistent data, loader boundaries, and invariants the code
 
 Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Development builds against Forge 54.1.18, NeoForge 21.4.158, and Fabric Loader 0.19.5 with Fabric API 0.119.4+1.21.4. Architectury is build-time only; no loader has an Architectury API runtime dependency.
 
-`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformPaths` are the loader seams. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
+`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, `PlatformPaths`, and `PlatformInfo` are the loader seams. `PlatformPaths` uses Architectury `@ExpectPlatform`; the other seams are installed during loader startup. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
 
 Three blocks and block entity types are registered, with no block items, menus, recipes, or portable containers:
 
@@ -24,9 +24,9 @@ Three blocks and block entity types are registered, with no block items, menus, 
 
 | Area | Responsibility |
 | --- | --- |
-| `block/*StackBlock` | State, shape, waterlogging, removal, comparators, scheduled publication |
-| `block/*StackBE` | Local inventory, NBT, rotations, selected cells, run caches |
-| `StoragePile`, `SinglesColumn`, `BarColumn` | Run-wide growth, mutation, fill, cleanup, structure |
+| `StackBlock`, `ShapedStackBlock`, `block/*StackBlock` | Shared state/waterlogging/use plumbing, dynamic occupied shapes, per-type removal, comparators, scheduled publication |
+| `StackBlockEntity`, `block/*StackBE` | Shared local inventory, NBT, synchronization, lighting and nested batching; per-type rotations, shapes and run caches |
+| `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Common automation contract plus distinct run-wide growth, mutation, fill, cleanup and structure |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
 | `util/*CubeIdx`, `ViewRay` | Geometry, rotation, support, seams, targeting |
 | `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
@@ -44,7 +44,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Entrypoint | `SomeStacks` | `SomeStacksNeoForge` | `SomeStacksFabric` plus client entrypoint |
 | Networking | `SimpleChannel` | payload registrar | payload registry plus `ProtocolPkt` handshake |
 | Gestures | interaction/input events | interaction/input events | callbacks plus air-click mixin |
-| Automation | whole-run `IItemHandler` | whole-run `IItemHandler` | Transfer API `Storage<ItemVariant>` |
+| Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
 
 The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins build with the legacy annotation processor into the fixed `somestacks.refmap.json` refmap.
@@ -53,7 +53,7 @@ The selected loader build is required on client and server. Loaders own transpor
 
 A maximal contiguous vertical run of one stack type is the central abstraction. Block entities own local slots; `StoragePile`, `SinglesColumn`, and `BarColumn` coordinate cross-block operations. Run resolution is cached per game tick and invalidated by structural changes.
 
-Block entities do not tick. Mutations schedule one deferred pass on the run's bottom block that coalesces client updates, lighting, comparator publication, and Storage settlement. Every block in a run reports the same run-wide comparator signal.
+Block entities do not tick. `StackBlockEntity` owns local persistence and a nesting-safe batch depth; mutations schedule one deferred pass on the run's bottom block that coalesces client updates, lighting, comparator publication, and Storage settlement. Every block in a run reports the same run-wide comparator signal.
 
 The three movement models are distinct:
 
@@ -69,9 +69,9 @@ The three movement models are distinct:
 
 Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
 
-Every loader-native view spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
+Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-Growth and cleanup use `WorldEdits` with an automation actor and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge and NeoForge fire native place/break events. Fabric fires `PlayerBlockBreakEvents` on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`.
+Growth and cleanup use `WorldEdits` with an automation actor and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge and NeoForge fire native place/break events. Fabric uses Fabric API's `FakePlayer`, fires `PlayerBlockBreakEvents` on removal, and routes optional Common Protection API growth checks only through `CommonProtectionCheck`.
 
 ## Player interaction and networking
 
@@ -79,7 +79,7 @@ Shared gesture rules recognize permanence, block rotation, item rotation, deposi
 
 The server treats every payload as a request. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
 
-Forge and NeoForge protection events run before `RightClickBlockSuppressor` consumes the trailing vanilla click. Fabric runs its edit checks before consuming the interaction. Adjacent Singles and Bar deposits validate both the clicked position and destination.
+`EventPlayerEditAuthority` owns the common protection-check ordering and view-hit calculation. Forge and NeoForge supply their native right-click event and mark `RightClickBlockSuppressor` only after every check succeeds; Fabric supplies `UseBlockCallback` and needs no trailing-click mark. Adjacent Singles and Bar deposits validate both the clicked position and destination.
 
 ## Configuration and presentation
 
@@ -91,7 +91,7 @@ All types use block entity renderers. `CubeRenderHelper` renders Storage and Sin
 
 ## GameTests
 
-There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions and the shared Base64 empty-structure fixture live under `common/src/gametest`; assertions use `CommonRegistry`. Native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Synthetic-player and protection tests remain loader-specific where their APIs differ. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
+There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions, shared protection scenarios, and the shared Base64 empty-structure fixture live under `common/src/gametest`; assertions use `CommonRegistry`. Native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Loader-native event and synthetic-player assertions remain loader-specific. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
 
 ## Conventions the code currently follows
 

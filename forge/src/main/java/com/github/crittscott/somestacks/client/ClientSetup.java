@@ -22,7 +22,6 @@ public final class ClientSetup {
     private ClientSetup() {}
 
     public static void init(IEventBus modBus) {
-        ClientRenderPlatform.setBackend(new ForgeRenderPlatform());
         ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);

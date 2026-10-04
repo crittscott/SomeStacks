@@ -2,16 +2,8 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.ExtractPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateBlockPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
-import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -94,34 +86,7 @@ public final class ClientEvents implements ClientGestures.Sender {
     }
 
     @Override
-    public void sendTogglePermanent(BlockPos pos) {
-        ModNetworking.CHANNEL.send(new TogglePermanentPkt(pos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face) {
-        ModNetworking.CHANNEL.send(
-                new PlaceAndDepositPkt(mode.toBlockType(), face, placePos),
-                PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        ModNetworking.CHANNEL.send(new DepositPkt(pos, clickedPos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendExtract(BlockPos pos, int index) {
-        ModNetworking.CHANNEL.send(new ExtractPkt(pos, index), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendRotateBlock(BlockPos pos) {
-        ModNetworking.CHANNEL.send(new RotateBlockPkt(pos), PacketDistributor.SERVER.noArg());
-    }
-
-    @Override
-    public void sendRotateItem(BlockPos pos, int slotIndex) {
-        ModNetworking.CHANNEL.send(new RotateItemPkt(pos, slotIndex), PacketDistributor.SERVER.noArg());
+    public void send(CustomPacketPayload payload) {
+        ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg());
     }
 }

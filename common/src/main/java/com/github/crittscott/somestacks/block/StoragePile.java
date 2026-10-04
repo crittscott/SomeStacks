@@ -35,7 +35,7 @@ import java.util.Map;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class StoragePile {
+public final class StoragePile implements StackRunItemAccess {
     private final Level level;
     private final BlockPos base;
     private final List<StorageStackBE> blocks;
@@ -190,11 +190,13 @@ public final class StoragePile {
      * unreachable gaps; advertising only current slots would leave automation no slot through
      * which to grow the pile.
      */
+    @Override
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
         return StorageStackBE.SLOTS * levels;
     }
 
+    @Override
     public ItemStack getSlot(int flatSlot) {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
@@ -210,7 +212,18 @@ public final class StoragePile {
      * @param amount the requested maximum
      * @return the extracted items, or an empty stack when the slot is invalid or empty
      */
-    public ItemStack extract(int flatSlot, int amount) {
+    @Override
+    public ItemStack extract(int flatSlot, int amount, boolean simulate) {
+        if (amount < 1) {
+            return ItemStack.EMPTY;
+        }
+        if (simulate) {
+            ItemStack inSlot = getSlot(flatSlot);
+            if (inSlot.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+            return inSlot.copyWithCount(Math.min(amount, inSlot.getCount()));
+        }
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
         }
@@ -334,6 +347,7 @@ public final class StoragePile {
      * @param simulate when true, nothing is stored and the pile does not grow
      * @return how many items were, or would be, taken from {@code stack}
      */
+    @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)) {
             return 0;

@@ -1,10 +1,17 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.network.DepositPkt;
+import com.github.crittscott.somestacks.network.ExtractPkt;
+import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
+import com.github.crittscott.somestacks.network.RotateBlockPkt;
+import com.github.crittscott.somestacks.network.RotateItemPkt;
+import com.github.crittscott.somestacks.network.TogglePermanentPkt;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
 /** Shared client gesture state and the loader-specific packet sender behind its rules. */
@@ -17,17 +24,7 @@ public final class ClientGestures {
             "key.categories." + SomeStacksCommon.MODID;
 
     public interface Sender {
-        void sendTogglePermanent(BlockPos pos);
-
-        void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face);
-
-        void sendDeposit(BlockPos pos, BlockPos clickedPos);
-
-        void sendExtract(BlockPos pos, int index);
-
-        void sendRotateBlock(BlockPos pos);
-
-        void sendRotateItem(BlockPos pos, int slotIndex);
+        void send(CustomPacketPayload payload);
     }
 
     private static StackMode stackMode = StackMode.STORAGE_STACK;
@@ -59,26 +56,26 @@ public final class ClientGestures {
     }
 
     public static void sendTogglePermanent(BlockPos pos) {
-        sender.sendTogglePermanent(pos);
+        sender.send(new TogglePermanentPkt(pos));
     }
 
     public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
-        sender.sendPlaceAndDeposit(stackMode, placePos, face);
+        sender.send(new PlaceAndDepositPkt(stackMode.toBlockType(), face, placePos));
     }
 
     public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        sender.sendDeposit(pos, clickedPos);
+        sender.send(new DepositPkt(pos, clickedPos));
     }
 
     public static void sendExtract(BlockPos pos, int index) {
-        sender.sendExtract(pos, index);
+        sender.send(new ExtractPkt(pos, index));
     }
 
     public static void sendRotateBlock(BlockPos pos) {
-        sender.sendRotateBlock(pos);
+        sender.send(new RotateBlockPkt(pos));
     }
 
     public static void sendRotateItem(BlockPos pos, int slotIndex) {
-        sender.sendRotateItem(pos, slotIndex);
+        sender.send(new RotateItemPkt(pos, slotIndex));
     }
 }

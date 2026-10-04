@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.server.GestureThrottle;
-import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -51,7 +50,7 @@ public final class PacketBoundary {
     }
 
     public static boolean withinReach(ServerPlayer sp, BlockPos pos) {
-        double reach = PlayerReach.blockReach(sp) + REACH_PADDING;
+        double reach = sp.blockInteractionRange() + REACH_PADDING;
         return Vec3.atCenterOf(pos).distanceToSqr(sp.getEyePosition(1.0f)) <= reach * reach;
     }
 

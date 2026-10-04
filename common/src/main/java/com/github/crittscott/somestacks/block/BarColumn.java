@@ -47,7 +47,7 @@ import java.util.List;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class BarColumn {
+public final class BarColumn implements StackRunItemAccess {
     private final Level level;
     private final List<BarStackBE> blocks;
 
@@ -175,11 +175,13 @@ public final class BarColumn {
      * expose unreachable gaps; advertising only current positions would leave automation no slot
      * through which to grow the column.
      */
+    @Override
     public int advertisedSlots() {
         int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
         return BarStackBE.SLOTS * levels;
     }
 
+    @Override
     public ItemStack getSlot(int flatSlot) {
         if (flatSlot < 0 || flatSlot >= totalSlots()) {
             return ItemStack.EMPTY;
@@ -323,25 +325,27 @@ public final class BarColumn {
      * it by the time the walk arrives there.
      *
      * @param simulate when true, nothing is placed
-     * @return whether a bar was, or would be, taken from {@code stack}
+     * @return how many bars were, or would be, taken from {@code stack}
      */
-    public boolean insertOneAt(int flatSlot, ItemStack stack, boolean simulate) {
+    @Override
+    public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
-            return false;
+            return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
-            return false;
+            return 0;
         }
         if (simulate) {
-            return true;
+            return 1;
         }
         if (flatSlot >= totalSlots() && !grow(flatSlot % BarStackBE.SLOTS)) {
-            return false;
+            return 0;
         }
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one, false).isEmpty();
+        return handlerOf(flatSlot).insertItem(
+                flatSlot % BarStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -444,6 +448,7 @@ public final class BarColumn {
      * @param simulate whether to report the result without changing the column
      * @return the one bar at {@code flatSlot}, or an empty stack when extraction is not possible
      */
+    @Override
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {
             return ItemStack.EMPTY;

@@ -2,16 +2,14 @@ package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.mojang.authlib.GameProfile;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Fabric's {@link EditAuthority}: the automation actor is a synthetic {@link ServerPlayer}, and
@@ -29,8 +27,6 @@ public final class FabricEditAuthority implements EditAuthority {
             java.util.UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
             "[SomeStacks]");
 
-    private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
-
     public FabricEditAuthority() {
         if (CommonProtectionCheck.isLoaded()) {
             SomeStacksCommon.LOGGER.info("Enabled Common Protection API checks for automated growth on Fabric");
@@ -39,8 +35,7 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return actors.computeIfAbsent(level,
-                key -> new ServerPlayer(key.getServer(), key, PROFILE, ClientInformation.createDefault()));
+        return FakePlayer.get(level, PROFILE);
     }
 
     @Override

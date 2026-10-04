@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.registries.Registries;
@@ -38,7 +39,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(BarStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock("singles_stack_block", SinglesStackBlock::new,
             BlockBehaviour.Properties.of()
@@ -47,7 +48,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(SinglesStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock("storage_stack_block", StorageStackBlock::new,
             BlockBehaviour.Properties.of()
@@ -55,7 +56,7 @@ public final class ModRegistry {
                     .noOcclusion()
                     .pushReaction(PushReaction.BLOCK)
                     .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StorageStackBlock.LIGHT_LEVEL)));
+                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register("bar_stack_be",

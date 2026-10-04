@@ -48,7 +48,10 @@ public final class CapabilityAndPersistenceChecks {
         check(pile != null, "Storage pile did not resolve");
         pile.setPermanent(true);
 
-        loaded.loadCustomOnly(source.getUpdateTag(registries), registries);
+        CompoundTag updateTag = source.getUpdateTag(registries);
+        check(!updateTag.getCompound("Items").contains("Size"),
+                "Current storage serialization still wrote the unused Size field");
+        loaded.loadCustomOnly(updateTag, registries);
 
         ItemStack restored = loaded.getItems().getStackInSlot(7);
         checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
@@ -116,7 +119,6 @@ public final class CapabilityAndPersistenceChecks {
         list.add(item);
         CompoundTag storage = new CompoundTag();
         storage.put("Items", list);
-        storage.putInt("Size", StorageStackBE.SLOTS);
         CompoundTag saved = new CompoundTag();
         saved.put("Items", storage);
         saved.putInt("Rotation", 0);

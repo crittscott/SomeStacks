@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
+import com.github.crittscott.somestacks.fabric.PlatformInfoImpl;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackSoundData;
@@ -18,7 +19,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -28,6 +28,7 @@ import net.minecraft.world.level.storage.LevelResource;
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
+        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
         FabricRegistry.init();
         FabricItemStorage.init();
         ServerConfig.useCommonIngotDefaults();
@@ -70,12 +71,8 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
                 GestureThrottle.clear(handler.player.getUUID()));
 
-        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for Fabric", modVersion());
-    }
-
-    private static String modVersion() {
-        return FabricLoader.getInstance().getModContainer(SomeStacksCommon.MODID)
-                .map(container -> container.getMetadata().getVersion().getFriendlyString())
-                .orElse("unknown");
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks v{} initialized for Fabric",
+                PlatformInfo.modVersion(SomeStacksCommon.MODID));
     }
 }

@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,9 +23,7 @@ import java.util.Map;
  */
 final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
         implements SlottedStorage<ItemVariant> {
-    private static final int EMPTY_STORAGE_SLOT_CAPACITY = 64;
-
-    private final BlockEntity blockEntity;
+    private final StackBlockEntity blockEntity;
     private final Map<Integer, RunSlot> slotViews = new HashMap<>();
     /** First live value observed for each touched slot, in the order its final diff must replay. */
     private LinkedHashMap<Integer, ItemStack> originals = new LinkedHashMap<>();
@@ -35,23 +32,14 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
     /** The one Singles or Bar position whose structural extraction this transaction may stage. */
     private int structuralExtractionSlot = -1;
 
-    FabricRunItemStorage(BlockEntity blockEntity) {
+    FabricRunItemStorage(StackBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
     }
 
     @Override
     public int getSlotCount() {
-        if (blockEntity instanceof StorageStackBE be) {
-            StoragePile pile = be.pile();
-            return pile != null ? pile.advertisedSlots() : StorageStackBE.SLOTS;
-        }
-        if (blockEntity instanceof SinglesStackBE be) {
-            SinglesColumn column = be.column();
-            return column != null ? column.advertisedSlots() : SinglesStackBE.SLOTS;
-        }
-        BarStackBE be = (BarStackBE) blockEntity;
-        BarColumn column = be.column();
-        return column != null ? column.advertisedSlots() : BarStackBE.SLOTS;
+        StackRunItemAccess run = blockEntity.itemRun();
+        return run != null ? run.advertisedSlots() : blockEntity.getItems().getSlots();
     }
 
     @Override
@@ -103,60 +91,30 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
     }
 
     private ItemStack liveStack(int slot) {
-        if (blockEntity instanceof StorageStackBE be) {
-            StoragePile pile = be.pile();
-            return pile != null ? pile.getSlot(slot) : localStack(be, slot, StorageStackBE.SLOTS);
+        StackRunItemAccess run = blockEntity.itemRun();
+        if (run != null) {
+            return run.getSlot(slot);
         }
-        if (blockEntity instanceof SinglesStackBE be) {
-            SinglesColumn column = be.column();
-            return column != null ? column.getSlot(slot) : localStack(be, slot, SinglesStackBE.SLOTS);
-        }
-        BarStackBE be = (BarStackBE) blockEntity;
-        BarColumn column = be.column();
-        return column != null ? column.getSlot(slot) : localStack(be, slot, BarStackBE.SLOTS);
-    }
-
-    private static ItemStack localStack(StorageStackBE be, int slot, int slotCount) {
-        return slot >= 0 && slot < slotCount ? be.getItems().getStackInSlot(slot) : ItemStack.EMPTY;
-    }
-
-    private static ItemStack localStack(SinglesStackBE be, int slot, int slotCount) {
-        return slot >= 0 && slot < slotCount ? be.getItems().getStackInSlot(slot) : ItemStack.EMPTY;
-    }
-
-    private static ItemStack localStack(BarStackBE be, int slot, int slotCount) {
-        return slot >= 0 && slot < slotCount ? be.getItems().getStackInSlot(slot) : ItemStack.EMPTY;
+        return slot >= 0 && slot < blockEntity.getItems().getSlots()
+                ? blockEntity.getItems().getStackInSlot(slot)
+                : ItemStack.EMPTY;
     }
 
     private boolean canInsert(int slot, ItemStack stack) {
-        if (blockEntity instanceof StorageStackBE be) {
-            StoragePile pile = be.pile();
-            return pile != null && pile.insertAt(slot, stack, true) > 0;
-        }
-        if (blockEntity instanceof SinglesStackBE be) {
-            SinglesColumn column = be.column();
-            return column != null && column.insertOneAt(slot, stack, true);
-        }
-        BarColumn column = ((BarStackBE) blockEntity).column();
-        return column != null && column.insertOneAt(slot, stack, true);
+        StackRunItemAccess run = blockEntity.itemRun();
+        return run != null && run.insertAt(slot, stack, true) > 0;
     }
 
     private boolean isValid(ItemStack stack) {
-        if (blockEntity instanceof StorageStackBE) {
-            return StorageStackBE.isValidStorageItem(stack);
-        }
-        if (blockEntity instanceof SinglesStackBE) {
-            return SinglesStackBE.isValidSinglesItem(stack);
-        }
-        return BarStackBE.isValidBarItem(stack);
+        return blockEntity.acceptsAutomation(stack);
     }
 
     private int capacity(ItemVariant resource) {
-        return blockEntity instanceof StorageStackBE ? resource.toStack().getMaxStackSize() : 1;
+        return Math.min(blockEntity.automationSlotLimit(), resource.toStack().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return !(blockEntity instanceof StorageStackBE);
+        return blockEntity.automationSlotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -167,40 +125,16 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
     }
 
     private void commitInsert(int slot, ItemStack stack) {
-        if (blockEntity instanceof StorageStackBE be) {
-            StoragePile pile = be.pile();
-            if (pile != null) {
-                pile.insertAt(slot, stack, false);
-            }
-        } else if (blockEntity instanceof SinglesStackBE be) {
-            SinglesColumn column = be.column();
-            if (column != null) {
-                column.insertOneAt(slot, stack, false);
-            }
-        } else {
-            BarColumn column = ((BarStackBE) blockEntity).column();
-            if (column != null) {
-                column.insertOneAt(slot, stack, false);
-            }
+        StackRunItemAccess run = blockEntity.itemRun();
+        if (run != null) {
+            run.insertAt(slot, stack, false);
         }
     }
 
     private void commitExtract(int slot, int amount) {
-        if (blockEntity instanceof StorageStackBE be) {
-            StoragePile pile = be.pile();
-            if (pile != null) {
-                pile.extract(slot, amount);
-            }
-        } else if (blockEntity instanceof SinglesStackBE be) {
-            SinglesColumn column = be.column();
-            if (column != null) {
-                column.extract(slot, amount, false);
-            }
-        } else {
-            BarColumn column = ((BarStackBE) blockEntity).column();
-            if (column != null) {
-                column.extract(slot, amount, false);
-            }
+        StackRunItemAccess run = blockEntity.itemRun();
+        if (run != null) {
+            run.extract(slot, amount, false);
         }
     }
 
@@ -354,8 +288,8 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         @Override
         public long getCapacity() {
             ItemVariant resource = getResource();
-            return resource.isBlank() && blockEntity instanceof StorageStackBE
-                    ? EMPTY_STORAGE_SLOT_CAPACITY
+            return resource.isBlank() && !isStructural()
+                    ? blockEntity.automationSlotLimit()
                     : capacity(resource);
         }
     }

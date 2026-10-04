@@ -5,15 +5,15 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
+import com.github.crittscott.somestacks.forge.PlatformInfoImpl;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
-import com.github.crittscott.somestacks.server.ForgePlayerEditAuthority;
 import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.PlayerEdits;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -27,7 +27,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
@@ -46,9 +45,9 @@ public class SomeStacks {
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
         WorldEdits.setAuthority(new ForgeEditAuthority());
-        PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
-        PlayerReach.setProvider(player -> player.blockInteractionRange());
+        PlayerEdits.setAuthority(new Protection());
 
         ModRegistry.init(modBus);
         ModNetworking.init();
@@ -62,13 +61,8 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
 
-        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for Forge", modVersion());
-    }
-
-    private static String modVersion() {
-        return ModList.get().getModContainerById(MODID)
-                .map(container -> container.getModInfo().getVersion().toString())
-                .orElse("unknown");
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks v{} initialized for Forge", PlatformInfo.modVersion(MODID));
     }
 
     /**

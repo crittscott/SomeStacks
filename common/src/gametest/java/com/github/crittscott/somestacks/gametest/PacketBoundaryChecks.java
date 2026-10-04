@@ -19,6 +19,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -50,11 +52,19 @@ public final class PacketBoundaryChecks {
         BlockPos targetAbsolute = helper.absolutePos(TARGET);
         player.setPos(
                 targetAbsolute.getX() + 0.5, targetAbsolute.getY(), targetAbsolute.getZ() + 0.5);
-
-        check(PacketBoundary.withinReach(player, helper.absolutePos(TARGET)),
-                "Near target was rejected");
-        check(!PacketBoundary.withinReach(player, helper.absolutePos(TARGET.east(20))),
-                "Far target was accepted");
+        AttributeInstance reach = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+        check(reach != null, "Player has no block-interaction-range attribute");
+        double original = reach.getBaseValue();
+        try {
+            reach.setBaseValue(10.0);
+            check(PacketBoundary.withinReach(player, helper.absolutePos(TARGET.east(8))),
+                    "Raised interaction range was ignored");
+            reach.setBaseValue(2.0);
+            check(!PacketBoundary.withinReach(player, helper.absolutePos(TARGET.east(8))),
+                    "Lowered interaction range was ignored");
+        } finally {
+            reach.setBaseValue(original);
+        }
         helper.succeed();
     }
 

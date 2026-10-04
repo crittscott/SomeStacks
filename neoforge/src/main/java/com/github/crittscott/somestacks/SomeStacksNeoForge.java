@@ -6,22 +6,21 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.NeoForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
+import com.github.crittscott.somestacks.neoforge.PlatformInfoImpl;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
-import com.github.crittscott.somestacks.server.NeoForgePlayerEditAuthority;
 import com.github.crittscott.somestacks.server.PlayerEdits;
+import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -44,9 +43,9 @@ public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
     public SomeStacksNeoForge(IEventBus modBus) {
+        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
-        PlayerEdits.setAuthority(new NeoForgePlayerEditAuthority());
-        PlayerReach.setProvider(player -> player.blockInteractionRange());
+        PlayerEdits.setAuthority(new Protection());
         ServerConfig.useCommonIngotDefaults();
 
         ModRegistry.init(modBus);
@@ -66,13 +65,8 @@ public class SomeStacksNeoForge {
             ClientSetup.init(modBus);
         }
 
-        SomeStacksCommon.LOGGER.info("Some Stacks v{} initialized for NeoForge", modVersion());
-    }
-
-    private static String modVersion() {
-        return ModList.get().getModContainerById(MODID)
-                .map(container -> container.getModInfo().getVersion().toString())
-                .orElse("unknown");
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks v{} initialized for NeoForge", PlatformInfo.modVersion(MODID));
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

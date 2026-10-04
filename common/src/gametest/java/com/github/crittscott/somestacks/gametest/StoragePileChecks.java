@@ -81,6 +81,12 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(10, first, false);
         storage.getItems().insertItem(20, compatible, false);
         storage.getItems().insertItem(25, distinct, false);
+        ItemStack firstPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
+        firstPickaxe.setDamageValue(1);
+        ItemStack secondPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
+        secondPickaxe.setDamageValue(2);
+        storage.getItems().insertItem(3, firstPickaxe, false);
+        storage.getItems().insertItem(4, secondPickaxe, false);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -89,11 +95,13 @@ public final class StoragePileChecks {
         checkEquals(64, pile.getSlot(0).getCount(), "Consolidated full stack");
         checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
         checkEquals(5, pile.getSlot(2).getCount(), "Distinct tagged stack");
-        check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
+        check(pile.getSlot(5).isEmpty(), "Packed contents left a gap");
         checkEquals(CustomData.of(firstTag), pile.getSlot(0).get(DataComponents.CUSTOM_DATA),
                 "First component identity");
         checkEquals(CustomData.of(secondTag), pile.getSlot(2).get(DataComponents.CUSTOM_DATA),
                 "Distinct component identity");
+        checkEquals(1, pile.getSlot(3).getDamageValue(), "First damage component identity");
+        checkEquals(2, pile.getSlot(4).getDamageValue(), "Second damage component identity");
         helper.succeed();
     }
 

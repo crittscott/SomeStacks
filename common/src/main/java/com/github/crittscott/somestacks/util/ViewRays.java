@@ -18,7 +18,7 @@ public final class ViewRays {
 
     public static ViewRay of(Player player) {
         Vec3 eye = player.getEyePosition(1.0f);
-        double length = PlayerReach.blockReach(player) + BLOCK_CROSSING;
+        double length = player.blockInteractionRange() + BLOCK_CROSSING;
         return new ViewRay(eye, eye.add(player.getLookAngle().scale(length)));
     }
 }
