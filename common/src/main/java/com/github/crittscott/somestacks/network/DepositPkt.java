@@ -62,7 +62,7 @@ public class DepositPkt implements CustomPacketPayload {
     }
 
     public static void handleServer(DepositPkt msg, ServerPlayer sp) {
-        if (PacketBoundary.validate(sp, msg.pos) == null) {
+        if (!PacketBoundary.allows(sp, msg.pos)) {
             return;
         }
         apply(sp, msg);

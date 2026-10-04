@@ -33,8 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
-
 /**
  * Places a new stack of the selected type against a clicked face and makes the first deposit into
  * it. The two are one packet because they are one gesture: a placement whose deposit would fail is
@@ -66,33 +64,19 @@ public class PlaceAndDepositPkt implements CustomPacketPayload {
     }
 
     public static void encode(PlaceAndDepositPkt msg, FriendlyByteBuf buf) {
-        buf.writeByte(msg.blockType.ordinal());
-        buf.writeByte(msg.face.ordinal());
+        buf.writeEnum(msg.blockType);
+        buf.writeEnum(msg.face);
         buf.writeBlockPos(msg.pos);
     }
 
-    /**
-     * Decoding runs on the network thread, ahead of every check the mod makes. Both enums arrive as
-     * indexes, so each is range-checked here and one naming no constant is carried through as null
-     * for the server handler to drop, rather than thrown out of the decoder.
-     */
     public static PlaceAndDepositPkt decode(FriendlyByteBuf buf) {
-        BlockType blockType = BlockType.fromOrdinal(buf.readByte());
-        Direction face = faceFromOrdinal(buf.readByte());
+        BlockType blockType = buf.readEnum(BlockType.class);
+        Direction face = buf.readEnum(Direction.class);
         return new PlaceAndDepositPkt(blockType, face, buf.readBlockPos());
     }
 
-    @Nullable
-    private static Direction faceFromOrdinal(int ordinal) {
-        Direction[] values = Direction.values();
-        return ordinal >= 0 && ordinal < values.length ? values[ordinal] : null;
-    }
-
     public static void handleServer(PlaceAndDepositPkt msg, ServerPlayer sp) {
-        if (msg.blockType == null || msg.face == null) {
-            return;
-        }
-        if (PacketBoundary.validate(sp, msg.pos) == null) {
+        if (!PacketBoundary.allows(sp, msg.pos)) {
             return;
         }
         apply(sp, msg);

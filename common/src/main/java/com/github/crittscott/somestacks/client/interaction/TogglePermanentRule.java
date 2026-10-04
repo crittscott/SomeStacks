@@ -18,7 +18,7 @@ public final class TogglePermanentRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isClientSide() && ctx.isMainHand()) {
+        if (ctx.isMainHand()) {
             ClientGestures.sendTogglePermanent(ctx.getClickedPos());
         }
         ctx.cancelEvent();

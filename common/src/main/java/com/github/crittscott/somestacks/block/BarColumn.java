@@ -48,10 +48,10 @@ import java.util.List;
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
 public final class BarColumn implements StackRunItemAccess {
-    private final Level level;
+    private final ServerLevel level;
     private final List<BarStackBE> blocks;
 
-    private BarColumn(Level level, List<BarStackBE> blocks) {
+    private BarColumn(ServerLevel level, List<BarStackBE> blocks) {
         this.level = level;
         this.blocks = blocks;
     }
@@ -61,8 +61,8 @@ public final class BarColumn implements StackRunItemAccess {
      * Stack. Client-side levels never resolve a column: its bounds come from the server config.
      */
     @Nullable
-    public static BarColumn at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static BarColumn at(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel)) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof BarStackBE be)) {
@@ -75,7 +75,7 @@ public final class BarColumn implements StackRunItemAccess {
      * Walks the world for the run containing {@code pos}. Every caller reaches this through the
      * cache {@link BarStackBE#column()} keeps; see there for why.
      */
-    static BarColumn resolve(Level level, BlockPos pos) {
+    static BarColumn resolve(ServerLevel level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof BarStackBE) {
             base = base.below();
@@ -125,7 +125,7 @@ public final class BarColumn implements StackRunItemAccess {
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
-    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+    static void markDirtyAt(Level level, BlockPos pos) {
         BarColumn column = at(level, pos);
         if (column != null) {
             column.markDirty();
@@ -271,13 +271,13 @@ public final class BarColumn implements StackRunItemAccess {
      * recompute for every individual call.
      */
     void markDirty() {
-        if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.isEmpty()) {
             return;
         }
         Block block = CommonRegistry.BAR_STACK_BLOCK.get();
         BlockPos bottom = blocks.get(0).getBlockPos();
-        if (!serverLevel.getBlockTicks().hasScheduledTick(bottom, block)) {
-            serverLevel.scheduleTick(bottom, block, 1);
+        if (!level.getBlockTicks().hasScheduledTick(bottom, block)) {
+            level.scheduleTick(bottom, block, 1);
         }
     }
 
@@ -292,7 +292,7 @@ public final class BarColumn implements StackRunItemAccess {
     void publishPending() {
         boolean published = false;
         for (BarStackBE be : blocks) {
-            published |= be.publishIfPending();
+            published |= be.publishIfPending(level);
         }
         if (published) {
             publishComparatorSignal();
@@ -396,31 +396,30 @@ public final class BarColumn implements StackRunItemAccess {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()
-                || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(serverLevel, above)
-                && WorldEdits.isUnobstructed(serverLevel, above, finalCollision);
+        return !WorldEdits.isProtected(level, above)
+                && WorldEdits.isUnobstructed(level, above, finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
     private boolean grow(int slot) {
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow(finalCollision)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(serverLevel);
+        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.BAR_STACK_BLOCK.get(), serverLevel, above);
+                CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
+                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
@@ -499,13 +498,9 @@ public final class BarColumn implements StackRunItemAccess {
             keep--;
         }
 
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(serverLevel, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

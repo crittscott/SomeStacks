@@ -38,10 +38,10 @@ import java.util.List;
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
 public final class SinglesColumn implements StackRunItemAccess {
-    private final Level level;
+    private final ServerLevel level;
     private final List<SinglesStackBE> blocks;
 
-    private SinglesColumn(Level level, List<SinglesStackBE> blocks) {
+    private SinglesColumn(ServerLevel level, List<SinglesStackBE> blocks) {
         this.level = level;
         this.blocks = blocks;
     }
@@ -52,8 +52,8 @@ public final class SinglesColumn implements StackRunItemAccess {
      * config.
      */
     @Nullable
-    public static SinglesColumn at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static SinglesColumn at(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel)) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof SinglesStackBE be)) {
@@ -66,7 +66,7 @@ public final class SinglesColumn implements StackRunItemAccess {
      * Walks the world for the run containing {@code pos}. Every caller reaches this through the
      * cache {@link SinglesStackBE#column()} keeps; see there for why.
      */
-    static SinglesColumn resolve(Level level, BlockPos pos) {
+    static SinglesColumn resolve(ServerLevel level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof SinglesStackBE) {
             base = base.below();
@@ -115,7 +115,7 @@ public final class SinglesColumn implements StackRunItemAccess {
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
-    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+    static void markDirtyAt(Level level, BlockPos pos) {
         SinglesColumn column = at(level, pos);
         if (column != null) {
             column.markDirty();
@@ -261,13 +261,13 @@ public final class SinglesColumn implements StackRunItemAccess {
      * avoids an update packet, a full-column comparator walk, and a light recompute for every step.
      */
     void markDirty() {
-        if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.isEmpty()) {
             return;
         }
         Block block = CommonRegistry.SINGLES_STACK_BLOCK.get();
         BlockPos bottom = blocks.get(0).getBlockPos();
-        if (!serverLevel.getBlockTicks().hasScheduledTick(bottom, block)) {
-            serverLevel.scheduleTick(bottom, block, 1);
+        if (!level.getBlockTicks().hasScheduledTick(bottom, block)) {
+            level.scheduleTick(bottom, block, 1);
         }
     }
 
@@ -282,7 +282,7 @@ public final class SinglesColumn implements StackRunItemAccess {
     void publishPending() {
         boolean published = false;
         for (SinglesStackBE be : blocks) {
-            published |= be.publishIfPending();
+            published |= be.publishIfPending(level);
         }
         if (published) {
             publishComparatorSignal();
@@ -377,31 +377,30 @@ public final class SinglesColumn implements StackRunItemAccess {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableSinglesStackBlock()
-                || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.size() >= maxHeight() || !ServerConfig.enableSinglesStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(serverLevel, above)
-                && WorldEdits.isUnobstructed(serverLevel, above, finalCollision);
+        return !WorldEdits.isProtected(level, above)
+                && WorldEdits.isUnobstructed(level, above, finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
     private boolean grow(int slot) {
         VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
-        if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow(finalCollision)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(serverLevel);
+        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), serverLevel, above);
+                CommonRegistry.SINGLES_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
+                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);

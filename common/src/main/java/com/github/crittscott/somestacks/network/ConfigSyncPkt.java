@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -39,7 +40,7 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         this.enableStack = enableStack;
         this.enableSingles = enableSingles;
         this.enableBar = enableBar;
-        this.renderOverrides = renderOverrides;
+        this.renderOverrides = Map.copyOf(renderOverrides);
     }
 
     @Override
@@ -74,11 +75,6 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         }
     }
 
-    /**
-     * Decodes an invalid entry count to a null-map sentinel for {@link #isValid()} to reject. An empty
-     * map is valid and would clear the client's server override layer, so it cannot represent
-     * failure.
-     */
     public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
@@ -86,11 +82,10 @@ public class ConfigSyncPkt implements CustomPacketPayload {
 
         int size = buf.readInt();
         if (size < 0 || size > MAX_OVERRIDE_ENTRIES) {
-            SomeStacksCommon.LOGGER.warn("Ignoring config sync claiming {} render overrides", size);
-            return new ConfigSyncPkt(enableStack, enableSingles, enableBar, null);
+            throw new DecoderException("Invalid render-override count: " + size);
         }
 
-        Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>();
+        Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>(size);
         for (int i = 0; i < size; i++) {
             ResourceLocation itemId = buf.readResourceLocation();
             RenderMode mode = buf.readBoolean() ? RenderMode.fromString(buf.readUtf()) : null;
@@ -103,10 +98,6 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         }
 
         return new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);
-    }
-
-    public boolean isValid() {
-        return renderOverrides != null;
     }
 
     public boolean enableStack() {

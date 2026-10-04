@@ -9,12 +9,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
@@ -76,16 +76,16 @@ public class SinglesStackBE extends StackBlockEntity {
      */
     @Nullable
     public SinglesColumn column() {
-        if (level == null || level.isClientSide) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        long now = level.getGameTime();
+        long now = serverLevel.getGameTime();
         if (cachedColumn != null && cachedColumnTick == now) {
             return cachedColumn;
         }
 
-        cachedColumn = SinglesColumn.resolve(level, getBlockPos());
+        cachedColumn = SinglesColumn.resolve(serverLevel, getBlockPos());
         cachedColumnTick = now;
         return cachedColumn;
     }
@@ -127,18 +127,13 @@ public class SinglesStackBE extends StackBlockEntity {
         }
     }
 
-    /** The rendered rotation of one item, in quarter turns. Out-of-range indexes read as unrotated. */
+    /** The rendered rotation of the item at {@code index}, which must be in {@code [0, SLOTS)}. */
     public int getCubeRotation(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return 0;
-        }
         return cubeRotations[index];
     }
 
+    /** Sets the rendered rotation at {@code index}, which must be in {@code [0, SLOTS)}. */
     public void setCubeRotation(int index, int cubeRot) {
-        if (index < 0 || index >= SLOTS) {
-            return;
-        }
         cubeRotations[index] = cubeRot % 4;
         setChanged();
         if (!isBatching()) {
@@ -177,14 +172,11 @@ public class SinglesStackBE extends StackBlockEntity {
      * Refuses rather than redirecting the item elsewhere, so a caller walking cells from the bottom
      * fills the supported ones in order.
      *
+     * @param index the cell to fill, in {@code [0, SLOTS)}
      * @return whether the item moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
         if (fromHand.isEmpty()) {
-            return false;
-        }
-
-        if (index < 0 || index >= SLOTS) {
             return false;
         }
 
@@ -212,13 +204,11 @@ public class SinglesStackBE extends StackBlockEntity {
      * Takes the item out of the named cell and settles the visual column above it downward, drawing
      * items across block seams as needed so nothing is left unsupported.
      *
+     * @param index the cell to empty, in {@code [0, SLOTS)}
      * @return the extracted item, or empty when the cell held nothing
      */
     public ItemStack extractAt(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return ItemStack.EMPTY;
-        }
-
+        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         int column = SinglesCubeIdx.columnFromIndex(index);
         int y = SinglesCubeIdx.xyzFromIndex(index)[1];
 
@@ -234,14 +224,7 @@ public class SinglesStackBE extends StackBlockEntity {
             endBatchWithoutPublish();
         }
 
-        if (level == null || level.isClientSide) {
-            clearEmptyCubeRotations();
-            setChanged();
-            requestPublish();
-            return extracted;
-        }
-
-        drawDownColumn(column);
+        drawDownColumn(serverLevel, column);
         return extracted;
     }
 
@@ -291,12 +274,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * sees as continuous is the visual one. The walk ends at the first block that hands nothing
      * down. The receiving cell is written directly, for the reason {@link #shiftColumnDown} gives.
      */
-    private void drawDownColumn(int column) {
-        Level columnLevel = level;
-        if (columnLevel == null) {
-            return;
-        }
-
+    private void drawDownColumn(ServerLevel columnLevel, int column) {
         SinglesStackBE be = this;
         int col = column;
 
@@ -350,14 +328,13 @@ public class SinglesStackBE extends StackBlockEntity {
      *
      * <p>A block protection refuses to remove stays, and publishes as the empty block it now is.
      */
-    private void publishColumnEdit(Level columnLevel) {
+    private void publishColumnEdit(ServerLevel columnLevel) {
         clearEmptyCubeRotations();
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && columnLevel instanceof ServerLevel serverLevel
-                && WorldEdits.removeChecked(serverLevel, getBlockPos())) {
-            removeEmptyBelow(serverLevel, getBlockPos().below());
+                && WorldEdits.removeChecked(columnLevel, getBlockPos())) {
+            removeEmptyBelow(columnLevel, getBlockPos().below());
             return;
         }
 

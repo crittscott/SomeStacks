@@ -10,13 +10,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -97,16 +97,16 @@ public class BarStackBE extends StackBlockEntity {
      */
     @Nullable
     public BarColumn column() {
-        if (level == null || level.isClientSide) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        long now = level.getGameTime();
+        long now = serverLevel.getGameTime();
         if (cachedColumn != null && cachedColumnTick == now) {
             return cachedColumn;
         }
 
-        cachedColumn = BarColumn.resolve(level, getBlockPos());
+        cachedColumn = BarColumn.resolve(serverLevel, getBlockPos());
         cachedColumnTick = now;
         return cachedColumn;
     }
@@ -151,14 +151,11 @@ public class BarStackBE extends StackBlockEntity {
      * and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
      * walking positions from the bottom fills the supported ones in order.
      *
+     * @param index the position to fill, in {@code [0, SLOTS)}
      * @return whether the bar moved; the hand shrinks by one only then
      */
     public boolean depositAt(int index, ItemStack fromHand) {
         if (fromHand.isEmpty()) {
-            return false;
-        }
-
-        if (index < 0 || index >= SLOTS) {
             return false;
         }
 
@@ -189,12 +186,11 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
+     *
+     * @param index the position to empty, in {@code [0, SLOTS)}
      */
     public ItemStack extractAt(int index) {
-        if (index < 0 || index >= SLOTS) {
-            return ItemStack.EMPTY;
-        }
-
+        ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
         BarDropBatch drops = new BarDropBatch();
 
@@ -203,16 +199,14 @@ public class BarStackBE extends StackBlockEntity {
         try {
             extracted = items.extractItem(index, 1, false);
 
-            if (!extracted.isEmpty() && level != null && !level.isClientSide) {
-                cascadeFrom(level, this, seamBeneath(), topBefore, drops);
+            if (!extracted.isEmpty()) {
+                cascadeFrom(serverLevel, this, seamBeneath(), topBefore, drops);
             }
         } finally {
             endBatch();
         }
 
-        if (level != null) {
-            drops.spawn(level);
-        }
+        drops.spawn(serverLevel);
         return extracted;
     }
 
@@ -248,7 +242,7 @@ public class BarStackBE extends StackBlockEntity {
      * seam. {@code topBefore} is {@code start}'s top layer as it stood before the edit that prompted
      * the settle, which the edit itself may already have changed.
      */
-    static void cascadeFrom(Level columnLevel, BarStackBE start,
+    static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
                             @Nullable boolean[] seamBelow, boolean[] topBefore,
                             BarDropBatch drops) {
         BarStackBE be = start;
@@ -272,9 +266,9 @@ public class BarStackBE extends StackBlockEntity {
             //
             // The flag is raised first because the removal runs onRemove, which reads it to know
             // the cascade is already walking its own way up, and lowered again if nothing went.
-            if (be.isEmpty() && columnLevel instanceof ServerLevel serverLevel) {
+            if (be.isEmpty()) {
                 be.removedByCascade = true;
-                if (!WorldEdits.removeChecked(serverLevel, be.getBlockPos())) {
+                if (!WorldEdits.removeChecked(columnLevel, be.getBlockPos())) {
                     be.removedByCascade = false;
                 }
             }
@@ -304,10 +298,7 @@ public class BarStackBE extends StackBlockEntity {
      * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
      * not even tell it was inside one.
      */
-    static void collapseAbove(Level level, BlockPos removed, BarDropBatch drops) {
-        if (level.isClientSide) {
-            return;
-        }
+    static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(),
                     BarCubeIdx.topLayerOccupancy(above.items), drops);

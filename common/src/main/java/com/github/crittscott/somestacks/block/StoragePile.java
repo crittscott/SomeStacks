@@ -36,11 +36,11 @@ import java.util.Map;
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
 public final class StoragePile implements StackRunItemAccess {
-    private final Level level;
+    private final ServerLevel level;
     private final BlockPos base;
     private final List<StorageStackBE> blocks;
 
-    private StoragePile(Level level, BlockPos base, List<StorageStackBE> blocks) {
+    private StoragePile(ServerLevel level, BlockPos base, List<StorageStackBE> blocks) {
         this.level = level;
         this.base = base;
         this.blocks = blocks;
@@ -52,8 +52,8 @@ public final class StoragePile implements StackRunItemAccess {
      * reading its bounds would consult the server config.
      */
     @Nullable
-    public static StoragePile at(@Nullable Level level, BlockPos pos) {
-        if (level == null || level.isClientSide) {
+    public static StoragePile at(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel)) {
             return null;
         }
         if (!(level.getBlockEntity(pos) instanceof StorageStackBE sbe)) {
@@ -67,7 +67,7 @@ public final class StoragePile implements StackRunItemAccess {
      * cache {@link StorageStackBE#pile()} keeps, because a capability read resolves the run once per
      * slot and a machine reading the whole handler does that hundreds of times a tick.
      */
-    static StoragePile resolve(Level level, BlockPos pos) {
+    static StoragePile resolve(ServerLevel level, BlockPos pos) {
         BlockPos base = pos;
         while (level.getBlockEntity(base.below()) instanceof StorageStackBE) {
             base = base.below();
@@ -108,7 +108,7 @@ public final class StoragePile implements StackRunItemAccess {
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
-    static void markDirtyAt(@Nullable Level level, BlockPos pos) {
+    static void markDirtyAt(Level level, BlockPos pos) {
         StoragePile pile = at(level, pos);
         if (pile != null) {
             pile.markDirty();
@@ -450,16 +450,15 @@ public final class StoragePile implements StackRunItemAccess {
      * player, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableStorageStackBlock()
-                || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.size() >= maxHeight() || !ServerConfig.enableStorageStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(editor(serverLevel, placer), above)
-                && WorldEdits.isUnobstructed(serverLevel, above, Shapes.block());
+        return !WorldEdits.isProtected(editor(level, placer), above)
+                && WorldEdits.isUnobstructed(level, above, Shapes.block());
     }
 
     /** The player a growth is attributed to: the depositing player, or the automation actor. */
@@ -469,16 +468,16 @@ public final class StoragePile implements StackRunItemAccess {
 
     /** Adds one block on top. The placement hook inherits its mode; growth uses the base rotation. */
     private boolean grow(@Nullable ServerPlayer placer) {
-        if (!canGrow(placer) || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow(placer)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = editor(serverLevel, placer);
+        ServerPlayer editor = editor(level, placer);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), serverLevel, above);
+                CommonRegistry.STORAGE_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, serverLevel, above, newStack, Direction.DOWN, Shapes.block())) {
+                editor, level, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
@@ -501,12 +500,9 @@ public final class StoragePile implements StackRunItemAccess {
      * automation traffic rather than once per item moved.
      */
     void markDirty() {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
         Block block = CommonRegistry.STORAGE_STACK_BLOCK.get();
-        if (!serverLevel.getBlockTicks().hasScheduledTick(base, block)) {
-            serverLevel.scheduleTick(base, block, 1);
+        if (!level.getBlockTicks().hasScheduledTick(base, block)) {
+            level.scheduleTick(base, block, 1);
         }
     }
 
@@ -552,7 +548,7 @@ public final class StoragePile implements StackRunItemAccess {
 
         trimEmptyTop();
         for (StorageStackBE sbe : blocks) {
-            sbe.publishIfPending();
+            sbe.publishIfPending(level);
         }
         publishComparatorSignal();
     }
@@ -575,13 +571,9 @@ public final class StoragePile implements StackRunItemAccess {
             keep--;
         }
 
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(serverLevel, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

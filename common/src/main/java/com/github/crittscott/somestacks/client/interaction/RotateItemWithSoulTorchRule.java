@@ -27,7 +27,7 @@ public final class RotateItemWithSoulTorchRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (!ctx.isClientSide() || !ctx.isMainHand()) {
+        if (!ctx.isMainHand()) {
             ctx.cancelEvent();
             return;
         }

@@ -92,18 +92,11 @@ public final class InteractionContext {
         return hand == InteractionHand.MAIN_HAND;
     }
 
-    public boolean isClientSide() {
-        return level.isClientSide;
-    }
-
     /**
      * Whether the player's crosshair is on a block. Distinguishes a click at open air, which cycles
      * the placement mode, from one that merely missed the block-click event.
      */
     public boolean isHittingBlock() {
-        if (!level.isClientSide) {
-            return false;
-        }
         HitResult hit = Minecraft.getInstance().hitResult;
         return hit != null && hit.getType() == HitResult.Type.BLOCK;
     }

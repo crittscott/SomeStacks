@@ -55,7 +55,7 @@ public class RotateItemPkt implements CustomPacketPayload {
     }
 
     public static void handleServer(RotateItemPkt msg, ServerPlayer sp) {
-        if (PacketBoundary.validate(sp, msg.pos) == null) return;
+        if (!PacketBoundary.allows(sp, msg.pos)) return;
 
             // Establish that this packet describes the gesture before claiming it. A claim fires
             // the interaction event and suppresses the vanilla click that follows.

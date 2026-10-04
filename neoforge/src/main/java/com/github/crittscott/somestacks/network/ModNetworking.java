@@ -8,6 +8,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -24,11 +25,11 @@ import java.util.function.Consumer;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static Consumer<CustomPacketPayload> clientReceiver = payload -> {};
+    private static Consumer<CustomPacketPayload> clientReceiver;
 
     /** Installed once by {@code ClientSetup} on the physical client. */
     public static void setClientReceiver(Consumer<CustomPacketPayload> receiver) {
-        clientReceiver = receiver;
+        clientReceiver = Objects.requireNonNull(receiver);
     }
 
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
@@ -54,14 +55,11 @@ public final class ModNetworking {
 
     private static <T extends CustomPacketPayload> IPayloadHandler<T> toServer(
             BiConsumer<T, ServerPlayer> handler) {
-        return (payload, context) -> context.enqueueWork(() -> {
-            if (context.player() instanceof ServerPlayer sender) {
-                handler.accept(payload, sender);
-            }
-        });
+        return (payload, context) -> handler.accept(payload, (ServerPlayer) context.player());
     }
 
     private static void toClient(CustomPacketPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> clientReceiver.accept(payload));
+        Objects.requireNonNull(clientReceiver,
+                "Client packet receiver has not been installed").accept(payload);
     }
 }

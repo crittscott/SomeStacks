@@ -5,17 +5,21 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.network.DepositPkt;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ExtractPkt;
 import com.github.crittscott.somestacks.network.PacketBoundary;
 import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
 import com.github.crittscott.somestacks.network.RotateBlockPkt;
 import com.github.crittscott.somestacks.network.RotateItemPkt;
 import com.github.crittscott.somestacks.network.TogglePermanentPkt;
+import com.github.crittscott.somestacks.network.WriteOverridesPkt;
 import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.util.BlockType;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -26,8 +30,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.border.WorldBorder;
 
-import java.util.function.Function;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -45,6 +50,49 @@ public final class PacketBoundaryChecks {
     public static final InteractionHand HAND = InteractionHand.MAIN_HAND;
 
     private PacketBoundaryChecks() {}
+
+    /** Malformed enum ids and collection counts fail in the decoder instead of reaching a handler. */
+    public static void malformedPayloadFieldsFailDuringDecoding(GameTestHelper helper) {
+        FriendlyByteBuf blockType = new FriendlyByteBuf(Unpooled.buffer());
+        blockType.writeVarInt(BlockType.values().length);
+        blockType.writeEnum(Direction.UP);
+        blockType.writeBlockPos(BlockPos.ZERO);
+        check(decodeFails(blockType, PlaceAndDepositPkt::decode),
+                "Invalid block-type ordinal reached the placement handler");
+
+        FriendlyByteBuf face = new FriendlyByteBuf(Unpooled.buffer());
+        face.writeEnum(BlockType.STORAGE_STACK);
+        face.writeVarInt(Direction.values().length);
+        face.writeBlockPos(BlockPos.ZERO);
+        check(decodeFails(face, PlaceAndDepositPkt::decode),
+                "Invalid face ordinal reached the placement handler");
+
+        FriendlyByteBuf namespaces = new FriendlyByteBuf(Unpooled.buffer());
+        namespaces.writeInt(-1);
+        check(decodeFails(namespaces, WriteOverridesPkt::decode),
+                "Negative namespace count reached the client handler");
+
+        FriendlyByteBuf overrides = new FriendlyByteBuf(Unpooled.buffer());
+        overrides.writeBoolean(true);
+        overrides.writeBoolean(true);
+        overrides.writeBoolean(true);
+        overrides.writeInt(65_537);
+        check(decodeFails(overrides, ConfigSyncPkt::decode),
+                "Excessive override count reached the client handler");
+        helper.succeed();
+    }
+
+    private static boolean decodeFails(
+            FriendlyByteBuf buffer, Consumer<FriendlyByteBuf> decoder) {
+        try {
+            decoder.accept(buffer);
+            return false;
+        } catch (RuntimeException expected) {
+            return true;
+        } finally {
+            buffer.release();
+        }
+    }
 
     public static void reachCheckAcceptsNearTargetAndRejectsFarTarget(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {

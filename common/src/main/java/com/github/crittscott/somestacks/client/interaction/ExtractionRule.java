@@ -26,7 +26,7 @@ public final class ExtractionRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (!ctx.isClientSide() || !ctx.isMainHand()) {
+        if (!ctx.isMainHand()) {
             ctx.cancelEvent();
             return;
         }

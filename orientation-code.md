@@ -51,7 +51,7 @@ The selected loader build is required on client and server. Loaders own transpor
 
 ## Runtime and movement model
 
-A maximal contiguous vertical run of one stack type is the central abstraction. Block entities own local slots; `StoragePile`, `SinglesColumn`, and `BarColumn` coordinate cross-block operations. Run resolution is cached per game tick and invalidated by structural changes.
+A maximal contiguous vertical run of one stack type is the central abstraction. Block entities own local slots; the server-only `StoragePile`, `SinglesColumn`, and `BarColumn` coordinate cross-block operations and hold a `ServerLevel`. Run resolution is cached per game tick and invalidated by structural changes.
 
 Block entities do not tick. `StackBlockEntity` owns local persistence and a nesting-safe batch depth; mutations schedule one deferred pass on the run's bottom block that coalesces client updates, lighting, comparator publication, and Storage settlement. Every block in a run reports the same run-wide comparator signal.
 
@@ -77,7 +77,7 @@ Growth and cleanup use `WorldEdits` with an automation actor and check build lim
 
 Shared gesture rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. Placement mode is client state sent with the placement request.
 
-The server treats every payload as a request. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
+The server treats every payload as a request. Decoders reject invalid enum ids and bounded collection sizes before dispatch. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
 
 `EventPlayerEditAuthority` owns the common protection-check ordering and view-hit calculation. Forge and NeoForge supply their native right-click event and mark `RightClickBlockSuppressor` only after every check succeeds; Fabric supplies `UseBlockCallback` and needs no trailing-click mark. Adjacent Singles and Bar deposits validate both the clicked position and destination.
 

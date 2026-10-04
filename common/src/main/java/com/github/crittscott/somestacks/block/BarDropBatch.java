@@ -2,8 +2,8 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.SlotAccess;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import java.util.LinkedHashMap;
@@ -33,11 +33,7 @@ final class BarDropBatch {
         }
     }
 
-    void spawn(Level level) {
-        if (level.isClientSide) {
-            return;
-        }
-
+    void spawn(ServerLevel level) {
         for (Map.Entry<BlockPos, Map<StackKey, Group>> position : dropsByPosition.entrySet()) {
             for (Group group : position.getValue().values()) {
                 int remaining = group.count;

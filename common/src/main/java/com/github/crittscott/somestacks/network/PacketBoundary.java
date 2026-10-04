@@ -21,32 +21,31 @@ public final class PacketBoundary {
     private static final double REACH_PADDING = 1.0;
 
     /**
-     * Common opening chain for a positional C2S packet: a non-null sender, a gesture left in this
-     * tick's budget, a sender who is not a spectator, a loaded target, and a target within reach.
-     * Returns the sender, or {@code null} if any check fails (the caller returns).
+     * Common opening chain for a positional C2S packet: claims this tick's gesture budget, then
+     * requires a sender who is not a spectator, a loaded target, and a target within reach.
      *
      * <p>{@code pos} is the position the packet would change, and it is the one held to reach here.
      * A packet naming a second position names a neighbor of this one, consults it for protection,
      * and writes nothing there; its distance is bounded by the caller's own reading of what counts
      * as a gesture rather than by a reach test of its own.
      */
-    static ServerPlayer validate(ServerPlayer sp, BlockPos pos) {
+    static boolean allows(ServerPlayer sp, BlockPos pos) {
         if (!GestureThrottle.claimTick(sp)) {
-            return null;
+            return false;
         }
         // A spectator passes through the world without touching it. Vanilla stops the interaction
         // that would reach a block at the game mode; the gestures these packets carry take the
         // place of that interaction, so they enforce the same restriction here.
         if (sp.isSpectator()) {
-            return null;
+            return false;
         }
         if (!sp.serverLevel().isLoaded(pos)) {
-            return null;
+            return false;
         }
         if (!withinReach(sp, pos)) {
-            return null;
+            return false;
         }
-        return sp;
+        return true;
     }
 
     public static boolean withinReach(ServerPlayer sp, BlockPos pos) {

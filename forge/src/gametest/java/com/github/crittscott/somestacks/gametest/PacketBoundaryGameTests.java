@@ -18,6 +18,11 @@ public final class PacketBoundaryGameTests {
     private PacketBoundaryGameTests() {}
 
     @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void malformedPayloadFieldsFailDuringDecoding(GameTestHelper helper) {
+        PacketBoundaryChecks.malformedPayloadFieldsFailDuringDecoding(helper);
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper helper) {
         PacketBoundaryChecks.reachCheckAcceptsNearTargetAndRejectsFarTarget(
                 helper, playerFactory(helper));

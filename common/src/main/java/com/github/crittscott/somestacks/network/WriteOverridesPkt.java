@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -27,7 +28,7 @@ public class WriteOverridesPkt implements CustomPacketPayload {
     private final List<String> namespaces;
 
     private WriteOverridesPkt(List<String> namespaces) {
-        this.namespaces = namespaces;
+        this.namespaces = List.copyOf(namespaces);
     }
 
     @Override
@@ -52,18 +53,13 @@ public class WriteOverridesPkt implements CustomPacketPayload {
         }
     }
 
-    /**
-     * Decodes an invalid namespace count to a null-list sentinel for {@link #namespaces()} to reject. An
-     * empty list is a valid request to write the user layer, so it cannot represent failure.
-     */
     public static WriteOverridesPkt decode(FriendlyByteBuf buf) {
         int size = buf.readInt();
         if (size < 0 || size > MAX_NAMESPACES) {
-            SomeStacksCommon.LOGGER.warn("Ignoring write request claiming {} namespaces", size);
-            return new WriteOverridesPkt(null);
+            throw new DecoderException("Invalid write-override namespace count: " + size);
         }
 
-        List<String> namespaces = new ArrayList<>();
+        List<String> namespaces = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             namespaces.add(buf.readUtf());
         }

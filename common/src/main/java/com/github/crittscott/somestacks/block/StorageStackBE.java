@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -79,16 +80,16 @@ public class StorageStackBE extends StackBlockEntity {
      */
     @Nullable
     public StoragePile pile() {
-        if (level == null || level.isClientSide) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        long now = level.getGameTime();
+        long now = serverLevel.getGameTime();
         if (cachedPile != null && cachedPileTick == now) {
             return cachedPile;
         }
 
-        cachedPile = StoragePile.resolve(level, getBlockPos());
+        cachedPile = StoragePile.resolve(serverLevel, getBlockPos());
         cachedPileTick = now;
         return cachedPile;
     }

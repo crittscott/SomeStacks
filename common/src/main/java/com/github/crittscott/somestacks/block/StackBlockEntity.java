@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -148,9 +149,8 @@ public abstract class StackBlockEntity extends BlockEntity {
         schedulePublish();
     }
 
-    final boolean publishIfPending() {
-        Level currentLevel = level;
-        if (currentLevel == null || currentLevel.isClientSide || !publishPending) {
+    final boolean publishIfPending(ServerLevel currentLevel) {
+        if (!publishPending) {
             return false;
         }
         publishPending = false;

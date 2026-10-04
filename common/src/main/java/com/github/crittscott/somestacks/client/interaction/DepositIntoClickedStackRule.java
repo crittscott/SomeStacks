@@ -65,7 +65,7 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isClientSide() && ctx.isMainHand()) {
+        if (ctx.isMainHand()) {
             ClientGestures.sendDeposit(ctx.getClickedPos(), ctx.getClickedPos());
         }
         ctx.cancelEvent();

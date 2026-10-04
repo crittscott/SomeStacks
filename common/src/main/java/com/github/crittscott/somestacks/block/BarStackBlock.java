@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -83,8 +84,11 @@ public class BarStackBlock extends ShapedStackBlock {
 
             // Removing a block removes the supporting seam beneath the column above. A cascade
             // already walks upward itself, so only an external removal starts another collapse.
-            if (!isMoving && !cascading) {
-                BarStackBE.collapseAbove(level, pos, drops);
+            if (level instanceof ServerLevel serverLevel) {
+                if (!isMoving && !cascading) {
+                    BarStackBE.collapseAbove(serverLevel, pos, drops);
+                }
+                drops.spawn(serverLevel);
             }
 
             // Publish after collapse so surviving runs report their final contents.
@@ -96,7 +100,6 @@ public class BarStackBlock extends ShapedStackBlock {
             // again.
             BarColumn.markDirtyAt(level, pos.below());
             BarColumn.markDirtyAt(level, pos.above());
-            drops.spawn(level);
         }
     }
 

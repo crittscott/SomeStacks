@@ -48,7 +48,7 @@ public class TogglePermanentPkt implements CustomPacketPayload {
     }
 
     public static void handleServer(TogglePermanentPkt msg, ServerPlayer sp) {
-        if (PacketBoundary.validate(sp, msg.pos) == null) return;
+        if (!PacketBoundary.allows(sp, msg.pos)) return;
 
         if (WorldEdits.isProtected(sp, msg.pos)) return;
 

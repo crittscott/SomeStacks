@@ -6,6 +6,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -54,9 +55,7 @@ final class ForgePacketHandlers {
     }
 
     private static void server(CustomPayloadEvent.Context ctx, Consumer<ServerPlayer> work) {
-        ServerPlayer sender = ctx.getSender();
-        if (sender != null) {
-            work.accept(sender);
-        }
+        work.accept(Objects.requireNonNull(ctx.getSender(),
+                "Serverbound payload has no sending player"));
     }
 }

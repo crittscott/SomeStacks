@@ -45,6 +45,7 @@ public final class ClientEvents implements ClientGestures.Sender {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
+        if (!evt.getLevel().isClientSide()) return;
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forAirClick(

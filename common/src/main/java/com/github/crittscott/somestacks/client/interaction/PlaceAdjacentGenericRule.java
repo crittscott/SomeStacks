@@ -18,7 +18,7 @@ public final class PlaceAdjacentGenericRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isClientSide() && ctx.isMainHand()) {
+        if (ctx.isMainHand()) {
             ClientGestures.sendPlaceAndDeposit(
                     ctx.getClickedPos().relative(ctx.getFace()),
                     ctx.getFace()

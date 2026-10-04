@@ -75,9 +75,7 @@ public final class FabricNetworking {
 
     private static <T extends CustomPacketPayload> void registerServer(
             CustomPacketPayload.Type<T> type, BiConsumer<T, ServerPlayer> handler) {
-        ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
-            ServerPlayer player = context.player();
-            player.server.execute(() -> handler.accept(payload, player));
-        });
+        ServerPlayNetworking.registerGlobalReceiver(type,
+                (payload, context) -> handler.accept(payload, context.player()));
     }
 }

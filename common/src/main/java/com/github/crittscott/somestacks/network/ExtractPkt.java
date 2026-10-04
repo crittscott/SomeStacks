@@ -47,7 +47,7 @@ public record ExtractPkt(BlockPos pos, int index) implements CustomPacketPayload
     }
 
     public static void handleServer(ExtractPkt msg, ServerPlayer player) {
-        if (PacketBoundary.validate(player, msg.pos) == null) return;
+        if (!PacketBoundary.allows(player, msg.pos)) return;
 
             // The mark goes on the stack itself: extraction can put an item in a hand that was
             // empty, at a position a Storage settle or a Bar collapse may be about to clear.

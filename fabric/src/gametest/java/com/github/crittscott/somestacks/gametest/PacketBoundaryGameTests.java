@@ -17,6 +17,11 @@ public final class PacketBoundaryGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
     @GameTest(template = TEMPLATE)
+    public void malformedPayloadFieldsFailDuringDecoding(GameTestHelper helper) {
+        PacketBoundaryChecks.malformedPayloadFieldsFailDuringDecoding(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
     public void reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper helper) {
         PacketBoundaryChecks.reachCheckAcceptsNearTargetAndRejectsFarTarget(
                 helper, playerFactory(helper));
