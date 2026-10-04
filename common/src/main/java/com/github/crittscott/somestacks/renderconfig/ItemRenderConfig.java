@@ -1,6 +1,5 @@
-package com.github.crittscott.somestacks.client;
+package com.github.crittscott.somestacks.renderconfig;
 
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

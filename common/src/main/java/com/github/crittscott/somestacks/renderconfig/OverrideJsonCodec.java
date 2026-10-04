@@ -1,8 +1,6 @@
-package com.github.crittscott.somestacks.util;
+package com.github.crittscott.somestacks.renderconfig;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.google.gson.JsonElement;

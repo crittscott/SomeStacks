@@ -3,7 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerOverridesLoader;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

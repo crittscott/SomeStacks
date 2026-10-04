@@ -3,8 +3,10 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.List;

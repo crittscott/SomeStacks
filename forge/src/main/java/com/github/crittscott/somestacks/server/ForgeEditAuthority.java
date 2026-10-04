@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
  * automation, and claim, protection, and logging mods are given the chance to veto through the
  * ordinary Forge placement and break events. Forge ships no FakePlayer helper, so this constructs
- * a bare {@code ServerPlayer} the same way the Fabric authority does.
+ * a bare {@code ServerPlayer} and caches one actor per dimension.
  */
 public final class ForgeEditAuthority implements EditAuthority {
     private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();

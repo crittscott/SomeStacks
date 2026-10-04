@@ -4,13 +4,13 @@
 
 # Some Stacks — code orientation
 
-Subsystem ownership, persistent data, loader boundaries, and invariants the code currently maintains. `orientation-player.md` covers observable behavior; `build-env.md` covers the build.
+Current subsystem ownership, persistence, loader boundaries, and invariants. `orientation-player.md` covers observable behavior; `build-env.md` covers the build.
 
 ## Project shape
 
-Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Architectury is build-time only; no loader has an Architectury API runtime dependency.
+Some Stacks is a Java 21 Minecraft 1.21.4 mod under `com.github.crittscott.somestacks`, mod id `somestacks`. Architectury is build-time only, with no runtime API dependency.
 
-`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams. Loader seams are installed during loader startup. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
+`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams installed during startup. Each loader supplies registry handles before common world objects exist.
 
 Three blocks and block entity types are registered, with no block items, menus, recipes, or portable containers:
 
@@ -33,6 +33,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | `WorldEdits`, `EditAuthority`, `AdjacentEdits` | World edits, automation authority, adjacent-target protection |
 | `StackInteractions`, `ServerGestureState` | Server interpretation of vanilla block-use packets and synchronized gesture state |
 | `network/*` | Gesture-state and server-to-client synchronization payloads |
+| `renderconfig/*` | Shared render override types, JSON validation, and codecs |
 | `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
 | `SsCommand`, `RenderGalleryGenerator` | Administration, profile authoring, galleries |
 | Loader modules | Registration, transport, callbacks, rendering glue, native automation views |
