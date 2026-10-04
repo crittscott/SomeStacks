@@ -25,10 +25,7 @@ abstract class MinecraftMixin {
     @Inject(method = "startUseItem", at = @At("HEAD"))
     private void somestacks$onEmptyHandAirClick(CallbackInfo callback) {
         if (player == null
-                || !player.getMainHandItem().isEmpty()
-                || !player.getOffhandItem().isEmpty()
-                || hitResult == null
-                || hitResult.getType() != HitResult.Type.MISS) {
+                || !ClientGestures.isEmptyMainHandAirClick(player, hitResult)) {
             return;
         }
 

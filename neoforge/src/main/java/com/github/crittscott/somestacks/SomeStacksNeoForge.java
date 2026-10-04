@@ -16,7 +16,6 @@ import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -67,12 +66,13 @@ public class SomeStacksNeoForge {
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.loadFor(event.getServer());
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+            ServerConfig.rebakeIngots();
+        }
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

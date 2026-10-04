@@ -26,7 +26,7 @@ public final class FabricGameTestSupport {
      * automation caller would: through {@link ItemStorage#SIDED}, not the block entity directly.
      */
     @SuppressWarnings("unchecked")
-    public static SlottedStorage<ItemVariant> capability(BlockEntity blockEntity) {
+    public static SlottedStorage<ItemVariant> storage(BlockEntity blockEntity) {
         Storage<ItemVariant> storage = ItemStorage.SIDED.find(
                 (ServerLevel) blockEntity.getLevel(),
                 blockEntity.getBlockPos(),

@@ -43,7 +43,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | --- | --- | --- | --- |
 | Metadata | `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` | `fabric.mod.json`, mixin config |
 | Entrypoint | `SomeStacks` | `SomeStacksNeoForge` | `SomeStacksFabric` plus client entrypoint |
-| Networking | `SimpleChannel` | payload registrar | payload registry plus `ProtocolPkt` handshake |
+| Networking | versioned `SimpleChannel` | versioned payload registrar | payload registry plus a configuration-phase `ProtocolPkt` version marker |
 | Gestures | interaction/input events | interaction/input events | callbacks plus air-click mixin |
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
@@ -72,7 +72,7 @@ Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; 
 
 Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-Growth and cleanup use `WorldEdits` with the shared `[SomeStacks]` automation identity and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge owns an explicit per-dimension actor cache cleared on level unload and server stop; NeoForge and Fabric use their fake-player factories. Forge and NeoForge fire native place/break events. Fabric fires `PlayerBlockBreakEvents` on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`. Successful outer-block placement/removal also invokes the vanilla placement callback and emits `BLOCK_PLACE`/`BLOCK_DESTROY` game events; internal cells and bars remain block-entity contents, not world blocks.
+Growth and cleanup use `WorldEdits` with the shared `[SomeStacks]` automation identity and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge owns an explicit per-dimension actor cache cleared on level unload and server stop; NeoForge and Fabric use their fake-player factories. Forge and NeoForge fire native place/break events. Fabric fires the `PlayerBlockBreakEvents` BEFORE/CANCELED/AFTER lifecycle on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`. Successful outer-block placement/removal also invokes the vanilla placement callback and emits `BLOCK_PLACE`/`BLOCK_DESTROY` game events; internal cells and bars remain block-entity contents, not world blocks.
 
 ## Player interaction and networking
 
@@ -92,7 +92,7 @@ All types use block entity renderers. `CubeRenderHelper` renders Storage and Sin
 
 ## GameTests
 
-There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions, shared vanilla-interaction and protection scenarios, and the shared Base64 empty-structure fixture live under `common/src/gametest`; assertions use `CommonRegistry`. Native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Loader-native event and synthetic-player assertions remain loader-specific. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
+There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` under `<loader>/src/gametest`, run with `:<loader>:runGameTestServer` and excluded from `build`. Neutral assertions, vanilla interaction/protection scenarios, and the Base64 empty-structure fixture live in `common/src/gametest` and use `CommonRegistry`. Loader-native `IItemHandler` and Transfer API checks remain local. Fabric also covers storage-wide transfer, `StorageUtil.move`, nested rollback, and one structural extraction per transaction. Forge/NeoForge use annotated holders (NeoForge disables class-name prefixes); Fabric uses `fabric-gametest` entrypoints. Native event/synthetic-player assertions stay local; `CUSTOM_DATA` distinguishes identical test stacks.
 
 ## Conventions the code currently follows
 

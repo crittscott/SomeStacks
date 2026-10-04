@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -112,13 +113,15 @@ public final class WorldEdits {
             return false;
         }
         BlockState state = level.getBlockState(pos);
-        if (authority.vetoesRemoval(level, pos, state)) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (authority.vetoesRemoval(level, pos, state, blockEntity)) {
             return false;
         }
         ServerPlayer actor = automationActor(level);
         if (!level.removeBlock(pos, false)) {
             return false;
         }
+        authority.afterRemoval(level, pos, state, blockEntity);
         level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
         return true;
     }

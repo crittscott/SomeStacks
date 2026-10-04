@@ -58,17 +58,17 @@ public final class BarColumnGameTests implements FabricGameTest {
     public void automationBackfillsWithoutDropping(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(barItem, 10);
 
         // A walk of the advertised positions fills the block from the bottom, because each bar
         // placed supports the layer above it before the walk reaches it.
-        ItemStack remainder = FabricGameTestSupport.insertWalkingSlots(capability, offered, false);
+        ItemStack remainder = FabricGameTestSupport.insertWalkingSlots(storage, offered, false);
         check(remainder.isEmpty(), "A walk of the positions left a remainder");
         checkEquals(10, count(bars.getItems(), barItem),
                 "Inserted bar count");
 
-        ItemStack extracted = FabricGameTestSupport.extractAt(capability, 0, 64, false);
+        ItemStack extracted = FabricGameTestSupport.extractAt(storage, 0, 64, false);
 
         checkEquals(1, extracted.getCount(), "Automated extracted count");
         checkEquals(9, count(bars.getItems(), barItem),
@@ -81,31 +81,31 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
+    public void storageInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(barItem, 4);
 
         // Position 8 is the first of layer 1, with an empty layer 0 beneath it, so it is refused
         // rather than redirected to a position that would take the bar.
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, 8, offered, true).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, 8, offered, true).getCount(),
                 "Simulated insertion into an unsupported position");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, 8, offered, false).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, 8, offered, false).getCount(),
                 "Committed insertion into an unsupported position");
         checkEquals(0, occupied(bars.getItems()),
                 "An unsupported position stored something");
 
         // Position 0 is in the bottom layer of a column standing on the world, so it is grounded
         // outright and takes exactly the one bar a position holds.
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, 0, offered, true).getCount(),
+        checkEquals(3, FabricGameTestSupport.insertAt(storage, 0, offered, true).getCount(),
                 "Simulated insertion into a grounded position");
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, 0, offered, false).getCount(),
+        checkEquals(3, FabricGameTestSupport.insertAt(storage, 0, offered, false).getCount(),
                 "Committed insertion into a grounded position");
-        checkEquals(4, offered.getCount(), "Capability mutated caller input");
+        checkEquals(4, offered.getCount(), "Storage mutated caller input");
         checkEquals(1, occupied(bars.getItems()),
                 "One call should store one bar");
-        checkEquals(1, FabricGameTestSupport.slotLimit(capability, 0),
+        checkEquals(1, FabricGameTestSupport.slotLimit(storage, 0),
                 "A position's slot limit should be what one call takes");
         helper.succeed();
     }
@@ -125,9 +125,9 @@ public final class BarColumnGameTests implements FabricGameTest {
                 "Test needs an item a Bar Stack refuses");
         bars.getItems().insertItem(0, new ItemStack(barItem), false);
         seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
 
-        ItemStack extracted = FabricGameTestSupport.extractAt(capability, 0, 64, false);
+        ItemStack extracted = FabricGameTestSupport.extractAt(storage, 0, 64, false);
 
         checkEquals(barItem, extracted.getItem(), "Automated extracted item");
         checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
@@ -137,13 +137,13 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
+    public void storageSimulationDoesNotMutateExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         bars.depositAt(0, new ItemStack(barItem));
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
 
-        ItemStack simulated = FabricGameTestSupport.extractAt(capability, 0, 64, true);
+        ItemStack simulated = FabricGameTestSupport.extractAt(storage, 0, 64, true);
 
         checkEquals(barItem, simulated.getItem(), "Simulated item");
         checkEquals(1, simulated.getCount(), "Simulated count");

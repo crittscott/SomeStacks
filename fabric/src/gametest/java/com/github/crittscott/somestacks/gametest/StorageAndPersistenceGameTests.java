@@ -31,7 +31,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * side, a run advertising its reachable headroom, and each type's update tag round-tripping the
  * contents and presentation state it is responsible for.
  */
-public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
+public final class StorageAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void itemStorageIsAvailableFromEverySide(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -68,13 +68,13 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
         int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
         checkEquals(StorageStackBE.SLOTS * storageLevels,
-                FabricGameTestSupport.capability(storage).getSlotCount(),
+                FabricGameTestSupport.storage(storage).getSlotCount(),
                 "Storage advertised slots");
         checkEquals(SinglesStackBE.SLOTS * singlesLevels,
-                FabricGameTestSupport.capability(singles).getSlotCount(),
+                FabricGameTestSupport.storage(singles).getSlotCount(),
                 "Singles advertised slots");
         checkEquals(BarStackBE.SLOTS * barLevels,
-                FabricGameTestSupport.capability(bar).getSlotCount(),
+                FabricGameTestSupport.storage(bar).getSlotCount(),
                 "Bar advertised slots");
         helper.succeed();
     }
@@ -107,7 +107,7 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void simulatedInsertionDoesNotMutateAnyStack(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(singles);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.APPLE, 5);
 
         // Cell 0 is a bottom-layer cell of a column standing on the world, so it is grounded

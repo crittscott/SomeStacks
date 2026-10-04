@@ -9,7 +9,9 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +29,7 @@ import java.util.regex.Pattern;
 
 /**
  * The server config values and the resolved lookup sets behind them, loaded from and saved to a
- * per-world JSON file the loader's entry point locates and hands to {@link #load(Path)}.
+ * per-world JSON file located by {@link #loadFor(MinecraftServer)}.
  *
  * <p>The text lists are stored as patterns and baked into sets that the hot paths can test cheaply.
  * Baking happens on load and whenever a list is edited, and for the ingot list, whenever item tags
@@ -157,6 +159,13 @@ public final class ServerConfig {
         }
 
         bakeServerLists();
+    }
+
+    /** Loads the policy file belonging to {@code server}'s current world. */
+    public static void loadFor(MinecraftServer server) {
+        load(server.getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig")
+                .resolve(SomeStacksCommon.MODID + "-server.json"));
     }
 
     /** Re-reads the current world's policy file. */

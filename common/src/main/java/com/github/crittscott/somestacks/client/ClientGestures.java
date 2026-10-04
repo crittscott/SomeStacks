@@ -6,7 +6,9 @@ import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.HitResult;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -62,5 +64,12 @@ public final class ClientGestures {
     /** Forces the next interaction to establish state on a new connection. */
     public static void resetSync() {
         lastSentMode = null;
+    }
+
+    /** Whether an input is the main-hand air click used for empty-hand placement-mode cycling. */
+    public static boolean isEmptyMainHandAirClick(Player player, @Nullable HitResult hit) {
+        return player.getMainHandItem().isEmpty()
+                && hit != null
+                && hit.getType() == HitResult.Type.MISS;
     }
 }

@@ -31,17 +31,13 @@ public final class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
-        if (evt.isCanceled()) return;
-
+        // RightClickEmpty is a pure notification: there is no vanilla action behind an empty-hand
+        // air click to suppress, so the rules run but nothing is canceled.
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
-
-        if (ctx.shouldCancel()) {
-            evt.setCanceled(true);
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

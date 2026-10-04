@@ -18,8 +18,8 @@ import java.util.function.Consumer;
  *
  * <p>The three server-to-client payloads are delivered to {@link #clientReceiver}, which the
  * physical client installs from {@code ClientSetup}; the dedicated server never touches a client
- * rendering class. There is no explicit protocol handshake payload: NeoForge already disconnects a
- * peer that has not registered a matching non-optional payload.
+ * rendering class. NeoForge rejects peers whose registrar version does not match the shared
+ * protocol version or which omit a required payload.
  */
 public final class ModNetworking {
     private ModNetworking() {}
@@ -32,7 +32,8 @@ public final class ModNetworking {
     }
 
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(SomeStacksCommon.MODID);
+        PayloadRegistrar registrar = event.registrar(
+                Integer.toString(SomeStacksCommon.PROTOCOL_VERSION));
 
         registrar.playToServer(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC,
                 toServer(GestureStatePkt::handleServer));

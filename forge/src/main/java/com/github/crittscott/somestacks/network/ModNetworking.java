@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,6 @@ import net.minecraftforge.network.SimpleChannel;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static final int PROTOCOL = 3;
     public static SimpleChannel CHANNEL;
 
     private static final StreamCodec<RegistryFriendlyByteBuf, GestureStatePkt>
@@ -31,9 +31,9 @@ public final class ModNetworking {
     public static void init() {
         CHANNEL = ChannelBuilder
                 .named(ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, "main"))
-                .networkProtocolVersion(PROTOCOL)
-                .clientAcceptedVersions(Channel.VersionTest.exact(PROTOCOL))
-                .serverAcceptedVersions(Channel.VersionTest.exact(PROTOCOL))
+                .networkProtocolVersion(SomeStacksCommon.PROTOCOL_VERSION)
+                .clientAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
+                .serverAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
                 .simpleChannel();
 
         CHANNEL.protocol(NetworkProtocol.PLAY)

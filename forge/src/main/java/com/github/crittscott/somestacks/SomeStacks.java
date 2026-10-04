@@ -15,7 +15,6 @@ import com.github.crittscott.somestacks.server.Protection;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -74,12 +73,13 @@ public class SomeStacks {
 
     /** Loads the world-specific server config; {@code /ss reload} can reread it later. */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerConfig.loadFor(event.getServer());
     }
 
     private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngots();
+        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+            ServerConfig.rebakeIngots();
+        }
     }
 
     private void onLevelUnload(LevelEvent.Unload event) {

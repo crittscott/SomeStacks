@@ -36,53 +36,53 @@ public final class StoragePileGameTests implements FabricGameTest {
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
+    public void storageInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
+        StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
         // A pile is a bag, so the slot named takes what a slot takes — here all eight, in slot 20
         // rather than at the base a deposit would have filled.
-        checkEquals(0, FabricGameTestSupport.insertAt(capability, 20, offered, true).getCount(),
+        checkEquals(0, FabricGameTestSupport.insertAt(storage, 20, offered, true).getCount(),
                 "Simulated insertion into an empty slot");
-        checkEquals(0, FabricGameTestSupport.insertAt(capability, 20, offered, false).getCount(),
+        checkEquals(0, FabricGameTestSupport.insertAt(storage, 20, offered, false).getCount(),
                 "Committed insertion into an empty slot");
-        checkEquals(8, offered.getCount(), "Capability mutated caller input");
-        checkEquals(8, storage.getItems().getStackInSlot(20).getCount(),
+        checkEquals(8, offered.getCount(), "Storage mutated caller input");
+        checkEquals(8, blockEntity.getItems().getStackInSlot(20).getCount(),
                 "The slot named should hold the items");
 
         // An incompatible slot takes nothing rather than redirecting to available space elsewhere.
         ItemStack other = new ItemStack(Items.DIRT, 8);
-        checkEquals(8, FabricGameTestSupport.insertAt(capability, 20, other, true).getCount(),
+        checkEquals(8, FabricGameTestSupport.insertAt(storage, 20, other, true).getCount(),
                 "Simulated insertion into an occupied incompatible slot");
 
         // The settle the insertion scheduled is what puts the items at the base.
-        StoragePile pile = storage.pile();
+        StoragePile pile = blockEntity.pile();
         check(pile != null, "Pile did not resolve");
         pile.settle();
-        checkEquals(8, storage.getItems().getStackInSlot(0).getCount(),
+        checkEquals(8, blockEntity.getItems().getStackInSlot(0).getCount(),
                 "Settle should pack the insertion down to the base");
-        checkEquals(0, count(storage.getItems(), Items.DIRT),
+        checkEquals(0, count(blockEntity.getItems(), Items.DIRT),
                 "Refused insertion stored something");
         helper.succeed();
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
-        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
         BlockPos above = helper.absolutePos(ORIGIN.above());
         helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         // The first advertised slot past what the pile holds: the one insertion grows into, and so
         // the only one an obstruction can refuse.
         int headroom = StorageStackBE.SLOTS;
-        ItemStack simulatedRemainder = FabricGameTestSupport.insertAt(capability, headroom, offered, true);
-        ItemStack committedRemainder = FabricGameTestSupport.insertAt(capability, headroom, offered, false);
+        ItemStack simulatedRemainder = FabricGameTestSupport.insertAt(storage, headroom, offered, true);
+        ItemStack committedRemainder = FabricGameTestSupport.insertAt(storage, headroom, offered, false);
 
         checkEquals(4, simulatedRemainder.getCount(), "Simulated remainder");
         checkEquals(4, committedRemainder.getCount(), "Committed remainder");
@@ -108,20 +108,20 @@ public final class StoragePileGameTests implements FabricGameTest {
     }
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
+    public void storageFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
         lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
 
-        SlottedStorage<ItemVariant> lowerCapability = FabricGameTestSupport.capability(lower);
-        SlottedStorage<ItemVariant> upperCapability = FabricGameTestSupport.capability(upper);
+        SlottedStorage<ItemVariant> lowerStorage = FabricGameTestSupport.storage(lower);
+        SlottedStorage<ItemVariant> upperStorage = FabricGameTestSupport.storage(upper);
 
-        checkEquals(12, FabricGameTestSupport.stackAt(lowerCapability, 0).getCount(),
-                "Lower capability count");
-        checkEquals(12, FabricGameTestSupport.stackAt(upperCapability, 0).getCount(),
-                "Upper capability count");
-        checkEquals(lowerCapability.getSlotCount(), upperCapability.getSlotCount(),
-                "Capability shape");
+        checkEquals(12, FabricGameTestSupport.stackAt(lowerStorage, 0).getCount(),
+                "Lower storage count");
+        checkEquals(12, FabricGameTestSupport.stackAt(upperStorage, 0).getCount(),
+                "Upper storage count");
+        checkEquals(lowerStorage.getSlotCount(), upperStorage.getSlotCount(),
+                "Storage shape");
         helper.succeed();
     }
 

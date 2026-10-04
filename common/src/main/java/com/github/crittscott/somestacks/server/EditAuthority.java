@@ -5,7 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 /**
  * The loader-specific half of automated world edits: who performs them, and whether a claim or
@@ -27,5 +30,11 @@ public interface EditAuthority {
     PlacementVeto preparePlacement(ServerLevel level, BlockPos pos);
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
-    boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state);
+    boolean vetoesRemoval(
+            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity);
+
+    /** Reports a completed removal to loader-native observers. */
+    default void afterRemoval(
+            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+    }
 }

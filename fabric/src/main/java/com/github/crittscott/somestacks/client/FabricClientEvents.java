@@ -39,11 +39,7 @@ public final class FabricClientEvents {
                     player, level, hand, ClientGestures.currentMode(),
                     FabricKeyMappings.STACK_MODE_KEY.isDown());
             ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
-            if (player.getItemInHand(hand).isEmpty()) {
-                InteractionRuleRegistry.processEmptyHandRules(context);
-            } else {
-                InteractionRuleRegistry.processItemRules(context);
-            }
+            InteractionRuleRegistry.processItemRules(context);
             return context.shouldCancel()
                     ? InteractionResult.FAIL
                     : InteractionResult.PASS;

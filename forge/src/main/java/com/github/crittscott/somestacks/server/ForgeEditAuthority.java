@@ -6,6 +6,7 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -14,6 +15,7 @@ import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
@@ -48,7 +50,8 @@ public final class ForgeEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
+    public boolean vetoesRemoval(
+            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
         ServerPlayer breaker = automationActor(level);
         BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, breaker);
         return MinecraftForge.EVENT_BUS.post(evt);

@@ -90,21 +90,21 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         int headroom = StorageStackBE.SLOTS;
-        check(FabricGameTestSupport.insertAt(capability, headroom, offered, true).isEmpty(),
+        check(FabricGameTestSupport.insertAt(storage, headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 
@@ -120,18 +120,18 @@ public final class ProtectionGameTests implements FabricGameTest {
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(singles);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         // A cell takes one item, so a credited growth leaves three of the four behind.
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 
@@ -148,18 +148,18 @@ public final class ProtectionGameTests implements FabricGameTest {
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(bar, 4);
 
         // A position takes one bar, so a credited growth leaves three of the four behind.
         int headroom = BarStackBE.SLOTS;
-        checkEquals(3, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
         outsideTheBorder(helper, () -> {
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
-            checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                     "Committed remainder");
         });
 
@@ -174,18 +174,18 @@ public final class ProtectionGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(storage);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
         putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
@@ -200,14 +200,14 @@ public final class ProtectionGameTests implements FabricGameTest {
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(singles);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
         putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
@@ -222,14 +222,14 @@ public final class ProtectionGameTests implements FabricGameTest {
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar), false);
         }
-        SlottedStorage<ItemVariant> capability = FabricGameTestSupport.capability(bars);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(bar, 4);
         putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, true).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "Simulated remainder");
-        checkEquals(4, FabricGameTestSupport.insertAt(capability, headroom, offered, false).getCount(),
+        checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(

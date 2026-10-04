@@ -1,14 +1,21 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.client.ClientGestures;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
@@ -32,6 +39,18 @@ public final class InteractionGameTests implements FabricGameTest {
     @GameTest(template = TEMPLATE)
     public void interactionReadsOnlyTheMainHand(GameTestHelper helper) {
         InteractionChecks.interactionReadsOnlyTheMainHand(helper, playerFactory(helper));
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void emptyMainHandAirClickIgnoresOccupiedOffhand(GameTestHelper helper) {
+        ServerPlayer player = FakePlayer.get(helper.getLevel());
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.SHIELD));
+        BlockHitResult miss = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, BlockPos.ZERO);
+
+        GameTestScaffold.check(ClientGestures.isEmptyMainHandAirClick(player, miss),
+                "Occupied offhand blocked empty-main-hand mode cycling");
+        helper.succeed();
     }
 
     @GameTest(template = TEMPLATE)

@@ -2,9 +2,9 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.function.Consumer;
@@ -16,18 +16,14 @@ public final class FabricClientNetworking {
     public static void init() {
         ClientGestures.setSender(packet -> ClientPlayNetworking.send(packet));
 
-        ClientPlayNetworking.registerGlobalReceiver(ProtocolPkt.TYPE, (payload, context) -> { });
+        ClientConfigurationNetworking.registerGlobalReceiver(
+                ProtocolPkt.TYPE, (payload, context) -> { });
         registerClient(ConfigSyncPkt.TYPE, ClientRenderPacketSink::apply);
         registerClient(RenderOverridePkt.TYPE, ClientRenderPacketSink::apply);
         registerClient(WriteOverridesPkt.TYPE, ClientRenderPacketSink::apply);
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            ClientGestures.resetSync();
-            if (!ClientPlayNetworking.canSend(GestureStatePkt.TYPE)) {
-                handler.getConnection().disconnect(
-                        Component.translatable("somestacks.disconnect.protocol"));
-            }
-        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
+                ClientGestures.resetSync());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
                 ClientGestures.resetSync());
     }

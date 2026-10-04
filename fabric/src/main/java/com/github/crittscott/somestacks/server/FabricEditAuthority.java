@@ -6,7 +6,10 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 /**
  * Fabric's {@link EditAuthority}: the automation actor is a synthetic {@link ServerPlayer}, and
@@ -40,9 +43,22 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
+    public boolean vetoesRemoval(
+            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
         ServerPlayer breaker = automationActor(level);
-        return !PlayerBlockBreakEvents.BEFORE.invoker()
-                .beforeBlockBreak(level, breaker, pos, state, level.getBlockEntity(pos));
+        boolean allowed = PlayerBlockBreakEvents.BEFORE.invoker()
+                .beforeBlockBreak(level, breaker, pos, state, blockEntity);
+        if (!allowed) {
+            PlayerBlockBreakEvents.CANCELED.invoker()
+                    .onBlockBreakCanceled(level, breaker, pos, state, blockEntity);
+        }
+        return !allowed;
+    }
+
+    @Override
+    public void afterRemoval(
+            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+        PlayerBlockBreakEvents.AFTER.invoker()
+                .afterBlockBreak(level, automationActor(level), pos, state, blockEntity);
     }
 }

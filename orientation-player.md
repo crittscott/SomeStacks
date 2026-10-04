@@ -36,7 +36,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts. Torch gestures do not spend the torch. Rotation reports the new angle above the hotbar; its sound is limited to once per player every 4 ticks. Sneaking keeps ordinary interaction available except where a torch gesture claims the click.
+Only the main hand acts; an occupied off hand does not block empty-main-hand mode cycling. Torch gestures do not spend the torch. Rotation reports the new angle above the hotbar; its sound is limited to once per player every 4 ticks. Sneaking keeps ordinary interaction available except where a torch gesture claims the click.
 
 ## Depositing and placing
 
@@ -168,7 +168,7 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation travel through vanilla's server-side block-use pipeline and answer to loader allow/deny results, build limits, obstruction, the world border, and spawn protection. A click through a neighboring block additionally checks the adjacent stack itself. Automatic growth and removal use the `[SomeStacks]` automation actor. Forge/NeoForge expose place and break events; Fabric exposes `PlayerBlockBreakEvents`, and automated Fabric growth also asks claim mods that implement Common Protection API directly. Appearance or removal of an outer stack block emits vanilla placement/destruction game events; the many internal cells and bars remain contents of that one block.
+Player placement, deposit, extraction, and rotation use vanilla's server block-use pipeline and honor loader allow/deny results, build limits, obstruction, world border, and spawn protection. Clicking through a neighboring block also checks the adjacent stack. Automatic growth and removal use the `[SomeStacks]` automation actor. Forge/NeoForge fire place and break events; Fabric fires the full `PlayerBlockBreakEvents` before/canceled/after lifecycle and asks Common Protection API claim mods about automated growth. Adding or removing an outer stack block emits vanilla placement/destruction game events; internal cells and bars remain contents of that block.
 
 The only client gesture payload synchronizes placement mode and whether the modifier is down. The actual action uses vanilla's block-use packet and its exact hit. The server independently validates the main hand, spectator and protection state, held item, target, support, type enablement, height, obstruction, and edit authority. It recomputes deposit, extraction, and Singles item-rotation cell selection by extending the player's reach ray through the vanilla hit point; clients never choose a cell index for the server.
 
