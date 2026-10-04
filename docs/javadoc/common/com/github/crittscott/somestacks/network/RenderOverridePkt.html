@@ -119,7 +119,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;net.minecraft.network.FriendlyByteBuf,<wbr><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type<wbr>&lt;<a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&gt;</code></div>
@@ -140,11 +140,11 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">decode</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(net.minecraft.network.RegistryFriendlyByteBuf)" class="member-name-link">decode</a><wbr>(net.minecraft.network.RegistryFriendlyByteBuf&nbsp;buf)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encode(com.github.crittscott.somestacks.network.RenderOverridePkt,net.minecraft.network.FriendlyByteBuf)" class="member-name-link">encode</a><wbr>(<a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&nbsp;msg,
- net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encode(com.github.crittscott.somestacks.network.RenderOverridePkt,net.minecraft.network.RegistryFriendlyByteBuf)" class="member-name-link">encode</a><wbr>(<a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&nbsp;msg,
+ net.minecraft.network.RegistryFriendlyByteBuf&nbsp;buf)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isReset()" class="member-name-link">isReset</a>()</code></div>
@@ -199,7 +199,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <li>
 <section class="detail" id="STREAM_CODEC">
 <h3>STREAM_CODEC</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.network.codec.StreamCodec&lt;net.minecraft.network.FriendlyByteBuf,<wbr><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&gt;</span>&nbsp;<span class="element-name">STREAM_CODEC</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.network.codec.StreamCodec&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&gt;</span>&nbsp;<span class="element-name">STREAM_CODEC</span></div>
 </section>
 </li>
 </ul>
@@ -236,16 +236,16 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 </section>
 </li>
 <li>
-<section class="detail" id="encode(com.github.crittscott.somestacks.network.RenderOverridePkt,net.minecraft.network.FriendlyByteBuf)">
+<section class="detail" id="encode(com.github.crittscott.somestacks.network.RenderOverridePkt,net.minecraft.network.RegistryFriendlyByteBuf)">
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">encode</span><wbr><span class="parameters">(<a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a>&nbsp;msg,
- net.minecraft.network.FriendlyByteBuf&nbsp;buf)</span></div>
+ net.minecraft.network.RegistryFriendlyByteBuf&nbsp;buf)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="decode(net.minecraft.network.FriendlyByteBuf)">
+<section class="detail" id="decode(net.minecraft.network.RegistryFriendlyByteBuf)">
 <h3>decode</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(net.minecraft.network.RegistryFriendlyByteBuf&nbsp;buf)</span></div>
 </section>
 </li>
 <li>

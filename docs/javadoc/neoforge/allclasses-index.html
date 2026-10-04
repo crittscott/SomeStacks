@@ -57,8 +57,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The client's gesture entry point: the three right-click events feed
- <code>InteractionRuleRegistry</code>, and the send methods here are how a matched rule reaches the
- server.</div>
+ <code>InteractionRuleRegistry</code>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ClientSetup.html" title="class in com.github.crittscott.somestacks.client">ClientSetup</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -79,32 +78,23 @@ loadScripts(document, 'script');</script>
 <div class="block">The mod's registered blocks and block entity types, and the NeoForge registration glue behind
  them.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/NeoForgeCommandNetwork.html" title="class in com.github.crittscott.somestacks.command">NeoForgeCommandNetwork</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">NeoForge delivery for packets initiated by the shared command tree.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">NeoForge's <code>EditAuthority</code>: the level's fake player stands in for automation, and claim,
  protection, and logging mods are given the chance to veto through the ordinary NeoForge placement
  and break events.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/NeoForgeItemHandlers.html" title="class in com.github.crittscott.somestacks.block">NeoForgeItemHandlers</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/NeoForgeItemHandlers.html" title="class in com.github.crittscott.somestacks.block">NeoForgeItemHandlers</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Exposes <code>Capabilities.ItemHandler.BLOCK</code> on the mod's three block entity types.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/neoforge/NeoForgePlatformServices.html" title="class in com.github.crittscott.somestacks.neoforge">NeoForgePlatformServices</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/neoforge/NeoForgePlatformServices.html" title="class in com.github.crittscott.somestacks.neoforge">NeoForgePlatformServices</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">NeoForge implementations of the common platform services.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/Protection.html" title="class in com.github.crittscott.somestacks.server">Protection</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">NeoForge player protection through the native right-click event and trailing-click suppressor.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/RightClickBlockSuppressor.html" title="class in com.github.crittscott.somestacks.server">RightClickBlockSuppressor</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/Protection.html" title="class in com.github.crittscott.somestacks.server">Protection</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Cancels the vanilla right-click that follows a stack interaction within the same tick, so the held
- item is not also placed or used against the position the interaction just changed.</div>
+<div class="block">NeoForge protection consultation for a stack reached through its neighboring block.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -113,8 +103,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html" title="class in com.github.crittscott.somestacks">SomeStacksNeoForge</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">NeoForge entry point: registers the blocks and block entities, the network payloads, the
- loader-native item-handler capability, and the listeners behind server config loading, sound
- data, login sync, and commands.</div>
+ loader-native item-handler capability, and the listeners behind server config loading, login
+ sync, and commands.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackInteractionEvents.html" title="class in com.github.crittscott.somestacks.server">StackInteractionEvents</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Applies Some Stacks gestures from NeoForge's actual server-side right-click event.</div>
 </div>
 </div>
 </div>

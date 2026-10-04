@@ -92,8 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ModNetworking</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">The mod's payloads and their handler registration. Every packet class is shared; this binds the
- shared <code>TYPE</code>/<code>STREAM_CODEC</code> pair to NeoForge's payload system and routes the six
- client-to-server handlers to their shared <code>handleServer</code> methods.
+ shared <code>TYPE</code>/<code>STREAM_CODEC</code> pair to NeoForge's payload system.
 
  <p>The three server-to-client payloads are delivered to <code>clientReceiver</code>, which the
  physical client installs from <code>ClientSetup</code>; the dedicated server never touches a client

@@ -164,7 +164,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sanitize(com.github.crittscott.somestacks.client.ItemRenderConfig)" class="member-name-link">sanitize</a><wbr>(<a href="../client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&nbsp;config)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the file-format bounds to a synchronized override, dropping invalid fields.</div>
+<div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.gson.JsonObject</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toJson(java.util.Map)" class="member-name-link">toJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&nbsp;map)</code></div>
@@ -268,8 +268,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sanitize(com.github.crittscott.somestacks.client.ItemRenderConfig)">
 <h3>sanitize</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a></span>&nbsp;<span class="element-name">sanitize</span><wbr><span class="parameters">(<a href="../client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&nbsp;config)</span></div>
-<div class="block">Applies the file-format bounds to a synchronized override, dropping invalid fields. Network
- overrides bypass <a href="#parse(com.google.gson.JsonObject,java.lang.String)"><code>parse(com.google.gson.JsonObject, java.lang.String)</code></a>, so they require the same validation at the packet boundary.</div>
+<div class="block">Applies the file-format bounds to an override, dropping invalid fields. Network overrides
+ bypass <a href="#parse(com.google.gson.JsonObject,java.lang.String)"><code>parse(com.google.gson.JsonObject, java.lang.String)</code></a>, and serialization may receive measured data, so both use the same
+ validation.</div>
 </section>
 </li>
 <li>

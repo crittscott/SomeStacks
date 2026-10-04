@@ -55,6 +55,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#automationUsesFabricFakePlayer(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationUsesFabricFakePlayer(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#automationUsesSharedIdentity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationUsesSharedIdentity(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#automationUsesSharedIdentity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationUsesSharedIdentity(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
@@ -145,6 +149,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#checkedPlacementRejectsAnObstructingEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">checkedPlacementRejectsAnObstructingEntity(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#checkEquals(java.lang.Object,java.lang.Object,java.lang.String)" class="member-name-link">checkEquals(Object, Object, String)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.LoaderBlockClick.html#click(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">click(ServerPlayer, BlockHitResult)</a> - Method in interface com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentTags(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
 <dd>&nbsp;</dd>
@@ -270,21 +276,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Extracts up to <code>amount</code> from <code>slot</code>, mirroring Forge's
  <code>IItemHandler.extractItem(slot, amount, simulate)</code>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#extractIgnoresAnEmptyCell(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractIgnoresAnEmptyCell(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#extractIgnoresAnEmptyCell(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractIgnoresAnEmptyCell(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>
-<div class="block">Extraction is the one mutation packet that acts on a cell the client chose rather than one
- the server recomputes, so the per-type handler checks are what stand between a client
- integer and the stored contents.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#extractIgnoresAnIndexOutsideTheBlocksOwnSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractIgnoresAnIndexOutsideTheBlocksOwnSlots(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#extractIgnoresAnIndexOutsideTheBlocksOwnSlots(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractIgnoresAnIndexOutsideTheBlocksOwnSlots(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>
-<div class="block">Each handler bounds the index against its own type's slot count, so Storage refuses indices
- the two 64-slot types accept, and no int reaches a slot lookup that would reject it.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></dt>
@@ -293,6 +284,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionPreservesAnExistingGap(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionRefusesIncompatibleOrFullHands(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
@@ -300,14 +295,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#extractRefusesAFullHandOfTheSameItem(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractRefusesAFullHandOfTheSameItem(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#extractRefusesAFullHandOfTheSameItem(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractRefusesAFullHandOfTheSameItem(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#extractRefusesAHandHoldingSomethingElse(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractRefusesAHandHoldingSomethingElse(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#extractRefusesAHandHoldingSomethingElse(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractRefusesAHandHoldingSomethingElse(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
@@ -337,18 +324,14 @@ loadScripts(document, 'script');</script>
  through <code>CommonRegistry</code>, seeding handlers directly, and the assertion helpers every test
  reads through.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#gestureChecksReadOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureChecksReadOnlyTheMainHand(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureStateTracksModeAndModifier(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#gestureChecksReadOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">gestureChecksReadOnlyTheMainHand(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#gestureThrottleEnforcesTickAndRotationSoundIntervals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureThrottleEnforcesTickAndRotationSoundIntervals(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#gestureThrottleEnforcesTickAndRotationSoundIntervals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">gestureThrottleEnforcesTickAndRotationSoundIntervals(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">gestureStateTracksModeAndModifier(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#HAND" class="member-name-link">HAND</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#HAND" class="member-name-link">HAND</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html#handCompatibilityUsesExactItemTagsAndCapacity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">handCompatibilityUsesExactItemTagsAndCapacity(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></dt>
 <dd>&nbsp;</dd>
@@ -376,6 +359,22 @@ loadScripts(document, 'script');</script>
 <div class="block">Walks every advertised slot from 0 upward inserting as much of <code>stack</code> as each slot
  will take, mirroring Forge's <code>ItemHandlerHelper.insertItemStacked</code>.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Loader-neutral checks for the state packet and vanilla-interaction gesture service.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.LoaderBlockClick.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a> - Interface in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Fabric delegates for loader-neutral interaction and validation checks.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#%3Cinit%3E()" class="member-name-link">InteractionGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">interactionReadsOnlyTheMainHand(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">interactionReadsOnlyTheMainHand(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
 <div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
@@ -387,6 +386,10 @@ loadScripts(document, 'script');</script>
  merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html#%3Cinit%3E()" class="member-name-link">ItemOpsGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">itemRotationTargetsOnlyAnOccupiedCell(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">itemRotationTargetsOnlyAnOccupiedCell(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html#itemStorageIsAvailableFromEverySide(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">itemStorageIsAvailableFromEverySide(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceGameTests</a></dt>
 <dd>&nbsp;</dd>
@@ -400,11 +403,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#malformedPayloadFieldsFailDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedPayloadFieldsFailDuringDecoding(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>
-<div class="block">Malformed enum ids and collection counts fail in the decoder instead of reaching a handler.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#malformedPayloadFieldsFailDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedPayloadFieldsFailDuringDecoding(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedGestureStateFailsDuringDecoding(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedGestureStateFailsDuringDecoding(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html#mergeRejectsDifferentItemsAndTags(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mergeRejectsDifferentItemsAndTags(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></dt>
 <dd>&nbsp;</dd>
@@ -413,10 +414,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html#mergeReturnsMovedCountAndDoesNotShrinkIncoming(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mergeReturnsMovedCountAndDoesNotShrinkIncoming(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html#mergeReturnsMovedCountAndDoesNotShrinkIncoming(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mergeReturnsMovedCountAndDoesNotShrinkIncoming(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#mutationPacketEntryPointsReachTheirValidatedOperations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mutationPacketEntryPointsReachTheirValidatedOperations(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#mutationPacketEntryPointsReachTheirValidatedOperations(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">mutationPacketEntryPointsReachTheirValidatedOperations(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
@@ -444,16 +441,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
-<dd>
-<div class="block">The shared packet boundary and the mutation handlers behind it: accepted entry-point dispatch,
- gesture pacing, held-item requirements, cell bounds, and refused extraction states.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
-<dd>
-<div class="block">Fabric delegates for loader-neutral packet entry-point, validation, and pacing checks.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#%3Cinit%3E()" class="member-name-link">PacketBoundaryGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#place(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block,java.lang.Class)" class="member-name-link">place(GameTestHelper, BlockPos, Block, Class&lt;T&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
@@ -504,16 +494,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#reachCheckAcceptsNearTargetAndRejectsFarTarget(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#reachCheckAcceptsNearTargetAndRejectsFarTarget(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#refusedBarExtractionLeavesTheBlockStanding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">refusedBarExtractionLeavesTheBlockStanding(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#refusedBarExtractionLeavesTheBlockStanding(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">refusedBarExtractionLeavesTheBlockStanding(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
-<dd>
-<div class="block">A refused Bar extraction must also leave the support cascade unrun.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/RenderGalleryChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
 <div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
@@ -526,13 +506,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/RenderGalleryGameTests.html#%3Cinit%3E()" class="member-name-link">RenderGalleryGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/RenderGalleryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#rotateBlockHandlerValidatesTheHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotateBlockHandlerValidatesTheHeldItemAndBlockType(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#rotateBlockHandlerValidatesTheHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotateBlockHandlerValidatesTheHeldItemAndBlockType(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#rotateItemHandlerLeavesEmptyCellsUnoriented(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotateItemHandlerLeavesEmptyCellsUnoriented(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationValidatesHeldItemAndBlockType(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#rotateItemHandlerLeavesEmptyCellsUnoriented(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotateItemHandlerLeavesEmptyCellsUnoriented(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationValidatesHeldItemAndBlockType(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
@@ -589,6 +569,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#slotLimit(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int)" class="member-name-link">slotLimit(SlottedStorage&lt;ItemVariant&gt;, int)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">sneakingRotationsReachTheLoaderHook(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)" class="member-name-link">sneakingRotationsReachTheLoaderHook(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;, InteractionChecks.LoaderBlockClick)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
+<dd>
+<div class="block">Reproduces sneaking right-clicks with redstone and soul torches and verifies that the
+ loader's real server interaction hook rotates the block and targeted item.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#stackAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int)" class="member-name-link">stackAt(SlottedStorage&lt;ItemVariant&gt;, int)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
@@ -636,13 +623,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#TARGET" class="member-name-link">TARGET</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#TARGET" class="member-name-link">TARGET</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#TEMPLATE" class="member-name-link">TEMPLATE</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html#togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html#togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">togglePermanentHandlerRequiresAnEmptyHandAndStoragePile(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/PacketBoundaryChecks.html" title="class in com.github.crittscott.somestacks.gametest">PacketBoundaryChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
@@ -668,6 +651,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>

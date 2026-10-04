@@ -54,7 +54,6 @@ loadScripts(document, 'script');</script>
 <li><a href="com/github/crittscott/somestacks/package-tree.html">com.github.crittscott.somestacks</a>, </li>
 <li><a href="com/github/crittscott/somestacks/block/package-tree.html">com.github.crittscott.somestacks.block</a>, </li>
 <li><a href="com/github/crittscott/somestacks/client/package-tree.html">com.github.crittscott.somestacks.client</a>, </li>
-<li><a href="com/github/crittscott/somestacks/command/package-tree.html">com.github.crittscott.somestacks.command</a>, </li>
 <li><a href="com/github/crittscott/somestacks/fabric/package-tree.html">com.github.crittscott.somestacks.fabric</a>, </li>
 <li><a href="com/github/crittscott/somestacks/network/package-tree.html">com.github.crittscott.somestacks.network</a>, </li>
 <li><a href="com/github/crittscott/somestacks/server/package-tree.html">com.github.crittscott.somestacks.server</a></li>
@@ -64,15 +63,10 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
-<li class="circle">com.github.crittscott.somestacks.server.EventPlayerEditAuthority (implements com.github.crittscott.somestacks.server.PlayerEditAuthority)
-<ul>
-<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></li>
-</ul>
-</li>
+<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricAdjacentEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricAdjacentEditAuthority</a> (implements com.github.crittscott.somestacks.server.AdjacentEditAuthority)</li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricClientEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricClientEvents</a></li>
-<li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a> (implements com.github.crittscott.somestacks.client.ClientGestures.Sender)</li>
+<li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricClientRendering.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricClientRendering</a></li>
-<li class="circle">com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html" class="type-name-link" title="class in com.github.crittscott.somestacks.command">FabricCommandNetwork</a> (implements com.github.crittscott.somestacks.command.CommandNetwork.Handler)</li>
 <li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricEditAuthority</a> (implements com.github.crittscott.somestacks.server.EditAuthority)</li>
 <li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/FabricItemStorage.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">FabricItemStorage</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricKeyMappings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricKeyMappings</a></li>
@@ -80,6 +74,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a></li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/FabricRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks">FabricRegistry</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricRenderCacheReloadListener.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricRenderCacheReloadListener</a> (implements net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener, net.minecraft.server.packs.resources.ResourceManagerReloadListener)</li>
+<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricStackInteractionEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricStackInteractionEvents</a></li>
 <li class="circle">net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;T&gt; (implements net.minecraft.server.packs.resources.PreparableReloadListener)
 <ul>
 <li class="circle">com.github.crittscott.somestacks.client.BarTextureStore
@@ -92,19 +87,24 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricItemRenderOverrides.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricItemRenderOverrides</a> (implements net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener)</li>
 </ul>
 </li>
-<li class="circle">net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener&lt;T&gt;
-<ul>
-<li class="circle">com.github.crittscott.somestacks.server.StackSoundData
-<ul>
-<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricStackSoundData.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricStackSoundData</a> (implements net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener)</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabric.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabric</a> (implements net.fabricmc.api.ModInitializer)</li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabricClient.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabricClient</a> (implements net.fabricmc.api.ClientModInitializer)</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class="hierarchy">
+<h2 title="Record Class Hierarchy">Record Class Hierarchy</h2>
+<ul>
+<li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
+<ul>
+<li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" class="type-name-link external-link" title="class or interface in java.lang">Record</a>
+<ul>
+<li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ProtocolPkt.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ProtocolPkt</a> (implements net.minecraft.network.protocol.common.custom.CustomPacketPayload)</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

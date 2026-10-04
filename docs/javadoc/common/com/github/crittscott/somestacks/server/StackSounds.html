@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StackSounds</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral server-side stack sounds, populated by <a href="StackSoundData.html" title="class in com.github.crittscott.somestacks.server"><code>StackSoundData</code></a>.</div>
+<div class="block">Loader-neutral access to the registered stack action sounds.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,36 +104,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second even-row-color"><code><a href="#BAR_DEPOSIT" class="member-name-link">BAR_DEPOSIT</a></code></div>
+<div class="col-first even-row-color"><code>static final float</code></div>
+<div class="col-second even-row-color"><code><a href="#VOLUME" class="member-name-link">VOLUME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT" class="member-name-link">BAR_EXTRACT</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_DEPOSIT" class="member-name-link">SINGLES_DEPOSIT</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT" class="member-name-link">SINGLES_EXTRACT</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE" class="member-name-link">SINGLES_ROTATE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_ITEM" class="member-name-link">SINGLES_ROTATE_ITEM</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_DEPOSIT" class="member-name-link">STORAGE_DEPOSIT</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_EXTRACT" class="member-name-link">STORAGE_EXTRACT</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static net.minecraft.sounds.SoundEvent</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_ROTATE" class="member-name-link">STORAGE_ROTATE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final float</code></div>
-<div class="col-second odd-row-color"><code><a href="#VOLUME" class="member-name-link">VOLUME</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -148,6 +121,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barDeposit()" class="member-name-link">barDeposit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barExtract()" class="member-name-link">barExtract</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" class="member-name-link">playRotation</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
  net.minecraft.core.BlockPos&nbsp;pos,
@@ -155,6 +134,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDeposit()" class="member-name-link">singlesDeposit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesExtract()" class="member-name-link">singlesExtract</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesRotate()" class="member-name-link">singlesRotate</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesRotateItem()" class="member-name-link">singlesRotateItem</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDeposit()" class="member-name-link">storageDeposit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageExtract()" class="member-name-link">storageExtract</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageRotate()" class="member-name-link">storageRotate</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -172,60 +172,6 @@ loadScripts(document, 'script');</script>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="BAR_DEPOSIT">
-<h3>BAR_DEPOSIT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">BAR_DEPOSIT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_EXTRACT">
-<h3>BAR_EXTRACT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">BAR_EXTRACT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_DEPOSIT">
-<h3>SINGLES_DEPOSIT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">SINGLES_DEPOSIT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_EXTRACT">
-<h3>SINGLES_EXTRACT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">SINGLES_EXTRACT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE">
-<h3>SINGLES_ROTATE</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">SINGLES_ROTATE</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE_ITEM">
-<h3>SINGLES_ROTATE_ITEM</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_DEPOSIT">
-<h3>STORAGE_DEPOSIT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">STORAGE_DEPOSIT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_EXTRACT">
-<h3>STORAGE_EXTRACT</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">STORAGE_EXTRACT</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_ROTATE">
-<h3>STORAGE_ROTATE</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">STORAGE_ROTATE</span></div>
-</section>
-</li>
 <li>
 <section class="detail" id="VOLUME">
 <h3>VOLUME</h3>
@@ -248,6 +194,60 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="storageDeposit()">
+<h3>storageDeposit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageDeposit</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageExtract()">
+<h3>storageExtract</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageExtract</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageRotate()">
+<h3>storageRotate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageRotate</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesDeposit()">
+<h3>singlesDeposit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesDeposit</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesExtract()">
+<h3>singlesExtract</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesExtract</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesRotate()">
+<h3>singlesRotate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesRotate</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesRotateItem()">
+<h3>singlesRotateItem</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesRotateItem</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barDeposit()">
+<h3>barDeposit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">barDeposit</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barExtract()">
+<h3>barExtract</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">barExtract</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)">
 <h3>playRotation</h3>

@@ -95,8 +95,9 @@ loadScripts(document, 'script');</script>
  the first rule that matches, so a rule states only its own conditions and relies on its position
  in that list to settle overlaps with broader rules behind it.
 
- <p>Rules run on the client, which owns gesture recognition. A rule that acts sends a packet and
- leaves the world untouched; the server decides whether the gesture is allowed.</div>
+ <p>Rules run on the client, which owns gesture recognition. They only decide whether to consume
+ the local click; the vanilla block-use packet carries the action and the server decides whether
+ the gesture is allowed.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,8 +115,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#execute(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">execute</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Acts on the claimed gesture, normally by sending a packet and calling
- <a href="InteractionContext.html#cancelEvent()"><code>InteractionContext.cancelEvent()</code></a> to take the click away from the vanilla interaction.</div>
+<div class="block">Acts on the claimed gesture, normally by calling <a href="InteractionContext.html#cancelEvent()"><code>InteractionContext.cancelEvent()</code></a> to
+ stop duplicate local block or item use.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#matches(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">matches</a><wbr>(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</code></div>
@@ -148,9 +149,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="execute(com.github.crittscott.somestacks.client.interaction.InteractionContext)">
 <h3>execute</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(<a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a>&nbsp;ctx)</span></div>
-<div class="block">Acts on the claimed gesture, normally by sending a packet and calling
- <a href="InteractionContext.html#cancelEvent()"><code>InteractionContext.cancelEvent()</code></a> to take the click away from the vanilla interaction.
- A matched rule ends the walk whether or not it cancels.</div>
+<div class="block">Acts on the claimed gesture, normally by calling <a href="InteractionContext.html#cancelEvent()"><code>InteractionContext.cancelEvent()</code></a> to
+ stop duplicate local block or item use. A matched rule ends the walk whether or not it
+ cancels.</div>
 </section>
 </li>
 </ul>

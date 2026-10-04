@@ -93,42 +93,47 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
 <div id="class-summary.tabpanel" role="tabpanel">
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="AdjacentEditAuthority.html" title="interface in com.github.crittscott.somestacks.server">AdjacentEditAuthority</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Loader-native permission consultation for a stack reached through its neighboring block.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AdjacentEdits.html" title="class in com.github.crittscott.somestacks.server">AdjacentEdits</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Protection seam used only when a click reaches a stack through a neighboring block.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AutomationActor.html" title="class in com.github.crittscott.somestacks.server">AutomationActor</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">The loader-independent identity attributed to Some Stacks automation.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">The loader-specific half of automated world edits: who performs them, and whether a claim or
  logging mod vetoes one.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EventPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">EventPlayerEditAuthority</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Shared ordering for loader-native player protection events.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GestureThrottle.html" title="class in com.github.crittscott.somestacks.server">GestureThrottle</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Enforces one stack gesture per player per tick and separately rate-limits rotation sounds.</div>
+<div class="block">Limits repeated rotation sounds without limiting the rotations themselves.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="PlayerEditAuthority.html" title="interface in com.github.crittscott.somestacks.server">PlayerEditAuthority</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
-<div class="block">Loader-specific protection checks for packet-driven player gestures.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlayerEdits.html" title="class in com.github.crittscott.somestacks.server">PlayerEdits</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral access to the installed player-gesture protection implementation.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackSoundData.html" title="class in com.github.crittscott.somestacks.server">StackSoundData</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerGestureState.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loads the sound each stack block plays for each of its actions from
- <code>data/&lt;namespace&gt;/somestacks_sounds/*.json</code> and publishes it to <a href="StackSounds.html" title="class in com.github.crittscott.somestacks.server"><code>StackSounds</code></a>.</div>
+<div class="block">Server-side placement mode and modifier state last reported by each connected client.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackInteractions.html" title="class in com.github.crittscott.somestacks.server">StackInteractions</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Applies stack gestures carried by the vanilla right-click interaction.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral server-side stack sounds, populated by <a href="StackSoundData.html" title="class in com.github.crittscott.somestacks.server"><code>StackSoundData</code></a>.</div>
+<div class="block">Loader-neutral access to the registered stack action sounds.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">

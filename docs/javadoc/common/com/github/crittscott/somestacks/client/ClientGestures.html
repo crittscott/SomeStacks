@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li><a href="#nested-class-summary">Nested</a></li>
+<li>Nested</li>
 <li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -91,25 +91,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ClientGestures</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Shared client gesture state and the loader-specific packet sender behind its rules.</div>
+<div class="block">Shared client gesture state and its loader-specific state-sync sender.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ClientGestures.Sender.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.client">ClientGestures.Sender</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -151,30 +136,18 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#displayModeMessage(net.minecraft.world.entity.player.Player)" class="member-name-link">displayModeMessage</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendDeposit(net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">sendDeposit</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.BlockPos&nbsp;clickedPos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forces the next interaction to establish state on a new connection.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendExtract(net.minecraft.core.BlockPos,int)" class="member-name-link">sendExtract</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;index)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendPlaceAndDeposit(net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">sendPlaceAndDeposit</a><wbr>(net.minecraft.core.BlockPos&nbsp;placePos,
- net.minecraft.core.Direction&nbsp;face)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendRotateBlock(net.minecraft.core.BlockPos)" class="member-name-link">sendRotateBlock</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendRotateItem(net.minecraft.core.BlockPos,int)" class="member-name-link">sendRotateItem</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;slotIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendTogglePermanent(net.minecraft.core.BlockPos)" class="member-name-link">sendTogglePermanent</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(com.github.crittscott.somestacks.client.ClientGestures.Sender)" class="member-name-link">setSender</a><wbr>(<a href="ClientGestures.Sender.html" title="interface in com.github.crittscott.somestacks.client">ClientGestures.Sender</a>&nbsp;sender)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends only state that changed since the last interaction on this connection.</div>
+</div>
 </div>
 </div>
 </div>
@@ -229,9 +202,9 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="setSender(com.github.crittscott.somestacks.client.ClientGestures.Sender)">
+<section class="detail" id="setSender(java.util.function.Consumer)">
 <h3>setSender</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSender</span><wbr><span class="parameters">(<a href="ClientGestures.Sender.html" title="interface in com.github.crittscott.somestacks.client">ClientGestures.Sender</a>&nbsp;sender)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSender</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</span></div>
 </section>
 </li>
 <li>
@@ -254,43 +227,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="sendTogglePermanent(net.minecraft.core.BlockPos)">
-<h3>sendTogglePermanent</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTogglePermanent</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<section class="detail" id="syncState(boolean)">
+<h3>syncState</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">syncState</span><wbr><span class="parameters">(boolean&nbsp;modifierDown)</span></div>
+<div class="block">Sends only state that changed since the last interaction on this connection.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="sendPlaceAndDeposit(net.minecraft.core.BlockPos,net.minecraft.core.Direction)">
-<h3>sendPlaceAndDeposit</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendPlaceAndDeposit</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;placePos,
- net.minecraft.core.Direction&nbsp;face)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="sendDeposit(net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)">
-<h3>sendDeposit</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendDeposit</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.BlockPos&nbsp;clickedPos)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="sendExtract(net.minecraft.core.BlockPos,int)">
-<h3>sendExtract</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendExtract</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;index)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="sendRotateBlock(net.minecraft.core.BlockPos)">
-<h3>sendRotateBlock</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendRotateBlock</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="sendRotateItem(net.minecraft.core.BlockPos,int)">
-<h3>sendRotateItem</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendRotateItem</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;slotIndex)</span></div>
+<section class="detail" id="resetSync()">
+<h3>resetSync</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetSync</span>()</div>
+<div class="block">Forces the next interaction to establish state on a new connection.</div>
 </section>
 </li>
 </ul>

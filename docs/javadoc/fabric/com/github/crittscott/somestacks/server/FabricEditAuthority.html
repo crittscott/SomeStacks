@@ -101,7 +101,7 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
  so claim and protection mods can veto automation-driven removal the same way they can on Forge.
 
  <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
- for the mod's placement-protection hook (<a href="FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server"><code>FabricPlayerEditAuthority</code></a>) to fire, and Fabric
+ for the mod's adjacent-target protection hook (<a href="FabricAdjacentEditAuthority.html" title="class in com.github.crittscott.somestacks.server"><code>FabricAdjacentEditAuthority</code></a>) to fire, and Fabric
  API has no generic "a block was placed" event the way Forge's block-place event is. Claim mods
  that implement Common Protection API are consulted directly instead, through
  <code>CommonProtectionCheck</code>, when the API is installed; other claim mods are not covered.</div>
