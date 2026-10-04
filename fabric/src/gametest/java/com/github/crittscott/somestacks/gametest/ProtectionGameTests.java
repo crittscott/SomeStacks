@@ -33,12 +33,15 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * and waterlogging, plus growth answering to the same checks in both simulation and commit.
  *
- * <p>Forge's tests also cover same-tick click suppression and Forge-event-driven claim/mod
- * integration; those exercise {@code Protection} and Forge's event bus, which have no Fabric
- * counterpart in this port (Fabric has no general claim-event hook), so they are not duplicated
- * here.
+ * <p>Loader-event-specific denial checks stay with Forge and NeoForge. Fabric's corresponding
+ * integration checks live in the shared scenarios and its Common Protection API test seam.
  */
 public final class ProtectionGameTests implements FabricGameTest {
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void automationUsesSharedIdentity(GameTestHelper helper) {
+        ProtectionChecks.automationUsesSharedIdentity(helper);
+    }
+
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationUsesFabricFakePlayer(GameTestHelper helper) {
         check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,

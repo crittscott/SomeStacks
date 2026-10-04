@@ -18,28 +18,8 @@ import java.util.function.Consumer;
 final class ForgePacketHandlers {
     private ForgePacketHandlers() {}
 
-    static void handlePlaceAndDeposit(PlaceAndDepositPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> PlaceAndDepositPkt.handleServer(msg, player));
-    }
-
-    static void handleDeposit(DepositPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> DepositPkt.handleServer(msg, player));
-    }
-
-    static void handleTogglePermanent(TogglePermanentPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> TogglePermanentPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateBlock(RotateBlockPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> RotateBlockPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateItem(RotateItemPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> RotateItemPkt.handleServer(msg, player));
-    }
-
-    static void handleExtract(ExtractPkt msg, CustomPayloadEvent.Context ctx) {
-        server(ctx, player -> ExtractPkt.handleServer(msg, player));
+    static void handleGestureState(GestureStatePkt msg, CustomPayloadEvent.Context ctx) {
+        server(ctx, player -> GestureStatePkt.handleServer(msg, player));
     }
 
     static void handleConfigSync(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {

@@ -2,7 +2,6 @@ package com.github.crittscott.somestacks.client.interaction;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
@@ -65,9 +64,6 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isMainHand()) {
-            ClientGestures.sendDeposit(ctx.getClickedPos(), ctx.getClickedPos());
-        }
         ctx.cancelEvent();
     }
 }

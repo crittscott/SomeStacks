@@ -9,22 +9,23 @@ import com.github.crittscott.somestacks.forge.ForgePlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
-import com.github.crittscott.somestacks.server.GestureThrottle;
-import com.github.crittscott.somestacks.server.PlayerEdits;
+import com.github.crittscott.somestacks.server.RotationSoundThrottle;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.server.AdjacentEdits;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -33,7 +34,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
- * listeners behind server config loading, sound data, login sync, and commands. Client
+ * listeners behind server config loading, login sync, and commands. Client
  * registration is deferred to {@link ClientSetup} so the dedicated server never touches it.
  *
  * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
@@ -42,46 +43,51 @@ import net.minecraftforge.network.PacketDistributor;
 public class SomeStacks {
     public static final String MODID = SomeStacksCommon.MODID;
 
+    private final ForgeEditAuthority editAuthority = new ForgeEditAuthority();
+
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         PlatformServices.install(
                 ForgePlatformServices::configFolder, ForgePlatformServices::modVersion);
-        WorldEdits.setAuthority(new ForgeEditAuthority());
-        PlayerEdits.setAuthority(new Protection());
+        WorldEdits.setAuthority(editAuthority);
+        AdjacentEdits.setAuthority(new Protection());
 
         ModRegistry.init(modBus);
         ModNetworking.init();
         CommandNetwork.setHandler(new ForgeCommandNetwork());
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
-        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
         MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
+        MinecraftForge.EVENT_BUS.addListener(this::onLevelUnload);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
 
         SomeStacksCommon.LOGGER.info(
                 "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(MODID));
     }
 
-    /**
-     * Loads the world-specific server config. There is no automatic file-watch reload behind this
-     * hand-rolled reader/writer; command edits are saved immediately, while manual file edits take
-     * effect on the next server start.
-     */
+    /** Loads the world-specific server config; {@code /ss reload} can reread it later. */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
         ServerConfig.load(configDir.resolve(MODID + "-server.json"));
     }
 
-    private void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new StackSoundData());
-    }
-
     private void onTagsUpdated(TagsUpdatedEvent event) {
         ServerConfig.rebakeIngots();
+    }
+
+    private void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel level) {
+            editAuthority.unload(level);
+        }
+    }
+
+    private void onServerStopped(ServerStoppedEvent event) {
+        editAuthority.clear();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -89,11 +95,12 @@ public class SomeStacks {
     }
 
     private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        GestureThrottle.clear(event.getEntity().getUUID());
+        ServerGestureState.clear(event.getEntity().getUUID());
+        RotationSoundThrottle.clear(event.getEntity().getUUID());
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
-        SsCommand.register(event.getDispatcher());
+        SsCommand.register(event.getDispatcher(), event.getBuildContext());
     }
 
     private void onServerTick(TickEvent.ServerTickEvent event) {
@@ -103,7 +110,7 @@ public class SomeStacks {
     }
 
     private void sendConfigSync(ServerPlayer player) {
-        ModNetworking.CHANNEL.send(buildConfigSync(), PacketDistributor.PLAYER.with(player));
+        ModNetworking.CHANNEL.send(ConfigSyncPkt.current(), PacketDistributor.PLAYER.with(player));
     }
 
     /**
@@ -113,15 +120,8 @@ public class SomeStacks {
      * @return the number of players synced
      */
     public static int syncAllPlayers(MinecraftServer server) {
-        ModNetworking.CHANNEL.send(buildConfigSync(), PacketDistributor.ALL.noArg());
+        ModNetworking.CHANNEL.send(ConfigSyncPkt.current(), PacketDistributor.ALL.noArg());
         return server.getPlayerList().getPlayerCount();
     }
 
-    private static ConfigSyncPkt buildConfigSync() {
-        return new ConfigSyncPkt(
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
-    }
 }

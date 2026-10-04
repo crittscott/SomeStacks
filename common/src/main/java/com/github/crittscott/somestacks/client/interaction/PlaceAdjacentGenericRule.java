@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.client.ClientGestures;
 
 /**
  * Modifier plus an item, on a click no deposit rule claimed, places the selected stack type in the
@@ -18,12 +17,6 @@ public final class PlaceAdjacentGenericRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isMainHand()) {
-            ClientGestures.sendPlaceAndDeposit(
-                    ctx.getClickedPos().relative(ctx.getFace()),
-                    ctx.getFace()
-            );
-        }
         ctx.cancelEvent();
     }
 }

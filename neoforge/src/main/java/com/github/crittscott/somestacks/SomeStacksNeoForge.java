@@ -9,13 +9,12 @@ import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.RotationSoundThrottle;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
-import com.github.crittscott.somestacks.server.PlayerEdits;
+import com.github.crittscott.somestacks.server.AdjacentEdits;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -24,7 +23,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -34,8 +32,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
- * loader-native item-handler capability, and the listeners behind server config loading, sound
- * data, login sync, and commands. Client registration is deferred to {@link ClientSetup} so the
+ * loader-native item-handler capability, and the listeners behind server config loading, login
+ * sync, and commands. Client registration is deferred to {@link ClientSetup} so the
  * dedicated server never touches it.
  */
 @Mod(SomeStacksNeoForge.MODID)
@@ -46,7 +44,7 @@ public class SomeStacksNeoForge {
         PlatformServices.install(
                 NeoForgePlatformServices::configFolder, NeoForgePlatformServices::modVersion);
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
-        PlayerEdits.setAuthority(new Protection());
+        AdjacentEdits.setAuthority(new Protection());
         ServerConfig.useCommonIngotDefaults();
 
         ModRegistry.init(modBus);
@@ -55,7 +53,6 @@ public class SomeStacksNeoForge {
         CommandNetwork.setHandler(new NeoForgeCommandNetwork());
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
-        NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogin);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogout);
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
@@ -75,10 +72,6 @@ public class SomeStacksNeoForge {
         ServerConfig.load(configDir.resolve(MODID + "-server.json"));
     }
 
-    private void onAddReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(ResourceLocation.fromNamespaceAndPath(MODID, "stack_sounds"), new StackSoundData());
-    }
-
     private void onTagsUpdated(TagsUpdatedEvent event) {
         ServerConfig.rebakeIngots();
     }
@@ -88,11 +81,12 @@ public class SomeStacksNeoForge {
     }
 
     private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        GestureThrottle.clear(event.getEntity().getUUID());
+        ServerGestureState.clear(event.getEntity().getUUID());
+        RotationSoundThrottle.clear(event.getEntity().getUUID());
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
-        SsCommand.register(event.getDispatcher());
+        SsCommand.register(event.getDispatcher(), event.getBuildContext());
     }
 
     private void onServerTick(ServerTickEvent.Post event) {
@@ -100,7 +94,7 @@ public class SomeStacksNeoForge {
     }
 
     private void sendConfigSync(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, buildConfigSync());
+        PacketDistributor.sendToPlayer(player, ConfigSyncPkt.current());
     }
 
     /**
@@ -110,15 +104,8 @@ public class SomeStacksNeoForge {
      * @return the number of players synced
      */
     public static int syncAllPlayers(MinecraftServer server) {
-        PacketDistributor.sendToAllPlayers(buildConfigSync());
+        PacketDistributor.sendToAllPlayers(ConfigSyncPkt.current());
         return server.getPlayerList().getPlayerCount();
     }
 
-    private static ConfigSyncPkt buildConfigSync() {
-        return new ConfigSyncPkt(
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
-    }
 }

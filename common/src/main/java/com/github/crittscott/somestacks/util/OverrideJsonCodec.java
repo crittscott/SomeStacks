@@ -3,7 +3,8 @@ package com.github.crittscott.somestacks.util;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.RenderMode;
-import com.google.gson.JsonArray;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
@@ -43,8 +44,9 @@ public final class OverrideJsonCodec {
     }
 
     /**
-     * Applies the file-format bounds to a synchronized override, dropping invalid fields. Network
-     * overrides bypass {@link #parse}, so they require the same validation at the packet boundary.
+     * Applies the file-format bounds to an override, dropping invalid fields. Network overrides
+     * bypass {@link #parse}, and serialization may receive measured data, so both use the same
+     * validation.
      */
     public static ItemRenderConfig sanitize(ItemRenderConfig config) {
         Float scale = config.scale();
@@ -89,59 +91,15 @@ public final class OverrideJsonCodec {
     /** Returns the parsed entry, or null if none of its fields are valid. */
     @Nullable
     public static ItemRenderConfig parseEntry(String itemKey, JsonObject json) {
-        RenderMode mode = null;
-        Float scale = null;
-        float[] offset = null;
-
-        if (json.has(FIELD_MODE)) {
-            try {
-                String modeString = json.get(FIELD_MODE).getAsString();
-                mode = RenderMode.fromString(modeString);
-                if (mode == null) {
-                    SomeStacksCommon.LOGGER.warn("Invalid render mode '{}' for item '{}'", modeString, itemKey);
-                }
-            } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse mode for item '{}': {}", itemKey, e.getMessage());
-            }
-        }
-
-        if (json.has(FIELD_SCALE)) {
-            try {
-                scale = json.get(FIELD_SCALE).getAsFloat();
-                if (!inRange(scale, MIN_SCALE, MAX_SCALE)) {
-                    SomeStacksCommon.LOGGER.warn("Invalid scale {} for item '{}', must be between {} and {}",
-                            scale, itemKey, MIN_SCALE, MAX_SCALE);
-                    scale = null;
-                }
-            } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse scale for item '{}': {}", itemKey, e.getMessage());
-            }
-        }
-
-        if (json.has(FIELD_OFFSET)) {
-            try {
-                JsonArray offsetArray = json.getAsJsonArray(FIELD_OFFSET);
-                if (offsetArray.size() != 3) {
-                    SomeStacksCommon.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
-                } else {
-                    float[] parsed = new float[]{
-                            offsetArray.get(0).getAsFloat(),
-                            offsetArray.get(1).getAsFloat(),
-                            offsetArray.get(2).getAsFloat()
-                    };
-                    if (inRange(parsed[0], MIN_OFFSET, MAX_OFFSET)
-                            && inRange(parsed[1], MIN_OFFSET, MAX_OFFSET)
-                            && inRange(parsed[2], MIN_OFFSET, MAX_OFFSET)) {
-                        offset = parsed;
-                    } else {
-                        SomeStacksCommon.LOGGER.warn("Out of range offset for item '{}', each component must be between {} and {}; ignoring it",
-                                itemKey, MIN_OFFSET, MAX_OFFSET);
-                    }
-                }
-            } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to parse offset for item '{}': {}", itemKey, e.getMessage());
-            }
-        }
+        RenderMode mode = json.has(FIELD_MODE)
+                ? parseField(ItemRenderConfig.MODE_CODEC, json.get(FIELD_MODE), itemKey, FIELD_MODE)
+                : null;
+        Float scale = json.has(FIELD_SCALE)
+                ? parseField(ItemRenderConfig.SCALE_CODEC, json.get(FIELD_SCALE), itemKey, FIELD_SCALE)
+                : null;
+        float[] offset = json.has(FIELD_OFFSET)
+                ? parseField(ItemRenderConfig.OFFSET_CODEC, json.get(FIELD_OFFSET), itemKey, FIELD_OFFSET)
+                : null;
 
         if (mode == null && scale == null && offset == null) {
             return null;
@@ -157,20 +115,20 @@ public final class OverrideJsonCodec {
     }
 
     public static JsonObject entryToJson(ItemRenderConfig config) {
-        JsonObject entry = new JsonObject();
-        if (config.mode() != null) {
-            entry.addProperty(FIELD_MODE, config.mode().getId());
-        }
-        if (config.scale() != null) {
-            entry.addProperty(FIELD_SCALE, config.scale());
-        }
-        if (config.offset() != null) {
-            JsonArray offsetArray = new JsonArray();
-            for (float component : config.offset()) {
-                offsetArray.add(component);
-            }
-            entry.add(FIELD_OFFSET, offsetArray);
-        }
-        return entry;
+        JsonElement encoded = ItemRenderConfig.CODEC.encodeStart(
+                        JsonOps.INSTANCE, sanitize(config))
+                .resultOrPartial(message -> SomeStacksCommon.LOGGER.warn(
+                        "Failed to serialize render override: {}", message))
+                .orElseGet(JsonObject::new);
+        return encoded.isJsonObject() ? encoded.getAsJsonObject() : new JsonObject();
+    }
+
+    @Nullable
+    private static <T> T parseField(
+            Codec<T> codec, JsonElement value, String itemKey, String field) {
+        return codec.parse(JsonOps.INSTANCE, value)
+                .resultOrPartial(message -> SomeStacksCommon.LOGGER.warn(
+                        "Invalid {} for item '{}': {}", field, itemKey, message))
+                .orElse(null);
     }
 }

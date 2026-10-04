@@ -22,11 +22,14 @@ public final class FabricClientNetworking implements ClientGestures.Sender {
         registerClient(WriteOverridesPkt.TYPE, ClientRenderPacketSink::apply);
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (!ClientPlayNetworking.canSend(PlaceAndDepositPkt.TYPE)) {
+            ClientGestures.resetSync();
+            if (!ClientPlayNetworking.canSend(GestureStatePkt.TYPE)) {
                 handler.getConnection().disconnect(
                         Component.translatable("somestacks.disconnect.protocol"));
             }
         });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
+                ClientGestures.resetSync());
     }
 
     @Override

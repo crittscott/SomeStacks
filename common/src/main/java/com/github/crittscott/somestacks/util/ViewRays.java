@@ -21,4 +21,17 @@ public final class ViewRays {
         double length = player.blockInteractionRange() + BLOCK_CROSSING;
         return new ViewRay(eye, eye.add(player.getLookAngle().scale(length)));
     }
+
+    /** Builds a reach-length ray through the exact point carried by a vanilla block interaction. */
+    public static ViewRay through(Player player, Vec3 hitLocation) {
+        Vec3 eye = player.getEyePosition(1.0f);
+        Vec3 direction = hitLocation.subtract(eye);
+        if (direction.lengthSqr() < 1.0E-8) {
+            direction = player.getLookAngle();
+        } else {
+            direction = direction.normalize();
+        }
+        double length = player.blockInteractionRange() + BLOCK_CROSSING;
+        return new ViewRay(eye, eye.add(direction.scale(length)));
+    }
 }

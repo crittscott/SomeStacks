@@ -1,7 +1,9 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import net.minecraft.network.FriendlyByteBuf;
+import com.github.crittscott.somestacks.client.ItemRenderConfig;
+import com.github.crittscott.somestacks.client.RenderMode;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 public class RenderOverridePkt implements CustomPacketPayload {
     public static final Type<RenderOverridePkt> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_override"));
-    public static final StreamCodec<FriendlyByteBuf, RenderOverridePkt> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, RenderOverridePkt> STREAM_CODEC =
             StreamCodec.ofMember(RenderOverridePkt::encode, RenderOverridePkt::decode);
 
     private final ResourceLocation itemId;
@@ -43,28 +45,27 @@ public class RenderOverridePkt implements CustomPacketPayload {
         return new RenderOverridePkt(itemId, true, "", 0.0f, new float[3]);
     }
 
-    public static void encode(RenderOverridePkt msg, FriendlyByteBuf buf) {
+    public static void encode(RenderOverridePkt msg, RegistryFriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.itemId);
         buf.writeBoolean(msg.reset);
         if (!msg.reset) {
-            buf.writeUtf(msg.renderMode);
-            buf.writeFloat(msg.scale);
-            buf.writeFloat(msg.offset[0]);
-            buf.writeFloat(msg.offset[1]);
-            buf.writeFloat(msg.offset[2]);
+            ItemRenderConfig.STREAM_CODEC.encode(buf, new ItemRenderConfig(
+                    RenderMode.fromString(msg.renderMode), msg.scale, msg.offset));
         }
     }
 
-    public static RenderOverridePkt decode(FriendlyByteBuf buf) {
+    public static RenderOverridePkt decode(RegistryFriendlyByteBuf buf) {
         ResourceLocation itemId = buf.readResourceLocation();
         boolean reset = buf.readBoolean();
         if (reset) {
             return reset(itemId);
         }
-        String renderMode = buf.readUtf();
-        float scale = buf.readFloat();
-        float[] offset = new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()};
-        return set(itemId, renderMode, scale, offset);
+        ItemRenderConfig config = ItemRenderConfig.STREAM_CODEC.decode(buf);
+        if (config.mode() == null || config.scale() == null || config.offset() == null) {
+            throw new io.netty.handler.codec.DecoderException(
+                    "Incomplete render override command");
+        }
+        return set(itemId, config.mode().getId(), config.scale(), config.offset());
     }
 
     public ResourceLocation itemId() {

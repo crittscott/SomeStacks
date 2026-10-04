@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,6 +25,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
 /** Block-state and interaction plumbing shared by all three stack blocks. */
@@ -35,6 +40,30 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
         registerDefaultState(defaultBlockState()
                 .setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
+    }
+
+    /** Shared properties for the Bar Stack's dynamic occupied shape. */
+    public static BlockBehaviour.Properties barProperties() {
+        return commonProperties(MapColor.METAL).dynamicShape();
+    }
+
+    /** Shared properties for the Singles Stack's dynamic occupied shape. */
+    public static BlockBehaviour.Properties singlesProperties() {
+        return commonProperties(MapColor.WOOD).dynamicShape();
+    }
+
+    /** Shared properties for the Storage Stack's full-block shape. */
+    public static BlockBehaviour.Properties storageProperties() {
+        return commonProperties(MapColor.METAL);
+    }
+
+    private static BlockBehaviour.Properties commonProperties(MapColor mapColor) {
+        return BlockBehaviour.Properties.of()
+                .mapColor(mapColor)
+                .noOcclusion()
+                .pushReaction(PushReaction.BLOCK)
+                .strength(0.5F, 6.0F)
+                .lightLevel(state -> state.getValue(LIGHT_LEVEL));
     }
 
     @Override
@@ -68,12 +97,19 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            StackInteractions.handleExistingStack(
+                    serverPlayer, InteractionHand.MAIN_HAND, hit);
+        }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
     @Override
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                        Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            StackInteractions.handleExistingStack(serverPlayer, hand, hit);
+        }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 

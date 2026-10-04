@@ -1,7 +1,5 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.ServerOverridesLoader;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -19,12 +17,7 @@ public final class FabricNetworking {
      * happens on the physical client and the dedicated server alike, before either side joins.
      */
     public static void registerPayloads() {
-        PayloadTypeRegistry.playC2S().register(PlaceAndDepositPkt.TYPE, PlaceAndDepositPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(DepositPkt.TYPE, DepositPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(TogglePermanentPkt.TYPE, TogglePermanentPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(RotateBlockPkt.TYPE, RotateBlockPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(RotateItemPkt.TYPE, RotateItemPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(ExtractPkt.TYPE, ExtractPkt.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC);
 
         PayloadTypeRegistry.playS2C().register(ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
@@ -33,28 +26,19 @@ public final class FabricNetworking {
     }
 
     public static void initServer() {
-        registerServer(PlaceAndDepositPkt.TYPE, PlaceAndDepositPkt::handleServer);
-        registerServer(DepositPkt.TYPE, DepositPkt::handleServer);
-        registerServer(TogglePermanentPkt.TYPE, TogglePermanentPkt::handleServer);
-        registerServer(RotateBlockPkt.TYPE, RotateBlockPkt::handleServer);
-        registerServer(RotateItemPkt.TYPE, RotateItemPkt::handleServer);
-        registerServer(ExtractPkt.TYPE, ExtractPkt::handleServer);
+        registerServer(GestureStatePkt.TYPE, GestureStatePkt::handleServer);
     }
 
     public static boolean supportsClient(ServerPlayer player) {
         return ServerPlayNetworking.canSend(player, ProtocolPkt.TYPE);
     }
 
-    public static void sendProtocol(ServerPlayer player) {
-        ServerPlayNetworking.send(player, ProtocolPkt.INSTANCE);
-    }
-
     public static void sendConfig(ServerPlayer player) {
-        ServerPlayNetworking.send(player, buildConfigSync());
+        ServerPlayNetworking.send(player, ConfigSyncPkt.current());
     }
 
     public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = buildConfigSync();
+        ConfigSyncPkt packet = ConfigSyncPkt.current();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(player, packet);
         }
@@ -63,14 +47,6 @@ public final class FabricNetworking {
 
     public static void send(ServerPlayer player, CustomPacketPayload packet) {
         ServerPlayNetworking.send(player, packet);
-    }
-
-    private static ConfigSyncPkt buildConfigSync() {
-        return new ConfigSyncPkt(
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
     }
 
     private static <T extends CustomPacketPayload> void registerServer(

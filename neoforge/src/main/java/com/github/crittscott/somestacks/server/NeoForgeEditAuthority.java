@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 public final class NeoForgeEditAuthority implements EditAuthority {
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return FakePlayerFactory.getMinecraft(level);
+        return FakePlayerFactory.get(level, AutomationActor.PROFILE);
     }
 
     @Override
@@ -29,7 +29,7 @@ public final class NeoForgeEditAuthority implements EditAuthority {
 
     @Override
     public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
-        ServerPlayer breaker = FakePlayerFactory.getMinecraft(level);
+        ServerPlayer breaker = automationActor(level);
         BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, breaker);
         return NeoForge.EVENT_BUS.post(evt).isCanceled();
     }

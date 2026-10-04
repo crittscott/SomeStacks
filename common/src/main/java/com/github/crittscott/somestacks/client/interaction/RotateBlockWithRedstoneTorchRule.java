@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.client.ClientGestures;
 import net.minecraft.world.item.Items;
 
 /**
@@ -18,9 +17,6 @@ public final class RotateBlockWithRedstoneTorchRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (ctx.isMainHand()) {
-            ClientGestures.sendRotateBlock(ctx.getClickedPos());
-        }
         ctx.cancelEvent();
     }
 }

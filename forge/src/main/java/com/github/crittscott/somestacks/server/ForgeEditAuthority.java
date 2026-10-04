@@ -1,20 +1,19 @@
 package com.github.crittscott.somestacks.server;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.level.BlockEvent;
 
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.WeakHashMap;
 
 /**
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
@@ -23,16 +22,23 @@ import java.util.WeakHashMap;
  * a bare {@code ServerPlayer} the same way the Fabric authority does.
  */
 public final class ForgeEditAuthority implements EditAuthority {
-    private static final GameProfile PROFILE = new GameProfile(
-            UUID.nameUUIDFromBytes("somestacks:automation".getBytes(StandardCharsets.UTF_8)),
-            "[SomeStacks]");
-
-    private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
+    private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return actors.computeIfAbsent(level, key ->
-                new ServerPlayer(key.getServer(), key, PROFILE, ClientInformation.createDefault()));
+        return actors.computeIfAbsent(level.dimension(), key ->
+                new ServerPlayer(level.getServer(), level, AutomationActor.PROFILE,
+                        ClientInformation.createDefault()));
+    }
+
+    /** Releases the actor that retains an unloading level. */
+    public void unload(ServerLevel level) {
+        actors.remove(level.dimension());
+    }
+
+    /** Releases every actor after a server session ends. */
+    public void clear() {
+        actors.clear();
     }
 
     @Override

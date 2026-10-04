@@ -8,10 +8,9 @@ import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -31,32 +30,27 @@ public final class ModRegistry {
             DeferredRegister.createBlocks(SomeStacksNeoForge.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, SomeStacksNeoForge.MODID);
+    public static final DeferredRegister<SoundEvent> SOUNDS =
+            DeferredRegister.create(Registries.SOUND_EVENT, SomeStacksNeoForge.MODID);
 
     public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock("bar_stack_block", BarStackBlock::new,
-            BlockBehaviour.Properties.of()
-                    .dynamicShape()
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
+            StackBlock.barProperties());
 
     public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock("singles_stack_block", SinglesStackBlock::new,
-            BlockBehaviour.Properties.of()
-                    .dynamicShape()
-                    .mapColor(MapColor.WOOD)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
+            StackBlock.singlesProperties());
 
     public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock("storage_stack_block", StorageStackBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL)));
+            StackBlock.storageProperties());
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register("bar_stack_be",
@@ -77,10 +71,25 @@ public final class ModRegistry {
         CommonRegistry.STORAGE_STACK_BE = STORAGE_STACK_BE::get;
         CommonRegistry.SINGLES_STACK_BE = SINGLES_STACK_BE::get;
         CommonRegistry.BAR_STACK_BE = BAR_STACK_BE::get;
+        CommonRegistry.STORAGE_DEPOSIT_SOUND = STORAGE_DEPOSIT_SOUND::get;
+        CommonRegistry.STORAGE_EXTRACT_SOUND = STORAGE_EXTRACT_SOUND::get;
+        CommonRegistry.STORAGE_ROTATE_SOUND = STORAGE_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_DEPOSIT_SOUND = SINGLES_DEPOSIT_SOUND::get;
+        CommonRegistry.SINGLES_EXTRACT_SOUND = SINGLES_EXTRACT_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_SOUND = SINGLES_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_ITEM_SOUND = SINGLES_ROTATE_ITEM_SOUND::get;
+        CommonRegistry.BAR_DEPOSIT_SOUND = BAR_DEPOSIT_SOUND::get;
+        CommonRegistry.BAR_EXTRACT_SOUND = BAR_EXTRACT_SOUND::get;
+    }
+
+    private static DeferredHolder<SoundEvent, SoundEvent> sound(String path) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(SomeStacksNeoForge.MODID, path);
+        return SOUNDS.register(path, () -> SoundEvent.createVariableRangeEvent(id));
     }
 
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        SOUNDS.register(modBus);
     }
 }

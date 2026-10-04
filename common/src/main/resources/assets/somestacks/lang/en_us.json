@@ -5,6 +5,16 @@
   "key.categories.somestacks": "Some Stacks",
   "key.somestacks.stack_mode": "Stack Modifier (Hold)",
 
+  "subtitles.somestacks.storage_stack.deposit": "Item placed in Storage Stack",
+  "subtitles.somestacks.storage_stack.extract": "Item taken from Storage Stack",
+  "subtitles.somestacks.storage_stack.rotate": "Storage Stack rotates",
+  "subtitles.somestacks.singles_stack.deposit": "Item placed in Singles Stack",
+  "subtitles.somestacks.singles_stack.extract": "Item taken from Singles Stack",
+  "subtitles.somestacks.singles_stack.rotate": "Singles Stack rotates",
+  "subtitles.somestacks.singles_stack.rotate_item": "Item rotates in Singles Stack",
+  "subtitles.somestacks.bar_stack.deposit": "Bar placed in Bar Stack",
+  "subtitles.somestacks.bar_stack.extract": "Bar taken from Bar Stack",
+
   "somestacks.mode.storage_stack": "Storage Stack",
   "somestacks.mode.singles_stack": "Singles Stack",
   "somestacks.mode.bar_stack": "Bar Stack",
@@ -53,7 +63,7 @@
   "somestacks.command.gallery_created": "Created %s %s (%s %s) for %s. Rows run north.",
   "somestacks.command.gallery_warning": " WARNING: %s of %s placements failed; see log for positions and reasons.",
   "somestacks.command.gallery_building": "Building %s %s (%s %s) for %s.",
-  "somestacks.command.reloaded": "Reloaded Some Stacks server overrides and synced %s player(s)",
+  "somestacks.command.reloaded": "Reloaded Some Stacks server config and overrides; synced %s player(s)",
   "somestacks.command.list_contains": "The %s already contains %s",
   "somestacks.command.list_added": "Added %s to the %s",
   "somestacks.command.list_missing": "The %s does not contain %s",
@@ -104,9 +114,8 @@
   "somestacks.command.help.write.detail.3": "That dump runs on your own client and holds it busy until it finishes, so name a namespace, or keep a review session's mods in the gen mod list and dump list, rather than reaching for all in a large pack.",
   "somestacks.command.help.write.detail.4": "Nothing reads generated_overrides back. A file there is ready to be corrected by hand and dropped into a resource pack or a server's server_item_overrides folder.",
 
-  "somestacks.command.help.reload.summary": "Re-read the server override folder and re-sync players",
-  "somestacks.command.help.reload.detail.1": "Reads config/somestacks/server_item_overrides/ again and pushes the current server config to every player.",
-  "somestacks.command.help.reload.detail.2": "It does not re-read the world-policy JSON. Restart the server after editing that file directly.",
+  "somestacks.command.help.reload.summary": "Re-read server policy and render overrides, then re-sync players",
+  "somestacks.command.help.reload.detail.1": "Reads the world's server-policy JSON and config/somestacks/server_item_overrides/ again, then pushes the current client-facing settings to every player.",
 
   "somestacks.command.help.gen.summary": "Edit the mod and item lists the render galleries build from",
   "somestacks.command.help.gen.detail.1": "The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is stored, which is the order of the gallery's columns.",

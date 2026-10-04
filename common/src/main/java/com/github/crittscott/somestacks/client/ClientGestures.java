@@ -1,20 +1,13 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.ExtractPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateBlockPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
+import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-/** Shared client gesture state and the loader-specific packet sender behind its rules. */
+/** Shared client gesture state and its loader-specific state-sync sender. */
 public final class ClientGestures {
     private ClientGestures() {}
 
@@ -28,6 +21,8 @@ public final class ClientGestures {
     }
 
     private static StackMode stackMode = StackMode.STORAGE_STACK;
+    private static StackMode lastSentMode;
+    private static boolean lastSentModifier;
     private static Sender sender;
 
     public static void setSender(Sender sender) {
@@ -55,27 +50,18 @@ public final class ClientGestures {
                 Component.translatable("somestacks.message.storage_mode", modeComponent), true);
     }
 
-    public static void sendTogglePermanent(BlockPos pos) {
-        sender.send(new TogglePermanentPkt(pos));
+    /** Sends only state that changed since the last interaction on this connection. */
+    public static void syncState(boolean modifierDown) {
+        if (lastSentMode == stackMode && lastSentModifier == modifierDown) {
+            return;
+        }
+        sender.send(new GestureStatePkt(stackMode, modifierDown));
+        lastSentMode = stackMode;
+        lastSentModifier = modifierDown;
     }
 
-    public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
-        sender.send(new PlaceAndDepositPkt(stackMode.toBlockType(), face, placePos));
-    }
-
-    public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        sender.send(new DepositPkt(pos, clickedPos));
-    }
-
-    public static void sendExtract(BlockPos pos, int index) {
-        sender.send(new ExtractPkt(pos, index));
-    }
-
-    public static void sendRotateBlock(BlockPos pos) {
-        sender.send(new RotateBlockPkt(pos));
-    }
-
-    public static void sendRotateItem(BlockPos pos, int slotIndex) {
-        sender.send(new RotateItemPkt(pos, slotIndex));
+    /** Forces the next interaction to establish state on a new connection. */
+    public static void resetSync() {
+        lastSentMode = null;
     }
 }

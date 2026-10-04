@@ -14,8 +14,7 @@ import java.util.function.Consumer;
 
 /**
  * The mod's payloads and their handler registration. Every packet class is shared; this binds the
- * shared {@code TYPE}/{@code STREAM_CODEC} pair to NeoForge's payload system and routes the six
- * client-to-server handlers to their shared {@code handleServer} methods.
+ * shared {@code TYPE}/{@code STREAM_CODEC} pair to NeoForge's payload system.
  *
  * <p>The three server-to-client payloads are delivered to {@link #clientReceiver}, which the
  * physical client installs from {@code ClientSetup}; the dedicated server never touches a client
@@ -35,18 +34,8 @@ public final class ModNetworking {
     public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(SomeStacksCommon.MODID);
 
-        registrar.playToServer(PlaceAndDepositPkt.TYPE, PlaceAndDepositPkt.STREAM_CODEC,
-                toServer(PlaceAndDepositPkt::handleServer));
-        registrar.playToServer(DepositPkt.TYPE, DepositPkt.STREAM_CODEC,
-                toServer(DepositPkt::handleServer));
-        registrar.playToServer(TogglePermanentPkt.TYPE, TogglePermanentPkt.STREAM_CODEC,
-                toServer(TogglePermanentPkt::handleServer));
-        registrar.playToServer(RotateBlockPkt.TYPE, RotateBlockPkt.STREAM_CODEC,
-                toServer(RotateBlockPkt::handleServer));
-        registrar.playToServer(RotateItemPkt.TYPE, RotateItemPkt.STREAM_CODEC,
-                toServer(RotateItemPkt::handleServer));
-        registrar.playToServer(ExtractPkt.TYPE, ExtractPkt.STREAM_CODEC,
-                toServer(ExtractPkt::handleServer));
+        registrar.playToServer(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC,
+                toServer(GestureStatePkt::handleServer));
 
         registrar.playToClient(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC, ModNetworking::toClient);
         registrar.playToClient(RenderOverridePkt.TYPE, RenderOverridePkt.STREAM_CODEC, ModNetworking::toClient);

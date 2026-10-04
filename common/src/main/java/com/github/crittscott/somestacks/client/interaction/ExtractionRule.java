@@ -1,15 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StorageCubeIdx;
-import com.github.crittscott.somestacks.util.ViewRay;
-import com.github.crittscott.somestacks.util.ViewRays;
-import net.minecraft.world.level.block.Block;
 
 /**
  * An unmodified right-click on any stack takes from the nearest occupied cell along the player's
@@ -26,29 +16,6 @@ public final class ExtractionRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (!ctx.isMainHand()) {
-            ctx.cancelEvent();
-            return;
-        }
-
-        ViewRay ray = ViewRays.of(ctx.getPlayer());
-        var be = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
-        int index = -1;
-
-        Block block = ctx.getLevel().getBlockState(ctx.getClickedPos()).getBlock();
-
-        if (be instanceof StorageStackBE sbe) {
-            index = StorageCubeIdx.traceCubes(ray, ctx.getClickedPos(), sbe, sbe.getRotation());
-        } else if (be instanceof SinglesStackBE ssbe) {
-            index = SinglesCubeIdx.traceCubes(ray, ctx.getClickedPos(), ssbe);
-        } else if (be instanceof BarStackBE barbe) {
-            index = BarCubeIdx.traceCubes(ray, ctx.getClickedPos(), barbe);
-        }
-
-        if (index >= 0) {
-            ClientGestures.sendExtract(ctx.getClickedPos(), index);
-        }
-
         ctx.cancelEvent();
     }
 }

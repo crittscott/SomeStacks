@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import io.netty.handler.codec.DecoderException;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ import java.util.List;
 public class WriteOverridesPkt implements CustomPacketPayload {
     public static final Type<WriteOverridesPkt> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "write_overrides"));
-    public static final StreamCodec<FriendlyByteBuf, WriteOverridesPkt> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, WriteOverridesPkt> STREAM_CODEC =
             StreamCodec.ofMember(WriteOverridesPkt::encode, WriteOverridesPkt::decode);
 
     /** Defensive upper bound on namespace count received from the server. */
@@ -46,15 +46,15 @@ public class WriteOverridesPkt implements CustomPacketPayload {
         return new WriteOverridesPkt(List.copyOf(namespaces));
     }
 
-    public static void encode(WriteOverridesPkt msg, FriendlyByteBuf buf) {
-        buf.writeInt(msg.namespaces.size());
+    public static void encode(WriteOverridesPkt msg, RegistryFriendlyByteBuf buf) {
+        buf.writeVarInt(msg.namespaces.size());
         for (String namespace : msg.namespaces) {
             buf.writeUtf(namespace);
         }
     }
 
-    public static WriteOverridesPkt decode(FriendlyByteBuf buf) {
-        int size = buf.readInt();
+    public static WriteOverridesPkt decode(RegistryFriendlyByteBuf buf) {
+        int size = buf.readVarInt();
         if (size < 0 || size > MAX_NAMESPACES) {
             throw new DecoderException("Invalid write-override namespace count: " + size);
         }

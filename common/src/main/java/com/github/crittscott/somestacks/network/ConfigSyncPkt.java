@@ -1,11 +1,11 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.ServerOverridesLoader;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
 import io.netty.handler.codec.DecoderException;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class ConfigSyncPkt implements CustomPacketPayload {
     public static final Type<ConfigSyncPkt> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
-    public static final StreamCodec<FriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
     /** Defensive upper bound on synchronized override entries. */
@@ -43,44 +43,38 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         this.renderOverrides = Map.copyOf(renderOverrides);
     }
 
+    /** Builds one snapshot of the server state clients need. */
+    public static ConfigSyncPkt current() {
+        return new ConfigSyncPkt(
+                ServerConfig.enableStorageStackBlock(),
+                ServerConfig.enableSinglesStackBlock(),
+                ServerConfig.enableBarStackBlock(),
+                ServerOverridesLoader.load());
+    }
+
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public static void encode(ConfigSyncPkt msg, FriendlyByteBuf buf) {
+    public static void encode(ConfigSyncPkt msg, RegistryFriendlyByteBuf buf) {
         buf.writeBoolean(msg.enableStack);
         buf.writeBoolean(msg.enableSingles);
         buf.writeBoolean(msg.enableBar);
 
-        buf.writeInt(msg.renderOverrides.size());
+        buf.writeVarInt(msg.renderOverrides.size());
         for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : msg.renderOverrides.entrySet()) {
             buf.writeResourceLocation(entry.getKey());
-            ItemRenderConfig config = entry.getValue();
-
-            buf.writeBoolean(config.mode() != null);
-            if (config.mode() != null) {
-                buf.writeUtf(config.mode().getId());
-            }
-            buf.writeBoolean(config.scale() != null);
-            if (config.scale() != null) {
-                buf.writeFloat(config.scale());
-            }
-            buf.writeBoolean(config.offset() != null);
-            if (config.offset() != null) {
-                buf.writeFloat(config.offset()[0]);
-                buf.writeFloat(config.offset()[1]);
-                buf.writeFloat(config.offset()[2]);
-            }
+            ItemRenderConfig.STREAM_CODEC.encode(buf, entry.getValue());
         }
     }
 
-    public static ConfigSyncPkt decode(FriendlyByteBuf buf) {
+    public static ConfigSyncPkt decode(RegistryFriendlyByteBuf buf) {
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
 
-        int size = buf.readInt();
+        int size = buf.readVarInt();
         if (size < 0 || size > MAX_OVERRIDE_ENTRIES) {
             throw new DecoderException("Invalid render-override count: " + size);
         }
@@ -88,13 +82,7 @@ public class ConfigSyncPkt implements CustomPacketPayload {
         Map<ResourceLocation, ItemRenderConfig> renderOverrides = new HashMap<>(size);
         for (int i = 0; i < size; i++) {
             ResourceLocation itemId = buf.readResourceLocation();
-            RenderMode mode = buf.readBoolean() ? RenderMode.fromString(buf.readUtf()) : null;
-            Float scale = buf.readBoolean() ? buf.readFloat() : null;
-            float[] offset = buf.readBoolean()
-                    ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
-                    : null;
-            renderOverrides.put(itemId,
-                    OverrideJsonCodec.sanitize(new ItemRenderConfig(mode, scale, offset)));
+            renderOverrides.put(itemId, ItemRenderConfig.STREAM_CODEC.decode(buf));
         }
 
         return new ConfigSyncPkt(enableStack, enableSingles, enableBar, renderOverrides);

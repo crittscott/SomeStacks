@@ -18,6 +18,7 @@ public final class ModeCycleRule implements InteractionRule {
     @Override
     public void execute(InteractionContext ctx) {
         ClientGestures.cycleMode();
+        ClientGestures.syncState(true);
         ClientGestures.displayModeMessage(ctx.getPlayer());
         if (ctx.hasItemInHand()) {
             ctx.cancelEvent();

@@ -8,7 +8,7 @@ What a player currently observes. `orientation-code.md` covers the code structur
 
 Some Stacks turns held items directly into visible world storage. It adds three stack blocks and nothing else: no block items, recipes, creative-tab entries, or storage screens. A stack exists because an item was deposited into the world and normally disappears when its last contents are removed.
 
-Requires Minecraft 1.21.4 and one of Fabric Loader 0.19.5+ with Fabric API 0.119.4+1.21.4, Forge 54.1.18+, or NeoForge 21.4.158+. Must be installed on both client and server.
+Requires Minecraft 1.21.4 and a matching Fabric, Forge, or NeoForge build on both client and server.
 
 ## The three stack types
 
@@ -89,7 +89,7 @@ Every bar above the bottom layer must overlap a bar directly below, and support 
 - **Pistons:** all three block piston movement.
 - **Collision:** Storage is a full block. Singles and Bar collide only on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unpathable.
 - **Empty dynamic blocks:** an empty Singles or Bar block has no outline but stays clickable and breakable.
-- **Sounds:** deposits, extraction, and rotations play server-selected sounds; data packs can replace them per type and action.
+- **Sounds:** deposits, extraction, and rotations use registered Some Stacks sound events with specific subtitles; resource packs can replace them per type and action through ordinary `sounds.json` entries.
 
 ## Automation
 
@@ -101,7 +101,7 @@ Every block exposes loader-native item storage on all six sides (`IItemHandler` 
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Fabric presents that actor as Fabric API's standard fake player so machine policies can recognize it.
+The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. All three loaders present automation under the same `[SomeStacks]` identity so machine and claim policies can recognize it.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
@@ -146,15 +146,15 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss write changed\|<modid>\|all\|list` | level 2 | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
-| `/ss reload` | level 2 | Reload server item-render overrides and resync players |
+| `/ss reload` | level 2 | Reread world policy and server item-render overrides, then resync players |
 
-Gallery commands build east of the player over a replaced sandstone floor, skip the protection checks ordinary placement uses (hence off by default), and spread large jobs across ticks. Galleries are alphabetical: one column per mod in id order, each running north through that mod's items in id order. `/ss reload` does not reread the world-policy JSON; direct edits to that file take effect on restart.
+Gallery commands build east over a replaced sandstone floor, bypass ordinary placement protection (hence off by default), and spread work across ticks. Galleries use one alphabetized column per mod. `/ss reload` applies direct world-policy JSON edits; malformed fields are reported and independently use defaults.
 
 ## Item appearance
 
 Storage and Singles can show an item in four modes: `2d` (flat art on a small cube), `3d` (the item's FIXED renderer), `gui` (its inventory renderer), and `block` (a BlockItem's block state, falling back to `3d`). Each profile can also set scale and a three-component offset.
 
-Resolution order: server override, the player's local override file, resource-pack data, then automatic measurement of how the item actually draws. A server override therefore wins over local preferences. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by resource-pack, mod-version, or resource-reload changes.
+Resolution order is server override, local override, resource-pack data, then automatic measurement. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
 `/ss item` changes the client's in-memory layer immediately; `/ss write changed` saves those changes to `config/somestacks/item_overrides.json`. The namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only and not loaded.
 
@@ -162,15 +162,15 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Extension points
 
-- Data pack: add items to the tags listed in `compatibility.ingots`, including `somestacks:ingots`; replace action sounds via `data/<namespace>/somestacks_sounds/*.json`.
-- Resource pack: add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Data pack: add items to the tags listed in `compatibility.ingots`, including `somestacks:ingots`.
+- Resource pack: replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: impose Storage/Singles profiles via `config/somestacks/server_item_overrides/*.json`, synced on login and `/ss reload`.
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation answer to build limits, obstruction, the world border, and spawn protection, and fire a real protection event that claim and logging mods can hook (Forge/NeoForge interaction, place, and break events; Fabric API's `UseBlockCallback` and `PlayerBlockBreakEvents`). Automatic growth and removal use a loader automation actor. Fabric has no placement event, so on Fabric automated growth also asks claim mods that implement Common Protection API directly.
+Player placement, deposit, extraction, and rotation travel through vanilla's server-side block-use pipeline and answer to loader allow/deny results, build limits, obstruction, the world border, and spawn protection. A click through a neighboring block additionally checks the adjacent stack itself. Automatic growth and removal use the `[SomeStacks]` automation actor. Forge/NeoForge expose place and break events; Fabric exposes `PlayerBlockBreakEvents`, and automated Fabric growth also asks claim mods that implement Common Protection API directly. Appearance or removal of an outer stack block emits vanilla placement/destruction game events; the many internal cells and bars remain contents of that one block.
 
-The server independently validates every gesture packet: one per player per tick, nonspectator, loaded target, the player's current vanilla block-interaction range, held item, target block and index, adjacency, support, type enablement, height, and protection. Deposit cell selection is recomputed from the player's current view using the same current range; extraction and Singles item rotation trust a range- and occupancy-checked client cell index.
+The only client gesture payload synchronizes placement mode and whether the modifier is down. The actual action uses vanilla's block-use packet and its exact hit. The server independently validates the main hand, spectator and protection state, held item, target, support, type enablement, height, obstruction, and edit authority. It recomputes deposit, extraction, and Singles item-rotation cell selection by extending the player's reach ray through the vanilla hit point; clients never choose a cell index for the server.
 
 ## Saved worlds
 

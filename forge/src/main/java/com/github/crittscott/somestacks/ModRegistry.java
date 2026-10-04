@@ -12,9 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,38 +39,27 @@ public final class ModRegistry {
             DeferredRegister.create(ForgeRegistries.BLOCKS, SomeStacks.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SomeStacks.MODID);
+    public static final DeferredRegister<SoundEvent> SOUNDS =
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacks.MODID);
 
     public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
-            () -> new BarStackBlock(BlockBehaviour.Properties.of()
-                    .setId(blockKey("bar_stack_block"))
-                    .dynamicShape()
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
-            ));
+            () -> new BarStackBlock(StackBlock.barProperties().setId(blockKey("bar_stack_block"))));
 
     public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
-            () -> new SinglesStackBlock(BlockBehaviour.Properties.of()
-                    .setId(blockKey("singles_stack_block"))
-                    .dynamicShape()
-                    .mapColor(MapColor.WOOD)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
-            ));
+            () -> new SinglesStackBlock(StackBlock.singlesProperties().setId(blockKey("singles_stack_block"))));
 
     public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
-            () -> new StorageStackBlock(BlockBehaviour.Properties.of()
-                    .setId(blockKey("storage_stack_block"))
-                    .mapColor(MapColor.METAL)
-                    .noOcclusion()
-                    .pushReaction(PushReaction.BLOCK)
-                    .strength(0.5F, 6.0F)
-                    .lightLevel(state -> state.getValue(StackBlock.LIGHT_LEVEL))
-            ));
+            () -> new StorageStackBlock(StackBlock.storageProperties().setId(blockKey("storage_stack_block"))));
+
+    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
+    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
+    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
+    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
+    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
+    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
+    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register("bar_stack_be",
@@ -96,14 +83,29 @@ public final class ModRegistry {
         CommonRegistry.STORAGE_STACK_BE = STORAGE_STACK_BE::get;
         CommonRegistry.SINGLES_STACK_BE = SINGLES_STACK_BE::get;
         CommonRegistry.BAR_STACK_BE = BAR_STACK_BE::get;
+        CommonRegistry.STORAGE_DEPOSIT_SOUND = STORAGE_DEPOSIT_SOUND::get;
+        CommonRegistry.STORAGE_EXTRACT_SOUND = STORAGE_EXTRACT_SOUND::get;
+        CommonRegistry.STORAGE_ROTATE_SOUND = STORAGE_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_DEPOSIT_SOUND = SINGLES_DEPOSIT_SOUND::get;
+        CommonRegistry.SINGLES_EXTRACT_SOUND = SINGLES_EXTRACT_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_SOUND = SINGLES_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_ITEM_SOUND = SINGLES_ROTATE_ITEM_SOUND::get;
+        CommonRegistry.BAR_DEPOSIT_SOUND = BAR_DEPOSIT_SOUND::get;
+        CommonRegistry.BAR_EXTRACT_SOUND = BAR_EXTRACT_SOUND::get;
     }
 
     private static ResourceKey<Block> blockKey(String path) {
         return ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, path));
     }
 
+    private static RegistryObject<SoundEvent> sound(String path) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, path);
+        return SOUNDS.register(path, () -> SoundEvent.createVariableRangeEvent(id));
+    }
+
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        SOUNDS.register(modBus);
     }
 }

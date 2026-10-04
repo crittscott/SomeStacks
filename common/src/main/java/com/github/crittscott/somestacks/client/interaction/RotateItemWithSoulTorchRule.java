@@ -1,10 +1,5 @@
 package com.github.crittscott.somestacks.client.interaction;
 
-import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.ViewRay;
-import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.world.item.Items;
 
 /**
@@ -27,21 +22,6 @@ public final class RotateItemWithSoulTorchRule implements InteractionRule {
 
     @Override
     public void execute(InteractionContext ctx) {
-        if (!ctx.isMainHand()) {
-            ctx.cancelEvent();
-            return;
-        }
-
-        ViewRay ray = ViewRays.of(ctx.getPlayer());
-
-        if (ctx.getLevel().getBlockEntity(ctx.getClickedPos()) instanceof SinglesStackBE ssbe) {
-            // Sent even when the ray hit no item. The gesture takes the click either way, and the
-            // packet is what tells the server to suppress the vanilla torch placement; the server
-            // ignores an index that names no cell.
-            int index = SinglesCubeIdx.traceCubes(ray, ctx.getClickedPos(), ssbe);
-            ClientGestures.sendRotateItem(ctx.getClickedPos(), index);
-        }
-
         ctx.cancelEvent();
     }
 }

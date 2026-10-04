@@ -6,15 +6,8 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.network.RotateItemPkt;
-import com.github.crittscott.somestacks.network.TogglePermanentPkt;
-import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +19,6 @@ import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.border.WorldBorder;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
@@ -45,8 +37,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
- * and the same-tick claim that stops the vanilla interaction following a gesture from acting on the
- * position the gesture just used.
+ * loader-native interaction denial, and world protection.
  *
  * <p>These fire the NeoForge events themselves, so they cover the order a consult and the commit
  * that follows must agree on.
@@ -59,6 +50,11 @@ public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
     @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationUsesSharedIdentity(GameTestHelper helper) {
+        ProtectionChecks.automationUsesSharedIdentity(helper);
+    }
+
+    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
         ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
@@ -68,163 +64,6 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(helper, playerFactory(helper));
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void sameTickSuppressionVetoesOnlyTheMarkedPosition(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-        BlockPos other = marked.east();
-
-        check(PROTECTION.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-
-        check(!PROTECTION.mayInteract(player, marked),
-                "Marked same-tick interaction was not suppressed");
-        check(PROTECTION.mayInteract(player, other),
-                "Different position was suppressed");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
-    public static void suppressionExpiresOnTheNextTick(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-
-        check(PROTECTION.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-        helper.runAfterDelay(1, () -> {
-            check(PROTECTION.mayInteract(player, marked),
-                    "Expired suppression still vetoed interaction");
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void rotationClaimsButPermanenceDoesNotClaimTheTrailingClick(
-            GameTestHelper helper) {
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN.east(3));
-        BlockPos singlesPos = singles.getBlockPos();
-        BlockPos storagePos = storage.getBlockPos();
-
-        try {
-            player.setPos(singlesPos.getX() + 0.5, singlesPos.getY(), singlesPos.getZ() + 0.5);
-            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.SOUL_TORCH));
-            GestureThrottle.clear(player.getUUID());
-            RotateItemPkt.handleServer(new RotateItemPkt(singlesPos, 0), player);
-            check(!PROTECTION.mayInteract(player, singlesPos),
-                    "Empty-cell rotation did not suppress the trailing torch click");
-
-            player.setPos(storagePos.getX() + 0.5, storagePos.getY(), storagePos.getZ() + 0.5);
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            GestureThrottle.clear(player.getUUID());
-            TogglePermanentPkt.handleServer(new TogglePermanentPkt(storagePos), player);
-            check(storage.pile().isPermanent(), "Permanence toggle did not run");
-            check(PROTECTION.mayInteract(player, storagePos),
-                    "Permanence toggle suppressed its trailing empty-hand click");
-        } finally {
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            GestureThrottle.clear(player.getUUID());
-        }
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void permanenceToggleHonorsInteractionDenial(GameTestHelper helper) {
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        BlockPos target = storage.getBlockPos();
-        Consumer<PlayerInteractEvent.RightClickBlock> denyTarget = event -> {
-            if (event.getEntity() == player && event.getPos().equals(target)) {
-                event.setUseBlock(TriState.FALSE);
-            }
-        };
-
-        player.setPos(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
-        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        GestureThrottle.clear(player.getUUID());
-        NeoForge.EVENT_BUS.addListener(denyTarget);
-        try {
-            TogglePermanentPkt.handleServer(new TogglePermanentPkt(target), player);
-            check(!storage.pile().isPermanent(),
-                    "Interaction-denied permanence toggle changed the pile");
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyTarget);
-            GestureThrottle.clear(player.getUUID());
-        }
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositSuppressesTheClickedBlockAndStillDeposits(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                DepositPkt.apply(player, new DepositPkt(target, clicked)));
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit did not reach the stack");
-        check(!PROTECTION.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(PROTECTION.mayInteract(player, target),
-                "The deposit target was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementSuppressesTheClickedBlockAndStillPlaces(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.below();
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(!PROTECTION.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(PROTECTION.mayInteract(player, target),
-                "The placed position was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositConsultsTheAdjacentBlockThatWasActuallyClicked(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        // The stack itself is open; the block the player put their cursor on is not. The deposit
-        // reaches the stack through that click, so refusing the click refuses the deposit.
-        Consumer<PlayerInteractEvent.RightClickBlock> denyClicked = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseBlock(TriState.FALSE);
-            }
-        };
-
-        NeoForge.EVENT_BUS.addListener(denyClicked);
-        try {
-            withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                    DepositPkt.apply(player, new DepositPkt(target, clicked)));
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyClicked);
-        }
-
-        checkEquals(0, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit ran despite the clicked block being denied");
-        helper.succeed();
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
@@ -288,21 +127,8 @@ public final class ProtectionGameTests {
         };
     }
 
-    /**
-     * Runs {@code action} with {@code stack} held, and empties the hand again before returning.
-     * The fake player is shared across tests, so what it carries has to be put back.
-     */
-    private static void withMainHand(ServerPlayer player, ItemStack stack, Runnable action) {
-        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        try {
-            action.run();
-        } finally {
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        }
-    }
-
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementHonorsUseItemDenyWithoutChangingBlockAccess(
+    public static void adjacentConsultationHonorsUseItemDeny(
             GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = GameTestSupport.fakePlayer(level);
@@ -315,10 +141,8 @@ public final class ProtectionGameTests {
 
         NeoForge.EVENT_BUS.addListener(denyItem);
         try {
-            check(PROTECTION.mayInteract(player, clicked),
-                    "Item-use denial incorrectly vetoed block access");
-            check(!PROTECTION.mayUseItemOn(player, clicked),
-                    "Item-use denial did not veto placement");
+            check(!PROTECTION.mayUseItemAt(player, clicked),
+                    "Item-use denial did not veto the adjacent stack consultation");
         } finally {
             NeoForge.EVENT_BUS.unregister(denyItem);
         }

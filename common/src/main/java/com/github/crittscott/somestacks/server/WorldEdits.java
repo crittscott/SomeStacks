@@ -7,8 +7,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -100,6 +100,8 @@ public final class WorldEdits {
             level.setBlock(pos, previous, Block.UPDATE_ALL);
             return false;
         }
+        state.getBlock().setPlacedBy(level, pos, state, placer, placer.getMainHandItem());
+        level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, state));
         return true;
     }
 
@@ -117,6 +119,11 @@ public final class WorldEdits {
         if (authority().vetoesRemoval(level, pos, state)) {
             return false;
         }
-        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        ServerPlayer actor = automationActor(level);
+        if (!level.removeBlock(pos, false)) {
+            return false;
+        }
+        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
+        return true;
     }
 }

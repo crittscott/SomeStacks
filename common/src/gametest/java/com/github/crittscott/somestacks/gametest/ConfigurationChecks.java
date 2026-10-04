@@ -192,6 +192,25 @@ public final class ConfigurationChecks {
             ServerConfig.load(fixture);
             check(ServerConfig.isIngotItem(knownIngot), "Bare item id did not admit its own item");
             checkEquals(1, ServerConfig.ingotItemCount(), "Bare item id admitted more than itself");
+
+            Files.writeString(fixture, """
+                    {
+                      "piles": {"max_pile_height": "not-a-number"},
+                      "stacks": {"enable_storage_stack_block": false},
+                      "compatibility": {"disable_mods": ["minecraft", 7]}
+                    }
+                    """);
+            check(ServerConfig.reload(), "Server config did not reload its current file");
+            checkEquals(8, ServerConfig.maxPileHeight(),
+                    "Malformed height did not fall back independently");
+            check(!ServerConfig.enableStorageStackBlock(),
+                    "Valid field beside a malformed field was lost");
+            check(ServerConfig.enableSinglesStackBlock(),
+                    "Missing field retained the previous file's value");
+            checkEquals(List.of("minecraft"), ServerConfig.DISABLE_MODS.get(),
+                    "Malformed list member invalidated valid members");
+            checkEquals(List.of(), ServerConfig.DISABLE_ITEMS.get(),
+                    "Missing list retained the previous file's value");
         } catch (IOException e) {
             throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
         } finally {

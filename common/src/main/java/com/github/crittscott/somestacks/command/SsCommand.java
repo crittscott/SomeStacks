@@ -14,10 +14,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -88,13 +91,15 @@ public final class SsCommand {
 
     private SsCommand() {}
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher,
+                                CommandBuildContext buildContext) {
         dispatcher.register(
                 Commands.literal(COMMAND_ROOT)
                         .then(Commands.literal(COMMAND_ITEM)
                                 .requires(SsCommand::isAdminPlayer)
-                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests(SsCommand::suggestItems)
+                                .then(Commands.argument(
+                                                ARG_ITEM,
+                                                ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .then(Commands.literal("reset")
                                                 .executes(SsCommand::resetItem))
                                         .then(Commands.argument(ARG_MODE, StringArgumentType.word())
@@ -120,8 +125,8 @@ public final class SsCommand {
                         .then(Commands.literal(COMMAND_RELOAD)
                                 .requires(SsCommand::isAdmin)
                                 .executes(SsCommand::reload))
-                        .then(genTree())
-                        .then(denyTree())
+                        .then(genTree(buildContext))
+                        .then(denyTree(buildContext))
                         .then(ingotTree())
                         .then(SsHelp.tree())
         );
@@ -194,7 +199,8 @@ public final class SsCommand {
      * {@code ss deny item add} checks one, since a typo would otherwise sit in the list and be
      * skipped by every gallery.
      */
-    private static LiteralArgumentBuilder<CommandSourceStack> genTree() {
+    private static LiteralArgumentBuilder<CommandSourceStack> genTree(
+            CommandBuildContext buildContext) {
         return Commands.literal(COMMAND_GEN)
                 .requires(SsCommand::isAdmin)
                 .then(Commands.literal("mod")
@@ -213,8 +219,9 @@ public final class SsCommand {
                                 .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
-                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests(SsCommand::suggestItems)
+                                .then(Commands.argument(
+                                                ARG_ITEM,
+                                                ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
@@ -232,7 +239,8 @@ public final class SsCommand {
      * expected to hold namespaces the registry cannot confirm; an item id is checked against the
      * registry, where a typo would otherwise sit in the list looking effective.
      */
-    private static LiteralArgumentBuilder<CommandSourceStack> denyTree() {
+    private static LiteralArgumentBuilder<CommandSourceStack> denyTree(
+            CommandBuildContext buildContext) {
         return Commands.literal(COMMAND_DENY)
                 .requires(SsCommand::isAdmin)
                 .then(Commands.literal("mod")
@@ -251,8 +259,9 @@ public final class SsCommand {
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
-                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests(SsCommand::suggestItems)
+                                .then(Commands.argument(
+                                                ARG_ITEM,
+                                                ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
@@ -340,7 +349,7 @@ public final class SsCommand {
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
-        return source.getEntity() instanceof ServerPlayer;
+        return source.isPlayer();
     }
 
     private static boolean isAdmin(CommandSourceStack source) {
@@ -411,12 +420,7 @@ public final class SsCommand {
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
-        if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
-            ctx.getSource().sendFailure(Component.translatable(
-                    "somestacks.command.unknown_item", itemId.toString()));
-            return 0;
-        }
+        ResourceLocation itemId = resourceItemId(ctx);
 
         String modeString = StringArgumentType.getString(ctx, ARG_MODE);
         if (RenderMode.fromString(modeString) == null) {
@@ -437,7 +441,7 @@ public final class SsCommand {
     private static int resetItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
+        ResourceLocation itemId = resourceItemId(ctx);
         CommandNetwork.send(player, RenderOverridePkt.reset(itemId));
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
@@ -704,6 +708,7 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
+        ServerConfig.reload();
         int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);
@@ -716,14 +721,15 @@ public final class SsCommand {
      * nothing or showing nothing.
      */
     private static int addItemEntry(CommandContext<CommandSourceStack> ctx,
-                                    ServerConfig.ListSetting list, String label) {
-        ResourceLocation itemId = ResourceLocationArgument.getId(ctx, ARG_ITEM);
-        if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
-            ctx.getSource().sendFailure(Component.translatable(
-                    "somestacks.command.unknown_item", itemId.toString()));
-            return 0;
-        }
+                                    ServerConfig.ListSetting list, String label)
+            throws CommandSyntaxException {
+        ResourceLocation itemId = resourceItemId(ctx);
         return addEntry(ctx, list, label, itemId.toString());
+    }
+
+    private static ResourceLocation resourceItemId(
+            CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return ResourceArgument.getResource(ctx, ARG_ITEM, Registries.ITEM).key().location();
     }
 
     private static int addEntry(CommandContext<CommandSourceStack> ctx,

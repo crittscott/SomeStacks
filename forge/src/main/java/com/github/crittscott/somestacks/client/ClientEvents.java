@@ -15,8 +15,8 @@ import net.minecraftforge.network.PacketDistributor;
 
 /**
  * The client's gesture entry point: the three right-click events feed
- * {@link InteractionRuleRegistry}, and the send methods here are how a matched rule reaches the
- * server. Also holds the selected placement mode, which is client state alone.
+ * {@link InteractionRuleRegistry}. A matched block rule is carried by the normal vanilla use
+ * packet; the custom packet synchronizes only the selected mode and modifier state.
  *
  * <p>A canceled event denies both the block use and the item use, so a gesture never also spends
  * what the player is holding.
@@ -36,6 +36,7 @@ public final class ClientEvents implements ClientGestures.Sender {
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -51,6 +52,7 @@ public final class ClientEvents implements ClientGestures.Sender {
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processItemRules(ctx);
 
         if (ctx.shouldCancel()) {
@@ -61,9 +63,8 @@ public final class ClientEvents implements ClientGestures.Sender {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
         // Only the client-side firing drives the gesture rules. In single player the integrated
-        // server shares this event bus, and the server re-fires RightClickBlock when consulting
-        // protection for our own deposit/extract packets; handling that re-fire would re-run the
-        // rules and cancel the very interaction being validated.
+        // server shares this event bus, and adjacent protection consultation re-fires
+        // RightClickBlock; handling that server-side re-fire would re-run the client rules.
         if (!evt.getLevel().isClientSide()) {
             return;
         }
@@ -73,6 +74,7 @@ public final class ClientEvents implements ClientGestures.Sender {
         InteractionContext ctx = InteractionContext.forBlockClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+        ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 
         if (ctx.shouldCancel()) {

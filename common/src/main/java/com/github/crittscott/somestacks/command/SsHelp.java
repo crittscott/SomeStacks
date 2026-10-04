@@ -85,8 +85,7 @@ final class SsHelp {
 
         RELOAD(SsCommand.COMMAND_RELOAD, "somestacks.command.help.reload.summary", Gate.OPERATOR,
                 List.of(usage(SsCommand.COMMAND_RELOAD)),
-                List.of("somestacks.command.help.reload.detail.1",
-                        "somestacks.command.help.reload.detail.2")),
+                List.of("somestacks.command.help.reload.detail.1")),
 
         GEN(SsCommand.COMMAND_GEN, "somestacks.command.help.gen.summary", Gate.OPERATOR,
                 List.of(usage(SsCommand.COMMAND_GEN + " mod add <modid>"),

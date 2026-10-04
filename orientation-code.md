@@ -8,7 +8,7 @@ Subsystem ownership, persistent data, loader boundaries, and invariants the code
 
 ## Project shape
 
-Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Development builds against Forge 54.1.18, NeoForge 21.4.158, and Fabric Loader 0.19.5 with Fabric API 0.119.4+1.21.4. Architectury is build-time only; no loader has an Architectury API runtime dependency.
+Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Architectury is build-time only; no loader has an Architectury API runtime dependency.
 
 `common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams. Loader seams are installed during loader startup. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
 
@@ -30,8 +30,9 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
 | `util/*CubeIdx`, `ViewRay` | Geometry, rotation, support, seams, targeting |
 | `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
-| `WorldEdits`, `EditAuthority` | World edits and loader protection seam |
-| `network/*` | Payloads and shared request validation |
+| `WorldEdits`, `EditAuthority`, `AdjacentEdits` | World edits, automation authority, adjacent-target protection |
+| `StackInteractions`, `ServerGestureState` | Server interpretation of vanilla block-use packets and synchronized gesture state |
+| `network/*` | Gesture-state and server-to-client synchronization payloads |
 | `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
 | `SsCommand`, `RenderGalleryGenerator` | Administration, profile authoring, galleries |
 | Loader modules | Registration, transport, callbacks, rendering glue, native automation views |
@@ -47,7 +48,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
 
-The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, request handlers, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins build with the legacy annotation processor into the fixed `somestacks.refmap.json` refmap.
+The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, gesture interpretation, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins build with the legacy annotation processor into the fixed `somestacks.refmap.json` refmap.
 
 ## Runtime and movement model
 
@@ -63,7 +64,7 @@ The three movement models are distinct:
 
 `StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`. Storage saves `DataVersion`, `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `DataVersion` and `Items`.
 
-`StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); an older tag has each stored item tag run through vanilla's DataFixerUpper (`References.ITEM_STACK`), is restamped, and marks the block entity dirty. That flag is a no-op during chunk load, when the block entity has no level yet, so an unsaved chunk simply re-migrates on its next load. Item tags that fail to parse or have no free slot go to a `SetAside` list in the storage tag, are saved back, retried on every load, and logged with the block position. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
+`StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); older item tags run through vanilla's DataFixerUpper and are restamped. Items that fail to parse or have no free slot go to a saved `SetAside` list, are retried on every load, and are logged with the block position. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
 
 ## Admission, automation, and edits
 
@@ -71,27 +72,27 @@ Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; 
 
 Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-Growth and cleanup use `WorldEdits` with an automation actor and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge and NeoForge fire native place/break events. Fabric uses Fabric API's `FakePlayer`, fires `PlayerBlockBreakEvents` on removal, and routes optional Common Protection API growth checks only through `CommonProtectionCheck`.
+Growth and cleanup use `WorldEdits` with the shared `[SomeStacks]` automation identity and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge owns an explicit per-dimension actor cache cleared on level unload and server stop; NeoForge and Fabric use their fake-player factories. Forge and NeoForge fire native place/break events. Fabric fires `PlayerBlockBreakEvents` on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`. Successful outer-block placement/removal also invokes the vanilla placement callback and emits `BLOCK_PLACE`/`BLOCK_DESTROY` game events; internal cells and bars remain block-entity contents, not world blocks.
 
 ## Player interaction and networking
 
-Shared gesture rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. Placement mode is client state sent with the placement request.
+Shared client rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. They suppress local vanilla block/item behavior without replacing the click: Forge/NeoForge cancellation and Fabric `SUCCESS` still send the normal block-use packet. A small payload sends placement mode and modifier-down state only when that state changes.
 
-The server treats every payload as a request. Decoders reject invalid enum ids and bounded collection sizes before dispatch. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
+Non-sneaking existing-stack clicks run from `StackBlock.useItemOn`/`useWithoutItem`; loader server hooks handle sneaking torch rotation plus placement or deposit reached through a neighboring non-stack block. Both pass the actual vanilla `BlockHitResult` to `StackInteractions`, after vanilla has supplied target, reach pacing, and the ordinary interaction event. Common handling validates main hand, spectator/protection state, held item, support, type enablement, height, obstruction, and edit authority. Placement plus first deposit is one transaction. Cell selection for deposit, extraction, and Singles item rotation is recomputed server-side by extending a ray through the vanilla hit location; no client cell index is accepted.
 
-`EventPlayerEditAuthority` owns the common protection-check ordering and view-hit calculation. Forge and NeoForge supply their native right-click event and mark `RightClickBlockSuppressor` only after every check succeeds; Fabric supplies `UseBlockCallback` and needs no trailing-click mark. Adjacent Singles and Bar deposits validate both the clicked position and destination.
+The real loader event covers the block the player clicked. When that click reaches a Singles or Bar Stack through a neighboring block, `AdjacentEdits` additionally consults protection at the destination with a recursion guard. There are no synthetic repeats for ordinary stack clicks, no trailing-click suppressor, and no per-gesture mutation packets.
 
 ## Configuration and presentation
 
-World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded at server startup. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` reloads server render overrides and resyncs players but does not reread policy JSON. Ingot-list entries are either a `#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and resolve again on configuration or tag reload.
+World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded atomically from defaults at server startup. Bad fields are reported and skipped independently, so one wrong type cannot leave a partially applied or previous world's configuration. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` rereads policy JSON, reloads server render overrides, and resyncs players. Ingot-list entries are either a `#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and resolve again on configuration or tag reload.
 
-Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
+Extension points are the configured ingot list; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
 
-All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `ItemCapture` resolves a stack through vanilla's item model resolver and records the draw: baked quads with their resolved layer tint, plus bounds of anything written vertex by vertex. Measurement and the `2d` projector both read it; only items drawn entirely as baked quads may use the 2-D projector, and Bar auto-tint reads the first captured quad's sprite and tint. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
+All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `ItemCapture` records resolved baked quads, layer tints, and vertex-written bounds for measurement and 2-D projection; Bar auto-tint reads the first captured quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
 
 ## GameTests
 
-There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions, shared protection scenarios, and the shared Base64 empty-structure fixture live under `common/src/gametest`; assertions use `CommonRegistry`. Native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Loader-native event and synthetic-player assertions remain loader-specific. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
+There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions, shared vanilla-interaction and protection scenarios, and the shared Base64 empty-structure fixture live under `common/src/gametest`; assertions use `CommonRegistry`. Native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Loader-native event and synthetic-player assertions remain loader-specific. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
 
 ## Conventions the code currently follows
 
@@ -100,6 +101,6 @@ There is no JUnit or production `test` source set. Each loader has a development
 - Internal movement never revalidates stored items.
 - Forge/NeoForge simulation and Fabric commit feasibility rules match.
 - Structural edits go through `WorldEdits`; sync, light, comparator work, and settlement are batched.
-- Every client request is validated independently of client gesture recognition.
+- Gesture state is untrusted input; every vanilla server interaction revalidates the world, hand, item, geometry, and edit authority.
 - Render-profile precedence is fixed; the measurement format version changes when fitting semantics change.
 - Storage and Singles render scales are separate in `CubeRenderHelper`.

@@ -33,7 +33,10 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterKeys);
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
         NeoForge.EVENT_BUS.addListener(
-                (ClientPlayerNetworkEvent.LoggingOut evt) -> AutoRenderProfiles.saveCache());
+                (ClientPlayerNetworkEvent.LoggingOut evt) -> {
+                    ClientGestures.resetSync();
+                    AutoRenderProfiles.saveCache();
+                });
         NeoForge.EVENT_BUS.addListener(
                 (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
     }

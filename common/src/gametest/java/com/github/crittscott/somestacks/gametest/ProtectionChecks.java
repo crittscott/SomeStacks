@@ -2,10 +2,11 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StackBlock;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
+import com.github.crittscott.somestacks.server.AutomationActor;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
@@ -30,6 +33,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 /** Loader-neutral placement and player-deposit protection scenarios. */
 public final class ProtectionChecks {
     private ProtectionChecks() {}
+
+    public static void automationUsesSharedIdentity(GameTestHelper helper) {
+        var actual = WorldEdits.automationActor(helper.getLevel()).getGameProfile();
+        checkEquals(AutomationActor.PROFILE.getId(), actual.getId(), "Automation UUID");
+        checkEquals(AutomationActor.PROFILE.getName(), actual.getName(), "Automation name");
+        helper.succeed();
+    }
 
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -70,13 +80,16 @@ public final class ProtectionChecks {
         GameTestScaffold.placeStorage(helper, ORIGIN);
 
         player.getAbilities().instabuild = true;
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
-            DepositPkt.apply(player, new DepositPkt(target, target));
+            StackInteractions.handleExistingStack(
+                    player, InteractionHand.MAIN_HAND, centerHit(target));
             checkEquals(64, player.getMainHandItem().getCount(),
                     "A creative deposit spent the held stack");
         } finally {
             player.getAbilities().instabuild = false;
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
         }
 
         checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
@@ -90,12 +103,24 @@ public final class ProtectionChecks {
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 64));
         BlockPos target = helper.absolutePos(ORIGIN);
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+        BlockPos support = target.below();
 
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
-            PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                    BlockType.STORAGE_STACK, Direction.UP, target));
+            StackInteractions.handleAdjacentClick(
+                    player,
+                    InteractionHand.MAIN_HAND,
+                    new BlockHitResult(
+                            new Vec3(support.getX() + 0.5, support.getY() + 1.0,
+                                    support.getZ() + 0.5),
+                            Direction.UP,
+                            support,
+                            false),
+                    true,
+                    true);
         } finally {
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
         }
 
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
@@ -104,6 +129,10 @@ public final class ProtectionChecks {
         check(level.getFluidState(target).getType() == Fluids.WATER,
                 "A stack placed into water swallowed the water");
         helper.succeed();
+    }
+
+    private static BlockHitResult centerHit(BlockPos pos) {
+        return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
     private static void putCowIn(GameTestHelper helper, BlockPos relative) {
