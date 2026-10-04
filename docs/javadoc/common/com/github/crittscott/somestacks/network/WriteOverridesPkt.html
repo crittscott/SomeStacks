@@ -143,9 +143,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="WriteOverridesPkt.html" title="class in com.github.crittscott.somestacks.network">WriteOverridesPkt</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">decode</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Decodes an invalid namespace count to a null-list sentinel for <a href="#namespaces()"><code>namespaces()</code></a> to reject.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="WriteOverridesPkt.html" title="class in com.github.crittscott.somestacks.network">WriteOverridesPkt</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#dump(java.util.List)" class="member-name-link">dump</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;namespaces)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -238,8 +236,6 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="decode(net.minecraft.network.FriendlyByteBuf)">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="WriteOverridesPkt.html" title="class in com.github.crittscott.somestacks.network">WriteOverridesPkt</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</span></div>
-<div class="block">Decodes an invalid namespace count to a null-list sentinel for <a href="#namespaces()"><code>namespaces()</code></a> to reject. An
- empty list is a valid request to write the user layer, so it cannot represent failure.</div>
 </section>
 </li>
 <li>

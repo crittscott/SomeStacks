@@ -1,1 +1,1 @@
-tagSearchIndex = [{"l":"Constant Field Values","h":"","u":"constant-values.html"},{"l":"The vanilla click a gesture displaces","h":"class com.github.crittscott.somestacks.server.Protection","d":"Section","u":"com/github/crittscott/somestacks/server/Protection.html#the-vanilla-click-a-gesture-displaces-heading"}];updateSearchResults();
+tagSearchIndex = [{"l":"Constant Field Values","h":"","u":"constant-values.html"}];updateSearchResults();

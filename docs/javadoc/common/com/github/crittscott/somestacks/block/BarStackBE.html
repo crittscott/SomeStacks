@@ -86,13 +86,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraft.world.level.block.entity.BlockEntity
+<div class="inheritance"><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">com.github.crittscott.somestacks.block.StackBlockEntity</a>
 <div class="inheritance">com.github.crittscott.somestacks.block.BarStackBE</div>
+</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BarStackBE</span>
-<span class="extends-implements">extends net.minecraft.world.level.block.entity.BlockEntity</span></div>
+<span class="extends-implements">extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></span></div>
 <div class="block">One Bar Stack: 64 bars laid in eight alternating layers of eight.
 
  <p>A slot index is a position, not a place in a bag, and every bar must rest on the layer beneath
@@ -100,7 +102,7 @@ loadScripts(document, 'script');</script>
  is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  cascade that drops whatever an extracted bar was holding up.
 
- <p>Capability exposure is loader-specific and lives outside this class; <a href="#getItems()"><code>getItems()</code></a> is
+ <p>Capability exposure is loader-specific and lives outside this class; <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a> is
  what a loader-specific capability view adapts.</div>
 </section>
 <section class="summary">
@@ -129,6 +131,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Positions in one block.</div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
+<code><a href="StackBlockEntity.html#items">items</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Fields inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>level, remove, worldPosition</code></div>
@@ -186,42 +191,41 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the occupied-bar shape, rebuilding it only after contents invalidate the cache.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItems()" class="member-name-link">getItems</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This block's local slots, for callers that already hold the block entity.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdatePacket()" class="member-name-link">getUpdatePacket</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdateTag(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">getUpdateTag</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a Bar Stack accepts this item, the single decision point every deposit, column
  insertion and capability path consults.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemRun()" class="member-name-link">itemRun</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The current server-side run, or <code>null</code> on the client or during removal.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">loadAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
- net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#syncToClients()" class="member-name-link">syncToClients</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markRunDirty()" class="member-name-link">markRunDirty</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Synchronizes this block's contents to tracking clients.</div>
+<div class="block">Schedules the owning run's deferred publication pass.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
-</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
+<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadAdditional</a>, <a href="StackBlockEntity.html#requestPublish()">requestPublish</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">saveAdditional</a>, <a href="StackBlockEntity.html#saveStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">saveStackData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, applyComponents, applyComponentsFromItemStack, applyImplicitComponents, clearRemoved, collectComponents, collectImplicitComponents, components, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPosFromTag, getType, hasLevel, isRemoved, isValidBlockState, loadCustomOnly, loadStatic, loadWithComponents, parseCustomNameSafe, removeComponentsFromTag, saveCustomAndMetadata, saveCustomOnly, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setComponents, setLevel, setRemoved, triggerEvent</code></div>
@@ -270,6 +274,48 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="isStoredItemValid(net.minecraft.world.item.ItemStack)">
+<h3>isStoredItemValid</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStoredItemValid</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackBlockEntity.html#isStoredItemValid(net.minecraft.world.item.ItemStack)">isStoredItemValid</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="localSlotLimit()">
+<h3>localSlotLimit</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">localSlotLimit</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="StackBlockEntity.html#localSlotLimit()">localSlotLimit</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="onLocalContentsChanged(int)">
+<h3>onLocalContentsChanged</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLocalContentsChanged</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="StackBlockEntity.html#onLocalContentsChanged(int)">onLocalContentsChanged</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="markRunDirty()">
+<h3>markRunDirty</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markRunDirty</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#markRunDirty()">StackBlockEntity</a></code></span></div>
+<div class="block">Schedules the owning run's deferred publication pass.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="isValidBarItem(net.minecraft.world.item.ItemStack)">
 <h3>isValidBarItem</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidBarItem</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
@@ -289,6 +335,18 @@ loadScripts(document, 'script');</script>
 
  <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
  the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full reasoning.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="itemRun()">
+<h3>itemRun</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span>&nbsp;<span class="element-name">itemRun</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#itemRun()">StackBlockEntity</a></code></span></div>
+<div class="block">The current server-side run, or <code>null</code> on the client or during removal.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackBlockEntity.html#itemRun()">itemRun</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -315,6 +373,8 @@ loadScripts(document, 'script');</script>
  and overlapping a bar below. Refuses rather than redirecting the item elsewhere, so a caller
  walking positions from the bottom fills the supported ones in order.</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the position to fill, in <code>[0, SLOTS)</code></dd>
 <dt>Returns:</dt>
 <dd>whether the bar moved; the hand shrinks by one only then</dd>
 </dl>
@@ -326,67 +386,20 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
 <div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
  takes a different path — see <a href="BarColumn.html#extract(int,int,boolean)"><code>BarColumn.extract(int, int, boolean)</code></a>, which backfills instead.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the position to empty, in <code>[0, SLOTS)</code></dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="isEmpty()">
-<h3>isEmpty</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmpty</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="syncToClients()">
-<h3>syncToClients</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">syncToClients</span>()</div>
-<div class="block">Synchronizes this block's contents to tracking clients.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="loadAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">
-<h3>loadAdditional</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadAdditional</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag,
+<section class="detail" id="loadStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">
+<h3>loadStackData</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadStackData</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag,
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>loadAdditional</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.entity.BlockEntity</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="saveAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">
-<h3>saveAdditional</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveAdditional</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag,
- net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>saveAdditional</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.entity.BlockEntity</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getItems()">
-<h3>getItems</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></span>&nbsp;<span class="element-name">getItems</span>()</div>
-<div class="block">This block's local slots, for callers that already hold the block entity.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getUpdatePacket()">
-<h3>getUpdatePacket</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket</span>&nbsp;<span class="element-name">getUpdatePacket</span>()</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>getUpdatePacket</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.entity.BlockEntity</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getUpdateTag(net.minecraft.core.HolderLookup.Provider)">
-<h3>getUpdateTag</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">getUpdateTag</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>getUpdateTag</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.entity.BlockEntity</code></dd>
+<dd><code><a href="StackBlockEntity.html#loadStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadStackData</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
 </dl>
 </section>
 </li>

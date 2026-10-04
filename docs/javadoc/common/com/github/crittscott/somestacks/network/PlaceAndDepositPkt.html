@@ -165,9 +165,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PlaceAndDepositPkt.html" title="class in com.github.crittscott.somestacks.network">PlaceAndDepositPkt</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">decode</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Decoding runs on the network thread, ahead of every check the mod makes.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encode(com.github.crittscott.somestacks.network.PlaceAndDepositPkt,net.minecraft.network.FriendlyByteBuf)" class="member-name-link">encode</a><wbr>(<a href="PlaceAndDepositPkt.html" title="class in com.github.crittscott.somestacks.network">PlaceAndDepositPkt</a>&nbsp;msg,
  net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
@@ -253,9 +251,6 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <section class="detail" id="decode(net.minecraft.network.FriendlyByteBuf)">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="PlaceAndDepositPkt.html" title="class in com.github.crittscott.somestacks.network">PlaceAndDepositPkt</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</span></div>
-<div class="block">Decoding runs on the network thread, ahead of every check the mod makes. Both enums arrive as
- indexes, so each is range-checked here and one naming no constant is carried through as null
- for the server handler to drop, rather than thrown out of the decoder.</div>
 </section>
 </li>
 <li>

@@ -93,8 +93,9 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></div>
@@ -114,18 +115,34 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Holds off an automation edit that arrives while another one is still running.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Dynamic occupied-content shapes shared by Singles and Bar stacks.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The Singles Stack block: the world-facing half of <a href="SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesStackBE</code></a>, holding the block
  state, the shapes, and the breaking behavior.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Block-state and interaction plumbing shared by all three stack blocks.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Local storage, persistence, synchronization, lighting, and batching shared by every stack.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Positional whole-run operations exposed to loader-native automation adapters.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -139,6 +156,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The Storage Stack block: the world-facing half of <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>StorageStackBE</code></a>, holding the block
  state, shapes, and breaking behavior.</div>
+</div>
 </div>
 </div>
 </div>

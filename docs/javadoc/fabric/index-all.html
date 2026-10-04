@@ -64,12 +64,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimInteraction(ServerPlayer, BlockPos, BlockPos...)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#claimItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimItemUse(ServerPlayer, BlockPos, BlockPos...)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">claimPlacement(ServerPlayer, BlockPos, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a> - package com.github.crittscott.somestacks</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a> - package com.github.crittscott.somestacks.block</dt>
@@ -84,7 +78,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a> - package com.github.crittscott.somestacks.server</dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/fabric/PlatformPathsImpl.html#configFolder()" class="member-name-link">configFolder()</a> - Static method in class com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/PlatformPathsImpl.html" title="class in com.github.crittscott.somestacks.fabric">PlatformPathsImpl</a></dt>
+<dt><a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html#configFolder()" class="member-name-link">configFolder()</a> - Static method in class com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
@@ -139,10 +133,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Fabric payload registration and server receivers around the shared packet codecs and handlers.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a> - Class in <a href="com/github/crittscott/somestacks/fabric/package-summary.html">com.github.crittscott.somestacks.fabric</a></dt>
+<dd>
+<div class="block">Fabric implementations of the common platform services.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
-<div class="block">Server-authoritative protection consults for the mod's packet-driven player gestures, the
- Fabric counterpart to <code>Protection</code>/<code>ForgePlayerEditAuthority</code> on Forge.</div>
+<div class="block">Fabric player protection through <code>UseBlockCallback</code>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#%3Cinit%3E()" class="member-name-link">FabricPlayerEditAuthority()</a> - Constructor for class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
 <dd>&nbsp;</dd>
@@ -156,17 +153,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/FabricRenderCacheReloadListener.html#%3Cinit%3E()" class="member-name-link">FabricRenderCacheReloadListener()</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricRenderCacheReloadListener.html" title="class in com.github.crittscott.somestacks.client">FabricRenderCacheReloadListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/FabricRenderPlatform.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricRenderPlatform</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
-<dd>
-<div class="block">Fabric services used by shared client rendering.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/client/FabricRenderPlatform.html#%3Cinit%3E()" class="member-name-link">FabricRenderPlatform()</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricRenderPlatform.html" title="class in com.github.crittscott.somestacks.client">FabricRenderPlatform</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/FabricStackSoundData.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricStackSoundData</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
 <div class="block">Gives the shared sound-data loader the identity Fabric's reload API requires.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/FabricStackSoundData.html#%3Cinit%3E()" class="member-name-link">FabricStackSoundData()</a> - Constructor for class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricStackSoundData.html" title="class in com.github.crittscott.somestacks.server">FabricStackSoundData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#fireRightClick(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,boolean)" class="member-name-link">fireRightClick(ServerPlayer, BlockPos, boolean)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -199,9 +192,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#mayInteract(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayInteract(ServerPlayer, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
+<dt><a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html#markClaim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">markClaim(ServerPlayer, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricPlayerEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricPlayerEditAuthority</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/client/FabricRenderPlatform.html#modVersion(java.lang.String)" class="member-name-link">modVersion(String)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricRenderPlatform.html" title="class in com.github.crittscott.somestacks.client">FabricRenderPlatform</a></dt>
+<dt><a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html#modVersion(java.lang.String)" class="member-name-link">modVersion(String)</a> - Static method in class com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
@@ -215,8 +208,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/fabric/PlatformPathsImpl.html" class="type-name-link" title="class in com.github.crittscott.somestacks.fabric">PlatformPathsImpl</a> - Class in <a href="com/github/crittscott/somestacks/fabric/package-summary.html">com.github.crittscott.somestacks.fabric</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/FabricEditAuthority.html#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement(ServerLevel, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricEditAuthority.html" title="class in com.github.crittscott.somestacks.server">FabricEditAuthority</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -229,29 +220,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html#send(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.RenderOverridePkt)" class="member-name-link">send(ServerPlayer, RenderOverridePkt)</a> - Method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html" title="class in com.github.crittscott.somestacks.command">FabricCommandNetwork</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#send(net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send(CustomPacketPayload)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html#send(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.WriteOverridesPkt)" class="member-name-link">send(ServerPlayer, WriteOverridesPkt)</a> - Method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html" title="class in com.github.crittscott.somestacks.command">FabricCommandNetwork</a></dt>
+<dt><a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html#send(net.minecraft.server.level.ServerPlayer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send(ServerPlayer, CustomPacketPayload)</a> - Method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/FabricCommandNetwork.html" title="class in com.github.crittscott.somestacks.command">FabricCommandNetwork</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/network/FabricNetworking.html#send(net.minecraft.server.level.ServerPlayer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send(ServerPlayer, CustomPacketPayload)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/FabricNetworking.html#sendConfig(net.minecraft.server.level.ServerPlayer)" class="member-name-link">sendConfig(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendDeposit(net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">sendDeposit(BlockPos, BlockPos)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendExtract(net.minecraft.core.BlockPos,int)" class="member-name-link">sendExtract(BlockPos, int)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendPlaceAndDeposit(com.github.crittscott.somestacks.util.StackMode,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">sendPlaceAndDeposit(StackMode, BlockPos, Direction)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/FabricNetworking.html#sendProtocol(net.minecraft.server.level.ServerPlayer)" class="member-name-link">sendProtocol(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricNetworking.html#sendRenderOverride(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.RenderOverridePkt)" class="member-name-link">sendRenderOverride(ServerPlayer, RenderOverridePkt)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendRotateBlock(net.minecraft.core.BlockPos)" class="member-name-link">sendRotateBlock(BlockPos)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendRotateItem(net.minecraft.core.BlockPos,int)" class="member-name-link">sendRotateItem(BlockPos, int)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html#sendTogglePermanent(net.minecraft.core.BlockPos)" class="member-name-link">sendTogglePermanent(BlockPos)</a> - Method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/FabricNetworking.html#sendWriteOverrides(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.WriteOverridesPkt)" class="member-name-link">sendWriteOverrides(ServerPlayer, WriteOverridesPkt)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/FabricRegistry.html#SINGLES_STACK_BE" class="member-name-link">SINGLES_STACK_BE</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/FabricRegistry.html" title="class in com.github.crittscott.somestacks">FabricRegistry</a></dt>
 <dd>&nbsp;</dd>

@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li><a href="#field-detail">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -64,7 +64,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -87,7 +87,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraft.world.level.block.state.BlockBehaviour
 <div class="inheritance">net.minecraft.world.level.block.Block
+<div class="inheritance"><a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">com.github.crittscott.somestacks.block.StackBlock</a>
 <div class="inheritance">com.github.crittscott.somestacks.block.StorageStackBlock</div>
+</div>
 </div>
 </div>
 </div>
@@ -98,8 +100,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StorageStackBlock</span>
-<span class="extends-implements">extends net.minecraft.world.level.block.Block
-implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.level.block.SimpleWaterloggedBlock</span></div>
+<span class="extends-implements">extends <a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></span></div>
 <div class="block">The Storage Stack block: the world-facing half of <a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>StorageStackBE</code></a>, holding the block
  state, shapes, and breaking behavior. Unlike Singles and Bar, Storage keeps a full-block shape
  regardless of which cells are occupied.
@@ -122,21 +123,9 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final net.minecraft.world.level.block.state.properties.IntegerProperty</code></div>
-<div class="col-second even-row-color"><code><a href="#LIGHT_LEVEL" class="member-name-link">LIGHT_LEVEL</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Light this block emits, derived from the <code>BlockItem</code>s stored in it and kept in the
- block state so lighting updates travel by the ordinary block-state path.</div>
-</div>
-<div class="col-first odd-row-color"><code>static final net.minecraft.world.level.block.state.properties.BooleanProperty</code></div>
-<div class="col-second odd-row-color"><code><a href="#WATERLOGGED" class="member-name-link">WATERLOGGED</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackBlock">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></h3>
+<code><a href="StackBlock.html#LIGHT_LEVEL">LIGHT_LEVEL</a>, <a href="StackBlock.html#WATERLOGGED">WATERLOGGED</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.level.block.Block">Fields inherited from class&nbsp;net.minecraft.world.level.block.Block</h3>
 <code>BLOCK_STATE_REGISTRY, CODEC, INDESTRUCTIBLE, INSTANT, stateDefinition, UPDATE_ALL, UPDATE_ALL_IMMEDIATE, UPDATE_CLIENTS, UPDATE_IMMEDIATE, UPDATE_INVISIBLE, UPDATE_KNOWN_SHAPE, UPDATE_LIMIT, UPDATE_MOVE_BY_PISTON, UPDATE_NEIGHBORS, UPDATE_NONE, UPDATE_SKIP_SHAPE_UPDATE_ON_WIRE, UPDATE_SUPPRESS_DROPS</code></div>
@@ -172,32 +161,20 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder)" class="member-name-link">createBlockStateDefinition</a><wbr>(net.minecraft.world.level.block.state.StateDefinition.Builder&lt;net.minecraft.world.level.block.Block,<wbr>net.minecraft.world.level.block.state.BlockState&gt;&nbsp;builder)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">getAnalogOutputSignal</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">getAnalogOutputSignal</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Reports the whole pile's fill, so a comparator reads the same value anywhere along it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.material.FluidState</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFluidState(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">getFluidState</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLightBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">getLightBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.RenderShape</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRenderShape(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">getRenderShape</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShadeBrightness(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">getShadeBrightness</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShadeBrightness(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">getShadeBrightness</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.world.level.BlockGetter&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">hasAnalogOutputSignal</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.entity.BlockEntity</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBlockEntity(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">newBlockEntity</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
@@ -230,35 +207,12 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Runs a pile pass scheduled at its base.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.state.BlockState</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)" class="member-name-link">updateShape</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.LevelReader&nbsp;level,
- net.minecraft.world.level.ScheduledTickAccess&nbsp;ticks,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;direction,
- net.minecraft.core.BlockPos&nbsp;neighborPos,
- net.minecraft.world.level.block.state.BlockState&nbsp;neighborState,
- net.minecraft.util.RandomSource&nbsp;random)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.InteractionResult</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useItemOn</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.InteractionResult</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useWithoutItem</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlock">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></h3>
+<code><a href="StackBlock.html#createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder)">createBlockStateDefinition</a>, <a href="StackBlock.html#getFluidState(net.minecraft.world.level.block.state.BlockState)">getFluidState</a>, <a href="StackBlock.html#getRenderShape(net.minecraft.world.level.block.state.BlockState)">getRenderShape</a>, <a href="StackBlock.html#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)">hasAnalogOutputSignal</a>, <a href="StackBlock.html#updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)">updateShape</a>, <a href="StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)">useItemOn</a>, <a href="StackBlock.html#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)">useWithoutItem</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.Block">Methods inherited from class&nbsp;net.minecraft.world.level.block.Block</h3>
 <code>animateTick, appendHoverText, asBlock, asItem, box, builtInRegistryHolder, byItem, canSupportCenter, canSupportRigidBlock, codec, defaultBlockState, destroy, dropFromExplosion, dropResources, dropResources, dropResources, fallOn, getDrops, getDrops, getExplosionResistance, getFriction, getId, getJumpFactor, getName, getShapeForEachState, getSpeedFactor, getStateDefinition, getStateForPlacement, handlePrecipitation, hasDynamicShape, isExceptionForConnection, isFaceFull, isPossibleToRespawnInThis, isShapeFullBlock, playerDestroy, playerWillDestroy, popExperience, popResource, popResourceFromFace, pushEntitiesUp, registerDefaultState, setPlacedBy, shouldRenderFace, spawnDestroyParticles, stateById, stepOn, toString, tryDropExperience, updateEntityMovementAfterFallOn, updateFromNeighbourShapes, updateOrDestroy, updateOrDestroy, wasExploded, withPropertiesOf</code></div>
@@ -283,28 +237,6 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="LIGHT_LEVEL">
-<h3>LIGHT_LEVEL</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.state.properties.IntegerProperty</span>&nbsp;<span class="element-name">LIGHT_LEVEL</span></div>
-<div class="block">Light this block emits, derived from the <code>BlockItem</code>s stored in it and kept in the
- block state so lighting updates travel by the ordinary block-state path.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="WATERLOGGED">
-<h3>WATERLOGGED</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.state.properties.BooleanProperty</span>&nbsp;<span class="element-name">WATERLOGGED</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -325,62 +257,11 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder)">
-<h3>createBlockStateDefinition</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createBlockStateDefinition</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.StateDefinition.Builder&lt;net.minecraft.world.level.block.Block,<wbr>net.minecraft.world.level.block.state.BlockState&gt;&nbsp;builder)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>createBlockStateDefinition</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.Block</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getFluidState(net.minecraft.world.level.block.state.BlockState)">
-<h3>getFluidState</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.material.FluidState</span>&nbsp;<span class="element-name">getFluidState</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>getFluidState</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)">
-<h3>updateShape</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.state.BlockState</span>&nbsp;<span class="element-name">updateShape</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.LevelReader&nbsp;level,
- net.minecraft.world.level.ScheduledTickAccess&nbsp;ticks,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;direction,
- net.minecraft.core.BlockPos&nbsp;neighborPos,
- net.minecraft.world.level.block.state.BlockState&nbsp;neighborState,
- net.minecraft.util.RandomSource&nbsp;random)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>updateShape</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getRenderShape(net.minecraft.world.level.block.state.BlockState)">
-<h3>getRenderShape</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.RenderShape</span>&nbsp;<span class="element-name">getRenderShape</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>getRenderShape</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="newBlockEntity(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">
 <h3>newBlockEntity</h3>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.entity.BlockEntity</span>&nbsp;<span class="element-name">newBlockEntity</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>newBlockEntity</code>&nbsp;in interface&nbsp;<code>net.minecraft.world.level.block.EntityBlock</code></dd>
-</dl>
 </section>
 </li>
 <li>
@@ -416,16 +297,6 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 </section>
 </li>
 <li>
-<section class="detail" id="hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)">
-<h3>hasAnalogOutputSignal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnalogOutputSignal</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>hasAnalogOutputSignal</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
 <h3>getAnalogOutputSignal</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getAnalogOutputSignal</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
@@ -435,36 +306,6 @@ implements net.minecraft.world.level.block.EntityBlock, net.minecraft.world.leve
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>getAnalogOutputSignal</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)">
-<h3>useWithoutItem</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.InteractionResult</span>&nbsp;<span class="element-name">useWithoutItem</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>useWithoutItem</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)">
-<h3>useItemOn</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.InteractionResult</span>&nbsp;<span class="element-name">useItemOn</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
- net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.world.phys.BlockHitResult&nbsp;hit)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>useItemOn</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
 </dl>
 </section>
 </li>

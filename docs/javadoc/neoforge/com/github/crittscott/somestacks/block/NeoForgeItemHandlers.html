@@ -92,8 +92,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">NeoForgeItemHandlers</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Exposes <code>Capabilities.ItemHandler.BLOCK</code> on the mod's three block entity types. Each
- provider hands back a whole-run view (<a href="PileItemHandler.html" title="class in com.github.crittscott.somestacks.block"><code>PileItemHandler</code></a>, <a href="SinglesColumnHandler.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesColumnHandler</code></a>,
- <a href="BarColumnHandler.html" title="class in com.github.crittscott.somestacks.block"><code>BarColumnHandler</code></a>) so a machine on any block in a run sees the entire run. The handler
+ provider hands back a <a href="RunItemHandler.html" title="class in com.github.crittscott.somestacks.block"><code>RunItemHandler</code></a> whole-run view so a machine on any block in a run
+ sees the entire run. The handler
  instances read their run live on every call, so a run growing or shrinking does not stale them.</div>
 </section>
 <section class="summary">

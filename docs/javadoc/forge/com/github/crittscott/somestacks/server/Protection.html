@@ -39,7 +39,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li>Nested</li>
 <li>Field</li>
-<li>Constr</li>
+<li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 </li>
@@ -47,7 +47,7 @@ loadScripts(document, 'script');</script>
 <p>Detail:</p>
 <ul>
 <li>Field</li>
-<li>Constr</li>
+<li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
 </li>
@@ -59,13 +59,13 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
@@ -85,96 +85,67 @@ loadScripts(document, 'script');</script>
 <h1 title="Class Protection" class="title">Class Protection</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance">com.github.crittscott.somestacks.server.EventPlayerEditAuthority
 <div class="inheritance">com.github.crittscott.somestacks.server.Protection</div>
 </div>
+</div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code>com.github.crittscott.somestacks.server.PlayerEditAuthority</code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Protection</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Server-authoritative protection consults for the mod's packet-driven player gestures. The mod's
- custom packets take the place of the vanilla interactions the client suppresses, so these re-run
- the checks a vanilla interaction would have triggered: world border, spawn protection, and the
- right-click interaction event that claim and logging mods hook.
-
- <p>Growth and removal driven by automation, and the vanilla mechanics behind them, live in the
- loader-neutral <code>WorldEdits</code> instead; this class is only the player-packet-facing half,
- which stays Forge-specific because it fires <code>PlayerInteractEvent.RightClickBlock</code>.
-
- <h2 id="the-vanilla-click-a-gesture-displaces-heading">The vanilla click a gesture displaces</h2>
-
- A gesture reaches the server twice. The client sends the mod's own packet from inside its
- <code>RightClickBlock</code> handler, and then the vanilla <code>ServerboundUseItemOnPacket</code> for the
- same click follows. Both are enqueued onto the server task queue in arrival order, so the mod's
- packet is handled first, in the same tick. Everything below rests on that:
-
- <ul>
-   <li>A gesture that claims a click must mark <a href="RightClickBlockSuppressor.html" title="class in com.github.crittscott.somestacks.server"><code>RightClickBlockSuppressor</code></a> for the position
-       it claimed, so the vanilla click that follows cannot also act there. The mark lives one
-       tick, matching the lifetime of the displaced click.</li>
-   <li>The mark vetoes <code>RightClickBlock</code> at that position, and the consults here fire that
-       same event. A consult run after the mark would therefore refuse itself, so the mark is
-       always placed last.</li>
- </ul>
-
- The <code>claim</code> methods below exist to make that ordering structural: they run every consult
- and only then mark. No caller places a mark of its own.</div>
+<span class="extends-implements">extends com.github.crittscott.somestacks.server.EventPlayerEditAuthority</span></div>
+<div class="block">Forge player protection through the native right-click event and trailing-click suppressor.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<li>
+<section class="constructor-summary" id="constructor-summary">
+<h2>Constructor Summary</h2>
+<div class="caption"><span>Constructors</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Protection</a>()</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimInteraction</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gates a stack access and claims the click for it: every position in <code>consulted</code> must
- clear both vanilla's own protection and the right-click event, and only then is
- <code>markPos</code> marked against the vanilla click that follows.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimItemUse</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gates a gesture that spends the held item and claims the click for it, the way
- <a href="#claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)"><code>claimInteraction(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, net.minecraft.core.BlockPos...)</code></a> gates one that only reaches the block.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">claimPlacement</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;againstPos,
- net.minecraft.core.BlockPos&nbsp;intoPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gates an item-driven placement of a block into <code>intoPos</code> against <code>againstPos</code> and
- claims the click for it.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayInteract(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayInteract</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fireRightClick(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,boolean)" class="member-name-link">fireRightClick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;requireItemUse)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markClaim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">markClaim</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Fires <code>PlayerInteractEvent.RightClickBlock</code> for a stack access at <code>pos</code> so
- claim/protection mods can veto it, exactly as they would for a right-click on a vanilla
- container.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseItemOn(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseItemOn</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayUseItemOn(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseItemOn</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Fires <code>PlayerInteractEvent.RightClickBlock</code> for an item-driven interaction at
- <code>pos</code>: a placement, or a deposit that spends the held stack.</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Exposes the held-item half of the native event for its loader-local protection test.</div>
 </div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.server.EventPlayerEditAuthority">Methods inherited from class&nbsp;com.github.crittscott.somestacks.server.EventPlayerEditAuthority</h3>
+<code>claimInteraction, claimItemUse, claimPlacement, lookHit, mayInteract</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -184,78 +155,54 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<li>
+<section class="constructor-details" id="constructor-detail">
+<h2>Constructor Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="&lt;init&gt;()">
+<h3>Protection</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Protection</span>()</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)">
-<h3>claimInteraction</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimInteraction</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</span></div>
-<div class="block">Gates a stack access and claims the click for it: every position in <code>consulted</code> must
- clear both vanilla's own protection and the right-click event, and only then is
- <code>markPos</code> marked against the vanilla click that follows.
-
- <p>The cheap consults run across all positions before the first event fires, so a gesture
- refused for reaching outside the world border does not first announce itself to the listeners
- of a position it was never allowed to touch.</div>
+<section class="detail" id="fireRightClick(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,boolean)">
+<h3>fireRightClick</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">fireRightClick</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;requireItemUse)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>fireRightClick</code>&nbsp;in class&nbsp;<code>com.github.crittscott.somestacks.server.EventPlayerEditAuthority</code></dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="claimItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)">
-<h3>claimItemUse</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimItemUse</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</span></div>
-<div class="block">Gates a gesture that spends the held item and claims the click for it, the way
- <a href="#claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)"><code>claimInteraction(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, net.minecraft.core.BlockPos...)</code></a> gates one that only reaches the block.
-
- <p>A deposit is not the container access it resembles. Opening a chest costs nothing and its
- contents are gated again by whatever guards the screen; a deposit takes the stack straight out
- of the hand off the click, with nothing in between. It therefore requires permission to use
- an item here as well as permission to reach the block, matching the checks vanilla applies to
- item-driven interaction and <a href="#claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)"><code>claimPlacement(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, net.minecraft.core.BlockPos)</code></a> applies to placement.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)">
-<h3>claimPlacement</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimPlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;againstPos,
- net.minecraft.core.BlockPos&nbsp;intoPos)</span></div>
-<div class="block">Gates an item-driven placement of a block into <code>intoPos</code> against <code>againstPos</code> and
- claims the click for it. Vanilla checks both positions: the block being used governs the
- interaction, while the position being filled governs placement. They can fall on opposite
- sides of a protection boundary. The click landed on <code>againstPos</code>, so
- that is what is marked.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="mayInteract(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
-<h3>mayInteract</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayInteract</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+<section class="detail" id="markClaim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
+<h3>markClaim</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markClaim</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Fires <code>PlayerInteractEvent.RightClickBlock</code> for a stack access at <code>pos</code> so
- claim/protection mods can veto it, exactly as they would for a right-click on a vanilla
- container. <code>true</code> means the interaction is allowed.
-
- <p>The event describes the interaction that is really happening: the face and point the
- player's own view ray meets. A mod that only asks who and where is unaffected, but one that
- logs what was clicked is told the truth rather than a placeholder.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>markClaim</code>&nbsp;in class&nbsp;<code>com.github.crittscott.somestacks.server.EventPlayerEditAuthority</code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="mayUseItemOn(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
 <h3>mayUseItemOn</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayUseItemOn</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayUseItemOn</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Fires <code>PlayerInteractEvent.RightClickBlock</code> for an item-driven interaction at
- <code>pos</code>: a placement, or a deposit that spends the held stack. Either requires both access
- to the block and permission to use the held item on it, and a listener that refuses only the
- item refuses both.</div>
+<div class="block">Exposes the held-item half of the native event for its loader-local protection test.</div>
 </section>
 </li>
 </ul>

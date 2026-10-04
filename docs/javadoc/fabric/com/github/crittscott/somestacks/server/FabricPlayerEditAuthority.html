@@ -85,7 +85,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class FabricPlayerEditAuthority" class="title">Class FabricPlayerEditAuthority</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance">com.github.crittscott.somestacks.server.EventPlayerEditAuthority
 <div class="inheritance">com.github.crittscott.somestacks.server.FabricPlayerEditAuthority</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -94,20 +96,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricPlayerEditAuthority</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements com.github.crittscott.somestacks.server.PlayerEditAuthority</span></div>
-<div class="block">Server-authoritative protection consults for the mod's packet-driven player gestures, the
- Fabric counterpart to <code>Protection</code>/<code>ForgePlayerEditAuthority</code> on Forge. The mod's
- custom packets take the place of the vanilla interactions the client suppresses, so these fire
- the same <code>UseBlockCallback</code> a claim or protection mod would see for a vanilla right-click.
-
- <p>Fabric API has no split between "use the block" and "use the item on it" the way Forge's
- right-click event does, so every gesture below is one merged check, matching how Fabric claim
- mods themselves collapse block interaction and edit into one policy on this platform.
-
- <p>Unlike Forge, no trailing-click suppression is needed: <code>FabricClientEvents</code> already
- cancels the client's own <code>UseBlockCallback</code> for a claimed gesture, which stops the vanilla
- packet from ever being sent, so the consult below is the only server-side firing for the click.</div>
+<span class="extends-implements">extends com.github.crittscott.somestacks.server.EventPlayerEditAuthority</span></div>
+<div class="block">Fabric player protection through <code>UseBlockCallback</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -135,28 +125,21 @@ implements com.github.crittscott.somestacks.server.PlayerEditAuthority</span></d
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimInteraction</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fireRightClick(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,boolean)" class="member-name-link">fireRightClick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;requireItemUse)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#claimItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)" class="member-name-link">claimItemUse</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">claimPlacement</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;againstPos,
- net.minecraft.core.BlockPos&nbsp;intoPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayInteract(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayInteract</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markClaim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">markClaim</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.server.EventPlayerEditAuthority">Methods inherited from class&nbsp;com.github.crittscott.somestacks.server.EventPlayerEditAuthority</h3>
+<code>claimInteraction, claimItemUse, claimPlacement, lookHit, mayInteract</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -186,49 +169,25 @@ implements com.github.crittscott.somestacks.server.PlayerEditAuthority</span></d
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="claimInteraction(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)">
-<h3>claimInteraction</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimInteraction</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</span></div>
+<section class="detail" id="fireRightClick(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,boolean)">
+<h3>fireRightClick</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">fireRightClick</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;requireItemUse)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>claimInteraction</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.PlayerEditAuthority</code></dd>
+<dd><code>fireRightClick</code>&nbsp;in class&nbsp;<code>com.github.crittscott.somestacks.server.EventPlayerEditAuthority</code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="claimItemUse(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos...)">
-<h3>claimItemUse</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimItemUse</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;markPos,
- net.minecraft.core.BlockPos...&nbsp;consulted)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>claimItemUse</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.PlayerEditAuthority</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="claimPlacement(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)">
-<h3>claimPlacement</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimPlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
- net.minecraft.core.BlockPos&nbsp;againstPos,
- net.minecraft.core.BlockPos&nbsp;intoPos)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>claimPlacement</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.PlayerEditAuthority</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="mayInteract(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
-<h3>mayInteract</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayInteract</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<section class="detail" id="markClaim(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
+<h3>markClaim</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markClaim</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>mayInteract</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.PlayerEditAuthority</code></dd>
+<dd><code>markClaim</code>&nbsp;in class&nbsp;<code>com.github.crittscott.somestacks.server.EventPlayerEditAuthority</code></dd>
 </dl>
 </section>
 </li>

@@ -88,9 +88,14 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.crittscott.somestacks.block.StoragePile</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StoragePile</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
 <div class="block">A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
 
  <p>Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole
@@ -159,8 +164,9 @@ loadScripts(document, 'script');</script>
  column while items remain and the configured height allows it.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
- int&nbsp;amount)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
+ int&nbsp;amount,
+ boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
  rest down over it.</div>
@@ -230,8 +236,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
 <h3>at</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></span>&nbsp;<span class="element-name">at</span><wbr><span class="parameters">(@Nullable
- net.minecraft.world.level.Level&nbsp;level,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></span>&nbsp;<span class="element-name">at</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
  Storage Stack. Client-side levels never resolve a pile: the pile is server state, and
@@ -308,22 +313,33 @@ loadScripts(document, 'script');</script>
  headroom while growth is allowed. Advertising the entire potential height would expose
  unreachable gaps; advertising only current slots would leave automation no slot through
  which to grow the pile.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#advertisedSlots()">advertisedSlots</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getSlot(int)">
 <h3>getSlot</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#getSlot(int)">getSlot</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="extract(int,int)">
+<section class="detail" id="extract(int,int,boolean)">
 <h3>extract</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extract</span><wbr><span class="parameters">(int&nbsp;flatSlot,
- int&nbsp;amount)</span></div>
+ int&nbsp;amount,
+ boolean&nbsp;simulate)</span></div>
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
  rest down over it.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the pile slot to extract, numbered from the bottom block upward</dd>
 <dd><code>amount</code> - the requested maximum</dd>
@@ -391,6 +407,8 @@ loadScripts(document, 'script');</script>
  <p>An automated insertion carries no player, so growth is checked against the loader-provided
  automation actor that would place the block.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>simulate</code> - when true, nothing is stored and the pile does not grow</dd>
 <dt>Returns:</dt>

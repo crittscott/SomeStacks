@@ -98,7 +98,7 @@ loadScripts(document, 'script');</script>
 implements <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span></div>
 <div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation. It gives all three loaders the
  item-handler insert/extract semantics and NBT shape
- (<code>{Size, Items:[{Slot, ...stack}], SetAside:[...]}</code>) used by the block entities.
+ (<code>{Items:[{Slot, ...stack}], SetAside:[...]}</code>) used by the block entities.
 
  <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
  aside rather than dropped: it is kept verbatim under <code>SetAside</code>, saved back with the

@@ -88,9 +88,14 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.crittscott.somestacks.block.BarColumn</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BarColumn</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
 <div class="block">A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
 
  <p>Bars are a structure, not a bag: a slot index is a position, every bar must rest on something,
@@ -169,8 +174,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertOneAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertOneAt</a><wbr>(int&nbsp;flatSlot,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -208,8 +213,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
 <h3>at</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></span>&nbsp;<span class="element-name">at</span><wbr><span class="parameters">(@Nullable
- net.minecraft.world.level.Level&nbsp;level,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></span>&nbsp;<span class="element-name">at</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">Resolves the column containing <code>pos</code>, or <code>null</code> when that position holds no Bar
  Stack. Client-side levels never resolve a column: its bounds come from the server config.</div>
@@ -246,12 +250,20 @@ loadScripts(document, 'script');</script>
  reachable headroom while growth is allowed. Advertising the entire potential height would
  expose unreachable gaps; advertising only current positions would leave automation no slot
  through which to grow the column.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#advertisedSlots()">advertisedSlots</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getSlot(int)">
 <h3>getSlot</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#getSlot(int)">getSlot</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -274,9 +286,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="insertOneAt(int,net.minecraft.world.item.ItemStack,boolean)">
-<h3>insertOneAt</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">insertOneAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
+<section class="detail" id="insertAt(int,net.minecraft.world.item.ItemStack,boolean)">
+<h3>insertAt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
 <div class="block">Places one bar at <code>flatSlot</code>, growing the column when that position lies in the block
@@ -291,10 +303,12 @@ loadScripts(document, 'script');</script>
  placement stands before the next position is offered: a filled layer supports the layer above
  it by the time the walk arrives there.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>simulate</code> - when true, nothing is placed</dd>
 <dt>Returns:</dt>
-<dd>whether a bar was, or would be, taken from <code>stack</code></dd>
+<dd>how many bars were, or would be, taken from <code>stack</code></dd>
 </dl>
 </section>
 </li>
@@ -311,6 +325,8 @@ loadScripts(document, 'script');</script>
  deposit may add rather than what the column may carry, so a bar stored before an
  <code>ss ingot</code> edit or a data pack reload narrowed the ingot set still moves.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the position to extract, numbered from the bottom block upward</dd>
 <dd><code>amount</code> - the requested maximum; any positive value can extract the position's one bar</dd>

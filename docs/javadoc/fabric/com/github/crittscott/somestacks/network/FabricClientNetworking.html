@@ -115,28 +115,8 @@ implements com.github.crittscott.somestacks.client.ClientGestures.Sender</span><
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendDeposit(net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)" class="member-name-link">sendDeposit</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.BlockPos&nbsp;clickedPos)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#send(net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send</a><wbr>(net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;payload)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendExtract(net.minecraft.core.BlockPos,int)" class="member-name-link">sendExtract</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendPlaceAndDeposit(com.github.crittscott.somestacks.util.StackMode,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">sendPlaceAndDeposit</a><wbr>(com.github.crittscott.somestacks.util.StackMode&nbsp;mode,
- net.minecraft.core.BlockPos&nbsp;placePos,
- net.minecraft.core.Direction&nbsp;face)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendRotateBlock(net.minecraft.core.BlockPos)" class="member-name-link">sendRotateBlock</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendRotateItem(net.minecraft.core.BlockPos,int)" class="member-name-link">sendRotateItem</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;slotIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTogglePermanent(net.minecraft.core.BlockPos)" class="member-name-link">sendTogglePermanent</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -161,67 +141,12 @@ implements com.github.crittscott.somestacks.client.ClientGestures.Sender</span><
 </section>
 </li>
 <li>
-<section class="detail" id="sendTogglePermanent(net.minecraft.core.BlockPos)">
-<h3>sendTogglePermanent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTogglePermanent</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<section class="detail" id="send(net.minecraft.network.protocol.common.custom.CustomPacketPayload)">
+<h3>send</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">send</span><wbr><span class="parameters">(net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;payload)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>sendTogglePermanent</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="sendPlaceAndDeposit(com.github.crittscott.somestacks.util.StackMode,net.minecraft.core.BlockPos,net.minecraft.core.Direction)">
-<h3>sendPlaceAndDeposit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendPlaceAndDeposit</span><wbr><span class="parameters">(com.github.crittscott.somestacks.util.StackMode&nbsp;mode,
- net.minecraft.core.BlockPos&nbsp;placePos,
- net.minecraft.core.Direction&nbsp;face)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>sendPlaceAndDeposit</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="sendDeposit(net.minecraft.core.BlockPos,net.minecraft.core.BlockPos)">
-<h3>sendDeposit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendDeposit</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.BlockPos&nbsp;clickedPos)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>sendDeposit</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="sendExtract(net.minecraft.core.BlockPos,int)">
-<h3>sendExtract</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendExtract</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;index)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>sendExtract</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="sendRotateBlock(net.minecraft.core.BlockPos)">
-<h3>sendRotateBlock</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendRotateBlock</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>sendRotateBlock</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="sendRotateItem(net.minecraft.core.BlockPos,int)">
-<h3>sendRotateItem</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendRotateItem</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- int&nbsp;slotIndex)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>sendRotateItem</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
+<dd><code>send</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.client.ClientGestures.Sender</code></dd>
 </dl>
 </section>
 </li>
