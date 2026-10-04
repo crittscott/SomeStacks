@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.PlatformPaths;
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.util.OverrideJsonCodec;
@@ -50,8 +50,8 @@ import java.util.TreeMap;
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformPaths.modConfigFolder().resolve("item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformPaths.modConfigFolder().resolve("generated_overrides");
+    private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
+    private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
     private static final float[] ZERO_OFFSET = new float[3];
 
     /** Bundled resource overrides, from client resource reload. */

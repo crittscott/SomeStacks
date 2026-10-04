@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "somestacks_gametest",
-  "version": "1",
+  "version": "${mod_version}",
   "name": "Some Stacks GameTests",
   "description": "Development-only Fabric GameTests for Some Stacks.",
   "environment": "server",

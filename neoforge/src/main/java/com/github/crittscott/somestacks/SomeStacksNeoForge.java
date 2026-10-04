@@ -6,7 +6,7 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.NeoForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.neoforge.PlatformInfoImpl;
+import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.GestureThrottle;
@@ -43,7 +43,8 @@ public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
     public SomeStacksNeoForge(IEventBus modBus) {
-        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
+        PlatformServices.install(
+                NeoForgePlatformServices::configFolder, NeoForgePlatformServices::modVersion);
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         PlayerEdits.setAuthority(new Protection());
         ServerConfig.useCommonIngotDefaults();
@@ -66,7 +67,7 @@ public class SomeStacksNeoForge {
         }
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for NeoForge", PlatformInfo.modVersion(MODID));
+                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(MODID));
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

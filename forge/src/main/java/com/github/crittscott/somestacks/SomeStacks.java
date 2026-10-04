@@ -5,7 +5,7 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.forge.PlatformInfoImpl;
+import com.github.crittscott.somestacks.forge.ForgePlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
@@ -45,7 +45,8 @@ public class SomeStacks {
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
+        PlatformServices.install(
+                ForgePlatformServices::configFolder, ForgePlatformServices::modVersion);
         WorldEdits.setAuthority(new ForgeEditAuthority());
         PlayerEdits.setAuthority(new Protection());
 
@@ -62,7 +63,7 @@ public class SomeStacks {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for Forge", PlatformInfo.modVersion(MODID));
+                "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(MODID));
     }
 
     /**

@@ -9,7 +9,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
-displayURL="https://github.com/crittscott/SomeStacks/tree/1.21.3"
+displayURL="${mod_homepage}"
 logoFile="assets/somestacks/icon.png"
 
 [[dependencies.${mod_id}]]

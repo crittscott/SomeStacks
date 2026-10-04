@@ -1,20 +1,3 @@
 architectury {
     common rootProject.enabled_platforms.split(',')
 }
-
-dependencies {
-    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
-    // which get remapped to the correct annotations on each platform.
-    // Do NOT use other classes from Fabric Loader.
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-}
-
-// Expands the ${mod_id} placeholder in pack.mcmeta once here, rather than duplicating the same
-// filesMatching block in every loader that bundles this module's resources.
-tasks.named('processResources', ProcessResources).configure {
-    inputs.property 'mod_id', mod_id
-
-    filesMatching('pack.mcmeta') {
-        expand mod_id: mod_id
-    }
-}

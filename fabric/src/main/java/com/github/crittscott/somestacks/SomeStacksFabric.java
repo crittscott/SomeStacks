@@ -6,7 +6,7 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.fabric.PlatformInfoImpl;
+import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackSoundData;
@@ -28,7 +28,8 @@ import net.minecraft.world.level.storage.LevelResource;
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
-        PlatformInfo.setResolver(PlatformInfoImpl::modVersion);
+        PlatformServices.install(
+                FabricPlatformServices::configFolder, FabricPlatformServices::modVersion);
         FabricRegistry.init();
         FabricItemStorage.init();
         ServerConfig.useCommonIngotDefaults();
@@ -73,6 +74,6 @@ public final class SomeStacksFabric implements ModInitializer {
 
         SomeStacksCommon.LOGGER.info(
                 "Some Stacks v{} initialized for Fabric",
-                PlatformInfo.modVersion(SomeStacksCommon.MODID));
+                PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 }

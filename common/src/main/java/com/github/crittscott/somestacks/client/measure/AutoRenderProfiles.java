@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.PlatformPaths;
-import com.github.crittscott.somestacks.PlatformInfo;
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderConfig;
@@ -200,7 +199,7 @@ public final class AutoRenderProfiles {
     }
 
     private static Path cacheFile() {
-        return PlatformPaths.modConfigFolder().resolve("measured_cache.json");
+        return PlatformServices.modConfigFolder().resolve("measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
@@ -220,7 +219,7 @@ public final class AutoRenderProfiles {
     }
 
     private static String modVersion(String namespace) {
-        return PlatformInfo.modVersion(namespace);
+        return PlatformServices.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {

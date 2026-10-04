@@ -10,7 +10,7 @@ Subsystem ownership, persistent data, loader boundaries, and invariants the code
 
 Some Stacks is a Java 21 mod for Minecraft 1.21.4 under `com.github.crittscott.somestacks`, mod id `somestacks`. Development builds against Forge 54.1.18, NeoForge 21.4.158, and Fabric Loader 0.19.5 with Fabric API 0.119.4+1.21.4. Architectury is build-time only; no loader has an Architectury API runtime dependency.
 
-`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, `PlatformPaths`, and `PlatformInfo` are the loader seams. `PlatformPaths` uses Architectury `@ExpectPlatform`; the other seams are installed during loader startup. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
+`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams. Loader seams are installed during loader startup. Each loader supplies registry handles before common world objects exist. Release JARs are under `<loader>/build/libs/`.
 
 Three blocks and block entity types are registered, with no block items, menus, recipes, or portable containers:
 
