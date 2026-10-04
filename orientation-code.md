@@ -48,7 +48,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
 
-The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, gesture interpretation, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins build with the legacy annotation processor into the fixed `somestacks.refmap.json` refmap.
+The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, gesture interpretation, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins use Loom's current remapping path without the legacy annotation processor.
 
 ## Runtime and movement model
 

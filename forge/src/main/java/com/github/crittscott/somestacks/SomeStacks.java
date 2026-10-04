@@ -1,9 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
+import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.forge.ForgePlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
@@ -55,7 +54,10 @@ public class SomeStacks {
 
         ModRegistry.init(modBus);
         ModNetworking.init();
-        CommandNetwork.setHandler(new ForgeCommandNetwork());
+        CommandNetwork.install(
+                SomeStacks::syncAllPlayers,
+                (player, packet) -> ModNetworking.CHANNEL.send(
+                        packet, PacketDistributor.PLAYER.with(player)));
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);

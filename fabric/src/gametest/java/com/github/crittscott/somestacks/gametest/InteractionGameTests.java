@@ -79,7 +79,7 @@ public final class InteractionGameTests implements FabricGameTest {
                 helper, playerFactory(helper));
     }
 
-    /** Each test needs its own mock player so the hand it means to test with starts empty. */
+    /** The fake player is shared per level, so every test sets the hand it means to test with. */
     private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {

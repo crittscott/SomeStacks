@@ -122,6 +122,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
+            RotationSoundThrottle.clear(player.getUUID());
         }
         helper.succeed();
     }
@@ -226,6 +227,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
+            RotationSoundThrottle.clear(player.getUUID());
         }
         helper.succeed();
     }
@@ -285,6 +287,7 @@ public final class InteractionChecks {
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        RotationSoundThrottle.clear(player.getUUID());
         try {
             check(RotationSoundThrottle.claim(player), "First rotation sound was refused");
             check(!RotationSoundThrottle.claim(player),

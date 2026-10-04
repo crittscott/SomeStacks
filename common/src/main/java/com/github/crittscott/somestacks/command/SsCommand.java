@@ -207,7 +207,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
@@ -247,7 +247,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
@@ -374,7 +374,7 @@ public final class SsCommand {
         String remaining = builder.getRemaining();
 
         if (!remaining.contains(":")) {
-            List<String> namespaces = RenderGalleryGenerator.getModIdsWithItems()
+            List<String> namespaces = RenderGalleryGenerator.Kind.STORAGE.modIds()
                     .stream()
                     .map(ns -> ns + ":")
                     .collect(Collectors.toList());
@@ -382,7 +382,7 @@ public final class SsCommand {
         }
 
         String namespace = remaining.split(":")[0];
-        List<String> itemIds = RenderGalleryGenerator.collectModItems(namespace)
+        List<String> itemIds = RenderGalleryGenerator.Kind.STORAGE.itemsIn(namespace)
                 .stream()
                 .map(item -> String.valueOf(BuiltInRegistries.ITEM.getKey(item)))
                 .collect(Collectors.toList());

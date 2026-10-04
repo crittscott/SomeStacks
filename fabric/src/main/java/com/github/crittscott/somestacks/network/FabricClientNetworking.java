@@ -10,11 +10,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import java.util.function.Consumer;
 
 /** Fabric client receivers and the packet sender used by the shared gesture rules. */
-public final class FabricClientNetworking implements ClientGestures.Sender {
+public final class FabricClientNetworking {
     private FabricClientNetworking() {}
 
     public static void init() {
-        ClientGestures.setSender(new FabricClientNetworking());
+        ClientGestures.setSender(packet -> ClientPlayNetworking.send(packet));
 
         ClientPlayNetworking.registerGlobalReceiver(ProtocolPkt.TYPE, (payload, context) -> { });
         registerClient(ConfigSyncPkt.TYPE, ClientRenderPacketSink::apply);
@@ -30,11 +30,6 @@ public final class FabricClientNetworking implements ClientGestures.Sender {
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
                 ClientGestures.resetSync());
-    }
-
-    @Override
-    public void send(CustomPacketPayload payload) {
-        ClientPlayNetworking.send(payload);
     }
 
     private static <T extends CustomPacketPayload> void registerClient(

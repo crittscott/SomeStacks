@@ -122,7 +122,7 @@ public final class AutoRenderProfiles {
             RenderProfile profile = entry.getValue();
             entries.put(id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {
-                versions.addProperty(id.getNamespace(), modVersion(id.getNamespace()));
+                versions.addProperty(id.getNamespace(), PlatformServices.modVersion(id.getNamespace()));
             }
         }
 
@@ -182,7 +182,8 @@ public final class AutoRenderProfiles {
                     continue;
                 }
                 JsonElement recorded = versions.get(id.getNamespace());
-                if (recorded == null || !recorded.getAsString().equals(modVersion(id.getNamespace()))) {
+                if (recorded == null
+                        || !recorded.getAsString().equals(PlatformServices.modVersion(id.getNamespace()))) {
                     dirty = true;
                     continue;
                 }
@@ -216,10 +217,6 @@ public final class AutoRenderProfiles {
     /** The enabled resource packs in application order, which determines the baked models. */
     private static String selectedPackIds() {
         return String.join("\n", Minecraft.getInstance().getResourcePackRepository().getSelectedIds());
-    }
-
-    private static String modVersion(String namespace) {
-        return PlatformServices.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {

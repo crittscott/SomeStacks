@@ -7,6 +7,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Objects;
+import java.util.function.Consumer;
+
 /** Shared client gesture state and its loader-specific state-sync sender. */
 public final class ClientGestures {
     private ClientGestures() {}
@@ -16,17 +19,13 @@ public final class ClientGestures {
     public static final String KEY_CATEGORY_TRANSLATION_KEY =
             "key.categories." + SomeStacksCommon.MODID;
 
-    public interface Sender {
-        void send(CustomPacketPayload payload);
-    }
-
     private static StackMode stackMode = StackMode.STORAGE_STACK;
     private static StackMode lastSentMode;
     private static boolean lastSentModifier;
-    private static Sender sender;
+    private static Consumer<CustomPacketPayload> sender;
 
-    public static void setSender(Sender sender) {
-        ClientGestures.sender = sender;
+    public static void setSender(Consumer<CustomPacketPayload> sender) {
+        ClientGestures.sender = Objects.requireNonNull(sender);
     }
 
     public static StackMode currentMode() {
@@ -55,7 +54,7 @@ public final class ClientGestures {
         if (lastSentMode == stackMode && lastSentModifier == modifierDown) {
             return;
         }
-        sender.send(new GestureStatePkt(stackMode, modifierDown));
+        sender.accept(new GestureStatePkt(stackMode, modifierDown));
         lastSentMode = stackMode;
         lastSentModifier = modifierDown;
     }

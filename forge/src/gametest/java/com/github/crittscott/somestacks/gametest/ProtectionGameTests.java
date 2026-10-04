@@ -23,6 +23,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
 

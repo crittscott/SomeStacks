@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -22,11 +21,12 @@ import net.minecraftforge.network.PacketDistributor;
  * what the player is holding.
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public final class ClientEvents implements ClientGestures.Sender {
+public final class ClientEvents {
     private ClientEvents() {}
 
     public static void init() {
-        ClientGestures.setSender(new ClientEvents());
+        ClientGestures.setSender(payload ->
+                ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg()));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -86,10 +86,5 @@ public final class ClientEvents implements ClientGestures.Sender {
             // the held item, so a bucket empties itself into the space the gesture is aiming at.
             evt.setCancellationResult(InteractionResult.SUCCESS);
         }
-    }
-
-    @Override
-    public void send(CustomPacketPayload payload) {
-        ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg());
     }
 }

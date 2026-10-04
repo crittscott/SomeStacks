@@ -148,6 +148,11 @@ public final class ConfigurationChecks {
 
         try {
             Files.createDirectories(serverConfigDir);
+            Files.deleteIfExists(fixture);
+            ServerConfig.load(fixture);
+            checkEquals(List.of("#c:ingots*", "#somestacks:ingots"),
+                    ServerConfig.INGOTS.get(), "Default ingot list");
+
             Files.writeString(fixture, configJson(999, -3, 0, "#" + glob));
             ServerConfig.load(fixture);
 

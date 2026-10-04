@@ -127,7 +127,7 @@ Per-world JSON policy at `<world>/serverconfig/somestacks-server.json`.
 | `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
 | `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
-| `compatibility.ingots` | `#forge:ingots*` / `#c:ingots*`, plus `#somestacks:ingots` | What Bar accepts and Singles refuses; `#name` is a tag pattern (`*` allowed), a bare id is one item |
+| `compatibility.ingots` | `#c:ingots*`, plus `#somestacks:ingots` | What Bar accepts and Singles refuses; `#name` is a tag pattern (`*` allowed), a bare id is one item |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |

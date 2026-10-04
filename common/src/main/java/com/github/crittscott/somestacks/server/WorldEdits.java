@@ -31,10 +31,6 @@ public final class WorldEdits {
         authority = impl;
     }
 
-    private static EditAuthority authority() {
-        return authority;
-    }
-
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
         return !sp.serverLevel().mayInteract(sp, pos);
@@ -47,7 +43,7 @@ public final class WorldEdits {
 
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
-        return authority().automationActor(level);
+        return authority.automationActor(level);
     }
 
     /** Vanilla's placement obstruction test for a block-local collision shape. */
@@ -91,7 +87,7 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        EditAuthority.PlacementVeto placementVeto = authority().preparePlacement(level, pos);
+        EditAuthority.PlacementVeto placementVeto = authority.preparePlacement(level, pos);
         BlockState previous = level.getBlockState(pos);
         if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
             return false;
@@ -116,7 +112,7 @@ public final class WorldEdits {
             return false;
         }
         BlockState state = level.getBlockState(pos);
-        if (authority().vetoesRemoval(level, pos, state)) {
+        if (authority.vetoesRemoval(level, pos, state)) {
             return false;
         }
         ServerPlayer actor = automationActor(level);

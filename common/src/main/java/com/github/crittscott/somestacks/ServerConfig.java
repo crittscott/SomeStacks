@@ -60,7 +60,7 @@ public final class ServerConfig {
     private static boolean enableBarStackBlock = true;
     private static List<String> disableModsRaw = new ArrayList<>();
     private static List<String> disableItemsRaw = new ArrayList<>();
-    private static List<String> ingotsRaw = new ArrayList<>(List.of("#forge:ingots*", "#somestacks:ingots"));
+    private static List<String> ingotsRaw = new ArrayList<>(List.of("#c:ingots*", "#somestacks:ingots"));
     private static int renderGalleryPlacementsPerTick = DEFAULT_GALLERY_PLACEMENTS_PER_TICK;
     private static boolean galleryEnabled = false;
     private static int galleryPermissionLevel = DEFAULT_GALLERY_PERMISSION_LEVEL;
@@ -68,8 +68,6 @@ public final class ServerConfig {
     private static List<String> genItemsRaw = new ArrayList<>();
 
     private static Path configFile;
-    private static boolean commonIngotDefaults;
-
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
     private static volatile Set<Item> ingotItems = Set.of();
@@ -128,17 +126,6 @@ public final class ServerConfig {
     /** The vanilla permission level {@code ss gallery} and {@code ss ingotgallery} require. */
     public static int galleryRequiredPermissionLevel() {
         return galleryPermissionLevel;
-    }
-
-    /**
-     * Selects the {@code c:} common-tag convention for a new config, used by loaders that do not
-     * populate the {@code forge:} tags (Fabric and NeoForge). An existing file remains authoritative.
-     */
-    public static void useCommonIngotDefaults() {
-        commonIngotDefaults = true;
-        if (configFile == null) {
-            ingotsRaw = new ArrayList<>(List.of("#c:ingots*", "#somestacks:ingots"));
-        }
     }
 
     // --- Loading and saving ---
@@ -237,9 +224,7 @@ public final class ServerConfig {
                 true,
                 List.of(),
                 List.of(),
-                commonIngotDefaults
-                        ? List.of("#c:ingots*", "#somestacks:ingots")
-                        : List.of("#forge:ingots*", "#somestacks:ingots"),
+                List.of("#c:ingots*", "#somestacks:ingots"),
                 DEFAULT_GALLERY_PLACEMENTS_PER_TICK,
                 false,
                 DEFAULT_GALLERY_PERMISSION_LEVEL,

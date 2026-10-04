@@ -1,12 +1,11 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
-import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
+import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricAdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
@@ -31,13 +30,12 @@ public final class SomeStacksFabric implements ModInitializer {
                 FabricPlatformServices::configFolder, FabricPlatformServices::modVersion);
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useCommonIngotDefaults();
         WorldEdits.setAuthority(new FabricEditAuthority());
         AdjacentEdits.setAuthority(new FabricAdjacentEditAuthority());
         FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
-        CommandNetwork.setHandler(new FabricCommandNetwork());
+        CommandNetwork.install(FabricNetworking::syncAllPlayers, FabricNetworking::send);
 
         CommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess, environment) ->

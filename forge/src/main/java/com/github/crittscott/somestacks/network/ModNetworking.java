@@ -42,11 +42,11 @@ public final class ModNetworking {
                         ForgePacketHandlers::handleGestureState)
                 .clientbound()
                 .addMain(ConfigSyncPkt.class, ConfigSyncPkt.STREAM_CODEC,
-                        ForgePacketHandlers::handleConfigSync)
+                        ForgePacketHandlers::handleClient)
                 .addMain(RenderOverridePkt.class, RenderOverridePkt.STREAM_CODEC,
-                        ForgePacketHandlers::handleRenderOverride)
+                        ForgePacketHandlers::handleClient)
                 .addMain(WriteOverridesPkt.class, WriteOverridesPkt.STREAM_CODEC,
-                        ForgePacketHandlers::handleWriteOverrides)
+                        ForgePacketHandlers::handleClient)
                 .build();
     }
 

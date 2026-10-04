@@ -35,7 +35,7 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
-        int moved = storage.deposit(offered);
+        int moved = storage.deposit(offered, null);
 
         checkEquals(8, moved, "Moved count");
         checkEquals(0, offered.getCount(), "Offered remainder");
@@ -53,7 +53,7 @@ public final class StoragePileChecks {
         }
         ItemStack offered = new ItemStack(Items.STONE, 1);
 
-        int moved = storage.deposit(offered);
+        int moved = storage.deposit(offered, null);
         StoragePile pile = storage.pile();
 
         checkEquals(1, moved, "Moved count");

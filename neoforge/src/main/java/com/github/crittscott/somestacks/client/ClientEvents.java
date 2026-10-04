@@ -2,7 +2,6 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -19,11 +18,11 @@ import net.neoforged.neoforge.network.PacketDistributor;
  * event denies both block and item use, so a gesture never also spends what the player is holding.
  */
 @EventBusSubscriber(value = Dist.CLIENT)
-public final class ClientEvents implements ClientGestures.Sender {
+public final class ClientEvents {
     private ClientEvents() {}
 
     public static void init() {
-        ClientGestures.setSender(new ClientEvents());
+        ClientGestures.setSender(packet -> PacketDistributor.sendToServer(packet));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -78,10 +77,5 @@ public final class ClientEvents implements ClientGestures.Sender {
             // empties itself into the space the gesture is aiming at.
             evt.setCancellationResult(InteractionResult.SUCCESS);
         }
-    }
-
-    @Override
-    public void send(CustomPacketPayload payload) {
-        PacketDistributor.sendToServer(payload);
     }
 }

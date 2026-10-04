@@ -31,7 +31,7 @@ The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `
 
 `common` has no resource expansion. Each loader expands its own metadata (`fabric.mod.json`, `META-INF/mods.toml`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
-Fabric Loom uses the legacy Mixin annotation processor and writes the fixed `somestacks.refmap.json` refmap. Forge and NeoForge use their loader-specific Loom setup without that Fabric-only Mixin block.
+Fabric uses Loom's current Mixin remapping path without the legacy annotation processor. Forge and NeoForge use their loader-specific Loom setup.
 
 Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric additionally compiles against the Common Protection API (`modCompileOnly`) so claim mods that ship it can be consulted when present, and puts it on its development runs (`modLocalRuntime`); both declarations are non-transitive, and the API is neither bundled nor required at runtime.
 

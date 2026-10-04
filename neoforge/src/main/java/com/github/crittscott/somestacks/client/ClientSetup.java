@@ -3,11 +3,7 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
-import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.network.WriteOverridesPkt;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
@@ -27,7 +23,7 @@ public final class ClientSetup {
     private ClientSetup() {}
 
     public static void init(IEventBus modBus) {
-        ModNetworking.setClientReceiver(ClientSetup::deliverRenderPacket);
+        ModNetworking.setClientReceiver(ClientRenderPacketSink::apply);
         ClientEvents.init();
         modBus.addListener(ClientSetup::onRegisterRenderers);
         modBus.addListener(ClientSetup::onRegisterKeys);
@@ -39,16 +35,6 @@ public final class ClientSetup {
                 });
         NeoForge.EVENT_BUS.addListener(
                 (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
-    }
-
-    private static void deliverRenderPacket(CustomPacketPayload payload) {
-        if (payload instanceof ConfigSyncPkt packet) {
-            ClientRenderPacketSink.apply(packet);
-        } else if (payload instanceof RenderOverridePkt packet) {
-            ClientRenderPacketSink.apply(packet);
-        } else if (payload instanceof WriteOverridesPkt packet) {
-            ClientRenderPacketSink.apply(packet);
-        }
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {

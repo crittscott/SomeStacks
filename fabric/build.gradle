@@ -10,11 +10,6 @@ architectury {
 rootProject.configureGameTests(project)
 
 loom {
-    mixin {
-        useLegacyMixinAp = true
-        defaultRefmapName = 'somestacks.refmap.json'
-    }
-
     mods {
         main {
             sourceSet sourceSets.main

@@ -128,7 +128,7 @@
 
   "somestacks.command.help.ingot.summary": "Edit which tags and items a Bar Stack accepts",
   "somestacks.command.help.ingot.detail.1": "A Bar Stack holds the items these entries resolve to, and a Singles Stack holds everything else, so widening this list narrows Singles by as much. Contents already stored can still be taken out either way.",
-  "somestacks.command.help.ingot.detail.2": "A # entry names an item tag and may contain * to match a run of any characters. The default #forge:ingots* covers #forge:ingots and every forge:ingots/<metal> beneath it, which reaches a mod that tags its ingots only under the child tag.",
+  "somestacks.command.help.ingot.detail.2": "A # entry names an item tag and may contain * to match a run of any characters. The default #c:ingots* covers #c:ingots and every c:ingots/<metal> beneath it, including a mod that tags its ingots only under a child tag.",
   "somestacks.command.help.ingot.detail.3": "Any other entry is a single item id, which accepts one hand-picked item without a data pack tag.",
   "somestacks.command.help.ingot.detail.4": "A # entry is taken as typed, since it may name a tag no data pack has declared yet; a bare item id is rejected when the registry does not know it. An edit reports how many items are accepted afterwards, and a # entry matching no tag is logged when the list is read.",
 

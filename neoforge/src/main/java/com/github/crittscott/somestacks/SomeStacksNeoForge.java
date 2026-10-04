@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.NeoForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
@@ -45,12 +44,12 @@ public class SomeStacksNeoForge {
                 NeoForgePlatformServices::configFolder, NeoForgePlatformServices::modVersion);
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
         AdjacentEdits.setAuthority(new Protection());
-        ServerConfig.useCommonIngotDefaults();
-
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
         modBus.addListener(NeoForgeItemHandlers::onRegisterCapabilities);
-        CommandNetwork.setHandler(new NeoForgeCommandNetwork());
+        CommandNetwork.install(
+                SomeStacksNeoForge::syncAllPlayers,
+                (player, packet) -> PacketDistributor.sendToPlayer(player, packet));
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogin);

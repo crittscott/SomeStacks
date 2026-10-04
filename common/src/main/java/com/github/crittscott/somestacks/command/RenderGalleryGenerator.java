@@ -155,14 +155,6 @@ public final class RenderGalleryGenerator {
         return barItemsByNamespace;
     }
 
-    public static List<String> getModIdsWithItems() {
-        return List.copyOf(itemsByNamespace().keySet());
-    }
-
-    public static List<Item> collectModItems(String modId) {
-        return itemsByNamespace().getOrDefault(modId, List.of());
-    }
-
     /** Planned gallery size, known before placement begins. */
     public record Plan(int expectedStacks, int totalItems) {}
 
@@ -316,7 +308,7 @@ public final class RenderGalleryGenerator {
         StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(pos);
 
         for (Item item : batch) {
-            sbe.deposit(new ItemStack(item, 1));
+            sbe.deposit(new ItemStack(item, 1), null);
         }
         return true;
     }

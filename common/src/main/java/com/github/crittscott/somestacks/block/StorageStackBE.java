@@ -139,12 +139,7 @@ public class StorageStackBE extends StackBlockEntity {
     /**
      * Deposits into the pile this block belongs to, filling from its base upward and growing the
      * column if it must. Which block of the pile the items were offered to makes no difference.
-     */
-    public int deposit(ItemStack fromHand) {
-        return deposit(fromHand, null);
-    }
-
-    /**
+     *
      * @param placer the player responsible for any block this deposit creates, or null for
      *               automation. See {@link StoragePile#deposit}.
      */
