@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /** Local storage, persistence, synchronization, lighting, and batching shared by every stack. */
 public abstract class StackBlockEntity extends BlockEntity {
@@ -24,6 +25,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     private boolean batchTouched;
     private boolean publishPending;
     private int publishedSignal = -1;
+    private StackRunItemAccess cachedRun;
+    private long cachedRunTick = Long.MIN_VALUE;
 
     protected StackBlockEntity(
             BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
@@ -54,11 +57,36 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     protected abstract boolean isStoredItemValid(ItemStack stack);
 
+    /** Resolves the current server-side run without consulting the per-tick cache. */
+    protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
+
     /** The current server-side run, or {@code null} on the client or during removal. */
-    public abstract StackRunItemAccess itemRun();
+    @Nullable
+    public final StackRunItemAccess itemRun() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return null;
+        }
+        long now = serverLevel.getGameTime();
+        if (cachedRun != null && cachedRunTick == now) {
+            return cachedRun;
+        }
+        cachedRun = resolveRun(serverLevel);
+        cachedRunTick = now;
+        return cachedRun;
+    }
+
+    /** Drops the cached run so a structural edit is visible again within the current tick. */
+    final void invalidateRunCache() {
+        cachedRun = null;
+    }
 
     /** Schedules the owning run's deferred publication pass. */
-    protected abstract void markRunDirty();
+    protected final void markRunDirty() {
+        StackRunItemAccess run = itemRun();
+        if (run != null) {
+            run.markDirty();
+        }
+    }
 
     protected int localSlotLimit() {
         return 64;

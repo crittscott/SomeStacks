@@ -10,7 +10,6 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
@@ -187,23 +186,14 @@ public final class StackInteractions {
         }
 
         if (level.getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            SlotAccess items = singles.getItems();
-            int index = SinglesCubeIdx.traceAllPositions(ray, pos, items, singles.getRotation());
-            boolean[] seam = level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
-                    ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
-                    : null;
-            return index >= 0 && items.getStackInSlot(index).isEmpty()
-                    && SinglesCubeIdx.isGrounded(index, items, singles.getRotation(), seam);
+            int index = SinglesCubeIdx.traceAllPositions(
+                    ray, pos, singles.getItems(), singles.getRotation());
+            return singles.canDepositAt(index);
         }
 
         if (level.getBlockEntity(pos) instanceof BarStackBE bars) {
-            SlotAccess items = bars.getItems();
-            int index = BarCubeIdx.traceAllPositions(ray, pos, items);
-            boolean[] seam = level.getBlockEntity(pos.below()) instanceof BarStackBE below
-                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                    : null;
-            return index >= 0 && items.getStackInSlot(index).isEmpty()
-                    && BarCubeIdx.isGrounded(index, items, seam);
+            int index = BarCubeIdx.traceAllPositions(ray, pos, bars.getItems());
+            return bars.canDepositAt(index);
         }
 
         return true;
@@ -336,18 +326,9 @@ public final class StackInteractions {
         return switch (type) {
             case STORAGE_STACK -> StorageStackBE.isValidStorageItem(handStack);
             case SINGLES_STACK -> SinglesStackBE.isValidSinglesItem(handStack)
-                    && SinglesCubeIdx.freshBlockSupports(
-                            depositIndex,
-                            level.getBlockEntity(pos.below()) instanceof SinglesStackBE below
-                                    ? SinglesCubeIdx.topLayerOccupancy(
-                                            below.getItems(), below.getRotation())
-                                    : null);
+                    && SinglesStackBE.supportsFreshDeposit(level, pos, depositIndex);
             case BAR_STACK -> BarStackBE.isValidBarItem(handStack)
-                    && BarCubeIdx.freshBlockSupports(
-                            depositIndex,
-                            level.getBlockEntity(pos.below()) instanceof BarStackBE below
-                                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                                    : null);
+                    && BarStackBE.supportsFreshDeposit(level, pos, depositIndex);
         };
     }
 

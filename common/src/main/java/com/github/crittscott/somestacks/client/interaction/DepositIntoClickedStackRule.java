@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.Direction;
@@ -40,23 +39,15 @@ public final class DepositIntoClickedStackRule implements InteractionRule {
         var be = ctx.getLevel().getBlockEntity(ctx.getClickedPos());
 
         if (be instanceof SinglesStackBE ssbe) {
-            SlotAccess handler = ssbe.getItems();
-            int index = SinglesCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler, ssbe.getRotation());
-            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof SinglesStackBE below
-                    ? SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation())
-                    : null;
-            return index >= 0 && handler.getStackInSlot(index).isEmpty()
-                    && SinglesCubeIdx.isGrounded(index, handler, ssbe.getRotation(), seam);
+            int index = SinglesCubeIdx.traceAllPositions(
+                    ray, ctx.getClickedPos(), ssbe.getItems(), ssbe.getRotation());
+            return ssbe.canDepositAt(index);
         }
 
         if (be instanceof BarStackBE barbe) {
-            SlotAccess handler = barbe.getItems();
-            int index = BarCubeIdx.traceAllPositions(ray, ctx.getClickedPos(), handler);
-            boolean[] seam = ctx.getLevel().getBlockEntity(ctx.getClickedPos().below()) instanceof BarStackBE below
-                    ? BarCubeIdx.topLayerOccupancy(below.getItems())
-                    : null;
-            return index >= 0 && handler.getStackInSlot(index).isEmpty()
-                    && BarCubeIdx.isGrounded(index, handler, seam);
+            int index = BarCubeIdx.traceAllPositions(
+                    ray, ctx.getClickedPos(), barbe.getItems());
+            return barbe.canDepositAt(index);
         }
 
         return true;

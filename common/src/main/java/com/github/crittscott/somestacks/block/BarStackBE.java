@@ -10,6 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,10 +42,6 @@ public class BarStackBE extends StackBlockEntity {
      */
     private boolean removedByCascade = false;
 
-    /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
-    private BarColumn cachedColumn;
-    private long cachedColumnTick = Long.MIN_VALUE;
-
     public BarStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS);
     }
@@ -62,14 +59,6 @@ public class BarStackBE extends StackBlockEntity {
     @Override
     protected void onLocalContentsChanged(int slot) {
         cachedShape = null;
-    }
-
-    @Override
-    protected void markRunDirty() {
-        BarColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
     }
 
     /**
@@ -97,28 +86,12 @@ public class BarStackBE extends StackBlockEntity {
      */
     @Nullable
     public BarColumn column() {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return null;
-        }
-
-        long now = serverLevel.getGameTime();
-        if (cachedColumn != null && cachedColumnTick == now) {
-            return cachedColumn;
-        }
-
-        cachedColumn = BarColumn.resolve(serverLevel, getBlockPos());
-        cachedColumnTick = now;
-        return cachedColumn;
+        return (BarColumn) itemRun();
     }
 
     @Override
-    public StackRunItemAccess itemRun() {
-        return column();
-    }
-
-    /** Invalidates the cached column so the next lookup walks the world again. */
-    void invalidateColumn() {
-        cachedColumn = null;
+    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+        return BarColumn.resolve(serverLevel, getBlockPos());
     }
 
     /** Builds the union of the occupied bars' boxes. */
@@ -159,15 +132,10 @@ public class BarStackBE extends StackBlockEntity {
             return false;
         }
 
-        if (!items.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
         if (!isValidBarItem(fromHand)) {
             return false;
         }
-
-        if (!BarCubeIdx.isGrounded(index, items, seamBeneath())) {
+        if (!canDepositAt(index)) {
             return false;
         }
 
@@ -200,7 +168,8 @@ public class BarStackBE extends StackBlockEntity {
             extracted = items.extractItem(index, 1, false);
 
             if (!extracted.isEmpty()) {
-                cascadeFrom(serverLevel, this, seamBeneath(), topBefore, drops);
+                cascadeFrom(serverLevel, this,
+                        supportSeamBeneath(level, getBlockPos()), topBefore, drops);
             }
         } finally {
             endBatch();
@@ -225,8 +194,25 @@ public class BarStackBE extends StackBlockEntity {
      * directly below, or null when this block stands on the world instead of on another Bar Stack.
      */
     @Nullable
-    private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof BarStackBE below) {
+    public boolean canDepositAt(int index) {
+        return index >= 0
+                && index < SLOTS
+                && items.getStackInSlot(index).isEmpty()
+                && BarCubeIdx.isGrounded(
+                        index, items, supportSeamBeneath(level, getBlockPos()));
+    }
+
+    /** Whether an empty Bar block at {@code pos} supports its first bar. */
+    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
+        return index >= 0
+                && index < SLOTS
+                && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
+    }
+
+    /** The overlap occupancy supporting the bottom layer at {@code pos}. */
+    @Nullable
+    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
+        if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;

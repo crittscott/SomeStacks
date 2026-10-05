@@ -12,4 +12,7 @@ public interface StackRunItemAccess {
     int insertAt(int slot, ItemStack stack, boolean simulate);
 
     ItemStack extract(int slot, int amount, boolean simulate);
+
+    /** Schedules the run's deferred publication or settlement pass. */
+    void markDirty();
 }

@@ -25,17 +25,17 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Area | Responsibility |
 | --- | --- |
 | `StackBlock`, `ShapedStackBlock`, `block/*StackBlock` | Shared state/waterlogging/use plumbing, dynamic occupied shapes, per-type removal, comparators, scheduled publication |
-| `StackBlockEntity`, `block/*StackBE` | Shared local inventory, NBT, synchronization, lighting and nested batching; per-type rotations, shapes and run caches |
-| `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Common automation contract plus distinct run-wide growth, mutation, fill, cleanup and structure |
+| `StackBlockEntity`, `block/*StackBE` | Shared local inventory, NBT, synchronization, lighting, nested batching and run cache; per-type rotations, shapes and run resolution |
+| `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Shared run resolution, slots, publication and comparators; distinct mutation, growth and cleanup |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
-| `util/*CubeIdx`, `ViewRay` | Geometry, rotation, support, seams, targeting |
+| `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Shared cube-grid coordinates plus per-type geometry, support, seams and targeting |
 | `ServerConfig` | Per-world policy, deny sets, resolved ingot membership |
 | `WorldEdits`, `EditAuthority`, `AdjacentEdits` | World edits, automation authority, adjacent-target protection |
 | `StackInteractions`, `ServerGestureState` | Server interpretation of vanilla block-use packets and synchronized gesture state |
 | `network/*` | Gesture-state and server-to-client synchronization payloads |
 | `renderconfig/*` | Shared render override types, JSON validation, and codecs |
 | `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
-| `SsCommand`, `RenderGalleryGenerator` | Administration, profile authoring, galleries |
+| `SomeStacksServer`, `SsCommand`, `RenderGalleryGenerator` | Common lifecycle, administration, profile authoring and galleries |
 | Loader modules | Registration, transport, callbacks, rendering glue, native automation views |
 
 ## Loader integration
@@ -53,7 +53,7 @@ The selected loader build is required on client and server. Loaders own transpor
 
 ## Runtime and movement model
 
-A maximal contiguous vertical run of one stack type is the central abstraction. Block entities own local slots; the server-only `StoragePile`, `SinglesColumn`, and `BarColumn` coordinate cross-block operations and hold a `ServerLevel`. Run resolution is cached per game tick and invalidated by structural changes.
+A maximal contiguous vertical run of one stack type is the central abstraction. Block entities own local slots; server-only runs coordinate cross-block operations. `StackRun` owns resolution, flattened slots, headroom, publication and comparators; the three concrete runs own their movement models. Resolution is cached per game tick and invalidated by structural changes.
 
 Block entities do not tick. `StackBlockEntity` owns local persistence and a nesting-safe batch depth; mutations schedule one deferred pass on the run's bottom block that coalesces client updates, lighting, comparator publication, and Storage settlement. Every block in a run reports the same run-wide comparator signal.
 
@@ -85,11 +85,11 @@ The real loader event covers the block the player clicked. When that click reach
 
 ## Configuration and presentation
 
-World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerConfig` and loaded atomically from defaults at server startup. Bad fields are reported and skipped independently, so one wrong type cannot leave a partially applied or previous world's configuration. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` rereads policy JSON, reloads server render overrides, and resyncs players. Ingot-list entries are either a `#`-prefixed item-tag pattern (`*` allowed, matched against whole tag names) or a bare item id, and resolve again on configuration or tag reload.
+World policy is `<world>/serverconfig/somestacks-server.json`, loaded atomically from defaults by `ServerConfig`; bad fields are independently reported and skipped. `/ss deny`, `/ss ingot`, and `/ss gen` save immediately. `/ss reload` rereads policy and server render overrides, then resyncs players. Ingot entries are `#`-prefixed tag patterns (`*` allowed) or bare item ids and resolve again on configuration or tag reload.
 
 Extension points are the configured ingot list; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
 
-All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `ItemCapture` records resolved baked quads, layer tints, and vertex-written bounds for measurement and 2-D projection; Bar auto-tint reads the first captured quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
+All types use block entity renderers. `CubeGrid` and `CubeRenderHelper` place Storage and Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `ItemCapture` records baked quads, tints, and bounds for measurement and 2-D projection; Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
 
 ## GameTests
 

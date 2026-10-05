@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -26,28 +25,22 @@ import java.util.List;
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 
+    public static final CubeGrid GRID = new CubeGrid(4, 4.0, 0, 4, 8, 12);
+
     /** Cells along one axis of the grid. */
-    public static final int GRID_EDGE = 4;
+    public static final int GRID_EDGE = GRID.edge();
 
     /** Cells in one layer. */
-    public static final int LAYER_SIZE = GRID_EDGE * GRID_EDGE;
+    public static final int LAYER_SIZE = GRID.layerSize();
 
     /** Layers in one block. */
     public static final int LAYERS = GRID_EDGE;
 
     /** Cells in one block, and therefore slots in one {@link SinglesStackBE}. */
-    public static final int CELLS = LAYER_SIZE * LAYERS;
+    public static final int CELLS = GRID.cells();
 
     /** The layer a block hands items down from, and the only one that holds up the block above. */
     public static final int TOP_LAYER_Y = LAYERS - 1;
-
-    /** Edge of one cell, in pixels. */
-    private static final double CELL_PIXELS = 4.0;
-
-    /** The largest cell coordinate on an axis, which a rotation reflects about. */
-    private static final int MAX_COORD = GRID_EDGE - 1;
-
-    private static final int[] STARTS = {0, 4, 8, 12};
 
     /**
      * Whether a prospective Singles Stack could support an item at {@code index}. Since all of its
@@ -60,14 +53,7 @@ public final class SinglesCubeIdx {
     }
 
     private static AABB getCubeBox(int visualX, int visualY, int visualZ, BlockPos blockPos) {
-        double minX = blockPos.getX() + startPixel(visualX) / 16.0;
-        double minY = blockPos.getY() + startPixel(visualY) / 16.0;
-        double minZ = blockPos.getZ() + startPixel(visualZ) / 16.0;
-        double maxX = minX + CELL_PIXELS / 16.0;
-        double maxY = minY + CELL_PIXELS / 16.0;
-        double maxZ = minZ + CELL_PIXELS / 16.0;
-
-        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+        return GRID.worldBoxAtVisual(visualX, visualY, visualZ, blockPos);
     }
 
     /**
@@ -109,14 +95,7 @@ public final class SinglesCubeIdx {
 
     /** Returns the block-local collision shape of one stored cell. */
     public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
-        int[] storageXYZ = xyzFromIndex(storageIndex);
-        int[] visualXYZ = rotateXYZ(
-                storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-        double minX = startPixel(visualXYZ[0]) / 16.0;
-        double minY = startPixel(visualXYZ[1]) / 16.0;
-        double minZ = startPixel(visualXYZ[2]) / 16.0;
-        double size = CELL_PIXELS / 16.0;
-        return Shapes.box(minX, minY, minZ, minX + size, minY + size, minZ + size);
+        return GRID.localShape(storageIndex, blockRotation);
     }
 
     /**
@@ -254,27 +233,17 @@ public final class SinglesCubeIdx {
      * turns counterclockwise seen from above, matching the direction of per-item rotation.
      */
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return switch (rotation % 4) {
-            case 0 -> new int[]{x, y, z};
-            case 1 -> new int[]{z, y, MAX_COORD - x};
-            case 2 -> new int[]{MAX_COORD - x, y, MAX_COORD - z};
-            case 3 -> new int[]{MAX_COORD - z, y, x};
-            default -> new int[]{x, y, z};
-        };
+        return GRID.rotateXYZ(x, y, z, rotation);
     }
 
     /** Returns a cell's origin on one axis in model pixels. */
     public static int startPixel(int i) {
-        return STARTS[i];
+        return GRID.startPixel(i);
     }
 
     /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
     public static int[] xyzFromIndex(int idx) {
-        int y = idx / LAYER_SIZE;
-        int rem = idx % LAYER_SIZE;
-        int z = rem / GRID_EDGE;
-        int x = rem % GRID_EDGE;
-        return new int[]{x, y, z};
+        return GRID.xyzFromIndex(idx);
     }
 
     private record Hit(int index, double distance) {

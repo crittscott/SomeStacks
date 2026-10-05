@@ -1,12 +1,15 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.util.CubeGrid;
+import com.github.crittscott.somestacks.util.SlotAccess;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -14,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -32,6 +36,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 
 /**
  * Draws one stored item inside one cell according to its render profile. The Storage
@@ -101,6 +106,42 @@ public final class CubeRenderHelper {
         FACE_CORNERS[Direction.WEST.ordinal()] = new float[]{0,0,0, 0,0,1, 0,1,1, 0,1,0};
         FACE_CORNERS[Direction.UP.ordinal()] = new float[]{0,1,1, 1,1,1, 1,1,0, 0,1,0};
         FACE_CORNERS[Direction.DOWN.ordinal()] = new float[]{0,0,0, 1,0,0, 1,0,1, 0,0,1};
+    }
+
+    /** Draws every occupied position in a regular Storage or Singles cube grid. */
+    public static void renderGridItems(
+            SlotAccess items, int slots, CubeGrid grid, int blockRotation,
+            float renderScale, IntUnaryOperator itemRotation,
+            Level level, BlockPos blockPos, PoseStack pose, MultiBufferSource buffers,
+            BlockRenderDispatcher blockRenderer) {
+        int cubeLight = LevelRenderer.getLightColor(level, blockPos);
+        for (int index = 0; index < slots; index++) {
+            ItemStack stack = items.getStackInSlot(index);
+            if (stack.isEmpty()) {
+                continue;
+            }
+
+            int[] storage = grid.xyzFromIndex(index);
+            int[] visual = grid.rotateXYZ(
+                    storage[0], storage[1], storage[2], blockRotation);
+
+            pose.pushPose();
+            pose.translate(
+                    grid.startPixel(visual[0]) / 16.0f,
+                    grid.startPixel(visual[1]) / 16.0f,
+                    grid.startPixel(visual[2]) / 16.0f);
+            pose.scale(renderScale, renderScale, renderScale);
+
+            int quarterTurns = itemRotation.applyAsInt(index);
+            if (quarterTurns != 0) {
+                pose.translate(CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE);
+                pose.mulPose(Axis.YP.rotationDegrees(quarterTurns * 90.0f));
+                pose.translate(-CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE);
+            }
+
+            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level);
+            pose.popPose();
+        }
     }
 
     /**

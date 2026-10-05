@@ -10,15 +10,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,13 +34,9 @@ import java.util.List;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class SinglesColumn implements StackRunItemAccess {
-    private final ServerLevel level;
-    private final List<SinglesStackBE> blocks;
-
+public final class SinglesColumn extends StackRun<SinglesStackBE> {
     private SinglesColumn(ServerLevel level, List<SinglesStackBE> blocks) {
-        this.level = level;
-        this.blocks = blocks;
+        super(level, blocks, SinglesStackBE.SLOTS, CommonRegistry.SINGLES_STACK_BLOCK.get());
     }
 
     /**
@@ -67,19 +60,7 @@ public final class SinglesColumn implements StackRunItemAccess {
      * cache {@link SinglesStackBE#column()} keeps; see there for why.
      */
     static SinglesColumn resolve(ServerLevel level, BlockPos pos) {
-        BlockPos base = pos;
-        while (level.getBlockEntity(base.below()) instanceof SinglesStackBE) {
-            base = base.below();
-        }
-
-        List<SinglesStackBE> blocks = new ArrayList<>();
-        BlockPos current = base;
-        while (level.getBlockEntity(current) instanceof SinglesStackBE be) {
-            blocks.add(be);
-            current = current.above();
-        }
-
-        return new SinglesColumn(level, blocks);
+        return new SinglesColumn(level, resolveBlocks(level, pos, SinglesStackBE.class));
     }
 
     /**
@@ -87,9 +68,7 @@ public final class SinglesColumn implements StackRunItemAccess {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        invalidateRun(level, pos, Direction.UP);
-        invalidateRun(level, pos.above(), Direction.UP);
-        invalidateRun(level, pos.below(), Direction.DOWN);
+        StackRun.invalidateAround(level, pos, SinglesStackBE.class);
     }
 
     /**
@@ -102,37 +81,17 @@ public final class SinglesColumn implements StackRunItemAccess {
      * <p>Call after {@link #invalidateAround}, so the runs are walked fresh.
      */
     static void publishAround(Level level, BlockPos pos) {
-        publishAt(level, pos);
-        publishAt(level, pos.below());
-        publishAt(level, pos.above());
-    }
-
-    private static void publishAt(Level level, BlockPos pos) {
-        SinglesColumn column = at(level, pos);
-        if (column != null) {
-            column.publishComparatorSignal();
-        }
+        StackRun.publishAround(level, pos, SinglesColumn::at);
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
     static void markDirtyAt(Level level, BlockPos pos) {
-        SinglesColumn column = at(level, pos);
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
-        BlockPos current = from;
-        while (level.getBlockEntity(current) instanceof SinglesStackBE be) {
-            be.invalidateColumn();
-            current = current.relative(direction);
-        }
+        StackRun.markDirtyAt(level, pos, SinglesColumn::at);
     }
 
     /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
     public static int maxHeight() {
-        return ServerConfig.maxPileHeight();
+        return StackRun.maxHeight();
     }
 
     /**
@@ -140,52 +99,7 @@ public final class SinglesColumn implements StackRunItemAccess {
      * counting the runs both below and above it, must fit the configured maximum.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return 1 + runLength(level, pos, Direction.DOWN) + runLength(level, pos, Direction.UP) <= maxHeight();
-    }
-
-    private static int runLength(Level level, BlockPos from, Direction direction) {
-        Block singles = CommonRegistry.SINGLES_STACK_BLOCK.get();
-        int length = 0;
-        BlockPos current = from.relative(direction);
-        while (level.getBlockState(current).is(singles)) {
-            length++;
-            current = current.relative(direction);
-        }
-        return length;
-    }
-
-    /** Positions the column actually holds: 64 per block, indexed from the bottom block upward. */
-    public int totalSlots() {
-        return blocks.size() * SinglesStackBE.SLOTS;
-    }
-
-    /**
-     * Positions the column advertises to automation: the ones it holds, plus one block's worth of
-     * headroom while the configured height allows another block.
-     *
-     * <p>Neither extreme works. The full potential height leaves most of the range permanently
-     * empty, and a caller polling its inventory re-derives that emptiness every tick. Only what the
-     * column holds is worse: a caller offers items to the positions the range names and no others,
-     * so a full column is never offered the insertion that grows it and automation cannot build
-     * past the first block. One block of headroom is what one growth adds, and {@link #insertAt}
-     * grows once for the cell it was given, so the range is reachable capacity and nothing more.
-     */
-    @Override
-    public int advertisedSlots() {
-        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
-        return SinglesStackBE.SLOTS * levels;
-    }
-
-    @Override
-    public ItemStack getSlot(int flatSlot) {
-        if (flatSlot < 0 || flatSlot >= totalSlots()) {
-            return ItemStack.EMPTY;
-        }
-        return handlerOf(flatSlot).getStackInSlot(flatSlot % SinglesStackBE.SLOTS);
-    }
-
-    private SlotAccess handlerOf(int flatSlot) {
-        return blocks.get(flatSlot / SinglesStackBE.SLOTS).getItems();
+        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.SINGLES_STACK_BLOCK.get());
     }
 
     // Comparator output
@@ -195,6 +109,7 @@ public final class SinglesColumn implements StackRunItemAccess {
      * occupancy is the whole of it — which is what vanilla's container measure reduces to when a
      * slot's limit is one, rather than the sum of stack fractions a Storage pile computes.
      */
+    @Override
     public double fillLevel() {
         int total = totalSlots();
         if (total == 0) {
@@ -210,83 +125,6 @@ public final class SinglesColumn implements StackRunItemAccess {
             }
         }
         return (double) occupied / total;
-    }
-
-    /**
-     * The comparator output for the whole column, which is what every block of it reports. Vanilla's
-     * container conversion, reserving the bottom of the range rather than scaling into it: any
-     * nonempty column reads at least 1, so signal 0 means empty and nothing else. Full means every
-     * cell of every block occupied.
-     */
-    public int comparatorSignal() {
-        double fill = fillLevel();
-        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
-    }
-
-    /**
-     * Tells the column's neighbors to read the comparator output again, but only when that output
-     * has actually changed.
-     *
-     * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
-     * every block reports, including blocks that publish nothing of their own and are exactly
-     * the ones a comparator may be sitting against. The whole run is notified; the guard is what
-     * keeps that from costing a run-length of neighbor updates per item moved. The bottom block
-     * holds the last published value, because the bottom is what identifies a column.
-     */
-    private void publishComparatorSignal() {
-        if (blocks.isEmpty()) {
-            return;
-        }
-        int signal = comparatorSignal();
-        if (!blocks.get(0).exchangePublishedSignal(signal)) {
-            return;
-        }
-
-        Block block = CommonRegistry.SINGLES_STACK_BLOCK.get();
-        for (SinglesStackBE be : blocks) {
-            // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
-            // block further away behind a solid block, which the plain neighbor update does not.
-            level.updateNeighbourForOutputSignal(be.getBlockPos(), block);
-        }
-    }
-
-    // Deferred publication
-
-    /**
-     * Schedules the publication pass for the next tick, on the column's bottom block so that every
-     * edit anywhere in the run coalesces into one pass.
-     *
-     * <p>A cell holds one item, so a caller moving a stack through the capability makes one call
-     * per item, and a single removal draws an item down out of every block above. Deferring is what
-     * avoids an update packet, a full-column comparator walk, and a light recompute for every step.
-     */
-    void markDirty() {
-        if (blocks.isEmpty()) {
-            return;
-        }
-        Block block = CommonRegistry.SINGLES_STACK_BLOCK.get();
-        BlockPos bottom = blocks.get(0).getBlockPos();
-        if (!level.getBlockTicks().hasScheduledTick(bottom, block)) {
-            level.scheduleTick(bottom, block, 1);
-        }
-    }
-
-    /**
-     * Publishes deferred contents and light for changed blocks, then publishes comparator output
-     * once for the whole column.
-     *
-     * <p>Nothing outstanding means nothing to publish, and the comparator walk is skipped with it: a
-     * structural change publishes through {@link #publishAround} at the moment it happens, so this
-     * pass handles only changes deferred by content edits.
-     */
-    void publishPending() {
-        boolean published = false;
-        for (SinglesStackBE be : blocks) {
-            published |= be.publishIfPending(level);
-        }
-        if (published) {
-            publishComparatorSignal();
-        }
     }
 
     // Insertion
@@ -362,11 +200,10 @@ public final class SinglesColumn implements StackRunItemAccess {
      */
     @Nullable
     private boolean[] seamUnder(int blockIndex) {
-        if (blockIndex == 0) {
-            return null;
-        }
-        SinglesStackBE below = blocks.get(blockIndex - 1);
-        return SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation());
+        BlockPos pos = blockIndex < blocks.size()
+                ? blocks.get(blockIndex).getBlockPos()
+                : topPos().above();
+        return SinglesStackBE.supportSeamBeneath(level, pos);
     }
 
     /**
@@ -407,10 +244,6 @@ public final class SinglesColumn implements StackRunItemAccess {
 
         blocks.add(grown);
         return true;
-    }
-
-    private BlockPos topPos() {
-        return blocks.get(blocks.size() - 1).getBlockPos();
     }
 
     // Extraction

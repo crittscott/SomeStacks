@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -37,10 +38,6 @@ public class SinglesStackBE extends StackBlockEntity {
     private VoxelShape cachedShape = null;
     private int rotation = 0;
     private int[] cubeRotations = new int[SLOTS];
-    /** The column resolved for this block, good for the tick it was taken on. See {@link #column()}. */
-    private SinglesColumn cachedColumn;
-    private long cachedColumnTick = Long.MIN_VALUE;
-
     public SinglesStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state, SLOTS);
     }
@@ -60,14 +57,6 @@ public class SinglesStackBE extends StackBlockEntity {
         cachedShape = null;
     }
 
-    @Override
-    protected void markRunDirty() {
-        SinglesColumn column = column();
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
     /**
      * The column this block belongs to, or null on the client and for a block being removed.
      *
@@ -76,28 +65,12 @@ public class SinglesStackBE extends StackBlockEntity {
      */
     @Nullable
     public SinglesColumn column() {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return null;
-        }
-
-        long now = serverLevel.getGameTime();
-        if (cachedColumn != null && cachedColumnTick == now) {
-            return cachedColumn;
-        }
-
-        cachedColumn = SinglesColumn.resolve(serverLevel, getBlockPos());
-        cachedColumnTick = now;
-        return cachedColumn;
+        return (SinglesColumn) itemRun();
     }
 
     @Override
-    public StackRunItemAccess itemRun() {
-        return column();
-    }
-
-    /** Invalidates the cached column so the next lookup walks the world again. */
-    void invalidateColumn() {
-        cachedColumn = null;
+    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+        return SinglesColumn.resolve(serverLevel, getBlockPos());
     }
 
     /**
@@ -179,12 +152,7 @@ public class SinglesStackBE extends StackBlockEntity {
         if (fromHand.isEmpty()) {
             return false;
         }
-
-        if (!items.getStackInSlot(index).isEmpty()) {
-            return false;
-        }
-
-        if (!SinglesCubeIdx.isGrounded(index, items, rotation, seamBeneath())) {
+        if (!canDepositAt(index)) {
             return false;
         }
 
@@ -233,8 +201,25 @@ public class SinglesStackBE extends StackBlockEntity {
      * directly below, or null when this block stands on the world instead of on another Singles
      * Stack.
      */
-    private boolean[] seamBeneath() {
-        if (level != null && level.getBlockEntity(getBlockPos().below()) instanceof SinglesStackBE below) {
+    public boolean canDepositAt(int index) {
+        return index >= 0
+                && index < SLOTS
+                && items.getStackInSlot(index).isEmpty()
+                && SinglesCubeIdx.isGrounded(
+                        index, items, rotation, supportSeamBeneath(level, getBlockPos()));
+    }
+
+    /** Whether an empty, unrotated Singles block at {@code pos} supports its first item. */
+    public static boolean supportsFreshDeposit(Level level, BlockPos pos, int index) {
+        return index >= 0
+                && index < SLOTS
+                && SinglesCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
+    }
+
+    /** The visual-column occupancy supporting the bottom layer at {@code pos}. */
+    @Nullable
+    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
+        if (level != null && level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
             return SinglesCubeIdx.topLayerOccupancy(below.items, below.rotation);
         }
         return null;

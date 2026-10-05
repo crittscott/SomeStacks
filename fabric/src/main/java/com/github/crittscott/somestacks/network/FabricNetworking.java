@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.BiConsumer;
@@ -33,18 +32,6 @@ public final class FabricNetworking {
         ServerConfigurationNetworking.registerGlobalReceiver(
                 ProtocolPkt.TYPE, (payload, context) -> { });
         registerServer(GestureStatePkt.TYPE, GestureStatePkt::handleServer);
-    }
-
-    public static void sendConfig(ServerPlayer player) {
-        ServerPlayNetworking.send(player, ConfigSyncPkt.current());
-    }
-
-    public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = ConfigSyncPkt.current();
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            ServerPlayNetworking.send(player, packet);
-        }
-        return server.getPlayerList().getPlayerCount();
     }
 
     public static void send(ServerPlayer player, CustomPacketPayload packet) {

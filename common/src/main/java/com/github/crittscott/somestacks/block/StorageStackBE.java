@@ -34,10 +34,6 @@ public class StorageStackBE extends StackBlockEntity {
     private int rotation = 0;
     private boolean permanent = false;
 
-    /** The pile resolved for this block, good for the tick it was taken on. See {@link #pile()}. */
-    private StoragePile cachedPile;
-    private long cachedPileTick = Long.MIN_VALUE;
-
     public StorageStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS);
     }
@@ -61,14 +57,6 @@ public class StorageStackBE extends StackBlockEntity {
         return isValidStorageItem(stack);
     }
 
-    @Override
-    protected void markRunDirty() {
-        StoragePile pile = pile();
-        if (pile != null) {
-            pile.markDirty();
-        }
-    }
-
     /**
      * The pile this block belongs to, or null on the client and for a block being removed.
      *
@@ -80,28 +68,12 @@ public class StorageStackBE extends StackBlockEntity {
      */
     @Nullable
     public StoragePile pile() {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return null;
-        }
-
-        long now = serverLevel.getGameTime();
-        if (cachedPile != null && cachedPileTick == now) {
-            return cachedPile;
-        }
-
-        cachedPile = StoragePile.resolve(serverLevel, getBlockPos());
-        cachedPileTick = now;
-        return cachedPile;
+        return (StoragePile) itemRun();
     }
 
     @Override
-    public StackRunItemAccess itemRun() {
-        return pile();
-    }
-
-    /** Invalidates the cached pile so the next lookup walks the world again. */
-    void invalidatePile() {
-        cachedPile = null;
+    protected StackRunItemAccess resolveRun(ServerLevel serverLevel) {
+        return StoragePile.resolve(serverLevel, getBlockPos());
     }
 
     public int getRotation() {

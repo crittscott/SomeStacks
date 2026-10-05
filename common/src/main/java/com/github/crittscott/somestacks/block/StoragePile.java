@@ -3,17 +3,14 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StackSort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -35,15 +32,9 @@ import java.util.Map;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class StoragePile implements StackRunItemAccess {
-    private final ServerLevel level;
-    private final BlockPos base;
-    private final List<StorageStackBE> blocks;
-
-    private StoragePile(ServerLevel level, BlockPos base, List<StorageStackBE> blocks) {
-        this.level = level;
-        this.base = base;
-        this.blocks = blocks;
+public final class StoragePile extends StackRun<StorageStackBE> {
+    private StoragePile(ServerLevel level, List<StorageStackBE> blocks) {
+        super(level, blocks, StorageStackBE.SLOTS, CommonRegistry.STORAGE_STACK_BLOCK.get());
     }
 
     /**
@@ -68,19 +59,7 @@ public final class StoragePile implements StackRunItemAccess {
      * slot and a machine reading the whole handler does that hundreds of times a tick.
      */
     static StoragePile resolve(ServerLevel level, BlockPos pos) {
-        BlockPos base = pos;
-        while (level.getBlockEntity(base.below()) instanceof StorageStackBE) {
-            base = base.below();
-        }
-
-        List<StorageStackBE> blocks = new ArrayList<>();
-        BlockPos current = base;
-        while (level.getBlockEntity(current) instanceof StorageStackBE sbe) {
-            blocks.add(sbe);
-            current = current.above();
-        }
-
-        return new StoragePile(level, base, blocks);
+        return new StoragePile(level, resolveBlocks(level, pos, StorageStackBE.class));
     }
 
     /**
@@ -94,30 +73,17 @@ public final class StoragePile implements StackRunItemAccess {
      * class does itself.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        invalidateRun(level, pos, Direction.UP);
-        invalidateRun(level, pos.above(), Direction.UP);
-        invalidateRun(level, pos.below(), Direction.DOWN);
-    }
-
-    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
-        BlockPos current = from;
-        while (level.getBlockEntity(current) instanceof StorageStackBE sbe) {
-            sbe.invalidatePile();
-            current = current.relative(direction);
-        }
+        StackRun.invalidateAround(level, pos, StorageStackBE.class);
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
     static void markDirtyAt(Level level, BlockPos pos) {
-        StoragePile pile = at(level, pos);
-        if (pile != null) {
-            pile.markDirty();
-        }
+        StackRun.markDirtyAt(level, pos, StoragePile::at);
     }
 
     /** The configured ceiling on pile height. Server-side only. */
     public static int maxHeight() {
-        return ServerConfig.maxPileHeight();
+        return StackRun.maxHeight();
     }
 
     /**
@@ -127,18 +93,7 @@ public final class StoragePile implements StackRunItemAccess {
      * the gap between two piles from joining them into an over-tall one.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return 1 + runLength(level, pos, Direction.DOWN) + runLength(level, pos, Direction.UP) <= maxHeight();
-    }
-
-    private static int runLength(Level level, BlockPos from, Direction direction) {
-        Block storage = CommonRegistry.STORAGE_STACK_BLOCK.get();
-        int length = 0;
-        BlockPos current = from.relative(direction);
-        while (level.getBlockState(current).is(storage)) {
-            length++;
-            current = current.relative(direction);
-        }
-        return length;
+        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.STORAGE_STACK_BLOCK.get());
     }
 
     /**
@@ -159,14 +114,6 @@ public final class StoragePile implements StackRunItemAccess {
         }
     }
 
-    public BlockPos basePos() {
-        return base;
-    }
-
-    public int height() {
-        return blocks.size();
-    }
-
     /** Whether this pile's blocks survive being emptied. The base block's flag is authoritative. */
     public boolean isPermanent() {
         return blocks.get(0).isPermanent();
@@ -177,31 +124,6 @@ public final class StoragePile implements StackRunItemAccess {
             sbe.inheritPermanent(permanent);
         }
         markDirty();
-    }
-
-    /** Slots the pile actually holds: 27 per block, indexed from the base upward. */
-    public int totalSlots() {
-        return blocks.size() * StorageStackBE.SLOTS;
-    }
-
-    /**
-     * Slots the pile advertises to automation: its current slots plus one block of reachable
-     * headroom while growth is allowed. Advertising the entire potential height would expose
-     * unreachable gaps; advertising only current slots would leave automation no slot through
-     * which to grow the pile.
-     */
-    @Override
-    public int advertisedSlots() {
-        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
-        return StorageStackBE.SLOTS * levels;
-    }
-
-    @Override
-    public ItemStack getSlot(int flatSlot) {
-        if (flatSlot < 0 || flatSlot >= totalSlots()) {
-            return ItemStack.EMPTY;
-        }
-        return handlerOf(flatSlot).getStackInSlot(flatSlot % StorageStackBE.SLOTS);
     }
 
     /**
@@ -234,53 +156,8 @@ public final class StoragePile implements StackRunItemAccess {
         return extracted;
     }
 
-    private SlotAccess handlerOf(int flatSlot) {
-        return blocks.get(flatSlot / StorageStackBE.SLOTS).getItems();
-    }
-
-    /**
-     * The comparator output for the whole pile, which is what every block of it reports. Held in one
-     * place so the value a block reports and the value a settle publishes cannot drift
-     * apart.
-     *
-     * <p>This is vanilla's container conversion, over a fill level computed the way vanilla computes
-     * it. The bottom of the range is reserved rather than proportional: any nonempty pile reads at
-     * least 1, so signal 0 means empty and nothing else, which is what the standard emptiness
-     * circuit tests. At 216 slots a proportional conversion would round hundreds of items to 0.
-     */
-    public int comparatorSignal() {
-        double fill = fillLevel();
-        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
-    }
-
-    /**
-     * Tells the pile's neighbors to read the comparator output again, but only when that output has
-     * actually changed.
-     *
-     * <p>Every block of the pile reports the whole pile's fill, so an edit anywhere in it changes
-     * the value every block reports, including blocks that publish nothing of their own and are
-     * exactly the ones a comparator may be sitting against. The whole run is notified; the guard is
-     * what keeps that from costing a run-length of neighbor updates per item moved. The base block
-     * holds the last published value, because the base is what identifies a pile.
-     */
-    private void publishComparatorSignal() {
-        if (blocks.isEmpty()) {
-            return;
-        }
-        int signal = comparatorSignal();
-        if (!blocks.get(0).exchangePublishedSignal(signal)) {
-            return;
-        }
-
-        Block block = CommonRegistry.STORAGE_STACK_BLOCK.get();
-        for (StorageStackBE sbe : blocks) {
-            // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
-            // block further away behind a solid block, which the plain neighbor update does not.
-            level.updateNeighbourForOutputSignal(sbe.getBlockPos(), block);
-        }
-    }
-
     /** The sum of every slot's fractional fullness, divided by the pile's current slot count. */
+    @Override
     public double fillLevel() {
         double sum = 0.0;
         for (int i = 0; i < totalSlots(); i++) {
@@ -488,23 +365,7 @@ public final class StoragePile implements StackRunItemAccess {
         return true;
     }
 
-    private BlockPos topPos() {
-        return blocks.get(blocks.size() - 1).getBlockPos();
-    }
-
     // Settling
-
-    /**
-     * Schedules the settle for the next tick, on the base so that every edit anywhere in the pile
-     * coalesces into one pass. Ticking there also means the pile settles once for a burst of
-     * automation traffic rather than once per item moved.
-     */
-    void markDirty() {
-        Block block = CommonRegistry.STORAGE_STACK_BLOCK.get();
-        if (!level.getBlockTicks().hasScheduledTick(base, block)) {
-            level.scheduleTick(base, block, 1);
-        }
-    }
 
     /**
      * Consolidates and sorts the whole pile, writes it back from the base upward, propagates the
@@ -547,9 +408,7 @@ public final class StoragePile implements StackRunItemAccess {
         }
 
         trimEmptyTop();
-        for (StorageStackBE sbe : blocks) {
-            sbe.publishIfPending(level);
-        }
+        publishPendingBlocks();
         publishComparatorSignal();
     }
 

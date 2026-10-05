@@ -2,16 +2,12 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
 import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
-import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.network.ProtocolPkt;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricAdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
-import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.AdjacentEdits;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.api.ModInitializer;
@@ -36,20 +32,18 @@ public final class SomeStacksFabric implements ModInitializer {
         FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
-        CommandNetwork.install(FabricNetworking::syncAllPlayers, FabricNetworking::send);
+        CommandNetwork.install(FabricNetworking::send);
 
         CommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess, environment) ->
-                        SsCommand.register(dispatcher, registryAccess));
-        ServerTickEvents.END_SERVER_TICK.register(server -> RenderGalleryGenerator.onServerTick());
+                        SomeStacksServer.registerCommands(dispatcher, registryAccess));
+        ServerTickEvents.END_SERVER_TICK.register(server -> SomeStacksServer.onServerTickEnd());
 
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            ServerConfig.loadFor(server);
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(SomeStacksServer::onServerStarting);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {
-                        ServerConfig.rebakeIngots();
+                        SomeStacksServer.onTagsReloaded();
                     }
                 });
 
@@ -59,11 +53,9 @@ public final class SomeStacksFabric implements ModInitializer {
             }
         });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                FabricNetworking.sendConfig(handler.player));
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            ServerGestureState.clear(handler.player.getUUID());
-            RotationSoundThrottle.clear(handler.player.getUUID());
-        });
+                SomeStacksServer.onPlayerJoined(handler.player));
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+                SomeStacksServer.onPlayerLeft(handler.player.getUUID()));
 
         SomeStacksCommon.LOGGER.info(
                 "Some Stacks v{} initialized for Fabric",
