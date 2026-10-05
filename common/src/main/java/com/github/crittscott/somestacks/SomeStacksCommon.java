@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Shared mod identity for common code. Loader entry points use these constants so registry names,
@@ -13,5 +13,5 @@ public final class SomeStacksCommon {
 
     public static final String MODID = "somestacks";
     public static final int PROTOCOL_VERSION = 3;
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 }

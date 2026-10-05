@@ -40,6 +40,7 @@ public final class SomeStacksFabric implements ModInitializer {
         ServerTickEvents.END_SERVER_TICK.register(server -> SomeStacksServer.onServerTickEnd());
 
         ServerLifecycleEvents.SERVER_STARTING.register(SomeStacksServer::onServerStarting);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> SomeStacksServer.onServerStopped());
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {

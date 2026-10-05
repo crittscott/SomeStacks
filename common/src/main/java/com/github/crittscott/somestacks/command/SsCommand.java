@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.ServerOverridesLoader;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
@@ -709,6 +710,7 @@ public final class SsCommand {
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
         ServerConfig.reload();
+        ServerOverridesLoader.reload();
         int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);

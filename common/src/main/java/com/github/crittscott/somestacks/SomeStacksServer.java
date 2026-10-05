@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks;
 
+import com.github.crittscott.somestacks.block.StackDataMigration;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
@@ -19,7 +20,13 @@ public final class SomeStacksServer {
     private SomeStacksServer() {}
 
     public static void onServerStarting(MinecraftServer server) {
+        StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
+        ServerOverridesLoader.reload();
+    }
+
+    public static void onServerStopped() {
+        StackDataMigration.endSession();
     }
 
     public static void onTagsReloaded() {

@@ -149,7 +149,9 @@ public final class ServerConfig {
                 settings = parseJson(root, settings);
                 SomeStacksCommon.LOGGER.info("Loaded server config from {}", displayPath(file));
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", file, e.getMessage());
+                SomeStacksCommon.LOGGER.warn(
+                        "Failed to read {}: {}. Using defaults; the next successful save by /ss deny, /ss ingot, or /ss gen will replace it",
+                        displayPath(file), e.getMessage());
             }
         }
 
@@ -413,9 +415,6 @@ public final class ServerConfig {
 
         disabledMods = Set.copyOf(mods);
         disabledItems = Set.copyOf(items);
-
-        SomeStacksCommon.LOGGER.debug("Baked server lists: {} disabled mod(s), {} disabled item(s)",
-                disabledMods.size(), disabledItems.size());
 
         bakeIngotItems();
     }

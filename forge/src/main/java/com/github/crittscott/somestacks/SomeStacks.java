@@ -81,6 +81,7 @@ public class SomeStacks {
     }
 
     private void onServerStopped(ServerStoppedEvent event) {
+        SomeStacksServer.onServerStopped();
         editAuthority.clear();
     }
 

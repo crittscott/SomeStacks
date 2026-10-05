@@ -49,7 +49,7 @@ public class ConfigSyncPkt implements CustomPacketPayload {
                 ServerConfig.enableStorageStackBlock(),
                 ServerConfig.enableSinglesStackBlock(),
                 ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
+                ServerOverridesLoader.current());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
@@ -22,14 +23,33 @@ import net.minecraft.util.datafix.fixes.References;
  * Minecraft 1.21.1, which did not record it. Only the item stacks need fixing; rotations and
  * permanence are plain numbers whose format has not changed.
  */
-final class StackDataMigration {
+public final class StackDataMigration {
     /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
     private static final int UNVERSIONED_DATA_VERSION = 3955;
 
     /** Key under which all three stack block entities save their {@link StackItemStorage}. */
     private static final String TAG_STORAGE = "Items";
 
+    private static long sessionUpgradeCount;
+    private static int sessionTargetVersion;
+
     private StackDataMigration() {
+    }
+
+    /** Starts migration accounting for a server session. */
+    public static synchronized void beginSession() {
+        sessionUpgradeCount = 0;
+        sessionTargetVersion = 0;
+    }
+
+    /** Logs the completed migration count, if this server session upgraded any block data. */
+    public static synchronized void endSession() {
+        if (sessionUpgradeCount > 0) {
+            SomeStacksCommon.LOGGER.info("Upgraded {} Some Stacks block(s) to data version {}",
+                    sessionUpgradeCount, sessionTargetVersion);
+        }
+        sessionUpgradeCount = 0;
+        sessionTargetVersion = 0;
     }
 
     /** Stamps the running game's data version on a tag being saved. */
@@ -53,7 +73,17 @@ final class StackDataMigration {
             upgradeItemList(storage.getList(StackItemStorage.TAG_SET_ASIDE, Tag.TAG_COMPOUND), registries, saved, current);
         }
         stampVersion(tag);
+        recordUpgrade(saved, current);
         return true;
+    }
+
+    private static synchronized void recordUpgrade(int from, int to) {
+        if (sessionUpgradeCount == 0) {
+            SomeStacksCommon.LOGGER.info(
+                    "Upgrading Some Stacks block data from data version {} to {}", from, to);
+        }
+        sessionUpgradeCount++;
+        sessionTargetVersion = to;
     }
 
     private static void upgradeItemList(ListTag list, HolderLookup.Provider registries, int from, int to) {

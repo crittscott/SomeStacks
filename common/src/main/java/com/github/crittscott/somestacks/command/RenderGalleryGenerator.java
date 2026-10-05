@@ -215,6 +215,12 @@ public final class RenderGalleryGenerator {
 
             if (job.isDone()) {
                 jobs.poll();
+                int skipped = job.expectedStacks - job.placedStacks;
+                if (skipped > 0) {
+                    SomeStacksCommon.LOGGER.warn(
+                            "Gallery for {} skipped {} of {} stack placement(s)",
+                            job.player.getGameProfile().getName(), skipped, job.expectedStacks);
+                }
                 job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
             }
         }
@@ -330,16 +336,13 @@ public final class RenderGalleryGenerator {
         return true;
     }
 
-    /** Places a stack block at {@code pos}, logging any rejected placement. */
+    /** Places a stack block at {@code pos}. */
     private static boolean placeStack(Level level, BlockPos pos, Block block) {
         if (level.isOutsideBuildHeight(pos)) {
-            SomeStacksCommon.LOGGER.warn("Gallery stack skipped at {}: outside build height", pos);
             return false;
         }
 
         if (!level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_ALL)) {
-            SomeStacksCommon.LOGGER.warn("Gallery stack placement rejected at {}, block there is {}",
-                    pos, level.getBlockState(pos));
             return false;
         }
 

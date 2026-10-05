@@ -19,6 +19,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -49,6 +50,7 @@ public class SomeStacksNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onServerTick);
         NeoForge.EVENT_BUS.addListener(this::onTagsUpdated);
+        NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientSetup.init(modBus);
@@ -66,6 +68,10 @@ public class SomeStacksNeoForge {
         if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
             SomeStacksServer.onTagsReloaded();
         }
+    }
+
+    private void onServerStopped(ServerStoppedEvent event) {
+        SomeStacksServer.onServerStopped();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
