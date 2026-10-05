@@ -24,36 +24,36 @@ import java.util.function.Function;
 public final class FabricRegistry {
     private FabricRegistry() {}
 
-    public static final Block BAR_STACK_BLOCK = registerBlock("bar_stack_block", BarStackBlock::new,
+    public static final Block BAR_STACK_BLOCK = registerBlock(CommonRegistry.BAR_STACK_BLOCK_PATH, BarStackBlock::new,
             StackBlock.barProperties());
 
-    public static final Block SINGLES_STACK_BLOCK = registerBlock("singles_stack_block", SinglesStackBlock::new,
+    public static final Block SINGLES_STACK_BLOCK = registerBlock(CommonRegistry.SINGLES_STACK_BLOCK_PATH, SinglesStackBlock::new,
             StackBlock.singlesProperties());
 
-    public static final Block STORAGE_STACK_BLOCK = registerBlock("storage_stack_block", StorageStackBlock::new,
+    public static final Block STORAGE_STACK_BLOCK = registerBlock(CommonRegistry.STORAGE_STACK_BLOCK_PATH, StorageStackBlock::new,
             StackBlock.storageProperties());
 
-    public static final SoundEvent STORAGE_DEPOSIT_SOUND = registerSound("block.storage_stack.deposit");
-    public static final SoundEvent STORAGE_EXTRACT_SOUND = registerSound("block.storage_stack.extract");
-    public static final SoundEvent STORAGE_ROTATE_SOUND = registerSound("block.storage_stack.rotate");
-    public static final SoundEvent SINGLES_DEPOSIT_SOUND = registerSound("block.singles_stack.deposit");
-    public static final SoundEvent SINGLES_EXTRACT_SOUND = registerSound("block.singles_stack.extract");
-    public static final SoundEvent SINGLES_ROTATE_SOUND = registerSound("block.singles_stack.rotate");
-    public static final SoundEvent SINGLES_ROTATE_ITEM_SOUND = registerSound("block.singles_stack.rotate_item");
-    public static final SoundEvent BAR_DEPOSIT_SOUND = registerSound("block.bar_stack.deposit");
-    public static final SoundEvent BAR_EXTRACT_SOUND = registerSound("block.bar_stack.extract");
+    public static final SoundEvent STORAGE_DEPOSIT_SOUND = registerSound(CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH);
+    public static final SoundEvent STORAGE_EXTRACT_SOUND = registerSound(CommonRegistry.STORAGE_EXTRACT_SOUND_PATH);
+    public static final SoundEvent STORAGE_ROTATE_SOUND = registerSound(CommonRegistry.STORAGE_ROTATE_SOUND_PATH);
+    public static final SoundEvent SINGLES_DEPOSIT_SOUND = registerSound(CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH);
+    public static final SoundEvent SINGLES_EXTRACT_SOUND = registerSound(CommonRegistry.SINGLES_EXTRACT_SOUND_PATH);
+    public static final SoundEvent SINGLES_ROTATE_SOUND = registerSound(CommonRegistry.SINGLES_ROTATE_SOUND_PATH);
+    public static final SoundEvent SINGLES_ROTATE_ITEM_SOUND = registerSound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH);
+    public static final SoundEvent BAR_DEPOSIT_SOUND = registerSound(CommonRegistry.BAR_DEPOSIT_SOUND_PATH);
+    public static final SoundEvent BAR_EXTRACT_SOUND = registerSound(CommonRegistry.BAR_EXTRACT_SOUND_PATH);
 
     public static final BlockEntityType<BarStackBE> BAR_STACK_BE = registerBlockEntity(
-            "bar_stack_be",
+            CommonRegistry.BAR_STACK_BE_PATH,
             FabricBlockEntityTypeBuilder.create(BarStackBE::new, BAR_STACK_BLOCK).build());
 
     public static final BlockEntityType<SinglesStackBE> SINGLES_STACK_BE = registerBlockEntity(
-            "singles_stack_be",
+            CommonRegistry.SINGLES_STACK_BE_PATH,
             FabricBlockEntityTypeBuilder.create(
                     SinglesStackBE::new, SINGLES_STACK_BLOCK).build());
 
     public static final BlockEntityType<StorageStackBE> STORAGE_STACK_BE = registerBlockEntity(
-            "stack_be",
+            CommonRegistry.STORAGE_STACK_BE_PATH,
             FabricBlockEntityTypeBuilder.create(
                     StorageStackBE::new, STORAGE_STACK_BLOCK).build());
 

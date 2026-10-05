@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
@@ -51,13 +52,14 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                     .apply(textureData.texture());
 
             int[] xyz = BarCubeIdx.xyzFromIndex(idx);
+            AABB bounds = BarCubeIdx.localBox(idx);
 
-            float sx = (float) (BarCubeIdx.startPixelX(xyz[0], xyz[1]) / 16.0);
-            float sy = (float) (BarCubeIdx.startPixelY(xyz[1]) / 16.0);
-            float sz = (float) (BarCubeIdx.startPixelZ(xyz[2], xyz[1]) / 16.0);
-            float width = (float) (BarCubeIdx.barWidth(xyz[1]) / 16.0);
-            float height = (float) (BarCubeIdx.barHeight(xyz[1]) / 16.0);
-            float depth = (float) (BarCubeIdx.barDepth(xyz[1]) / 16.0);
+            float sx = (float) bounds.minX;
+            float sy = (float) bounds.minY;
+            float sz = (float) bounds.minZ;
+            float width = (float) bounds.getXsize();
+            float height = (float) bounds.getYsize();
+            float depth = (float) bounds.getZsize();
 
             pose.pushPose();
             pose.translate(sx, sy, sz);

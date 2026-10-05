@@ -101,10 +101,12 @@ public final class SinglesCubeIdx {
     /**
      * The storage column a visual column occupies under a block rotation, the inverse of
      * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
-     * {@code r} is {@code (4 - r) % 4}.
+     * {@code r} is its normalized inverse.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = rotateXYZ(visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE, (4 - blockRotation % 4) % 4);
+        int[] storage = rotateXYZ(
+                visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE,
+                QuarterTurns.inverse(blockRotation));
         return storage[2] * GRID_EDGE + storage[0];
     }
 

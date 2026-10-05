@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,6 @@ public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
     public static final int SLOTS = StorageCubeIdx.CELLS;
 
-    private static final String TAG_ROTATION = "Rotation";
     private static final String TAG_PERMANENT = "Permanent";
 
     private int rotation = 0;
@@ -85,7 +85,7 @@ public class StorageStackBE extends StackBlockEntity {
 
     /** Sets the rendered layout rotation modulo four and publishes it to clients. */
     public void setRotation(int rotation) {
-        this.rotation = rotation % 4;
+        this.rotation = QuarterTurns.normalize(rotation);
         setChanged();
         syncToClients();
     }
@@ -107,7 +107,7 @@ public class StorageStackBE extends StackBlockEntity {
     /** Gives a block that has just joined a pile the pile's presentation and mode. */
     void adoptPileState(boolean permanent, int rotation) {
         this.permanent = permanent;
-        this.rotation = rotation % 4;
+        this.rotation = QuarterTurns.normalize(rotation);
         setChanged();
         syncToClients();
     }
@@ -207,7 +207,7 @@ public class StorageStackBE extends StackBlockEntity {
 
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(TAG_ROTATION)) rotation = tag.getInt(TAG_ROTATION);
+        if (tag.contains(TAG_ROTATION)) rotation = QuarterTurns.normalize(tag.getInt(TAG_ROTATION));
         if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
 

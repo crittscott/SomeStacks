@@ -17,6 +17,23 @@ public final class CommonRegistry {
     private CommonRegistry() {
     }
 
+    public static final String STORAGE_STACK_BLOCK_PATH = "storage_stack_block";
+    public static final String SINGLES_STACK_BLOCK_PATH = "singles_stack_block";
+    public static final String BAR_STACK_BLOCK_PATH = "bar_stack_block";
+    public static final String STORAGE_STACK_BE_PATH = "stack_be";
+    public static final String SINGLES_STACK_BE_PATH = "singles_stack_be";
+    public static final String BAR_STACK_BE_PATH = "bar_stack_be";
+
+    public static final String STORAGE_DEPOSIT_SOUND_PATH = "block.storage_stack.deposit";
+    public static final String STORAGE_EXTRACT_SOUND_PATH = "block.storage_stack.extract";
+    public static final String STORAGE_ROTATE_SOUND_PATH = "block.storage_stack.rotate";
+    public static final String SINGLES_DEPOSIT_SOUND_PATH = "block.singles_stack.deposit";
+    public static final String SINGLES_EXTRACT_SOUND_PATH = "block.singles_stack.extract";
+    public static final String SINGLES_ROTATE_SOUND_PATH = "block.singles_stack.rotate";
+    public static final String SINGLES_ROTATE_ITEM_SOUND_PATH = "block.singles_stack.rotate_item";
+    public static final String BAR_DEPOSIT_SOUND_PATH = "block.bar_stack.deposit";
+    public static final String BAR_EXTRACT_SOUND_PATH = "block.bar_stack.extract";
+
     public static Supplier<Block> STORAGE_STACK_BLOCK;
     public static Supplier<Block> SINGLES_STACK_BLOCK;
     public static Supplier<Block> BAR_STACK_BLOCK;

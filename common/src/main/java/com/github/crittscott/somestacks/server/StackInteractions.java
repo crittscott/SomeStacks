@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StackPlacement;
@@ -31,8 +32,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Applies stack gestures carried by the vanilla right-click interaction. */
 public final class StackInteractions {
-    private static final int DEGREES_PER_ROTATION = 90;
-
     private StackInteractions() {}
 
     /** Handles a vanilla use call on an existing stack block. */
@@ -402,19 +401,19 @@ public final class StackInteractions {
         int rotation;
         if (type == BlockType.SINGLES_STACK
                 && player.level().getBlockEntity(pos) instanceof SinglesStackBE singles) {
-            rotation = (singles.getRotation() + 1) % 4;
+            rotation = QuarterTurns.next(singles.getRotation());
             singles.setRotation(rotation);
             StackSounds.playRotation(player, pos, StackSounds.singlesRotate());
         } else if (type == BlockType.STORAGE_STACK
                 && player.level().getBlockEntity(pos) instanceof StorageStackBE storage) {
-            rotation = (storage.getRotation() + 1) % 4;
+            rotation = QuarterTurns.next(storage.getRotation());
             storage.setRotation(rotation);
             StackSounds.playRotation(player, pos, StackSounds.storageRotate());
         } else {
             return;
         }
         player.displayClientMessage(Component.translatable(
-                "somestacks.message.rotation", rotation * DEGREES_PER_ROTATION), true);
+                "somestacks.message.rotation", QuarterTurns.degrees(rotation)), true);
     }
 
     private static void rotateItem(ServerPlayer player, BlockPos pos, ViewRay ray) {
@@ -425,11 +424,11 @@ public final class StackInteractions {
         if (index < 0 || singles.getItems().getStackInSlot(index).isEmpty()) {
             return;
         }
-        int rotation = (singles.getCubeRotation(index) + 1) % 4;
+        int rotation = QuarterTurns.next(singles.getCubeRotation(index));
         singles.setCubeRotation(index, rotation);
         StackSounds.playRotation(player, pos, StackSounds.singlesRotateItem());
         player.displayClientMessage(Component.translatable(
-                "somestacks.message.item_rotation", rotation * DEGREES_PER_ROTATION), true);
+                "somestacks.message.item_rotation", QuarterTurns.degrees(rotation)), true);
     }
 
     private static void togglePermanent(ServerPlayer player, BlockPos pos) {

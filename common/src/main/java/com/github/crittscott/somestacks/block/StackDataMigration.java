@@ -27,9 +27,6 @@ public final class StackDataMigration {
     /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
     private static final int UNVERSIONED_DATA_VERSION = 3955;
 
-    /** Key under which all three stack block entities save their {@link StackItemStorage}. */
-    private static final String TAG_STORAGE = "Items";
-
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
 
@@ -67,8 +64,8 @@ public final class StackDataMigration {
         if (saved >= current) {
             return false;
         }
-        if (tag.contains(TAG_STORAGE, Tag.TAG_COMPOUND)) {
-            CompoundTag storage = tag.getCompound(TAG_STORAGE);
+        if (tag.contains(StackBlockEntity.TAG_ITEMS, Tag.TAG_COMPOUND)) {
+            CompoundTag storage = tag.getCompound(StackBlockEntity.TAG_ITEMS);
             upgradeItemList(storage.getList(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND), registries, saved, current);
             upgradeItemList(storage.getList(StackItemStorage.TAG_SET_ASIDE, Tag.TAG_COMPOUND), registries, saved, current);
         }

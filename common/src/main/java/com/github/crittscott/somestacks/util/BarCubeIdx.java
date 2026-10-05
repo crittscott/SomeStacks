@@ -3,9 +3,9 @@ package com.github.crittscott.somestacks.util;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -71,6 +71,25 @@ public final class BarCubeIdx {
     /** Slots in one block, and therefore slots in one {@link BarStackBE}. */
     public static final int CELLS = LAYER_SIZE * LAYERS;
 
+    private static final AABB[] LOCAL_BOXES = new AABB[CELLS];
+    private static final VoxelShape[] LOCAL_SHAPES = new VoxelShape[CELLS];
+
+    static {
+        for (int index = 0; index < CELLS; index++) {
+            int[] xyz = xyzFromIndex(index);
+            double minX = startPixelX(xyz[0], xyz[1]);
+            double minY = startPixelY(xyz[1]);
+            double minZ = startPixelZ(xyz[2], xyz[1]);
+            double maxX = minX + barWidth(xyz[1]);
+            double maxY = minY + barHeight(xyz[1]);
+            double maxZ = minZ + barDepth(xyz[1]);
+            LOCAL_BOXES[index] = new AABB(
+                    minX / 16.0, minY / 16.0, minZ / 16.0,
+                    maxX / 16.0, maxY / 16.0, maxZ / 16.0);
+            LOCAL_SHAPES[index] = Block.box(minX, minY, minZ, maxX, maxY, maxZ);
+        }
+    }
+
     /**
      * Whether a prospective Bar Stack could support a bar at {@code index}. Since all of its slots
      * are still empty, only the bottom layer can be supported. It is grounded when there is no Bar
@@ -81,16 +100,7 @@ public final class BarCubeIdx {
     }
 
     private static AABB getBarBox(int index, BlockPos blockPos) {
-        int[] xyz = xyzFromIndex(index);
-
-        double minX = blockPos.getX() + startPixelX(xyz[0], xyz[1]) / 16.0;
-        double minY = blockPos.getY() + startPixelY(xyz[1]) / 16.0;
-        double minZ = blockPos.getZ() + startPixelZ(xyz[2], xyz[1]) / 16.0;
-        double maxX = minX + barWidth(xyz[1]) / 16.0;
-        double maxY = minY + barHeight(xyz[1]) / 16.0;
-        double maxZ = minZ + barDepth(xyz[1]) / 16.0;
-
-        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+        return localBox(index).move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     private static AABB getBarFootprint(int x, int y, int z) {
@@ -167,17 +177,12 @@ public final class BarCubeIdx {
 
     /** Returns the block-local collision shape of one bar slot. */
     public static VoxelShape shapeFor(int index) {
-        int[] xyz = xyzFromIndex(index);
-        double minX = startPixelX(xyz[0], xyz[1]) / 16.0;
-        double minY = startPixelY(xyz[1]) / 16.0;
-        double minZ = startPixelZ(xyz[2], xyz[1]) / 16.0;
-        return Shapes.box(
-                minX,
-                minY,
-                minZ,
-                minX + barWidth(xyz[1]) / 16.0,
-                minY + barHeight(xyz[1]) / 16.0,
-                minZ + barDepth(xyz[1]) / 16.0);
+        return LOCAL_SHAPES[index];
+    }
+
+    /** Returns the cached block-local bounds used by collision, targeting, and rendering. */
+    public static AABB localBox(int index) {
+        return LOCAL_BOXES[index];
     }
 
     /**

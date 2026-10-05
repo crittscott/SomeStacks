@@ -10,6 +10,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.commands.Commands;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.LevelResource;
 
@@ -46,15 +47,39 @@ public final class ServerConfig {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    private static final String CONFIG_DIRECTORY = "serverconfig";
+    private static final String CONFIG_FILE_SUFFIX = "-server.json";
+
+    private static final String SECTION_PILES = "piles";
+    private static final String SECTION_STACKS = "stacks";
+    private static final String SECTION_COMPATIBILITY = "compatibility";
+    private static final String SECTION_RENDER_GALLERY = "render_gallery";
+
+    private static final String KEY_MAX_PILE_HEIGHT = "max_pile_height";
+    private static final String KEY_ENABLE_STORAGE = "enable_storage_stack_block";
+    private static final String KEY_ENABLE_SINGLES = "enable_singles_stack_block";
+    private static final String KEY_ENABLE_BAR = "enable_bar_stack_block";
+    private static final String KEY_DISABLE_MODS = "disable_mods";
+    private static final String KEY_DISABLE_ITEMS = "disable_items";
+    private static final String KEY_INGOTS = "ingots";
+    private static final String KEY_PLACEMENTS_PER_TICK = "placements_per_tick";
+    private static final String KEY_GALLERY_ENABLED = "enabled";
+    private static final String KEY_REQUIRED_PERMISSION_LEVEL = "required_permission_level";
+    private static final String KEY_GEN_MODS = "gen_mods";
+    private static final String KEY_GEN_ITEMS = "gen_items";
+
+    private static final List<String> DEFAULT_INGOTS =
+            List.of("#c:ingots*", "#somestacks:ingots");
+
     private static final int DEFAULT_MAX_PILE_HEIGHT = 8;
     private static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
-    private static final int DEFAULT_GALLERY_PERMISSION_LEVEL = 3;
+    private static final int DEFAULT_GALLERY_PERMISSION_LEVEL = Commands.LEVEL_ADMINS;
 
     /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
     private static final int MAX_PILE_HEIGHT_LIMIT = 64;
 
     /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
-    private static final int GALLERY_PERMISSION_LEVEL_MAX = 4;
+    private static final int GALLERY_PERMISSION_LEVEL_MAX = Commands.LEVEL_OWNERS;
 
     private static int maxPileHeight = DEFAULT_MAX_PILE_HEIGHT;
     private static boolean enableStorageStackBlock = true;
@@ -62,7 +87,7 @@ public final class ServerConfig {
     private static boolean enableBarStackBlock = true;
     private static List<String> disableModsRaw = new ArrayList<>();
     private static List<String> disableItemsRaw = new ArrayList<>();
-    private static List<String> ingotsRaw = new ArrayList<>(List.of("#c:ingots*", "#somestacks:ingots"));
+    private static List<String> ingotsRaw = new ArrayList<>(DEFAULT_INGOTS);
     private static int renderGalleryPlacementsPerTick = DEFAULT_GALLERY_PLACEMENTS_PER_TICK;
     private static boolean galleryEnabled = false;
     private static int galleryPermissionLevel = DEFAULT_GALLERY_PERMISSION_LEVEL;
@@ -166,8 +191,8 @@ public final class ServerConfig {
     /** Loads the policy file belonging to {@code server}'s current world. */
     public static void loadFor(MinecraftServer server) {
         load(server.getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig")
-                .resolve(SomeStacksCommon.MODID + "-server.json"));
+                .resolve(CONFIG_DIRECTORY)
+                .resolve(SomeStacksCommon.MODID + CONFIG_FILE_SUFFIX));
     }
 
     /** Re-reads the current world's policy file. */
@@ -180,37 +205,37 @@ public final class ServerConfig {
     }
 
     private static Settings parseJson(JsonObject root, Settings fallback) {
-        JsonObject piles = obj(root, "piles");
+        JsonObject piles = obj(root, SECTION_PILES);
         int parsedMaxPileHeight = clamp(
-                intOr(piles, "max_pile_height", fallback.maxPileHeight()),
+                intOr(piles, KEY_MAX_PILE_HEIGHT, fallback.maxPileHeight()),
                 1, MAX_PILE_HEIGHT_LIMIT);
 
-        JsonObject stacks = obj(root, "stacks");
+        JsonObject stacks = obj(root, SECTION_STACKS);
         boolean parsedStorageEnabled = boolOr(
-                stacks, "enable_storage_stack_block", fallback.enableStorageStackBlock());
+                stacks, KEY_ENABLE_STORAGE, fallback.enableStorageStackBlock());
         boolean parsedSinglesEnabled = boolOr(
-                stacks, "enable_singles_stack_block", fallback.enableSinglesStackBlock());
+                stacks, KEY_ENABLE_SINGLES, fallback.enableSinglesStackBlock());
         boolean parsedBarEnabled = boolOr(
-                stacks, "enable_bar_stack_block", fallback.enableBarStackBlock());
+                stacks, KEY_ENABLE_BAR, fallback.enableBarStackBlock());
 
-        JsonObject compatibility = obj(root, "compatibility");
+        JsonObject compatibility = obj(root, SECTION_COMPATIBILITY);
         List<String> parsedDisableMods = stringListOr(
-                compatibility, "disable_mods", fallback.disableMods());
+                compatibility, KEY_DISABLE_MODS, fallback.disableMods());
         List<String> parsedDisableItems = stringListOr(
-                compatibility, "disable_items", fallback.disableItems());
+                compatibility, KEY_DISABLE_ITEMS, fallback.disableItems());
         List<String> parsedIngots = stringListOr(
-                compatibility, "ingots", fallback.ingots());
+                compatibility, KEY_INGOTS, fallback.ingots());
 
-        JsonObject gallery = obj(root, "render_gallery");
+        JsonObject gallery = obj(root, SECTION_RENDER_GALLERY);
         int parsedPlacementsPerTick = Math.max(
-                1, intOr(gallery, "placements_per_tick", fallback.renderGalleryPlacementsPerTick()));
+                1, intOr(gallery, KEY_PLACEMENTS_PER_TICK, fallback.renderGalleryPlacementsPerTick()));
         boolean parsedGalleryEnabled = boolOr(
-                gallery, "enabled", fallback.galleryEnabled());
+                gallery, KEY_GALLERY_ENABLED, fallback.galleryEnabled());
         int parsedPermissionLevel = clamp(
-                intOr(gallery, "required_permission_level", fallback.galleryPermissionLevel()),
+                intOr(gallery, KEY_REQUIRED_PERMISSION_LEVEL, fallback.galleryPermissionLevel()),
                 0, GALLERY_PERMISSION_LEVEL_MAX);
-        List<String> parsedGenMods = stringListOr(gallery, "gen_mods", fallback.genMods());
-        List<String> parsedGenItems = stringListOr(gallery, "gen_items", fallback.genItems());
+        List<String> parsedGenMods = stringListOr(gallery, KEY_GEN_MODS, fallback.genMods());
+        List<String> parsedGenItems = stringListOr(gallery, KEY_GEN_ITEMS, fallback.genItems());
 
         return new Settings(
                 parsedMaxPileHeight,
@@ -235,7 +260,7 @@ public final class ServerConfig {
                 true,
                 List.of(),
                 List.of(),
-                List.of("#c:ingots*", "#somestacks:ingots"),
+                DEFAULT_INGOTS,
                 DEFAULT_GALLERY_PLACEMENTS_PER_TICK,
                 false,
                 DEFAULT_GALLERY_PERMISSION_LEVEL,
@@ -269,30 +294,30 @@ public final class ServerConfig {
         }
 
         JsonObject piles = new JsonObject();
-        piles.addProperty("max_pile_height", maxPileHeight);
+        piles.addProperty(KEY_MAX_PILE_HEIGHT, maxPileHeight);
 
         JsonObject stacks = new JsonObject();
-        stacks.addProperty("enable_storage_stack_block", enableStorageStackBlock);
-        stacks.addProperty("enable_singles_stack_block", enableSinglesStackBlock);
-        stacks.addProperty("enable_bar_stack_block", enableBarStackBlock);
+        stacks.addProperty(KEY_ENABLE_STORAGE, enableStorageStackBlock);
+        stacks.addProperty(KEY_ENABLE_SINGLES, enableSinglesStackBlock);
+        stacks.addProperty(KEY_ENABLE_BAR, enableBarStackBlock);
 
         JsonObject compatibility = new JsonObject();
-        compatibility.add("disable_mods", stringArray(disableModsRaw));
-        compatibility.add("disable_items", stringArray(disableItemsRaw));
-        compatibility.add("ingots", stringArray(ingotsRaw));
+        compatibility.add(KEY_DISABLE_MODS, stringArray(disableModsRaw));
+        compatibility.add(KEY_DISABLE_ITEMS, stringArray(disableItemsRaw));
+        compatibility.add(KEY_INGOTS, stringArray(ingotsRaw));
 
         JsonObject gallery = new JsonObject();
-        gallery.addProperty("placements_per_tick", renderGalleryPlacementsPerTick);
-        gallery.addProperty("enabled", galleryEnabled);
-        gallery.addProperty("required_permission_level", galleryPermissionLevel);
-        gallery.add("gen_mods", stringArray(genModsRaw));
-        gallery.add("gen_items", stringArray(genItemsRaw));
+        gallery.addProperty(KEY_PLACEMENTS_PER_TICK, renderGalleryPlacementsPerTick);
+        gallery.addProperty(KEY_GALLERY_ENABLED, galleryEnabled);
+        gallery.addProperty(KEY_REQUIRED_PERMISSION_LEVEL, galleryPermissionLevel);
+        gallery.add(KEY_GEN_MODS, stringArray(genModsRaw));
+        gallery.add(KEY_GEN_ITEMS, stringArray(genItemsRaw));
 
         JsonObject root = new JsonObject();
-        root.add("piles", piles);
-        root.add("stacks", stacks);
-        root.add("compatibility", compatibility);
-        root.add("render_gallery", gallery);
+        root.add(SECTION_PILES, piles);
+        root.add(SECTION_STACKS, stacks);
+        root.add(SECTION_COMPATIBILITY, compatibility);
+        root.add(SECTION_RENDER_GALLERY, gallery);
 
         try {
             Files.createDirectories(configFile.getParent());

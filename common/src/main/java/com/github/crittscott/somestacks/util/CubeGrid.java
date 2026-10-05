@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Arrays;
@@ -13,8 +13,9 @@ public final class CubeGrid {
     private final int layerSize;
     private final int cells;
     private final int maxCoord;
-    private final double cellPixels;
     private final int[] starts;
+    private final AABB[] localBoxes;
+    private final VoxelShape[] localShapes;
 
     public CubeGrid(int edge, double cellPixels, int... starts) {
         if (edge < 1 || starts.length != edge) {
@@ -24,8 +25,26 @@ public final class CubeGrid {
         this.layerSize = edge * edge;
         this.cells = layerSize * edge;
         this.maxCoord = edge - 1;
-        this.cellPixels = cellPixels;
         this.starts = Arrays.copyOf(starts, starts.length);
+        this.localBoxes = new AABB[cells];
+        this.localShapes = new VoxelShape[cells];
+        for (int y = 0; y < edge; y++) {
+            for (int z = 0; z < edge; z++) {
+                for (int x = 0; x < edge; x++) {
+                    int index = indexFromXYZ(x, y, z);
+                    double minX = starts[x] / 16.0;
+                    double minY = starts[y] / 16.0;
+                    double minZ = starts[z] / 16.0;
+                    double size = cellPixels / 16.0;
+                    localBoxes[index] = new AABB(
+                            minX, minY, minZ, minX + size, minY + size, minZ + size);
+                    localShapes[index] = Block.box(
+                            starts[x], starts[y], starts[z],
+                            starts[x] + cellPixels, starts[y] + cellPixels,
+                            starts[z] + cellPixels);
+                }
+            }
+        }
     }
 
     public int edge() {
@@ -55,7 +74,7 @@ public final class CubeGrid {
 
     /** Rotates grid coordinates counterclockwise in quarter turns when viewed from above. */
     public int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return switch (Math.floorMod(rotation, 4)) {
+        return switch (QuarterTurns.normalize(rotation)) {
             case 0 -> new int[]{x, y, z};
             case 1 -> new int[]{z, y, maxCoord - x};
             case 2 -> new int[]{maxCoord - x, y, maxCoord - z};
@@ -65,26 +84,29 @@ public final class CubeGrid {
     }
 
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
-        int[] storage = xyzFromIndex(storageIndex);
-        int[] visual = rotateXYZ(storage[0], storage[1], storage[2], rotation);
-        return worldBoxAtVisual(visual[0], visual[1], visual[2], blockPos);
+        return localBox(storageIndex, rotation).move(
+                blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     public AABB worldBoxAtVisual(int x, int y, int z, BlockPos blockPos) {
-        double minX = blockPos.getX() + startPixel(x) / 16.0;
-        double minY = blockPos.getY() + startPixel(y) / 16.0;
-        double minZ = blockPos.getZ() + startPixel(z) / 16.0;
-        double size = cellPixels / 16.0;
-        return new AABB(minX, minY, minZ, minX + size, minY + size, minZ + size);
+        return localBoxes[indexFromXYZ(x, y, z)].move(
+                blockPos.getX(), blockPos.getY(), blockPos.getZ());
+    }
+
+    /** Returns the cached block-local bounds for one stored cell at the given layout rotation. */
+    public AABB localBox(int storageIndex, int rotation) {
+        int[] storage = xyzFromIndex(storageIndex);
+        int[] visual = rotateXYZ(storage[0], storage[1], storage[2], rotation);
+        return localBoxes[indexFromXYZ(visual[0], visual[1], visual[2])];
     }
 
     public VoxelShape localShape(int storageIndex, int rotation) {
         int[] storage = xyzFromIndex(storageIndex);
         int[] visual = rotateXYZ(storage[0], storage[1], storage[2], rotation);
-        double minX = startPixel(visual[0]) / 16.0;
-        double minY = startPixel(visual[1]) / 16.0;
-        double minZ = startPixel(visual[2]) / 16.0;
-        double size = cellPixels / 16.0;
-        return Shapes.box(minX, minY, minZ, minX + size, minY + size, minZ + size);
+        return localShapes[indexFromXYZ(visual[0], visual[1], visual[2])];
+    }
+
+    private int indexFromXYZ(int x, int y, int z) {
+        return y * layerSize + z * edge + x;
     }
 }

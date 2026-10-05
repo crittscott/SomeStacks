@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.server.StackInteractions;
-import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,12 +26,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.phys.BlockHitResult;
 
 /** Block-state and interaction plumbing shared by all three stack blocks. */
 public abstract class StackBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
     public static final IntegerProperty LIGHT_LEVEL =
-            IntegerProperty.create("light", 0, ItemOps.MAX_LIGHT_LEVEL);
+            IntegerProperty.create("light", 0, LightEngine.MAX_LEVEL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     protected StackBlock(Properties properties) {

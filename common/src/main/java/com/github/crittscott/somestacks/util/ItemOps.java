@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.Level;
 
 /**
@@ -18,9 +19,6 @@ import net.minecraft.world.level.Level;
  */
 public final class ItemOps {
     private ItemOps(){}
-
-    /** The brightest a block can be, and so the top of each stack block's light property. */
-    public static final int MAX_LIGHT_LEVEL = 15;
 
     /** Share of a stored block's own emission that a cell holding it contributes. */
     private static final int LIGHT_SHARE_DIVISOR = 4;
@@ -100,7 +98,7 @@ public final class ItemOps {
                 totalLight += blockLight / LIGHT_SHARE_DIVISOR;
             }
         }
-        return Math.min(totalLight, MAX_LIGHT_LEVEL);
+        return Math.min(totalLight, LightEngine.MAX_LEVEL);
     }
 
     /** Whether the server config bars this item's namespace. Disabled contents may still be removed. */

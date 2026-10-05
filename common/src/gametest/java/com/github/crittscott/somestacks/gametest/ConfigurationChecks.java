@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.StackMode;
@@ -79,7 +80,7 @@ public final class ConfigurationChecks {
         check(stone != null, "Stone override was skipped");
         checkEquals(RenderMode.BLOCK, stone.mode(), "Stone mode");
         checkEquals(1.25f, stone.scale(), "Stone scale");
-        checkArrayEquals(new float[] {-1.0f, 0.0f, 1.0f}, stone.offset(), "Stone offset");
+        checkOffsetEquals(new RenderOffset(-1.0f, 0.0f, 1.0f), stone.offset(), "Stone offset");
 
         ItemRenderConfig dirt = parsed.get(ResourceLocation.parse("minecraft:dirt"));
         check(dirt != null, "Valid field in a partially malformed override was skipped");
@@ -146,7 +147,7 @@ public final class ConfigurationChecks {
                 "Parsed maximum scale");
 
         ItemRenderConfig sanitized = OverrideJsonCodec.sanitize(new ItemRenderConfig(
-                RenderMode.GUI, Float.NaN, new float[] {0.0f, 0.0f}));
+                RenderMode.GUI, Float.NaN, new RenderOffset(Float.NaN, 0.0f, 0.0f)));
         checkEquals(RenderMode.GUI, sanitized.mode(), "Sanitize dropped a valid mode");
         checkEquals(null, sanitized.scale(), "Sanitize retained an invalid scale");
         checkEquals(null, sanitized.offset(), "Sanitize retained an invalid offset");
@@ -154,13 +155,13 @@ public final class ConfigurationChecks {
         ItemRenderConfig edge = OverrideJsonCodec.sanitize(new ItemRenderConfig(
                 null,
                 OverrideJsonCodec.MAX_SCALE,
-                new float[] {
+                new RenderOffset(
                         OverrideJsonCodec.MIN_OFFSET,
                         0.0f,
                         OverrideJsonCodec.MAX_OFFSET
-                }));
+                )));
         checkEquals(OverrideJsonCodec.MAX_SCALE, edge.scale(), "Sanitize rejected maximum scale");
-        checkArrayEquals(new float[] {-1.0f, 0.0f, 1.0f}, edge.offset(),
+        checkOffsetEquals(new RenderOffset(-1.0f, 0.0f, 1.0f), edge.offset(),
                 "Sanitize rejected endpoint offsets");
         helper.succeed();
     }
@@ -568,17 +569,10 @@ public final class ConfigurationChecks {
         check(actual != null, message + " was absent");
         checkEquals(expected.mode(), actual.mode(), message + " mode");
         checkEquals(expected.scale(), actual.scale(), message + " scale");
-        checkArrayEquals(expected.offset(), actual.offset(), message + " offset");
+        checkOffsetEquals(expected.offset(), actual.offset(), message + " offset");
     }
 
-    private static void checkArrayEquals(float[] expected, float[] actual, String message) {
-        if (expected == null || actual == null) {
-            check(expected == actual, message + ": one offset was null");
-            return;
-        }
-        checkEquals(expected.length, actual.length, message + " length");
-        for (int i = 0; i < expected.length; i++) {
-            checkEquals(expected[i], actual[i], message + " component " + i);
-        }
+    private static void checkOffsetEquals(RenderOffset expected, RenderOffset actual, String message) {
+        checkEquals(expected, actual, message);
     }
 }

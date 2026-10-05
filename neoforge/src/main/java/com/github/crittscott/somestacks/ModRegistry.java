@@ -33,35 +33,35 @@ public final class ModRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS =
             DeferredRegister.create(Registries.SOUND_EVENT, SomeStacksNeoForge.MODID);
 
-    public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock("bar_stack_block", BarStackBlock::new,
+    public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.BAR_STACK_BLOCK_PATH, BarStackBlock::new,
             StackBlock.barProperties());
 
-    public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock("singles_stack_block", SinglesStackBlock::new,
+    public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.SINGLES_STACK_BLOCK_PATH, SinglesStackBlock::new,
             StackBlock.singlesProperties());
 
-    public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock("storage_stack_block", StorageStackBlock::new,
+    public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.STORAGE_STACK_BLOCK_PATH, StorageStackBlock::new,
             StackBlock.storageProperties());
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND = sound(CommonRegistry.STORAGE_ROTATE_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND = sound(CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND = sound(CommonRegistry.SINGLES_EXTRACT_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND = sound(CommonRegistry.SINGLES_ROTATE_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND = sound(CommonRegistry.BAR_DEPOSIT_SOUND_PATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND = sound(CommonRegistry.BAR_EXTRACT_SOUND_PATH);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
-            BLOCK_ENTITIES.register("bar_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE_PATH,
                     () -> new BlockEntityType<>(BarStackBE::new, Set.of(BAR_STACK_BLOCK.get())));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
-            BLOCK_ENTITIES.register("singles_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.SINGLES_STACK_BE_PATH,
                     () -> new BlockEntityType<>(SinglesStackBE::new, Set.of(SINGLES_STACK_BLOCK.get())));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
-            BLOCK_ENTITIES.register("stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE_PATH,
                     () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
     static {

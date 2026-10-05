@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -22,9 +23,9 @@ public class RenderOverridePkt implements CustomPacketPayload {
     private final boolean reset;
     private final String renderMode;
     private final float scale;
-    private final float[] offset;
+    private final RenderOffset offset;
 
-    private RenderOverridePkt(ResourceLocation itemId, boolean reset, String renderMode, float scale, float[] offset) {
+    private RenderOverridePkt(ResourceLocation itemId, boolean reset, String renderMode, float scale, RenderOffset offset) {
         this.itemId = itemId;
         this.reset = reset;
         this.renderMode = renderMode;
@@ -37,12 +38,12 @@ public class RenderOverridePkt implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static RenderOverridePkt set(ResourceLocation itemId, String renderMode, float scale, float[] offset) {
+    public static RenderOverridePkt set(ResourceLocation itemId, String renderMode, float scale, RenderOffset offset) {
         return new RenderOverridePkt(itemId, false, renderMode, scale, offset);
     }
 
     public static RenderOverridePkt reset(ResourceLocation itemId) {
-        return new RenderOverridePkt(itemId, true, "", 0.0f, new float[3]);
+        return new RenderOverridePkt(itemId, true, "", 0.0f, RenderOffset.ZERO);
     }
 
     public static void encode(RenderOverridePkt msg, RegistryFriendlyByteBuf buf) {
@@ -84,7 +85,7 @@ public class RenderOverridePkt implements CustomPacketPayload {
         return scale;
     }
 
-    public float[] offset() {
+    public RenderOffset offset() {
         return offset;
     }
 }

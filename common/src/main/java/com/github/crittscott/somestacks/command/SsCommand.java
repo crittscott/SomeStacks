@@ -6,6 +6,7 @@ import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -23,6 +24,7 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -54,12 +56,13 @@ import java.util.stream.Collectors;
  * subcommands gated by server config rather than a fixed level: {@code render_gallery.enabled}
  * (off by default) and {@code render_gallery.required_permission_level} (default 3).
  *
- * <p>{@link SsHelp} carries each subcommand's forms, gate, and summary, and {@code ss help} is
- * gated by nothing, so a player who cannot run a subcommand can still read what it needs.
+ * <p>{@link SsHelp} derives each subcommand's forms from this tree and supplies its gate and
+ * summary. {@code ss help} is gated by nothing, so a player who cannot run a subcommand can still
+ * read what it needs.
  */
 public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
-    private static final int ADMIN_PERMISSION_LEVEL = 2;
+    private static final int GAME_MASTER_PERMISSION_LEVEL = Commands.LEVEL_GAMEMASTERS;
 
     static final String COMMAND_ROOT = "ss";
     static final String COMMAND_ITEM = "item";
@@ -354,7 +357,7 @@ public final class SsCommand {
     }
 
     private static boolean isAdmin(CommandSourceStack source) {
-        return source.hasPermission(ADMIN_PERMISSION_LEVEL);
+        return source.hasPermission(GAME_MASTER_PERMISSION_LEVEL);
     }
 
     /**
@@ -398,26 +401,27 @@ public final class SsCommand {
      * passes its own values down rather than probing the context.
      */
     private static int setMode(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, 1.0f, new float[3]);
+        return setItem(ctx, 1.0f, RenderOffset.ZERO);
     }
 
     private static int setModeAndScale(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[3]);
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), RenderOffset.ZERO);
     }
 
     private static int setModeScaleAndXy(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[]{
-                FloatArgumentType.getFloat(ctx, ARG_X), FloatArgumentType.getFloat(ctx, ARG_Y), 0.0f});
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new RenderOffset(
+                FloatArgumentType.getFloat(ctx, ARG_X),
+                FloatArgumentType.getFloat(ctx, ARG_Y), 0.0f));
     }
 
     private static int setModeScaleAndXyz(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new float[]{
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new RenderOffset(
                 FloatArgumentType.getFloat(ctx, ARG_X),
                 FloatArgumentType.getFloat(ctx, ARG_Y),
-                FloatArgumentType.getFloat(ctx, ARG_Z)});
+                FloatArgumentType.getFloat(ctx, ARG_Z)));
     }
 
-    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, float[] offset)
+    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, RenderOffset offset)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -435,7 +439,7 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.override_set", itemId.toString(), modeString, scale,
-                offset[0], offset[1], offset[2]), false);
+                offset.x(), offset.y(), offset.z()), false);
         return 1;
     }
 
@@ -667,7 +671,8 @@ public final class SsCommand {
         for (Skips skip : skips) {
             if (!skip.entries().isEmpty()) {
                 message.append(Component.translatable("somestacks.command.skipped",
-                        skip.entries().size(), skip.reason(), String.join(", ", skip.entries())));
+                        skip.entries().size(), skip.reason(),
+                        ComponentUtils.formatList(skip.entries(), Component::literal)));
             }
         }
     }
@@ -781,7 +786,7 @@ public final class SsCommand {
         }
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_entries", Component.translatable(label), entries.size(),
-                String.join(", ", entries)), false);
+                ComponentUtils.formatList(entries, Component::literal)), false);
         return entries.size();
     }
 

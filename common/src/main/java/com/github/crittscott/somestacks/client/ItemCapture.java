@@ -2,10 +2,13 @@ package com.github.crittscott.somestacks.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.util.ARGB;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.component.DataComponents;
@@ -30,6 +33,13 @@ import java.util.List;
  * caller must finish with a result before capturing again.
  */
 public final class ItemCapture {
+    static final int BLOCK_VERTEX_STRIDE =
+            DefaultVertexFormat.BLOCK.getVertexSize() / Integer.BYTES;
+    static final int BLOCK_POSITION_OFFSET =
+            DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.POSITION) / Integer.BYTES;
+    static final int BLOCK_UV_OFFSET =
+            DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.UV0) / Integer.BYTES;
+
     /** A baked quad together with the color vanilla multiplies into it. */
     public record TintedQuad(BakedQuad quad, int color) {}
 
@@ -127,7 +137,7 @@ public final class ItemCapture {
         Matrix4f matrix = pose.pose();
         int[] vertices = quad.getVertices();
         for (int i = 0; i < 4; i++) {
-            int base = i * 8;
+            int base = i * BLOCK_VERTEX_STRIDE + BLOCK_POSITION_OFFSET;
             matrix.transformPosition(
                     Float.intBitsToFloat(vertices[base]),
                     Float.intBitsToFloat(vertices[base + 1]),
@@ -138,11 +148,7 @@ public final class ItemCapture {
     }
 
     private static int color(float r, float g, float b, float a) {
-        return channel(a) << 24 | channel(r) << 16 | channel(g) << 8 | channel(b);
-    }
-
-    private static int channel(float value) {
-        return Math.round(Math.max(0.0f, Math.min(1.0f, value)) * 255.0f);
+        return ARGB.colorFromFloat(a, r, g, b);
     }
 
     /** Receives every buffer the render state asks for; it records and never draws. */

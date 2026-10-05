@@ -42,35 +42,35 @@ public final class ModRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacks.MODID);
 
-    public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
-            () -> new BarStackBlock(StackBlock.barProperties().setId(blockKey("bar_stack_block"))));
+    public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register(CommonRegistry.BAR_STACK_BLOCK_PATH,
+            () -> new BarStackBlock(StackBlock.barProperties().setId(blockKey(CommonRegistry.BAR_STACK_BLOCK_PATH))));
 
-    public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register("singles_stack_block",
-            () -> new SinglesStackBlock(StackBlock.singlesProperties().setId(blockKey("singles_stack_block"))));
+    public static final RegistryObject<Block> SINGLES_STACK_BLOCK = BLOCKS.register(CommonRegistry.SINGLES_STACK_BLOCK_PATH,
+            () -> new SinglesStackBlock(StackBlock.singlesProperties().setId(blockKey(CommonRegistry.SINGLES_STACK_BLOCK_PATH))));
 
-    public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register("storage_stack_block",
-            () -> new StorageStackBlock(StackBlock.storageProperties().setId(blockKey("storage_stack_block"))));
+    public static final RegistryObject<Block> STORAGE_STACK_BLOCK = BLOCKS.register(CommonRegistry.STORAGE_STACK_BLOCK_PATH,
+            () -> new StorageStackBlock(StackBlock.storageProperties().setId(blockKey(CommonRegistry.STORAGE_STACK_BLOCK_PATH))));
 
-    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
-    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
-    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
-    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
-    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
-    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
-    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
-    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
+    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound(CommonRegistry.STORAGE_ROTATE_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound(CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound(CommonRegistry.SINGLES_EXTRACT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound(CommonRegistry.SINGLES_ROTATE_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound(CommonRegistry.BAR_DEPOSIT_SOUND_PATH);
+    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound(CommonRegistry.BAR_EXTRACT_SOUND_PATH);
 
     public static final RegistryObject<BlockEntityType<BarStackBE>> BAR_STACK_BE =
-            BLOCK_ENTITIES.register("bar_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE_PATH,
                     () -> new BlockEntityType<>(BarStackBE::new, Set.of(BAR_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<SinglesStackBE>> SINGLES_STACK_BE =
-            BLOCK_ENTITIES.register("singles_stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.SINGLES_STACK_BE_PATH,
                     () -> new BlockEntityType<>(SinglesStackBE::new, Set.of(SINGLES_STACK_BLOCK.get())));
 
     public static final RegistryObject<BlockEntityType<StorageStackBE>> STORAGE_STACK_BE =
-            BLOCK_ENTITIES.register("stack_be",
+            BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE_PATH,
                     () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
     static {

@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.client.RenderProfile;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -257,12 +258,12 @@ public final class AutoRenderProfiles {
         ModelMeasurement.Result result = ModelMeasurement.measure(stack);
         RenderMode mode = selectMode(result);
         if (mode == RenderMode.TWO_D) {
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.TWO_D, 1.0f, RenderOffset.ZERO);
         }
 
         RenderProfile fitted = fit(result, RenderMode.THREE_D, scaleFactor);
         if (fitted == null) {
-            return new RenderProfile(RenderMode.THREE_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.THREE_D, 1.0f, RenderOffset.ZERO);
         }
         return fitted;
     }
@@ -313,11 +314,11 @@ public final class AutoRenderProfiles {
 
         // The measured bounds already include the renderer's -0.5 shift, so the geometry
         // center directly gives the offset that recenters it on the cell center.
-        float[] offset = new float[]{
+        RenderOffset offset = new RenderOffset(
                 (float) (-scale * (bounds.minX + bounds.maxX) * 0.5),
                 (float) (-scale * (bounds.minY + bounds.maxY) * 0.5),
                 (float) (-scale * (bounds.minZ + bounds.maxZ) * 0.5)
-        };
+        );
 
         return new RenderProfile(mode, scale, offset);
     }

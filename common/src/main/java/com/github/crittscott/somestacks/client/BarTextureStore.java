@@ -13,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -35,6 +36,9 @@ import java.util.Map;
  * differently if their resource packs differ.
  */
 public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
+    public static final ResourceLocation RELOAD_LISTENER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
+
     private static final Gson GSON = new Gson();
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
@@ -42,6 +46,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
+    private static final int OPAQUE_PIXEL_ALPHA_THRESHOLD = 127;
     private static final String COMMENT_PREFIX = "_comment";
     private static final String FIELD_TEXTURE = "texture";
     private static final String FIELD_TINT = "tint";
@@ -64,19 +69,19 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
 
         public int red() {
-            return (color >> 16) & 0xFF;
+            return ARGB.red(color);
         }
 
         public int green() {
-            return (color >> 8) & 0xFF;
+            return ARGB.green(color);
         }
 
         public int blue() {
-            return color & 0xFF;
+            return ARGB.blue(color);
         }
 
         public int alpha() {
-            return (color >> 24) & 0xFF;
+            return ARGB.alpha(color);
         }
     }
 
@@ -180,8 +185,9 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 return BarTextureData.WHITE;
             }
             ItemCapture.TintedQuad first = capture.quads().getFirst();
-            return multiplyColors(averageSpriteColor(first.quad().getSprite(), resourceManager),
-                    first.color() | 0xFF000000);
+            return ARGB.multiply(averageSpriteColor(first.quad().getSprite(), resourceManager),
+                    ARGB.color(0xFF, ARGB.red(first.color()), ARGB.green(first.color()),
+                            ARGB.blue(first.color())));
         } catch (Exception e) {
             SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
             return BarTextureData.WHITE;
@@ -207,13 +213,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         } finally {
             image.close();
         }
-    }
-
-    private static int multiplyColors(int left, int right) {
-        int r = (((left >> 16) & 0xFF) * ((right >> 16) & 0xFF)) / 0xFF;
-        int g = (((left >> 8) & 0xFF) * ((right >> 8) & 0xFF)) / 0xFF;
-        int b = ((left & 0xFF) * (right & 0xFF)) / 0xFF;
-        return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
     private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {
@@ -244,12 +243,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
                 int argb = image.getPixel(x, y);
-                int a = (argb >> 24) & 0xFF;
+                int a = ARGB.alpha(argb);
 
-                if (a > 127) {
-                    int r = (argb >> 16) & 0xFF;
-                    int g = (argb >> 8) & 0xFF;
-                    int b = argb & 0xFF;
+                if (a > OPAQUE_PIXEL_ALPHA_THRESHOLD) {
+                    int r = ARGB.red(argb);
+                    int g = ARGB.green(argb);
+                    int b = ARGB.blue(argb);
 
                     sumR += r;
                     sumG += g;
@@ -272,7 +271,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         int brightG = (int) Math.min(255, avgG + (255 - avgG) * BRIGHTEN_FACTOR);
         int brightB = (int) Math.min(255, avgB + (255 - avgB) * BRIGHTEN_FACTOR);
 
-        return 0xFF000000 | (brightR << 16) | (brightG << 8) | brightB;
+        return ARGB.color(0xFF, brightR, brightG, brightB);
     }
 
     private static int parseColor(String colorStr) {

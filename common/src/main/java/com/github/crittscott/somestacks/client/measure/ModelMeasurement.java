@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.client.measure;
 
 import com.github.crittscott.somestacks.client.ItemCapture;
+import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -43,8 +43,7 @@ public final class ModelMeasurement {
         try {
             PoseStack pose = new PoseStack();
             if (counterRotate) {
-                pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
-                pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
+                CubeRenderHelper.applyGuiCounterRotation(pose);
             }
             ItemCapture capture = ItemCapture.capture(stack, context, null, pose);
             if (capture.isEmpty()) {

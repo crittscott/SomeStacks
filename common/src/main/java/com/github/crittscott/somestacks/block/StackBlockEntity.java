@@ -18,7 +18,8 @@ import javax.annotation.Nullable;
 
 /** Local storage, persistence, synchronization, lighting, and batching shared by every stack. */
 public abstract class StackBlockEntity extends BlockEntity {
-    private static final String TAG_ITEMS = "Items";
+    static final String TAG_ITEMS = "Items";
+    protected static final String TAG_ROTATION = "Rotation";
 
     protected final StackItemStorage items;
     private int batchDepth;

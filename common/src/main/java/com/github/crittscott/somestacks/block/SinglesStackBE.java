@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +34,6 @@ public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = SinglesCubeIdx.CELLS;
 
-    private static final String TAG_ROTATION = "Rotation";
     private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
@@ -97,7 +97,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * unless a batch is open.
      */
     public void setRotation(int rotation) {
-        this.rotation = rotation % 4;
+        this.rotation = QuarterTurns.normalize(rotation);
         setChanged();
         cachedShape = null;
         if (!isBatching()) {
@@ -115,7 +115,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * a batch is open. The index must be in {@code [0, SLOTS)}.
      */
     public void setCubeRotation(int index, int cubeRot) {
-        cubeRotations[index] = cubeRot % 4;
+        cubeRotations[index] = QuarterTurns.normalize(cubeRot);
         setChanged();
         if (!isBatching()) {
             syncToClients();
@@ -376,12 +376,15 @@ public class SinglesStackBE extends StackBlockEntity {
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains(TAG_ROTATION)) {
-            rotation = tag.getInt(TAG_ROTATION);
+            rotation = QuarterTurns.normalize(tag.getInt(TAG_ROTATION));
         }
         if (tag.contains(TAG_CUBE_ROTATIONS)) {
             int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS);
             if (loaded.length == SLOTS) {
                 cubeRotations = loaded.clone();
+                for (int i = 0; i < cubeRotations.length; i++) {
+                    cubeRotations[i] = QuarterTurns.normalize(cubeRotations[i]);
+                }
             }
         }
         cachedShape = null;

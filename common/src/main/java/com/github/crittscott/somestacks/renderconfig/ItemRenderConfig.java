@@ -8,7 +8,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Optional;
 public record ItemRenderConfig(
         @Nullable RenderMode mode,
         @Nullable Float scale,
-        @Nullable float[] offset
+        @Nullable RenderOffset offset
 ) {
     public static final Codec<RenderMode> MODE_CODEC = Codec.STRING.comapFlatMap(
             id -> {
@@ -34,17 +33,6 @@ public record ItemRenderConfig(
     public static final Codec<Float> SCALE_CODEC = Codec.floatRange(
             OverrideJsonCodec.MIN_SCALE, OverrideJsonCodec.MAX_SCALE);
 
-    public static final Codec<float[]> OFFSET_CODEC = Codec.floatRange(
-                    OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET)
-            .listOf()
-            .comapFlatMap(
-                    values -> values.size() == 3
-                            ? DataResult.success(new float[]{
-                                    values.get(0), values.get(1), values.get(2)})
-                            : DataResult.error(() ->
-                                    "Expected 3 offset components, found " + values.size()),
-                    values -> List.of(values[0], values[1], values[2]));
-
     /** The JSON vocabulary used by resource, user, cache, and server override entries. */
     public static final Codec<ItemRenderConfig> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -52,7 +40,7 @@ public record ItemRenderConfig(
                             .forGetter(config -> Optional.ofNullable(config.mode)),
                     SCALE_CODEC.optionalFieldOf("scale")
                             .forGetter(config -> Optional.ofNullable(config.scale)),
-                    OFFSET_CODEC.optionalFieldOf("offset")
+                    RenderOffset.CODEC.optionalFieldOf("offset")
                             .forGetter(config -> Optional.ofNullable(config.offset)))
                     .apply(instance, (mode, scale, offset) -> new ItemRenderConfig(
                             mode.orElse(null), scale.orElse(null), offset.orElse(null))));
@@ -72,9 +60,9 @@ public record ItemRenderConfig(
         }
         buf.writeBoolean(config.offset != null);
         if (config.offset != null) {
-            buf.writeFloat(config.offset[0]);
-            buf.writeFloat(config.offset[1]);
-            buf.writeFloat(config.offset[2]);
+            buf.writeFloat(config.offset.x());
+            buf.writeFloat(config.offset.y());
+            buf.writeFloat(config.offset.z());
         }
     }
 
@@ -94,16 +82,10 @@ public record ItemRenderConfig(
             throw new DecoderException("Invalid render scale: " + scale);
         }
 
-        float[] offset = buf.readBoolean()
-                ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
+        RenderOffset offset = buf.readBoolean()
+                ? new RenderOffset(buf.readFloat(), buf.readFloat(), buf.readFloat())
                 : null;
-        if (offset != null
-                && (!OverrideJsonCodec.inRange(
-                            offset[0], OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET)
-                    || !OverrideJsonCodec.inRange(
-                            offset[1], OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET)
-                    || !OverrideJsonCodec.inRange(
-                            offset[2], OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET))) {
+        if (offset != null && !offset.isValid()) {
             throw new DecoderException("Invalid render offset");
         }
 

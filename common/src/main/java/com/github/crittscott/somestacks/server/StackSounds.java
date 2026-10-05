@@ -11,6 +11,8 @@ public final class StackSounds {
     private StackSounds() {}
 
     public static final float VOLUME = 0.5f;
+    private static final float ROTATION_PITCH_BASE = 0.9f;
+    private static final float ROTATION_PITCH_SPREAD = 0.2f;
 
     public static SoundEvent storageDeposit() { return CommonRegistry.STORAGE_DEPOSIT_SOUND.get(); }
     public static SoundEvent storageExtract() { return CommonRegistry.STORAGE_EXTRACT_SOUND.get(); }
@@ -27,7 +29,8 @@ public final class StackSounds {
         if (!RotationSoundThrottle.claim(sp)) {
             return;
         }
-        float pitch = 0.9f + sp.serverLevel().getRandom().nextFloat() * 0.2f;
+        float pitch = ROTATION_PITCH_BASE
+                + sp.serverLevel().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
         sp.serverLevel().playSound(null, pos, sound, SoundSource.BLOCKS, VOLUME, pitch);
     }
 }

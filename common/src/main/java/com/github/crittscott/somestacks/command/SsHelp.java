@@ -2,12 +2,15 @@ package com.github.crittscott.somestacks.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -41,13 +44,11 @@ final class SsHelp {
     }
 
     /**
-     * One top-level subcommand. The summary is its line in the index, the usages are its exact
-     * forms, and the detail is what a player needs to know before running it.
+     * One top-level subcommand. The summary is its line in the index, while Brigadier supplies its
+     * exact forms and the detail is what a player needs to know before running it.
      */
     private enum Topic {
         ITEM(SsCommand.COMMAND_ITEM, "somestacks.command.help.item.summary", Gate.OPERATOR_IN_GAME,
-                List.of(usage(SsCommand.COMMAND_ITEM + " <item> <mode> [<scale> [<x> <y> [<z>]]]"),
-                        usage(SsCommand.COMMAND_ITEM + " <item> reset")),
                 List.of("somestacks.command.help.item.detail.1",
                         "somestacks.command.help.item.detail.2",
                         "somestacks.command.help.item.detail.3",
@@ -55,10 +56,6 @@ final class SsHelp {
 
         GALLERY(SsCommand.COMMAND_GALLERY, "somestacks.command.help.gallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
-                List.of(usage(SsCommand.COMMAND_GALLERY + " <modid>"),
-                        usage(SsCommand.COMMAND_GALLERY + " all"),
-                        usage(SsCommand.COMMAND_GALLERY + " list"),
-                        usage(SsCommand.COMMAND_GALLERY + " items")),
                 List.of("somestacks.command.help.gallery.detail.1",
                         "somestacks.command.help.gallery.detail.2",
                         "somestacks.command.help.gallery.detail.3",
@@ -67,72 +64,45 @@ final class SsHelp {
 
         INGOTGALLERY(SsCommand.COMMAND_INGOT_GALLERY, "somestacks.command.help.ingotgallery.summary",
                 Gate.SERVER_ADMIN_IN_GAME,
-                List.of(usage(SsCommand.COMMAND_INGOT_GALLERY + " <modid>"),
-                        usage(SsCommand.COMMAND_INGOT_GALLERY + " all"),
-                        usage(SsCommand.COMMAND_INGOT_GALLERY + " list")),
                 List.of("somestacks.command.help.ingotgallery.detail.1",
                         "somestacks.command.help.ingotgallery.detail.2")),
 
         WRITE(SsCommand.COMMAND_WRITE, "somestacks.command.help.write.summary", Gate.OPERATOR_IN_GAME,
-                List.of(usage(SsCommand.COMMAND_WRITE + " changed"),
-                        usage(SsCommand.COMMAND_WRITE + " <modid>"),
-                        usage(SsCommand.COMMAND_WRITE + " all"),
-                        usage(SsCommand.COMMAND_WRITE + " list")),
                 List.of("somestacks.command.help.write.detail.1",
                         "somestacks.command.help.write.detail.2",
                         "somestacks.command.help.write.detail.3",
                         "somestacks.command.help.write.detail.4")),
 
         RELOAD(SsCommand.COMMAND_RELOAD, "somestacks.command.help.reload.summary", Gate.OPERATOR,
-                List.of(usage(SsCommand.COMMAND_RELOAD)),
                 List.of("somestacks.command.help.reload.detail.1")),
 
         GEN(SsCommand.COMMAND_GEN, "somestacks.command.help.gen.summary", Gate.OPERATOR,
-                List.of(usage(SsCommand.COMMAND_GEN + " mod add <modid>"),
-                        usage(SsCommand.COMMAND_GEN + " mod remove <modid>"),
-                        usage(SsCommand.COMMAND_GEN + " mod list"),
-                        usage(SsCommand.COMMAND_GEN + " item add <item>"),
-                        usage(SsCommand.COMMAND_GEN + " item remove <item>"),
-                        usage(SsCommand.COMMAND_GEN + " item list")),
                 List.of("somestacks.command.help.gen.detail.1",
                         "somestacks.command.help.gen.detail.2",
                         "somestacks.command.help.gen.detail.3")),
 
         DENY(SsCommand.COMMAND_DENY, "somestacks.command.help.deny.summary", Gate.OPERATOR,
-                List.of(usage(SsCommand.COMMAND_DENY + " mod add <modid>"),
-                        usage(SsCommand.COMMAND_DENY + " mod remove <modid>"),
-                        usage(SsCommand.COMMAND_DENY + " mod list"),
-                        usage(SsCommand.COMMAND_DENY + " item add <item>"),
-                        usage(SsCommand.COMMAND_DENY + " item remove <item>"),
-                        usage(SsCommand.COMMAND_DENY + " item list")),
                 List.of("somestacks.command.help.deny.detail.1",
                         "somestacks.command.help.deny.detail.2")),
 
         INGOT(SsCommand.COMMAND_INGOT, "somestacks.command.help.ingot.summary", Gate.OPERATOR,
-                List.of(usage(SsCommand.COMMAND_INGOT + " add <#tag|item>"),
-                        usage(SsCommand.COMMAND_INGOT + " remove <#tag|item>"),
-                        usage(SsCommand.COMMAND_INGOT + " list")),
                 List.of("somestacks.command.help.ingot.detail.1",
                         "somestacks.command.help.ingot.detail.2",
                         "somestacks.command.help.ingot.detail.3",
                         "somestacks.command.help.ingot.detail.4")),
 
         HELP(SsCommand.COMMAND_HELP, "somestacks.command.help.help.summary", Gate.ANYONE,
-                List.of(usage(SsCommand.COMMAND_HELP),
-                        usage(SsCommand.COMMAND_HELP + " <command>")),
                 List.of("somestacks.command.help.help.detail.1"));
 
         private final String name;
         private final String summaryKey;
         private final Gate gate;
-        private final List<String> usages;
         private final List<String> detailKeys;
 
-        Topic(String name, String summaryKey, Gate gate, List<String> usages, List<String> detailKeys) {
+        Topic(String name, String summaryKey, Gate gate, List<String> detailKeys) {
             this.name = name;
             this.summaryKey = summaryKey;
             this.gate = gate;
-            this.usages = usages;
             this.detailKeys = detailKeys;
         }
 
@@ -160,10 +130,6 @@ final class SsHelp {
                         .executes(SsHelp::topic));
     }
 
-    private static String usage(String form) {
-        return "/" + SsCommand.COMMAND_ROOT + " " + form;
-    }
-
     /** Builds the command index from each subcommand's summary. */
     private static int index(CommandContext<CommandSourceStack> ctx) {
         send(ctx, Component.translatable("somestacks.command.help.title")
@@ -186,7 +152,8 @@ final class SsHelp {
 
         if (topic == null) {
             ctx.getSource().sendFailure(Component.translatable(
-                    "somestacks.command.help.unknown", name, String.join(", ", Topic.names())));
+                    "somestacks.command.help.unknown", name,
+                    ComponentUtils.formatList(Topic.names(), Component::literal)));
             return 0;
         }
 
@@ -194,7 +161,7 @@ final class SsHelp {
                         Component.translatable(topic.summaryKey))
                 .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 
-        for (String usage : topic.usages) {
+        for (String usage : usages(ctx, topic)) {
             send(ctx, Component.translatable("somestacks.command.help.usage", usage)
                     .withStyle(ChatFormatting.YELLOW));
         }
@@ -208,6 +175,22 @@ final class SsHelp {
         }
 
         return 1;
+    }
+
+    /** Derives every accepted form from the registered Brigadier tree. */
+    private static List<String> usages(CommandContext<CommandSourceStack> ctx, Topic topic) {
+        CommandDispatcher<CommandSourceStack> dispatcher =
+                ctx.getSource().getServer().getCommands().getDispatcher();
+        CommandNode<CommandSourceStack> root =
+                dispatcher.getRoot().getChild(SsCommand.COMMAND_ROOT);
+        CommandNode<CommandSourceStack> topicNode = root == null ? null : root.getChild(topic.name);
+        if (topicNode == null) {
+            return List.of();
+        }
+        String prefix = "/" + SsCommand.COMMAND_ROOT + " " + topic.name;
+        return Arrays.stream(dispatcher.getAllUsage(topicNode, ctx.getSource(), false))
+                .map(form -> form.isEmpty() ? prefix : prefix + " " + form)
+                .toList();
     }
 
     /** Sends help only to the requesting source. */

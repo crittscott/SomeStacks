@@ -6,12 +6,14 @@ import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -50,12 +52,13 @@ import java.util.TreeMap;
  * whose name is not a namespace therefore applies to nothing.
  */
 public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
+    public static final ResourceLocation RELOAD_LISTENER_ID =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_render_overrides");
+
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
     private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
-    private static final float[] ZERO_OFFSET = new float[3];
-
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
     /** Admin overrides synced from the server. */
@@ -165,7 +168,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         RenderMode mode = entry.mode() != null ? entry.mode() : AutoRenderProfiles.get(stack).mode();
         float scale = entry.scale() != null ? entry.scale() : 1.0f;
-        float[] offset = entry.offset() != null ? entry.offset() : ZERO_OFFSET;
+        RenderOffset offset = entry.offset() != null ? entry.offset() : RenderOffset.ZERO;
         return new RenderProfile(mode, scale, offset);
     }
 
@@ -263,7 +266,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 itemCount, byNamespace.size() - failed.size(), GENERATED_DIR.toString());
         if (!failed.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.failed",
-                    failed.size(), String.join(", ", failed)));
+                    failed.size(), ComponentUtils.formatList(failed, Component::literal)));
         }
         if (!rejected.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.rejected", rejected.size()));

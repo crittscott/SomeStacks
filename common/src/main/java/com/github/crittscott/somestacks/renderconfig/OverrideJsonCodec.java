@@ -53,12 +53,8 @@ public final class OverrideJsonCodec {
             scale = null;
         }
 
-        float[] offset = config.offset();
-        if (offset != null
-                && (offset.length != 3
-                        || !inRange(offset[0], MIN_OFFSET, MAX_OFFSET)
-                        || !inRange(offset[1], MIN_OFFSET, MAX_OFFSET)
-                        || !inRange(offset[2], MIN_OFFSET, MAX_OFFSET))) {
+        RenderOffset offset = config.offset();
+        if (offset != null && !offset.isValid()) {
             SomeStacksCommon.LOGGER.warn("Dropping out of range offset from a synchronized override");
             offset = null;
         }
@@ -95,8 +91,8 @@ public final class OverrideJsonCodec {
         Float scale = json.has(FIELD_SCALE)
                 ? parseField(ItemRenderConfig.SCALE_CODEC, json.get(FIELD_SCALE), itemKey, FIELD_SCALE)
                 : null;
-        float[] offset = json.has(FIELD_OFFSET)
-                ? parseField(ItemRenderConfig.OFFSET_CODEC, json.get(FIELD_OFFSET), itemKey, FIELD_OFFSET)
+        RenderOffset offset = json.has(FIELD_OFFSET)
+                ? parseField(RenderOffset.CODEC, json.get(FIELD_OFFSET), itemKey, FIELD_OFFSET)
                 : null;
 
         if (mode == null && scale == null && offset == null) {

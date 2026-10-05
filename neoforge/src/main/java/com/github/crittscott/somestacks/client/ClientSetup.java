@@ -1,10 +1,8 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
@@ -48,15 +46,12 @@ public final class ClientSetup {
     }
 
     private static void onRegisterReloadListeners(AddClientReloadListenersEvent evt) {
-        evt.addListener(id("item_render_overrides"), new ItemRenderOverrides());
-        evt.addListener(id("bar_textures"), new BarTextureStore());
-        evt.addListener(id("render_caches"), (ResourceManagerReloadListener) manager -> {
-            AutoRenderProfiles.onResourceReload();
-            CubeRenderHelper.onResourceReload();
-        });
-    }
-
-    private static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, path);
+        evt.addListener(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
+        evt.addListener(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
+        evt.addListener(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+                (ResourceManagerReloadListener) manager -> {
+                    AutoRenderProfiles.onResourceReload();
+                    CubeRenderHelper.onResourceReload();
+                });
     }
 }
