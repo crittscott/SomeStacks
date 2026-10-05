@@ -50,27 +50,32 @@ public final class ProtectionGameTests {
 
     private ProtectionGameTests() {}
 
+    /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
     }
 
+    /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
         ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#checkedPlacementRejectsAnObstructingEntity}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(helper, playerFactory(helper));
+        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     // Mod-driven removal under protection
@@ -78,6 +83,10 @@ public final class ProtectionGameTests {
     // An unattended settle has no player actor, so it uses the level's automation player exactly
     // as growth does. A refusal must leave the block and the run model in step.
 
+    /**
+     * To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
+     * block, trigger settling, and verify the protected block remains.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
@@ -111,7 +120,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /** In game, allow a player but deny [SomeStacks] in a claim, then extract the last Single. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Single. Player-attributed cleanup removes the empty block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -137,7 +149,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /** In game, allow a player but deny [SomeStacks] in a claim, then extract the last Bar. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Bar. Player-attributed cleanup removes the empty block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -163,7 +178,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /** In game, allow a player but deny [SomeStacks], then extract the last item from Storage. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Storage item. Deferred cleanup retains the player and removes the block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -193,7 +211,11 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /** In game, combine player and machine extraction before settlement; cleanup uses [SomeStacks]. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, extract one of two
+     * Storage items by hand and the other by automation before settling, and verify the empty block
+     * remains because mixed cleanup is attributed to [SomeStacks].
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -228,20 +250,17 @@ public final class ProtectionGameTests {
 
     // Waterlogging
 
+    /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
-        ProtectionChecks.placementIntoWaterKeepsTheWater(helper, playerFactory(helper));
+        ProtectionChecks.placementIntoWaterKeepsTheWater(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
-    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        return stack -> {
-            ServerPlayer player = GameTestSupport.fakePlayer(level);
-            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            return player;
-        };
-    }
-
+    /**
+     * To reproduce in-game: deny SomeStacks item use at the destination beside a stack, then
+     * right-click the neighboring face and verify no block or item is placed there.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void adjacentConsultationHonorsUseItemDeny(
             GameTestHelper helper) {
@@ -272,6 +291,10 @@ public final class ProtectionGameTests {
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
+    /**
+     * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -285,7 +308,7 @@ public final class ProtectionGameTests {
         check(capability.insertItem(headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -298,6 +321,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -312,7 +339,7 @@ public final class ProtectionGameTests {
         checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -325,6 +352,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -340,7 +371,7 @@ public final class ProtectionGameTests {
         checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
@@ -355,6 +386,10 @@ public final class ProtectionGameTests {
 
     // Growth through entities
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -364,7 +399,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -377,6 +412,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Singles column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -386,7 +425,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -399,6 +438,10 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -409,7 +452,7 @@ public final class ProtectionGameTests {
         }
         IItemHandler capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
         checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
@@ -422,45 +465,4 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /**
-     * Puts a living placement-blocking entity across the bottom north-west cell and bar position
-     * of {@code relative}.
-     */
-    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
-        check(cow != null, "Could not create obstruction cow");
-        check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(
-                target.getX() + 0.5,
-                target.getY(),
-                target.getZ() + 0.5,
-                0.0F,
-                0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
-    }
-
-    /**
-     * Runs {@code action} with the world border moved off the test structure, and restores it
-     * before returning. The border is level-wide state, but the move and the restore both happen
-     * inside this one synchronous call, so no other test observes it moved.
-     */
-    private static void outsideTheBorder(GameTestHelper helper, Runnable action) {
-        WorldBorder border = helper.getLevel().getWorldBorder();
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        double centerX = border.getCenterX();
-        double centerZ = border.getCenterZ();
-        double size = border.getSize();
-        try {
-            border.setCenter(above.getX() + 1000.0, above.getZ());
-            border.setSize(16.0);
-            check(!border.isWithinBounds(above),
-                    "Test setup left the position inside the world border");
-            action.run();
-        } finally {
-            border.setCenter(centerX, centerZ);
-            border.setSize(size);
-        }
-    }
 }

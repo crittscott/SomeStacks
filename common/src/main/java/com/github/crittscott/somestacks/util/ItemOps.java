@@ -26,8 +26,8 @@ public final class ItemOps {
     private static final int LIGHT_SHARE_DIVISOR = 4;
 
     /**
-     * Whether an extraction may land in this hand: it must be empty, or hold the same item and tags
-     * with room left. This is the rule that keeps a player's hand from being swapped out mid-gesture.
+     * Whether an extraction may land in this hand: it must be empty, or hold the same item and data
+     * components with room left. This keeps a player's hand from being swapped out mid-gesture.
      */
     public static boolean canTakeIntoHand(ItemStack hand, ItemStack offer) {
         if (offer.isEmpty()) return false;
@@ -141,7 +141,7 @@ public final class ItemOps {
         if (isItemDisabled(stack)) {
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
             player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_item", itemId),
+                    Component.translatable("somestacks.message.disabled_item", itemId.toString()),
                     true
             );
             return true;

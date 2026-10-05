@@ -112,6 +112,7 @@ public final class OverrideJsonCodec {
         return root;
     }
 
+    /** Serializes one sanitized override entry, returning an empty object if encoding fails. */
     public static JsonObject entryToJson(ItemRenderConfig config) {
         JsonElement encoded = ItemRenderConfig.CODEC.encodeStart(
                         JsonOps.INSTANCE, sanitize(config))

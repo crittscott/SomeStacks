@@ -1,19 +1,37 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +39,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -29,6 +48,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ConfigurationChecks {
     private ConfigurationChecks() {}
 
+    /**
+     * Valid render-override fields round-trip in stable item-id order while malformed entries and
+     * fields are skipped independently. No in-game reproduction applies: this directly verifies
+     * the JSON codec rather than a player-visible action.
+     */
     public static void overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(
             GameTestHelper helper) {
         JsonObject root = JsonParser.parseString("""
@@ -74,6 +98,11 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
+    /**
+     * Render scale and offset bounds are inclusive, finite, and shared by file and network values.
+     * No in-game reproduction applies: this directly verifies validation at the serialization
+     * boundary.
+     */
     public static void overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(
             GameTestHelper helper) {
         check(OverrideJsonCodec.inRange(
@@ -136,6 +165,13 @@ public final class ConfigurationChecks {
         helper.succeed();
     }
 
+    /**
+     * Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
+     * resolves exact and wildcard ingot entries. To reproduce in-game: edit the world's
+     * {@code somestacks-server.json}, run {@code /ss reload}, and verify the height limits, enabled
+     * stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
+     * field while malformed fields revert independently to defaults.
+     */
     public static void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
@@ -227,6 +263,268 @@ public final class ConfigurationChecks {
             }
         }
         helper.succeed();
+    }
+
+    /**
+     * Exact-item denial applies to player deposits but not automation, namespace denial applies to
+     * both, and contents already stored remain extractable. To reproduce in-game: deny one item,
+     * try it by hand and by a pipe, then deny its namespace after storing it. The pipe can insert
+     * through the exact-item rule, the namespace rule refuses new input, and the old contents can
+     * still be removed.
+     */
+    public static void denyPoliciesRespectPlayerAutomationAndExistingContents(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-policy-gametest.json");
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 4));
+        try {
+            Files.createDirectories(fixture.getParent());
+            Files.writeString(fixture, policyJson(8, true, true, true,
+                    List.of(), List.of("minecraft:stone")));
+            ServerConfig.load(fixture);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            StackInteractions.handleExistingStack(
+                    player, InteractionHand.MAIN_HAND, centerHit(storage.getBlockPos()));
+            checkEquals(4, player.getMainHandItem().getCount(),
+                    "Exact-item denial changed the player hand");
+            checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.STONE),
+                    "Exact-item denial admitted a player deposit");
+
+            checkEquals(2, storage.itemRun().insertAt(
+                    0, new ItemStack(Items.STONE, 2), false),
+                    "Exact-item denial reached automation");
+            Files.writeString(fixture, policyJson(8, true, true, true,
+                    List.of("minecraft"), List.of()));
+            ServerConfig.load(fixture);
+            checkEquals(0, storage.itemRun().insertAt(
+                    1, new ItemStack(Items.STONE), false),
+                    "Namespace denial did not reach automation");
+            checkEquals(2, storage.itemRun().extract(0, 64, false).getCount(),
+                    "Stored denied contents were not extractable");
+        } catch (IOException e) {
+            throw new GameTestAssertException("Could not prepare policy fixture: " + e);
+        } finally {
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
+            restoreConfig(original, fixture);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Disabled types and the maximum run height refuse placement and growth without spending the
+     * input. To reproduce in-game: disable Bar placement, cap runs at one block, and try placement,
+     * player growth, and automation growth. No second block appears and every held item remains.
+     */
+    public static void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-limits-gametest.json");
+        try {
+            Files.createDirectories(fixture.getParent());
+            Files.writeString(fixture, policyJson(1, true, true, false, List.of(), List.of()));
+            ServerConfig.load(fixture);
+
+            StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
+            for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            }
+            checkEquals(StorageStackBE.SLOTS, storage.itemRun().advertisedSlots(),
+                    "Height-capped run advertised headroom");
+            checkEquals(0, storage.itemRun().insertAt(
+                    StorageStackBE.SLOTS, new ItemStack(Items.STONE), false),
+                    "Height-capped automation grew the run");
+            ItemStack deposit = new ItemStack(Items.STONE);
+            checkEquals(0, storage.deposit(deposit, playerFactory.apply(ItemStack.EMPTY)),
+                    "Height-capped player deposit grew the run");
+            checkEquals(1, deposit.getCount(), "Rejected deposit spent its input");
+            helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(),
+                    GameTestScaffold.ORIGIN.above());
+
+            BlockPos supportRelative = GameTestScaffold.ORIGIN.east(4);
+            BlockPos support = helper.absolutePos(supportRelative);
+            helper.setBlock(supportRelative, Blocks.STONE);
+            Item barItem = GameTestScaffold.firstBarItem();
+            ServerPlayer player = playerFactory.apply(new ItemStack(barItem, 3));
+            ServerGestureState.set(player, StackMode.BAR_STACK, true);
+            try {
+                StackInteractions.handleAdjacentClick(
+                        player,
+                        InteractionHand.MAIN_HAND,
+                        new BlockHitResult(
+                                new Vec3(support.getX() + 0.5, support.getY() + 1.0,
+                                        support.getZ() + 0.5),
+                                Direction.UP,
+                                support,
+                                false),
+                        true,
+                        true);
+                checkEquals(3, player.getMainHandItem().getCount(),
+                        "Disabled Bar placement spent the hand");
+                helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(),
+                        supportRelative.above());
+            } finally {
+                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                ServerGestureState.clear(player.getUUID());
+            }
+
+            Files.writeString(fixture, policyJson(8, true, true, false, List.of(), List.of()));
+            ServerConfig.load(fixture);
+            BarStackBE bars = GameTestScaffold.placeBar(
+                    helper, GameTestScaffold.ORIGIN.east(7));
+            for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+                bars.getItems().insertItem(slot, new ItemStack(barItem), false);
+            }
+            checkEquals(0, bars.itemRun().insertAt(
+                    BarStackBE.SLOTS, new ItemStack(barItem), false),
+                    "Disabled Bar type allowed automation growth");
+
+            Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
+            ServerConfig.load(fixture);
+            ServerPlayer invalidPlayer = playerFactory.apply(new ItemStack(Items.STICK, 2));
+            ServerGestureState.set(invalidPlayer, StackMode.BAR_STACK, true);
+            try {
+                StackInteractions.handleAdjacentClick(
+                        invalidPlayer,
+                        InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(support), Direction.UP, support, false),
+                        true,
+                        true);
+                checkEquals(2, invalidPlayer.getMainHandItem().getCount(),
+                        "Invalid first Bar deposit spent the hand");
+                helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(),
+                        supportRelative.above());
+            } finally {
+                invalidPlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                ServerGestureState.clear(invalidPlayer.getUUID());
+            }
+        } catch (IOException e) {
+            throw new GameTestAssertException("Could not prepare limit fixture: " + e);
+        } finally {
+            restoreConfig(original, fixture);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Server commands enforce permissions and save list edits immediately. To reproduce in-game:
+     * try the administrative list commands without permission, then as an operator, and inspect
+     * {@code somestacks-server.json}. Only the operator edits succeed and they are already on disk.
+     */
+    public static void serverCommandsEnforcePermissionsAndPersistEdits(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.json");
+        MinecraftServer server = helper.getLevel().getServer();
+        try {
+            Files.createDirectories(fixture.getParent());
+            Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
+            ServerConfig.load(fixture);
+            var commands = server.getCommands();
+            var lowPermission = server.createCommandSourceStack().withPermission(0);
+            checkEquals(0, execute(commands.getDispatcher(), lowPermission,
+                    "ss deny item add minecraft:stone"),
+                    "Permission-zero source ran an admin command");
+            check(!ServerConfig.DISABLE_ITEMS.get().contains("minecraft:stone"),
+                    "Rejected command changed policy");
+
+            var operator = server.createCommandSourceStack().withPermission(4);
+            check(execute(commands.getDispatcher(), operator,
+                    "ss deny item add minecraft:stone") > 0,
+                    "Operator deny command failed");
+            check(execute(commands.getDispatcher(), operator,
+                    "ss ingot add minecraft:iron_ingot") > 0,
+                    "Operator ingot command failed");
+            check(execute(commands.getDispatcher(), operator,
+                    "ss gen mod add examplemod") > 0,
+                    "Operator gallery-list command failed");
+            JsonObject written = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
+            check(written.getAsJsonObject("compatibility")
+                            .getAsJsonArray("disable_items").contains(
+                                    JsonParser.parseString("\"minecraft:stone\"")),
+                    "Deny command was not saved immediately");
+            check(ServerConfig.INGOTS.get().contains("minecraft:iron_ingot"),
+                    "Ingot command did not update policy");
+            check(ServerConfig.GEN_MODS.get().contains("examplemod"),
+                    "Gen command did not update policy");
+
+            Files.writeString(fixture, policyJson(8, true, true, true,
+                    List.of(), List.of("minecraft:dirt")));
+            execute(commands.getDispatcher(), operator, "ss reload");
+            check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:dirt")),
+                    "Reload command did not apply the edited file");
+
+            ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+            checkEquals(0, execute(commands.getDispatcher(),
+                    player.createCommandSourceStack().withPermission(4), "ss gallery all"),
+                    "Disabled gallery command ran");
+        } catch (IOException e) {
+            throw new GameTestAssertException("Could not prepare command fixture: " + e);
+        } finally {
+            restoreConfig(original, fixture);
+        }
+        helper.succeed();
+    }
+
+    private static BlockHitResult centerHit(BlockPos pos) {
+        return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
+    }
+
+    private static int execute(
+            com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher,
+            CommandSourceStack source,
+            String command) {
+        try {
+            return dispatcher.execute(command, source);
+        } catch (CommandSyntaxException ignored) {
+            return 0;
+        }
+    }
+
+    private static Path serverConfigPath(GameTestHelper helper, String name) {
+        return helper.getLevel().getServer()
+                .getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig")
+                .resolve(name);
+    }
+
+    private static String policyJson(
+            int maxHeight,
+            boolean storage,
+            boolean singles,
+            boolean bars,
+            List<String> disabledMods,
+            List<String> disabledItems) {
+        JsonObject compatibility = new JsonObject();
+        compatibility.add("disable_mods", stringArray(disabledMods));
+        compatibility.add("disable_items", stringArray(disabledItems));
+        JsonObject stacks = new JsonObject();
+        stacks.addProperty("enable_storage_stack_block", storage);
+        stacks.addProperty("enable_singles_stack_block", singles);
+        stacks.addProperty("enable_bar_stack_block", bars);
+        JsonObject piles = new JsonObject();
+        piles.addProperty("max_pile_height", maxHeight);
+        JsonObject root = new JsonObject();
+        root.add("piles", piles);
+        root.add("stacks", stacks);
+        root.add("compatibility", compatibility);
+        return root.toString();
+    }
+
+    private static com.google.gson.JsonArray stringArray(List<String> entries) {
+        com.google.gson.JsonArray array = new com.google.gson.JsonArray();
+        entries.forEach(array::add);
+        return array;
+    }
+
+    private static void restoreConfig(Path original, Path fixture) {
+        ServerConfig.load(original);
+        try {
+            Files.deleteIfExists(fixture);
+        } catch (IOException e) {
+            SomeStacksCommon.LOGGER.warn("Could not delete GameTest config fixture {}", fixture, e);
+        }
     }
 
     private static String configJson(int height, int permission, int placements, String ingotEntry) {

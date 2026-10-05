@@ -12,8 +12,9 @@ public final class StackSort {
     private StackSort(){}
 
     /**
-     * Orders stacks by item id, damage, tags, and descending count, with empty stacks last. This
-     * gives identical piles the same layout and leaves a group's partial stack at its end.
+     * Orders stacks by item id, damage, data components, and descending count, with empty stacks
+     * last. This gives identical piles the same layout and leaves a group's partial stack at its
+     * end.
      */
     public static final Comparator<ItemStack> COMPARATOR = (a, b) -> {
         if (a.isEmpty() && b.isEmpty()) return 0;

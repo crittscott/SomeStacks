@@ -30,6 +30,30 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 
 /** Fabric-native transaction behavior exercised through the complete Transfer API storage. */
 public final class FabricTransferGameTests implements FabricGameTest {
+    /**
+     * No in-game reproduction applies: Fabric automation stages an insertion without publishing
+     * it to the block entity, then publishes the complete edit when the transaction commits.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void stagedInsertionIsInvisibleUntilCommit(GameTestHelper helper) {
+        StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(4L, storage.insert(
+                    ItemVariant.of(Items.STONE), 4, transaction), "Staged insertion");
+            checkEquals(0, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+                    "Uncommitted insertion reached the world");
+            transaction.commit();
+        }
+        checkEquals(4, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
+                "Committed insertion did not reach the world");
+        helper.succeed();
+    }
+
+    /**
+     * No in-game reproduction applies: this verifies whole-storage Fabric transactions, including
+     * nested rollback, commit all mutations together or leave the run unchanged.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void wholeStorageInsertExtractAndNestedRollbackAreAtomic(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
@@ -71,6 +95,10 @@ public final class FabricTransferGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: connect Fabric Transfer API automation between a chest and a SomeStacks
+     * run; moving an item removes it from the chest and inserts it into the run.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageUtilMovesItemsFromChestIntoRun(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
@@ -98,6 +126,10 @@ public final class FabricTransferGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * No in-game reproduction applies: this verifies one Fabric transaction cannot stage structural
+     * extraction from two run positions whose simultaneous gravity updates would conflict.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void transactionAllowsOnlyOneStructuralExtractionPosition(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);

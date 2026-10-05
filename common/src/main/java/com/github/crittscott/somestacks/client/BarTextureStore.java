@@ -291,6 +291,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         throw new IllegalArgumentException("Invalid color format: " + colorStr);
     }
 
+    /**
+     * Resolves an explicit bar mapping, or derives and caches a tint over the default texture for
+     * an unmapped item. Empty stacks use the fallback mapping.
+     */
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
 

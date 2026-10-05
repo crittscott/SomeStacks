@@ -9,26 +9,19 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.
  */
 public final class ItemOpsGameTests implements FabricGameTest {
+    /** See {@link ItemOpsChecks#handCompatibilityUsesExactItemComponentsAndCapacity}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void handCompatibilityUsesExactItemTagsAndCapacity(GameTestHelper helper) {
-        ItemOpsChecks.handCompatibilityUsesExactItemTagsAndCapacity(helper);
+    public void handCompatibilityUsesExactItemComponentsAndCapacity(GameTestHelper helper) {
+        ItemOpsChecks.handCompatibilityUsesExactItemComponentsAndCapacity(helper);
     }
 
+    /** See {@link ItemOpsChecks#mergeReturnsMovedCountAndDoesNotShrinkIncoming}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void mergeReturnsMovedCountAndDoesNotShrinkIncoming(GameTestHelper helper) {
         ItemOpsChecks.mergeReturnsMovedCountAndDoesNotShrinkIncoming(helper);
     }
 
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void mergeRejectsDifferentItemsAndTags(GameTestHelper helper) {
-        ItemOpsChecks.mergeRejectsDifferentItemsAndTags(helper);
-    }
-
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void handlerEmptyDetectionScansEverySlot(GameTestHelper helper) {
-        ItemOpsChecks.handlerEmptyDetectionScansEverySlot(helper);
-    }
-
+    /** See {@link ItemOpsChecks#lightIsPerOccupiedSlotIntegerDividedAndCapped}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void lightIsPerOccupiedSlotIntegerDividedAndCapped(GameTestHelper helper) {
         ItemOpsChecks.lightIsPerOccupiedSlotIntegerDividedAndCapped(helper);

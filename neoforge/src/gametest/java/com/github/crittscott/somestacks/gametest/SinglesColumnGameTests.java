@@ -28,140 +28,113 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 public final class SinglesColumnGameTests {
     private SinglesColumnGameTests() {}
 
+    /** See {@link SinglesColumnChecks#standaloneBottomIsGroundedAndFloatingCellIsRejected}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesColumnChecks.standaloneBottomIsGroundedAndFloatingCellIsRejected(helper);
     }
 
+    /** See {@link SinglesColumnChecks#upperCellUsesTheCellImmediatelyBelow}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void upperCellUsesTheCellImmediatelyBelow(GameTestHelper helper) {
         SinglesColumnChecks.upperCellUsesTheCellImmediatelyBelow(helper);
     }
 
+    /** See {@link SinglesColumnChecks#differentlyRotatedBlocksShareVisualSeamColumns}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void differentlyRotatedBlocksShareVisualSeamColumns(GameTestHelper helper) {
         SinglesColumnChecks.differentlyRotatedBlocksShareVisualSeamColumns(helper);
     }
 
+    /** See {@link SinglesColumnChecks#extractionShiftsOneColumnAndCarriesItemRotation}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
         SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(helper);
     }
 
+    /** See {@link SinglesColumnChecks#shiftKeepsAnItemItWouldNoLongerAccept}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(helper);
     }
 
+    /** See {@link SinglesColumnChecks#drawDownKeepsAnItemItWouldNoLongerAccept}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(helper);
     }
 
+    /** See {@link SinglesColumnChecks#extractionPreservesAnExistingGap}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
         SinglesColumnChecks.extractionPreservesAnExistingGap(helper);
     }
 
+    /** See {@link SinglesColumnChecks#extractionDrawsAcrossDifferentlyRotatedBlockBoundary}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
         SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(helper);
     }
 
+    /**
+     * To reproduce in-game: target individual Singles cells with item automation; only the named
+     * supported empty cell accepts the item, without redirecting it elsewhere.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForTheCellItIsGiven(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STICK, 3);
-
-        // Cell 63 is a top-layer cell with nothing beneath it, so it is refused rather than
-        // redirected to a cell that would take the item.
-        checkEquals(3, capability.insertItem(63, offered, true).getCount(),
-                "Simulated insertion into an unsupported cell");
-        checkEquals(3, capability.insertItem(63, offered, false).getCount(),
-                "Committed insertion into an unsupported cell");
-        checkEquals(0, occupied(singles.getItems()),
-                "An unsupported cell stored something");
-
-        // Cell 0 is grounded outright, and takes exactly the one item a cell holds.
-        checkEquals(2, capability.insertItem(0, offered, true).getCount(),
-                "Simulated insertion into a grounded cell");
-        checkEquals(3, offered.getCount(), "Simulation changed input");
-        checkEquals(0, occupied(singles.getItems()),
-                "Simulation changed occupancy");
-
-        checkEquals(2, capability.insertItem(0, offered, false).getCount(),
-                "Committed insertion into a grounded cell");
-        checkEquals(3, offered.getCount(), "Capability mutated caller input");
-        checkEquals(1, occupied(singles.getItems()),
-                "One call should store one item");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(0).getItem(),
-                "The cell named should hold the item");
-        helper.succeed();
+        AutomationChecks.singlesInsertionAnswersForTheCellItIsGiven(helper);
     }
 
+    /**
+     * To reproduce in-game: let item automation walk the advertised Singles cells in order and
+     * verify the column fills from the lowest supported cell upward.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityWalkFillsTheColumnFromTheBottom(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(singles);
-        ItemStack offered = new ItemStack(Items.STICK, 3);
-
-        // A caller walking the advertised cells in order still fills the column, because each
-        // placement stands before the next cell is offered.
-        ItemStack remainder = ItemHandlerHelper.insertItemStacked(capability, offered, false);
-
-        check(remainder.isEmpty(), "A walk of the cells left a remainder");
-        checkEquals(3, offered.getCount(), "Capability mutated caller input");
-        for (int cell = 0; cell < 3; cell++) {
-            checkEquals(Items.STICK, singles.getItems().getStackInSlot(cell).getItem(),
-                    "Lowest cell " + cell);
-        }
-        helper.succeed();
+        AutomationChecks.singlesWalkFillsFromTheBottom(helper);
     }
 
+    /**
+     * To reproduce in-game: extract a lower Singles cell through item automation and verify the item
+     * above shifts down with its rotation, just as it does after player extraction.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityExtractionUsesThePlayerGravityPath(GameTestHelper helper) {
-        SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        int column = 0;
-        int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
-        int above = SinglesCubeIdx.indexFromColumn(column, 1);
-        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(above, new ItemStack(Items.PAPER), false);
-        IItemHandler capability = GameTestSupport.capability(singles);
-
-        ItemStack simulated = capability.extractItem(bottom, 64, true);
-        checkEquals(Items.STICK, simulated.getItem(), "Simulated extracted item");
-        checkEquals(Items.STICK, singles.getItems().getStackInSlot(bottom).getItem(),
-                "Simulation mutated contents");
-
-        ItemStack extracted = capability.extractItem(bottom, 64, false);
-
-        checkEquals(1, extracted.getCount(), "Capability extracted more than one item");
-        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(bottom).getItem(),
-                "Capability extraction did not shift column");
-        helper.succeed();
+        AutomationChecks.singlesExtractionUsesThePlayerGravityPath(helper);
     }
 
+    /** See {@link SinglesColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedCell}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedCell(GameTestHelper helper) {
         SinglesColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedCell(helper);
     }
 
+    /** See {@link SinglesColumnChecks#depositTraceUsesFarthestCellWhenNothingIsOccupied}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositTraceUsesFarthestCellWhenNothingIsOccupied(GameTestHelper helper) {
         SinglesColumnChecks.depositTraceUsesFarthestCellWhenNothingIsOccupied(helper);
     }
 
+    /** See {@link SinglesColumnChecks#breakingMiddleBlockDropsItsContentsWithoutClosingTheGap}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(
+            GameTestHelper helper) {
+        SinglesColumnChecks.breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(helper);
+    }
+
+    /** See {@link SinglesColumnChecks#comparatorReservesZeroForAnEmptyColumn}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         SinglesColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
+    /** See {@link SinglesColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         SinglesColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
+    /** See {@link SinglesColumnChecks#comparatorFollowsAColumnLosingABlock}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         SinglesColumnChecks.comparatorFollowsAColumnLosingABlock(helper);

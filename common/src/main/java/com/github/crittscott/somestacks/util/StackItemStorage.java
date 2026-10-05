@@ -51,6 +51,10 @@ public class StackItemStorage implements SlotAccess {
         return stacks[slot];
     }
 
+    /**
+     * Replaces a slot directly and reports the change, bypassing admission and capacity checks.
+     * Internal relocation and settlement use this only for already-stored contents.
+     */
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         stacks[slot] = stack;
         onContentsChanged(slot);

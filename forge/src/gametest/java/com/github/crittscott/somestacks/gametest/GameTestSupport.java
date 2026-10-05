@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
+import java.util.function.Function;
 
 /**
  * Forge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
@@ -70,5 +72,15 @@ public final class GameTestSupport {
                 // behavior these server-side tests observe.
             }
         });
+    }
+
+    /** A fake-player factory that resets the main hand for each shared check. */
+    public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        return mainHand -> {
+            ServerPlayer player = fakePlayer(level);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            return player;
+        };
     }
 }

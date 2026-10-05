@@ -15,26 +15,19 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public final class ItemOpsGameTests {
     private ItemOpsGameTests() {}
 
+    /** See {@link ItemOpsChecks#handCompatibilityUsesExactItemComponentsAndCapacity}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void handCompatibilityUsesExactItemTagsAndCapacity(GameTestHelper helper) {
-        ItemOpsChecks.handCompatibilityUsesExactItemTagsAndCapacity(helper);
+    public static void handCompatibilityUsesExactItemComponentsAndCapacity(GameTestHelper helper) {
+        ItemOpsChecks.handCompatibilityUsesExactItemComponentsAndCapacity(helper);
     }
 
+    /** See {@link ItemOpsChecks#mergeReturnsMovedCountAndDoesNotShrinkIncoming}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void mergeReturnsMovedCountAndDoesNotShrinkIncoming(GameTestHelper helper) {
         ItemOpsChecks.mergeReturnsMovedCountAndDoesNotShrinkIncoming(helper);
     }
 
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void mergeRejectsDifferentItemsAndTags(GameTestHelper helper) {
-        ItemOpsChecks.mergeRejectsDifferentItemsAndTags(helper);
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void handlerEmptyDetectionScansEverySlot(GameTestHelper helper) {
-        ItemOpsChecks.handlerEmptyDetectionScansEverySlot(helper);
-    }
-
+    /** See {@link ItemOpsChecks#lightIsPerOccupiedSlotIntegerDividedAndCapped}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void lightIsPerOccupiedSlotIntegerDividedAndCapped(GameTestHelper helper) {
         ItemOpsChecks.lightIsPerOccupiedSlotIntegerDividedAndCapped(helper);

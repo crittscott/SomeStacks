@@ -119,6 +119,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return blocks.get(0).isPermanent();
     }
 
+    /** Changes permanence and attributes any resulting cleanup to automation. */
     public void setPermanent(boolean permanent) {
         setPermanent(permanent, null);
     }
@@ -189,8 +190,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * column while items remain and the configured height allows it.
      *
      * @param placer the player responsible for any block this deposit creates, or null for
-     *               automation, whose growth is attributed to the level's fake player and checked
-     *               against the same protections.
+     *               automation, whose growth is attributed to the automation actor and checked
+     *               against the same protections
      * @return how many items were taken from {@code fromHand}, which is shrunk by that amount
      */
     public int deposit(ItemStack fromHand, @Nullable ServerPlayer placer) {
@@ -336,8 +337,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * promise a block the deposit itself would refuse.
      *
      * <p>Spawn protection exempts operators, so the result depends on who is growing the pile: a
-     * player's own deposit is checked against that player, and automation against the level's fake
-     * player, which is never exempt.
+     * player's own deposit is checked against that player, and automation against the level's
+     * automation actor, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
         if (blocks.size() >= maxHeight() || !ServerConfig.enableStorageStackBlock()) {

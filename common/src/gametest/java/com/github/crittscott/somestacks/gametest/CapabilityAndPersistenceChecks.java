@@ -9,6 +9,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,7 +36,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 public final class CapabilityAndPersistenceChecks {
     private CapabilityAndPersistenceChecks() {}
 
-    public static void storageUpdateTagRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
+    /**
+     * Storage disk data preserves items, data components, block rotation, and permanence. To
+     * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
+     * permanent, then unload and revisit the chunk or observe it from a joining client. All four
+     * properties remain visible.
+     */
+    public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
         StorageStackBE source = placeStorage(helper, ORIGIN);
         StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
@@ -48,10 +56,7 @@ public final class CapabilityAndPersistenceChecks {
         check(pile != null, "Storage pile did not resolve");
         pile.setPermanent(true);
 
-        CompoundTag updateTag = source.getUpdateTag(registries);
-        check(!updateTag.getCompound("Items").contains("Size"),
-                "Current storage serialization still wrote the unused Size field");
-        loaded.loadCustomOnly(updateTag, registries);
+        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
 
         ItemStack restored = loaded.getItems().getStackInSlot(7);
         checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
@@ -63,7 +68,12 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
-    public static void singlesUpdateTagRoundTripsItemsAndBothRotations(GameTestHelper helper) {
+    /**
+     * Singles disk data preserves contents plus block and per-item rotations. To reproduce
+     * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
+     * chunk or observe it from a joining client. Both orientations and the item remain unchanged.
+     */
+    public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
         SinglesStackBE source = placeSingles(helper, ORIGIN);
         SinglesStackBE loaded = placeSingles(helper, ORIGIN.east(3));
@@ -71,7 +81,7 @@ public final class CapabilityAndPersistenceChecks {
         source.setRotation(2);
         source.setCubeRotation(21, 3);
 
-        loaded.loadCustomOnly(source.getUpdateTag(registries), registries);
+        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
 
         checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
                 "Restored Singles item");
@@ -80,19 +90,113 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
-    public static void barUpdateTagRoundTripsItems(GameTestHelper helper) {
+    /**
+     * Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
+     * unload and revisit the chunk or join from another client, and verify the same Bar positions
+     * remain occupied.
+     */
+    public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
         BarStackBE source = placeBar(helper, ORIGIN);
         BarStackBE loaded = placeBar(helper, ORIGIN.east(3));
         Item barItem = firstBarItem();
         source.getItems().insertItem(37, new ItemStack(barItem), false);
 
-        loaded.loadCustomOnly(source.getUpdateTag(registries), registries);
+        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
 
         checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(),
                 "Restored Bar item");
         checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
                 "Restored Bar count");
+        helper.succeed();
+    }
+
+    /**
+     * Client update tags carry every field the renderers need while omitting server-only set-aside
+     * data. To reproduce in-game: deposit and rotate Storage, Singles, and Bar contents, then join
+     * with another client. The contents and rotations appear, without exposing unreadable saved
+     * entries to that client.
+     */
+    public static void updateTagsCarryClientStateAndOmitSetAside(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
+        BarStackBE bars = placeBar(helper, ORIGIN.east(6));
+        Item barItem = firstBarItem();
+        storage.getItems().insertItem(4, new ItemStack(Items.STONE, 3), false);
+        storage.setRotation(2);
+        storage.pile().setPermanent(true);
+        singles.getItems().insertItem(5, new ItemStack(Items.APPLE), false);
+        singles.setRotation(1);
+        singles.setCubeRotation(5, 3);
+        bars.getItems().insertItem(6, new ItemStack(barItem), false);
+
+        StorageStackBE storageClient = placeStorage(helper, ORIGIN.south(3));
+        SinglesStackBE singlesClient = placeSingles(helper, ORIGIN.east(3).south(3));
+        BarStackBE barsClient = placeBar(helper, ORIGIN.east(6).south(3));
+        CompoundTag storageTag = storage.getUpdateTag(registries);
+        CompoundTag singlesTag = singles.getUpdateTag(registries);
+        CompoundTag barTag = bars.getUpdateTag(registries);
+        check(!storageTag.getCompound("Items").contains("SetAside"),
+                "Storage update tag exposed set-aside data");
+        check(!singlesTag.getCompound("Items").contains("SetAside"),
+                "Singles update tag exposed set-aside data");
+        check(!barTag.getCompound("Items").contains("SetAside"),
+                "Bar update tag exposed set-aside data");
+        storageClient.loadCustomOnly(storageTag, registries);
+        singlesClient.loadCustomOnly(singlesTag, registries);
+        barsClient.loadCustomOnly(barTag, registries);
+
+        checkEquals(3, storageClient.getItems().getStackInSlot(4).getCount(),
+                "Storage client item count");
+        checkEquals(2, storageClient.getRotation(), "Storage client rotation");
+        check(storageClient.isPermanent(), "Storage client permanence");
+        checkEquals(Items.APPLE, singlesClient.getItems().getStackInSlot(5).getItem(),
+                "Singles client item");
+        checkEquals(1, singlesClient.getRotation(), "Singles client block rotation");
+        checkEquals(3, singlesClient.getCubeRotation(5), "Singles client item rotation");
+        checkEquals(barItem, barsClient.getItems().getStackInSlot(6).getItem(),
+                "Bar client item");
+        helper.succeed();
+    }
+
+    /**
+     * Unreadable and unplaceable saved entries remain byte-for-byte in disk data and never enter a
+     * live slot. To reproduce in-game: remove an item-providing mod, open and save the world, then
+     * restore the mod. Its stored item returns instead of having been discarded.
+     */
+    public static void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
+        HolderLookup.Provider registries = helper.getLevel().registryAccess();
+        StorageStackBE loaded = placeStorage(helper, ORIGIN);
+
+        CompoundTag unknown = new CompoundTag();
+        unknown.putString("id", "examplemod:gone");
+        unknown.putInt("count", 2);
+        unknown.putInt("Slot", 4);
+        CompoundTag outsideRange = (CompoundTag) new ItemStack(Items.STONE, 5)
+                .save(registries, new CompoundTag());
+        outsideRange.putInt("Slot", StorageStackBE.SLOTS + 10);
+        ListTag entries = new ListTag();
+        entries.add(unknown.copy());
+        entries.add(outsideRange.copy());
+        CompoundTag storage = new CompoundTag();
+        storage.put("Items", entries);
+        CompoundTag saved = new CompoundTag();
+        saved.put("Items", storage);
+        NbtUtils.addCurrentDataVersion(saved);
+
+        loaded.loadWithComponents(saved, registries);
+        checkEquals(0, GameTestScaffold.occupied(loaded.getItems()),
+                "Unreadable entries reached live slots");
+
+        CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+        ListTag setAside = persisted.getCompound("Items")
+                .getList("SetAside", Tag.TAG_COMPOUND);
+        checkEquals(2, setAside.size(), "Persisted set-aside entry count");
+        checkEquals(unknown, setAside.getCompound(0), "Unknown item tag changed");
+        checkEquals(outsideRange, setAside.getCompound(1), "Out-of-range item tag changed");
+        check(!loaded.getUpdateTag(registries).getCompound("Items").contains("SetAside"),
+                "Client update tag exposed set-aside entries");
         helper.succeed();
     }
 
@@ -137,6 +241,11 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
+    /**
+     * Singles and Bar collision and outline shapes update when their contents change. To reproduce
+     * in-game: deposit into an empty Singles or Bar block and then extract the item. Its occupied
+     * shape appears on deposit and disappears on extraction.
+     */
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BarStackBE bar = placeBar(helper, ORIGIN.east(3));

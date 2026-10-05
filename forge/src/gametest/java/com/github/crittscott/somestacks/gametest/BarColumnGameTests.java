@@ -38,85 +38,58 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
 public final class BarColumnGameTests {
     private BarColumnGameTests() {}
 
+    /** See {@link BarColumnChecks#validityAndBottomGroundingAreEnforced}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
+    /** See {@link BarColumnChecks#upperBarRequiresOverlappingSupport}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarColumnChecks.upperBarRequiresOverlappingSupport(helper);
     }
 
+    /** See {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
     }
 
+    /** See {@link BarColumnChecks#supportedNeighborSurvivesPlayerExtraction}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
     }
 
+    /** See {@link BarColumnChecks#differentlyOrientedSeamUsesFootprintOverlap}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarColumnChecks.differentlyOrientedSeamUsesFootprintOverlap(helper);
     }
 
+    /** See {@link BarColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedBar}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void automationBackfillsWithoutDropping(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(barItem, 10);
-
-        // A walk of the advertised positions fills the block from the bottom, because each bar
-        // placed supports the layer above it before the walk reaches it.
-        ItemStack remainder = ItemHandlerHelper.insertItemStacked(capability, offered, false);
-        check(remainder.isEmpty(), "A walk of the positions left a remainder");
-        checkEquals(10, count(bars.getItems(), barItem),
-                "Inserted bar count");
-
-        ItemStack extracted = capability.extractItem(0, 64, false);
-
-        checkEquals(1, extracted.getCount(), "Automated extracted count");
-        checkEquals(9, count(bars.getItems(), barItem),
-                "Count after automated extraction");
-        checkEquals(barItem, bars.getItems().getStackInSlot(0).getItem(),
-                "Hole was not backfilled");
-        checkEquals(0, droppedNear(helper, bars.getBlockPos(), barItem),
-                "Automation dropped a bar");
-        helper.succeed();
+    public static void depositTraceStopsAtLastEmptyBeforeOccupiedBar(GameTestHelper helper) {
+        BarColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedBar(helper);
     }
 
+    /**
+     * To reproduce in-game: fill a supported Bar column, let item automation extract a lower
+     * position, and verify the top bar fills the hole without dropping an item.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationBackfillsWithoutDropping(GameTestHelper helper) {
+        AutomationChecks.barAutomationBackfillsWithoutDropping(helper);
+    }
+
+    /**
+     * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
+     * positions; unsupported positions refuse insertion while a supported empty position accepts it.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        IItemHandler capability = GameTestSupport.capability(bars);
-        ItemStack offered = new ItemStack(barItem, 4);
-
-        // Position 8 is the first of layer 1, with an empty layer 0 beneath it, so it is refused
-        // rather than redirected to a position that would take the bar.
-        checkEquals(4, capability.insertItem(8, offered, true).getCount(),
-                "Simulated insertion into an unsupported position");
-        checkEquals(4, capability.insertItem(8, offered, false).getCount(),
-                "Committed insertion into an unsupported position");
-        checkEquals(0, occupied(bars.getItems()),
-                "An unsupported position stored something");
-
-        // Position 0 is in the bottom layer of a column standing on the world, so it is grounded
-        // outright and takes exactly the one bar a position holds.
-        checkEquals(3, capability.insertItem(0, offered, true).getCount(),
-                "Simulated insertion into a grounded position");
-        checkEquals(3, capability.insertItem(0, offered, false).getCount(),
-                "Committed insertion into a grounded position");
-        checkEquals(4, offered.getCount(), "Capability mutated caller input");
-        checkEquals(1, occupied(bars.getItems()),
-                "One call should store one bar");
-        checkEquals(1, capability.getSlotLimit(0),
-                "A position's slot limit should be what one call takes");
-        helper.succeed();
+        AutomationChecks.barInsertionAnswersForThePositionItIsGiven(helper);
     }
 
     /**
@@ -124,27 +97,20 @@ public final class BarColumnGameTests {
      * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
      * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
      * contents the current ingot set no longer covers.
+     *
+     * <p>To reproduce in-game: fill a Bar Stack, narrow the ingot rule so one stored bar is no
+     * longer accepted, then automate extraction below it. Backfill retains or drops that legacy
+     * bar without deleting or changing it.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
-        BarStackBE bars = placeBar(helper, ORIGIN);
-        Item barItem = firstBarItem();
-        BlockPos pos = bars.getBlockPos();
-        check(!BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
-                "Test needs an item a Bar Stack refuses");
-        bars.getItems().insertItem(0, new ItemStack(barItem), false);
-        seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));
-        IItemHandler capability = GameTestSupport.capability(bars);
-
-        ItemStack extracted = capability.extractItem(0, 64, false);
-
-        checkEquals(barItem, extracted.getItem(), "Automated extracted item");
-        checkEquals(1, extracted.getCount(), "Automated extraction took more than one bar");
-        int accounted = heldAt(helper, pos, Items.STICK) + droppedNear(helper, pos, Items.STICK);
-        checkEquals(1, accounted, "Refused bar after being backfilled into the hole");
-        helper.succeed();
+        AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(helper);
     }
 
+    /**
+     * No in-game reproduction applies: this verifies the loader capability simulation contract; a
+     * simulated Bar extraction reports the result without changing the stored bar.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -161,36 +127,43 @@ public final class BarColumnGameTests {
         helper.succeed();
     }
 
+    /** See {@link BarColumnChecks#breakingLowerBlockCollapsesDependentUpperBlock}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarColumnChecks.breakingLowerBlockCollapsesDependentUpperBlock(helper);
     }
 
+    /** See {@link BarColumnChecks#breakingFullColumnConsolidatesDrops}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarColumnChecks.breakingFullColumnConsolidatesDrops(helper);
     }
 
+    /** See {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
     }
 
+    /** See {@link BarColumnChecks#collapseDoesNotMergeDifferentComponents}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
-        BarColumnChecks.collapseDoesNotMergeDifferentTags(helper);
+    public static void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
+        BarColumnChecks.collapseDoesNotMergeDifferentComponents(helper);
     }
 
+    /** See {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
+    /** See {@link BarColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
+    /** See {@link BarColumnChecks#comparatorFollowsAColumnLosingABlock}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
@@ -201,8 +174,9 @@ public final class BarColumnGameTests {
      * Support depends on the seam's occupancy, which is empty whether or not the block remains;
      * protection controls only the world edit.
      *
-     * <p>This exercises Forge's own break event, which Fabric API has no general-purpose claim
-     * equivalent for, so it is not ported.
+     * <p>To reproduce in-game: build a supported two-block Bar column, deny [SomeStacks]
+     * permission to remove the lower block, and extract its bottom support. The empty lower block
+     * remains, while the unsupported upper block comes down.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {

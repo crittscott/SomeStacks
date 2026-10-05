@@ -33,10 +33,12 @@ public final class RunEdit {
         return true;
     }
 
+    /** Whether an outer automation mutation currently owns the structural-edit guard. */
     public static boolean isInProgress() {
         return inProgress;
     }
 
+    /** Releases the guard after, and only after, a successful {@link #begin()}. */
     public static void end() {
         inProgress = false;
     }

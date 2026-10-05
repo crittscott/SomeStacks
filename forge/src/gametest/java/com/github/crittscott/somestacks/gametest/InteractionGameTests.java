@@ -19,32 +19,37 @@ import java.util.function.Function;
 public final class InteractionGameTests {
     private InteractionGameTests() {}
 
+    /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         InteractionChecks.malformedGestureStateFailsDuringDecoding(helper);
     }
 
+    /** See {@link InteractionChecks#gestureStateTracksModeAndModifier}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void gestureStateTracksModeAndModifier(GameTestHelper helper) {
         InteractionChecks.gestureStateTracksModeAndModifier(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#interactionReadsOnlyTheMainHand}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void interactionReadsOnlyTheMainHand(GameTestHelper helper) {
-        InteractionChecks.interactionReadsOnlyTheMainHand(helper, playerFactory(helper));
+        InteractionChecks.interactionReadsOnlyTheMainHand(helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#rotationValidatesHeldItemAndBlockType}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void rotationValidatesHeldItemAndBlockType(GameTestHelper helper) {
         InteractionChecks.rotationValidatesHeldItemAndBlockType(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#sneakingRotationsReachTheLoaderHook}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
         InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper, playerFactory(helper), (player, hit) -> {
+                helper, GameTestSupport.playerFactory(helper), (player, hit) -> {
                     var event = new PlayerInteractEvent.RightClickBlock(
                             player, InteractionChecks.HAND, hit.getBlockPos(), hit);
                     StackInteractionEvents.onRightClickBlock(event);
@@ -52,46 +57,55 @@ public final class InteractionGameTests {
                 });
     }
 
+    /** See {@link InteractionChecks#vanillaInteractionReachesDepositExtractAndPlacement}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void vanillaInteractionReachesDepositExtractAndPlacement(
             GameTestHelper helper) {
         InteractionChecks.vanillaInteractionReachesDepositExtractAndPlacement(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#itemRotationTargetsOnlyAnOccupiedCell}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void itemRotationTargetsOnlyAnOccupiedCell(GameTestHelper helper) {
         InteractionChecks.itemRotationTargetsOnlyAnOccupiedCell(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#permanenceRequiresEmptyHandAndHonorsProtection}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void permanenceRequiresEmptyHandAndHonorsProtection(
             GameTestHelper helper) {
         InteractionChecks.permanenceRequiresEmptyHandAndHonorsProtection(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#rotationSoundThrottleSuppressesSameTickAndClears}. */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper) {
         InteractionChecks.rotationSoundThrottleSuppressesSameTickAndClears(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#extractionRefusesIncompatibleOrFullHands}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionRefusesIncompatibleOrFullHands(GameTestHelper helper) {
         InteractionChecks.extractionRefusesIncompatibleOrFullHands(
-                helper, playerFactory(helper));
+                helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** The fake player is shared per level, so every test sets the hand it means to test with. */
-    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        return mainHand -> {
-            ServerPlayer player = GameTestSupport.fakePlayer(level);
-            player.setItemInHand(InteractionChecks.HAND, mainHand);
-            return player;
-        };
+    /** See {@link InteractionChecks#fullTopFacePlacesTheSelectedStackType}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void fullTopFacePlacesTheSelectedStackType(GameTestHelper helper) {
+        InteractionChecks.fullTopFacePlacesTheSelectedStackType(
+                helper, GameTestSupport.playerFactory(helper));
     }
+
+    /** See {@link InteractionChecks#everyStackTypeBlocksPistons}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void everyStackTypeBlocksPistons(GameTestHelper helper) {
+        InteractionChecks.everyStackTypeBlocksPistons(helper);
+    }
+
 }

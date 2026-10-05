@@ -75,8 +75,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
-     * narrows what Singles takes by the same set.
+     * Whether Singles accepts this item. Items from disabled namespaces and items accepted by Bar
+     * are excluded, so widening the configured ingot list narrows what Singles accepts.
      */
     public static boolean isValidSinglesItem(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -92,6 +92,10 @@ public class SinglesStackBE extends StackBlockEntity {
         return rotation;
     }
 
+    /**
+     * Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately
+     * unless a batch is open.
+     */
     public void setRotation(int rotation) {
         this.rotation = rotation % 4;
         setChanged();
@@ -106,7 +110,10 @@ public class SinglesStackBE extends StackBlockEntity {
         return cubeRotations[index];
     }
 
-    /** Sets the rendered rotation at {@code index}, which must be in {@code [0, SLOTS)}. */
+    /**
+     * Sets the rendered item rotation at {@code index} modulo four and publishes immediately unless
+     * a batch is open. The index must be in {@code [0, SLOTS)}.
+     */
     public void setCubeRotation(int index, int cubeRot) {
         cubeRotations[index] = cubeRot % 4;
         setChanged();

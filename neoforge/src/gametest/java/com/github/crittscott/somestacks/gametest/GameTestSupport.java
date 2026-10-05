@@ -3,12 +3,15 @@ package com.github.crittscott.somestacks.gametest;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.items.IItemHandler;
+
+import java.util.function.Function;
 
 /**
  * NeoForge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
@@ -65,5 +68,15 @@ public final class GameTestSupport {
      */
     public static ServerPlayer fakePlayer(ServerLevel level) {
         return FakePlayerFactory.getMinecraft(level);
+    }
+
+    /** A fake-player factory that resets the main hand for each shared check. */
+    public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        return mainHand -> {
+            ServerPlayer player = fakePlayer(level);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            return player;
+        };
     }
 }

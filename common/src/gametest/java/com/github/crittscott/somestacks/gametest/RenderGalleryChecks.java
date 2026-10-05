@@ -24,6 +24,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class RenderGalleryChecks {
     private RenderGalleryChecks() {}
 
+    /**
+     * A queued Storage gallery builds its sandstone floor, one column per item group, and reports
+     * planned and completed totals. To reproduce in-game: enable galleries and run an
+     * {@code /ss gallery} form containing multiple groups. The rows begin east of the player on a
+     * sandstone floor and the completion message reports the placed stacks and items.
+     */
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper, ServerPlayer player) {
         BlockPos playerPos = helper.absolutePos(ORIGIN);
@@ -63,6 +69,11 @@ public final class RenderGalleryChecks {
         });
     }
 
+    /**
+     * Gallery placement obeys the configured per-tick budget. To reproduce in-game: lower
+     * {@code render_gallery.placements_per_tick} and request a large Storage gallery. Construction
+     * visibly progresses across multiple ticks rather than completing in one server tick.
+     */
     public static void queuedStorageGallerySpreadsWorkAcrossTicks(
             GameTestHelper helper, ServerPlayer player) {
         BlockPos playerPos = helper.absolutePos(ORIGIN);
@@ -96,6 +107,11 @@ public final class RenderGalleryChecks {
         });
     }
 
+    /**
+     * A Bar gallery lays out rows and fills each block up to its capacity before starting the next.
+     * To reproduce in-game: enable galleries and run {@code /ss ingotgallery} for more than one
+     * block's worth of one ingot. The first row is full and the next holds the remainder.
+     */
     public static void queuedBarGalleryBuildsRowsAndFillsBars(
             GameTestHelper helper, ServerPlayer player) {
         BlockPos playerPos = helper.absolutePos(ORIGIN);

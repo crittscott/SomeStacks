@@ -18,7 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -39,6 +39,10 @@ public final class InteractionChecks {
         boolean click(ServerPlayer player, BlockHitResult hit);
     }
 
+    /**
+     * A gesture-state packet with an invalid mode ordinal fails during decoding. No in-game
+     * reproduction applies: this is a malformed-wire boundary that the normal client cannot send.
+     */
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         ByteBuf buffer = Unpooled.buffer();
         buffer.writeByte(StackMode.values().length);
@@ -61,6 +65,11 @@ public final class InteractionChecks {
         }
     }
 
+    /**
+     * The server records the client's selected mode and current modifier state. To reproduce
+     * in-game: cycle to Bar mode, hold the modifier, and right-click an eligible item against a
+     * block. The server performs the Bar placement rather than another mode or an ordinary use.
+     */
     public static void gestureStateTracksModeAndModifier(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
@@ -76,6 +85,11 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
+     * hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
+     * off-hand item is not deposited.
+     */
     public static void interactionReadsOnlyTheMainHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
@@ -96,6 +110,11 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
+     * Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those torches
+     * and observe that only the matching gestures change orientation.
+     */
     public static void rotationValidatesHeldItemAndBlockType(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
@@ -128,8 +147,9 @@ public final class InteractionChecks {
     }
 
     /**
-     * Reproduces sneaking right-clicks with redstone and soul torches and verifies that the
-     * loader's real server interaction hook rotates the block and targeted item.
+     * Sneaking right-clicks reach the loader's real server interaction hook for both block and item
+     * rotation. To reproduce in-game: Shift-right-click Storage with a redstone torch and an
+     * occupied Singles cell with a soul torch. The block and item rotate respectively.
      */
     public static void sneakingRotationsReachTheLoaderHook(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
@@ -160,6 +180,12 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Vanilla block-use interactions reach deposit, extraction, and adjacent placement. To
+     * reproduce in-game: modifier-click an existing Storage pile with an item, plain-click it with
+     * an empty hand, then modifier-click the top of an ordinary block. The item deposits, extracts,
+     * and creates a new Storage stack in the three cases.
+     */
     public static void vanillaInteractionReachesDepositExtractAndPlacement(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE depositTarget = GameTestScaffold.placeStorage(helper, TARGET);
@@ -205,6 +231,11 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Item rotation affects only the occupied Singles cell on the view ray. To reproduce in-game:
+     * Shift-right-click an occupied cell with a soul torch, then an empty cell beside it. The first
+     * item rotates once and the empty-cell click changes nothing.
+     */
     public static void itemRotationTargetsOnlyAnOccupiedCell(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET);
@@ -232,6 +263,11 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Permanence requires an empty main hand and obeys world protection. To reproduce in-game:
+     * select permanence mode and modifier-click Storage first with an item, then empty-handed, then
+     * inside a claim that denies the player. Only the unprotected empty-hand click toggles it.
+     */
     public static void permanenceRequiresEmptyHandAndHonorsProtection(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
@@ -246,7 +282,7 @@ public final class InteractionChecks {
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
             storage.pile().setPermanent(false);
-            outsideWorldBorder(helper, storage.getBlockPos(), () ->
+            GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
                     click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");
         } finally {
@@ -256,6 +292,11 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * Extraction refuses an incompatible held item or a compatible stack with no room. To
+     * reproduce in-game: plain-click stored stone while holding dirt, then while holding a full
+     * stack of matching stone. The Storage contents and held stacks remain unchanged.
+     */
     public static void extractionRefusesIncompatibleOrFullHands(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
@@ -284,6 +325,70 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: fill a Singles block, select Storage mode, hold an item, and
+     * modifier-click its top face. A Storage Stack appears above and receives the held items.
+     */
+    public static void fullTopFacePlacesTheSelectedStackType(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET);
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.DIRT), false);
+        }
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 2));
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        BlockPos destination = singles.getBlockPos().above();
+        try {
+            StackInteractions.handleExistingStack(
+                    player,
+                    HAND,
+                    new BlockHitResult(
+                            new Vec3(
+                                    singles.getBlockPos().getX() + 0.5,
+                                    singles.getBlockPos().getY() + 1.0,
+                                    singles.getBlockPos().getZ() + 0.5),
+                            Direction.UP,
+                            singles.getBlockPos(),
+                            false));
+            check(helper.getLevel().getBlockState(destination)
+                            .is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Top-face placement ignored the selected type");
+            checkEquals(2, GameTestScaffold.heldAt(helper, destination, Items.STONE),
+                    "Placed Storage contents");
+            check(player.getMainHandItem().isEmpty(), "Successful placement did not spend hand");
+        } finally {
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: extend a piston into each SomeStacks block type. Storage, Singles, and
+     * Bar blocks remain in place and the piston cannot push them.
+     */
+    public static void everyStackTypeBlocksPistons(GameTestHelper helper) {
+        checkEquals(PushReaction.BLOCK,
+                CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState()
+                        .getPistonPushReaction(),
+                "Storage piston reaction");
+        checkEquals(PushReaction.BLOCK,
+                CommonRegistry.SINGLES_STACK_BLOCK.get().defaultBlockState()
+                        .getPistonPushReaction(),
+                "Singles piston reaction");
+        checkEquals(PushReaction.BLOCK,
+                CommonRegistry.BAR_STACK_BLOCK.get().defaultBlockState()
+                        .getPistonPushReaction(),
+                "Bar piston reaction");
+        helper.succeed();
+    }
+
+    /**
+     * Rotation sound pacing permits one sound per player within its throttle window and resets when
+     * player state clears. To reproduce in-game: perform rotation gestures faster than the throttle
+     * interval, then pause and rotate again. The rapid repeats do not each play a sound; the later
+     * rotation does.
+     */
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
@@ -319,21 +424,4 @@ public final class InteractionChecks {
         return new BlockHitResult(point, Direction.WEST, pos, false);
     }
 
-    private static void outsideWorldBorder(
-            GameTestHelper helper, BlockPos target, Runnable action) {
-        WorldBorder border = helper.getLevel().getWorldBorder();
-        double centerX = border.getCenterX();
-        double centerZ = border.getCenterZ();
-        double size = border.getSize();
-        try {
-            border.setCenter(target.getX() + 1000.0, target.getZ());
-            border.setSize(16.0);
-            check(!border.isWithinBounds(target),
-                    "Test setup left protected target inside the world border");
-            action.run();
-        } finally {
-            border.setCenter(centerX, centerZ);
-            border.setSize(size);
-        }
-    }
 }

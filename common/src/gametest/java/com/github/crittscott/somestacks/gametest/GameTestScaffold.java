@@ -11,22 +11,26 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Scaffolding shared by both loaders' GameTests: placing each stack type on the empty template
+ * Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  * through {@link CommonRegistry}, seeding handlers directly, and the assertion helpers every test
- * reads through. Loader-native automation access (Forge's {@code IItemHandler}, Fabric's Transfer
- * API storage) stays in each loader's own {@code GameTestSupport}/{@code FabricGameTestSupport}.
+ * reads through. Loader-native automation access stays in Forge's and NeoForge's
+ * {@code GameTestSupport} and Fabric's {@code FabricGameTestSupport}.
  *
  * <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
  * the ordinary rules would not produce and check what happens next.
@@ -156,6 +160,42 @@ public final class GameTestScaffold {
         BlockPos absolute = helper.absolutePos(relative);
         BlockState state = helper.getLevel().getBlockState(absolute);
         return state.getAnalogOutputSignal(helper.getLevel(), absolute);
+    }
+
+    /** Puts a living placement-blocking entity across the center of {@code relative}. */
+    public static void putCowIn(GameTestHelper helper, BlockPos relative) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(relative);
+        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
+        check(cow != null, "Could not create obstruction cow");
+        check(cow.blocksBuilding, "Cow does not block building");
+        cow.moveTo(
+                target.getX() + 0.5,
+                target.getY(),
+                target.getZ() + 0.5,
+                0.0F,
+                0.0F);
+        check(level.addFreshEntity(cow), "Could not add obstruction cow");
+    }
+
+    /** Runs {@code action} while {@code relative} lies outside the world border, then restores it. */
+    public static void outsideWorldBorder(
+            GameTestHelper helper, BlockPos relative, Runnable action) {
+        WorldBorder border = helper.getLevel().getWorldBorder();
+        BlockPos target = helper.absolutePos(relative);
+        double centerX = border.getCenterX();
+        double centerZ = border.getCenterZ();
+        double size = border.getSize();
+        try {
+            border.setCenter(target.getX() + 1000.0, target.getZ());
+            border.setSize(16.0);
+            check(!border.isWithinBounds(target),
+                    "Test setup left the position inside the world border");
+            action.run();
+        } finally {
+            border.setCenter(centerX, centerZ);
+            border.setSize(size);
+        }
     }
 
     public static void check(boolean condition, String message) {

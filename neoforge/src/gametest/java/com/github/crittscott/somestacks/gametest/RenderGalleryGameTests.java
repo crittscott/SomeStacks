@@ -16,6 +16,7 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public final class RenderGalleryGameTests {
     private RenderGalleryGameTests() {}
 
+    /** See {@link RenderGalleryChecks#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals}. */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 100)
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper) {
@@ -23,12 +24,14 @@ public final class RenderGalleryGameTests {
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
     }
 
+    /** See {@link RenderGalleryChecks#queuedStorageGallerySpreadsWorkAcrossTicks}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void queuedStorageGallerySpreadsWorkAcrossTicks(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         RenderGalleryChecks.queuedStorageGallerySpreadsWorkAcrossTicks(helper, player);
     }
 
+    /** See {@link RenderGalleryChecks#queuedBarGalleryBuildsRowsAndFillsBars}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void queuedBarGalleryBuildsRowsAndFillsBars(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());

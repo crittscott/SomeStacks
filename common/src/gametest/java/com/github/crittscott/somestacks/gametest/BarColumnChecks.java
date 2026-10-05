@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.ViewRay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,12 +32,16 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
  * Bar support and collapse in a live level that does not touch loader-native automation directly:
  * item validity, grounding at the bottom of a column, footprint overlap deciding support across
  * the alternating layer orientations, and player extraction dropping what it unsupports.
- * Capability/Transfer-API-facing tests, and Forge's event-bus-driven protection test, stay in each
- * loader's own {@code BarColumnGameTests}.
+ * Loader-native automation and protection-event tests stay in each loader's GameTest classes.
  */
 public final class BarColumnChecks {
     private BarColumnChecks() {}
 
+    /**
+     * Bar accepts configured ingots on its grounded bottom layer and rejects other items or
+     * unsupported positions. To reproduce in-game: deposit a configured ingot into a bottom Bar
+     * position, then try a non-ingot and a floating position. Only the grounded ingot is stored.
+     */
     public static void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -50,6 +56,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A Bar above the bottom layer needs footprint overlap with a Bar beneath it. To reproduce
+     * in-game: place one bottom Bar, then try depositing above both an overlapping and a disjoint
+     * position. Only the overlapping Bar remains.
+     */
     public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -63,6 +74,10 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Player extraction cascades through Bars that lose support. To reproduce in-game: build a
+     * vertical chain of supported Bars and extract its bottom Bar. The unsupported Bars above drop.
+     */
     public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -81,6 +96,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A neighboring Bar with another overlapping support survives a player cascade. To reproduce
+     * in-game: support an upper Bar with two lower Bars, then extract one lower support. The upper
+     * Bar remains on the other.
+     */
     public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -100,6 +120,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Bar support across a block seam follows cuboid footprint overlap between alternating layers.
+     * To reproduce in-game: fill a top-layer Bar below, then deposit into an overlapping bottom
+     * position of the Bar block above. The cross-oriented overlap supports it.
+     */
     public static void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -113,6 +138,32 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A Bar deposit ray selects the last empty bar before the first occupied bar. To reproduce
+     * in-game: place a Bar in the farther position of a bottom-layer row and aim through the empty
+     * nearer position. The new Bar occupies the nearer position rather than passing through it.
+     */
+    public static void depositTraceStopsAtLastEmptyBeforeOccupiedBar(GameTestHelper helper) {
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        Item barItem = firstBarItem();
+        bars.getItems().insertItem(1, new ItemStack(barItem), false);
+        BlockPos pos = bars.getBlockPos();
+        double y = pos.getY() + 1.0 / 16.0;
+        double z = pos.getZ() + 2.0 / 16.0;
+        ViewRay ray = new ViewRay(
+                new Vec3(pos.getX() - 1.0, y, z),
+                new Vec3(pos.getX() + 2.0, y, z));
+
+        checkEquals(0, BarCubeIdx.traceAllPositions(ray, pos, bars.getItems()),
+                "Bar trace deposit index");
+        helper.succeed();
+    }
+
+    /**
+     * Breaking a lower Bar block collapses Bars in the block above that depended on its seam. To
+     * reproduce in-game: build supported Bars across a two-block seam and break the lower block.
+     * The upper dependent Bars drop and its empty block disappears.
+     */
     public static void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -130,6 +181,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Breaking a full Bar column drops all contents without spawning one entity per Bar. To
+     * reproduce in-game: fill a Bar block with one ingot type and break it. Every ingot is returned
+     * in consolidated dropped stacks.
+     */
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -160,6 +216,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A player-triggered cascade consolidates matching drops across block boundaries. To reproduce
+     * in-game: build a dense supported Bar column spanning two blocks and remove its lowest support.
+     * All unsupported Bars are returned in consolidated item entities.
+     */
     public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -202,7 +263,12 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
-    public static void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
+    /**
+     * A Bar collapse never merges stacks with different data components. To reproduce in-game:
+     * build a supported Bar chain from otherwise identical items carrying distinct components, then
+     * remove the support. Each component identity remains a separate drop.
+     */
+    public static void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         BlockPos pos = bars.getBlockPos();
@@ -222,18 +288,21 @@ public final class BarColumnChecks {
         List<ItemEntity> drops = droppedInColumn(helper, pos, pos).stream()
                 .filter(entity -> entity.getItem().is(barItem))
                 .toList();
-        checkEquals(2, drops.size(), "Differently tagged item-entity count");
+        checkEquals(2, drops.size(), "Component-distinct item-entity count");
         checkEquals(2, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
-                "Differently tagged item count");
+                "Component-distinct item count");
         int[] variants = drops.stream().mapToInt(BarColumnChecks::testVariant).sorted().toArray();
         check(Arrays.equals(new int[]{1, 2}, variants),
-                "Different tags were merged or changed: " + Arrays.toString(variants));
+                "Different components were merged or changed: " + Arrays.toString(variants));
         helper.succeed();
     }
 
     /**
      * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
      * position holds one bar, so full means every position of every block occupied.
+     *
+     * <p>To reproduce in-game: compare an empty Bar column, the same column with one Bar, and a full
+     * column. Their comparator outputs are 0, at least 1, and 15 respectively.
      */
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -252,6 +321,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Every block in a Bar column reports the same whole-column fill. To reproduce in-game: make a
+     * two-block column with one block full and the other empty, then place comparators against both.
+     * Their outputs match.
+     */
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         placeBar(helper, ORIGIN.above());
@@ -269,6 +343,9 @@ public final class BarColumnChecks {
     /**
      * The fill is measured against the column's current height, so a run that loses a block reports
      * the same contents as a larger share of a smaller column.
+     *
+     * <p>To reproduce in-game: fill the lower half of a two-block Bar column, read its comparator,
+     * then remove the empty upper block. The lower block's output rises from half full to full.
      */
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);

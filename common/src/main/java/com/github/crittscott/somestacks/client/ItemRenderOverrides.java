@@ -118,16 +118,19 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         CONFIG_MAP.putAll(prepared);
     }
 
+    /** Replaces the highest-precedence profile layer with the server's synchronized overrides. */
     public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
         SERVER_OVERRIDES.clear();
         SERVER_OVERRIDES.putAll(overrides);
     }
 
+    /** Changes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
     }
 
+    /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);

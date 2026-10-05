@@ -5,6 +5,8 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.server.AutomationActor;
+import com.github.crittscott.somestacks.server.FabricAdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -48,7 +50,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ProtectionGameTests implements FabricGameTest {
     private static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
             new ConcurrentHashMap<>();
-    private static final Map<TestTarget, AtomicReference<Player>> REMOVAL_PROBES =
+    private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES =
             new ConcurrentHashMap<>();
 
     static {
@@ -66,19 +68,25 @@ public final class ProtectionGameTests implements FabricGameTest {
             return probe.result();
         });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
-            AtomicReference<Player> actor = REMOVAL_PROBES.get(new TestTarget(level, pos));
-            if (actor != null) {
-                actor.set(player);
+            RemovalProbe probe = REMOVAL_PROBES.get(new TestTarget(level, pos));
+            if (probe != null) {
+                probe.actor().set(player);
+                return probe.allowed();
             }
             return true;
         });
     }
 
+    /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
     }
 
+    /**
+     * No in-game reproduction applies: this verifies that Fabric backs the shared SomeStacks
+     * automation identity with its FakePlayer implementation.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationUsesFabricFakePlayer(GameTestHelper helper) {
         check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
@@ -86,7 +94,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /** In game, click outside a claim toward its interior; Fabric must deny before placing there. */
+    /**
+     * To reproduce in-game: stand outside a claim and click toward a denied destination inside it.
+     * Fabric consults that destination while it is still air and places nothing there.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void destinationConsultationRunsBeforePlacement(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -94,7 +105,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
         PlacementProbe probe = new PlacementProbe(
-                InteractionResult.SUCCESS, new AtomicBoolean(), new AtomicBoolean());
+                InteractionResult.FAIL, new AtomicBoolean(), new AtomicBoolean());
         PLACEMENT_PROBES.put(key, probe);
         try {
             check(!WorldEdits.placeChecked(
@@ -110,7 +121,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /** In game, allow a player but deny [SomeStacks] in a claim, then extract the last Single. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Single. Player-attributed cleanup removes the empty block.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -120,7 +134,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
         AtomicReference<Player> observedActor = new AtomicReference<>();
-        REMOVAL_PROBES.put(key, observedActor);
+        REMOVAL_PROBES.put(key, new RemovalProbe(true, observedActor));
         try {
             check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
         } finally {
@@ -132,7 +146,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /** In game, allow a player but deny [SomeStacks], then extract the last item from Storage. */
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Storage item. Deferred cleanup retains the player and removes the block.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -142,7 +159,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
         AtomicReference<Player> observedActor = new AtomicReference<>();
-        REMOVAL_PROBES.put(key, observedActor);
+        REMOVAL_PROBES.put(key, new RemovalProbe(true, observedActor));
         try {
             check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
                     "Player extraction returned nothing");
@@ -158,41 +175,195 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * A refused cleanup leaves the empty top Storage block in both the world and the resolved run.
+     * To reproduce in-game: protect the top block of a two-block temporary Storage pile from
+     * [SomeStacks], leave one item in the bottom block, and trigger settlement. The protected empty
+     * top block remains; after allowing [SomeStacks], the next settlement removes it.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
+        BlockPos topRelative = ORIGIN.above();
+        StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, topRelative);
+        base.getItems().insertItem(0, new ItemStack(Items.DIRT), false);
+
+        ServerLevel level = helper.getLevel();
+        TestTarget key = new TestTarget(level, helper.absolutePos(topRelative));
+        REMOVAL_PROBES.put(key, new RemovalProbe(false, new AtomicReference<>()));
+        try {
+            StoragePile pile = base.pile();
+            check(pile != null, "Pile did not resolve");
+            pile.settle();
+            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+            checkEquals(2, pile.height(), "The pile dropped a block it never removed");
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        StoragePile pile = base.pile();
+        check(pile != null, "Pile did not resolve after the refusal");
+        pile.settle();
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.succeed();
+    }
+
+    /**
+     * Player-triggered Bar cleanup retains that player as the break-event actor.
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, place one Bar, and
+     * extract it. The now-empty Bar block is removed because cleanup is attributed to the player.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        bars.getItems().insertItem(
+                0, new ItemStack(GameTestScaffold.firstBarItem()), false);
+        ServerPlayer player = FakePlayer.get(level);
+        TestTarget key = new TestTarget(level, helper.absolutePos(ORIGIN));
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        REMOVAL_PROBES.put(key, new RemovalProbe(true, observedActor));
+        try {
+            check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        check(observedActor.get() == player, "Bar cleanup event did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * Mixed player and machine mutations attribute deferred Storage cleanup to [SomeStacks].
+     * To reproduce in-game: allow a player but deny [SomeStacks], put two items in a temporary
+     * Storage pile, extract one by hand and the other by automation before settlement, and let
+     * settlement run. The empty block remains because mixed cleanup uses the automation actor.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
+        ServerPlayer player = FakePlayer.get(level);
+        TestTarget key = new TestTarget(level, helper.absolutePos(ORIGIN));
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        REMOVAL_PROBES.put(key, new RemovalProbe(false, observedActor));
+        try {
+            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
+                    "Player extraction count");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve before automation extraction");
+            checkEquals(1, pile.extract(0, 1, false).getCount(),
+                    "Automation extraction count");
+            pile.settle();
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        check(observedActor.get() != null, "Cleanup break event did not fire");
+        checkEquals(AutomationActor.PROFILE.getId(), observedActor.get().getUUID(),
+                "Mixed cleanup actor UUID");
+        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * A Fabric item-use denial vetoes an adjacent-stack consultation. To reproduce in-game: deny
+     * item use at a claimed destination, then hold the modifier and right-click the neighboring
+     * block toward it. No item is deposited and no stack is placed in the denied position.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void adjacentConsultationHonorsUseItemDeny(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayer.get(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        TestTarget key = new TestTarget(level, target);
+        PlacementProbe probe = new PlacementProbe(
+                InteractionResult.FAIL, new AtomicBoolean(), new AtomicBoolean());
+        PLACEMENT_PROBES.put(key, probe);
+        try {
+            check(!new FabricAdjacentEditAuthority().mayUseItemAt(player, target),
+                    "Item-use denial did not veto the adjacent stack consultation");
+        } finally {
+            PLACEMENT_PROBES.remove(key);
+        }
+        check(probe.invoked().get(), "Fabric did not consult the adjacent destination");
+        helper.succeed();
+    }
+
+    /**
+     * A refused removal keeps an emptied Bar block without preventing the unsupported block above
+     * from collapsing. To reproduce in-game: build a supported two-block Bar column, deny
+     * [SomeStacks] permission to remove the lower block, and extract its bottom support. The empty
+     * lower block remains, while the unsupported upper block comes down.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
+        BarStackBE lower = GameTestScaffold.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestScaffold.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestScaffold.firstBarItem();
+        BlockPos upperPos = upper.getBlockPos();
+
+        int slot = 0;
+        GameTestScaffold.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        for (int layer = 1; layer < 8; layer++) {
+            slot = BarColumnChecks.firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
+            GameTestScaffold.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        }
+        GameTestScaffold.seedSlot(
+                upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
+                new ItemStack(barItem));
+
+        TestTarget key = new TestTarget(helper.getLevel(), lower.getBlockPos());
+        REMOVAL_PROBES.put(key, new RemovalProbe(false, new AtomicReference<>()));
+        try {
+            lower.extractAt(0);
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        helper.assertBlockPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        check(lower.isEmpty(), "The kept block held on to its bars");
+        check(helper.getLevel().getBlockEntity(upperPos) == null,
+                "The block above a kept block was not brought down");
+        helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(GameTestHelper helper) {
         ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#checkedPlacementRejectsAnObstructingEntity}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
-        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(helper, playerFactory(helper));
+        ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
-        ProtectionChecks.placementIntoWaterKeepsTheWater(helper, playerFactory(helper));
-    }
-
-    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        return stack -> {
-            ServerPlayer player = FakePlayer.get(level);
-            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            return player;
-        };
+        ProtectionChecks.placementIntoWaterKeepsTheWater(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     private record TestTarget(Level level, BlockPos pos) {}
 
     private record PlacementProbe(
             InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir) {}
+
+    private record RemovalProbe(boolean allowed, AtomicReference<Player> actor) {}
 
     // Growth under protection
     //
@@ -202,6 +373,10 @@ public final class ProtectionGameTests implements FabricGameTest {
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
+    /**
+     * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -215,7 +390,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         check(FabricGameTestSupport.insertAt(storage, headroom, offered, true).isEmpty(),
                 "A full pile with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
@@ -228,6 +403,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -242,7 +421,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
@@ -255,6 +434,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -270,7 +453,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         checkEquals(3, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                 "A full column with free headroom did not credit growth");
 
-        outsideTheBorder(helper, () -> {
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
                     "Simulated remainder");
             checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
@@ -285,6 +468,10 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     // Growth through entities
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -294,7 +481,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
         checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
@@ -307,6 +494,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Singles column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -316,7 +507,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
         checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
@@ -329,6 +520,10 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: stand in the growth space above a full Bar column and insert through
+     * item automation; it accepts nothing and does not grow into the entity.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -338,7 +533,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(bar, 4);
-        putCowIn(helper, ORIGIN.above());
+        GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
         checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, true).getCount(),
@@ -351,45 +546,4 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /**
-     * Puts a living placement-blocking entity across the bottom north-west cell and bar position
-     * of {@code relative}.
-     */
-    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
-        check(cow != null, "Could not create obstruction cow");
-        check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(
-                target.getX() + 0.5,
-                target.getY(),
-                target.getZ() + 0.5,
-                0.0F,
-                0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
-    }
-
-    /**
-     * Runs {@code action} with the world border moved off the test structure, and restores it
-     * before returning. The border is level-wide state, but the move and the restore both happen
-     * inside this one synchronous call, so no other test observes it moved.
-     */
-    private static void outsideTheBorder(GameTestHelper helper, Runnable action) {
-        WorldBorder border = helper.getLevel().getWorldBorder();
-        BlockPos above = helper.absolutePos(ORIGIN.above());
-        double centerX = border.getCenterX();
-        double centerZ = border.getCenterZ();
-        double size = border.getSize();
-        try {
-            border.setCenter(above.getX() + 1000.0, above.getZ());
-            border.setSize(16.0);
-            check(!border.isWithinBounds(above),
-                    "Test setup left the position inside the world border");
-            action.run();
-        } finally {
-            border.setCenter(centerX, centerZ);
-            border.setSize(size);
-        }
-    }
 }

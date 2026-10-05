@@ -83,6 +83,7 @@ public class StorageStackBE extends StackBlockEntity {
         return rotation;
     }
 
+    /** Sets the rendered layout rotation modulo four and publishes it to clients. */
     public void setRotation(int rotation) {
         this.rotation = rotation % 4;
         setChanged();

@@ -8,18 +8,43 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public final class ConfigurationGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
+    /** See {@link ConfigurationChecks#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes}. */
     @GameTest(template = TEMPLATE)
     public void overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(GameTestHelper helper) {
         ConfigurationChecks.overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(helper);
     }
 
+    /** See {@link ConfigurationChecks#overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues}. */
     @GameTest(template = TEMPLATE)
     public void overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(GameTestHelper helper) {
         ConfigurationChecks.overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(helper);
     }
 
+    /** See {@link ConfigurationChecks#serverConfigLoadsBoundsListsAndIngotGlobs}. */
     @GameTest(template = TEMPLATE)
     public void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
         ConfigurationChecks.serverConfigLoadsBoundsListsAndIngotGlobs(helper);
+    }
+
+    /** See {@link ConfigurationChecks#denyPoliciesRespectPlayerAutomationAndExistingContents}. */
+    @GameTest(template = TEMPLATE)
+    public void denyPoliciesRespectPlayerAutomationAndExistingContents(GameTestHelper helper) {
+        ConfigurationChecks.denyPoliciesRespectPlayerAutomationAndExistingContents(
+                helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ConfigurationChecks#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically}. */
+    @GameTest(template = TEMPLATE)
+    public void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
+            GameTestHelper helper) {
+        ConfigurationChecks.disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
+                helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ConfigurationChecks#serverCommandsEnforcePermissionsAndPersistEdits}. */
+    @GameTest(template = TEMPLATE)
+    public void serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper helper) {
+        ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 }

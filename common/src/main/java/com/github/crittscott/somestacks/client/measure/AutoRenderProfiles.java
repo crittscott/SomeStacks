@@ -110,6 +110,7 @@ public final class AutoRenderProfiles {
         }
     }
 
+    /** Writes the measured cache only when a profile has changed since its last load or save. */
     public static void saveCache() {
         if (!dirty) {
             return;

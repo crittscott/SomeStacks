@@ -13,9 +13,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -29,11 +26,17 @@ import java.util.function.Function;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.putCowIn;
 
 /** Loader-neutral placement and player-deposit protection scenarios. */
 public final class ProtectionChecks {
     private ProtectionChecks() {}
 
+    /**
+     * Every loader attributes automation to the same [SomeStacks] profile. To reproduce in-game:
+     * configure a claim or logging mod to report the actor for machine-driven stack growth or
+     * cleanup. It reports [SomeStacks] with the shared profile identity.
+     */
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
         var actual = WorldEdits.automationActor(helper.getLevel()).getGameProfile();
         checkEquals(AutomationActor.PROFILE.getId(), actual.getId(), "Automation UUID");
@@ -41,6 +44,11 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /**
+     * Checked world edits place inside build height and reject positions outside it. To reproduce
+     * in-game: grow or place a stack in ordinary space, then attempt the same edit at the world's
+     * vertical limit. Only the in-bounds placement succeeds.
+     */
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerLevel level = helper.getLevel();
@@ -59,6 +67,11 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /**
+     * Stack placement refuses a living entity intersecting its final collision shape. To reproduce
+     * in-game: stand or put a mob in the occupied part of a proposed stack and try to place or grow
+     * it. No stack block appears.
+     */
     public static void checkedPlacementRejectsAnObstructingEntity(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerLevel level = helper.getLevel();
@@ -73,6 +86,11 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /**
+     * Creative deposits fill a stack without consuming the held items. To reproduce in-game:
+     * switch to Creative, hold the modifier, and deposit a full held stack into Storage. Storage
+     * receives the items while the hand retains its original count.
+     */
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 64));
@@ -97,6 +115,11 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /**
+     * Placing a stack into water waterlogs it instead of removing the fluid. To reproduce in-game:
+     * hold the modifier and place a new stack into a water source. The block appears waterlogged and
+     * the water remains present.
+     */
     public static void placementIntoWaterKeepsTheWater(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerLevel level = helper.getLevel();
@@ -135,13 +158,4 @@ public final class ProtectionChecks {
         return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
-    private static void putCowIn(GameTestHelper helper, BlockPos relative) {
-        ServerLevel level = helper.getLevel();
-        BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
-        check(cow != null, "Could not create obstruction cow");
-        check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
-        check(level.addFreshEntity(cow), "Could not add obstruction cow");
-    }
 }

@@ -31,6 +31,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
 public final class SinglesColumnChecks {
     private SinglesColumnChecks() {}
 
+    /**
+     * The bottom layer stands on the world, while an unsupported higher cell rejects a deposit. To
+     * reproduce in-game: aim at an empty bottom cell and deposit, then aim at a higher cell with
+     * nothing beneath it. Only the bottom deposit succeeds.
+     */
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         check(SinglesStackBE.isValidSinglesItem(new ItemStack(Items.STICK)),
@@ -46,6 +51,10 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A Singles item is supported by the cell directly beneath it. To reproduce in-game: deposit
+     * into a bottom cell, then the same visual column one layer higher. Both items remain stacked.
+     */
     public static void upperCellUsesTheCellImmediatelyBelow(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 5;
@@ -59,6 +68,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Support across a block seam follows visual columns despite different block rotations. To
+     * reproduce in-game: rotate two stacked Singles blocks differently, fill a top cell of the
+     * lower block, then deposit into the visually aligned bottom cell above. The deposit succeeds.
+     */
     public static void differentlyRotatedBlocksShareVisualSeamColumns(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
@@ -81,6 +95,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Extraction shifts only the aimed visual column down one layer and carries item rotations. To
+     * reproduce in-game: make a three-item vertical Singles column, rotate the upper two items, and
+     * extract the bottom item. The other two descend with their orientations unchanged.
+     */
     public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 3;
@@ -116,6 +135,10 @@ public final class SinglesColumnChecks {
      * survive the shift that closes the gap beneath it. An ingot stands in for such an item: a
      * Singles Stack refuses one from a deposit, because Bar accepts it, but may be holding one that
      * predates an {@code ss ingot} edit or a data pack reload.
+     *
+     * <p>To reproduce in-game: store an item in Singles, change the ingot list so Singles would now
+     * reject it, place another item below it, and extract the lower item. The newly rejected stored
+     * item moves down rather than being lost.
      */
     public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -139,6 +162,10 @@ public final class SinglesColumnChecks {
     /**
      * The same conservation across a block boundary: the item handed down from the block above is
      * one the receiving block would refuse from a deposit.
+     *
+     * <p>To reproduce in-game: store an item in the bottom cell of an upper Singles block, change
+     * the ingot list so Singles rejects it, and extract the aligned top item below. The stored item
+     * crosses the seam rather than being lost.
      */
     public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
@@ -162,6 +189,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Singles gravity shifts occupied cells exactly one layer and does not compact a preexisting
+     * gap. To reproduce in-game: use automation to leave a gap between two items in one column,
+     * then extract the bottom item. The gap remains and the upper item descends only one layer.
+     */
     public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int column = 2;
@@ -180,6 +212,12 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Extraction draws from the visually aligned column across a differently rotated block seam.
+     * To reproduce in-game: rotate two stacked Singles blocks differently, put items across one
+     * visual seam column, rotate the upper item, and extract the lower item. The upper item crosses
+     * the seam with its item rotation intact and its emptied block disappears.
+     */
     public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above());
@@ -207,6 +245,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * A deposit ray stops at the last empty cell before an occupied cell. To reproduce in-game:
+     * place an item deeper in a Singles row and aim through the empty cells toward it. The new item
+     * occupies the empty cell immediately in front of the stored item.
+     */
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedCell(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         singles.getItems().insertItem(8, new ItemStack(Items.STICK), false);
@@ -222,6 +265,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * An unobstructed deposit ray selects its farthest supported cell. To reproduce in-game: aim
+     * through an entirely empty supported Singles row and deposit. The item appears in the farthest
+     * cell on that ray.
+     */
     public static void depositTraceUsesFarthestCellWhenNothingIsOccupied(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BlockPos blockPos = singles.getBlockPos();
@@ -233,6 +281,36 @@ public final class SinglesColumnChecks {
                 0);
 
         checkEquals(12, result, "Trace deposit index");
+        helper.succeed();
+    }
+
+    /**
+     * Breaking the middle Singles block drops only its local items and does not pull the upper
+     * block through the new gap. To reproduce in-game: put one distinct item in the same column of
+     * each block in a three-block Singles run and break the middle block. Its item drops and the
+     * upper item stays in the upper block.
+     */
+    public static void breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(
+            GameTestHelper helper) {
+        SinglesStackBE lower = placeSingles(helper, ORIGIN);
+        SinglesStackBE middle = placeSingles(helper, ORIGIN.above());
+        SinglesStackBE upper = placeSingles(helper, ORIGIN.above(2));
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        middle.getItems().insertItem(0, new ItemStack(Items.DIRT), false);
+        upper.getItems().insertItem(0, new ItemStack(Items.APPLE), false);
+
+        helper.setBlock(ORIGIN.above(), Blocks.AIR);
+
+        checkEquals(1, GameTestScaffold.droppedNear(
+                helper, middle.getBlockPos(), Items.DIRT), "Dropped middle contents");
+        checkEquals(1, GameTestScaffold.heldAt(
+                helper, lower.getBlockPos(), Items.STONE), "Lower contents");
+        checkEquals(1, GameTestScaffold.heldAt(
+                helper, upper.getBlockPos(), Items.APPLE), "Upper contents");
+        check(helper.getLevel().getBlockEntity(upper.getBlockPos()) instanceof SinglesStackBE,
+                "Upper block moved into the gap");
+        checkEquals(Items.APPLE, upper.getItems().getStackInSlot(0).getItem(),
+                "Upper item moved out of its block");
         helper.succeed();
     }
 
@@ -249,6 +327,9 @@ public final class SinglesColumnChecks {
     /**
      * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
      * holds one item, so full means every cell of every block occupied.
+     *
+     * <p>To reproduce in-game: compare an empty Singles column, the same column with one item, and a
+     * full column. Their comparator outputs are 0, at least 1, and 15 respectively.
      */
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -266,6 +347,11 @@ public final class SinglesColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Every block in a Singles column reports the same whole-column fill. To reproduce in-game:
+     * make a two-block column with one block's cells full and the other empty, then place comparators
+     * against both blocks. Both report the half-full value.
+     */
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         placeSingles(helper, ORIGIN.above());
@@ -282,6 +368,9 @@ public final class SinglesColumnChecks {
     /**
      * The fill is measured against the column's current height, so a run that loses a block reports
      * the same contents as a larger share of a smaller column.
+     *
+     * <p>To reproduce in-game: fill the lower half of a two-block Singles column, read its comparator,
+     * then remove the empty upper block. The lower block's output rises from half full to full.
      */
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);

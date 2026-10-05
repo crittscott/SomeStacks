@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -7,14 +8,18 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.function.Function;
+
 /**
  * Fabric-native scaffolding for the GameTests: the namespaced template name and Transfer API
- * storage access, including the insert/extract shims that mirror Forge's {@code IItemHandler}
- * call surface. Everything loader-neutral lives in {@link GameTestScaffold}.
+ * storage access and the small transaction helpers used by adapter-specific tests. Everything
+ * loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class FabricGameTestSupport {
     public static final String TEMPLATE = "somestacks:somestacks_empty";
@@ -59,20 +64,6 @@ public final class FabricGameTestSupport {
     }
 
     /**
-     * Walks every advertised slot from 0 upward inserting as much of {@code stack} as each slot
-     * will take, mirroring Forge's {@code ItemHandlerHelper.insertItemStacked}. Returns the
-     * remainder left over once the stack is exhausted or every slot has been offered it.
-     */
-    public static ItemStack insertWalkingSlots(
-            SlottedStorage<ItemVariant> storage, ItemStack stack, boolean simulate) {
-        ItemStack remaining = stack.copy();
-        for (int slot = 0; slot < storage.getSlotCount() && !remaining.isEmpty(); slot++) {
-            remaining = insertAt(storage, slot, remaining, simulate);
-        }
-        return remaining;
-    }
-
-    /**
      * Extracts up to {@code amount} from {@code slot}, mirroring Forge's
      * {@code IItemHandler.extractItem(slot, amount, simulate)}.
      */
@@ -95,10 +86,6 @@ public final class FabricGameTestSupport {
         return slotStorage.getResource().toStack((int) slotStorage.getAmount());
     }
 
-    public static int slotLimit(SlottedStorage<ItemVariant> storage, int slot) {
-        return (int) storage.getSlot(slot).getCapacity();
-    }
-
     public static int count(SlottedStorage<ItemVariant> storage, Item item) {
         int total = 0;
         for (int slot = 0; slot < storage.getSlotCount(); slot++) {
@@ -118,5 +105,15 @@ public final class FabricGameTestSupport {
             }
         }
         return total;
+    }
+
+    /** A fake-player factory that resets the main hand for each shared check. */
+    public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        return mainHand -> {
+            ServerPlayer player = FakePlayer.get(level);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            return player;
+        };
     }
 }

@@ -25,22 +25,29 @@ import java.util.function.Function;
 public final class InteractionGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
+    /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(template = TEMPLATE)
     public void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         InteractionChecks.malformedGestureStateFailsDuringDecoding(helper);
     }
 
+    /** See {@link InteractionChecks#gestureStateTracksModeAndModifier}. */
     @GameTest(template = TEMPLATE)
     public void gestureStateTracksModeAndModifier(GameTestHelper helper) {
         InteractionChecks.gestureStateTracksModeAndModifier(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#interactionReadsOnlyTheMainHand}. */
     @GameTest(template = TEMPLATE)
     public void interactionReadsOnlyTheMainHand(GameTestHelper helper) {
-        InteractionChecks.interactionReadsOnlyTheMainHand(helper, playerFactory(helper));
+        InteractionChecks.interactionReadsOnlyTheMainHand(helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /**
+     * To reproduce in-game: leave the main hand empty, hold an item in the offhand, and use the
+     * empty-hand air gesture; the SomeStacks interaction mode still changes.
+     */
     @GameTest(template = TEMPLATE)
     public void emptyMainHandAirClickIgnoresOccupiedOffhand(GameTestHelper helper) {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
@@ -53,58 +60,69 @@ public final class InteractionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /** See {@link InteractionChecks#rotationValidatesHeldItemAndBlockType}. */
     @GameTest(template = TEMPLATE)
     public void rotationValidatesHeldItemAndBlockType(GameTestHelper helper) {
         InteractionChecks.rotationValidatesHeldItemAndBlockType(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#sneakingRotationsReachTheLoaderHook}. */
     @GameTest(template = TEMPLATE)
     public void sneakingRotationsReachTheLoaderHook(GameTestHelper helper) {
         InteractionChecks.sneakingRotationsReachTheLoaderHook(
-                helper, playerFactory(helper), (player, hit) ->
+                helper, FabricGameTestSupport.playerFactory(helper), (player, hit) ->
                         UseBlockCallback.EVENT.invoker().interact(
                                 player, player.level(), InteractionChecks.HAND, hit)
                                 == InteractionResult.SUCCESS);
     }
 
+    /** See {@link InteractionChecks#vanillaInteractionReachesDepositExtractAndPlacement}. */
     @GameTest(template = TEMPLATE)
     public void vanillaInteractionReachesDepositExtractAndPlacement(GameTestHelper helper) {
         InteractionChecks.vanillaInteractionReachesDepositExtractAndPlacement(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#itemRotationTargetsOnlyAnOccupiedCell}. */
     @GameTest(template = TEMPLATE)
     public void itemRotationTargetsOnlyAnOccupiedCell(GameTestHelper helper) {
         InteractionChecks.itemRotationTargetsOnlyAnOccupiedCell(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#permanenceRequiresEmptyHandAndHonorsProtection}. */
     @GameTest(template = TEMPLATE)
     public void permanenceRequiresEmptyHandAndHonorsProtection(GameTestHelper helper) {
         InteractionChecks.permanenceRequiresEmptyHandAndHonorsProtection(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#rotationSoundThrottleSuppressesSameTickAndClears}. */
     @GameTest(template = TEMPLATE, timeoutTicks = 20)
     public void rotationSoundThrottleSuppressesSameTickAndClears(GameTestHelper helper) {
         InteractionChecks.rotationSoundThrottleSuppressesSameTickAndClears(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#extractionRefusesIncompatibleOrFullHands}. */
     @GameTest(template = TEMPLATE)
     public void extractionRefusesIncompatibleOrFullHands(GameTestHelper helper) {
         InteractionChecks.extractionRefusesIncompatibleOrFullHands(
-                helper, playerFactory(helper));
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /** The fake player is shared per level, so every test sets the hand it means to test with. */
-    private static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        return mainHand -> {
-            ServerPlayer player = FakePlayer.get(level);
-            player.setItemInHand(InteractionChecks.HAND, mainHand);
-            return player;
-        };
+    /** See {@link InteractionChecks#fullTopFacePlacesTheSelectedStackType}. */
+    @GameTest(template = TEMPLATE)
+    public void fullTopFacePlacesTheSelectedStackType(GameTestHelper helper) {
+        InteractionChecks.fullTopFacePlacesTheSelectedStackType(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
+
+    /** See {@link InteractionChecks#everyStackTypeBlocksPistons}. */
+    @GameTest(template = TEMPLATE)
+    public void everyStackTypeBlocksPistons(GameTestHelper helper) {
+        InteractionChecks.everyStackTypeBlocksPistons(helper);
+    }
+
 }
