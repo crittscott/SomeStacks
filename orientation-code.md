@@ -47,7 +47,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Networking | versioned `SimpleChannel` | versioned payload registrar | payload registry plus a configuration-phase `ProtocolPkt` version marker |
 | Gestures | interaction/input events | interaction/input events | callbacks plus air-click mixin |
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
-| Automated edits | vanilla plus place/break events | vanilla plus place/break events | vanilla, break callback, Common Protection API growth check |
+| Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla, destination callback, Common Protection API, break callbacks |
 
 The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, gesture interpretation, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins use Loom's current remapping path without the legacy annotation processor.
 
@@ -73,7 +73,7 @@ Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; 
 
 Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-Growth and cleanup use `WorldEdits` with the shared `[SomeStacks]` automation identity and check build limits, replaceability, obstruction, border, spawn, and loader authority. Forge owns an explicit per-dimension actor cache cleared on level unload and server stop; NeoForge and Fabric use their fake-player factories. Forge and NeoForge fire native place/break events. Fabric fires the `PlayerBlockBreakEvents` BEFORE/CANCELED/AFTER lifecycle on removal and routes optional Common Protection API growth checks only through `CommonProtectionCheck`. Successful outer-block placement/removal also invokes the vanilla placement callback and emits `BLOCK_PLACE`/`BLOCK_DESTROY` game events; internal cells and bars remain block-entity contents, not world blocks.
+`WorldEdits` checks build limits, replaceability, obstruction, border, spawn and loader authority. Automated edits use the shared `[SomeStacks]` identity. Player-triggered cleanup retains the player; deferred Storage settlement falls back to automation for automated or mixed causes. Forge caches an actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge fire native place/break events. Before placement, Fabric consults the destination callback for players and Common Protection API for every actor; removal fires the `PlayerBlockBreakEvents` BEFORE/CANCELED/AFTER lifecycle. Outer-block edits invoke the vanilla placement callback and emit `BLOCK_PLACE`/`BLOCK_DESTROY` game events.
 
 ## Player interaction and networking
 
@@ -81,7 +81,7 @@ Shared client rules recognize permanence, block rotation, item rotation, deposit
 
 Non-sneaking existing-stack clicks run from `StackBlock.useItemOn`/`useWithoutItem`; loader server hooks handle sneaking torch rotation plus placement or deposit reached through a neighboring non-stack block. Both pass the actual vanilla `BlockHitResult` to `StackInteractions`, after vanilla has supplied target, reach pacing, and the ordinary interaction event. Common handling validates main hand, spectator/protection state, held item, support, type enablement, height, obstruction, and edit authority. Placement plus first deposit is one transaction. Cell selection for deposit, extraction, and Singles item rotation is recomputed server-side by extending a ray through the vanilla hit location; no client cell index is accepted.
 
-The real loader event covers the block the player clicked. When that click reaches a Singles or Bar Stack through a neighboring block, `AdjacentEdits` additionally consults protection at the destination with a recursion guard. There are no synthetic repeats for ordinary stack clicks, no trailing-click suppressor, and no per-gesture mutation packets.
+The real loader event covers the clicked block. `AdjacentEdits` recursion-guards an additional destination check for Singles/Bar reached through a neighbor and for Fabric placement; only `PASS` authorizes it. There are no synthetic repeats for ordinary stack clicks, trailing-click suppressor, or per-gesture mutation packets.
 
 ## Configuration and presentation
 

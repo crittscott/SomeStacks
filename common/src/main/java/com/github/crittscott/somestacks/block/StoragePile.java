@@ -120,8 +120,21 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     public void setPermanent(boolean permanent) {
+        setPermanent(permanent, null);
+    }
+
+    /** Changes permanence and attributes any resulting deferred cleanup to {@code actor}. */
+    public void setPermanent(boolean permanent, @Nullable ServerPlayer actor) {
         for (StorageStackBE sbe : blocks) {
             sbe.inheritPermanent(permanent);
+        }
+        markDirtyBy(actor);
+    }
+
+    /** Schedules settlement while preserving the actor responsible for possible block cleanup. */
+    void markDirtyBy(@Nullable ServerPlayer actor) {
+        if (!blocks.isEmpty()) {
+            blocks.get(0).noteCleanupActor(actor);
         }
         markDirty();
     }
@@ -151,7 +164,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
         ItemStack extracted = handlerOf(flatSlot).extractItem(flatSlot % StorageStackBE.SLOTS, amount, false);
         if (!extracted.isEmpty()) {
-            markDirty();
+            markDirtyBy(null);
         }
         return extracted;
     }
@@ -201,7 +214,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
 
         if (moved > 0) {
-            markDirty();
+            markDirtyBy(placer);
         }
         return moved;
     }
@@ -256,7 +269,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
 
         if (moved > 0) {
-            markDirty();
+            markDirtyBy(null);
         }
         return moved;
     }
@@ -377,6 +390,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * block that packing emptied away is never sent to clients only to be removed behind it.
      */
     public void settle() {
+        ServerPlayer cleanupActor = blocks.get(0).takeCleanupActor();
         List<ItemStack> contents = new ArrayList<>();
         for (int i = 0; i < totalSlots(); i++) {
             ItemStack stack = getSlot(i);
@@ -407,7 +421,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             }
         }
 
-        trimEmptyTop();
+        trimEmptyTop(cleanupActor);
         publishPendingBlocks();
         publishComparatorSignal();
     }
@@ -420,7 +434,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * <p>Protection can refuse a removal, and the walk stops there rather than skipping past it:
      * the pile keeps every block from the refused one down, so what it holds is what stands.
      */
-    private void trimEmptyTop() {
+    private void trimEmptyTop(@Nullable ServerPlayer actor) {
         int keep = blocks.size();
         while (keep > 0) {
             StorageStackBE sbe = blocks.get(keep - 1);
@@ -432,7 +446,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
+            boolean removed = actor == null
+                    ? WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())
+                    : WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
+            if (!removed) {
                 break;
             }
             removedDownTo = i;

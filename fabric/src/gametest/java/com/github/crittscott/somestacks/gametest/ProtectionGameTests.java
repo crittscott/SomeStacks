@@ -3,26 +3,38 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -31,12 +43,37 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
- * and waterlogging, plus growth answering to the same checks in both simulation and commit.
- *
- * <p>Loader-event-specific denial checks stay with Forge and NeoForge. Fabric's corresponding
- * integration checks live in the shared scenarios and its Common Protection API test seam.
+ * destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.
  */
 public final class ProtectionGameTests implements FabricGameTest {
+    private static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
+            new ConcurrentHashMap<>();
+    private static final Map<TestTarget, AtomicReference<Player>> REMOVAL_PROBES =
+            new ConcurrentHashMap<>();
+
+    static {
+        UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (!(level instanceof ServerLevel serverLevel)) {
+                return InteractionResult.PASS;
+            }
+            PlacementProbe probe = PLACEMENT_PROBES.get(
+                    new TestTarget(serverLevel, hit.getBlockPos()));
+            if (probe == null) {
+                return InteractionResult.PASS;
+            }
+            probe.invoked().set(true);
+            probe.sawAir().set(level.getBlockState(hit.getBlockPos()).isAir());
+            return probe.result();
+        });
+        PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
+            AtomicReference<Player> actor = REMOVAL_PROBES.get(new TestTarget(level, pos));
+            if (actor != null) {
+                actor.set(player);
+            }
+            return true;
+        });
+    }
+
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
@@ -46,6 +83,78 @@ public final class ProtectionGameTests implements FabricGameTest {
     public void automationUsesFabricFakePlayer(GameTestHelper helper) {
         check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
                 "Fabric automation actor was not a Fabric API FakePlayer");
+        helper.succeed();
+    }
+
+    /** In game, click outside a claim toward its interior; Fabric must deny before placing there. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void destinationConsultationRunsBeforePlacement(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerPlayer player = FakePlayer.get(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        TestTarget key = new TestTarget(level, target);
+        PlacementProbe probe = new PlacementProbe(
+                InteractionResult.SUCCESS, new AtomicBoolean(), new AtomicBoolean());
+        PLACEMENT_PROBES.put(key, probe);
+        try {
+            check(!WorldEdits.placeChecked(
+                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                    "A handled destination consultation permitted placement");
+        } finally {
+            PLACEMENT_PROBES.remove(key);
+        }
+
+        check(probe.invoked().get(), "Fabric did not consult the placement destination");
+        check(probe.sawAir().get(), "Fabric consulted protection only after placement");
+        helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
+        helper.succeed();
+    }
+
+    /** In game, allow a player but deny [SomeStacks] in a claim, then extract the last Single. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = FakePlayer.get(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        TestTarget key = new TestTarget(level, target);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        REMOVAL_PROBES.put(key, observedActor);
+        try {
+            check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        check(observedActor.get() == player, "Cleanup break event did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /** In game, allow a player but deny [SomeStacks], then extract the last item from Storage. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = FakePlayer.get(level);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        TestTarget key = new TestTarget(level, target);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        REMOVAL_PROBES.put(key, observedActor);
+        try {
+            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+                    "Player extraction returned nothing");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve before settlement");
+            pile.settle();
+        } finally {
+            REMOVAL_PROBES.remove(key);
+        }
+
+        check(observedActor.get() == player, "Deferred cleanup did not retain the player");
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         helper.succeed();
     }
 
@@ -79,6 +188,11 @@ public final class ProtectionGameTests implements FabricGameTest {
             return player;
         };
     }
+
+    private record TestTarget(Level level, BlockPos pos) {}
+
+    private record PlacementProbe(
+            InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir) {}
 
     // Growth under protection
     //

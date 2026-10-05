@@ -344,7 +344,7 @@ public final class StackInteractions {
                     ? Integer.MAX_VALUE
                     : handStack.getMaxStackSize() - handStack.getCount();
             ItemStack taken = storage.extractAt(
-                    index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack);
+                    index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack, player);
             if (!taken.isEmpty()) {
                 level.playSound(null, pos, StackSounds.storageExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
@@ -371,7 +371,7 @@ public final class StackInteractions {
             if (stored.isEmpty() || !ItemOps.canTakeIntoHand(player.getMainHandItem(), stored)) {
                 return;
             }
-            ItemStack taken = singles.extractAt(index);
+            ItemStack taken = singles.extractAt(index, player);
             if (!taken.isEmpty()) {
                 level.playSound(null, pos, StackSounds.singlesExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
@@ -389,7 +389,7 @@ public final class StackInteractions {
             if (stored.isEmpty() || !ItemOps.canTakeIntoHand(player.getMainHandItem(), stored)) {
                 return;
             }
-            ItemStack taken = bars.extractAt(index);
+            ItemStack taken = bars.extractAt(index, player);
             if (!taken.isEmpty()) {
                 level.playSound(null, pos, StackSounds.barExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
@@ -438,7 +438,7 @@ public final class StackInteractions {
             return;
         }
         boolean permanent = !pile.isPermanent();
-        pile.setPermanent(permanent);
+        pile.setPermanent(permanent, player);
         player.displayClientMessage(Component.translatable(
                 "somestacks.message.pile_state",
                 Component.translatable(permanent

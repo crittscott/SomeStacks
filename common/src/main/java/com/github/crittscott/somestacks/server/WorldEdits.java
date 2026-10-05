@@ -16,10 +16,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * Vanilla world-edit mechanics for automated growth and removal: world border and spawn
- * protection, entity obstruction, and the actual block placement/removal. The one loader-specific
- * decision each carries — who the automation actor is, and whether a claim/logging mod vetoes the
- * edit — is delegated to {@link EditAuthority}.
+ * Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
+ * entity obstruction, actor propagation, and the actual block edit. Automation identity and
+ * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
     private WorldEdits() {
@@ -78,9 +77,11 @@ public final class WorldEdits {
     }
 
     /**
-     * Places {@code state} at {@code pos}, restoring the previous state if a claim/logging mod
-     * vetoes it. {@code finalCollision} is the completed placement's collision shape, since a
-     * block-entity stack can start empty and acquire its real shape only with its first deposit.
+     * Places {@code state} at {@code pos}. Loader checks that can run as queries happen before the
+     * world changes; loaders whose native placement event requires the placed state may still veto
+     * afterward, in which case the previous state is restored. {@code finalCollision} is the
+     * completed placement's collision shape, since a block-entity stack can start empty and acquire
+     * its real shape only with its first deposit.
      */
     public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
                                        BlockState state, Direction placedAgainst,
@@ -89,11 +90,14 @@ public final class WorldEdits {
             return false;
         }
         EditAuthority.PlacementVeto placementVeto = authority.preparePlacement(level, pos);
+        if (placementVeto.isVetoedBefore(placer, placedAgainst)) {
+            return false;
+        }
         BlockState previous = level.getBlockState(pos);
         if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
             return false;
         }
-        if (placementVeto.isVetoed(placer, placedAgainst)) {
+        if (placementVeto.isVetoedAfter(placer, placedAgainst)) {
             level.setBlock(pos, previous, Block.UPDATE_ALL);
             return false;
         }
@@ -109,19 +113,26 @@ public final class WorldEdits {
      * @return whether the block was removed
      */
     public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        if (isProtected(level, pos)) {
+        return removeChecked(automationActor(level), level, pos);
+    }
+
+    /**
+     * Removes a stack block on behalf of {@code actor}, preserving that identity through vanilla
+     * protection, loader-native removal events, and the emitted game event.
+     */
+    public static boolean removeChecked(ServerPlayer actor, ServerLevel level, BlockPos pos) {
+        if (isProtected(actor, pos)) {
             return false;
         }
         BlockState state = level.getBlockState(pos);
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (authority.vetoesRemoval(level, pos, state, blockEntity)) {
+        if (authority.vetoesRemoval(actor, level, pos, state, blockEntity)) {
             return false;
         }
-        ServerPlayer actor = automationActor(level);
         if (!level.removeBlock(pos, false)) {
             return false;
         }
-        authority.afterRemoval(level, pos, state, blockEntity);
+        authority.afterRemoval(actor, level, pos, state, blockEntity);
         level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
         return true;
     }

@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -74,9 +76,8 @@ public final class ProtectionGameTests {
 
     // Mod-driven removal under protection
     //
-    // A settle or a collapse takes down the blocks it empties, and that is a world edit with no
-    // actor left to ask, so it uses the level's fake player exactly as growth does. A refusal
-    // has to leave the block standing without leaving the run's own model out of step with it.
+    // An unattended settle has no player actor, so it uses the level's automation player exactly
+    // as growth does. A refusal must leave the block and the run model in step.
 
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
@@ -108,6 +109,62 @@ public final class ProtectionGameTests {
         check(pile != null, "Pile did not resolve after the refusal");
         pile.settle();
         helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.succeed();
+    }
+
+    /** In game, allow a player but deny [SomeStacks] in a claim, then extract the last Single. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
+            if (event.getPos().equals(target)) {
+                observedActor.set(event.getPlayer());
+            }
+        };
+
+        NeoForge.EVENT_BUS.addListener(captureActor);
+        try {
+            check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            NeoForge.EVENT_BUS.unregister(captureActor);
+        }
+
+        check(observedActor.get() == player, "Cleanup break event did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /** In game, allow a player but deny [SomeStacks], then extract the last item from Storage. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
+            if (event.getPos().equals(target)) {
+                observedActor.set(event.getPlayer());
+            }
+        };
+
+        NeoForge.EVENT_BUS.addListener(captureActor);
+        try {
+            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+                    "Player extraction returned nothing");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve before settlement");
+            pile.settle();
+        } finally {
+            NeoForge.EVENT_BUS.unregister(captureActor);
+        }
+
+        check(observedActor.get() == player, "Deferred cleanup did not retain the player");
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         helper.succeed();
     }
 

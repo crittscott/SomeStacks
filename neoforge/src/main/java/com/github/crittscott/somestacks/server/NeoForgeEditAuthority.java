@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.server;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
@@ -27,14 +29,19 @@ public final class NeoForgeEditAuthority implements EditAuthority {
     @Override
     public EditAuthority.PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
-        return (placer, placedAgainst) -> EventHooks.onBlockPlace(placer, snapshot, placedAgainst);
+        return new EditAuthority.PlacementVeto() {
+            @Override
+            public boolean isVetoedAfter(Player placer, Direction placedAgainst) {
+                return EventHooks.onBlockPlace(placer, snapshot, placedAgainst);
+            }
+        };
     }
 
     @Override
     public boolean vetoesRemoval(
-            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
-        ServerPlayer breaker = automationActor(level);
-        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, breaker);
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
+        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
         return NeoForge.EVENT_BUS.post(evt).isCanceled();
     }
 }

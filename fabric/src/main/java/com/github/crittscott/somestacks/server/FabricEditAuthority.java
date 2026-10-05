@@ -4,8 +4,10 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -16,16 +18,15 @@ import javax.annotation.Nullable;
  * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
  * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
  *
- * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
- * for the mod's adjacent-target protection hook ({@link FabricAdjacentEditAuthority}) to fire, and Fabric
- * API has no generic "a block was placed" event the way Forge's block-place event is. Claim mods
- * that implement Common Protection API are consulted directly instead, through
- * {@link CommonProtectionCheck}, when the API is installed; other claim mods are not covered.
+ * <p>Player placement consults the destination through {@link FabricAdjacentEditAuthority} before
+ * changing the world. Automated growth has no corresponding click, and Fabric API has no generic
+ * block-place event, so claim mods that implement Common Protection API are consulted directly
+ * through {@link CommonProtectionCheck}. Both checks run before placement.
  */
 public final class FabricEditAuthority implements EditAuthority {
     public FabricEditAuthority() {
         if (CommonProtectionCheck.isLoaded()) {
-            SomeStacksCommon.LOGGER.info("Enabled Common Protection API checks for automated growth on Fabric");
+            SomeStacksCommon.LOGGER.info("Enabled Common Protection API checks for placement on Fabric");
         }
     }
 
@@ -36,29 +37,37 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
-        return (placer, placedAgainst) -> {
-            ServerPlayer actor = (ServerPlayer) placer;
-            return CommonProtectionCheck.isLoaded() && CommonProtectionCheck.prevents(level, actor, pos);
+        return new PlacementVeto() {
+            @Override
+            public boolean isVetoedBefore(Player placer, Direction placedAgainst) {
+                ServerPlayer actor = (ServerPlayer) placer;
+                if (!AutomationActor.is(actor) && !AdjacentEdits.mayUseItemAt(actor, pos)) {
+                    return true;
+                }
+                return CommonProtectionCheck.isLoaded()
+                        && CommonProtectionCheck.prevents(level, actor, pos);
+            }
         };
     }
 
     @Override
     public boolean vetoesRemoval(
-            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
-        ServerPlayer breaker = automationActor(level);
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
         boolean allowed = PlayerBlockBreakEvents.BEFORE.invoker()
-                .beforeBlockBreak(level, breaker, pos, state, blockEntity);
+                .beforeBlockBreak(level, actor, pos, state, blockEntity);
         if (!allowed) {
             PlayerBlockBreakEvents.CANCELED.invoker()
-                    .onBlockBreakCanceled(level, breaker, pos, state, blockEntity);
+                    .onBlockBreakCanceled(level, actor, pos, state, blockEntity);
         }
         return !allowed;
     }
 
     @Override
     public void afterRemoval(
-            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
         PlayerBlockBreakEvents.AFTER.invoker()
-                .afterBlockBreak(level, automationActor(level), pos, state, blockEntity);
+                .afterBlockBreak(level, actor, pos, state, blockEntity);
     }
 }

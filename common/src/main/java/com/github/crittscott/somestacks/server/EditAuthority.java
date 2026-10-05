@@ -11,30 +11,39 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 /**
- * The loader-specific half of automated world edits: who performs them, and whether a claim or
- * logging mod vetoes one. {@link WorldEdits} owns the vanilla mechanics and consults this for both.
+ * The loader-specific half of stack world edits: who performs automation, and whether a claim or
+ * logging mod vetoes an edit. {@link WorldEdits} owns the vanilla mechanics and actor propagation.
  *
  * <p>The loader's entry point installs an implementation via {@link WorldEdits#setAuthority} before
  * any world logic can run.
  */
 public interface EditAuthority {
-    @FunctionalInterface
     interface PlacementVeto {
-        boolean isVetoed(Player placer, Direction placedAgainst);
+        /** Whether the loader refuses the placement before the world is changed. */
+        default boolean isVetoedBefore(Player placer, Direction placedAgainst) {
+            return false;
+        }
+
+        /** Whether the loader refuses the placement after the new state exists. */
+        default boolean isVetoedAfter(Player placer, Direction placedAgainst) {
+            return false;
+        }
     }
 
     /** The actor automation-driven growth and removal are attributed to. */
     ServerPlayer automationActor(ServerLevel level);
 
-    /** Captures the loader-specific state needed to evaluate a placement after it occurs. */
+    /** Captures the loader-specific checks needed before and after a placement. */
     PlacementVeto preparePlacement(ServerLevel level, BlockPos pos);
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
     boolean vetoesRemoval(
-            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity);
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity);
 
     /** Reports a completed removal to loader-native observers. */
     default void afterRemoval(
-            ServerLevel level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
+            ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
+            @Nullable BlockEntity blockEntity) {
     }
 }

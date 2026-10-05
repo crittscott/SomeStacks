@@ -8,8 +8,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Optional Common Protection API integration for {@link FabricEditAuthority}. Fabric API has no
- * generic block-place event the way Forge's does, so automated growth has nothing to fire on this
- * platform; claim mods that implement Common Protection API are asked directly to close that gap.
+ * generic block-place event the way Forge's does, so claim mods that implement Common Protection
+ * API are asked directly before player placement or automated growth.
  * The API's types are referenced only inside this class, and only once {@link #isLoaded()}
  * confirms it is present, so a server without it never touches them.
  */

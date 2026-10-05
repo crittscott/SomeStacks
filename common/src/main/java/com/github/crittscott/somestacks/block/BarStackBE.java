@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -158,6 +159,11 @@ public class BarStackBE extends StackBlockEntity {
      * @param index the position to empty, in {@code [0, SLOTS)}
      */
     public ItemStack extractAt(int index) {
+        return extractAt(index, null);
+    }
+
+    /** Player-facing extraction variant that preserves the actor through cascade cleanup. */
+    public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
         BarDropBatch drops = new BarDropBatch();
@@ -169,7 +175,7 @@ public class BarStackBE extends StackBlockEntity {
 
             if (!extracted.isEmpty()) {
                 cascadeFrom(serverLevel, this,
-                        supportSeamBeneath(level, getBlockPos()), topBefore, drops);
+                        supportSeamBeneath(level, getBlockPos()), topBefore, drops, actor);
             }
         } finally {
             endBatch();
@@ -230,7 +236,7 @@ public class BarStackBE extends StackBlockEntity {
      */
     static void cascadeFrom(ServerLevel columnLevel, BarStackBE start,
                             @Nullable boolean[] seamBelow, boolean[] topBefore,
-                            BarDropBatch drops) {
+                            BarDropBatch drops, @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -254,7 +260,10 @@ public class BarStackBE extends StackBlockEntity {
             // the cascade is already walking its own way up, and lowered again if nothing went.
             if (be.isEmpty()) {
                 be.removedByCascade = true;
-                if (!WorldEdits.removeChecked(columnLevel, be.getBlockPos())) {
+                boolean removed = actor == null
+                        ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
+                        : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
+                if (!removed) {
                     be.removedByCascade = false;
                 }
             }
@@ -287,7 +296,7 @@ public class BarStackBE extends StackBlockEntity {
     static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(),
-                    BarCubeIdx.topLayerOccupancy(above.items), drops);
+                    BarCubeIdx.topLayerOccupancy(above.items), drops, null);
         }
     }
 

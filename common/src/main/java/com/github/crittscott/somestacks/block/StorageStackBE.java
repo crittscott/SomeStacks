@@ -33,6 +33,9 @@ public class StorageStackBE extends StackBlockEntity {
 
     private int rotation = 0;
     private boolean permanent = false;
+    @Nullable
+    private ServerPlayer pendingCleanupActor;
+    private boolean pendingCleanupUsesAutomation;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS);
@@ -109,6 +112,35 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /**
+     * Remembers who caused the next deferred settle. Multiple edits by one player retain that
+     * player; automation, an unknown cause, or mixed actors conservatively use the automation
+     * identity.
+     */
+    void noteCleanupActor(@Nullable ServerPlayer actor) {
+        if (pendingCleanupUsesAutomation) {
+            return;
+        }
+        if (actor == null) {
+            pendingCleanupActor = null;
+            pendingCleanupUsesAutomation = true;
+        } else if (pendingCleanupActor == null) {
+            pendingCleanupActor = actor;
+        } else if (!pendingCleanupActor.getUUID().equals(actor.getUUID())) {
+            pendingCleanupActor = null;
+            pendingCleanupUsesAutomation = true;
+        }
+    }
+
+    /** Takes and clears the actor attached to the next deferred settle. Null means automation. */
+    @Nullable
+    ServerPlayer takeCleanupActor() {
+        ServerPlayer actor = pendingCleanupUsesAutomation ? null : pendingCleanupActor;
+        pendingCleanupActor = null;
+        pendingCleanupUsesAutomation = false;
+        return actor;
+    }
+
+    /**
      * Deposits into the pile this block belongs to, filling from its base upward and growing the
      * column if it must. Which block of the pile the items were offered to makes no difference.
      *
@@ -125,6 +157,12 @@ public class StorageStackBE extends StackBlockEntity {
      * settle that packs the rest of the pile down over the gap.
      */
     public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand) {
+        return extractAt(index, maxCount, playerHand, null);
+    }
+
+    /** Player-facing extraction variant that preserves the actor through deferred cleanup. */
+    public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand,
+                               @Nullable ServerPlayer actor) {
         if (index < 0 || index >= items.getSlots()) {
             return ItemStack.EMPTY;
         }
@@ -145,7 +183,7 @@ public class StorageStackBE extends StackBlockEntity {
 
         StoragePile pile = pile();
         if (pile != null) {
-            pile.markDirty();
+            pile.markDirtyBy(actor);
         }
 
         return taken;

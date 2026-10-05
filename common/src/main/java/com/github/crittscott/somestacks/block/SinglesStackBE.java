@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -176,6 +177,11 @@ public class SinglesStackBE extends StackBlockEntity {
      * @return the extracted item, or empty when the cell held nothing
      */
     public ItemStack extractAt(int index) {
+        return extractAt(index, null);
+    }
+
+    /** Player-facing extraction variant that preserves the actor through structural cleanup. */
+    public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         int column = SinglesCubeIdx.columnFromIndex(index);
         int y = SinglesCubeIdx.xyzFromIndex(index)[1];
@@ -192,7 +198,7 @@ public class SinglesStackBE extends StackBlockEntity {
             endBatchWithoutPublish();
         }
 
-        drawDownColumn(serverLevel, column);
+        drawDownColumn(serverLevel, column, actor);
         return extracted;
     }
 
@@ -259,7 +265,8 @@ public class SinglesStackBE extends StackBlockEntity {
      * sees as continuous is the visual one. The walk ends at the first block that hands nothing
      * down. The receiving cell is written directly, for the reason {@link #shiftColumnDown} gives.
      */
-    private void drawDownColumn(ServerLevel columnLevel, int column) {
+    private void drawDownColumn(ServerLevel columnLevel, int column,
+                                @Nullable ServerPlayer actor) {
         SinglesStackBE be = this;
         int col = column;
 
@@ -295,7 +302,7 @@ public class SinglesStackBE extends StackBlockEntity {
                 }
             }
 
-            be.publishColumnEdit(columnLevel);
+            be.publishColumnEdit(columnLevel, actor);
 
             if (next == null) {
                 return;
@@ -313,13 +320,13 @@ public class SinglesStackBE extends StackBlockEntity {
      *
      * <p>A block protection refuses to remove stays, and publishes as the empty block it now is.
      */
-    private void publishColumnEdit(ServerLevel columnLevel) {
+    private void publishColumnEdit(ServerLevel columnLevel, @Nullable ServerPlayer actor) {
         clearEmptyCubeRotations();
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && WorldEdits.removeChecked(columnLevel, getBlockPos())) {
-            removeEmptyBelow(columnLevel, getBlockPos().below());
+                && removeChecked(actor, columnLevel, getBlockPos())) {
+            removeEmptyBelow(columnLevel, getBlockPos().below(), actor);
             return;
         }
 
@@ -328,15 +335,23 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
-    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos) {
+    private static void removeEmptyBelow(ServerLevel columnLevel, BlockPos pos,
+                                         @Nullable ServerPlayer actor) {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            if (!WorldEdits.removeChecked(columnLevel, current)) {
+            if (!removeChecked(actor, columnLevel, current)) {
                 return;
             }
             current = current.below();
         }
+    }
+
+    private static boolean removeChecked(@Nullable ServerPlayer actor, ServerLevel level,
+                                         BlockPos pos) {
+        return actor == null
+                ? WorldEdits.removeChecked(level, pos)
+                : WorldEdits.removeChecked(actor, level, pos);
     }
 
     /**
