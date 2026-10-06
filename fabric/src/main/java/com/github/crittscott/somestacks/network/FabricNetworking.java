@@ -24,8 +24,6 @@ public final class FabricNetworking {
         PayloadTypeRegistry.playC2S().register(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC);
 
         PayloadTypeRegistry.playS2C().register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(RenderOverridePkt.TYPE, RenderOverridePkt.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(WriteOverridesPkt.TYPE, WriteOverridesPkt.STREAM_CODEC);
     }
 
     public static void initServer() {

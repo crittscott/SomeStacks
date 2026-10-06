@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  * The mod's payloads and their handler registration. Every packet class is shared; this binds the
  * shared {@code TYPE}/{@code STREAM_CODEC} pair to NeoForge's payload system.
  *
- * <p>The three server-to-client payloads are delivered to {@link #clientReceiver}, which the
+ * <p>The server-to-client payload is delivered to {@link #clientReceiver}, which the
  * physical client installs from {@code ClientSetup}; the dedicated server never touches a client
  * rendering class. NeoForge rejects peers whose registrar version does not match the shared
  * protocol version or which omit a required payload.
@@ -24,10 +24,10 @@ import java.util.function.Consumer;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static Consumer<CustomPacketPayload> clientReceiver;
+    private static Consumer<ConfigSyncPkt> clientReceiver;
 
     /** Installed once by {@code ClientSetup} on the physical client. */
-    public static void setClientReceiver(Consumer<CustomPacketPayload> receiver) {
+    public static void setClientReceiver(Consumer<ConfigSyncPkt> receiver) {
         clientReceiver = Objects.requireNonNull(receiver);
     }
 
@@ -39,8 +39,6 @@ public final class ModNetworking {
                 toServer(GestureStatePkt::handleServer));
 
         registrar.playToClient(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC, ModNetworking::toClient);
-        registrar.playToClient(RenderOverridePkt.TYPE, RenderOverridePkt.STREAM_CODEC, ModNetworking::toClient);
-        registrar.playToClient(WriteOverridesPkt.TYPE, WriteOverridesPkt.STREAM_CODEC, ModNetworking::toClient);
     }
 
     private static <T extends CustomPacketPayload> IPayloadHandler<T> toServer(
@@ -48,7 +46,7 @@ public final class ModNetworking {
         return (payload, context) -> handler.accept(payload, (ServerPlayer) context.player());
     }
 
-    private static void toClient(CustomPacketPayload payload, IPayloadContext context) {
+    private static void toClient(ConfigSyncPkt payload, IPayloadContext context) {
         Objects.requireNonNull(clientReceiver,
                 "Client packet receiver has not been installed").accept(payload);
     }

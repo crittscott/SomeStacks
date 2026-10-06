@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
@@ -24,8 +23,7 @@ final class ForgePacketHandlers {
         GestureStatePkt.handleServer(msg, player);
     }
 
-    static <T extends CustomPacketPayload> void handleClient(
-            T msg, CustomPayloadEvent.Context ctx) {
+    static void handleClient(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
     }
 }

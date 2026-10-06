@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.forge.ForgePlatformServices;
+import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.AdjacentEdits;
@@ -47,7 +47,7 @@ public class SomeStacks {
 
         ModRegistry.init(modBus);
         ModNetworking.init();
-        CommandNetwork.install((player, packet) -> ModNetworking.CHANNEL.send(
+        ConfigSyncNetwork.install((player, packet) -> ModNetworking.CHANNEL.send(
                 packet, PacketDistributor.PLAYER.with(player)));
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);

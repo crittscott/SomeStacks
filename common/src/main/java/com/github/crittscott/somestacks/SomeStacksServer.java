@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.StackDataMigration;
-import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
+import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
@@ -23,6 +23,7 @@ public final class SomeStacksServer {
         StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
         ServerOverridesLoader.reload();
+        ConfigSyncPkt.rebuildCurrent();
     }
 
     public static void onServerStopped() {
@@ -34,7 +35,7 @@ public final class SomeStacksServer {
     }
 
     public static void onPlayerJoined(ServerPlayer player) {
-        CommandNetwork.send(player, ConfigSyncPkt.current());
+        ConfigSyncNetwork.syncPlayer(player);
     }
 
     public static void onPlayerLeft(UUID playerId) {

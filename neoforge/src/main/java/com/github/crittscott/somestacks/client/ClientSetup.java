@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.GameShuttingDownEvent;
 /**
  * Client-side registration: the three block entity renderers, the key binding, the resource reload
  * listeners behind render overrides, bar textures, and measured profiles, and the delivery target
- * for the render-related server-to-client payloads.
+ * for the server-to-client render configuration payload.
  */
 public final class ClientSetup {
     private ClientSetup() {}

@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegist
 import com.github.crittscott.somestacks.network.ModNetworking;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -27,6 +28,23 @@ public final class ClientEvents {
     public static void init() {
         ClientGestures.setSender(payload ->
                 ModNetworking.CHANNEL.send(payload, PacketDistributor.SERVER.noArg()));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+        ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
+            @Override
+            public void success(net.minecraft.commands.CommandSourceStack source,
+                                net.minecraft.network.chat.Component message) {
+                source.sendSuccess(() -> message, false);
+            }
+
+            @Override
+            public void failure(net.minecraft.commands.CommandSourceStack source,
+                                net.minecraft.network.chat.Component message) {
+                source.sendFailure(message);
+            }
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

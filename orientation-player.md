@@ -137,13 +137,13 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 
 ## Commands
 
-`/ss` is mainly an admin and render-authoring tool.
+`/ss` combines server administration with local render-authoring tools.
 
 | Command | Permission | Purpose |
 | --- | --- | --- |
 | `/ss help [command]` | anyone | List or explain commands |
-| `/ss item ...` / `reset` | level 2 | Change how one item appears on that client |
-| `/ss write changed\|<modid>\|all\|list` | level 2 | Save changed item profiles, or generate complete profile files |
+| `/ss item ...` / `reset` | anyone; client-local | Change how one item appears on that client |
+| `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` / `ingot ...` | level 2 | Edit gallery lists, disabled lists, or ingot tag patterns |
 | `/ss reload` | level 2 | Reread world policy and server item-render overrides, then resync players |
@@ -152,11 +152,11 @@ Gallery commands build east over a replaced sandstone floor, bypass ordinary pla
 
 ## Item appearance
 
-Storage and Singles can show an item in four modes: `2d` (flat art on a small cube), `3d` (the item's FIXED renderer), `gui` (its inventory renderer), and `block` (a BlockItem's block state, falling back to `3d`). Each profile can also set scale and a three-component offset.
+Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED renderer), `gui` (the inventory renderer), and `block` (a BlockItem's state, falling back to `3d`). Profiles also set scale and a three-component offset.
 
 Resolution order is server override, local override, resource-pack data, then automatic measurement. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer immediately; `/ss write changed` saves those changes to `config/somestacks/item_overrides.json`. The namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only and not loaded.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. These are local client commands: a server cannot invoke them or request a client file write.
 
 Bar appearance is separate and client-side: resource packs map item ids to bar textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 

@@ -102,6 +102,10 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
     }
 
+    /** Removes server-only state before a saved tag is sent as a client update. */
+    protected void stripServerOnlyUpdateData(CompoundTag tag) {
+    }
+
     public final boolean isEmpty() {
         return ItemOps.isHandlerEmpty(items);
     }
@@ -223,6 +227,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag, registries);
         StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
+        stripServerOnlyUpdateData(tag);
         return tag;
     }
 }

@@ -7,6 +7,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -23,6 +24,23 @@ public final class ClientEvents {
 
     public static void init() {
         ClientGestures.setSender(packet -> PacketDistributor.sendToServer(packet));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+        ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
+            @Override
+            public void success(net.minecraft.commands.CommandSourceStack source,
+                                net.minecraft.network.chat.Component message) {
+                source.sendSuccess(() -> message, false);
+            }
+
+            @Override
+            public void failure(net.minecraft.commands.CommandSourceStack source,
+                                net.minecraft.network.chat.Component message) {
+                source.sendFailure(message);
+            }
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -87,7 +87,6 @@
   "somestacks.command.help.usage": "  %s",
   "somestacks.command.help.audience": "Run by %s.",
   "somestacks.command.help.gate.operator": "an operator, in game or from the server console",
-  "somestacks.command.help.gate.operator_in_game": "an operator, in game only",
   "somestacks.command.help.gate.server_admin_in_game": "a server administrator, in game only",
   "somestacks.command.help.gate.anyone": "anyone",
 

@@ -32,7 +32,6 @@ final class SsHelp {
     /** Who may run a subcommand, phrased for the player reading about it. */
     private enum Gate {
         OPERATOR("somestacks.command.help.gate.operator"),
-        OPERATOR_IN_GAME("somestacks.command.help.gate.operator_in_game"),
         SERVER_ADMIN_IN_GAME("somestacks.command.help.gate.server_admin_in_game"),
         ANYONE("somestacks.command.help.gate.anyone");
 
@@ -44,11 +43,11 @@ final class SsHelp {
     }
 
     /**
-     * One top-level subcommand. The summary is its line in the index, while Brigadier supplies its
-     * exact forms and the detail is what a player needs to know before running it.
+     * One top-level subcommand. The summary is its line in the index; usage comes from the server
+     * tree or the explicit client-only forms.
      */
     private enum Topic {
-        ITEM(SsCommand.COMMAND_ITEM, "somestacks.command.help.item.summary", Gate.OPERATOR_IN_GAME,
+        ITEM(SsCommand.COMMAND_ITEM, "somestacks.command.help.item.summary", Gate.ANYONE,
                 List.of("somestacks.command.help.item.detail.1",
                         "somestacks.command.help.item.detail.2",
                         "somestacks.command.help.item.detail.3",
@@ -67,7 +66,7 @@ final class SsHelp {
                 List.of("somestacks.command.help.ingotgallery.detail.1",
                         "somestacks.command.help.ingotgallery.detail.2")),
 
-        WRITE(SsCommand.COMMAND_WRITE, "somestacks.command.help.write.summary", Gate.OPERATOR_IN_GAME,
+        WRITE(SsCommand.COMMAND_WRITE, "somestacks.command.help.write.summary", Gate.ANYONE,
                 List.of("somestacks.command.help.write.detail.1",
                         "somestacks.command.help.write.detail.2",
                         "somestacks.command.help.write.detail.3",
@@ -177,8 +176,24 @@ final class SsHelp {
         return 1;
     }
 
-    /** Derives every accepted form from the registered Brigadier tree. */
+    /** Derives server forms from Brigadier and names the two client-only trees explicitly. */
     private static List<String> usages(CommandContext<CommandSourceStack> ctx, Topic topic) {
+        if (topic == Topic.ITEM) {
+            return List.of(
+                    "/ss item <item> reset",
+                    "/ss item <item> <mode>",
+                    "/ss item <item> <mode> <scale>",
+                    "/ss item <item> <mode> <scale> <x> <y>",
+                    "/ss item <item> <mode> <scale> <x> <y> <z>");
+        }
+        if (topic == Topic.WRITE) {
+            return List.of(
+                    "/ss write changed",
+                    "/ss write all",
+                    "/ss write list",
+                    "/ss write <modid>");
+        }
+
         CommandDispatcher<CommandSourceStack> dispatcher =
                 ctx.getSource().getServer().getCommands().getDispatcher();
         CommandNode<CommandSourceStack> root =

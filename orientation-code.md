@@ -8,7 +8,7 @@ Current subsystem ownership, persistence, loader boundaries, and invariants. `or
 
 ## Project shape
 
-Some Stacks is a Java 21 Minecraft 1.21.4 mod under `com.github.crittscott.somestacks`, mod id `somestacks`. Architectury is build-time only, with no runtime API dependency.
+Some Stacks is a Java 21 Minecraft 1.21.4 mod under `com.github.crittscott.somestacks`, mod id `somestacks`.
 
 `common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams installed during startup. Each loader supplies registry handles before common world objects exist.
 
@@ -34,8 +34,8 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | `StackInteractions`, `ServerGestureState` | Server interpretation of vanilla block-use packets and synchronized gesture state |
 | `network/*` | Gesture-state and server-to-client synchronization payloads |
 | `renderconfig/*` | Shared render override types, JSON validation, and codecs |
-| `client/*` | Renderers, profiles, measurement, bar textures, gesture rules |
-| `SomeStacksServer`, `SsCommand`, `RenderGalleryGenerator` | Common lifecycle, administration, profile authoring and galleries |
+| `client/*` | Renderers, profiles, measurement, bar textures, gesture rules, local profile-authoring commands |
+| `SomeStacksServer`, `SsCommand`, `RenderGalleryGenerator` | Common lifecycle, server administration and galleries |
 | Loader modules | Registration, transport, callbacks, rendering glue, native automation views |
 
 ## Loader integration
@@ -49,7 +49,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla, destination callback, Common Protection API, break callbacks |
 
-The selected loader build is required on client and server. Loaders own transport and callbacks; packet codecs, gesture interpretation, gesture rules, rendering, commands, and storage mechanics remain in `common`. Fabric's mixins use Loom's current remapping path without the legacy annotation processor.
+The selected loader build is required on client and server. Loaders own transport, command registration and callbacks; packet codecs, gesture interpretation, command trees, rendering, and storage mechanics remain in `common`. Forge and NeoForge enforce the shared protocol version through their channels; Fabric checks a configuration-phase marker in both directions. Fabric's mixins use Loom's current remapping path without the legacy annotation processor.
 
 ## Runtime and movement model
 
@@ -63,7 +63,7 @@ The three movement models are distinct:
 - `SinglesColumn` is positional. Extraction shifts one visual column down across rotation-aware seams, transports item rotation, preserves unrelated gaps, and does not collapse above a broken block.
 - `BarColumn` is positional and overlap-supported. Player extraction and block removal cascade; automation extraction moves the topmost bar into the opened position instead.
 
-`StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`. Storage saves `DataVersion`, `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `DataVersion` and `Items`.
+`StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`. Storage saves `DataVersion`, `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `DataVersion` and `Items`. `Permanent` is server-only and is stripped from update tags.
 
 `StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); older item tags run through vanilla's DataFixerUpper and are restamped. Items that fail to parse or have no free slot go to a saved `SetAside` list, are retried on every load, and are logged with the block position. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
 
@@ -79,6 +79,8 @@ Every loader-native view adapts `StackRunItemAccess` and spans the whole run plu
 
 Shared client rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. They suppress local vanilla block/item behavior without replacing the click: Forge/NeoForge cancellation and Fabric `SUCCESS` still send the normal block-use packet. A small payload sends placement mode and modifier-down state only when that state changes.
 
+The only play-phase server-to-client payload is a cached config snapshot. It is split into bounded chunks; the client stages one generation and publishes enable flags, server render overrides and render-tool namespace lists only after the declared totals arrive. `/ss item` and `/ss write` are client command branches and perform their file changes directly, so no server packet can request a client write.
+
 Non-sneaking existing-stack clicks run from `StackBlock.useItemOn`/`useWithoutItem`; loader server hooks handle sneaking torch rotation plus placement or deposit reached through a neighboring non-stack block. Both pass the actual vanilla `BlockHitResult` to `StackInteractions`, after vanilla has supplied target, reach pacing, and the ordinary interaction event. Common handling validates main hand, spectator/protection state, held item, support, type enablement, height, obstruction, and edit authority. Placement plus first deposit is one transaction. Cell selection for deposit, extraction, and Singles item rotation is recomputed server-side by extending a ray through the vanilla hit location; no client cell index is accepted.
 
 The real loader event covers the clicked block. `AdjacentEdits` recursion-guards an additional destination check for Singles/Bar reached through a neighbor and for Fabric placement; only `PASS` authorizes it. There are no synthetic repeats for ordinary stack clicks, trailing-click suppressor, or per-gesture mutation packets.
@@ -93,7 +95,7 @@ All types use block entity renderers. `CubeGrid` and `CubeRenderHelper` place St
 
 ## GameTests
 
-There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` under `<loader>/src/gametest`, run with `:<loader>:runGameTestServer` and excluded from `build`. Neutral assertions, vanilla interaction/protection scenarios, and the Base64 empty-structure fixture live in `common/src/gametest` and use `CommonRegistry`. Loader-native `IItemHandler` and Transfer API checks remain local. Fabric also covers storage-wide transfer, `StorageUtil.move`, nested rollback, and one structural extraction per transaction. Forge/NeoForge use annotated holders (NeoForge disables class-name prefixes); Fabric uses `fabric-gametest` entrypoints. Native event/synthetic-player assertions stay local; `CUSTOM_DATA` distinguishes identical test stacks.
+There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest`, run with `:<loader>:runGameTestServer` and excluded from `build`. Neutral scenarios live in `common/src/gametest`; loader-native automation and events stay local. Fabric additionally covers transaction behavior.
 
 ## Conventions the code currently follows
 

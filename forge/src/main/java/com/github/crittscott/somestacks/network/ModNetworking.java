@@ -43,10 +43,6 @@ public final class ModNetworking {
                 .clientbound()
                 .addMain(ConfigSyncPkt.class, ConfigSyncPkt.STREAM_CODEC,
                         ForgePacketHandlers::handleClient)
-                .addMain(RenderOverridePkt.class, RenderOverridePkt.STREAM_CODEC,
-                        ForgePacketHandlers::handleClient)
-                .addMain(WriteOverridesPkt.class, WriteOverridesPkt.STREAM_CODEC,
-                        ForgePacketHandlers::handleClient)
                 .build();
     }
 

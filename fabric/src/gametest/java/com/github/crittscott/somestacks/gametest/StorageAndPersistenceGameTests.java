@@ -106,10 +106,10 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryClientStateAndOmitSetAside}. */
+    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void updateTagsCarryClientStateAndOmitSetAside(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.updateTagsCarryClientStateAndOmitSetAside(helper);
+    public void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */

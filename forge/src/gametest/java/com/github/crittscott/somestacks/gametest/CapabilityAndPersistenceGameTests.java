@@ -107,10 +107,10 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryClientStateAndOmitSetAside}. */
+    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void updateTagsCarryClientStateAndOmitSetAside(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.updateTagsCarryClientStateAndOmitSetAside(helper);
+    public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */

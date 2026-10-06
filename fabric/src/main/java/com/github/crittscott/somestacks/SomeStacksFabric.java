@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
-import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
+import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.network.ProtocolPkt;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
@@ -32,7 +32,7 @@ public final class SomeStacksFabric implements ModInitializer {
         FabricStackInteractionEvents.init();
         FabricNetworking.registerPayloads();
         FabricNetworking.initServer();
-        CommandNetwork.install(FabricNetworking::send);
+        ConfigSyncNetwork.install(FabricNetworking::send);
 
         CommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess, environment) ->

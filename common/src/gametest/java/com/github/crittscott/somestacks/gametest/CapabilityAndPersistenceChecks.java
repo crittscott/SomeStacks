@@ -112,12 +112,12 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Client update tags carry every field the renderers need while omitting server-only set-aside
-     * data. To reproduce in-game: deposit and rotate Storage, Singles, and Bar contents, then join
-     * with another client. The contents and rotations appear, without exposing unreadable saved
-     * entries to that client.
+     * Client update tags carry every field the renderers need while omitting server-only state. To
+     * reproduce in-game: deposit and rotate Storage, Singles, and Bar contents, make the Storage
+     * pile permanent, then join with another client. The contents and rotations appear without
+     * exposing permanence or unreadable saved entries to that client.
      */
-    public static void updateTagsCarryClientStateAndOmitSetAside(GameTestHelper helper) {
+    public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
@@ -143,6 +143,8 @@ public final class CapabilityAndPersistenceChecks {
                 "Singles update tag exposed set-aside data");
         check(!barTag.getCompound("Items").contains("SetAside"),
                 "Bar update tag exposed set-aside data");
+        check(!storageTag.contains("Permanent"),
+                "Storage update tag exposed permanence");
         storageClient.loadCustomOnly(storageTag, registries);
         singlesClient.loadCustomOnly(singlesTag, registries);
         barsClient.loadCustomOnly(barTag, registries);
@@ -150,7 +152,7 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(3, storageClient.getItems().getStackInSlot(4).getCount(),
                 "Storage client item count");
         checkEquals(2, storageClient.getRotation(), "Storage client rotation");
-        check(storageClient.isPermanent(), "Storage client permanence");
+        check(!storageClient.isPermanent(), "Storage client received permanence");
         checkEquals(Items.APPLE, singlesClient.getItems().getStackInSlot(5).getItem(),
                 "Singles client item");
         checkEquals(1, singlesClient.getRotation(), "Singles client block rotation");

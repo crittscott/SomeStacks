@@ -2,13 +2,9 @@ package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerOverridesLoader;
-import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.network.WriteOverridesPkt;
-import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
-import com.github.crittscott.somestacks.renderconfig.RenderMode;
-import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -42,13 +38,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * The {@code ss} command: render override authoring, render gallery generation, server list
- * editing, and override reloading.
+ * The server-side {@code ss} command: render gallery generation, server list editing, and
+ * override reloading. Client-local render authoring lives in {@code ClientRenderCommands}.
  *
  * <p>Everything here is an administrative tool, so every subcommand but {@code help} requires a
- * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
- * against the sender's own view and so are player-only on top of that; the two gallery generators
- * need a player because a gallery is built where the sender stands.
+ * vanilla permission level. The two gallery generators need a player because a gallery is built
+ * where the sender stands.
  *
  * <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
  * without the protection checks applied to placement gestures, which is a wider authority than
@@ -56,9 +51,8 @@ import java.util.stream.Collectors;
  * subcommands gated by server config rather than a fixed level: {@code render_gallery.enabled}
  * (off by default) and {@code render_gallery.required_permission_level} (default 3).
  *
- * <p>{@link SsHelp} derives each subcommand's forms from this tree and supplies its gate and
- * summary. {@code ss help} is gated by nothing, so a player who cannot run a subcommand can still
- * read what it needs.
+ * <p>{@link SsHelp} derives server forms from this tree, supplies the two client-only forms, and
+ * describes each gate. {@code ss help} is gated by nothing.
  */
 public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
@@ -76,11 +70,6 @@ public final class SsCommand {
     static final String COMMAND_HELP = "help";
 
     private static final String ARG_ITEM = "item";
-    private static final String ARG_MODE = "mode";
-    private static final String ARG_SCALE = "scale";
-    private static final String ARG_X = "x";
-    private static final String ARG_Y = "y";
-    private static final String ARG_Z = "z";
     private static final String ARG_MODID = "modid";
     private static final String ARG_ENTRY = "entry";
 
@@ -90,42 +79,16 @@ public final class SsCommand {
     private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
     private static final String INGOTS_LABEL = "somestacks.command.label.ingots";
 
-    /** Override dumps cover all items, matching the Storage gallery's item selection. */
-    private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
-
     private SsCommand() {}
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher,
                                 CommandBuildContext buildContext) {
         dispatcher.register(
                 Commands.literal(COMMAND_ROOT)
-                        .then(Commands.literal(COMMAND_ITEM)
-                                .requires(SsCommand::isAdminPlayer)
-                                .then(Commands.argument(
-                                                ARG_ITEM,
-                                                ResourceArgument.resource(buildContext, Registries.ITEM))
-                                        .then(Commands.literal("reset")
-                                                .executes(SsCommand::resetItem))
-                                        .then(Commands.argument(ARG_MODE, StringArgumentType.word())
-                                                .suggests((ctx, builder) -> {
-                                                    for (RenderMode mode : RenderMode.values()) {
-                                                        builder.suggest(mode.getId());
-                                                    }
-                                                    return builder.buildFuture();
-                                                })
-                                                .executes(SsCommand::setMode)
-                                                .then(Commands.argument(ARG_SCALE, scaleArg())
-                                                        .executes(SsCommand::setModeAndScale)
-                                                        .then(Commands.argument(ARG_X, offsetArg())
-                                                                .then(Commands.argument(ARG_Y, offsetArg())
-                                                                        .executes(SsCommand::setModeScaleAndXy)
-                                                                        .then(Commands.argument(ARG_Z, offsetArg())
-                                                                                .executes(SsCommand::setModeScaleAndXyz))))))))
                         .then(galleryTree(COMMAND_GALLERY, RenderGalleryGenerator.Kind.STORAGE)
                                 .then(Commands.literal("items")
                                         .executes(SsCommand::galleryItems)))
                         .then(galleryTree(COMMAND_INGOT_GALLERY, RenderGalleryGenerator.Kind.BAR))
-                        .then(writeTree())
                         .then(Commands.literal(COMMAND_RELOAD)
                                 .requires(SsCommand::isAdmin)
                                 .executes(SsCommand::reload))
@@ -134,19 +97,6 @@ public final class SsCommand {
                         .then(ingotTree())
                         .then(SsHelp.tree())
         );
-    }
-
-    /**
-     * Bounds the numeric {@code ss item} arguments to the override schema. Brigadier reports an
-     * invalid value at the argument itself and rejects overflow before it reaches a render
-     * transform.
-     */
-    private static FloatArgumentType scaleArg() {
-        return FloatArgumentType.floatArg(OverrideJsonCodec.MIN_SCALE, OverrideJsonCodec.MAX_SCALE);
-    }
-
-    private static FloatArgumentType offsetArg() {
-        return FloatArgumentType.floatArg(OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET);
     }
 
     /**
@@ -167,27 +117,6 @@ public final class SsCommand {
                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(kind.modIds(), builder))
                         .executes(ctx -> gallerySingle(ctx, kind)));
-    }
-
-    /**
-     * The {@code ss write} subtree. {@code changed} writes the user override layer to the file
-     * the client loads at startup, so it holds only what {@code ss item} set. The namespace forms
-     * dump complete profiles for every item of those namespaces to a folder nothing reads back,
-     * which is what keeps a dump of a whole modpack from freezing that pack into the user layer.
-     * Namespaces are named exactly as the gallery commands name them.
-     */
-    private static LiteralArgumentBuilder<CommandSourceStack> writeTree() {
-        return Commands.literal(COMMAND_WRITE)
-                .requires(SsCommand::isAdminPlayer)
-                .then(Commands.literal("changed")
-                        .executes(SsCommand::writeChanged))
-                .then(Commands.literal("all")
-                        .executes(SsCommand::dumpAll))
-                .then(Commands.literal("list")
-                        .executes(SsCommand::dumpList))
-                .then(Commands.argument(ARG_MODID, StringArgumentType.word())
-                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(DUMP_KIND.modIds(), builder))
-                        .executes(SsCommand::dumpSingle));
     }
 
     /**
@@ -360,14 +289,6 @@ public final class SsCommand {
         return source.hasPermission(GAME_MASTER_PERMISSION_LEVEL);
     }
 
-    /**
-     * The gate on the render subcommands: they configure the server's rendering, which is an
-     * operator's job, and they act on the sender's own view, which needs a sender to have one.
-     */
-    private static boolean isAdminPlayer(CommandSourceStack source) {
-        return isPlayer(source) && isAdmin(source);
-    }
-
     private static CompletableFuture<Suggestions> suggestEntries(
             ServerConfig.ListSetting list, SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggest(List.copyOf(list.get()), builder);
@@ -393,74 +314,12 @@ public final class SsCommand {
         return SharedSuggestionProvider.suggest(itemIds, builder);
     }
 
-    /**
-     * The four forms of {@code ss item <item> <mode> ...}, each supplying the arguments the
-     * shorter ones leave off. The defaults match what an override entry omitting those fields
-     * resolves to, so {@code ss item foo:bar gui} and a hand-written {@code {"mode": "gui"}}
-     * render the same way. Brigadier cannot report which optional nodes it parsed, so each form
-     * passes its own values down rather than probing the context.
-     */
-    private static int setMode(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, 1.0f, RenderOffset.ZERO);
-    }
-
-    private static int setModeAndScale(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), RenderOffset.ZERO);
-    }
-
-    private static int setModeScaleAndXy(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new RenderOffset(
-                FloatArgumentType.getFloat(ctx, ARG_X),
-                FloatArgumentType.getFloat(ctx, ARG_Y), 0.0f));
-    }
-
-    private static int setModeScaleAndXyz(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, ARG_SCALE), new RenderOffset(
-                FloatArgumentType.getFloat(ctx, ARG_X),
-                FloatArgumentType.getFloat(ctx, ARG_Y),
-                FloatArgumentType.getFloat(ctx, ARG_Z)));
-    }
-
-    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, RenderOffset offset)
-            throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-        ResourceLocation itemId = resourceItemId(ctx);
-
-        String modeString = StringArgumentType.getString(ctx, ARG_MODE);
-        if (RenderMode.fromString(modeString) == null) {
-            ctx.getSource().sendFailure(Component.translatable(
-                    "somestacks.command.unknown_render_mode", modeString));
-            return 0;
-        }
-
-        RenderOverridePkt packet = RenderOverridePkt.set(itemId, modeString, scale, offset);
-        CommandNetwork.send(player, packet);
-
-        ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.override_set", itemId.toString(), modeString, scale,
-                offset.x(), offset.y(), offset.z()), false);
-        return 1;
-    }
-
-    private static int resetItem(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-        ResourceLocation itemId = resourceItemId(ctx);
-        CommandNetwork.send(player, RenderOverridePkt.reset(itemId));
-
-        ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.override_reset", itemId.toString()), false);
-        return 1;
-    }
-
     /** Entries omitted from one request, grouped by reason. */
     private record Skips(Component reason, List<String> entries) {}
 
     /**
-     * The namespaces one invocation acts on, with the ones dropped from the request and why.
-     * The gallery commands and the dump select namespaces the same way, so a review session can
-     * dump exactly what it just looked at.
+     * The namespaces one gallery invocation acts on, with the ones dropped from the request and
+     * why.
      */
     private record Selection(RenderGalleryGenerator.Kind kind, List<String> modIds,
                              List<String> disabledMods, List<String> unusableMods) {
@@ -716,7 +575,8 @@ public final class SsCommand {
     private static int reload(CommandContext<CommandSourceStack> ctx) {
         ServerConfig.reload();
         ServerOverridesLoader.reload();
-        int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
+        ConfigSyncPkt.rebuildCurrent();
+        int synced = ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);
         return synced;
@@ -750,6 +610,7 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_added", entry, Component.translatable(label)), true);
+        syncClientToolState(ctx, list);
         return 1;
     }
 
@@ -764,7 +625,18 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_removed", entry, Component.translatable(label)), true);
+        syncClientToolState(ctx, list);
         return 1;
+    }
+
+    /** Keeps client-local {@code ss write list} inputs current after their server lists change. */
+    private static void syncClientToolState(CommandContext<CommandSourceStack> ctx,
+                                            ServerConfig.ListSetting list) {
+        if (list != ServerConfig.GEN_MODS && list != ServerConfig.DISABLE_MODS) {
+            return;
+        }
+        ConfigSyncPkt.rebuildCurrent();
+        ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
     }
 
     /**
@@ -790,45 +662,4 @@ public final class SsCommand {
         return entries.size();
     }
 
-    private static int writeChanged(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-        CommandNetwork.send(player, WriteOverridesPkt.userLayer());
-        return 1;
-    }
-
-    private static int dumpSingle(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-        Selection selection = selectSingle(ctx, DUMP_KIND, StringArgumentType.getString(ctx, ARG_MODID));
-        return selection == null ? 0 : dump(ctx, player, selection);
-    }
-
-    private static int dumpAll(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-        Selection selection = selectAll(ctx, DUMP_KIND);
-        return selection == null ? 0 : dump(ctx, player, selection);
-    }
-
-    private static int dumpList(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-        Selection selection = selectList(ctx, DUMP_KIND);
-        return selection == null ? 0 : dump(ctx, player, selection);
-    }
-
-    /**
-     * Sends the requested namespaces to the client, which resolves and measures their items and
-     * reports the files it writes.
-     */
-    private static int dump(CommandContext<CommandSourceStack> ctx, ServerPlayer player, Selection selection) {
-        CommandNetwork.send(player, WriteOverridesPkt.dump(selection.modIds()));
-
-        MutableComponent message = Component.translatable(
-                "somestacks.command.dumping", subject(selection.modIds()));
-        appendSkips(message, selection.skips());
-
-        ctx.getSource().sendSuccess(() -> message, false);
-        return 1;
-    }
 }

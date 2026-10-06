@@ -100,7 +100,6 @@ public class StorageStackBE extends StackBlockEntity {
         if (permanent != value) {
             permanent = value;
             setChanged();
-            syncToClients();
         }
     }
 
@@ -215,6 +214,11 @@ public class StorageStackBE extends StackBlockEntity {
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt(TAG_ROTATION, rotation);
         tag.putBoolean(TAG_PERMANENT, permanent);
+    }
+
+    @Override
+    protected void stripServerOnlyUpdateData(CompoundTag tag) {
+        tag.remove(TAG_PERMANENT);
     }
 
 }
