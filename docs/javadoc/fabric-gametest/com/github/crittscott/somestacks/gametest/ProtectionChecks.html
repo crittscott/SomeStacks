@@ -107,23 +107,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationUsesSharedIdentity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationUsesSharedIdentity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Every loader attributes automation to the same [SomeStacks] profile.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Checked world edits place inside build height and reject positions outside it.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkedPlacementRejectsAnObstructingEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">checkedPlacementRejectsAnObstructingEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stack placement refuses a living entity intersecting its final collision shape.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#creativeDepositFillsTheStackWithoutSpendingTheHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">creativeDepositFillsTheStackWithoutSpendingTheHand</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creative deposits fill a stack without consuming the held items.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Placing a stack into water waterlogs it instead of removing the fluid.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,6 +155,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="automationUsesSharedIdentity(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>automationUsesSharedIdentity</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationUsesSharedIdentity</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Every loader attributes automation to the same [SomeStacks] profile. To reproduce in-game:
+ configure a claim or logging mod to report the actor for machine-driven stack growth or
+ cleanup. It reports [SomeStacks] with the shared profile identity.</div>
 </section>
 </li>
 <li>
@@ -152,6 +165,9 @@ loadScripts(document, 'script');</script>
 <h3>checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Checked world edits place inside build height and reject positions outside it. To reproduce
+ in-game: grow or place a stack in ordinary space, then attempt the same edit at the world's
+ vertical limit. Only the in-bounds placement succeeds.</div>
 </section>
 </li>
 <li>
@@ -159,6 +175,9 @@ loadScripts(document, 'script');</script>
 <h3>checkedPlacementRejectsAnObstructingEntity</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkedPlacementRejectsAnObstructingEntity</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Stack placement refuses a living entity intersecting its final collision shape. To reproduce
+ in-game: stand or put a mob in the occupied part of a proposed stack and try to place or grow
+ it. No stack block appears.</div>
 </section>
 </li>
 <li>
@@ -166,6 +185,9 @@ loadScripts(document, 'script');</script>
 <h3>creativeDepositFillsTheStackWithoutSpendingTheHand</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">creativeDepositFillsTheStackWithoutSpendingTheHand</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Creative deposits fill a stack without consuming the held items. To reproduce in-game:
+ switch to Creative, hold the modifier, and deposit a full held stack into Storage. Storage
+ receives the items while the hand retains its original count.</div>
 </section>
 </li>
 <li>
@@ -173,6 +195,9 @@ loadScripts(document, 'script');</script>
 <h3>placementIntoWaterKeepsTheWater</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementIntoWaterKeepsTheWater</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Placing a stack into water waterlogs it instead of removing the fluid. To reproduce in-game:
+ hold the modifier and place a new stack into a water source. The block appears waterlogged and
+ the water remains present.</div>
 </section>
 </li>
 </ul>

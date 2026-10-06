@@ -112,21 +112,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerPayloads()" class="member-name-link">registerPayloads</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Registers every payload type on both play directions.</div>
+<div class="block">Registers the configuration marker in both directions and every play payload.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#send(net.minecraft.server.level.ServerPlayer,net.minecraft.network.protocol.common.custom.CustomPacketPayload)" class="member-name-link">send</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.network.protocol.common.custom.CustomPacketPayload&nbsp;packet)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendConfig(net.minecraft.server.level.ServerPlayer)" class="member-name-link">sendConfig</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsClient(net.minecraft.server.level.ServerPlayer)" class="member-name-link">supportsClient</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncAllPlayers(net.minecraft.server.MinecraftServer)" class="member-name-link">syncAllPlayers</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -148,32 +139,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="registerPayloads()">
 <h3>registerPayloads</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerPayloads</span>()</div>
-<div class="block">Registers every payload type on both play directions. Runs from the common initializer so it
- happens on the physical client and the dedicated server alike, before either side joins.</div>
+<div class="block">Registers the configuration marker in both directions and every play payload. Runs from the
+ common initializer on the physical client and dedicated server before either side connects.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="initServer()">
 <h3>initServer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initServer</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="supportsClient(net.minecraft.server.level.ServerPlayer)">
-<h3>supportsClient</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsClient</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="sendConfig(net.minecraft.server.level.ServerPlayer)">
-<h3>sendConfig</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendConfig</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="syncAllPlayers(net.minecraft.server.MinecraftServer)">
-<h3>syncAllPlayers</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">syncAllPlayers</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
 </section>
 </li>
 <li>

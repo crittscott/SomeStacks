@@ -109,31 +109,53 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholePileFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingMiddleBlockDropsItsContentsAndSplitsThePile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingMiddleBlockDropsItsContentsAndSplitsThePile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Breaking the middle Storage block drops only that block's contents and leaves independent
+ runs above and below.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyPile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholePileFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The comparator range reserves 0 for an empty pile, as a vanilla container's does.</div>
+<div class="block">Every block in a Storage pile reports the same whole-pile comparator signal.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositFillsCompatiblePartialBeforeEmptySlot</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyPile</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The comparator range reserves 0 for an empty pile, as a vanilla container's does.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">emptyTemporaryPileDisappearsButPermanentPileRemains</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositFillsCompatiblePartialBeforeEmptySlot</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A deposit fills a compatible partial stack before using an empty slot.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">emptyTemporaryPileDisappearsButPermanentPileRemains</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Empty temporary piles disappear while permanent piles retain their blocks.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionSettlesOnScheduledBlockTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extraction schedules settlement instead of leaving a lasting gap.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">fullPileGrowsByOneBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Depositing into a full Storage pile grows it upward by one block.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">ordinaryPlacementBelowPermanentPileRepairsDerivedState</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Placing Storage beneath a permanent pile preserves permanence, repacks contents into the new
+ base, and republishes comparator output.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts, and
+ packs downward.</div>
+</div>
 </div>
 </div>
 </div>
@@ -155,42 +177,75 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="depositFillsCompatiblePartialBeforeEmptySlot(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>depositFillsCompatiblePartialBeforeEmptySlot</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositFillsCompatiblePartialBeforeEmptySlot</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A deposit fills a compatible partial stack before using an empty slot. To reproduce in-game:
+ leave a partial stack of one item in Storage, then deposit more of that item. The partial
+ reaches its limit before any remainder appears in another cube.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="fullPileGrowsByOneBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>fullPileGrowsByOneBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: fill
+ every slot in one Storage block, then deposit one more allowed item. A second Storage block
+ appears above and holds the item.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>settleConsolidatesExactIdentityAndPacksDown</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleConsolidatesExactIdentityAndPacksDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts, and
+ packs downward. To reproduce in-game: put scattered compatible and component-distinct items
+ in a Storage pile through automation, then let it settle. Compatible items merge at the base
+ while distinct component or damage variants remain separate in stable order.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionSettlesOnScheduledBlockTick(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionSettlesOnScheduledBlockTick</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionSettlesOnScheduledBlockTick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Extraction schedules settlement instead of leaving a lasting gap. To reproduce in-game:
+ store two different stacks, extract the lower visible stack, and wait a moment. The remaining
+ stack packs into the first Storage position.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="emptyTemporaryPileDisappearsButPermanentPileRemains(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>emptyTemporaryPileDisappearsButPermanentPileRemains</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">emptyTemporaryPileDisappearsButPermanentPileRemains</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Empty temporary piles disappear while permanent piles retain their blocks. To reproduce
+ in-game: empty one ordinary Storage pile, then toggle another permanent with an empty hand in
+ permanence mode and empty it. Only the permanent block remains.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="comparatorReadsTheWholePileFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>comparatorReadsTheWholePileFromEveryBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholePileFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Every block in a Storage pile reports the same whole-pile comparator signal. To reproduce
+ in-game: make a two-block pile with contents only in one block and place comparators against
+ both blocks. Their outputs match.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="ordinaryPlacementBelowPermanentPileRepairsDerivedState(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>ordinaryPlacementBelowPermanentPileRepairsDerivedState</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">ordinaryPlacementBelowPermanentPileRepairsDerivedState</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Placing Storage beneath a permanent pile preserves permanence, repacks contents into the new
+ base, and republishes comparator output. To reproduce in-game: make a full one-block permanent
+ pile with a comparator, place another Storage block beneath it, and wait. The joined pile stays
+ permanent, moves contents downward, and the comparator changes to the two-block fill value.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="breakingMiddleBlockDropsItsContentsAndSplitsThePile(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>breakingMiddleBlockDropsItsContentsAndSplitsThePile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">breakingMiddleBlockDropsItsContentsAndSplitsThePile</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Breaking the middle Storage block drops only that block's contents and leaves independent
+ runs above and below. To reproduce in-game: put different items in each block of a
+ three-block pile and break the middle block. Its items drop, while the other two blocks keep
+ their own contents and settle independently.</div>
 </section>
 </li>
 <li>
@@ -199,7 +254,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyPile</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The comparator range reserves 0 for an empty pile, as a vanilla container's does. A pile is
  large enough that a proportional conversion would round hundreds of items down to 0, so the
- reserved value is what makes an emptiness circuit read a pile correctly.</div>
+ reserved value is what makes an emptiness circuit read a pile correctly.
+
+ <p>To reproduce in-game: compare an empty Storage pile, the same pile with one item, and a
+ full pile. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
 </section>
 </li>
 </ul>

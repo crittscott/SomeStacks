@@ -100,11 +100,10 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
  removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
  so claim and protection mods can veto automation-driven removal the same way they can on Forge.
 
- <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
- for the mod's adjacent-target protection hook (<a href="FabricAdjacentEditAuthority.html" title="class in com.github.crittscott.somestacks.server"><code>FabricAdjacentEditAuthority</code></a>) to fire, and Fabric
- API has no generic "a block was placed" event the way Forge's block-place event is. Claim mods
- that implement Common Protection API are consulted directly instead, through
- <code>CommonProtectionCheck</code>, when the API is installed; other claim mods are not covered.</div>
+ <p>Player placement consults the destination through <a href="FabricAdjacentEditAuthority.html" title="class in com.github.crittscott.somestacks.server"><code>FabricAdjacentEditAuthority</code></a> before
+ changing the world. Automated growth has no corresponding click, and Fabric API has no generic
+ block-place event, so claim mods that implement Common Protection API are consulted directly
+ through <code>CommonProtectionCheck</code>. Both checks run before placement.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -141,18 +140,27 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.server.level.ServerPlayer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.crittscott.somestacks.server.EditAuthority.PlacementVeto</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#afterRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">afterRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.server.level.ServerPlayer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.crittscott.somestacks.server.EditAuthority.PlacementVeto</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -206,14 +214,32 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">
+<section class="detail" id="vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)">
 <h3>vetoesRemoval</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">vetoesRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">vetoesRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ @Nullable
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>vetoesRemoval</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="afterRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)">
+<h3>afterRemoval</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">afterRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ @Nullable
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>afterRemoval</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
 </dl>
 </section>
 </li>

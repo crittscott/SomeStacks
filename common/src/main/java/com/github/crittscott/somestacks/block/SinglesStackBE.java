@@ -37,7 +37,7 @@ public class SinglesStackBE extends StackBlockEntity {
     private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
-    private int rotation = 0;
+    private int cachedShapeRotation = -1;
     private int[] cubeRotations = new int[SLOTS];
     public SinglesStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state, SLOTS);
@@ -89,7 +89,7 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     public int getRotation() {
-        return rotation;
+        return blockRotation();
     }
 
     /**
@@ -97,12 +97,8 @@ public class SinglesStackBE extends StackBlockEntity {
      * unless a batch is open.
      */
     public void setRotation(int rotation) {
-        this.rotation = QuarterTurns.normalize(rotation);
-        setChanged();
         cachedShape = null;
-        if (!isBatching()) {
-            syncToClients();
-        }
+        setBlockRotation(rotation);
     }
 
     /** The rendered rotation of the item at {@code index}, which must be in {@code [0, SLOTS)}. */
@@ -125,7 +121,7 @@ public class SinglesStackBE extends StackBlockEntity {
     /** Builds the union of the occupied cells' boxes at the current layout rotation. */
     public VoxelShape computeShape() {
         VoxelShape shape = Shapes.empty();
-        int blockRotation = this.rotation;
+        int blockRotation = getRotation();
 
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
@@ -142,8 +138,10 @@ public class SinglesStackBE extends StackBlockEntity {
      * the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.
      */
     public VoxelShape getCachedShape() {
-        if (cachedShape == null) {
+        int blockRotation = getRotation();
+        if (cachedShape == null || cachedShapeRotation != blockRotation) {
             cachedShape = computeShape();
+            cachedShapeRotation = blockRotation;
         }
         return cachedShape;
     }
@@ -219,7 +217,7 @@ public class SinglesStackBE extends StackBlockEntity {
                 && index < SLOTS
                 && items.getStackInSlot(index).isEmpty()
                 && SinglesCubeIdx.isGrounded(
-                        index, items, rotation, supportSeamBeneath(level, getBlockPos()));
+                        index, items, getRotation(), supportSeamBeneath(level, getBlockPos()));
     }
 
     /** Whether an empty, unrotated Singles block at {@code pos} supports its first item. */
@@ -233,7 +231,7 @@ public class SinglesStackBE extends StackBlockEntity {
     @Nullable
     public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
         if (level != null && level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
-            return SinglesCubeIdx.topLayerOccupancy(below.items, below.rotation);
+            return SinglesCubeIdx.topLayerOccupancy(below.items, below.getRotation());
         }
         return null;
     }
@@ -282,8 +280,10 @@ public class SinglesStackBE extends StackBlockEntity {
             int nextColumn = -1;
 
             if (columnLevel.getBlockEntity(be.getBlockPos().above()) instanceof SinglesStackBE above) {
-                int visualColumn = SinglesCubeIdx.visualColumnFromStorage(col, be.rotation);
-                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(visualColumn, above.rotation);
+                int visualColumn = SinglesCubeIdx.visualColumnFromStorage(
+                        col, be.getRotation());
+                int aboveColumn = SinglesCubeIdx.storageColumnFromVisual(
+                        visualColumn, above.getRotation());
 
                 int sourceIndex = SinglesCubeIdx.indexFromColumn(aboveColumn, 0);
 
@@ -375,9 +375,6 @@ public class SinglesStackBE extends StackBlockEntity {
 
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(TAG_ROTATION)) {
-            rotation = QuarterTurns.normalize(tag.getInt(TAG_ROTATION));
-        }
         if (tag.contains(TAG_CUBE_ROTATIONS)) {
             int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS);
             if (loaded.length == SLOTS) {
@@ -392,7 +389,6 @@ public class SinglesStackBE extends StackBlockEntity {
 
     @Override
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putInt(TAG_ROTATION, rotation);
         // IntArrayTag holds the array it is given, and an integrated server hands its update
         // packets to the client unserialized: both sides must get their own copy, or the client
         // renders the server's in-progress rotations against its own not-yet-updated items.

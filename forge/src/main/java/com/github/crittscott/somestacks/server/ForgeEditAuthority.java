@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.server;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
  * automation, and claim, protection, and logging mods are given the chance to veto through the
  * ordinary Forge placement and break events. Forge ships no FakePlayer helper, so this constructs
- * a bare {@code ServerPlayer} and caches one actor per dimension.
+ * a connection-safe {@code ServerPlayer} and caches one actor per dimension.
  */
 public final class ForgeEditAuthority implements EditAuthority {
     private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();
@@ -31,8 +32,23 @@ public final class ForgeEditAuthority implements EditAuthority {
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return actors.computeIfAbsent(level.dimension(), key ->
-                new ServerPlayer(level.getServer(), level, AutomationActor.PROFILE,
-                        ClientInformation.createDefault()));
+                new AutomationPlayer(level));
+    }
+
+    /** Forge has no fake-player facility; automation must not try to write to a missing connection. */
+    private static final class AutomationPlayer extends ServerPlayer {
+        private AutomationPlayer(ServerLevel level) {
+            super(level.getServer(), level, AutomationActor.PROFILE,
+                    ClientInformation.createDefault());
+        }
+
+        @Override
+        public void sendSystemMessage(Component message) {
+        }
+
+        @Override
+        public void displayClientMessage(Component message, boolean actionBar) {
+        }
     }
 
     /** Releases the actor that retains an unloading level. */

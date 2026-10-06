@@ -90,6 +90,13 @@ public final class InteractionGameTests {
                 helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#playerMutationEmitsBlockChange}. */
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
+    public static void playerMutationEmitsBlockChange(GameTestHelper helper) {
+        InteractionChecks.playerMutationEmitsBlockChange(
+                helper, GameTestSupport.playerFactory(helper));
+    }
+
     /** See {@link InteractionChecks#extractionRefusesIncompatibleOrFullHands}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionRefusesIncompatibleOrFullHands(GameTestHelper helper) {

@@ -209,7 +209,9 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -327,6 +329,8 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.
+ Internal relocation and settlement use this only for already-stored contents.</div>
 </section>
 </li>
 <li>

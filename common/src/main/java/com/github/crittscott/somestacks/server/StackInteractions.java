@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -217,6 +218,7 @@ public final class StackInteractions {
             if (deposited > 0) {
                 level.playSound(null, pos, StackSounds.storageDeposit(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
+                emitBlockChange(player, pos, level.getBlockState(pos));
             }
             return;
         }
@@ -230,6 +232,7 @@ public final class StackInteractions {
                 returnToHand(player, creative, handStack);
                 level.playSound(null, pos, StackSounds.singlesDeposit(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
+                emitBlockChange(player, pos, level.getBlockState(pos));
             }
             return;
         }
@@ -242,6 +245,7 @@ public final class StackInteractions {
                 returnToHand(player, creative, handStack);
                 level.playSound(null, pos, StackSounds.barDeposit(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
+                emitBlockChange(player, pos, level.getBlockState(pos));
             }
         }
     }
@@ -333,6 +337,7 @@ public final class StackInteractions {
 
     private static void extract(ServerPlayer player, BlockPos pos, ViewRay ray) {
         Level level = player.level();
+        BlockState changedState = level.getBlockState(pos);
         if (level.getBlockEntity(pos) instanceof StorageStackBE storage) {
             int index = StorageCubeIdx.traceCubes(ray, pos, storage, storage.getRotation());
             if (index < 0) {
@@ -347,16 +352,8 @@ public final class StackInteractions {
             if (!taken.isEmpty()) {
                 level.playSound(null, pos, StackSounds.storageExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
-                if (handStack.isEmpty()) {
-                    player.setItemInHand(InteractionHand.MAIN_HAND, taken);
-                } else {
-                    int moved = ItemOps.mergeIntoStack(handStack, taken);
-                    taken.shrink(moved);
-                    player.setItemInHand(InteractionHand.MAIN_HAND, handStack);
-                    if (!taken.isEmpty()) {
-                        player.drop(taken, false);
-                    }
-                }
+                ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
+                emitBlockChange(player, pos, changedState);
             }
             return;
         }
@@ -375,6 +372,7 @@ public final class StackInteractions {
                 level.playSound(null, pos, StackSounds.singlesExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
+                emitBlockChange(player, pos, changedState);
             }
             return;
         }
@@ -393,6 +391,7 @@ public final class StackInteractions {
                 level.playSound(null, pos, StackSounds.barExtract(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
+                emitBlockChange(player, pos, changedState);
             }
         }
     }
@@ -412,6 +411,7 @@ public final class StackInteractions {
         } else {
             return;
         }
+        emitBlockChange(player, pos, player.level().getBlockState(pos));
         player.displayClientMessage(Component.translatable(
                 "somestacks.message.rotation", QuarterTurns.degrees(rotation)), true);
     }
@@ -426,6 +426,7 @@ public final class StackInteractions {
         }
         int rotation = QuarterTurns.next(singles.getCubeRotation(index));
         singles.setCubeRotation(index, rotation);
+        emitBlockChange(player, pos, player.level().getBlockState(pos));
         StackSounds.playRotation(player, pos, StackSounds.singlesRotateItem());
         player.displayClientMessage(Component.translatable(
                 "somestacks.message.item_rotation", QuarterTurns.degrees(rotation)), true);
@@ -438,6 +439,7 @@ public final class StackInteractions {
         }
         boolean permanent = !pile.isPermanent();
         pile.setPermanent(permanent, player);
+        emitBlockChange(player, pos, player.level().getBlockState(pos));
         player.displayClientMessage(Component.translatable(
                 "somestacks.message.pile_state",
                 Component.translatable(permanent
@@ -449,5 +451,11 @@ public final class StackInteractions {
         if (!creative) {
             player.setItemInHand(InteractionHand.MAIN_HAND, handStack);
         }
+    }
+
+    /** Emits one sensor-visible event for one successful player mutation inside a stack block. */
+    private static void emitBlockChange(ServerPlayer player, BlockPos pos, BlockState state) {
+        player.serverLevel().gameEvent(
+                GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
     }
 }

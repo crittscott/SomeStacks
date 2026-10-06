@@ -18,6 +18,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SculkSensorBlock;
+import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -403,6 +407,35 @@ public final class InteractionChecks {
             RotationSoundThrottle.clear(player.getUUID());
         }
         helper.succeed();
+    }
+
+    /**
+     * A successful mutation inside a stack emits one block-change game event. To reproduce
+     * in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.
+     */
+    public static void playerMutationEmitsBlockChange(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
+        BlockPos sensorPos = helper.absolutePos(TARGET.east(2));
+        check(helper.getLevel().setBlock(
+                        sensorPos, Blocks.SCULK_SENSOR.defaultBlockState(), Block.UPDATE_ALL),
+                "Could not place sculk sensor");
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        try {
+            check(click(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
+                    "Storage deposit interaction was not consumed");
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+        }
+
+        helper.runAfterDelay(5, () -> {
+            checkEquals(
+                    SculkSensorPhase.ACTIVE,
+                    helper.getLevel().getBlockState(sensorPos).getValue(SculkSensorBlock.PHASE),
+                    "Sculk sensor phase after stack mutation");
+            helper.succeed();
+        });
     }
 
     private static boolean click(ServerPlayer player, BlockPos pos,

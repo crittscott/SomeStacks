@@ -78,16 +78,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">com.github.crittscott.somestacks</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../block/package-summary.html">com.github.crittscott.somestacks.block</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="../client/package-summary.html">com.github.crittscott.somestacks.client</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../command/package-summary.html">com.github.crittscott.somestacks.command</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="../network/package-summary.html">com.github.crittscott.somestacks.network</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../server/package-summary.html">com.github.crittscott.somestacks.server</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
@@ -107,55 +97,58 @@ loadScripts(document, 'script');</script>
 <div class="block">The three stack types, as a value that can be named in a packet and looked up in the registry or
  the server config.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Coordinate conversion, rotation, and cell boxes for a regular cubic item grid.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
  the player, how a broken block sheds its contents, and how stored items add up to a light level.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.util">OverrideJsonCodec</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Parses and serializes the item render override schema shared by bundled resources, the client
- override file, the measured cache, and the server override directory.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Normalization and display conversion for block and item quarter-turn rotations.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
  support.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A numbered range of item slots, matching the Forge and NeoForge <code>IItemHandler</code> contract so
  their capability views stay thin adapters.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab3">
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
 <div class="block">What the placement modifier does next, as cycled by the mode gesture: place one of the three
  stack types, or toggle a Storage pile's permanence.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackPlacement.html" title="class in com.github.crittscott.somestacks.util">StackPlacement</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackPlacement.html" title="class in com.github.crittscott.somestacks.util">StackPlacement</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The state a stack block takes when it is put into the world.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackSort.html" title="class in com.github.crittscott.somestacks.util">StackSort</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackSort.html" title="class in com.github.crittscott.somestacks.util">StackSort</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Comparator used to lay out the contents of a settled Storage pile.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
  what box it occupies, and which one a player's reach ray hits first.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
 <div class="block">The segment a player's view ray sweeps against a block they are interacting with: their eye
  position out to the far end of their block reach.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Builds a <a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util"><code>ViewRay</code></a> from a player's eye position and block reach.</div>
 </div>
 </div>

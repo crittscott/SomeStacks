@@ -91,13 +91,12 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SsCommand</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The <code>ss</code> command: render override authoring, render gallery generation, server list
- editing, and override reloading.
+<div class="block">The server-side <code>ss</code> command: render gallery generation, server list editing, and
+ override reloading. Client-local render authoring lives in <code>ClientRenderCommands</code>.
 
  <p>Everything here is an administrative tool, so every subcommand but <code>help</code> requires a
- vanilla permission level. The render subcommands, <code>item</code> and <code>write</code>, are issued
- against the sender's own view and so are player-only on top of that; the two gallery generators
- need a player because a gallery is built where the sender stands.
+ vanilla permission level. The two gallery generators need a player because a gallery is built
+ where the sender stands.
 
  <p>The gallery generators sit a level above the rest. They overwrite a region of the world outright,
  without the protection checks applied to placement gestures, which is a wider authority than
@@ -105,8 +104,8 @@ loadScripts(document, 'script');</script>
  subcommands gated by server config rather than a fixed level: <code>render_gallery.enabled</code>
  (off by default) and <code>render_gallery.required_permission_level</code> (default 3).
 
- <p><code>SsHelp</code> carries each subcommand's forms, gate, and summary, and <code>ss help</code> is
- gated by nothing, so a player who cannot run a subcommand can still read what it needs.</div>
+ <p><code>SsHelp</code> derives server forms from this tree, supplies the two client-only forms, and
+ describes each gate. <code>ss help</code> is gated by nothing.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

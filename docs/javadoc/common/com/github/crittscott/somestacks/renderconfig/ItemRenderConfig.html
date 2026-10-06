@@ -5,7 +5,7 @@
 <title>ItemRenderConfig (common 0.8.2 API)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="declaration: package: com.github.crittscott.somestacks.client, record: ItemRenderConfig">
+<meta name="description" content="declaration: package: com.github.crittscott.somestacks.renderconfig, record: ItemRenderConfig">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../script-dir/jquery-ui.min.css" title="Style">
@@ -81,17 +81,17 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.github.crittscott.somestacks.client</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.github.crittscott.somestacks.renderconfig</a></div>
 <h1 title="Record Class ItemRenderConfig" class="title">Record Class ItemRenderConfig</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">java.lang.Record</a>
-<div class="inheritance">com.github.crittscott.somestacks.client.ItemRenderConfig</div>
+<div class="inheritance">com.github.crittscott.somestacks.renderconfig.ItemRenderConfig</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ItemRenderConfig</span>(@Nullable <a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode, @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;scale, @Nullable float[]&nbsp;offset)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ItemRenderConfig</span>(@Nullable <a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode, @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;scale, @Nullable <a href="RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">One override entry in the shared override vocabulary. Every field is optional; an
  entry owns an item's presentation, so fields it omits take plain defaults (scale 1,
@@ -109,23 +109,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#CODEC" class="member-name-link">CODEC</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">The JSON vocabulary used by resource, user, cache, and server override entries.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#MODE_CODEC" class="member-name-link">MODE_CODEC</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;float[]&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#OFFSET_CODEC" class="member-name-link">OFFSET_CODEC</a></code></div>
+<div class="col-first even-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#SCALE_CODEC" class="member-name-link">SCALE_CODEC</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final com.mojang.serialization.Codec<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SCALE_CODEC" class="member-name-link">SCALE_CODEC</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final net.minecraft.network.codec.StreamCodec<wbr>&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">One network vocabulary for override entries, shared by every packet that carries one.</div>
 </div>
 </div>
@@ -139,9 +136,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.client.RenderMode,java.lang.Float,float%5B%5D)" class="member-name-link">ItemRenderConfig</a><wbr>(<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.renderconfig.RenderMode,java.lang.Float,com.github.crittscott.somestacks.renderconfig.RenderOffset)" class="member-name-link">ItemRenderConfig</a><wbr>(<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;scale,
- float[]&nbsp;offset)</code></div>
+ <a href="RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>ItemRenderConfig</code> record class.</div>
 </div>
@@ -169,12 +166,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mode()" class="member-name-link">mode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[]</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#offset()" class="member-name-link">offset</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
@@ -209,7 +206,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="MODE_CODEC">
 <h3>MODE_CODEC</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.mojang.serialization.Codec&lt;<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&gt;</span>&nbsp;<span class="element-name">MODE_CODEC</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.mojang.serialization.Codec&lt;<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&gt;</span>&nbsp;<span class="element-name">MODE_CODEC</span></div>
 </section>
 </li>
 <li>
@@ -219,22 +216,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="OFFSET_CODEC">
-<h3>OFFSET_CODEC</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.mojang.serialization.Codec&lt;float[]&gt;</span>&nbsp;<span class="element-name">OFFSET_CODEC</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="CODEC">
 <h3>CODEC</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.mojang.serialization.Codec&lt;<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">CODEC</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.mojang.serialization.Codec&lt;<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">CODEC</span></div>
 <div class="block">The JSON vocabulary used by resource, user, cache, and server override entries.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="STREAM_CODEC">
 <h3>STREAM_CODEC</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.network.codec.StreamCodec&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">STREAM_CODEC</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.network.codec.StreamCodec&lt;net.minecraft.network.RegistryFriendlyByteBuf,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">STREAM_CODEC</span></div>
 <div class="block">One network vocabulary for override entries, shared by every packet that carries one.</div>
 </section>
 </li>
@@ -247,14 +238,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.client.RenderMode,java.lang.Float,float[])">
+<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.renderconfig.RenderMode,java.lang.Float,com.github.crittscott.somestacks.renderconfig.RenderOffset)">
 <h3>ItemRenderConfig</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ItemRenderConfig</span><wbr><span class="parameters">(@Nullable
- <a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode,
+ <a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode,
  @Nullable
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;scale,
  @Nullable
- float[]&nbsp;offset)</span></div>
+ <a href="RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)</span></div>
 <div class="block">Creates an instance of a <code>ItemRenderConfig</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -317,7 +308,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="mode()">
 <h3>mode</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a></span>&nbsp;<span class="element-name">mode</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></span>&nbsp;<span class="element-name">mode</span>()</div>
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -341,7 +332,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="offset()">
 <h3>offset</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">offset</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></span>&nbsp;<span class="element-name">offset</span>()</div>
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>

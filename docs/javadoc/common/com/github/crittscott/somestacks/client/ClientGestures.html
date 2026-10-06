@@ -135,17 +135,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#displayModeMessage(net.minecraft.world.entity.player.Player)" class="member-name-link">displayModeMessage</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isEmptyMainHandAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.phys.HitResult)" class="member-name-link">isEmptyMainHandAirClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
+ net.minecraft.world.phys.HitResult&nbsp;hit)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Forces the next interaction to establish state on a new connection.</div>
+<div class="block">Whether an input is the main-hand air click used for empty-hand placement-mode cycling.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forces the next interaction to establish state on a new connection.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sends only state that changed since the last interaction on this connection.</div>
 </div>
 </div>
@@ -238,6 +244,15 @@ loadScripts(document, 'script');</script>
 <h3>resetSync</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetSync</span>()</div>
 <div class="block">Forces the next interaction to establish state on a new connection.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isEmptyMainHandAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.phys.HitResult)">
+<h3>isEmptyMainHandAirClick</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmptyMainHandAirClick</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
+ @Nullable
+ net.minecraft.world.phys.HitResult&nbsp;hit)</span></div>
+<div class="block">Whether an input is the main-hand air click used for empty-hand placement-mode cycling.</div>
 </section>
 </li>
 </ul>

@@ -93,8 +93,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Loads the server's admin render overrides from <code>config/somestacks/server_item_overrides</code>.
  Files use the same JSON schema as everywhere else, so an admin can drop in a
- client-written override file verbatim. The folder is read fresh at every sync point;
- later files (by name order) win on duplicate items.</div>
+ client-written override file verbatim. The folder is read at server start and on explicit
+ reload; later files (by name order) win on duplicate items.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,9 +109,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#load()" class="member-name-link">load</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#current()" class="member-name-link">current</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The immutable snapshot most recently loaded at server start or by <code>/ss reload</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Replaces the cached snapshot from the files currently in the override directory.</div>
+</div>
 </div>
 </div>
 </div>
@@ -130,9 +137,17 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="load()">
-<h3>load</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="client/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">load</span>()</div>
+<section class="detail" id="reload()">
+<h3>reload</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span>()</div>
+<div class="block">Replaces the cached snapshot from the files currently in the override directory.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="current()">
+<h3>current</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">current</span>()</div>
+<div class="block">The immutable snapshot most recently loaded at server start or by <code>/ss reload</code>.</div>
 </section>
 </li>
 </ul>

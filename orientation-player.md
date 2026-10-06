@@ -36,7 +36,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; an occupied off hand does not block empty-main-hand mode cycling. Torch gestures do not spend the torch. Rotation reports the new angle above the hotbar; its sound is limited to once per player every 4 ticks. Sneaking keeps ordinary interaction available except where a torch gesture claims the click.
+Only the main hand acts; an occupied off hand does not block empty-main-hand mode cycling. Torches are not spent. Rotation reports the angle above the hotbar; its sound is limited to once per player every 4 ticks. Storage and Singles turn with rotated or mirrored structures. Sneaking keeps ordinary interaction except where a torch gesture claims the click.
 
 ## Depositing and placing
 
@@ -168,13 +168,13 @@ Bar appearance is separate and client-side: resource packs map item ids to bar t
 
 ## Protection and validation
 
-Player gestures use vanilla's server block-use pipeline and honor loader results, build limits, obstruction, border, and spawn protection. Neighbor clicks also check the destination, including new Fabric placement. Automatic edits use `[SomeStacks]`; player-triggered cleanup retains the player, while mixed deferred Storage edits use automation. Forge/NeoForge fire place and break events. Fabric checks Common Protection API before placement and fires the full before/canceled/after break lifecycle. Outer-block edits emit vanilla placement/destruction game events.
+Player gestures use vanilla's block-use pipeline and honor loader results, build limits, obstruction, border, and spawn protection. Neighbor clicks also check the destination. Automatic edits use `[SomeStacks]`; player cleanup retains the player, while mixed deferred Storage edits use automation. Forge/NeoForge fire place and break events. Fabric checks Common Protection API before placement and fires the full break lifecycle. Outer edits emit placement/destruction game events; successful player content and rotation changes emit a sculk-detectable block-change event.
 
 The only client gesture payload synchronizes placement mode and whether the modifier is down. The actual action uses vanilla's block-use packet and its exact hit. The server independently validates the main hand, spectator and protection state, held item, target, support, type enablement, height, obstruction, and edit authority. It recomputes deposit, extraction, and Singles item-rotation cell selection by extending the player's reach ray through the vanilla hit point; clients never choose a cell index for the server.
 
 ## Saved worlds
 
-A world saved with the 1.21.1 version of the mod loads with its stack contents upgraded to the current item format. A stored item that cannot be read, such as one from a removed mod, is not dropped: it stays in the block's saved data, is logged, and returns if it becomes readable again.
+A 1.21.1 world loads with current-format contents, and the preceding release's rotations migrate into block facing. An unreadable item stays in saved data, is logged, and returns when readable again.
 
 ## Boundaries
 

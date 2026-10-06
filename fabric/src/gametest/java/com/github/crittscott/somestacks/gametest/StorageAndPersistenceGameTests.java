@@ -124,6 +124,12 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
         CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
     }
 
+    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
+    }
+
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {

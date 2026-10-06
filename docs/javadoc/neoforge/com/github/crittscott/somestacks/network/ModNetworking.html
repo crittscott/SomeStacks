@@ -94,10 +94,10 @@ loadScripts(document, 'script');</script>
 <div class="block">The mod's payloads and their handler registration. Every packet class is shared; this binds the
  shared <code>TYPE</code>/<code>STREAM_CODEC</code> pair to NeoForge's payload system.
 
- <p>The three server-to-client payloads are delivered to <code>clientReceiver</code>, which the
+ <p>The server-to-client payload is delivered to <code>clientReceiver</code>, which the
  physical client installs from <code>ClientSetup</code>; the dedicated server never touches a client
- rendering class. There is no explicit protocol handshake payload: NeoForge already disconnects a
- peer that has not registered a matching non-optional payload.</div>
+ rendering class. NeoForge rejects peers whose registrar version does not match the shared
+ protocol version or which omit a required payload.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -116,7 +116,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRegisterPayloadHandlers(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent)" class="member-name-link">onRegisterPayloadHandlers</a><wbr>(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;receiver)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;com.github.crittscott.somestacks.network.ConfigSyncPkt&gt;&nbsp;receiver)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Installed once by <code>ClientSetup</code> on the physical client.</div>
 </div>
@@ -140,7 +140,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setClientReceiver(java.util.function.Consumer)">
 <h3>setClientReceiver</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setClientReceiver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;receiver)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setClientReceiver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;com.github.crittscott.somestacks.network.ConfigSyncPkt&gt;&nbsp;receiver)</span></div>
 <div class="block">Installed once by <code>ClientSetup</code> on the physical client.</div>
 </section>
 </li>

@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li>Nested</li>
-<li>Field</li>
+<li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -85,7 +85,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class BarColumn" class="title">Class BarColumn</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">com.github.crittscott.somestacks.block.StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;
 <div class="inheritance">com.github.crittscott.somestacks.block.BarColumn</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -94,8 +96,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BarColumn</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
+<span class="extends-implements">extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</span></div>
 <div class="block">A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
 
  <p>Bars are a structure, not a bag: a slot index is a position, every bar must rest on something,
@@ -123,6 +124,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h3>
+<code><a href="StackRun.html#blocks">blocks</a>, <a href="StackRun.html#level">level</a></code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -134,30 +144,19 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#advertisedSlots()" class="member-name-link">advertisedSlots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Positions the column advertises to automation: its current positions plus one block of
- reachable headroom while growth is allowed.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the column containing <code>pos</code>, or <code>null</code> when that position holds no Bar
  Stack.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a Bar Stack may be created at <code>pos</code>: the contiguous column it would form,
  counting the runs both below and above it, must fit the configured maximum.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorSignal()" class="member-name-link">comparatorSignal</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The comparator output for the whole column, which is what every block of it reports.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
@@ -171,30 +170,25 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The share of the column's positions that hold a bar.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Places one bar at <code>flatSlot</code>, growing the column when that position lies in the block
  above it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxHeight()" class="member-name-link">maxHeight</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxHeight()" class="member-name-link">maxHeight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The configured ceiling on column height, shared with Storage piles.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Positions the column actually holds: 64 per block, indexed from the bottom block upward.</div>
 </div>
 </div>
 </div>
-</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h3>
+<code><a href="StackRun.html#advertisedSlots()">advertisedSlots</a>, <a href="StackRun.html#basePos()">basePos</a>, <a href="StackRun.html#blockOf(int)">blockOf</a>, <a href="StackRun.html#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">columnHasRoomFor</a>, <a href="StackRun.html#comparatorSignal()">comparatorSignal</a>, <a href="StackRun.html#getSlot(int)">getSlot</a>, <a href="StackRun.html#handlerOf(int)">handlerOf</a>, <a href="StackRun.html#height()">height</a>, <a href="StackRun.html#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)">invalidateAround</a>, <a href="StackRun.html#localSlot(int)">localSlot</a>, <a href="StackRun.html#markDirty()">markDirty</a>, <a href="StackRun.html#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">markDirtyAt</a>, <a href="StackRun.html#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">publishAround</a>, <a href="StackRun.html#publishPending()">publishPending</a>, <a href="StackRun.html#publishPendingBlocks()">publishPendingBlocks</a>, <a href="StackRun.html#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)">resolveBlocks</a>, <a href="StackRun.html#topPos()">topPos</a>, <a href="StackRun.html#totalSlots()">totalSlots</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -236,53 +230,16 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="totalSlots()">
-<h3>totalSlots</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">totalSlots</span>()</div>
-<div class="block">Positions the column actually holds: 64 per block, indexed from the bottom block upward.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="advertisedSlots()">
-<h3>advertisedSlots</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">advertisedSlots</span>()</div>
-<div class="block">Positions the column advertises to automation: its current positions plus one block of
- reachable headroom while growth is allowed. Advertising the entire potential height would
- expose unreachable gaps; advertising only current positions would leave automation no slot
- through which to grow the column.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#advertisedSlots()">advertisedSlots</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getSlot(int)">
-<h3>getSlot</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#getSlot(int)">getSlot</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="fillLevel()">
 <h3>fillLevel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">fillLevel</span>()</div>
 <div class="block">The share of the column's positions that hold a bar. A position takes one bar and no more, so
  occupancy is the whole of it — which is what vanilla's container measure reduces to when a
  slot's limit is one, rather than the sum of stack fractions a Storage pile computes.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="comparatorSignal()">
-<h3>comparatorSignal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">comparatorSignal</span>()</div>
-<div class="block">The comparator output for the whole column, which is what every block of it reports. Vanilla's
- container conversion, reserving the bottom of the range rather than scaling into it: any
- nonempty column reads at least 1, so signal 0 means empty and nothing else. Full means every
- position of every block occupied.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRun.html#fillLevel()">fillLevel</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -303,8 +260,6 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  placement stands before the next position is offered: a filled layer supports the layer above
  it by the time the walk arrives there.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>simulate</code> - when true, nothing is placed</dd>
 <dt>Returns:</dt>
@@ -325,8 +280,6 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  deposit may add rather than what the column may carry, so a bar stored before an
  <code>ss ingot</code> edit or a data pack reload narrowed the ingot set still moves.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the position to extract, numbered from the bottom block upward</dd>
 <dd><code>amount</code> - the requested maximum; any positive value can extract the position's one bar</dd>

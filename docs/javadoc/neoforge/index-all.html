@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Client-side registration: the three block entity renderers, the key binding, the resource reload
  listeners behind render overrides, bar textures, and measured profiles, and the delivery target
- for the render-related server-to-client payloads.</div>
+ for the server-to-client render configuration payload.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a> - package com.github.crittscott.somestacks</dt>
 <dd>&nbsp;</dd>
@@ -173,6 +173,8 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/block/NeoForgeItemHandlers.html#onRegisterCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent)" class="member-name-link">onRegisterCapabilities(RegisterCapabilitiesEvent)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeItemHandlers.html" title="class in com.github.crittscott.somestacks.block">NeoForgeItemHandlers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ClientEvents.html#onRegisterClientCommands(net.neoforged.neoforge.client.event.RegisterClientCommandsEvent)" class="member-name-link">onRegisterClientCommands(RegisterClientCommandsEvent)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ModNetworking.html#onRegisterPayloadHandlers(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent)" class="member-name-link">onRegisterPayloadHandlers(RegisterPayloadHandlersEvent)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ModNetworking.html" title="class in com.github.crittscott.somestacks.network">ModNetworking</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientEvents.html#onRightClick(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClick(PlayerInteractEvent.RightClickBlock)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></dt>
@@ -206,7 +208,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/network/ModNetworking.html#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver(Consumer&lt;CustomPacketPayload&gt;)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ModNetworking.html" title="class in com.github.crittscott.somestacks.network">ModNetworking</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/ModNetworking.html#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver(Consumer&lt;ConfigSyncPkt&gt;)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ModNetworking.html" title="class in com.github.crittscott.somestacks.network">ModNetworking</a></dt>
 <dd>
 <div class="block">Installed once by <code>ClientSetup</code> on the physical client.</div>
 </dd>
@@ -250,15 +252,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#STORAGE_STACK_BLOCK" class="member-name-link">STORAGE_STACK_BLOCK</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html#syncAllPlayers(net.minecraft.server.MinecraftServer)" class="member-name-link">syncAllPlayers(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html" title="class in com.github.crittscott.somestacks">SomeStacksNeoForge</a></dt>
-<dd>
-<div class="block">Sends the current server config to every player, reading the override directory once for the
- whole broadcast.</div>
-</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html#vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vetoesRemoval(ServerLevel, BlockPos, BlockState)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a></dt>
+<dt><a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval(ServerPlayer, ServerLevel, BlockPos, BlockState, BlockEntity)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>

@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></code>, <code><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code>, <code><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></dd>
+<dd><code><a href="BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></code>, <code><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code>, <code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></code>, <code><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">StackRunItemAccess</span></div>
@@ -108,21 +108,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#advertisedSlots()" class="member-name-link">advertisedSlots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Positions visible to automation, numbered from the bottom block upward.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Extracts up to <code>amount</code> from the named current position, or only reports the result
+ when <code>simulate</code> is true.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Returns how many items the named slot accepted.</div>
+<div class="block">Returns how many items the named advertised position accepts.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Schedules the run's deferred publication or settlement pass.</div>
 </div>
 </div>
 </div>
@@ -142,12 +154,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="advertisedSlots()">
 <h3>advertisedSlots</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">advertisedSlots</span>()</div>
+<div class="block">Positions visible to automation, numbered from the bottom block upward. Below the height
+ limit this includes one block of headroom; insertion still decides whether growth is
+ currently possible.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getSlot(int)">
 <h3>getSlot</h3>
 <div class="member-signature"><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
+<div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
 </section>
 </li>
 <li>
@@ -156,7 +172,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">insertAt</span><wbr><span class="parameters">(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
-<div class="block">Returns how many items the named slot accepted.</div>
+<div class="block">Returns how many items the named advertised position accepts. When <code>simulate</code> is true,
+ reports the same answer without changing the run or growing it.</div>
 </section>
 </li>
 <li>
@@ -165,6 +182,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extract</span><wbr><span class="parameters">(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
+<div class="block">Extracts up to <code>amount</code> from the named current position, or only reports the result
+ when <code>simulate</code> is true. Structural runs perform their normal gravity or backfill on a
+ committed extraction.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="markDirty()">
+<h3>markDirty</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">markDirty</span>()</div>
+<div class="block">Schedules the run's deferred publication or settlement pass.</div>
 </section>
 </li>
 </ul>

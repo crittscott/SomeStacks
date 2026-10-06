@@ -4,15 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -48,20 +45,9 @@ public final class WorldEdits {
 
     /** Vanilla's placement obstruction test for a block-local collision shape. */
     public static boolean isUnobstructed(ServerLevel level, BlockPos pos, VoxelShape localShape) {
-        if (localShape.isEmpty()) {
-            return true;
-        }
-        VoxelShape worldShape = localShape.move(pos.getX(), pos.getY(), pos.getZ());
-        return level.getEntities(
-                (Entity) null,
-                worldShape.bounds(),
-                entity -> !entity.isRemoved()
-                        && entity.blocksBuilding
-                        && Shapes.joinIsNotEmpty(
-                                worldShape,
-                                Shapes.create(entity.getBoundingBox()),
-                                BooleanOp.AND))
-                .isEmpty();
+        return localShape.isEmpty()
+                || level.isUnobstructed(
+                        null, localShape.move(pos.getX(), pos.getY(), pos.getZ()));
     }
 
     /**
@@ -101,8 +87,11 @@ public final class WorldEdits {
             level.setBlock(pos, previous, Block.UPDATE_ALL);
             return false;
         }
-        state.getBlock().setPlacedBy(level, pos, state, placer, placer.getMainHandItem());
-        level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, state));
+        BlockState placedState = level.getBlockState(pos);
+        placedState.getBlock().setPlacedBy(
+                level, pos, placedState, placer, placer.getMainHandItem());
+        level.gameEvent(
+                GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
         return true;
     }
 

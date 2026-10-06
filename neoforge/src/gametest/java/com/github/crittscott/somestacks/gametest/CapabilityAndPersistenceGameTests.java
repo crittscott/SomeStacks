@@ -126,6 +126,12 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
     }
 
+    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
+    }
+
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {

@@ -178,69 +178,74 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)"><code>isGrounded(int, com.github.crittscott.somestacks.util.SlotAccess, boolean[])</code></a> to an occupancy snapshot rather than live slots.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.AABB</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#localBox(int)" class="member-name-link">localBox</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the cached block-local bounds used by collision, targeting, and rendering.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a snapshot of which slots in a block contain bars.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
  boolean[]&nbsp;seamBelow)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the top layer beneath a block overlaps the footprint of <code>index</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the block-local collision shape of one bar slot.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelX(int,int)" class="member-name-link">startPixelX</a><wbr>(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelX(int,int)" class="member-name-link">startPixelX</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a bar's X origin in model pixels from its within-layer X index and layer.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelY(int)" class="member-name-link">startPixelY</a><wbr>(int&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelY(int)" class="member-name-link">startPixelY</a><wbr>(int&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a layer's Y origin in model pixels.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelZ(int,int)" class="member-name-link">startPixelZ</a><wbr>(int&nbsp;z,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelZ(int,int)" class="member-name-link">startPixelZ</a><wbr>(int&nbsp;z,
  int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a bar's Z origin in model pixels from its within-layer Z index and layer.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the top layer's occupancy, which is the supporting seam for the Bar Stack above.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
  slots.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
  occupied one, or the farthest intersected slot if the ray meets no occupied bar.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.BarStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.BarStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="../block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&nbsp;be)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the nearest occupied bar intersected by the view ray, or <code>-1</code> on a miss.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index.</div>
 </div>
 </div>
@@ -331,6 +336,13 @@ loadScripts(document, 'script');</script>
 <h3>shapeFor</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">shapeFor</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
 <div class="block">Returns the block-local collision shape of one bar slot.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="localBox(int)">
+<h3>localBox</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.AABB</span>&nbsp;<span class="element-name">localBox</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Returns the cached block-local bounds used by collision, targeting, and rendering.</div>
 </section>
 </li>
 <li>

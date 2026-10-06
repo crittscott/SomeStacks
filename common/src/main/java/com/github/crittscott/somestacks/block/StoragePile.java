@@ -373,7 +373,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
         StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
 
-        grown.setRotation(blocks.get(0).getRotation());
         grown.beginBatch();
         blocks.add(grown);
         return true;

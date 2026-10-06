@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,9 +21,10 @@ import javax.annotation.Nullable;
 /** Local storage, persistence, synchronization, lighting, and batching shared by every stack. */
 public abstract class StackBlockEntity extends BlockEntity {
     static final String TAG_ITEMS = "Items";
-    protected static final String TAG_ROTATION = "Rotation";
 
     protected final StackItemStorage items;
+    @Nullable
+    private Integer pendingBlockRotation;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -114,6 +117,21 @@ public abstract class StackBlockEntity extends BlockEntity {
         return items;
     }
 
+    /** The outer block's layout rotation, expressed in the grid's quarter-turn coordinates. */
+    protected final int blockRotation() {
+        applyPendingBlockRotation();
+        BlockState state = getBlockState();
+        return state.hasProperty(StackBlock.HORIZONTAL_FACING)
+                ? QuarterTurns.fromDirection(state.getValue(StackBlock.HORIZONTAL_FACING))
+                : 0;
+    }
+
+    /** Changes the outer block's facing; the block-state update performs client synchronization. */
+    protected final void setBlockRotation(int rotation) {
+        pendingBlockRotation = QuarterTurns.normalize(rotation);
+        applyPendingBlockRotation();
+    }
+
     public final int automationSlotLimit() {
         return localSlotLimit();
     }
@@ -181,6 +199,31 @@ public abstract class StackBlockEntity extends BlockEntity {
         schedulePublish();
     }
 
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        applyPendingBlockRotation();
+    }
+
+    /** Applies a requested or migrated rotation once the block belongs to a server level. */
+    private void applyPendingBlockRotation() {
+        if (pendingBlockRotation == null || level == null || level.isClientSide) {
+            return;
+        }
+        BlockState state = getBlockState();
+        if (!state.hasProperty(StackBlock.HORIZONTAL_FACING)) {
+            pendingBlockRotation = null;
+            return;
+        }
+        BlockState migrated = state.setValue(
+                StackBlock.HORIZONTAL_FACING,
+                QuarterTurns.toDirection(pendingBlockRotation));
+        if (state == migrated || level.setBlock(getBlockPos(), migrated, Block.UPDATE_ALL)) {
+            pendingBlockRotation = null;
+            setChanged();
+        }
+    }
+
     final boolean publishIfPending(ServerLevel currentLevel) {
         if (!publishPending) {
             return false;
@@ -201,6 +244,12 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected final void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         if (StackDataMigration.upgrade(tag, registries)) {
+            setChanged();
+        }
+        Integer legacyBlockRotation = StackDataMigration.takeLegacyBlockRotation(tag);
+        if (legacyBlockRotation != null) {
+            pendingBlockRotation = legacyBlockRotation;
+            applyPendingBlockRotation();
             setChanged();
         }
         if (tag.contains(TAG_ITEMS)) {

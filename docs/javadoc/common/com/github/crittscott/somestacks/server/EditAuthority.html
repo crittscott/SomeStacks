@@ -87,8 +87,8 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">EditAuthority</span></div>
-<div class="block">The loader-specific half of automated world edits: who performs them, and whether a claim or
- logging mod vetoes one. <a href="WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> owns the vanilla mechanics and consults this for both.
+<div class="block">The loader-specific half of stack world edits: who performs automation, and whether a claim or
+ logging mod vetoes an edit. <a href="WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> owns the vanilla mechanics and actor propagation.
 
  <p>The loader's entry point installs an implementation via <a href="WorldEdits.html#setAuthority(com.github.crittscott.somestacks.server.EditAuthority)"><code>WorldEdits.setAuthority(com.github.crittscott.somestacks.server.EditAuthority)</code></a> before
  any world logic can run.</div>
@@ -115,28 +115,39 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.server.level.ServerPlayer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#afterRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">afterRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Reports a completed removal to loader-native observers.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.server.level.ServerPlayer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">The actor automation-driven growth and removal are attributed to.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Captures the loader-specific state needed to evaluate a placement after it occurs.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Captures the loader-specific checks needed before and after a placement.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Whether a claim, protection, or logging mod refuses this removal.</div>
 </div>
 </div>
@@ -165,16 +176,31 @@ loadScripts(document, 'script');</script>
 <h3>preparePlacement</h3>
 <div class="member-signature"><span class="return-type"><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></span>&nbsp;<span class="element-name">preparePlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Captures the loader-specific state needed to evaluate a placement after it occurs.</div>
+<div class="block">Captures the loader-specific checks needed before and after a placement.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="vetoesRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">
+<section class="detail" id="vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)">
 <h3>vetoesRemoval</h3>
-<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">vetoesRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">vetoesRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ @Nullable
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
 <div class="block">Whether a claim, protection, or logging mod refuses this removal.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="afterRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)">
+<h3>afterRemoval</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">afterRemoval</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ @Nullable
+ net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
+<div class="block">Reports a completed removal to loader-native observers.</div>
 </section>
 </li>
 </ul>

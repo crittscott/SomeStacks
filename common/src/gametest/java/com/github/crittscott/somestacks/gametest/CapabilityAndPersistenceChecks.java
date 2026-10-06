@@ -2,8 +2,14 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBlock;
+import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -15,6 +21,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -37,7 +46,7 @@ public final class CapabilityAndPersistenceChecks {
     private CapabilityAndPersistenceChecks() {}
 
     /**
-     * Storage disk data preserves items, data components, block rotation, and permanence. To
+     * Storage disk data preserves items, data components, block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
      * permanent, then unload and revisit the chunk or observe it from a joining client. All four
      * properties remain visible.
@@ -56,7 +65,10 @@ public final class CapabilityAndPersistenceChecks {
         check(pile != null, "Storage pile did not resolve");
         pile.setPermanent(true);
 
-        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
+        CompoundTag saved = source.saveWithoutMetadata(registries);
+        check(!saved.contains("Rotation"), "Storage saved legacy block-entity rotation");
+        copyFacing(helper, source, loaded);
+        loaded.loadWithComponents(saved, registries);
 
         ItemStack restored = loaded.getItems().getStackInSlot(7);
         checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
@@ -69,7 +81,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Singles disk data preserves contents plus block and per-item rotations. To reproduce
+     * Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
      * chunk or observe it from a joining client. Both orientations and the item remain unchanged.
      */
@@ -81,7 +93,10 @@ public final class CapabilityAndPersistenceChecks {
         source.setRotation(2);
         source.setCubeRotation(21, 3);
 
-        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
+        CompoundTag saved = source.saveWithoutMetadata(registries);
+        check(!saved.contains("Rotation"), "Singles saved legacy block-entity rotation");
+        copyFacing(helper, source, loaded);
+        loaded.loadWithComponents(saved, registries);
 
         checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
                 "Restored Singles item");
@@ -137,6 +152,10 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag storageTag = storage.getUpdateTag(registries);
         CompoundTag singlesTag = singles.getUpdateTag(registries);
         CompoundTag barTag = bars.getUpdateTag(registries);
+        check(!storageTag.contains("Rotation"),
+                "Storage update tag carried block-state rotation");
+        check(!singlesTag.contains("Rotation"),
+                "Singles update tag carried block-state rotation");
         check(!storageTag.getCompound("Items").contains("SetAside"),
                 "Storage update tag exposed set-aside data");
         check(!singlesTag.getCompound("Items").contains("SetAside"),
@@ -145,6 +164,8 @@ public final class CapabilityAndPersistenceChecks {
                 "Bar update tag exposed set-aside data");
         check(!storageTag.contains("Permanent"),
                 "Storage update tag exposed permanence");
+        copyFacing(helper, storage, storageClient);
+        copyFacing(helper, singles, singlesClient);
         storageClient.loadCustomOnly(storageTag, registries);
         singlesClient.loadCustomOnly(singlesTag, registries);
         barsClient.loadCustomOnly(barTag, registries);
@@ -227,7 +248,7 @@ public final class CapabilityAndPersistenceChecks {
         storage.put("Items", list);
         CompoundTag saved = new CompoundTag();
         saved.put("Items", storage);
-        saved.putInt("Rotation", 0);
+        saved.putInt("Rotation", 3);
         saved.putBoolean("Permanent", false);
 
         ChunkAccess chunk = helper.getLevel().getChunk(loaded.getBlockPos());
@@ -239,7 +260,47 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(5, restored.getCount(), "Upgraded Storage count");
         check(restored.has(DataComponents.DAMAGE_RESISTANT),
                 "The 1.21.1 fire_resistant component was not upgraded to damage_resistant");
+        checkEquals(3, loaded.getRotation(), "Migrated Storage block-state rotation");
+        check(!loaded.saveWithoutMetadata(registries).contains("Rotation"),
+                "Migrated Storage rewrote legacy Rotation");
         check(chunk.isUnsaved(), "Upgrading saved contents did not mark the block for saving");
+        helper.succeed();
+    }
+
+    /**
+     * Structure rotation transforms the outer facing of Storage and Singles while leaving their
+     * internal slot identities intact. To reproduce in-game: save either block in a structure and
+     * place the structure with a clockwise quarter turn; the visible grid turns with the build.
+     */
+    public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
+        StorageStackBlock storageBlock =
+                (StorageStackBlock) com.github.crittscott.somestacks.CommonRegistry
+                        .STORAGE_STACK_BLOCK.get();
+        SinglesStackBlock singlesBlock =
+                (SinglesStackBlock) com.github.crittscott.somestacks.CommonRegistry
+                        .SINGLES_STACK_BLOCK.get();
+        BlockState storageState = storageBlock.rotate(
+                storageBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
+        BlockState singlesState = singlesBlock.rotate(
+                singlesBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
+
+        checkEquals(Direction.EAST, storageState.getValue(StackBlock.HORIZONTAL_FACING),
+                "Rotated Storage facing");
+        checkEquals(Direction.EAST, singlesState.getValue(StackBlock.HORIZONTAL_FACING),
+                "Rotated Singles facing");
+
+        BlockPos storagePos = helper.absolutePos(ORIGIN);
+        BlockPos singlesPos = helper.absolutePos(ORIGIN.east(3));
+        check(helper.getLevel().setBlock(storagePos, storageState, Block.UPDATE_ALL),
+                "Could not place rotated Storage");
+        check(helper.getLevel().setBlock(singlesPos, singlesState, Block.UPDATE_ALL),
+                "Could not place rotated Singles");
+        StorageStackBE storage = (StorageStackBE) helper.getLevel().getBlockEntity(storagePos);
+        SinglesStackBE singles = (SinglesStackBE) helper.getLevel().getBlockEntity(singlesPos);
+        check(storage != null && storage.getRotation() == 3,
+                "Storage geometry did not read the rotated facing");
+        check(singles != null && singles.getRotation() == 3,
+                "Singles geometry did not read the rotated facing");
         helper.succeed();
     }
 
@@ -269,5 +330,14 @@ public final class CapabilityAndPersistenceChecks {
         check(bar.getCachedShape().isEmpty(),
                 "Bar shape cache did not reflect extraction");
         helper.succeed();
+    }
+
+    private static void copyFacing(
+            GameTestHelper helper, StackBlockEntity source, StackBlockEntity target) {
+        BlockState targetState = target.getBlockState().setValue(
+                StackBlock.HORIZONTAL_FACING,
+                source.getBlockState().getValue(StackBlock.HORIZONTAL_FACING));
+        check(helper.getLevel().setBlock(target.getBlockPos(), targetState, Block.UPDATE_ALL),
+                "Could not copy stack facing");
     }
 }

@@ -139,48 +139,86 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">everyStackTypeBlocksPistons</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: extend a piston into each SomeStacks block type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacePlacesTheSelectedStackType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: fill a Singles block, select Storage mode, hold an item, and
+ modifier-click its top face.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#gestureStateTracksModeAndModifier(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">gestureStateTracksModeAndModifier</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The server records the client's selected mode and current modifier state.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#interactionReadsOnlyTheMainHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">interactionReadsOnlyTheMainHand</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stack gestures act only from the main hand.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemRotationTargetsOnlyAnOccupiedCell(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">itemRotationTargetsOnlyAnOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Item rotation affects only the occupied Singles cell on the view ray.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">malformedGestureStateFailsDuringDecoding</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A gesture-state packet with an invalid mode ordinal fails during decoding.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#permanenceRequiresEmptyHandAndHonorsProtection(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">permanenceRequiresEmptyHandAndHonorsProtection</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Permanence requires an empty main hand and obeys world protection.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerMutationEmitsBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">playerMutationEmitsBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationValidatesHeldItemAndBlockType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)" class="member-name-link">sneakingRotationsReachTheLoaderHook</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
- <a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a>&nbsp;loaderClick)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reproduces sneaking right-clicks with redstone and soul torches and verifies that the
- loader's real server interaction hook rotates the block and targeted item.</div>
+<div class="block">A successful mutation inside a stack emits one block-change game event.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationSoundThrottleSuppressesSameTickAndClears(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationSoundThrottleSuppressesSameTickAndClears</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Rotation sound pacing permits one sound per player within its throttle window and resets when
+ player state clears.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotationValidatesHeldItemAndBlockType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">rotationValidatesHeldItemAndBlockType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
+ Bar blocks do not rotate.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sneakingRotationsReachTheLoaderHook(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderBlockClick)" class="member-name-link">sneakingRotationsReachTheLoaderHook</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
+ <a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a>&nbsp;loaderClick)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sneaking right-clicks reach the loader's real server interaction hook for both block and item
+ rotation.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vanillaInteractionReachesDepositExtractAndPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">vanillaInteractionReachesDepositExtractAndPlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Vanilla block-use interactions reach deposit, extraction, and adjacent placement.</div>
+</div>
 </div>
 </div>
 </div>
@@ -222,6 +260,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="malformedGestureStateFailsDuringDecoding(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>malformedGestureStateFailsDuringDecoding</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">malformedGestureStateFailsDuringDecoding</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A gesture-state packet with an invalid mode ordinal fails during decoding. No in-game
+ reproduction applies: this is a malformed-wire boundary that the normal client cannot send.</div>
 </section>
 </li>
 <li>
@@ -229,6 +269,9 @@ loadScripts(document, 'script');</script>
 <h3>gestureStateTracksModeAndModifier</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gestureStateTracksModeAndModifier</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">The server records the client's selected mode and current modifier state. To reproduce
+ in-game: cycle to Bar mode, hold the modifier, and right-click an eligible item against a
+ block. The server performs the Bar placement rather than another mode or an ordinary use.</div>
 </section>
 </li>
 <li>
@@ -236,6 +279,9 @@ loadScripts(document, 'script');</script>
 <h3>interactionReadsOnlyTheMainHand</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">interactionReadsOnlyTheMainHand</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
+ hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
+ off-hand item is not deposited.</div>
 </section>
 </li>
 <li>
@@ -243,6 +289,9 @@ loadScripts(document, 'script');</script>
 <h3>rotationValidatesHeldItemAndBlockType</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rotationValidatesHeldItemAndBlockType</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
+ Bar blocks do not rotate. To reproduce in-game: Shift-right-click each type with those torches
+ and observe that only the matching gestures change orientation.</div>
 </section>
 </li>
 <li>
@@ -251,8 +300,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sneakingRotationsReachTheLoaderHook</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
  <a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a>&nbsp;loaderClick)</span></div>
-<div class="block">Reproduces sneaking right-clicks with redstone and soul torches and verifies that the
- loader's real server interaction hook rotates the block and targeted item.</div>
+<div class="block">Sneaking right-clicks reach the loader's real server interaction hook for both block and item
+ rotation. To reproduce in-game: Shift-right-click Storage with a redstone torch and an
+ occupied Singles cell with a soul torch. The block and item rotate respectively.</div>
 </section>
 </li>
 <li>
@@ -260,6 +310,10 @@ loadScripts(document, 'script');</script>
 <h3>vanillaInteractionReachesDepositExtractAndPlacement</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">vanillaInteractionReachesDepositExtractAndPlacement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Vanilla block-use interactions reach deposit, extraction, and adjacent placement. To
+ reproduce in-game: modifier-click an existing Storage pile with an item, plain-click it with
+ an empty hand, then modifier-click the top of an ordinary block. The item deposits, extracts,
+ and creates a new Storage stack in the three cases.</div>
 </section>
 </li>
 <li>
@@ -267,6 +321,9 @@ loadScripts(document, 'script');</script>
 <h3>itemRotationTargetsOnlyAnOccupiedCell</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">itemRotationTargetsOnlyAnOccupiedCell</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Item rotation affects only the occupied Singles cell on the view ray. To reproduce in-game:
+ Shift-right-click an occupied cell with a soul torch, then an empty cell beside it. The first
+ item rotates once and the empty-cell click changes nothing.</div>
 </section>
 </li>
 <li>
@@ -274,6 +331,9 @@ loadScripts(document, 'script');</script>
 <h3>permanenceRequiresEmptyHandAndHonorsProtection</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">permanenceRequiresEmptyHandAndHonorsProtection</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Permanence requires an empty main hand and obeys world protection. To reproduce in-game:
+ select permanence mode and modifier-click Storage first with an item, then empty-handed, then
+ inside a claim that denies the player. Only the unprotected empty-hand click toggles it.</div>
 </section>
 </li>
 <li>
@@ -281,6 +341,26 @@ loadScripts(document, 'script');</script>
 <h3>extractionRefusesIncompatibleOrFullHands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionRefusesIncompatibleOrFullHands</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Extraction refuses an incompatible held item or a compatible stack with no room. To
+ reproduce in-game: plain-click stored stone while holding dirt, then while holding a full
+ stack of matching stone. The Storage contents and held stacks remain unchanged.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fullTopFacePlacesTheSelectedStackType(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>fullTopFacePlacesTheSelectedStackType</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullTopFacePlacesTheSelectedStackType</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">To reproduce in-game: fill a Singles block, select Storage mode, hold an item, and
+ modifier-click its top face. A Storage Stack appears above and receives the held items.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>everyStackTypeBlocksPistons</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">everyStackTypeBlocksPistons</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: extend a piston into each SomeStacks block type. Storage, Singles, and
+ Bar blocks remain in place and the piston cannot push them.</div>
 </section>
 </li>
 <li>
@@ -288,6 +368,19 @@ loadScripts(document, 'script');</script>
 <h3>rotationSoundThrottleSuppressesSameTickAndClears</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rotationSoundThrottleSuppressesSameTickAndClears</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Rotation sound pacing permits one sound per player within its throttle window and resets when
+ player state clears. To reproduce in-game: perform rotation gestures faster than the throttle
+ interval, then pause and rotate again. The rapid repeats do not each play a sound; the later
+ rotation does.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerMutationEmitsBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>playerMutationEmitsBlockChange</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerMutationEmitsBlockChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">A successful mutation inside a stack emits one block-change game event. To reproduce
+ in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.</div>
 </section>
 </li>
 </ul>

@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
@@ -20,12 +21,14 @@ import net.minecraft.util.datafix.fixes.References;
  * not know, so the item stacks these block entities hold are run through the DataFixerUpper here.
  *
  * <p>Every save carries a {@code DataVersion}. A tag without one was written by Some Stacks for
- * Minecraft 1.21.1, which did not record it. Only the item stacks need fixing; rotations and
- * permanence are plain numbers whose format has not changed.
+ * Minecraft 1.21.1, which did not record it. The immediately preceding release also stored an
+ * outer block's {@code Rotation} in block-entity data; that field is consumed into block state on
+ * load and is never written again.
  */
 public final class StackDataMigration {
     /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
     private static final int UNVERSIONED_DATA_VERSION = 3955;
+    private static final String LEGACY_TAG_ROTATION = "Rotation";
 
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
@@ -72,6 +75,16 @@ public final class StackDataMigration {
         stampVersion(tag);
         recordUpgrade(saved, current);
         return true;
+    }
+
+    /** Removes and returns the previous release's block-entity layout rotation, if present. */
+    static Integer takeLegacyBlockRotation(CompoundTag tag) {
+        if (!tag.contains(LEGACY_TAG_ROTATION, Tag.TAG_INT)) {
+            return null;
+        }
+        int rotation = QuarterTurns.normalize(tag.getInt(LEGACY_TAG_ROTATION));
+        tag.remove(LEGACY_TAG_ROTATION);
+        return rotation;
     }
 
     private static synchronized void recordUpgrade(int from, int to) {

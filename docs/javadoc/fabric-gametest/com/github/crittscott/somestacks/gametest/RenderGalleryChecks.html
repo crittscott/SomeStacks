@@ -109,15 +109,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#queuedBarGalleryBuildsRowsAndFillsBars(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">queuedBarGalleryBuildsRowsAndFillsBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Bar gallery lays out rows and fills each block up to its capacity before starting the next.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A queued Storage gallery builds its sandstone floor, one column per item group, and reports
+ planned and completed totals.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#queuedStorageGallerySpreadsWorkAcrossTicks(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)" class="member-name-link">queuedStorageGallerySpreadsWorkAcrossTicks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gallery placement obeys the configured per-tick budget.</div>
+</div>
 </div>
 </div>
 </div>
@@ -140,6 +147,10 @@ loadScripts(document, 'script');</script>
 <h3>queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">queuedStorageGalleryBuildsFloorRowsAndCompletionTotals</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">A queued Storage gallery builds its sandstone floor, one column per item group, and reports
+ planned and completed totals. To reproduce in-game: enable galleries and run an
+ <code>/ss gallery</code> form containing multiple groups. The rows begin east of the player on a
+ sandstone floor and the completion message reports the placed stacks and items.</div>
 </section>
 </li>
 <li>
@@ -147,6 +158,9 @@ loadScripts(document, 'script');</script>
 <h3>queuedStorageGallerySpreadsWorkAcrossTicks</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">queuedStorageGallerySpreadsWorkAcrossTicks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Gallery placement obeys the configured per-tick budget. To reproduce in-game: lower
+ <code>render_gallery.placements_per_tick</code> and request a large Storage gallery. Construction
+ visibly progresses across multiple ticks rather than completing in one server tick.</div>
 </section>
 </li>
 <li>
@@ -154,6 +168,9 @@ loadScripts(document, 'script');</script>
 <h3>queuedBarGalleryBuildsRowsAndFillsBars</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">queuedBarGalleryBuildsRowsAndFillsBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">A Bar gallery lays out rows and fills each block up to its capacity before starting the next.
+ To reproduce in-game: enable galleries and run <code>/ss ingotgallery</code> for more than one
+ block's worth of one ingot. The first row is full and the next holds the remainder.</div>
 </section>
 </li>
 </ul>

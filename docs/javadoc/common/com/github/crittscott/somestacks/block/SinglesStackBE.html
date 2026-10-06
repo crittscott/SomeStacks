@@ -164,27 +164,40 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#column()" class="member-name-link">column</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canDepositAt(int)" class="member-name-link">canDepositAt</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
+ directly below, or null when this block stands on the world instead of on another Singles
+ Stack.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#column()" class="member-name-link">column</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The column this block belongs to, or null on the client and for a block being removed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#computeShape()" class="member-name-link">computeShape</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#computeShape()" class="member-name-link">computeShape</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Builds the union of the occupied cells' boxes at the current layout rotation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depositAt(int,net.minecraft.world.item.ItemStack)" class="member-name-link">depositAt</a><wbr>(int&nbsp;index,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depositAt(int,net.minecraft.world.item.ItemStack)" class="member-name-link">depositAt</a><wbr>(int&nbsp;index,
  net.minecraft.world.item.ItemStack&nbsp;fromHand)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Puts one item from the given stack into the named cell, if that cell is empty and supported.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
  items across block seams as needed so nothing is left unsupported.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index,
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Player-facing extraction variant that preserves the actor through structural cleanup.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCachedShape()" class="member-name-link">getCachedShape</a>()</code></div>
@@ -208,48 +221,60 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether Singles accepts this item.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemRun()" class="member-name-link">itemRun</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The current server-side run, or <code>null</code> on the client or during removal.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markRunDirty()" class="member-name-link">markRunDirty</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Schedules the owning run's deferred publication pass.</div>
-</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
- net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCubeRotation(int,int)" class="member-name-link">setCubeRotation</a><wbr>(int&nbsp;index,
- int&nbsp;cubeRot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the rendered rotation at <code>index</code>, which must be in <code>[0, SLOTS)</code>.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resolves the current server-side run without consulting the per-tick cache.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag,
+ net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotation(int)" class="member-name-link">setRotation</a><wbr>(int&nbsp;rotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCubeRotation(int,int)" class="member-name-link">setCubeRotation</a><wbr>(int&nbsp;index,
+ int&nbsp;cubeRot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the rendered item rotation at <code>index</code> modulo four and publishes immediately unless
+ a batch is open.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotation(int)" class="member-name-link">setRotation</a><wbr>(int&nbsp;rotation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately
+ unless a batch is open.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The visual-column occupancy supporting the bottom layer at <code>pos</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsFreshDeposit(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,int)" class="member-name-link">supportsFreshDeposit</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether an empty, unrotated Singles block at <code>pos</code> supports its first item.</div>
+</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadAdditional</a>, <a href="StackBlockEntity.html#requestPublish()">requestPublish</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">saveAdditional</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
+<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadAdditional</a>, <a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a>, <a href="StackBlockEntity.html#requestPublish()">requestPublish</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">saveAdditional</a>, <a href="StackBlockEntity.html#setBlockRotation(int)">setBlockRotation</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)">stripServerOnlyUpdateData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
-<code>addEntityType, applyComponents, applyComponentsFromItemStack, applyImplicitComponents, clearRemoved, collectComponents, collectImplicitComponents, components, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPosFromTag, getType, hasLevel, isRemoved, isValidBlockState, loadCustomOnly, loadStatic, loadWithComponents, parseCustomNameSafe, removeComponentsFromTag, saveCustomAndMetadata, saveCustomOnly, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setComponents, setLevel, setRemoved, triggerEvent</code></div>
+<code>addEntityType, applyComponents, applyComponentsFromItemStack, applyImplicitComponents, clearRemoved, collectComponents, collectImplicitComponents, components, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPosFromTag, getType, hasLevel, isRemoved, isValidBlockState, loadCustomOnly, loadStatic, loadWithComponents, parseCustomNameSafe, removeComponentsFromTag, saveCustomAndMetadata, saveCustomOnly, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setComponents, setRemoved, triggerEvent</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -269,14 +294,6 @@ loadScripts(document, 'script');</script>
 <h3>SLOTS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SLOTS</span></div>
 <div class="block">Cells in one block. The column's flat range is this times its height.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.block.SinglesStackBE.SLOTS">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -333,18 +350,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="markRunDirty()">
-<h3>markRunDirty</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markRunDirty</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#markRunDirty()">StackBlockEntity</a></code></span></div>
-<div class="block">Schedules the owning run's deferred publication pass.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="column()">
 <h3>column</h3>
 <div class="member-signature"><span class="annotations">@Nullable
@@ -356,14 +361,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="itemRun()">
-<h3>itemRun</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span>&nbsp;<span class="element-name">itemRun</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#itemRun()">StackBlockEntity</a></code></span></div>
-<div class="block">The current server-side run, or <code>null</code> on the client or during removal.</div>
+<section class="detail" id="resolveRun(net.minecraft.server.level.ServerLevel)">
+<h3>resolveRun</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span>&nbsp;<span class="element-name">resolveRun</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#resolveRun(net.minecraft.server.level.ServerLevel)">StackBlockEntity</a></code></span></div>
+<div class="block">Resolves the current server-side run without consulting the per-tick cache.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="StackBlockEntity.html#itemRun()">itemRun</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+<dd><code><a href="StackBlockEntity.html#resolveRun(net.minecraft.server.level.ServerLevel)">resolveRun</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
 </dl>
 </section>
 </li>
@@ -371,8 +376,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isValidSinglesItem(net.minecraft.world.item.ItemStack)">
 <h3>isValidSinglesItem</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidSinglesItem</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Whether Singles accepts this item. Bar-valid items are excluded, so widening the ingot tags
- narrows what Singles takes by the same set.</div>
+<div class="block">Whether Singles accepts this item. Items from disabled namespaces and items accepted by Bar
+ are excluded, so widening the configured ingot list narrows what Singles accepts.</div>
 </section>
 </li>
 <li>
@@ -385,6 +390,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setRotation(int)">
 <h3>setRotation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
+<div class="block">Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately
+ unless a batch is open.</div>
 </section>
 </li>
 <li>
@@ -399,7 +406,8 @@ loadScripts(document, 'script');</script>
 <h3>setCubeRotation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCubeRotation</span><wbr><span class="parameters">(int&nbsp;index,
  int&nbsp;cubeRot)</span></div>
-<div class="block">Sets the rendered rotation at <code>index</code>, which must be in <code>[0, SLOTS)</code>.</div>
+<div class="block">Sets the rendered item rotation at <code>index</code> modulo four and publishes immediately unless
+ a batch is open. The index must be in <code>[0, SLOTS)</code>.</div>
 </section>
 </li>
 <li>
@@ -445,6 +453,43 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>the extracted item, or empty when the cell held nothing</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="extractAt(int,net.minecraft.server.level.ServerPlayer)">
+<h3>extractAt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index,
+ @Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
+<div class="block">Player-facing extraction variant that preserves the actor through structural cleanup.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="canDepositAt(int)">
+<h3>canDepositAt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canDepositAt</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
+ directly below, or null when this block stands on the world instead of on another Singles
+ Stack.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportsFreshDeposit(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,int)">
+<h3>supportsFreshDeposit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsFreshDeposit</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ int&nbsp;index)</span></div>
+<div class="block">Whether an empty, unrotated Singles block at <code>pos</code> supports its first item.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
+<h3>supportSeamBeneath</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">supportSeamBeneath</span><wbr><span class="parameters">(@Nullable
+ net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<div class="block">The visual-column occupancy supporting the bottom layer at <code>pos</code>.</div>
 </section>
 </li>
 <li>

@@ -110,56 +110,81 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingMiddleBlockDropsItsContentsWithoutClosingTheGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Breaking the middle Singles block drops only its local items and does not pull the upper
+ block through the new gap.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The fill is measured against the column's current height, so a run that loses a block reports
  the same contents as a larger share of a smaller column.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholeColumnFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholeColumnFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyColumn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholeColumnFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholeColumnFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Every block in a Singles column reports the same whole-column fill.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyColumn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
  holds one item, so full means every cell of every block occupied.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceStopsAtLastEmptyBeforeOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceStopsAtLastEmptyBeforeOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceUsesFarthestCellWhenNothingIsOccupied(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceUsesFarthestCellWhenNothingIsOccupied</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyRotatedBlocksShareVisualSeamColumns(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyRotatedBlocksShareVisualSeamColumns</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">drawDownKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceStopsAtLastEmptyBeforeOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceStopsAtLastEmptyBeforeOccupiedCell</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A deposit ray stops at the last empty cell before an occupied cell.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceUsesFarthestCellWhenNothingIsOccupied(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceUsesFarthestCellWhenNothingIsOccupied</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">An unobstructed deposit ray selects its farthest supported cell.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyRotatedBlocksShareVisualSeamColumns(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyRotatedBlocksShareVisualSeamColumns</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Support across a block seam follows visual columns despite different block rotations.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawDownKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">drawDownKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The same conservation across a block boundary: the item handed down from the block above is
  one the receiving block would refuse from a deposit.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionPreservesAnExistingGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">shiftKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extraction draws from the visually aligned column across a differently rotated block seam.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionPreservesAnExistingGap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Singles gravity shifts occupied cells exactly one layer and does not compact a preexisting
+ gap.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">extractionShiftsOneColumnAndCarriesItemRotation</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extraction shifts only the aimed visual column down one layer and carries item rotations.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shiftKeepsAnItemItWouldNoLongerAccept(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">shiftKeepsAnItemItWouldNoLongerAccept</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Validity gates insertion only, so an item stored before the rule narrowed under it has to
  survive the shift that closes the gap beneath it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">standaloneBottomIsGroundedAndFloatingCellIsRejected</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperCellUsesTheCellImmediatelyBelow(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperCellUsesTheCellImmediatelyBelow</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">standaloneBottomIsGroundedAndFloatingCellIsRejected</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The bottom layer stands on the world, while an unsupported higher cell rejects a deposit.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperCellUsesTheCellImmediatelyBelow(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperCellUsesTheCellImmediatelyBelow</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Singles item is supported by the cell directly beneath it.</div>
+</div>
 </div>
 </div>
 </div>
@@ -181,24 +206,35 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>standaloneBottomIsGroundedAndFloatingCellIsRejected</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">standaloneBottomIsGroundedAndFloatingCellIsRejected</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">The bottom layer stands on the world, while an unsupported higher cell rejects a deposit. To
+ reproduce in-game: aim at an empty bottom cell and deposit, then aim at a higher cell with
+ nothing beneath it. Only the bottom deposit succeeds.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="upperCellUsesTheCellImmediatelyBelow(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>upperCellUsesTheCellImmediatelyBelow</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">upperCellUsesTheCellImmediatelyBelow</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Singles item is supported by the cell directly beneath it. To reproduce in-game: deposit
+ into a bottom cell, then the same visual column one layer higher. Both items remain stacked.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="differentlyRotatedBlocksShareVisualSeamColumns(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>differentlyRotatedBlocksShareVisualSeamColumns</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">differentlyRotatedBlocksShareVisualSeamColumns</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Support across a block seam follows visual columns despite different block rotations. To
+ reproduce in-game: rotate two stacked Singles blocks differently, fill a top cell of the
+ lower block, then deposit into the visually aligned bottom cell above. The deposit succeeds.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionShiftsOneColumnAndCarriesItemRotation(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionShiftsOneColumnAndCarriesItemRotation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionShiftsOneColumnAndCarriesItemRotation</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Extraction shifts only the aimed visual column down one layer and carries item rotations. To
+ reproduce in-game: make a three-item vertical Singles column, rotate the upper two items, and
+ extract the bottom item. The other two descend with their orientations unchanged.</div>
 </section>
 </li>
 <li>
@@ -208,7 +244,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Validity gates insertion only, so an item stored before the rule narrowed under it has to
  survive the shift that closes the gap beneath it. An ingot stands in for such an item: a
  Singles Stack refuses one from a deposit, because Bar accepts it, but may be holding one that
- predates an <code>ss ingot</code> edit or a data pack reload.</div>
+ predates an <code>ss ingot</code> edit or a data pack reload.
+
+ <p>To reproduce in-game: store an item in Singles, change the ingot list so Singles would now
+ reject it, place another item below it, and extract the lower item. The newly rejected stored
+ item moves down rather than being lost.</div>
 </section>
 </li>
 <li>
@@ -216,31 +256,58 @@ loadScripts(document, 'script');</script>
 <h3>drawDownKeepsAnItemItWouldNoLongerAccept</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawDownKeepsAnItemItWouldNoLongerAccept</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The same conservation across a block boundary: the item handed down from the block above is
- one the receiving block would refuse from a deposit.</div>
+ one the receiving block would refuse from a deposit.
+
+ <p>To reproduce in-game: store an item in the bottom cell of an upper Singles block, change
+ the ingot list so Singles rejects it, and extract the aligned top item below. The stored item
+ crosses the seam rather than being lost.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionPreservesAnExistingGap(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionPreservesAnExistingGap</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionPreservesAnExistingGap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Singles gravity shifts occupied cells exactly one layer and does not compact a preexisting
+ gap. To reproduce in-game: use automation to leave a gap between two items in one column,
+ then extract the bottom item. The gap remains and the upper item descends only one layer.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="extractionDrawsAcrossDifferentlyRotatedBlockBoundary(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>extractionDrawsAcrossDifferentlyRotatedBlockBoundary</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionDrawsAcrossDifferentlyRotatedBlockBoundary</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Extraction draws from the visually aligned column across a differently rotated block seam.
+ To reproduce in-game: rotate two stacked Singles blocks differently, put items across one
+ visual seam column, rotate the upper item, and extract the lower item. The upper item crosses
+ the seam with its item rotation intact and its emptied block disappears.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="depositTraceStopsAtLastEmptyBeforeOccupiedCell(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>depositTraceStopsAtLastEmptyBeforeOccupiedCell</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositTraceStopsAtLastEmptyBeforeOccupiedCell</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A deposit ray stops at the last empty cell before an occupied cell. To reproduce in-game:
+ place an item deeper in a Singles row and aim through the empty cells toward it. The new item
+ occupies the empty cell immediately in front of the stored item.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="depositTraceUsesFarthestCellWhenNothingIsOccupied(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>depositTraceUsesFarthestCellWhenNothingIsOccupied</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositTraceUsesFarthestCellWhenNothingIsOccupied</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">An unobstructed deposit ray selects its farthest supported cell. To reproduce in-game: aim
+ through an entirely empty supported Singles row and deposit. The item appears in the farthest
+ cell on that ray.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="breakingMiddleBlockDropsItsContentsWithoutClosingTheGap(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>breakingMiddleBlockDropsItsContentsWithoutClosingTheGap</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">breakingMiddleBlockDropsItsContentsWithoutClosingTheGap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Breaking the middle Singles block drops only its local items and does not pull the upper
+ block through the new gap. To reproduce in-game: put one distinct item in the same column of
+ each block in a three-block Singles run and break the middle block. Its item drops and the
+ upper item stays in the upper block.</div>
 </section>
 </li>
 <li>
@@ -248,13 +315,19 @@ loadScripts(document, 'script');</script>
 <h3>comparatorReservesZeroForAnEmptyColumn</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyColumn</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a cell
- holds one item, so full means every cell of every block occupied.</div>
+ holds one item, so full means every cell of every block occupied.
+
+ <p>To reproduce in-game: compare an empty Singles column, the same column with one item, and a
+ full column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="comparatorReadsTheWholeColumnFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>comparatorReadsTheWholeColumnFromEveryBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholeColumnFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Every block in a Singles column reports the same whole-column fill. To reproduce in-game:
+ make a two-block column with one block's cells full and the other empty, then place comparators
+ against both blocks. Both report the half-full value.</div>
 </section>
 </li>
 <li>
@@ -262,7 +335,10 @@ loadScripts(document, 'script');</script>
 <h3>comparatorFollowsAColumnLosingABlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorFollowsAColumnLosingABlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The fill is measured against the column's current height, so a run that loses a block reports
- the same contents as a larger share of a smaller column.</div>
+ the same contents as a larger share of a smaller column.
+
+ <p>To reproduce in-game: fill the lower half of a two-block Singles column, read its comparator,
+ then remove the empty upper block. The lower block's output rises from half full to full.</div>
 </section>
 </li>
 </ul>

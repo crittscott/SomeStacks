@@ -105,6 +105,13 @@ public final class InteractionGameTests implements FabricGameTest {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link InteractionChecks#playerMutationEmitsBlockChange}. */
+    @GameTest(template = TEMPLATE, timeoutTicks = 20)
+    public void playerMutationEmitsBlockChange(GameTestHelper helper) {
+        InteractionChecks.playerMutationEmitsBlockChange(
+                helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
     /** See {@link InteractionChecks#extractionRefusesIncompatibleOrFullHands}. */
     @GameTest(template = TEMPLATE)
     public void extractionRefusesIncompatibleOrFullHands(GameTestHelper helper) {

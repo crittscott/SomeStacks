@@ -93,8 +93,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Bar support and collapse in a live level that does not touch loader-native automation directly:
  item validity, grounding at the bottom of a column, footprint overlap deciding support across
  the alternating layer orientations, and player extraction dropping what it unsupports.
- Capability/Transfer-API-facing tests, and Forge's event-bus-driven protection test, stay in each
- loader's own <code>BarColumnGameTests</code>.</div>
+ Loader-native automation and protection-event tests stay in each loader's GameTest classes.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -111,13 +110,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnConsolidatesDrops</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Breaking a full Bar column drops all contents without spawning one entity per Bar.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#breakingLowerBlockCollapsesDependentUpperBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingLowerBlockCollapsesDependentUpperBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Breaking a lower Bar block collapses Bars in the block above that depended on its seam.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentTags</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">collapseDoesNotMergeDifferentComponents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Bar collapse never merges stacks with different data components.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorFollowsAColumnLosingABlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorFollowsAColumnLosingABlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -126,7 +131,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReadsTheWholeColumnFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReadsTheWholeColumnFromEveryBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Every block in a Bar column reports the same whole-column fill.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#comparatorReservesZeroForAnEmptyColumn(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorReservesZeroForAnEmptyColumn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -134,36 +141,54 @@ loadScripts(document, 'script');</script>
  position holds one bar, so full means every position of every block occupied.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyOrientedSeamUsesFootprintOverlap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyOrientedSeamUsesFootprintOverlap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#depositTraceStopsAtLastEmptyBeforeOccupiedBar(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">depositTraceStopsAtLastEmptyBeforeOccupiedBar</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Bar deposit ray selects the last empty bar before the first occupied bar.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#differentlyOrientedSeamUsesFootprintOverlap(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">differentlyOrientedSeamUsesFootprintOverlap</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Bar support across a block seam follows cuboid footprint overlap between alternating layers.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSeamSupportedBy(int)" class="member-name-link">firstSeamSupportedBy</a><wbr>(int&nbsp;seamIndex)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSeamSupportedBy(int)" class="member-name-link">firstSeamSupportedBy</a><wbr>(int&nbsp;seamIndex)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSupportedBy(int,int,int)" class="member-name-link">firstSupportedBy</a><wbr>(int&nbsp;lowerIndex,
- int&nbsp;from,
- int&nbsp;to)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,int,int)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;lowerIndex,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstSupportedBy(int,int,int)" class="member-name-link">firstSupportedBy</a><wbr>(int&nbsp;lowerIndex,
  int&nbsp;from,
  int&nbsp;to)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeConsolidatesAcrossBlocks</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A player-triggered cascade consolidates matching drops across block boundaries.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionDropsUnsupportedBars</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Player extraction cascades through Bars that lose support.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedBy(int,int,int)" class="member-name-link">supportedBy</a><wbr>(int&nbsp;lowerIndex,
+ int&nbsp;from,
+ int&nbsp;to)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">supportedNeighborSurvivesPlayerExtraction</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A neighboring Bar with another overlapping support survives a player cascade.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A Bar above the bottom layer needs footprint overlap with a Bar beneath it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">validityAndBottomGroundingAreEnforced</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Bar accepts configured ingots on its grounded bottom layer and rejects other items or
+ unsupported positions.</div>
+</div>
 </div>
 </div>
 </div>
@@ -185,54 +210,89 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="validityAndBottomGroundingAreEnforced(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>validityAndBottomGroundingAreEnforced</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">validityAndBottomGroundingAreEnforced</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Bar accepts configured ingots on its grounded bottom layer and rejects other items or
+ unsupported positions. To reproduce in-game: deposit a configured ingot into a bottom Bar
+ position, then try a non-ingot and a floating position. Only the grounded ingot is stored.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>upperBarRequiresOverlappingSupport</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">upperBarRequiresOverlappingSupport</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Bar above the bottom layer needs footprint overlap with a Bar beneath it. To reproduce
+ in-game: place one bottom Bar, then try depositing above both an overlapping and a disjoint
+ position. Only the overlapping Bar remains.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="playerExtractionDropsUnsupportedBars(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerExtractionDropsUnsupportedBars</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionDropsUnsupportedBars</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Player extraction cascades through Bars that lose support. To reproduce in-game: build a
+ vertical chain of supported Bars and extract its bottom Bar. The unsupported Bars above drop.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="supportedNeighborSurvivesPlayerExtraction(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>supportedNeighborSurvivesPlayerExtraction</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">supportedNeighborSurvivesPlayerExtraction</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A neighboring Bar with another overlapping support survives a player cascade. To reproduce
+ in-game: support an upper Bar with two lower Bars, then extract one lower support. The upper
+ Bar remains on the other.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="differentlyOrientedSeamUsesFootprintOverlap(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>differentlyOrientedSeamUsesFootprintOverlap</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">differentlyOrientedSeamUsesFootprintOverlap</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Bar support across a block seam follows cuboid footprint overlap between alternating layers.
+ To reproduce in-game: fill a top-layer Bar below, then deposit into an overlapping bottom
+ position of the Bar block above. The cross-oriented overlap supports it.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="depositTraceStopsAtLastEmptyBeforeOccupiedBar(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>depositTraceStopsAtLastEmptyBeforeOccupiedBar</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">depositTraceStopsAtLastEmptyBeforeOccupiedBar</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Bar deposit ray selects the last empty bar before the first occupied bar. To reproduce
+ in-game: place a Bar in the farther position of a bottom-layer row and aim through the empty
+ nearer position. The new Bar occupies the nearer position rather than passing through it.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="breakingLowerBlockCollapsesDependentUpperBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>breakingLowerBlockCollapsesDependentUpperBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">breakingLowerBlockCollapsesDependentUpperBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Breaking a lower Bar block collapses Bars in the block above that depended on its seam. To
+ reproduce in-game: build supported Bars across a two-block seam and break the lower block.
+ The upper dependent Bars drop and its empty block disappears.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>breakingFullColumnConsolidatesDrops</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">breakingFullColumnConsolidatesDrops</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Breaking a full Bar column drops all contents without spawning one entity per Bar. To
+ reproduce in-game: fill a Bar block with one ingot type and break it. Every ingot is returned
+ in consolidated dropped stacks.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="playerCascadeConsolidatesAcrossBlocks(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerCascadeConsolidatesAcrossBlocks</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCascadeConsolidatesAcrossBlocks</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A player-triggered cascade consolidates matching drops across block boundaries. To reproduce
+ in-game: build a dense supported Bar column spanning two blocks and remove its lowest support.
+ All unsupported Bars are returned in consolidated item entities.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="collapseDoesNotMergeDifferentTags(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>collapseDoesNotMergeDifferentTags</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentTags</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<section class="detail" id="collapseDoesNotMergeDifferentComponents(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>collapseDoesNotMergeDifferentComponents</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collapseDoesNotMergeDifferentComponents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">A Bar collapse never merges stacks with different data components. To reproduce in-game:
+ build a supported Bar chain from otherwise identical items carrying distinct components, then
+ remove the support. Each component identity remains a separate drop.</div>
 </section>
 </li>
 <li>
@@ -240,13 +300,19 @@ loadScripts(document, 'script');</script>
 <h3>comparatorReservesZeroForAnEmptyColumn</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReservesZeroForAnEmptyColumn</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
- position holds one bar, so full means every position of every block occupied.</div>
+ position holds one bar, so full means every position of every block occupied.
+
+ <p>To reproduce in-game: compare an empty Bar column, the same column with one Bar, and a full
+ column. Their comparator outputs are 0, at least 1, and 15 respectively.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="comparatorReadsTheWholeColumnFromEveryBlock(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>comparatorReadsTheWholeColumnFromEveryBlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorReadsTheWholeColumnFromEveryBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Every block in a Bar column reports the same whole-column fill. To reproduce in-game: make a
+ two-block column with one block full and the other empty, then place comparators against both.
+ Their outputs match.</div>
 </section>
 </li>
 <li>
@@ -254,7 +320,10 @@ loadScripts(document, 'script');</script>
 <h3>comparatorFollowsAColumnLosingABlock</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorFollowsAColumnLosingABlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">The fill is measured against the column's current height, so a run that loses a block reports
- the same contents as a larger share of a smaller column.</div>
+ the same contents as a larger share of a smaller column.
+
+ <p>To reproduce in-game: fill the lower half of a two-block Bar column, read its comparator,
+ then remove the empty upper block. The lower block's output rises from half full to full.</div>
 </section>
 </li>
 <li>

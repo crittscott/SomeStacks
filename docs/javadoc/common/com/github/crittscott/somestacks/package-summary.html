@@ -84,10 +84,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="network/package-summary.html">com.github.crittscott.somestacks.network</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="server/package-summary.html">com.github.crittscott.somestacks.server</a></div>
+<div class="col-first even-row-color"><a href="renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="util/package-summary.html">com.github.crittscott.somestacks.util</a></div>
+<div class="col-first odd-row-color"><a href="server/package-summary.html">com.github.crittscott.somestacks.server</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="util/package-summary.html">com.github.crittscott.somestacks.util</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
@@ -108,7 +110,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The server config values and the resolved lookup sets behind them, loaded from and saved to a
- per-world JSON file the loader's entry point locates and hands to <a href="ServerConfig.html#load(java.nio.file.Path)"><code>ServerConfig.load(Path)</code></a>.</div>
+ per-world JSON file located by <a href="ServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)"><code>ServerConfig.loadFor(MinecraftServer)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -121,6 +123,10 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Shared mod identity for common code.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Loader-neutral server lifecycle operations called by each loader's native event adapters.</div>
 </div>
 </div>
 </div>

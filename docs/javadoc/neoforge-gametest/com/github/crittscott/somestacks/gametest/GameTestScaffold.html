@@ -90,10 +90,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GameTestScaffold</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Scaffolding shared by both loaders' GameTests: placing each stack type on the empty template
+<div class="block">Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  through <code>CommonRegistry</code>, seeding handlers directly, and the assertion helpers every test
- reads through. Loader-native automation access (Forge's <code>IItemHandler</code>, Fabric's Transfer
- API storage) stays in each loader's own <code>GameTestSupport</code>/<code>FabricGameTestSupport</code>.
+ reads through. Loader-native automation access stays in Forge's and NeoForge's
+ <code>GameTestSupport</code> and Fabric's <code>FabricGameTestSupport</code>.
 
  <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
  the ordinary rules would not produce and check what happens next.</div>
@@ -166,24 +166,37 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupied(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupied</a><wbr>(com.github.crittscott.somestacks.util.SlotAccess&nbsp;handler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends net.minecraft.world.level.block.entity.BlockEntity&gt;<br>T</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#place(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block,java.lang.Class)" class="member-name-link">place</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outsideWorldBorder(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,java.lang.Runnable)" class="member-name-link">outsideWorldBorder</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.core.BlockPos&nbsp;relative,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;action)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Runs <code>action</code> while <code>relative</code> lies outside the world border, then restores it.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends net.minecraft.world.level.block.entity.BlockEntity&gt;<br>T</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#place(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block,java.lang.Class)" class="member-name-link">place</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.core.BlockPos&nbsp;relative,
  net.minecraft.world.level.block.Block&nbsp;block,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.BarStackBE</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeBar(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeBar</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
- net.minecraft.core.BlockPos&nbsp;relative)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.SinglesStackBE</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeSingles(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeSingles</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.BarStackBE</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeBar(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeBar</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.core.BlockPos&nbsp;relative)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.StorageStackBE</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeStorage(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeStorage</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.SinglesStackBE</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeSingles(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeSingles</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.core.BlockPos&nbsp;relative)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.crittscott.somestacks.block.StorageStackBE</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeStorage(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeStorage</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.core.BlockPos&nbsp;relative)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#putCowIn(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">putCowIn</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.core.BlockPos&nbsp;relative)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Puts a living placement-blocking entity across the center of <code>relative</code>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seedSlot(com.github.crittscott.somestacks.util.StackItemStorage,int,net.minecraft.world.item.ItemStack)" class="member-name-link">seedSlot</a><wbr>(com.github.crittscott.somestacks.util.StackItemStorage&nbsp;handler,
  int&nbsp;slot,
@@ -329,6 +342,23 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">signalAt</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  net.minecraft.core.BlockPos&nbsp;relative)</span></div>
 <div class="block">The comparator output at <code>relative</code>, read the way a comparator against it reads.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="putCowIn(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)">
+<h3>putCowIn</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">putCowIn</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.core.BlockPos&nbsp;relative)</span></div>
+<div class="block">Puts a living placement-blocking entity across the center of <code>relative</code>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="outsideWorldBorder(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,java.lang.Runnable)">
+<h3>outsideWorldBorder</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">outsideWorldBorder</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ net.minecraft.core.BlockPos&nbsp;relative,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;action)</span></div>
+<div class="block">Runs <code>action</code> while <code>relative</code> lies outside the world border, then restores it.</div>
 </section>
 </li>
 <li>

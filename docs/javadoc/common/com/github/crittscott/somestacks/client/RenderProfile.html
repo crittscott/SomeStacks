@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <hr>
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RenderProfile</span>(<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode, float&nbsp;scale, float[]&nbsp;offset)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RenderProfile</span>(<a href="../renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode, float&nbsp;scale, <a href="../renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">A complete, ready-to-render presentation for one item: the output of resolving the
  override layers, or of measuring the item's model when no layer configures it.</div>
@@ -106,9 +106,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.client.RenderMode,float,float%5B%5D)" class="member-name-link">RenderProfile</a><wbr>(<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.renderconfig.RenderMode,float,com.github.crittscott.somestacks.renderconfig.RenderOffset)" class="member-name-link">RenderProfile</a><wbr>(<a href="../renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode,
  float&nbsp;scale,
- float[]&nbsp;offset)</code></div>
+ <a href="../renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>RenderProfile</code> record class.</div>
 </div>
@@ -136,12 +136,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mode()" class="member-name-link">mode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[]</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#offset()" class="member-name-link">offset</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
@@ -174,11 +174,11 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.client.RenderMode,float,float[])">
+<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.renderconfig.RenderMode,float,com.github.crittscott.somestacks.renderconfig.RenderOffset)">
 <h3>RenderProfile</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RenderProfile</span><wbr><span class="parameters">(<a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a>&nbsp;mode,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RenderProfile</span><wbr><span class="parameters">(<a href="../renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a>&nbsp;mode,
  float&nbsp;scale,
- float[]&nbsp;offset)</span></div>
+ <a href="../renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a>&nbsp;offset)</span></div>
 <div class="block">Creates an instance of a <code>RenderProfile</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -240,7 +240,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="mode()">
 <h3>mode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RenderMode.html" title="enum class in com.github.crittscott.somestacks.client">RenderMode</a></span>&nbsp;<span class="element-name">mode</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></span>&nbsp;<span class="element-name">mode</span>()</div>
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -262,7 +262,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="offset()">
 <h3>offset</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">offset</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></span>&nbsp;<span class="element-name">offset</span>()</div>
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>

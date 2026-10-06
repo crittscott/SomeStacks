@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class ItemRenderOverrides" class="title">Class ItemRenderOverrides</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&gt;
+<div class="inheritance">net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;
 <div class="inheritance">com.github.crittscott.somestacks.client.ItemRenderOverrides</div>
 </div>
 </div>
@@ -96,7 +96,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ItemRenderOverrides</span>
-<span class="extends-implements">extends net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&gt;</span></div>
+<span class="extends-implements">extends net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</span></div>
 <div class="block">The client's item render configuration, layered by authority. The first matching entry owns the
  entire presentation: server-synced admin overrides, then the user's override file, then bundled
  resource overrides. Items absent from every layer use measured profiles.
@@ -126,14 +126,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#CONFIG_MAP" class="member-name-link">CONFIG_MAP</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bundled resource overrides, from client resource reload.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#SERVER_OVERRIDES" class="member-name-link">SERVER_OVERRIDES</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#SERVER_OVERRIDES" class="member-name-link">SERVER_OVERRIDES</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Admin overrides synced from the server.</div>
 </div>
 </div>
@@ -164,7 +167,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&nbsp;prepared,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;prepared,
  net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -180,25 +183,31 @@ loadScripts(document, 'script');</script>
 <div class="block">Writes the user layer to the user override file and reports the result to the
  player.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare</a><wbr>(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.client.ItemRenderConfig)" class="member-name-link">putUser</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId,
- <a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&nbsp;config)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">putUser</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId,
+ <a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Changes one in-memory user override; <a href="#handleWriteRequest()"><code>handleWriteRequest()</code></a> persists the layer.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeUser(net.minecraft.resources.ResourceLocation)" class="member-name-link">removeUser</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Removes one in-memory user override; <a href="#handleWriteRequest()"><code>handleWriteRequest()</code></a> persists the layer.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolve(net.minecraft.world.item.ItemStack)" class="member-name-link">resolve</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the item's presentation through the override layers.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSyncedServerOverrides(java.util.Map)" class="member-name-link">setSyncedServerOverrides</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&nbsp;overrides)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSyncedServerOverrides(java.util.Map)" class="member-name-link">setSyncedServerOverrides</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;overrides)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Replaces the highest-precedence profile layer with the server's synchronized overrides.</div>
+</div>
 </div>
 </div>
 </div>
@@ -223,16 +232,22 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="RELOAD_LISTENER_ID">
+<h3>RELOAD_LISTENER_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">RELOAD_LISTENER_ID</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="CONFIG_MAP">
 <h3>CONFIG_MAP</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">CONFIG_MAP</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">CONFIG_MAP</span></div>
 <div class="block">Bundled resource overrides, from client resource reload.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="SERVER_OVERRIDES">
 <h3>SERVER_OVERRIDES</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">SERVER_OVERRIDES</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">SERVER_OVERRIDES</span></div>
 <div class="block">Admin overrides synced from the server.</div>
 </section>
 </li>
@@ -261,43 +276,46 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)">
 <h3>prepare</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">prepare</span><wbr><span class="parameters">(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">prepare</span><wbr><span class="parameters">(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>prepare</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&gt;</code></dd>
+<dd><code>prepare</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&nbsp;prepared,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;prepared,
  net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
  net.minecraft.util.profiling.ProfilerFiller&nbsp;profiler)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>apply</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&gt;</code></dd>
+<dd><code>apply</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setSyncedServerOverrides(java.util.Map)">
 <h3>setSyncedServerOverrides</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSyncedServerOverrides</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&gt;&nbsp;overrides)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSyncedServerOverrides</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;overrides)</span></div>
+<div class="block">Replaces the highest-precedence profile layer with the server's synchronized overrides.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.client.ItemRenderConfig)">
+<section class="detail" id="putUser(net.minecraft.resources.ResourceLocation,com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)">
 <h3>putUser</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">putUser</span><wbr><span class="parameters">(net.minecraft.resources.ResourceLocation&nbsp;itemId,
- <a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.client">ItemRenderConfig</a>&nbsp;config)</span></div>
+ <a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</span></div>
+<div class="block">Changes one in-memory user override; <a href="#handleWriteRequest()"><code>handleWriteRequest()</code></a> persists the layer.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="removeUser(net.minecraft.resources.ResourceLocation)">
 <h3>removeUser</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeUser</span><wbr><span class="parameters">(net.minecraft.resources.ResourceLocation&nbsp;itemId)</span></div>
+<div class="block">Removes one in-memory user override; <a href="#handleWriteRequest()"><code>handleWriteRequest()</code></a> persists the layer.</div>
 </section>
 </li>
 <li>

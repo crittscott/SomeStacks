@@ -54,30 +54,28 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationChecks</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Loader-neutral automation semantics exercised directly through <code>StackRunItemAccess</code>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Bar support and collapse in a live level that does not touch loader-native automation directly:
  item validity, grounding at the bottom of a column, footprint overlap deciding support across
  the alternating layer orientations, and player extraction dropping what it unsupports.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
  footprint overlap deciding support across the alternating layer orientations, and the difference
  between player extraction, which drops what it unsupports, and automated extraction, which
  backfills from the top instead.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The saved-state half of the automation surface: each type's update tag round-tripping the
  contents and presentation state it is responsible for, upgrading a world saved by the previous
  release, and cached-shape invalidation.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceGameTests</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The automation surface and the saved state behind it: the whole-run storage exposed on every
- side, a run advertising its reachable headroom, and each type's update tag round-tripping the
- contents and presentation state it is responsible for.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -90,74 +88,83 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Fabric-native scaffolding for the GameTests: the namespaced template name and Transfer API
- storage access, including the insert/extract shims that mirror Forge's <code>IItemHandler</code>
- call surface.</div>
+ storage access and the small transaction helpers used by adapter-specific tests.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Scaffolding shared by both loaders' GameTests: placing each stack type on the empty template
+<div class="block">Fabric-native transaction behavior exercised through the complete Transfer API storage.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  through <code>CommonRegistry</code>, seeding handlers directly, and the assertion helpers every test
  reads through.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loader-neutral checks for the state packet and vanilla-interaction gesture service.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/gametest/InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Fabric delegates for loader-neutral interaction and validation checks.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
- merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
  merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
+ merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loader-neutral placement and player-deposit protection scenarios.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The rules that keep a gesture from writing where it should not: build height, entity obstruction,
- and waterlogging, plus growth answering to the same checks in both simulation and commit.</div>
+ destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/RenderGalleryChecks.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryChecks</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
- and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/RenderGalleryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryGameTests</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/RenderGalleryChecks.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryChecks</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
  and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/RenderGalleryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryGameTests</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
+ and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Singles support and gravity in a live level that does not touch loader-native automation
  directly: grounding at the bottom of a column, a cell resting on the one below it, visual
  columns lining up across differently rotated blocks, and extraction shifting a column down while
  carrying each item's rotation with it.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
  on the one below it, visual columns lining up across differently rotated blocks, and extraction
  shifting a column down while carrying each item's rotation with it.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Storage settling order across every item-identity component used by the comparator.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Storage settling order across every item-identity component used by the comparator.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Storage settling order across every item-identity component used by the comparator.</div>
+<div class="block">The automation surface and the saved state behind it: the whole-run storage exposed on every
+ side, a run advertising its reachable headroom, and each type's update tag round-tripping the
+ contents and presentation state it is responsible for.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">

@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -34,6 +35,8 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     public static final IntegerProperty LIGHT_LEVEL =
             IntegerProperty.create("light", 0, LightEngine.MAX_LEVEL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final EnumProperty<Direction> HORIZONTAL_FACING =
+            BlockStateProperties.HORIZONTAL_FACING;
 
     protected StackBlock(Properties properties) {
         super(properties);

@@ -2,12 +2,17 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nullable;
 
@@ -22,6 +27,24 @@ import javax.annotation.Nullable;
 public class StorageStackBlock extends StackBlock {
     public StorageStackBlock(Properties props) {
         super(props);
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(HORIZONTAL_FACING);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(
+                HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Nullable

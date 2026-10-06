@@ -91,10 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WorldEdits</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Vanilla world-edit mechanics for automated growth and removal: world border and spawn
- protection, entity obstruction, and the actual block placement/removal. The one loader-specific
- decision each carries — who the automation actor is, and whether a claim/logging mod vetoes the
- edit — is delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
+<div class="block">Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
+ entity obstruction, actor propagation, and the actual block edit. Automation identity and
+ loader-native claim/logging hooks are delegated to <a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server"><code>EditAuthority</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -151,8 +150,7 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Places <code>state</code> at <code>pos</code>, restoring the previous state if a claim/logging mod
- vetoes it.</div>
+<div class="block">Places <code>state</code> at <code>pos</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeChecked(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
@@ -161,9 +159,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Removes a stack block the mod itself decided to take down, answering to the same protection
  growth does and reporting the removal to claim/logging mods.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAuthority(com.github.crittscott.somestacks.server.EditAuthority)" class="member-name-link">setAuthority</a><wbr>(<a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a>&nbsp;impl)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Removes a stack block on behalf of <code>actor</code>, preserving that identity through vanilla
+ protection, loader-native removal events, and the emitted game event.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAuthority(com.github.crittscott.somestacks.server.EditAuthority)" class="member-name-link">setAuthority</a><wbr>(<a href="EditAuthority.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority</a>&nbsp;impl)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Installed once by the loader's entry point before any world logic can run.</div>
 </div>
 </div>
@@ -245,9 +251,11 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.core.Direction&nbsp;placedAgainst,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;finalCollision)</span></div>
-<div class="block">Places <code>state</code> at <code>pos</code>, restoring the previous state if a claim/logging mod
- vetoes it. <code>finalCollision</code> is the completed placement's collision shape, since a
- block-entity stack can start empty and acquire its real shape only with its first deposit.</div>
+<div class="block">Places <code>state</code> at <code>pos</code>. Loader checks that can run as queries happen before the
+ world changes; loaders whose native placement event requires the placed state may still veto
+ afterward, in which case the previous state is restored. <code>finalCollision</code> is the
+ completed placement's collision shape, since a block-entity stack can start empty and acquire
+ its real shape only with its first deposit.</div>
 </section>
 </li>
 <li>
@@ -261,6 +269,16 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>whether the block was removed</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<h3>removeChecked</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeChecked</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;actor,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<div class="block">Removes a stack block on behalf of <code>actor</code>, preserving that identity through vanilla
+ protection, loader-native removal events, and the emitted game event.</div>
 </section>
 </li>
 </ul>

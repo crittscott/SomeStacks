@@ -7,10 +7,12 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.AutomationActor;
+import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.Protection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -54,6 +56,20 @@ public final class ProtectionGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
+    }
+
+    /**
+     * No in-game reproduction applies: a protection listener may message the Forge automation
+     * actor even though it has no client connection, and that message must be discarded safely.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationActorDiscardsClientMessages(GameTestHelper helper) {
+        ForgeEditAuthority authority = new ForgeEditAuthority();
+        ServerPlayer actor = authority.automationActor(helper.getLevel());
+        actor.sendSystemMessage(Component.literal("ignored system message"));
+        actor.displayClientMessage(Component.literal("ignored client message"), true);
+        authority.clear();
+        helper.succeed();
     }
 
     /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */

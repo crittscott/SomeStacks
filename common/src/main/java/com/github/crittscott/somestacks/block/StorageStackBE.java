@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
-import com.github.crittscott.somestacks.util.QuarterTurns;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +30,6 @@ public class StorageStackBE extends StackBlockEntity {
 
     private static final String TAG_PERMANENT = "Permanent";
 
-    private int rotation = 0;
     private boolean permanent = false;
     @Nullable
     private ServerPlayer pendingCleanupActor;
@@ -80,14 +78,12 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     public int getRotation() {
-        return rotation;
+        return blockRotation();
     }
 
-    /** Sets the rendered layout rotation modulo four and publishes it to clients. */
+    /** Sets the outer block's rendered layout rotation modulo four. */
     public void setRotation(int rotation) {
-        this.rotation = QuarterTurns.normalize(rotation);
-        setChanged();
-        syncToClients();
+        setBlockRotation(rotation);
     }
 
     /** Whether this block survives being emptied. The pile's base block is authoritative. */
@@ -106,9 +102,8 @@ public class StorageStackBE extends StackBlockEntity {
     /** Gives a block that has just joined a pile the pile's presentation and mode. */
     void adoptPileState(boolean permanent, int rotation) {
         this.permanent = permanent;
-        this.rotation = QuarterTurns.normalize(rotation);
         setChanged();
-        syncToClients();
+        setBlockRotation(rotation);
     }
 
     /**
@@ -206,13 +201,11 @@ public class StorageStackBE extends StackBlockEntity {
 
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(TAG_ROTATION)) rotation = QuarterTurns.normalize(tag.getInt(TAG_ROTATION));
         if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
     }
 
     @Override
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putInt(TAG_ROTATION, rotation);
         tag.putBoolean(TAG_PERMANENT, permanent);
     }
 

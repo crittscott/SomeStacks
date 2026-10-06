@@ -127,11 +127,14 @@ loadScripts(document, 'script');</script>
  cube becomes eight pixels.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
-<div class="col-second odd-row-color"><code><a href="#STACK_CUBE_TEXTURE" class="member-name-link">STACK_CUBE_TEXTURE</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#RENDER_CACHE_RELOAD_LISTENER_ID" class="member-name-link">RENDER_CACHE_RELOAD_LISTENER_ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final float</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_CELL_RENDER_SCALE" class="member-name-link">STORAGE_CELL_RENDER_SCALE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second even-row-color"><code><a href="#STACK_CUBE_TEXTURE" class="member-name-link">STACK_CUBE_TEXTURE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final float</code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_CELL_RENDER_SCALE" class="member-name-link">STORAGE_CELL_RENDER_SCALE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Storage's own cell-render scale, grown so a cell's rendered content fills more of its
  4.5-pixel cell, halving the gap between Storage's cells.</div>
 </div>
@@ -150,9 +153,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)" class="member-name-link">applyGuiCounterRotation</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Applies the counter-rotation shared by GUI rendering and automatic GUI measurement.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Clears failure state tied to models being replaced by a resource reload.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)" class="member-name-link">renderGridItems</a><wbr>(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
+ int&nbsp;slots,
+ <a href="../util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a>&nbsp;grid,
+ int&nbsp;blockRotation,
+ float&nbsp;renderScale,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntUnaryOperator.html" title="class or interface in java.util.function" class="external-link">IntUnaryOperator</a>&nbsp;itemRotation,
+ net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;blockPos,
+ com.mojang.blaze3d.vertex.PoseStack&nbsp;pose,
+ net.minecraft.client.renderer.MultiBufferSource&nbsp;buffers,
+ net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Draws every occupied position in a regular Storage or Singles cube grid.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderItemInCube(net.minecraft.world.item.ItemStack,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,int,net.minecraft.client.renderer.block.BlockRenderDispatcher,net.minecraft.world.level.Level)" class="member-name-link">renderItemInCube</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
@@ -187,6 +210,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="STACK_CUBE_TEXTURE">
 <h3>STACK_CUBE_TEXTURE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STACK_CUBE_TEXTURE</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="RENDER_CACHE_RELOAD_LISTENER_ID">
+<h3>RENDER_CACHE_RELOAD_LISTENER_ID</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">RENDER_CACHE_RELOAD_LISTENER_ID</span></div>
 </section>
 </li>
 <li>
@@ -261,6 +290,23 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)">
+<h3>renderGridItems</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">renderGridItems</span><wbr><span class="parameters">(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
+ int&nbsp;slots,
+ <a href="../util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a>&nbsp;grid,
+ int&nbsp;blockRotation,
+ float&nbsp;renderScale,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntUnaryOperator.html" title="class or interface in java.util.function" class="external-link">IntUnaryOperator</a>&nbsp;itemRotation,
+ net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;blockPos,
+ com.mojang.blaze3d.vertex.PoseStack&nbsp;pose,
+ net.minecraft.client.renderer.MultiBufferSource&nbsp;buffers,
+ net.minecraft.client.renderer.block.BlockRenderDispatcher&nbsp;blockRenderer)</span></div>
+<div class="block">Draws every occupied position in a regular Storage or Singles cube grid.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="renderItemInCube(net.minecraft.world.item.ItemStack,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,int,net.minecraft.client.renderer.block.BlockRenderDispatcher,net.minecraft.world.level.Level)">
 <h3>renderItemInCube</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">renderItemInCube</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack,
@@ -273,6 +319,13 @@ loadScripts(document, 'script');</script>
  <a href="ItemRenderOverrides.html#resolve(net.minecraft.world.item.ItemStack)"><code>ItemRenderOverrides.resolve(net.minecraft.world.item.ItemStack)</code></a> selects for it, or draws nothing if <code>stack</code> is
  empty. <code>pose</code> must already be positioned at the cell being drawn; this method only
  pushes/pops the transforms needed for the item's own presentation within it.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="applyGuiCounterRotation(com.mojang.blaze3d.vertex.PoseStack)">
+<h3>applyGuiCounterRotation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyGuiCounterRotation</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;pose)</span></div>
+<div class="block">Applies the counter-rotation shared by GUI rendering and automatic GUI measurement.</div>
 </section>
 </li>
 <li>

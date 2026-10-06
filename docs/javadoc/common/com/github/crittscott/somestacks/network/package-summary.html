@@ -78,16 +78,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">com.github.crittscott.somestacks</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../block/package-summary.html">com.github.crittscott.somestacks.block</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="../client/package-summary.html">com.github.crittscott.somestacks.client</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../command/package-summary.html">com.github.crittscott.somestacks.command</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="../server/package-summary.html">com.github.crittscott.somestacks.server</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="../util/package-summary.html">com.github.crittscott.somestacks.util</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
@@ -98,24 +88,17 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Server-to-client synchronization of the settings the client must agree with the server about:
- which stack types are enabled, and the server's item render overrides.</div>
+<div class="block">Loader-specific delivery for the cached server configuration snapshot.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="block">One byte-bounded chunk of the server settings synchronized to clients.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
 <div class="block">Client-to-server state needed to interpret the next vanilla block interaction.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="RenderOverridePkt.html" title="class in com.github.crittscott.somestacks.network">RenderOverridePkt</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Server to client: applies or resets one entry in the receiving client's user render
- override layer, as directed by the <code>ss item</code> command.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="WriteOverridesPkt.html" title="class in com.github.crittscott.somestacks.network">WriteOverridesPkt</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Server to client: asks the receiving client to write render override JSON, as directed by
- the <code>ss write</code> command.</div>
 </div>
 </div>
 </div>

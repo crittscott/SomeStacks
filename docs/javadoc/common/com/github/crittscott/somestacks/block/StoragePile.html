@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li>Nested</li>
-<li>Field</li>
+<li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -85,7 +85,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class StoragePile" class="title">Class StoragePile</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">com.github.crittscott.somestacks.block.StackRun</a>&lt;<a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;
 <div class="inheritance">com.github.crittscott.somestacks.block.StoragePile</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -94,8 +96,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StoragePile</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></span></div>
+<span class="extends-implements">extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;</span></div>
 <div class="block">A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
 
  <p>Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole
@@ -109,6 +110,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h3>
+<code><a href="StackRun.html#blocks">blocks</a>, <a href="StackRun.html#level">level</a></code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -128,22 +138,13 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
  from the block below when there is one and otherwise from the block above.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#advertisedSlots()" class="member-name-link">advertisedSlots</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Slots the pile advertises to automation: its current slots plus one block of reachable
- headroom while growth is allowed.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the pile containing <code>pos</code>, or <code>null</code> when that position holds no
  Storage Stack.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.core.BlockPos</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#basePos()" class="member-name-link">basePos</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
@@ -152,57 +153,54 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  counting the runs both below and above it, must fit the configured maximum.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#comparatorSignal()" class="member-name-link">comparatorSignal</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The comparator output for the whole pile, which is what every block of it reports.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deposit(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">deposit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;fromHand,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deposit(net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">deposit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;fromHand,
  net.minecraft.server.level.ServerPlayer&nbsp;placer)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Fills the pile from the base upward, ignoring where the deposit was aimed, and grows the
  column while items remain and the configured height allows it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
  rest down over it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fillLevel()" class="member-name-link">fillLevel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fillLevel()" class="member-name-link">fillLevel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The sum of every slot's fractional fullness, divided by the pile's current slot count.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#height()" class="member-name-link">height</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile when
  that slot lies in the block above it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPermanent()" class="member-name-link">isPermanent</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPermanent()" class="member-name-link">isPermanent</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Whether this pile's blocks survive being emptied.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxHeight()" class="member-name-link">maxHeight</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxHeight()" class="member-name-link">maxHeight</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The configured ceiling on pile height.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent,
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#settle()" class="member-name-link">settle</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -210,14 +208,12 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  base's permanent flag, removes empty blocks left at the top, and publishes all deferred
  changes.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Slots the pile actually holds: 27 per block, indexed from the base upward.</div>
 </div>
 </div>
 </div>
-</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h3>
+<code><a href="StackRun.html#advertisedSlots()">advertisedSlots</a>, <a href="StackRun.html#basePos()">basePos</a>, <a href="StackRun.html#blockOf(int)">blockOf</a>, <a href="StackRun.html#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">columnHasRoomFor</a>, <a href="StackRun.html#comparatorSignal()">comparatorSignal</a>, <a href="StackRun.html#getSlot(int)">getSlot</a>, <a href="StackRun.html#handlerOf(int)">handlerOf</a>, <a href="StackRun.html#height()">height</a>, <a href="StackRun.html#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)">invalidateAround</a>, <a href="StackRun.html#localSlot(int)">localSlot</a>, <a href="StackRun.html#markDirty()">markDirty</a>, <a href="StackRun.html#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">markDirtyAt</a>, <a href="StackRun.html#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">publishAround</a>, <a href="StackRun.html#publishPending()">publishPending</a>, <a href="StackRun.html#publishPendingBlocks()">publishPendingBlocks</a>, <a href="StackRun.html#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)">resolveBlocks</a>, <a href="StackRun.html#topPos()">topPos</a>, <a href="StackRun.html#totalSlots()">totalSlots</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -274,18 +270,6 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="basePos()">
-<h3>basePos</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.core.BlockPos</span>&nbsp;<span class="element-name">basePos</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="height()">
-<h3>height</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">height</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="isPermanent()">
 <h3>isPermanent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPermanent</span>()</div>
@@ -296,37 +280,16 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <section class="detail" id="setPermanent(boolean)">
 <h3>setPermanent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPermanent</span><wbr><span class="parameters">(boolean&nbsp;permanent)</span></div>
+<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="totalSlots()">
-<h3>totalSlots</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">totalSlots</span>()</div>
-<div class="block">Slots the pile actually holds: 27 per block, indexed from the base upward.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="advertisedSlots()">
-<h3>advertisedSlots</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">advertisedSlots</span>()</div>
-<div class="block">Slots the pile advertises to automation: its current slots plus one block of reachable
- headroom while growth is allowed. Advertising the entire potential height would expose
- unreachable gaps; advertising only current slots would leave automation no slot through
- which to grow the pile.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#advertisedSlots()">advertisedSlots</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getSlot(int)">
-<h3>getSlot</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;flatSlot)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#getSlot(int)">getSlot</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
-</dl>
+<section class="detail" id="setPermanent(boolean,net.minecraft.server.level.ServerPlayer)">
+<h3>setPermanent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPermanent</span><wbr><span class="parameters">(boolean&nbsp;permanent,
+ @Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
+<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
 </section>
 </li>
 <li>
@@ -338,8 +301,6 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
  rest down over it.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>flatSlot</code> - the pile slot to extract, numbered from the bottom block upward</dd>
 <dd><code>amount</code> - the requested maximum</dd>
@@ -349,24 +310,14 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 </li>
 <li>
-<section class="detail" id="comparatorSignal()">
-<h3>comparatorSignal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">comparatorSignal</span>()</div>
-<div class="block">The comparator output for the whole pile, which is what every block of it reports. Held in one
- place so the value a block reports and the value a settle publishes cannot drift
- apart.
-
- <p>This is vanilla's container conversion, over a fill level computed the way vanilla computes
- it. The bottom of the range is reserved rather than proportional: any nonempty pile reads at
- least 1, so signal 0 means empty and nothing else, which is what the standard emptiness
- circuit tests. At 216 slots a proportional conversion would round hundreds of items to 0.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="fillLevel()">
 <h3>fillLevel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">fillLevel</span>()</div>
 <div class="block">The sum of every slot's fractional fullness, divided by the pile's current slot count.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="StackRun.html#fillLevel()">fillLevel</a></code>&nbsp;in class&nbsp;<code><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -380,8 +331,8 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>placer</code> - the player responsible for any block this deposit creates, or null for
-               automation, whose growth is attributed to the level's fake player and checked
-               against the same protections.</dd>
+               automation, whose growth is attributed to the automation actor and checked
+               against the same protections</dd>
 <dt>Returns:</dt>
 <dd>how many items were taken from <code>fromHand</code>, which is shrunk by that amount</dd>
 </dl>
@@ -407,8 +358,6 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
  <p>An automated insertion carries no player, so growth is checked against the loader-provided
  automation actor that would place the block.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code>&nbsp;in interface&nbsp;<code><a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>simulate</code> - when true, nothing is stored and the pile does not grow</dd>
 <dt>Returns:</dt>

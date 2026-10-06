@@ -25,7 +25,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Area | Responsibility |
 | --- | --- |
 | `StackBlock`, `ShapedStackBlock`, `block/*StackBlock` | Shared state/waterlogging/use plumbing, dynamic occupied shapes, per-type removal, comparators, scheduled publication |
-| `StackBlockEntity`, `block/*StackBE` | Shared local inventory, NBT, synchronization, lighting, nested batching and run cache; per-type rotations, shapes and run resolution |
+| `StackBlockEntity`, `block/*StackBE` | Shared local inventory, NBT, synchronization, lighting and batching; per-type shapes, item rotations and run resolution |
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Shared run resolution, slots, publication and comparators; distinct mutation, growth and cleanup |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage contract |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Shared cube-grid coordinates plus per-type geometry, support, seams and targeting |
@@ -49,7 +49,7 @@ Three blocks and block entity types are registered, with no block items, menus, 
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla, destination callback, Common Protection API, break callbacks |
 
-The selected loader build is required on client and server. Loaders own transport, command registration and callbacks; packet codecs, gesture interpretation, command trees, rendering, and storage mechanics remain in `common`. Forge and NeoForge enforce the shared protocol version through their channels; Fabric checks a configuration-phase marker in both directions. Fabric's mixins use Loom's current remapping path without the legacy annotation processor.
+The selected loader build is required on client and server. Loaders own transport, registration and callbacks; packet codecs, gestures, commands, rendering, and storage mechanics remain in `common`. Forge and NeoForge enforce the shared protocol version through their channels; Fabric checks a configuration-phase marker in both directions.
 
 ## Runtime and movement model
 
@@ -63,9 +63,9 @@ The three movement models are distinct:
 - `SinglesColumn` is positional. Extraction shifts one visual column down across rotation-aware seams, transports item rotation, preserves unrelated gaps, and does not collapse above a broken block.
 - `BarColumn` is positional and overlap-supported. Player extraction and block removal cascade; automation extraction moves the topmost bar into the opened position instead.
 
-`StackItemStorage` persists local inventory through each block entity's NBT methods using Data Components and a `HolderLookup.Provider`. Storage saves `DataVersion`, `Items`, `Rotation`, and `Permanent`; Singles adds `CubeRotations`; Bar saves `DataVersion` and `Items`. `Permanent` is server-only and is stripped from update tags.
+`StackItemStorage` persists local inventory through block-entity NBT using Data Components and a `HolderLookup.Provider`. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-`StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); older item tags run through vanilla's DataFixerUpper and are restamped. Items that fail to parse or have no free slot go to a saved `SetAside` list, are retried on every load, and are logged with the block position. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
+`StackDataMigration` runs first in every `loadAdditional`. A tag without `DataVersion` is 1.21.1 (3955); older item tags run through vanilla's DataFixerUpper and are restamped. It also consumes the preceding release's block-entity `Rotation` into block state. Items that cannot load go to a saved `SetAside` list, are retried on every load, and are logged. Update tags carry `DataVersion` but omit `SetAside`. Permanence is pile-wide but stored on the base; block rotations are local; Singles item rotation travels with the item.
 
 ## Admission, automation, and edits
 
@@ -73,7 +73,7 @@ Storage accepts ordinary nonempty items; Bar accepts the configured ingot list; 
 
 Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric stages mutations until outer transaction commit and permits one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
-`WorldEdits` checks build limits, replaceability, obstruction, border, spawn and loader authority. Automated edits use the shared `[SomeStacks]` identity. Player-triggered cleanup retains the player; deferred Storage settlement falls back to automation for automated or mixed causes. Forge caches an actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge fire native place/break events. Before placement, Fabric consults the destination callback for players and Common Protection API for every actor; removal fires the `PlayerBlockBreakEvents` BEFORE/CANCELED/AFTER lifecycle. Outer-block edits invoke the vanilla placement callback and emit `BLOCK_PLACE`/`BLOCK_DESTROY` game events.
+`WorldEdits` checks build limits, replaceability, vanilla obstruction, border, spawn and loader authority. Automated edits use the shared `[SomeStacks]` identity. Player cleanup retains the player; deferred Storage settlement uses automation for automated or mixed causes. Forge caches a connection-safe actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge fire native place/break events. Fabric consults the destination callback and Common Protection API before placement; removal fires the `PlayerBlockBreakEvents` lifecycle. Outer edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`; successful player content and rotation edits emit one `BLOCK_CHANGE`.
 
 ## Player interaction and networking
 
