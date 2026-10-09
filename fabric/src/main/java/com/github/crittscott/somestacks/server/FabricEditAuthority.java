@@ -2,12 +2,15 @@ package com.github.crittscott.somestacks.server;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +30,12 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        return protectionQueries != null && protectionQueries.mayUseAdjacent(player, pos);
+        if (protectionQueries != null && !protectionQueries.mayUseAdjacent(player, pos)) {
+            return false;
+        }
+        return UseBlockCallback.EVENT.invoker().interact(
+                player, player.serverLevel(), InteractionHand.MAIN_HAND,
+                WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
     }
 
     @Override

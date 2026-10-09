@@ -44,11 +44,18 @@ public final class ProtectionGameTests implements FabricGameTest {
             new ConcurrentHashMap<>();
     private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES =
             new ConcurrentHashMap<>();
+    private static final Map<TestTarget, InteractionResult> ADJACENT_USE_RESULTS =
+            new ConcurrentHashMap<>();
 
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
             PlacementProbe probe = PLACEMENT_PROBES.get(new TestTarget(level, hit.getBlockPos()));
             if (probe != null) probe.syntheticClick().set(true);
+            InteractionResult result = ADJACENT_USE_RESULTS.get(new TestTarget(level, hit.getBlockPos()));
+            if (result != null) {
+                check(WorldEdits.isConsultingAdjacent(), "Destination callback lacks its gesture guard");
+                return result;
+            }
             return InteractionResult.PASS;
         });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
@@ -323,6 +330,35 @@ public final class ProtectionGameTests implements FabricGameTest {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
+        ProtectionChecks.adjacentDepositsFillGroundedCells(helper, FabricGameTestSupport.playerFactory(helper));
+        helper.succeed();
+    }
+
+    /**
+     * Destination block-use callbacks can refuse neighboring deposits with or without Common
+     * Protection API. To reproduce in-game: deny block use at a stack with a protection mod,
+     * then modifier-click its support through an empty cell. No item moves.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void adjacentDepositsHonorBlockUseCallbacks(GameTestHelper helper) {
+        TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
+        try {
+            for (InteractionResult result : java.util.List.of(InteractionResult.FAIL, InteractionResult.SUCCESS)) {
+                ADJACENT_USE_RESULTS.put(key, result);
+                helper.getLevel().removeBlock(key.pos(), false);
+                ProtectionChecks.checkAdjacentAndDirectDeposits(
+                        helper, FabricGameTestSupport.playerFactory(helper), false);
+                check(!WorldEdits.isConsultingAdjacent(), "Destination consultation guard leaked");
+            }
+        } finally {
+            ADJACENT_USE_RESULTS.remove(key);
+        }
+        helper.succeed();
+    }
+
     record TestTarget(Level level, BlockPos pos) {}
 
     record PlacementProbe(
@@ -545,7 +581,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     /**
      * To reproduce in-game: hold the modifier and click a neighboring face toward a Singles Stack
-     * allowed by Common Protection API. One item is deposited without inventing a destination click.
+     * allowed by Common Protection API and destination block-use callbacks. One item is deposited.
      */
     public void allowedAdjacentDepositUsesProtectionQuery(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
@@ -555,7 +591,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         try {
             ProtectionChecks.checkAdjacentAndDirectDeposits(helper, FabricGameTestSupport.playerFactory(helper), true);
             check(probe.invoked().get(), "Neighbor deposit skipped protection");
-            check(!probe.syntheticClick().get(), "Neighbor deposit fabricated an interaction");
+            check(probe.syntheticClick().get(), "Neighbor deposit skipped destination block-use callbacks");
         } finally {
             PLACEMENT_PROBES.remove(key);
         }

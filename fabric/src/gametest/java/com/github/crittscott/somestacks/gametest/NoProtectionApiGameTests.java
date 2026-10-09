@@ -17,20 +17,22 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 public final class NoProtectionApiGameTests implements FabricGameTest {
     /**
      * To reproduce in-game without Common Protection API: place a stack against an ordinary block,
-     * then modifier-click an adjacent face toward an existing stack. Placement works, while the
-     * neighboring click cannot edit the existing stack; direct clicks can still deposit.
+     * then modifier-click through empty grounded cells at their support. Both placement and
+     * neighboring deposits work when destination block-use callbacks permit them.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void placementWorksAndAdjacentEditingRequiresDirectClick(GameTestHelper helper) {
+    public void placementAndAdjacentDepositsWorkWithoutProtectionApi(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
-        check(!WorldEdits.mayUseAdjacent(player, pos),
-                "Neighboring click gained authority over an existing stack");
+        check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
                         Blocks.STONE.defaultBlockState(), Direction.DOWN),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
+        helper.getLevel().removeBlock(pos, false);
+        ProtectionChecks.checkAdjacentAndDirectDeposits(
+                helper, FabricGameTestSupport.playerFactory(helper), true);
         helper.succeed();
     }
 }
