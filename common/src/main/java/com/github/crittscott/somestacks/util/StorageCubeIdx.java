@@ -53,22 +53,4 @@ public final class StorageCubeIdx {
 
         return closestIndex;
     }
-
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counterclockwise seen from above, matching the direction of per-item rotation.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Returns a cell's origin on one axis in model pixels. */
-    public static int startPixel(int i) {
-        return GRID.startPixel(i);
-    }
-
-    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
-    public static int[] xyzFromIndex(int idx) {
-        return GRID.xyzFromIndex(idx);
-    }
 }

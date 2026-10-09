@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
@@ -8,18 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Objects;
-
 /** Protection seam used only when a click reaches a stack through a neighboring block. */
 public final class AdjacentEdits {
     private static final ThreadLocal<Boolean> consulting = ThreadLocal.withInitial(() -> false);
-    private static AdjacentEditAuthority authority;
 
     private AdjacentEdits() {}
-
-    public static void setAuthority(AdjacentEditAuthority authority) {
-        AdjacentEdits.authority = Objects.requireNonNull(authority);
-    }
 
     public static boolean mayUseItemAt(ServerPlayer player, BlockPos pos) {
         if (WorldEdits.isProtected(player, pos)) {
@@ -27,8 +21,7 @@ public final class AdjacentEdits {
         }
         consulting.set(true);
         try {
-            return Objects.requireNonNull(authority,
-                    "Adjacent edit authority has not been installed").mayUseItemAt(player, pos);
+            return PlatformServices.adjacentEditAuthority().mayUseItemAt(player, pos);
         } finally {
             consulting.remove();
         }

@@ -14,11 +14,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 public final class StoragePile extends StackRun<StorageStackBE> {
     private StoragePile(ServerLevel level, List<StorageStackBE> blocks) {
-        super(level, blocks, StorageStackBE.SLOTS, CommonRegistry.STORAGE_STACK_BLOCK.get());
+        super(level, blocks, StorageStackBE.SLOTS, CommonRegistry.storageStackBlock());
     }
 
     /**
@@ -82,9 +83,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /** The configured ceiling on pile height. Server-side only. */
-    public static int maxHeight() {
-        return StackRun.maxHeight();
-    }
 
     /**
      * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
@@ -93,7 +91,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * the gap between two piles from joining them into an over-tall one.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.STORAGE_STACK_BLOCK.get());
+        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.storageStackBlock());
     }
 
     /**
@@ -328,7 +326,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * automation actor, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableStorageStackBlock()) {
+        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableStorageStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
@@ -353,7 +351,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         BlockPos above = topPos().above();
         ServerPlayer editor = editor(level, placer);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), level, above);
+                CommonRegistry.storageStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
                 editor, level, above, newStack, Direction.DOWN, Shapes.block())) {
             return false;

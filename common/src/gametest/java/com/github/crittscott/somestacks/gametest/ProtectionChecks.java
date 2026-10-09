@@ -2,9 +2,9 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StoragePile;
+import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
@@ -16,20 +16,20 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.Function;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.concurrent.atomic.AtomicReference;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -155,7 +155,7 @@ public final class ProtectionChecks {
             ServerGestureState.clear(player.getUUID());
         }
 
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         check(level.getBlockState(target).getValue(StackBlock.WATERLOGGED),
                 "A stack placed into water was not waterlogged");
         check(level.getFluidState(target).getType() == Fluids.WATER,
@@ -189,7 +189,7 @@ public final class ProtectionChecks {
             unregister.run();
         }
         check(actor.get() == player, "Bar cleanup did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.barStackBlock(), ORIGIN);
         helper.succeed();
     }
 
@@ -219,9 +219,9 @@ public final class ProtectionChecks {
         }
         check(actor.get() != null, "Cleanup break event did not fire");
         checkEquals(AutomationActor.PROFILE.getId(), actor.get().getUUID(), "Mixed cleanup actor");
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         storage.pile().settle();
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         helper.succeed();
     }
 
@@ -241,7 +241,7 @@ public final class ProtectionChecks {
         installVeto.run();
         try {
             check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
-                    CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(), Direction.DOWN),
+                    CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
                     "Vetoed placement succeeded");
         } finally {
             removeVeto.run();
@@ -256,5 +256,4 @@ public final class ProtectionChecks {
     private static BlockHitResult centerHit(BlockPos pos) {
         return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
-
 }

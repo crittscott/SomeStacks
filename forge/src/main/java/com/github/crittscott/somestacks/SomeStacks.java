@@ -2,12 +2,8 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.forge.ForgePlatformServices;
-import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.ForgeEditAuthority;
-import com.github.crittscott.somestacks.server.AdjacentEdits;
-import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.WorldEdits;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +17,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.PacketDistributor;
 
 /**
  * The mod entry point: registers the blocks and block entities, the network channel, and the
@@ -34,10 +29,11 @@ import net.minecraftforge.network.PacketDistributor;
 public class SomeStacks {
     public static final String MODID = SomeStacksCommon.MODID;
 
-    private final ForgeEditAuthority editAuthority = new ForgeEditAuthority();
+    private final ForgePlatformServices platform = new ForgePlatformServices();
 
     public SomeStacks(FMLJavaModLoadingContext context) {
         IEventBus modBus = context.getModEventBus();
+        PlatformServices.install(platform);
 
         ForgeServerConfig config = ForgeServerConfig.INSTANCE;
         context.registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, config.spec);
@@ -45,15 +41,8 @@ public class SomeStacks {
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);
 
-        PlatformServices.install(
-                ForgePlatformServices::configFolder, ForgePlatformServices::modVersion);
-        WorldEdits.setAuthority(editAuthority);
-        AdjacentEdits.setAuthority(new Protection());
-
         ModRegistry.init(modBus);
         ModNetworking.init();
-        ConfigSyncNetwork.install((player, packet) -> ModNetworking.CHANNEL.send(
-                packet, PacketDistributor.PLAYER.with(player)));
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
@@ -73,14 +62,14 @@ public class SomeStacks {
     }
 
     private void onLevelUnload(LevelEvent.Unload event) {
-        if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel level) {
-            editAuthority.unload(level);
+        if (event.getLevel() instanceof ServerLevel level) {
+            platform.editAuthority().unload(level);
         }
     }
 
     private void onServerStopped(ServerStoppedEvent event) {
         SomeStacksServer.onServerStopped();
-        editAuthority.clear();
+        platform.editAuthority().clear();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -100,5 +89,4 @@ public class SomeStacks {
             SomeStacksServer.onServerTickEnd();
         }
     }
-
 }

@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesColumn;
@@ -211,7 +213,7 @@ public final class StackInteractions {
             int deposited = storage.deposit(handStack, player);
             returnToHand(player, creative, handStack);
             if (deposited > 0) {
-                level.playSound(null, pos, StackSounds.storageDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.storageDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 emitBlockChange(player, pos, level.getBlockState(pos));
             }
@@ -225,7 +227,7 @@ public final class StackInteractions {
             if (index >= 0 && singles.getItems().getStackInSlot(index).isEmpty()
                     && singles.depositAt(index, handStack)) {
                 returnToHand(player, creative, handStack);
-                level.playSound(null, pos, StackSounds.singlesDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.singlesDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 emitBlockChange(player, pos, level.getBlockState(pos));
             }
@@ -238,7 +240,7 @@ public final class StackInteractions {
             if (index >= 0 && bars.getItems().getStackInSlot(index).isEmpty()
                     && bars.depositAt(index, handStack)) {
                 returnToHand(player, creative, handStack);
-                level.playSound(null, pos, StackSounds.barDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.barDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 emitBlockChange(player, pos, level.getBlockState(pos));
             }
@@ -269,7 +271,7 @@ public final class StackInteractions {
         };
         if (columnFull) {
             player.displayClientMessage(Component.translatable(
-                    "somestacks.message.maximum_height", StoragePile.maxHeight()), true);
+                    "somestacks.message.maximum_height", ServerConfig.maxPileHeight()), true);
             return;
         }
 
@@ -300,19 +302,19 @@ public final class StackInteractions {
             case STORAGE_STACK -> {
                 StorageStackBE storage = (StorageStackBE) level.getBlockEntity(pos);
                 storage.deposit(handStack, player);
-                level.playSound(null, pos, StackSounds.storageDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.storageDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
             }
             case SINGLES_STACK -> {
                 SinglesStackBE singles = (SinglesStackBE) level.getBlockEntity(pos);
                 singles.depositAt(depositIndex, handStack);
-                level.playSound(null, pos, StackSounds.singlesDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.singlesDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
             }
             case BAR_STACK -> {
                 BarStackBE bars = (BarStackBE) level.getBlockEntity(pos);
                 bars.depositAt(depositIndex, handStack);
-                level.playSound(null, pos, StackSounds.barDeposit(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.barDepositSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
             }
         }
@@ -345,7 +347,7 @@ public final class StackInteractions {
             ItemStack taken = storage.extractAt(
                     index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack, player);
             if (!taken.isEmpty()) {
-                level.playSound(null, pos, StackSounds.storageExtract(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.storageExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
                 emitBlockChange(player, pos, changedState);
@@ -364,7 +366,7 @@ public final class StackInteractions {
             }
             ItemStack taken = singles.extractAt(index, player);
             if (!taken.isEmpty()) {
-                level.playSound(null, pos, StackSounds.singlesExtract(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.singlesExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
                 emitBlockChange(player, pos, changedState);
@@ -383,7 +385,7 @@ public final class StackInteractions {
             }
             ItemStack taken = bars.extractAt(index, player);
             if (!taken.isEmpty()) {
-                level.playSound(null, pos, StackSounds.barExtract(), SoundSource.BLOCKS,
+                level.playSound(null, pos, CommonRegistry.barExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
                 emitBlockChange(player, pos, changedState);
@@ -397,12 +399,12 @@ public final class StackInteractions {
                 && player.level().getBlockEntity(pos) instanceof SinglesStackBE singles) {
             rotation = QuarterTurns.next(singles.getRotation());
             singles.setRotation(rotation);
-            StackSounds.playRotation(player, pos, StackSounds.singlesRotate());
+            StackSounds.playRotation(player, pos, CommonRegistry.singlesRotateSound());
         } else if (type == BlockType.STORAGE_STACK
                 && player.level().getBlockEntity(pos) instanceof StorageStackBE storage) {
             rotation = QuarterTurns.next(storage.getRotation());
             storage.setRotation(rotation);
-            StackSounds.playRotation(player, pos, StackSounds.storageRotate());
+            StackSounds.playRotation(player, pos, CommonRegistry.storageRotateSound());
         } else {
             return;
         }
@@ -422,7 +424,7 @@ public final class StackInteractions {
         int rotation = QuarterTurns.next(singles.getCubeRotation(index));
         singles.setCubeRotation(index, rotation);
         emitBlockChange(player, pos, player.level().getBlockState(pos));
-        StackSounds.playRotation(player, pos, StackSounds.singlesRotateItem());
+        StackSounds.playRotation(player, pos, CommonRegistry.singlesRotateItemSound());
         player.displayClientMessage(Component.translatable(
                 "somestacks.message.item_rotation", QuarterTurns.degrees(rotation)), true);
     }

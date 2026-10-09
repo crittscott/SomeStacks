@@ -225,7 +225,7 @@ public final class InteractionChecks {
                             Direction.UP, support, false),
                     true, true);
             check(helper.getLevel().getBlockState(destination)
-                            .is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                            .is(CommonRegistry.storageStackBlock()),
                     "Vanilla interaction did not place Storage");
             checkEquals(2, GameTestScaffold.heldAt(helper, destination, Items.DIRT),
                     "Placed stack contents");
@@ -357,7 +357,7 @@ public final class InteractionChecks {
                             false),
                     com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK);
             check(helper.getLevel().getBlockState(destination)
-                            .is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                            .is(CommonRegistry.storageStackBlock()),
                     "Top-face placement ignored the selected type");
             checkEquals(2, GameTestScaffold.heldAt(helper, destination, Items.STONE),
                     "Placed Storage contents");
@@ -375,15 +375,15 @@ public final class InteractionChecks {
      */
     public static void everyStackTypeBlocksPistons(GameTestHelper helper) {
         checkEquals(PushReaction.BLOCK,
-                CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState()
+                CommonRegistry.storageStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Storage piston reaction");
         checkEquals(PushReaction.BLOCK,
-                CommonRegistry.SINGLES_STACK_BLOCK.get().defaultBlockState()
+                CommonRegistry.singlesStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Singles piston reaction");
         checkEquals(PushReaction.BLOCK,
-                CommonRegistry.BAR_STACK_BLOCK.get().defaultBlockState()
+                CommonRegistry.barStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Bar piston reaction");
         helper.succeed();
@@ -459,5 +459,4 @@ public final class InteractionChecks {
         player.setPos(pos.getX() - 2.0, point.y - player.getEyeHeight(), point.z);
         return new BlockHitResult(point, Direction.WEST, pos, false);
     }
-
 }

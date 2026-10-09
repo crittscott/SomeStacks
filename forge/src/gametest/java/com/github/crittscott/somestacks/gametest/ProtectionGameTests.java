@@ -115,7 +115,7 @@ public final class ProtectionGameTests {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
             pile.settle();
-            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+            helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyTop);
@@ -125,7 +125,7 @@ public final class ProtectionGameTests {
         StoragePile pile = base.pile();
         check(pile != null, "Pile did not resolve after the refusal");
         pile.settle();
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), topRelative);
         helper.succeed();
     }
 
@@ -154,10 +154,9 @@ public final class ProtectionGameTests {
         }
 
         check(observedActor.get() == player, "Cleanup break event did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN);
         helper.succeed();
     }
-
 
     /**
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
@@ -188,10 +187,9 @@ public final class ProtectionGameTests {
         }
 
         check(observedActor.get() == player, "Deferred cleanup did not retain the player");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         helper.succeed();
     }
-
 
     // Waterlogging
 
@@ -305,7 +303,7 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -336,7 +334,7 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -368,7 +366,7 @@ public final class ProtectionGameTests {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -396,7 +394,7 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -422,7 +420,7 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -449,8 +447,7 @@ public final class ProtectionGameTests {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
-
 }

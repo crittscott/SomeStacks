@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +15,8 @@ import javax.annotation.Nullable;
  * The loader-specific half of stack world edits: who performs automation, and whether a claim or
  * logging mod vetoes an edit. {@link WorldEdits} owns the vanilla mechanics and actor propagation.
  *
- * <p>The loader's entry point installs an implementation via {@link WorldEdits#setAuthority} before
- * any world logic can run.
+ * <p>The loader supplies this authority as part of its {@link PlatformServices.Backend} before any
+ * world logic can run.
  */
 public interface EditAuthority {
     interface PlacementVeto {

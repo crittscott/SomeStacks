@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.JsonServerConfig;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -16,9 +16,9 @@ import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -318,7 +318,7 @@ public final class ConfigurationChecks {
             checkEquals(0, storage.deposit(deposit, playerFactory.apply(ItemStack.EMPTY)),
                     "Height-capped player deposit grew the run");
             checkEquals(1, deposit.getCount(), "Rejected deposit spent its input");
-            helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(),
+            helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(),
                     GameTestScaffold.ORIGIN.above());
 
             BlockPos supportRelative = GameTestScaffold.ORIGIN.east(4);
@@ -341,7 +341,7 @@ public final class ConfigurationChecks {
                         true);
                 checkEquals(3, player.getMainHandItem().getCount(),
                         "Disabled Bar placement spent the hand");
-                helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(),
+                helper.assertBlockNotPresent(CommonRegistry.barStackBlock(),
                         supportRelative.above());
             } finally {
                 player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -372,7 +372,7 @@ public final class ConfigurationChecks {
                         true);
                 checkEquals(2, invalidPlayer.getMainHandItem().getCount(),
                         "Invalid first Bar deposit spent the hand");
-                helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(),
+                helper.assertBlockNotPresent(CommonRegistry.barStackBlock(),
                         supportRelative.above());
             } finally {
                 invalidPlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
@@ -560,5 +560,4 @@ public final class ConfigurationChecks {
                 }
                 """.formatted(height, placements, permission);
     }
-
 }

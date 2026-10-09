@@ -89,13 +89,9 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         }
     }
 
-    protected static int maxHeight() {
-        return ServerConfig.maxPileHeight();
-    }
-
     protected static boolean columnHasRoomFor(Level level, BlockPos pos, Block block) {
         return 1 + runLength(level, pos, Direction.DOWN, block)
-                + runLength(level, pos, Direction.UP, block) <= maxHeight();
+                + runLength(level, pos, Direction.UP, block) <= ServerConfig.maxPileHeight();
     }
 
     private static int runLength(Level level, BlockPos from, Direction direction, Block block) {
@@ -126,7 +122,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
     @Override
     public final int advertisedSlots() {
-        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
+        int levels = blocks.size() < ServerConfig.maxPileHeight() ? blocks.size() + 1 : blocks.size();
         return slotsPerBlock * levels;
     }
 

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,13 +22,6 @@ public final class WorldEdits {
     private WorldEdits() {
     }
 
-    private static EditAuthority authority;
-
-    /** Installed once by the loader's entry point before any world logic can run. */
-    public static void setAuthority(EditAuthority impl) {
-        authority = impl;
-    }
-
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
         return !sp.serverLevel().mayInteract(sp, pos);
@@ -40,7 +34,7 @@ public final class WorldEdits {
 
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
-        return authority.automationActor(level);
+        return PlatformServices.editAuthority().automationActor(level);
     }
 
     /** Vanilla's placement obstruction test for a block-local collision shape. */
@@ -75,7 +69,7 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        EditAuthority.PlacementVeto placementVeto = authority.preparePlacement(level, pos);
+        EditAuthority.PlacementVeto placementVeto = PlatformServices.editAuthority().preparePlacement(level, pos);
         if (placementVeto.isVetoedBefore(placer, placedAgainst)) {
             return false;
         }
@@ -114,13 +108,13 @@ public final class WorldEdits {
         }
         BlockState state = level.getBlockState(pos);
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (authority.vetoesRemoval(actor, level, pos, state, blockEntity)) {
+        if (PlatformServices.editAuthority().vetoesRemoval(actor, level, pos, state, blockEntity)) {
             return false;
         }
         if (!level.removeBlock(pos, false)) {
             return false;
         }
-        authority.afterRemoval(actor, level, pos, state, blockEntity);
+        PlatformServices.editAuthority().afterRemoval(actor, level, pos, state, blockEntity);
         level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
         return true;
     }

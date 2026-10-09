@@ -3,12 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
-import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
-import com.github.crittscott.somestacks.server.AdjacentEdits;
-import com.github.crittscott.somestacks.server.Protection;
-import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -20,7 +15,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
@@ -33,21 +27,16 @@ public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
     public SomeStacksNeoForge(IEventBus modBus, net.neoforged.fml.ModContainer container) {
+        PlatformServices.install(new NeoForgePlatformServices());
         NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
         container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, config.spec);
         ServerConfig.install(config);
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);
 
-        PlatformServices.install(
-                NeoForgePlatformServices::configFolder, NeoForgePlatformServices::modVersion);
-        WorldEdits.setAuthority(new NeoForgeEditAuthority());
-        AdjacentEdits.setAuthority(new Protection());
         ModRegistry.init(modBus);
         modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
         modBus.addListener(NeoForgeItemHandlers::onRegisterCapabilities);
-        ConfigSyncNetwork.install(
-                (player, packet) -> PacketDistributor.sendToPlayer(player, packet));
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogin);
@@ -87,5 +76,4 @@ public class SomeStacksNeoForge {
     private void onServerTick(ServerTickEvent.Post event) {
         SomeStacksServer.onServerTickEnd();
     }
-
 }

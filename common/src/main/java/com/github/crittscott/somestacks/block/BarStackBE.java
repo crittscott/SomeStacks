@@ -15,9 +15,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -43,7 +44,7 @@ public class BarStackBE extends StackBlockEntity {
     private boolean removedByCascade = false;
 
     public BarStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS);
+        super(CommonRegistry.barStackBe(), pos, state, SLOTS);
     }
 
     @Override
@@ -327,5 +328,4 @@ public class BarStackBE extends StackBlockEntity {
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
         cachedShape = null;
     }
-
 }

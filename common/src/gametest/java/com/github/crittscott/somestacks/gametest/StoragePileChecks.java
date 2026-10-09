@@ -234,7 +234,7 @@ public final class StoragePileChecks {
 
             check(level.setBlock(
                             lowerPos,
-                            CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(),
+                            CommonRegistry.storageStackBlock().defaultBlockState(),
                             Block.UPDATE_ALL),
                     "Could not place Storage Stack below pile");
 
@@ -339,5 +339,4 @@ public final class StoragePileChecks {
         checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
         helper.succeed();
     }
-
 }

@@ -3,6 +3,8 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.network.ModNetworking;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
@@ -34,14 +36,14 @@ public final class ClientEvents {
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
             @Override
-            public void success(net.minecraft.commands.CommandSourceStack source,
-                                net.minecraft.network.chat.Component message) {
+            public void success(CommandSourceStack source,
+                                Component message) {
                 source.sendSuccess(() -> message, false);
             }
 
             @Override
-            public void failure(net.minecraft.commands.CommandSourceStack source,
-                                net.minecraft.network.chat.Component message) {
+            public void failure(CommandSourceStack source,
+                                Component message) {
                 source.sendFailure(message);
             }
         });

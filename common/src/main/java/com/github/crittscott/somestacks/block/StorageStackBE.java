@@ -36,7 +36,7 @@ public class StorageStackBE extends StackBlockEntity {
     private boolean pendingCleanupUsesAutomation;
 
     public StorageStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.STORAGE_STACK_BE.get(), pos, state, SLOTS);
+        super(CommonRegistry.storageStackBe(), pos, state, SLOTS);
     }
 
     /**
@@ -213,5 +213,4 @@ public class StorageStackBE extends StackBlockEntity {
     protected void stripServerOnlyUpdateData(CompoundTag tag) {
         tag.remove(TAG_PERMANENT);
     }
-
 }

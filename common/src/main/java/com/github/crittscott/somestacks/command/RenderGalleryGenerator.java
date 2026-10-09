@@ -298,7 +298,7 @@ public final class RenderGalleryGenerator {
     }
 
     private static boolean fillStorageStack(Level level, BlockPos pos, List<Item> batch) {
-        if (!placeStack(level, pos, CommonRegistry.STORAGE_STACK_BLOCK.get())) {
+        if (!placeStack(level, pos, CommonRegistry.storageStackBlock())) {
             return false;
         }
         StorageStackBE sbe = (StorageStackBE) level.getBlockEntity(pos);
@@ -315,7 +315,7 @@ public final class RenderGalleryGenerator {
      * grounds outright.
      */
     private static boolean fillBarStack(Level level, BlockPos pos, List<Item> batch) {
-        if (!placeStack(level, pos, CommonRegistry.BAR_STACK_BLOCK.get())) {
+        if (!placeStack(level, pos, CommonRegistry.barStackBlock())) {
             return false;
         }
         BarStackBE bbe = (BarStackBE) level.getBlockEntity(pos);

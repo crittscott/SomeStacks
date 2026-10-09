@@ -206,16 +206,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         return batchDepth > 0;
     }
 
-    private void schedulePublish() {
+    protected final void schedulePublish() {
         if (level == null || level.isClientSide) {
             return;
         }
         publishPending = true;
         markRunDirty();
-    }
-
-    protected final void requestPublish() {
-        schedulePublish();
     }
 
     @Override

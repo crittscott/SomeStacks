@@ -135,7 +135,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
 
         check(observedActor.get() == player, "Cleanup break event did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN);
         helper.succeed();
     }
 
@@ -164,7 +164,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         }
 
         check(observedActor.get() == player, "Deferred cleanup did not retain the player");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         helper.succeed();
     }
 
@@ -188,7 +188,7 @@ public final class ProtectionGameTests implements FabricGameTest {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
             pile.settle();
-            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+            helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
         } finally {
             REMOVAL_PROBES.remove(key);
@@ -197,11 +197,9 @@ public final class ProtectionGameTests implements FabricGameTest {
         StoragePile pile = base.pile();
         check(pile != null, "Pile did not resolve after the refusal");
         pile.settle();
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), topRelative);
         helper.succeed();
     }
-
-
 
     /**
      * A Fabric item-use denial vetoes an adjacent-stack consultation. To reproduce in-game: deny
@@ -258,7 +256,7 @@ public final class ProtectionGameTests implements FabricGameTest {
             REMOVAL_PROBES.remove(key);
         }
 
-        helper.assertBlockPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(CommonRegistry.barStackBlock(), ORIGIN);
         check(lower.isEmpty(), "The kept block held on to its bars");
         check(helper.getLevel().getBlockEntity(upperPos) == null,
                 "The block above a kept block was not brought down");
@@ -359,7 +357,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -390,7 +388,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -422,7 +420,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -450,7 +448,7 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -476,7 +474,7 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
         helper.succeed();
     }
 
@@ -502,8 +500,7 @@ public final class ProtectionGameTests implements FabricGameTest {
                 "Committed remainder");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
-                CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN.above());
+                CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
-
 }

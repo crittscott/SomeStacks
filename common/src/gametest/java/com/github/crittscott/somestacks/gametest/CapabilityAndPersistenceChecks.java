@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
@@ -274,11 +275,9 @@ public final class CapabilityAndPersistenceChecks {
      */
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         StorageStackBlock storageBlock =
-                (StorageStackBlock) com.github.crittscott.somestacks.CommonRegistry
-                        .STORAGE_STACK_BLOCK.get();
+                (StorageStackBlock) CommonRegistry.storageStackBlock();
         SinglesStackBlock singlesBlock =
-                (SinglesStackBlock) com.github.crittscott.somestacks.CommonRegistry
-                        .SINGLES_STACK_BLOCK.get();
+                (SinglesStackBlock) CommonRegistry.singlesStackBlock();
         BlockState storageState = storageBlock.rotate(
                 storageBlock.defaultBlockState(), Rotation.CLOCKWISE_90);
         BlockState singlesState = singlesBlock.rotate(

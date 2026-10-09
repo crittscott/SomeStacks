@@ -14,8 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
@@ -45,7 +46,7 @@ import java.util.List;
  */
 public final class BarColumn extends StackRun<BarStackBE> {
     private BarColumn(ServerLevel level, List<BarStackBE> blocks) {
-        super(level, blocks, BarStackBE.SLOTS, CommonRegistry.BAR_STACK_BLOCK.get());
+        super(level, blocks, BarStackBE.SLOTS, CommonRegistry.barStackBlock());
     }
 
     /**
@@ -99,16 +100,13 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /** The configured ceiling on column height, shared with Storage piles. */
-    public static int maxHeight() {
-        return StackRun.maxHeight();
-    }
 
     /**
      * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.BAR_STACK_BLOCK.get());
+        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.barStackBlock());
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
@@ -208,7 +206,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()) {
+        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableBarStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
@@ -229,7 +227,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         BlockPos above = topPos().above();
         ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
+                CommonRegistry.barStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
                 editor, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;

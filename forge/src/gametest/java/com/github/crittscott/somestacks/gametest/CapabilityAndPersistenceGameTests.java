@@ -1,18 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
-import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.RunEdit;
-import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
@@ -20,10 +18,10 @@ import net.minecraftforge.items.IItemHandler;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
-import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
+import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
 
 /**
  * The automation surface and the saved state behind it: the item handler exposed on every side,
@@ -72,9 +70,9 @@ public final class CapabilityAndPersistenceGameTests {
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
-        int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
-        int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
-        int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
+        int storageLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
+        int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
+        int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         checkEquals(StorageStackBE.SLOTS * storageLevels,
                 GameTestSupport.capability(storage).getSlots(),
                 "Storage advertised slots");

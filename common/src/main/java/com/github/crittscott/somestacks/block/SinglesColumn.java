@@ -14,8 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public final class SinglesColumn extends StackRun<SinglesStackBE> {
     private SinglesColumn(ServerLevel level, List<SinglesStackBE> blocks) {
-        super(level, blocks, SinglesStackBE.SLOTS, CommonRegistry.SINGLES_STACK_BLOCK.get());
+        super(level, blocks, SinglesStackBE.SLOTS, CommonRegistry.singlesStackBlock());
     }
 
     /**
@@ -89,16 +90,13 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
     }
 
     /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
-    public static int maxHeight() {
-        return StackRun.maxHeight();
-    }
 
     /**
      * Whether a Singles Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.SINGLES_STACK_BLOCK.get());
+        return StackRun.columnHasRoomFor(level, pos, CommonRegistry.singlesStackBlock());
     }
 
     // Insertion
@@ -188,7 +186,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableSinglesStackBlock()) {
+        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableSinglesStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
@@ -209,7 +207,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         BlockPos above = topPos().above();
         ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.SINGLES_STACK_BLOCK.get(), level, above);
+                CommonRegistry.singlesStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
                 editor, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;

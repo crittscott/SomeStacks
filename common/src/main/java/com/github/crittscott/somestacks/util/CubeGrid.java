@@ -5,15 +5,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Arrays;
-
 /** Coordinate conversion, rotation, and cell boxes for a regular cubic item grid. */
 public final class CubeGrid {
     private final int edge;
     private final int layerSize;
     private final int cells;
     private final int maxCoord;
-    private final int[] starts;
     private final AABB[] localBoxes;
     private final VoxelShape[] localShapes;
     private final int[][] rotatedIndices;
@@ -26,7 +23,6 @@ public final class CubeGrid {
         this.layerSize = edge * edge;
         this.cells = layerSize * edge;
         this.maxCoord = edge - 1;
-        this.starts = Arrays.copyOf(starts, starts.length);
         this.localBoxes = new AABB[cells];
         this.localShapes = new VoxelShape[cells];
         this.rotatedIndices = new int[4][cells];
@@ -63,10 +59,6 @@ public final class CubeGrid {
 
     public int cells() {
         return cells;
-    }
-
-    public int startPixel(int coordinate) {
-        return starts[coordinate];
     }
 
     /** Converts a bottom-up slot index to its x, y, z coordinates. */

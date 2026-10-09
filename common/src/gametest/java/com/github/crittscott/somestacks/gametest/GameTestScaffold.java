@@ -41,15 +41,15 @@ public final class GameTestScaffold {
     private GameTestScaffold() {}
 
     public static StorageStackBE placeStorage(GameTestHelper helper, BlockPos relative) {
-        return place(helper, relative, CommonRegistry.STORAGE_STACK_BLOCK.get(), StorageStackBE.class);
+        return place(helper, relative, CommonRegistry.storageStackBlock(), StorageStackBE.class);
     }
 
     public static SinglesStackBE placeSingles(GameTestHelper helper, BlockPos relative) {
-        return place(helper, relative, CommonRegistry.SINGLES_STACK_BLOCK.get(), SinglesStackBE.class);
+        return place(helper, relative, CommonRegistry.singlesStackBlock(), SinglesStackBE.class);
     }
 
     public static BarStackBE placeBar(GameTestHelper helper, BlockPos relative) {
-        return place(helper, relative, CommonRegistry.BAR_STACK_BLOCK.get(), BarStackBE.class);
+        return place(helper, relative, CommonRegistry.barStackBlock(), BarStackBE.class);
     }
 
     public static <T extends BlockEntity> T place(

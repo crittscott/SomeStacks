@@ -1,11 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.BarColumn;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.RunEdit;
-import com.github.crittscott.somestacks.block.SinglesColumn;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -73,9 +71,9 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
         BarStackBE bar = placeBar(helper, ORIGIN.east(6));
 
-        int storageLevels = StoragePile.maxHeight() > 1 ? 2 : 1;
-        int singlesLevels = SinglesColumn.maxHeight() > 1 ? 2 : 1;
-        int barLevels = BarColumn.maxHeight() > 1 ? 2 : 1;
+        int storageLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
+        int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
+        int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         checkEquals(StorageStackBE.SLOTS * storageLevels,
                 FabricGameTestSupport.storage(storage).getSlotCount(),
                 "Storage advertised slots");

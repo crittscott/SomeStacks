@@ -19,6 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -77,7 +78,7 @@ public final class ClientRenderCommands {
         RequiredArgumentBuilder<S, String> mode = RequiredArgumentBuilder
                 .<S, String>argument(ARG_MODE, StringArgumentType.word())
                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                        java.util.Arrays.stream(RenderMode.values())
+                        Arrays.stream(RenderMode.values())
                                 .map(RenderMode::getId), builder))
                 .executes(ctx -> setItem(ctx, feedback, 1.0f, RenderOffset.ZERO))
                 .then(scale);

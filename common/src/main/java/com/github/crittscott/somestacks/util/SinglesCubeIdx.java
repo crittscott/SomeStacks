@@ -7,10 +7,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
@@ -236,11 +237,6 @@ public final class SinglesCubeIdx {
      */
     public static int[] rotateXYZ(int x, int y, int z, int rotation) {
         return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Returns a cell's origin on one axis in model pixels. */
-    public static int startPixel(int i) {
-        return GRID.startPixel(i);
     }
 
     /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */

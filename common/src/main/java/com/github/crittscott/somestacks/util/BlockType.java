@@ -28,9 +28,9 @@ public enum BlockType {
 
     public Block getBlock() {
         return switch (this) {
-            case STORAGE_STACK -> CommonRegistry.STORAGE_STACK_BLOCK.get();
-            case SINGLES_STACK -> CommonRegistry.SINGLES_STACK_BLOCK.get();
-            case BAR_STACK -> CommonRegistry.BAR_STACK_BLOCK.get();
+            case STORAGE_STACK -> CommonRegistry.storageStackBlock();
+            case SINGLES_STACK -> CommonRegistry.singlesStackBlock();
+            case BAR_STACK -> CommonRegistry.barStackBlock();
         };
     }
 

@@ -3,8 +3,8 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.ItemOps;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.QuarterTurns;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -16,8 +16,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 /**
  * One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.
@@ -40,7 +41,7 @@ public class SinglesStackBE extends StackBlockEntity {
     private int cachedShapeRotation = -1;
     private int[] cubeRotations = new int[SLOTS];
     public SinglesStackBE(BlockPos pos, BlockState state) {
-        super(CommonRegistry.SINGLES_STACK_BE.get(), pos, state, SLOTS);
+        super(CommonRegistry.singlesStackBe(), pos, state, SLOTS);
     }
 
     @Override
@@ -338,7 +339,7 @@ public class SinglesStackBE extends StackBlockEntity {
         }
 
         setChanged();
-        requestPublish();
+        schedulePublish();
     }
 
     /** Stops at the first block that is not an empty Singles Stack, or that protection keeps. */
@@ -394,5 +395,4 @@ public class SinglesStackBE extends StackBlockEntity {
         // renders the server's in-progress rotations against its own not-yet-updated items.
         tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
     }
-
 }

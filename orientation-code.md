@@ -10,7 +10,7 @@ See `orientation-player.md` for behavior; `build-env.md` for the build.
 
 Java 21, Minecraft 1.21.4; package `com.github.crittscott.somestacks`, mod id `somestacks`.
 
-`common` folds into each loader JAR and is not a runtime artifact. It has no loader imports; `CommonRegistry`, `EditAuthority`, networking callbacks, client gesture adapters, automation adapters, and `PlatformServices` are the loader seams installed during startup. Each loader supplies registry handles before common world objects exist.
+`common` folds into each loader JAR and has no loader imports. Each loader installs one `PlatformServices.Backend` for paths, mod versions, config delivery, and edit/adjacent-use authority. Client gesture and automation adapters remain loader-owned. `CommonRegistry` owns immutable identifiers and typed built-in-registry lookups used after loader-local registration.
 
 Three registered blocks and block entity types; no block items, menus, or recipes:
 
@@ -49,7 +49,7 @@ Three registered blocks and block entity types; no block items, menus, or recipe
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla, destination callback, Common Protection API, break callbacks |
 
-The selected loader build is required on both sides. Transport, registration, and callbacks are loader-owned; gameplay and rendering are common. Forge/NeoForge enforce the protocol through channels; Fabric checks a configuration-phase marker in both directions.
+Matching loader builds are required on both sides. Forge/NeoForge enforce the protocol through channels; Fabric checks a configuration-phase marker in both directions.
 
 ## Runtime and movement model
 
@@ -71,7 +71,7 @@ The three movement models are distinct:
 
 Storage accepts ordinary nonempty items; Bar accepts the reloadable `somestacks:ingots` item tag; Singles accepts allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits. Internal settlement, gravity, and backfill never reapply admission rules.
 
-Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge each have one generic `RunItemHandler`; Fabric has one generic transaction adapter without per-type dispatch. Fabric retains one adapter and indexed slot-view cache per block entity. All views of a run use its bottom block's transaction ledger, stage mutations until outer commit, and permit one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
+Every loader-native view adapts `StackRunItemAccess` and spans the whole run plus one headroom block while growth is allowed. Storage slots use item stack limits; Singles and Bar slots hold one item. Forge and NeoForge have minimal native `RunItemHandler` wrappers over the shared common `RunItemHandlerBase`; Fabric has one generic transaction adapter without per-type dispatch. Fabric retains one adapter and indexed slot-view cache per block entity. All views of a run use its bottom block's transaction ledger, stage mutations until outer commit, and permit one structural extraction position per transaction. `RunEdit` refuses reentrant automation mutations.
 
 `WorldEdits` checks build limits, replaceability, vanilla obstruction, border, spawn and loader authority. Automated edits use the shared `[SomeStacks]` identity. Player cleanup retains the player; deferred Storage settlement uses automation for automated or mixed causes. Forge caches a connection-safe actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge fire native place/break events and restore the captured loader snapshot, including block-entity data, after a placement veto. Fabric consults the destination callback and Common Protection API before placement; removal fires the `PlayerBlockBreakEvents` lifecycle. Outer edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`; successful player content and rotation edits emit one `BLOCK_CHANGE`.
 
@@ -91,9 +91,9 @@ The real loader event covers the clicked block. `AdjacentEdits` recursion-guards
 
 Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
 
-All types use block entity renderers. `CubeGrid` and `CubeRenderHelper` place Storage and Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Complete resolved profiles cache per item and invalidate on override changes or resource reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass. `CubeGrid` precomputes rotated indices; Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. All render overrides and Bar appearance are client resource data. Galleries spread work across ticks but bypass normal placement protection.
+Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Complete resolved profiles cache per item and invalidate on override changes or resource reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass. `CubeGrid` precomputes rotated indices; Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. All render overrides and Bar appearance are client resource data. Galleries spread work across ticks but bypass normal placement protection.
 
 ## GameTests
 
-Each loader has a development-only `somestacks_gametest`, run with `:<loader>:runGameTestServer` and excluded from `build`. Shared scenarios live in `common/src/gametest`; native automation and event checks stay local.
+Development-only `somestacks_gametest` runs with `:<loader>:runGameTestServer` and is excluded from `build`. Shared scenarios live in `common/src/gametest`; native automation and event checks stay loader-local.
 
