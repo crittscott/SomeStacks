@@ -14,6 +14,8 @@ Java 21, Minecraft 1.21.4; package `com.github.crittscott.somestacks`, id `somes
 
 Three blocks and block entity types; no block items, menus, or recipes:
 
+`ShapedStackBlock` gives Singles and Bar full-block targeting/outline and interaction shapes, with occupied-content collision and an empty visual shape. Empty positions remain directly clickable.
+
 | Block | Block entity | Local storage |
 | --- | --- | --- |
 | `storage_stack_block` | `stack_be` | 27 item stacks |

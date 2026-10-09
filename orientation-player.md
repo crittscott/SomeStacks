@@ -90,7 +90,7 @@ Every bar above the bottom layer must overlap a bar directly below, and support 
 - **Light:** each cell holding a glowing `BlockItem` contributes a quarter of that block's light level by integer division; contributions add, capped at 15. Item count in a Storage slot does not matter.
 - **Pistons:** all three block piston movement.
 - **Collision:** Storage is a full block. Singles and Bar collide only on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unpathable.
-- **Empty dynamic blocks:** an empty Singles or Bar block has no outline but stays clickable and breakable.
+- **Targeting:** Singles and Bar have a full-block selection outline, so empty positions remain clickable; empty blocks remain clickable and breakable without collision.
 - **Sounds:** deposits, extraction, and rotations use registered Some Stacks sound events with specific subtitles; resource packs can replace them per type and action through ordinary `sounds.json` entries.
 
 ## Automation
