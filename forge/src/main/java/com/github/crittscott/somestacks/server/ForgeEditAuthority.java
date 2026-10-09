@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * Forge's {@link EditAuthority}: a synthetic per-level {@link ServerPlayer} stands in for
@@ -61,20 +63,59 @@ public final class ForgeEditAuthority implements EditAuthority {
         actors.clear();
     }
 
-    @Override
-    public EditAuthority.PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
-        BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
-        return new EditAuthority.PlacementVeto() {
-            @Override
-            public void restore() {
-                snapshot.restore(true, true);
-            }
+    private static final int UPDATE_RECURSION_LIMIT = 512;
+    private boolean placing;
 
-            @Override
-            public boolean isVetoedAfter(Player placer, Direction placedAgainst) {
-                return ForgeEventFactory.onBlockPlace(placer, snapshot, placedAgainst);
+    @Override
+    public boolean place(Player placer, ServerLevel level, BlockPos pos,
+                         BlockState state, Direction placedAgainst) {
+        if (placing || level.captureBlockSnapshots || level.restoringBlockSnapshots) {
+            return false;
+        }
+        placing = true;
+        int firstSnapshot = level.capturedBlockSnapshots.size();
+        var snapshots = new ArrayList<BlockSnapshot>();
+        try {
+            boolean placed;
+            level.captureBlockSnapshots = true;
+            try {
+                placed = level.setBlock(pos, state, Block.UPDATE_ALL);
+            } finally {
+                level.captureBlockSnapshots = false;
+                snapshots.addAll(level.capturedBlockSnapshots.subList(
+                        firstSnapshot, level.capturedBlockSnapshots.size()));
+                level.capturedBlockSnapshots.subList(
+                        firstSnapshot, level.capturedBlockSnapshots.size()).clear();
             }
-        };
+            if (!placed || snapshots.isEmpty()
+                    || ForgeEventFactory.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
+                level.restoringBlockSnapshots = true;
+                level.captureBlockSnapshots = true;
+                int rollbackStart = level.capturedBlockSnapshots.size();
+                try {
+                    for (int i = snapshots.size() - 1; i >= 0; i--) {
+                        BlockSnapshot snapshot = snapshots.get(i);
+                        snapshot.restore(true, false);
+                    }
+                } finally {
+                    level.captureBlockSnapshots = false;
+                    level.capturedBlockSnapshots.subList(
+                            rollbackStart, level.capturedBlockSnapshots.size()).clear();
+                    level.restoringBlockSnapshots = false;
+                }
+                return false;
+            }
+            for (BlockSnapshot snapshot : snapshots) {
+                BlockState previous = snapshot.getReplacedBlock();
+                BlockState current = level.getBlockState(snapshot.getPos());
+                current.onPlace(level, snapshot.getPos(), previous, false);
+                level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
+                        previous, current, snapshot.getFlag(), UPDATE_RECURSION_LIMIT);
+            }
+            return true;
+        } finally {
+            placing = false;
+        }
     }
 
     @Override

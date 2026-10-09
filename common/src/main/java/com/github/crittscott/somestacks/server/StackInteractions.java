@@ -27,6 +27,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,7 +41,7 @@ public final class StackInteractions {
     /** Handles a vanilla use call on an existing stack block. */
     public static boolean handleExistingStack(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit, BlockType clickedType) {
-        if (AdjacentEdits.isConsulting() || hand != InteractionHand.MAIN_HAND) {
+        if (hand != InteractionHand.MAIN_HAND) {
             return false;
         }
 
@@ -60,8 +61,7 @@ public final class StackInteractions {
     public static boolean handleSneakingRotation(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit,
             boolean blockAllowed, boolean itemAllowed) {
-        if (AdjacentEdits.isConsulting()
-                || hand != InteractionHand.MAIN_HAND
+        if (hand != InteractionHand.MAIN_HAND
                 || !blockAllowed
                 || !itemAllowed
                 || !player.isShiftKeyDown()
@@ -87,7 +87,7 @@ public final class StackInteractions {
     public static boolean handleAdjacentClick(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit,
             boolean blockAllowed, boolean itemAllowed) {
-        if (AdjacentEdits.isConsulting() || hand != InteractionHand.MAIN_HAND) {
+        if (hand != InteractionHand.MAIN_HAND) {
             return false;
         }
 
@@ -114,8 +114,8 @@ public final class StackInteractions {
         BlockPos destination = clickedPos.relative(hit.getDirection());
         BlockType destinationType = BlockType.of(level.getBlockState(destination).getBlock());
         if (destinationType == BlockType.SINGLES_STACK || destinationType == BlockType.BAR_STACK) {
-            if (!AdjacentEdits.mayUseItemAt(player, destination)) {
-                return false;
+            if (!WorldEdits.mayUseAdjacent(player, destination)) {
+                return true;
             }
             deposit(player, destination, ray);
             return true;
@@ -334,8 +334,8 @@ public final class StackInteractions {
 
     private static void extract(ServerPlayer player, BlockPos pos, ViewRay ray) {
         Level level = player.level();
-        BlockState changedState = level.getBlockState(pos);
-        if (level.getBlockEntity(pos) instanceof StorageStackBE storage) {
+        var originalStack = level.getBlockEntity(pos);
+        if (originalStack instanceof StorageStackBE storage) {
             int index = StorageCubeIdx.traceCubes(ray, pos, storage, storage.getRotation());
             if (index < 0) {
                 return;
@@ -350,12 +350,12 @@ public final class StackInteractions {
                 level.playSound(null, pos, CommonRegistry.storageExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitBlockChange(player, pos, changedState);
+                emitSurvivingBlockChange(player, pos, originalStack);
             }
             return;
         }
 
-        if (level.getBlockEntity(pos) instanceof SinglesStackBE singles) {
+        if (originalStack instanceof SinglesStackBE singles) {
             int index = SinglesCubeIdx.traceCubes(ray, pos, singles);
             if (index < 0) {
                 return;
@@ -369,12 +369,12 @@ public final class StackInteractions {
                 level.playSound(null, pos, CommonRegistry.singlesExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitBlockChange(player, pos, changedState);
+                emitSurvivingBlockChange(player, pos, originalStack);
             }
             return;
         }
 
-        if (level.getBlockEntity(pos) instanceof BarStackBE bars) {
+        if (originalStack instanceof BarStackBE bars) {
             int index = BarCubeIdx.traceCubes(ray, pos, bars);
             if (index < 0) {
                 return;
@@ -388,7 +388,7 @@ public final class StackInteractions {
                 level.playSound(null, pos, CommonRegistry.barExtractSound(), SoundSource.BLOCKS,
                         StackSounds.VOLUME, 1.0f);
                 ItemOps.giveToPlayerOrDrop(player, InteractionHand.MAIN_HAND, taken);
-                emitBlockChange(player, pos, changedState);
+                emitSurvivingBlockChange(player, pos, originalStack);
             }
         }
     }
@@ -451,6 +451,13 @@ public final class StackInteractions {
     }
 
     /** Emits one sensor-visible event for one successful player mutation inside a stack block. */
+    private static void emitSurvivingBlockChange(ServerPlayer player, BlockPos pos, BlockEntity edited) {
+        Level level = player.level();
+        if (level.getBlockEntity(pos) == edited) {
+            emitBlockChange(player, pos, level.getBlockState(pos));
+        }
+    }
+
     private static void emitBlockChange(ServerPlayer player, BlockPos pos, BlockState state) {
         player.serverLevel().gameEvent(
                 GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));

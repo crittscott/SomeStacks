@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -163,6 +164,40 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /** Exercises neighboring and direct deposits under the loader's destination policy. */
+    public static void checkAdjacentAndDirectDeposits(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            boolean neighborAllowed) {
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        BlockPos target = singles.getBlockPos();
+        BlockPos neighbor = target.west();
+        helper.getLevel().setBlock(neighbor, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 2));
+        player.setPos(neighbor.getX() - 2.0, target.getY() + 0.125 - player.getEyeHeight(),
+                target.getZ() + 0.125);
+        ServerGestureState.set(player, StackMode.SINGLES_STACK, true);
+        try {
+            check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(new Vec3(target.getX(), target.getY() + 0.125,
+                            target.getZ() + 0.125), Direction.EAST, neighbor, false), true, true),
+                    "Neighbor gesture was not consumed");
+            checkEquals(neighborAllowed, !singles.isEmpty(), "Neighbor deposit policy");
+            checkEquals(neighborAllowed ? 1 : 2, player.getMainHandItem().getCount(), "Neighbor deposit hand");
+            if (neighborAllowed) return;
+            helper.getLevel().removeBlock(neighbor, false);
+            check(StackInteractions.handleExistingStack(player, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(new Vec3(target.getX() + 0.125, target.getY() + 0.125,
+                            target.getZ() + 0.125), Direction.WEST, target, false),
+                    com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK),
+                    "Direct deposit gesture was not consumed");
+            check(!singles.isEmpty(), "Direct click failed to deposit");
+            checkEquals(1, player.getMainHandItem().getCount(), "Direct deposit hand");
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        }
+    }
+
     /** Native removal observation whose returned action unregisters the hook. */
     @FunctionalInterface
     public interface RemovalObserver {
@@ -251,6 +286,44 @@ public final class ProtectionChecks {
         checkEquals(Items.DIAMOND, restored.getItem(0).getItem(), "Restored container item");
         checkEquals(3, restored.getItem(0).getCount(), "Restored container count");
         helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: face an observer toward a denied placement position. A rejected
+     * placement produces no observer pulse; after permitting the same placement, the observer pulses.
+     */
+    public static void placementPublicationAnswersToVeto(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            Runnable installVeto, Runnable removeVeto) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        BlockPos observer = target.west();
+        level.setBlock(observer, Blocks.OBSERVER.defaultBlockState()
+                .setValue(ObserverBlock.FACING, Direction.EAST), Block.UPDATE_ALL);
+        helper.runAfterDelay(6, () -> {
+            installVeto.run();
+            try {
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
+                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+                        "Vetoed placement succeeded");
+            } finally {
+                removeVeto.run();
+            }
+            helper.runAfterDelay(3, () -> {
+                check(!level.getBlockState(observer).getValue(ObserverBlock.POWERED),
+                        "Denied placement pulsed its observer");
+                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
+                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+                        "Accepted placement failed");
+                ((StorageStackBE) level.getBlockEntity(target)).getItems()
+                        .insertItem(0, new ItemStack(Items.STONE), false);
+                helper.runAfterDelay(3, () -> {
+                    check(level.getBlockState(observer).getValue(ObserverBlock.POWERED),
+                            "Accepted placement never published to its observer");
+                    helper.succeed();
+                });
+            });
+        });
     }
 
     private static BlockHitResult centerHit(BlockPos pos) {

@@ -44,7 +44,7 @@ final class SsHelp {
 
     /**
      * One top-level subcommand. The summary is its line in the index; usage comes from the server
-     * tree or the explicit client-only forms.
+     * tree or the shared client syntax tree.
      */
     private enum Topic {
         ITEM(SsCommand.COMMAND_ITEM, "somestacks.command.help.item.summary", Gate.ANYONE,
@@ -167,22 +167,10 @@ final class SsHelp {
         return 1;
     }
 
-    /** Derives server forms from Brigadier and names the two client-only trees explicitly. */
+    /** Derives all forms from Brigadier, using the server-safe syntax tree for client commands. */
     private static List<String> usages(CommandContext<CommandSourceStack> ctx, Topic topic) {
-        if (topic == Topic.ITEM) {
-            return List.of(
-                    "/ss item <item> reset",
-                    "/ss item <item> <mode>",
-                    "/ss item <item> <mode> <scale>",
-                    "/ss item <item> <mode> <scale> <x> <y>",
-                    "/ss item <item> <mode> <scale> <x> <y> <z>");
-        }
-        if (topic == Topic.WRITE) {
-            return List.of(
-                    "/ss write changed",
-                    "/ss write all",
-                    "/ss write list",
-                    "/ss write <modid>");
+        if (topic == Topic.ITEM || topic == Topic.WRITE) {
+            return ClientRenderCommandSyntax.usages(topic.name);
         }
 
         CommandDispatcher<CommandSourceStack> dispatcher =

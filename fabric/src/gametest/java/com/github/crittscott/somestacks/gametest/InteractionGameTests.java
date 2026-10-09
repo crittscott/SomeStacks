@@ -130,4 +130,22 @@ public final class InteractionGameTests implements FabricGameTest {
         InteractionChecks.everyStackTypeBlocksPistons(helper);
     }
 
+    /** See {@link InteractionChecks#extractionEventsFollowBlockSurvival}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void extractionEventsFollowBlockSurvival(GameTestHelper helper) {
+        InteractionChecks.extractionEventsFollowBlockSurvival(helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
+        SynchronizationChecks.configDecoderEnforcesPacketBudget(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configStagingRejectsAndClearsInvalidGenerations}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
+        SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
+    }
+
 }

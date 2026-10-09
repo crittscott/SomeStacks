@@ -333,7 +333,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(editor(level, placer), above)
+        return WorldEdits.mayPlace(editor(level, placer), above)
                 && WorldEdits.isUnobstructed(level, above, Shapes.block());
     }
 

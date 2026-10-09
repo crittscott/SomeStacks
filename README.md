@@ -32,7 +32,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode. Stack types the server has disabled are skipped. |
 | Hold `V` + item, right-click a stack | Deposit into it. |
-| Hold `V` + item, right-click any other block | Deposit into an adjacent Singles or Bar Stack, or place the selected type in the empty space and make the first deposit. |
+| Hold `V` + item, right-click any other block | Place the selected type in the empty space and make the first deposit. Fabric can also deposit into an allowed adjacent Singles or Bar Stack; Forge/NeoForge require clicking an existing stack directly. |
 | Right-click a stack, no `V`, no Shift | Take from the nearest item you are looking at. Storage gives you as much as your hand will hold; Singles and Bar give one. |
 | Select Toggle Permanent, hold `V`, right-click a Storage Stack empty-handed | Stop that pile from removing itself when emptied. |
 | Shift + right-click a Storage or Singles Stack with a **redstone torch** | Rotate the whole block 90°. |
@@ -49,7 +49,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Fabric fires the matching break event for automated removal; growth has no equivalent placement event to fire, so Fabric also asks claim mods that support Common Protection API directly.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Forge/NeoForge publish placement updates only after acceptance, restoring snapshots on denial. Fabric requires Common Protection API for player placement, automated growth, and neighboring-stack interaction queries, and fires its native break lifecycle for removal. Fabric claim mods must implement the API's providers to protect those placement and neighboring-stack edits.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 

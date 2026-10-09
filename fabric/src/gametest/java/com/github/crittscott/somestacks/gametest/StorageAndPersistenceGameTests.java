@@ -176,4 +176,16 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
                 "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
+    /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
+        SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(helper);
+    }
+
+    /** See {@link SynchronizationChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
+        SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
+    }
+
 }

@@ -2,9 +2,6 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 /**
  * The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
@@ -30,27 +27,6 @@ public final class StorageCubeIdx {
 
     /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, StorageStackBE be, int rotation) {
-        SlotAccess handler = be.getItems();
-
-        double closestDist = Double.MAX_VALUE;
-        int closestIndex = -1;
-
-        for (int i = 0; i < StorageStackBE.SLOTS; i++) {
-            ItemStack stack = handler.getStackInSlot(i);
-            if (stack.isEmpty()) continue;
-
-            AABB cubeBox = GRID.worldBox(i, rotation, blockPos);
-            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hit != null) {
-                double dist = hit.distanceTo(ray.eye());
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = i;
-                }
-            }
-        }
-
-        return closestIndex;
+        return ray.nearestOccupied(be.getItems(), slot -> GRID.worldBox(slot, rotation, blockPos));
     }
 }

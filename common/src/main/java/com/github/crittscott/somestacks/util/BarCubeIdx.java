@@ -2,16 +2,11 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
@@ -201,57 +196,13 @@ public final class BarCubeIdx {
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
                                         @Nullable SlotAccess handler) {
-        List<Hit> hits = new ArrayList<>();
-
-        for (int i = 0; i < BarStackBE.SLOTS; i++) {
-            AABB barBox = getBarBox(i, blockPos);
-            Vec3 hitPos = barBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hitPos != null) {
-                double dist = hitPos.distanceTo(ray.eye());
-                hits.add(new Hit(i, dist));
-            }
-        }
-
-        if (hits.isEmpty()) return -1;
-
-        hits.sort(Comparator.comparingDouble(h -> h.distance));
-
-        int lastEmpty = -1;
-        for (Hit hit : hits) {
-            if (handler != null && !handler.getStackInSlot(hit.index).isEmpty()) {
-                return lastEmpty;
-            }
-            lastEmpty = hit.index;
-        }
-
-        return lastEmpty;
+        return ray.lastEmptyBeforeOccupied(BarStackBE.SLOTS, handler,
+                slot -> getBarBox(slot, blockPos));
     }
 
     /** Returns the nearest occupied bar intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, BarStackBE be) {
-        SlotAccess handler = be.getItems();
-
-        double closestDist = Double.MAX_VALUE;
-        int closestIndex = -1;
-
-        for (int i = 0; i < BarStackBE.SLOTS; i++) {
-            ItemStack stack = handler.getStackInSlot(i);
-            if (stack.isEmpty()) continue;
-
-            AABB barBox = getBarBox(i, blockPos);
-            Vec3 hit = barBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hit != null) {
-                double dist = hit.distanceTo(ray.eye());
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = i;
-                }
-            }
-        }
-
-        return closestIndex;
+        return ray.nearestOccupied(be.getItems(), slot -> getBarBox(slot, blockPos));
     }
 
     /** Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index. */
@@ -332,6 +283,4 @@ public final class BarCubeIdx {
         return occupancy;
     }
 
-    private record Hit(int index, double distance) {
-    }
 }

@@ -32,10 +32,17 @@ public record ConfigSyncPkt(
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
-    private static final int MAX_PACKET_BYTES = 256 * 1024;
+    public static final int MAX_PACKET_BYTES = 256 * 1024;
     private static final int PACKET_OVERHEAD_BYTES = 64;
     private static final int MAX_TOTAL_NAMESPACES = 4_096;
     private static final int MAX_NAMESPACE_LENGTH = 256;
+    private static final int MAX_ENCODED_NAMESPACE_BYTES = MAX_NAMESPACE_LENGTH + 2;
+    private static final int MAX_NAMESPACE_BYTES = 2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
+    public static final int MAX_GENERATION_CHUNKS = (MAX_NAMESPACE_BYTES
+            + MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES - 1)
+            / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
+    public static final int MAX_GENERATION_BYTES = MAX_NAMESPACE_BYTES
+            + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
 
     private static volatile List<ConfigSyncPkt> currentPackets = List.of();
     private static int nextGeneration;
@@ -43,6 +50,16 @@ public record ConfigSyncPkt(
     public ConfigSyncPkt {
         genMods = List.copyOf(genMods);
         disabledMods = List.copyOf(disabledMods);
+        if (generation <= 0 || totalGenMods < 0 || totalGenMods > MAX_TOTAL_NAMESPACES
+                || totalDisabledMods < 0 || totalDisabledMods > MAX_TOTAL_NAMESPACES
+                || genMods.size() > totalGenMods || disabledMods.size() > totalDisabledMods) {
+            throw new DecoderException("Invalid config synchronization totals");
+        }
+        validateNamespaces(genMods);
+        validateNamespaces(disabledMods);
+        if (budgetBytes(genMods, disabledMods) > MAX_PACKET_BYTES) {
+            throw new DecoderException("Config synchronization packet exceeds byte limit");
+        }
     }
 
     @Override
@@ -162,6 +179,9 @@ public record ConfigSyncPkt(
     }
 
     private static ConfigSyncPkt decode(RegistryFriendlyByteBuf buf) {
+        if (buf.readableBytes() > MAX_PACKET_BYTES) {
+            throw new DecoderException("Config synchronization packet exceeds byte limit");
+        }
         int generation = buf.readVarInt();
         if (generation <= 0) {
             throw new DecoderException("Invalid config generation: " + generation);
@@ -182,6 +202,27 @@ public record ConfigSyncPkt(
                 generation, first, last, enableStack, enableSingles, enableBar,
                 totalGenMods, totalDisabledMods,
                 genMods, disabledMods);
+    }
+
+    /** Conservative encoded size, including bounded metadata overhead. */
+    public int budgetBytes() {
+        return budgetBytes(genMods, disabledMods);
+    }
+
+    private static int budgetBytes(List<String> genMods, List<String> disabledMods) {
+        int bytes = PACKET_OVERHEAD_BYTES;
+        for (String namespace : genMods) bytes += encodedStringSize(namespace);
+        for (String namespace : disabledMods) bytes += encodedStringSize(namespace);
+        return bytes;
+    }
+
+    private static void validateNamespaces(List<String> namespaces) {
+        for (String namespace : namespaces) {
+            if (namespace.length() > MAX_NAMESPACE_LENGTH
+                    || ResourceLocation.tryBuild(namespace, "validation") == null) {
+                throw new DecoderException("Invalid synchronized namespace");
+            }
+        }
     }
 
     private static void writeNamespaces(RegistryFriendlyByteBuf buf, List<String> namespaces) {

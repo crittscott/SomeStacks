@@ -4,9 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 
 /**
- * Modifier plus an item, clicking a face of some other block that has a Singles or Bar Stack
- * against it, deposits into that stack. The vanilla click names the neighbor, and the server also
- * checks protection at the adjacent stack before depositing.
+ * Consumes a modified neighbor click toward a Singles or Bar Stack. The server decides whether
+ * the loader can authorize the destination without another click; otherwise it refuses the deposit.
  */
 public final class DepositIntoAdjacentStackRule implements InteractionRule {
     @Override

@@ -66,11 +66,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-    // Optional: claim mods that implement Common Protection API ship it; checks run only when present.
-    modCompileOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
-        transitive = false
-    }
-    modLocalRuntime("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
+    modImplementation("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
         transitive = false
     }
 
@@ -83,6 +79,7 @@ tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = rootProject.sharedModProperties + [
             fabric_loader_version: fabric_loader_version,
             fabric_api_version: fabric_api_version,
+            common_protection_api_version: common_protection_api_version,
     ]
     inputs.properties replaceProperties
 

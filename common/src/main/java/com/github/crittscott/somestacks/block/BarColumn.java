@@ -213,7 +213,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(level, above)
+        return WorldEdits.mayPlace(level, above)
                 && WorldEdits.isUnobstructed(level, above, finalCollision);
     }
 

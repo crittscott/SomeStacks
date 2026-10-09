@@ -3,9 +3,11 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -119,6 +121,11 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
+    }
+
+    /** Checks type-specific update data before inventory or metadata is changed. */
+    protected boolean isValidClientStackData(CompoundTag tag) {
+        return true;
     }
 
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
@@ -257,6 +264,10 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     @Override
     protected final void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        if (level != null && level.isClientSide) {
+            loadClientUpdate(tag, registries);
+            return;
+        }
         super.loadAdditional(tag, registries);
         if (StackDataMigration.upgrade(tag, registries)) {
             setChanged();
@@ -272,6 +283,28 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
         loadStackData(tag, registries);
         refreshComparatorContribution();
+    }
+
+    /** Forge/NeoForge chunk-update hook; Fabric updates reach the client branch of loadAdditional. */
+    public final void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        loadClientUpdate(tag, registries);
+    }
+
+    /** Rejects malformed wire data without migration, recovery retention, or logging. */
+    public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
+        if (!tag.contains("DataVersion", Tag.TAG_INT)
+                || tag.getInt("DataVersion") != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
+                || !tag.contains(TAG_ITEMS, Tag.TAG_COMPOUND)
+                || tag.contains(StackItemStorage.TAG_SET_ASIDE)
+                || tag.contains("Permanent") || tag.contains("Rotation")
+                || !isValidClientStackData(tag)
+                || !items.deserializeClientUpdate(registries, tag.getCompound(TAG_ITEMS))) {
+            return false;
+        }
+        pendingBlockRotation = null;
+        loadStackData(tag, registries);
+        refreshComparatorContribution();
+        return true;
     }
 
     @Override

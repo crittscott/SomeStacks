@@ -29,6 +29,7 @@ public final class ClientSetup {
         NeoForge.EVENT_BUS.addListener(
                 (ClientPlayerNetworkEvent.LoggingOut evt) -> {
                     ClientGestures.resetSync();
+                    ClientRenderPacketSink.clear();
                     AutoRenderProfiles.saveCache();
                 });
         NeoForge.EVENT_BUS.addListener(

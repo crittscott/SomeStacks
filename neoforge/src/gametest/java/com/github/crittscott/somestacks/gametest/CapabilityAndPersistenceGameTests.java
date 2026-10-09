@@ -178,4 +178,16 @@ public final class CapabilityAndPersistenceGameTests {
                 "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
+    /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
+        SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(helper);
+    }
+
+    /** See {@link SynchronizationChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
+        SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
+    }
+
 }

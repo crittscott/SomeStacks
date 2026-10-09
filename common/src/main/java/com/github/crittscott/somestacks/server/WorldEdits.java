@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -30,6 +29,22 @@ public final class WorldEdits {
     /** {@link #isProtected(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
     public static boolean isProtected(ServerLevel level, BlockPos pos) {
         return isProtected(automationActor(level), pos);
+    }
+
+    /** Vanilla and loader query checks used before automation promises growth capacity. */
+    public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
+        return !isProtected(player, pos)
+                && PlatformServices.editAuthority().mayPlace(player, player.serverLevel(), pos);
+    }
+
+    public static boolean mayPlace(ServerLevel level, BlockPos pos) {
+        return mayPlace(automationActor(level), pos);
+    }
+
+    /** Consults a dedicated loader protection query for an existing adjacent stack. */
+    public static boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        return !isProtected(player, pos)
+                && PlatformServices.editAuthority().mayUseAdjacent(player, pos);
     }
 
     /** The actor automation-driven growth and removal are attributed to. */
@@ -58,8 +73,8 @@ public final class WorldEdits {
 
     /**
      * Places {@code state} at {@code pos}. Loader checks that can run as queries happen before the
-     * world changes; loaders whose native placement event requires the placed state may still veto
-     * afterward, in which case the previous state is restored. {@code finalCollision} is the
+     * world changes; loader placement transactions defer publication until protection accepts
+     * the edit, restoring captured state and block-entity data on denial. {@code finalCollision} is the
      * completed placement's collision shape, since a block-entity stack can start empty and acquire
      * its real shape only with its first deposit.
      */
@@ -69,15 +84,7 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        EditAuthority.PlacementVeto placementVeto = PlatformServices.editAuthority().preparePlacement(level, pos);
-        if (placementVeto.isVetoedBefore(placer, placedAgainst)) {
-            return false;
-        }
-        if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
-            return false;
-        }
-        if (placementVeto.isVetoedAfter(placer, placedAgainst)) {
-            placementVeto.restore();
+        if (!PlatformServices.editAuthority().place(placer, level, pos, state, placedAgainst)) {
             return false;
         }
         BlockState placedState = level.getBlockState(pos);

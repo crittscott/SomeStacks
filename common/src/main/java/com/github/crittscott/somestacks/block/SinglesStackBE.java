@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -372,6 +373,17 @@ public class SinglesStackBE extends StackBlockEntity {
                 cubeRotations[i] = 0;
             }
         }
+    }
+
+    @Override
+    protected boolean isValidClientStackData(CompoundTag tag) {
+        if (!tag.contains(TAG_CUBE_ROTATIONS, Tag.TAG_INT_ARRAY)) return false;
+        int[] rotations = tag.getIntArray(TAG_CUBE_ROTATIONS);
+        if (rotations.length != SLOTS) return false;
+        for (int rotation : rotations) {
+            if (rotation < 0 || rotation >= QuarterTurns.COUNT) return false;
+        }
+        return true;
     }
 
     @Override

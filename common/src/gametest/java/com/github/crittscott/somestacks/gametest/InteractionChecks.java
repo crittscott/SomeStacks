@@ -12,6 +12,13 @@ import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.gameevent.PositionSource;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +33,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -438,6 +447,99 @@ public final class InteractionChecks {
                     "Sculk sensor phase after stack mutation");
             helper.succeed();
         });
+    }
+
+    /**
+     * To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.
+     * The surviving block emits only change; removing the last item emits only destroy.
+     */
+    public static void extractionEventsFollowBlockSurvival(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        for (boolean bar : new boolean[] {false, true}) {
+            var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
+                    : GameTestScaffold.placeSingles(helper, TARGET);
+            var item = bar ? GameTestScaffold.firstBarItem() : Items.STONE;
+            be.getItems().insertItem(0, new ItemStack(item), false);
+            be.getItems().insertItem(1, new ItemStack(item), false);
+            ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            try {
+                double y = bar ? 0.0625 : 0.125;
+                List<Holder<GameEvent>> first = observeGameEvents(helper.getLevel(), be.getBlockPos(),
+                        () -> click(player, be.getBlockPos(), 0.125, y, 0.125));
+                checkEquals(List.of(GameEvent.BLOCK_CHANGE), first, "Surviving extraction events");
+                List<Holder<GameEvent>> last = observeGameEvents(helper.getLevel(), be.getBlockPos(),
+                        () -> click(player, be.getBlockPos(), bar ? 0.75 : 0.375, y, 0.125));
+                checkEquals(List.of(GameEvent.BLOCK_DESTROY), last, "Last extraction events");
+                check(helper.getLevel().getBlockEntity(be.getBlockPos()) == null,
+                        "Last extraction did not remove the block");
+            } finally {
+                ServerGestureState.clear(player.getUUID());
+                player.setItemInHand(HAND, ItemStack.EMPTY);
+            }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: deny cleanup of a Singles or Bar block, then extract its final item.
+     * The empty block survives and emits one change vibration, with no destroy vibration.
+     */
+    public static void deniedCleanupEmitsOnlyBlockChange(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            ProtectionChecks.RemovalObserver observer) {
+        for (boolean bar : new boolean[] {false, true}) {
+            var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
+                    : GameTestScaffold.placeSingles(helper, TARGET);
+            be.getItems().insertItem(0,
+                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE), false);
+            ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+            Runnable unregister = observer.install(helper.getLevel(), be.getBlockPos(),
+                    actor -> {}, actor -> false);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            try {
+                List<Holder<GameEvent>> events = observeGameEvents(helper.getLevel(), be.getBlockPos(),
+                        () -> click(player, be.getBlockPos(), 0.125, bar ? 0.0625 : 0.125, 0.125));
+                checkEquals(List.of(GameEvent.BLOCK_CHANGE), events, "Denied-cleanup events");
+                check(helper.getLevel().getBlockEntity(be.getBlockPos()) == be && be.isEmpty(),
+                        "Denied cleanup did not leave the empty block");
+            } finally {
+                unregister.run();
+                ServerGestureState.clear(player.getUUID());
+                player.setItemInHand(HAND, ItemStack.EMPTY);
+            }
+        }
+        helper.succeed();
+    }
+
+    private static List<Holder<GameEvent>> observeGameEvents(ServerLevel level, BlockPos pos,
+                                                            Runnable mutation) {
+        var events = new ArrayList<Holder<GameEvent>>();
+        GameEventListener listener = new GameEventListener() {
+            @Override
+            public PositionSource getListenerSource() { return new BlockPositionSource(pos); }
+
+            @Override
+            public int getListenerRadius() { return 16; }
+
+            @Override
+            public boolean handleGameEvent(ServerLevel sourceLevel, Holder<GameEvent> event,
+                                           GameEvent.Context context, Vec3 source) {
+                if (BlockPos.containing(source).equals(pos)
+                        && (event.equals(GameEvent.BLOCK_CHANGE) || event.equals(GameEvent.BLOCK_DESTROY))) {
+                    events.add(event);
+                }
+                return true;
+            }
+        };
+        var registry = level.getChunkAt(pos).getListenerRegistry(SectionPos.blockToSectionCoord(pos.getY()));
+        registry.register(listener);
+        try {
+            mutation.run();
+        } finally {
+            registry.unregister(listener);
+        }
+        return events;
     }
 
     private static boolean click(ServerPlayer player, BlockPos pos,

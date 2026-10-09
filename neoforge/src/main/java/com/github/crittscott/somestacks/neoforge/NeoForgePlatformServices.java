@@ -2,9 +2,7 @@ package com.github.crittscott.somestacks.neoforge;
 
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.server.AdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
-import com.github.crittscott.somestacks.server.Protection;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
@@ -15,7 +13,6 @@ import java.nio.file.Path;
 /** NeoForge implementations of the common platform services. */
 public final class NeoForgePlatformServices implements PlatformServices.Backend {
     private final NeoForgeEditAuthority editAuthority = new NeoForgeEditAuthority();
-    private final AdjacentEditAuthority adjacentEditAuthority = new Protection();
 
     @Override
     public Path configFolder() {
@@ -37,10 +34,5 @@ public final class NeoForgePlatformServices implements PlatformServices.Backend 
     @Override
     public NeoForgeEditAuthority editAuthority() {
         return editAuthority;
-    }
-
-    @Override
-    public AdjacentEditAuthority adjacentEditAuthority() {
-        return adjacentEditAuthority;
     }
 }

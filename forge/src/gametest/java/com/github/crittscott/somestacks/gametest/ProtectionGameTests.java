@@ -7,7 +7,7 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
-import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
 
@@ -41,8 +40,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  */
 @GameTestHolder(SomeStacks.MODID)
 public final class ProtectionGameTests {
-    private static final Protection PROTECTION = new Protection();
-
     private ProtectionGameTests() {}
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
@@ -201,29 +198,39 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * To reproduce in-game: deny SomeStacks item use at the destination beside a stack, then
-     * right-click the neighboring face and verify no block or item is placed there.
+     * To reproduce in-game: hold the modifier and click a neighbor toward a Singles Stack.
+     * No deposit occurs; click the stack directly to deposit. No destination click is fabricated.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void adjacentConsultationHonorsUseItemDeny(
-            GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = GameTestSupport.fakePlayer(level);
-        BlockPos clicked = helper.absolutePos(ORIGIN);
-        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseItem(Event.Result.DENY);
-            }
+    public static void adjacentStackRequiresDirectClick(GameTestHelper helper) {
+        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
+        BlockPos target = helper.absolutePos(ORIGIN);
+        java.util.concurrent.atomic.AtomicInteger clicks = new java.util.concurrent.atomic.AtomicInteger();
+        Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
+            if (event.getEntity() == player && event.getPos().equals(target)) clicks.incrementAndGet();
         };
-
-        MinecraftForge.EVENT_BUS.addListener(denyItem);
+        MinecraftForge.EVENT_BUS.addListener(observe);
         try {
-            check(!PROTECTION.mayUseItemAt(player, clicked),
-                    "Item-use denial did not veto the adjacent stack consultation");
+            check(!WorldEdits.mayUseAdjacent(player, target), "Adjacent edit bypassed the direct-click gate");
+            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), false);
+            checkEquals(0, clicks.get(), "Authorization fabricated an interaction event");
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyItem);
+            MinecraftForge.EVENT_BUS.unregister(observe);
         }
         helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#placementPublicationAnswersToVeto}. */
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 30)
+    public static void placementPublicationAnswersToVeto(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        Consumer<BlockEvent.EntityPlaceEvent> deny = event -> {
+            if (event.getPos().equals(pos)) event.setCanceled(true);
+        };
+        ProtectionChecks.placementPublicationAnswersToVeto(helper,
+                GameTestSupport.playerFactory(helper),
+                () -> MinecraftForge.EVENT_BUS.addListener(deny),
+                () -> MinecraftForge.EVENT_BUS.unregister(deny));
     }
 
     /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
@@ -450,4 +457,11 @@ public final class ProtectionGameTests {
                 CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
+    /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
+        InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
+                GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
 }

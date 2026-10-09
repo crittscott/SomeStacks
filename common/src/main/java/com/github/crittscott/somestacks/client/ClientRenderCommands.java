@@ -1,17 +1,14 @@
 package com.github.crittscott.somestacks.client;
 
+import com.github.crittscott.somestacks.command.ClientRenderCommandSyntax;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
-import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -19,23 +16,22 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_ITEM;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODE;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_MODID;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_SCALE;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_X;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Y;
+import static com.github.crittscott.somestacks.command.ClientRenderCommandSyntax.ARG_Z;
+
 /** Client-only render-authoring commands; no server packet can invoke these operations. */
 public final class ClientRenderCommands {
-    private static final String ARG_ITEM = "item";
-    private static final String ARG_MODE = "mode";
-    private static final String ARG_SCALE = "scale";
-    private static final String ARG_X = "x";
-    private static final String ARG_Y = "y";
-    private static final String ARG_Z = "z";
-    private static final String ARG_MODID = "modid";
-
     private ClientRenderCommands() {}
 
     public interface Feedback<S> {
@@ -44,76 +40,26 @@ public final class ClientRenderCommands {
     }
 
     public static <S> void register(CommandDispatcher<S> dispatcher, Feedback<S> feedback) {
-        dispatcher.register(LiteralArgumentBuilder.<S>literal("ss")
-                .then(itemTree(feedback))
-                .then(writeTree(feedback)));
-    }
-
-    private static <S> LiteralArgumentBuilder<S> itemTree(Feedback<S> feedback) {
-        RequiredArgumentBuilder<S, Float> z = RequiredArgumentBuilder
-                .<S, Float>argument(ARG_Z, offsetArg())
-                .executes(ctx -> setItem(ctx, feedback,
-                        FloatArgumentType.getFloat(ctx, ARG_SCALE),
-                        new RenderOffset(
-                                FloatArgumentType.getFloat(ctx, ARG_X),
-                                FloatArgumentType.getFloat(ctx, ARG_Y),
-                                FloatArgumentType.getFloat(ctx, ARG_Z))));
-        RequiredArgumentBuilder<S, Float> y = RequiredArgumentBuilder
-                .<S, Float>argument(ARG_Y, offsetArg())
-                .executes(ctx -> setItem(ctx, feedback,
-                        FloatArgumentType.getFloat(ctx, ARG_SCALE),
-                        new RenderOffset(
-                                FloatArgumentType.getFloat(ctx, ARG_X),
-                                FloatArgumentType.getFloat(ctx, ARG_Y), 0.0f)))
-                .then(z);
-        RequiredArgumentBuilder<S, Float> x = RequiredArgumentBuilder
-                .<S, Float>argument(ARG_X, offsetArg())
-                .then(y);
-        RequiredArgumentBuilder<S, Float> scale = RequiredArgumentBuilder
-                .<S, Float>argument(ARG_SCALE, FloatArgumentType.floatArg(
-                        OverrideJsonCodec.MIN_SCALE, OverrideJsonCodec.MAX_SCALE))
-                .executes(ctx -> setItem(ctx, feedback,
-                        FloatArgumentType.getFloat(ctx, ARG_SCALE), RenderOffset.ZERO))
-                .then(x);
-        RequiredArgumentBuilder<S, String> mode = RequiredArgumentBuilder
-                .<S, String>argument(ARG_MODE, StringArgumentType.word())
-                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                        Arrays.stream(RenderMode.values())
-                                .map(RenderMode::getId), builder))
-                .executes(ctx -> setItem(ctx, feedback, 1.0f, RenderOffset.ZERO))
-                .then(scale);
-        RequiredArgumentBuilder<S, ResourceLocation> item = RequiredArgumentBuilder
-                .<S, ResourceLocation>argument(ARG_ITEM, ResourceLocationArgument.id())
-                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                        BuiltInRegistries.ITEM.keySet().stream().map(ResourceLocation::toString),
-                        builder))
-                .then(LiteralArgumentBuilder.<S>literal("reset")
-                        .executes(ctx -> resetItem(ctx, feedback)))
-                .then(mode);
-        return LiteralArgumentBuilder.<S>literal("item").then(item);
-    }
-
-    private static FloatArgumentType offsetArg() {
-        return FloatArgumentType.floatArg(
-                OverrideJsonCodec.MIN_OFFSET, OverrideJsonCodec.MAX_OFFSET);
-    }
-
-    private static <S> LiteralArgumentBuilder<S> writeTree(Feedback<S> feedback) {
-        return LiteralArgumentBuilder.<S>literal("write")
-                .then(LiteralArgumentBuilder.<S>literal("changed")
-                        .executes(ctx -> {
-                            ItemRenderOverrides.handleWriteRequest();
-                            return 1;
-                        }))
-                .then(LiteralArgumentBuilder.<S>literal("all")
-                        .executes(ctx -> dumpAll(ctx, feedback)))
-                .then(LiteralArgumentBuilder.<S>literal("list")
-                        .executes(ctx -> dumpList(ctx, feedback)))
-                .then(RequiredArgumentBuilder.<S, String>argument(
-                                ARG_MODID, StringArgumentType.word())
-                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                installedNamespaces(), builder))
-                        .executes(ctx -> dumpSingle(ctx, feedback)));
+        ClientRenderCommandSyntax.register(dispatcher, action -> ctx -> switch (action) {
+            case ITEM_DEFAULT -> setItem(ctx, feedback, 1.0f, RenderOffset.ZERO);
+            case ITEM_SCALE -> setItem(ctx, feedback,
+                    FloatArgumentType.getFloat(ctx, ARG_SCALE), RenderOffset.ZERO);
+            case ITEM_XY, ITEM_XYZ -> setItem(ctx, feedback,
+                    FloatArgumentType.getFloat(ctx, ARG_SCALE), new RenderOffset(
+                            FloatArgumentType.getFloat(ctx, ARG_X), FloatArgumentType.getFloat(ctx, ARG_Y),
+                            action == ClientRenderCommandSyntax.Action.ITEM_XYZ
+                                    ? FloatArgumentType.getFloat(ctx, ARG_Z) : 0.0f));
+            case RESET -> resetItem(ctx, feedback);
+            case WRITE_CHANGED -> {
+                ItemRenderOverrides.handleWriteRequest();
+                yield 1;
+            }
+            case WRITE_ALL -> dumpAll(ctx, feedback);
+            case WRITE_LIST -> dumpList(ctx, feedback);
+            case WRITE_NAMESPACE -> dumpSingle(ctx, feedback);
+        }, (ctx, builder) -> SharedSuggestionProvider.suggest(
+                BuiltInRegistries.ITEM.keySet().stream().map(ResourceLocation::toString), builder),
+                (ctx, builder) -> SharedSuggestionProvider.suggest(installedNamespaces(), builder));
     }
 
     private static <S> int setItem(

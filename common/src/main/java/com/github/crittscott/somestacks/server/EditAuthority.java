@@ -19,27 +19,22 @@ import javax.annotation.Nullable;
  * world logic can run.
  */
 public interface EditAuthority {
-    interface PlacementVeto {
-        /** Whether the loader refuses the placement before the world is changed. */
-        default boolean isVetoedBefore(Player placer, Direction placedAgainst) {
-            return false;
-        }
+    /** Side-effect-free placement permission, where the loader provides a query API. */
+    default boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+        return true;
+    }
 
-        /** Restores the captured block and block-entity data after a post-placement veto. */
-        default void restore() {
-        }
+    /** Places a block through the loader's native protection transaction. */
+    boolean place(Player placer, ServerLevel level, BlockPos pos,
+                  BlockState state, Direction placedAgainst);
 
-        /** Whether the loader refuses the placement after the new state exists. */
-        default boolean isVetoedAfter(Player placer, Direction placedAgainst) {
-            return false;
-        }
+    /** Whether a neighboring click may edit an existing destination stack without another click. */
+    default boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        return false;
     }
 
     /** The actor automation-driven growth and removal are attributed to. */
     ServerPlayer automationActor(ServerLevel level);
-
-    /** Captures the loader-specific checks needed before and after a placement. */
-    PlacementVeto preparePlacement(ServerLevel level, BlockPos pos);
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
     boolean vetoesRemoval(

@@ -2,14 +2,9 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -141,66 +136,14 @@ public final class SinglesCubeIdx {
      */
     public static int traceAllPositions(ViewRay ray, BlockPos blockPos,
                                         @Nullable SlotAccess handler, int blockRotation) {
-        List<Hit> hits = new ArrayList<>();
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            int[] storageXYZ = xyzFromIndex(storageIndex);
-            int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-            AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hitPos = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hitPos != null) {
-                double dist = hitPos.distanceTo(ray.eye());
-                hits.add(new Hit(storageIndex, dist));
-            }
-        }
-
-        if (hits.isEmpty()) {
-            return -1;
-        }
-
-        hits.sort(Comparator.comparingDouble(h -> h.distance));
-
-        int lastEmpty = -1;
-        for (Hit hit : hits) {
-            if (handler != null && !handler.getStackInSlot(hit.index).isEmpty()) {
-                return lastEmpty;
-            }
-            lastEmpty = hit.index;
-        }
-
-        return lastEmpty;
+        return ray.lastEmptyBeforeOccupied(SinglesStackBE.SLOTS, handler,
+                slot -> GRID.worldBox(slot, blockRotation, blockPos));
     }
 
     /** Returns the nearest occupied cell intersected by the view ray, or {@code -1} on a miss. */
     public static int traceCubes(ViewRay ray, BlockPos blockPos, SinglesStackBE be) {
-        SlotAccess handler = be.getItems();
-
-        int blockRotation = be.getRotation();
-        double closestDist = Double.MAX_VALUE;
-        int closestIndex = -1;
-
-        for (int storageIndex = 0; storageIndex < SinglesStackBE.SLOTS; storageIndex++) {
-            ItemStack stack = handler.getStackInSlot(storageIndex);
-            if (stack.isEmpty()) continue;
-
-            int[] storageXYZ = xyzFromIndex(storageIndex);
-            int[] visualXYZ = rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-            AABB cubeBox = getCubeBox(visualXYZ[0], visualXYZ[1], visualXYZ[2], blockPos);
-            Vec3 hit = cubeBox.clip(ray.eye(), ray.end()).orElse(null);
-
-            if (hit != null) {
-                double dist = hit.distanceTo(ray.eye());
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestIndex = storageIndex;
-                }
-            }
-        }
-
-        return closestIndex;
+        int rotation = be.getRotation();
+        return ray.nearestOccupied(be.getItems(), slot -> GRID.worldBox(slot, rotation, blockPos));
     }
 
     /**
@@ -244,6 +187,4 @@ public final class SinglesCubeIdx {
         return GRID.xyzFromIndex(idx);
     }
 
-    private record Hit(int index, double distance) {
-    }
 }

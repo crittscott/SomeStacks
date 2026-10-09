@@ -57,11 +57,11 @@ public final class SsCommand {
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
     private static final int GAME_MASTER_PERMISSION_LEVEL = Commands.LEVEL_GAMEMASTERS;
 
-    static final String COMMAND_ROOT = "ss";
-    static final String COMMAND_ITEM = "item";
+    static final String COMMAND_ROOT = ClientRenderCommandSyntax.ROOT;
+    static final String COMMAND_ITEM = ClientRenderCommandSyntax.ITEM;
     static final String COMMAND_GALLERY = "gallery";
     static final String COMMAND_INGOT_GALLERY = "ingotgallery";
-    static final String COMMAND_WRITE = "write";
+    static final String COMMAND_WRITE = ClientRenderCommandSyntax.WRITE;
     static final String COMMAND_RELOAD = "reload";
     static final String COMMAND_GEN = "gen";
     static final String COMMAND_DENY = "deny";

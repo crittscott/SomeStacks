@@ -111,4 +111,22 @@ public final class InteractionGameTests {
         InteractionChecks.everyStackTypeBlocksPistons(helper);
     }
 
+    /** See {@link InteractionChecks#extractionEventsFollowBlockSurvival}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void extractionEventsFollowBlockSurvival(GameTestHelper helper) {
+        InteractionChecks.extractionEventsFollowBlockSurvival(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
+        SynchronizationChecks.configDecoderEnforcesPacketBudget(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configStagingRejectsAndClearsInvalidGenerations}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
+        SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
+    }
+
 }

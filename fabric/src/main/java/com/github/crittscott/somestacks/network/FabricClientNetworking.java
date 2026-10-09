@@ -28,10 +28,14 @@ public final class FabricClientNetworking {
         });
         registerClient(ConfigSyncPkt.TYPE, ClientRenderPacketSink::apply);
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
-                ClientGestures.resetSync());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
-                ClientGestures.resetSync());
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
+        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
+        });
     }
 
     private static <T extends CustomPacketPayload> void registerClient(

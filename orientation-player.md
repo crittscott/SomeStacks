@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Some Stacks turns held items into visible storage. It adds three blocks, with no block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; removing its last contents normally removes it.
 
-Requires Minecraft 1.21.4 and matching loader builds on client and server.
+Requires Minecraft 1.21.4 and matching loader builds on client and server. Fabric also requires Common Protection API.
 
 ## The three stack types
 
@@ -30,13 +30,15 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode |
 | Hold `V` + item, right-click a stack | Deposit into that stack, whatever the selected mode |
-| Hold `V` + item, right-click another block | Deposit into an adjacent Singles/Bar Stack if applicable, otherwise place the selected type against that face and make the first deposit |
+| Hold `V` + item, right-click another block | Place the selected type against that face and make the first deposit; on Fabric, an allowed adjacent Singles/Bar Stack can instead receive the deposit |
 | Right-click a stack, no `V`, no Shift | Extract the nearest stored item on the view ray |
 | Toggle Permanent mode, hold `V`, empty hand, right-click a Storage Stack | Toggle whether that pile keeps empty blocks |
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; off-hand items do not block mode cycling. Torches are not spent. Rotation reports its angle above the hotbar; sound is limited to once per player every 4 ticks. Storage/Singles turn with structures. Sneaking keeps ordinary interaction except for torch gestures.
+Forge/NeoForge require direct existing-stack clicks. Fabric allows neighbor deposits when Common Protection API permits them.
+
+Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound is limited to once every 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
 
 ## Depositing and placing
 
@@ -147,7 +149,7 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
 
-Gallery commands build east over a replaced sandstone floor, bypass ordinary placement protection (hence off by default), and spread work across ticks. Galleries use one alphabetized column per mod. Fabric's `/ss reload` applies direct world-policy JSON edits; malformed fields independently use defaults. Forge/NeoForge validate TOML through their native config lifecycle. Ingot classification is edited through the `somestacks:ingots` data-pack tag and takes effect on `/reload`.
+Galleries build east over sandstone, one alphabetized column per mod, spreading work across ticks. They bypass placement protection and are off by default. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
 
 ## Item appearance
 
@@ -155,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. These are local client commands: a server cannot invoke them or request a client file write.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke these commands or request client writes.
 
 For Bar appearance, resource packs map item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 
@@ -167,9 +169,9 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 
 ## Protection and validation
 
-Player gestures use vanilla's block-use pipeline and honor loader results, build limits, obstruction, border, and spawn protection. Neighbor clicks also check the destination. Automatic edits use `[SomeStacks]`; player cleanup retains the player, while mixed deferred Storage edits use automation. Forge/NeoForge fire place and break events and restore block-entity data as well as block state when placement is vetoed. Fabric checks Common Protection API before placement and fires the full break lifecycle. Outer edits emit placement/destruction game events; successful player content and rotation changes emit a sculk-detectable block-change event.
+Gestures use vanilla block-use and honor loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge require direct existing-stack clicks; Fabric queries Common Protection API for neighbor deposits and placement. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed deferred Storage cleanup uses automation. Forge/NeoForge publish placement only after acceptance and restore full snapshots on denial without notifying neighbors. All loaders fire native break hooks. Surviving player edits emit sculk-detectable change; removing the final Single or Bar emits only destruction at that position.
 
-The only client gesture payload synchronizes placement mode and whether the modifier is down. The actual action uses vanilla's block-use packet and its exact hit. The server independently validates the main hand, spectator and protection state, held item, target, support, type enablement, height, obstruction, and edit authority. It recomputes deposit, extraction, and Singles item-rotation cell selection by extending the player's reach ray through the vanilla hit point; clients never choose a cell index for the server.
+The gesture payload carries mode and modifier state; actions use vanilla block-use and its exact hit. The server validates hand, spectator/protection state, item, target, support, enablement, height and obstruction. It selects cells independently along the reach ray through the hit point; clients never choose cell indices.
 
 ## Saved worlds
 

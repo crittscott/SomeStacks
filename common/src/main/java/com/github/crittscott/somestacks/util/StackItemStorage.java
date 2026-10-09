@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
@@ -196,6 +198,32 @@ public class StackItemStorage implements SlotAccess {
                 setAside.add(itemTag.copy());
             }
         }
+    }
+
+    /** Validates a current-format client snapshot before replacing any local contents. */
+    public boolean deserializeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
+        if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
+                || list.size() > stacks.length
+                || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
+            return false;
+        }
+        ItemStack[] decoded = new ItemStack[stacks.length];
+        Arrays.fill(decoded, ItemStack.EMPTY);
+        boolean[] used = new boolean[stacks.length];
+        RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag entry = list.getCompound(i);
+            if (!entry.contains(TAG_SLOT, Tag.TAG_INT)) return false;
+            int slot = entry.getInt(TAG_SLOT);
+            if (slot < 0 || slot >= stacks.length || used[slot]) return false;
+            Optional<ItemStack> parsed = ItemStack.CODEC.parse(ops, entry).result();
+            if (parsed.isEmpty() || parsed.get().isEmpty()) return false;
+            used[slot] = true;
+            decoded[slot] = parsed.get();
+        }
+        System.arraycopy(decoded, 0, stacks, 0, stacks.length);
+        setAside.clear();
+        return true;
     }
 
     /** Removes the set-aside tags from serialized storage, which clients have no use for. */

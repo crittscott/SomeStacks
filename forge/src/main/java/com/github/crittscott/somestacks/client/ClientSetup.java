@@ -28,6 +28,7 @@ public final class ClientSetup {
         modBus.addListener(ClientSetup::onRegisterReloadListeners);
         MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut evt) -> {
             ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
             AutoRenderProfiles.saveCache();
         });
         MinecraftForge.EVENT_BUS.addListener((GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());

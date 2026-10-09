@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.server.AdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.EditAuthority;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -16,7 +15,6 @@ public final class PlatformServices {
         String modVersion(String namespace);
         void sendConfig(ServerPlayer player, ConfigSyncPkt packet);
         EditAuthority editAuthority();
-        AdjacentEditAuthority adjacentEditAuthority();
     }
 
     private static Backend backend;
@@ -30,7 +28,6 @@ public final class PlatformServices {
         }
         Objects.requireNonNull(implementation, "Platform backend");
         Objects.requireNonNull(implementation.editAuthority(), "Edit authority");
-        Objects.requireNonNull(implementation.adjacentEditAuthority(), "Adjacent edit authority");
         backend = implementation;
     }
 
@@ -59,9 +56,5 @@ public final class PlatformServices {
 
     public static EditAuthority editAuthority() {
         return backend().editAuthority();
-    }
-
-    public static AdjacentEditAuthority adjacentEditAuthority() {
-        return backend().adjacentEditAuthority();
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
@@ -14,6 +15,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * NeoForge's {@link EditAuthority}: the level's fake player stands in for automation, and claim,
@@ -26,20 +28,54 @@ public final class NeoForgeEditAuthority implements EditAuthority {
         return FakePlayerFactory.get(level, AutomationActor.PROFILE);
     }
 
-    @Override
-    public EditAuthority.PlacementVeto preparePlacement(ServerLevel level, BlockPos pos) {
-        BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
-        return new EditAuthority.PlacementVeto() {
-            @Override
-            public void restore() {
-                snapshot.restore();
-            }
+    private static final int UPDATE_RECURSION_LIMIT = 512;
+    private boolean placing;
 
-            @Override
-            public boolean isVetoedAfter(Player placer, Direction placedAgainst) {
-                return EventHooks.onBlockPlace(placer, snapshot, placedAgainst);
+    @Override
+    public boolean place(Player placer, ServerLevel level, BlockPos pos,
+                         BlockState state, Direction placedAgainst) {
+        if (placing || level.captureBlockSnapshots || level.restoringBlockSnapshots) {
+            return false;
+        }
+        placing = true;
+        int firstSnapshot = level.capturedBlockSnapshots.size();
+        var snapshots = new ArrayList<BlockSnapshot>();
+        try {
+            boolean placed;
+            level.captureBlockSnapshots = true;
+            try {
+                placed = level.setBlock(pos, state, Block.UPDATE_ALL);
+            } finally {
+                level.captureBlockSnapshots = false;
+                snapshots.addAll(level.capturedBlockSnapshots.subList(
+                        firstSnapshot, level.capturedBlockSnapshots.size()));
+                level.capturedBlockSnapshots.subList(
+                        firstSnapshot, level.capturedBlockSnapshots.size()).clear();
             }
-        };
+            if (!placed || snapshots.isEmpty()
+                    || EventHooks.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
+                level.restoringBlockSnapshots = true;
+                try {
+                    for (int i = snapshots.size() - 1; i >= 0; i--) {
+                        BlockSnapshot snapshot = snapshots.get(i);
+                        snapshot.restore(Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                    }
+                } finally {
+                    level.restoringBlockSnapshots = false;
+                }
+                return false;
+            }
+            for (BlockSnapshot snapshot : snapshots) {
+                BlockState previous = snapshot.getState();
+                BlockState current = level.getBlockState(snapshot.getPos());
+                current.onPlace(level, snapshot.getPos(), previous, false);
+                level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
+                        previous, current, snapshot.getFlags(), UPDATE_RECURSION_LIMIT);
+            }
+            return true;
+        } finally {
+            placing = false;
+        }
     }
 
     @Override
