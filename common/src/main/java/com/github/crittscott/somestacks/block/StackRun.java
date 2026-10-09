@@ -150,7 +150,14 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return flatSlot % slotsPerBlock;
     }
 
-    public abstract double fillLevel();
+    /** Whole-run fill computed from each block's maintained local contribution. */
+    public final double fillLevel() {
+        double sum = 0.0;
+        for (BE blockEntity : blocks) {
+            sum += blockEntity.comparatorContribution();
+        }
+        return blocks.isEmpty() ? 0.0 : sum / totalSlots();
+    }
 
     public final int comparatorSignal() {
         double fill = fillLevel();

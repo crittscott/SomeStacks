@@ -14,16 +14,16 @@ public final class ConfigurationGameTests implements FabricGameTest {
         ConfigurationChecks.overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(helper);
     }
 
-    /** See {@link ConfigurationChecks#overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues}. */
+    /** See {@link ConfigurationChecks#overrideJsonUsesInclusiveBounds}. */
     @GameTest(template = TEMPLATE)
-    public void overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(GameTestHelper helper) {
-        ConfigurationChecks.overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(helper);
+    public void overrideJsonUsesInclusiveBounds(GameTestHelper helper) {
+        ConfigurationChecks.overrideJsonUsesInclusiveBounds(helper);
     }
 
-    /** See {@link ConfigurationChecks#serverConfigLoadsBoundsListsAndIngotGlobs}. */
+    /** See {@link ConfigurationChecks#serverConfigLoadsBoundsAndLists}. */
     @GameTest(template = TEMPLATE)
-    public void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
-        ConfigurationChecks.serverConfigLoadsBoundsListsAndIngotGlobs(helper);
+    public void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
+        ConfigurationChecks.serverConfigLoadsBoundsAndLists(helper);
     }
 
     /** See {@link ConfigurationChecks#denyPoliciesRespectPlayerAutomationAndExistingContents}. */
@@ -47,4 +47,10 @@ public final class ConfigurationGameTests implements FabricGameTest {
         ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
+    /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
+        ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
 }

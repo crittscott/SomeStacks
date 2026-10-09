@@ -103,7 +103,8 @@ public final class InteractionChecks {
         try {
             check(!StackInteractions.handleExistingStack(
                             player, InteractionHand.OFF_HAND,
-                            hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5)),
+                            hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
+                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK),
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
@@ -353,7 +354,8 @@ public final class InteractionChecks {
                                     singles.getBlockPos().getZ() + 0.5),
                             Direction.UP,
                             singles.getBlockPos(),
-                            false));
+                            false),
+                    com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK);
             check(helper.getLevel().getBlockState(destination)
                             .is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
                     "Top-face placement ignored the selected type");
@@ -441,7 +443,8 @@ public final class InteractionChecks {
     private static boolean click(ServerPlayer player, BlockPos pos,
                                  double localX, double localY, double localZ) {
         return StackInteractions.handleExistingStack(
-                player, HAND, hit(player, pos, localX, localY, localZ));
+                player, HAND, hit(player, pos, localX, localY, localZ),
+                    com.github.crittscott.somestacks.util.BlockType.of(player.level().getBlockState(pos).getBlock()));
     }
 
     private static boolean rotationClick(ServerPlayer player, BlockPos pos,

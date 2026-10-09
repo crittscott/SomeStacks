@@ -100,9 +100,10 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+        if (!level.isClientSide) {
             StackInteractions.handleExistingStack(
-                    serverPlayer, InteractionHand.MAIN_HAND, hit);
+                    (ServerPlayer) player, InteractionHand.MAIN_HAND, hit,
+                    com.github.crittscott.somestacks.util.BlockType.of(state.getBlock()));
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
@@ -110,8 +111,9 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                        Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            StackInteractions.handleExistingStack(serverPlayer, hand, hit);
+        if (!level.isClientSide) {
+            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit,
+                    com.github.crittscott.somestacks.util.BlockType.of(state.getBlock()));
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }

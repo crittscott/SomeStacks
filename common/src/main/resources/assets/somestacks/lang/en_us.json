@@ -4,7 +4,6 @@
   "block.somestacks.bar_stack_block": "Bar Stack",
   "key.categories.somestacks": "Some Stacks",
   "key.somestacks.stack_mode": "Stack Modifier (Hold)",
-
   "subtitles.somestacks.storage_stack.deposit": "Item placed in Storage Stack",
   "subtitles.somestacks.storage_stack.extract": "Item taken from Storage Stack",
   "subtitles.somestacks.storage_stack.rotate": "Storage Stack rotates",
@@ -14,7 +13,6 @@
   "subtitles.somestacks.singles_stack.rotate_item": "Item rotates in Singles Stack",
   "subtitles.somestacks.bar_stack.deposit": "Bar placed in Bar Stack",
   "subtitles.somestacks.bar_stack.extract": "Bar taken from Bar Stack",
-
   "somestacks.mode.storage_stack": "Storage Stack",
   "somestacks.mode.singles_stack": "Singles Stack",
   "somestacks.mode.bar_stack": "Bar Stack",
@@ -29,18 +27,14 @@
   "somestacks.message.disabled_mod": "Items from mod '%s' are disabled in server config",
   "somestacks.message.disabled_item": "Item '%s' is disabled in server config",
   "somestacks.disconnect.protocol": "Some Stacks protocol mismatch: the mod is required on both client and server",
-
   "somestacks.command.label.disabled_mods": "disabled mod list",
   "somestacks.command.label.disabled_items": "disabled item list",
   "somestacks.command.label.gen_mods": "gen mod list",
   "somestacks.command.label.gen_items": "gen item list",
-  "somestacks.command.label.ingots": "ingot list",
-
   "somestacks.command.gallery.storage_stacks": "StorageStacks",
   "somestacks.command.gallery.bar_stacks": "BarStacks",
   "somestacks.command.gallery.items": "items",
   "somestacks.command.gallery.ingots": "ingots",
-  "somestacks.command.ingot.accepted": "Bar Stacks now accept %s item(s)",
   "somestacks.command.unknown_item": "Unknown item: %s",
   "somestacks.command.unknown_render_mode": "Unknown render mode '%s', expected 2d, 3d, block, or gui",
   "somestacks.command.override_set": "Set render override for %s: mode=%s, scale=%s, offset=[%s,%s,%s]",
@@ -77,7 +71,6 @@
   "somestacks.command.dump.success": "Dumped %s render profile(s) for %s namespace(s) to %s",
   "somestacks.command.dump.failed": ". Failed to write %s: %s",
   "somestacks.command.dump.rejected": ". Ignored %s invalid namespace(s)",
-
   "somestacks.command.help.title": "Some Stacks commands",
   "somestacks.command.help.index_command": "  /ss %s",
   "somestacks.command.help.index_summary": " - %s",
@@ -89,48 +82,34 @@
   "somestacks.command.help.gate.operator": "an operator, in game or from the server console",
   "somestacks.command.help.gate.server_admin_in_game": "a server administrator, in game only",
   "somestacks.command.help.gate.anyone": "anyone",
-
   "somestacks.command.help.item.summary": "Set how one item is drawn inside a stack",
   "somestacks.command.help.item.detail.1": "Modes: 2d flattens the item onto the faces of its cell, 3d uses its ordinary model, block draws a block item's own block, and gui uses its inventory look.",
   "somestacks.command.help.item.detail.2": "Only the mode is required. Scale defaults to 1 and offset to zero, and 2d uses the x and y offset only.",
   "somestacks.command.help.item.detail.3": "The change applies to your own view at once but lives in memory until /ss write changed saves it.",
   "somestacks.command.help.item.detail.4": "reset drops your entry, so the item goes back to the server, built-in or measured setting it had before.",
-
   "somestacks.command.help.gallery.summary": "Build galleries of Storage Stacks to review item rendering",
   "somestacks.command.help.gallery.detail.1": "Builds east of you over a sandstone floor, nine items to a stack, rows running north. Whatever blocks stand in the floor and stack positions are replaced.",
   "somestacks.command.help.gallery.detail.2": "It overwrites that region outright, without the protection checks a placement gesture answers to, which is why it is held a permission level above the rest of ss.",
   "somestacks.command.help.gallery.detail.3": "<modid> is one namespace and all is every loaded one, which in a large pack is thousands of rendered block entities. list builds the namespaces of the gen mod list.",
   "somestacks.command.help.gallery.detail.4": "items builds one row from the gen item list, sorted by mod id and then item name.",
   "somestacks.command.help.gallery.detail.5": "all, list and items skip an entry they cannot show and report it; naming one namespace that cannot be shown fails instead.",
-
   "somestacks.command.help.ingotgallery.summary": "Build galleries of Bar Stacks to review bar textures and tints",
   "somestacks.command.help.ingotgallery.detail.1": "The same generator over Bar Stacks, covering only the items a Bar Stack accepts, one bar per ingot and eight to a block.",
   "somestacks.command.help.ingotgallery.detail.2": "Its namespace completions offer only the namespaces that have an ingot.",
-
   "somestacks.command.help.write.summary": "Write render overrides from your client to disk",
   "somestacks.command.help.write.detail.1": "changed saves what /ss item set to config/somestacks/item_overrides.json, which your client loads at startup. Only entries you set are ever written.",
   "somestacks.command.help.write.detail.2": "The namespace forms dump a complete profile for every item of those namespaces to config/somestacks/generated_overrides/<namespace>.json, measuring whatever no override layer configures.",
   "somestacks.command.help.write.detail.3": "That dump runs on your own client and holds it busy until it finishes, so name a namespace, or keep a review session's mods in the gen mod list and dump list, rather than reaching for all in a large pack.",
-  "somestacks.command.help.write.detail.4": "Nothing reads generated_overrides back. A file there is ready to be corrected by hand and dropped into a resource pack or a server's server_item_overrides folder.",
-
+  "somestacks.command.help.write.detail.4": "Nothing reads generated_overrides back. A file there is ready to be corrected by hand and dropped into a resource pack, including a server resource pack.",
   "somestacks.command.help.reload.summary": "Re-read server policy and render overrides, then re-sync players",
-  "somestacks.command.help.reload.detail.1": "Reads the world's server-policy JSON and config/somestacks/server_item_overrides/ again, then pushes the current client-facing settings to every player.",
-
+  "somestacks.command.help.reload.detail.1": "Refreshes the current server policy and pushes client-facing settings to every player. Fabric rereads the world JSON file; Forge and NeoForge load TOML edits through their config lifecycle. Data-pack ingot tags use /reload; render resources use a resource reload.",
   "somestacks.command.help.gen.summary": "Edit the mod and item lists the render galleries build from",
   "somestacks.command.help.gen.detail.1": "The mod list feeds /ss gallery list and /ss ingotgallery list, in the order it is stored, which is the order of the gallery's columns.",
   "somestacks.command.help.gen.detail.2": "The item list feeds /ss gallery items. The row is sorted by mod id and then item name when it is built, so the stored order carries no meaning.",
   "somestacks.command.help.gen.detail.3": "An item id is checked against the registry as it is added. A mod id is taken as typed.",
-
   "somestacks.command.help.deny.summary": "Bar a mod's items or one item from being stored",
   "somestacks.command.help.deny.detail.1": "A disabled mod's items are refused by every stack; a disabled item is refused on the deposit gestures. Contents already stored can still be taken out.",
   "somestacks.command.help.deny.detail.2": "A mod id is taken as typed, since it may name a mod that is not installed yet. An item id is checked against the registry, because the list is matched by exact id and a typo would sit in it looking effective.",
-
-  "somestacks.command.help.ingot.summary": "Edit which tags and items a Bar Stack accepts",
-  "somestacks.command.help.ingot.detail.1": "A Bar Stack holds the items these entries resolve to, and a Singles Stack holds everything else, so widening this list narrows Singles by as much. Contents already stored can still be taken out either way.",
-  "somestacks.command.help.ingot.detail.2": "A # entry names an item tag and may contain * to match a run of any characters. The default #c:ingots* covers #c:ingots and every c:ingots/<metal> beneath it, including a mod that tags its ingots only under a child tag.",
-  "somestacks.command.help.ingot.detail.3": "Any other entry is a single item id, which accepts one hand-picked item without a data pack tag.",
-  "somestacks.command.help.ingot.detail.4": "A # entry is taken as typed, since it may name a tag no data pack has declared yet; a bare item id is rejected when the registry does not know it. An edit reports how many items are accepted afterwards, and a # entry matching no tag is logged when the list is read.",
-
   "somestacks.command.help.help.summary": "List these commands, or explain one",
   "somestacks.command.help.help.detail.1": "Every ss subcommand has an entry, and each one names the gate it answers to: ss is an administrator's tool throughout, and the two render gallery commands sit a permission level above the rest because they overwrite the world."
 }

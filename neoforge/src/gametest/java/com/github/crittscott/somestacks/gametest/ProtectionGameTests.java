@@ -12,15 +12,10 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.border.WorldBorder;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -31,7 +26,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -216,6 +210,49 @@ public final class ProtectionGameTests {
             NeoForge.EVENT_BUS.unregister(denyItem);
         }
         helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
+        ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
+            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+        Consumer<BlockEvent.BreakEvent> listener = event -> {
+            if (event.getLevel() == level && event.getPos().equals(pos)) {
+                observed.accept(event.getPlayer());
+                if (!allowed.test(event.getPlayer())) {
+                    event.setCanceled(true);
+                }
+            }
+        };
+        NeoForge.EVENT_BUS.addListener(listener);
+        return () -> NeoForge.EVENT_BUS.unregister(listener);
+    }
+
+    /** See {@link ProtectionChecks#vetoedPlacementRestoresBlockEntity}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
+            if (event.getPos().equals(pos)) {
+                event.setCanceled(true);
+            }
+        };
+        ProtectionChecks.vetoedPlacementRestoresBlockEntity(helper,
+                GameTestSupport.playerFactory(helper),
+                () -> NeoForge.EVENT_BUS.addListener(listener),
+                () -> NeoForge.EVENT_BUS.unregister(listener));
     }
 
     // Growth under protection

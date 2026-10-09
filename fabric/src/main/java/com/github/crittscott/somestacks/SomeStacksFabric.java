@@ -25,6 +25,7 @@ public final class SomeStacksFabric implements ModInitializer {
     public void onInitialize() {
         PlatformServices.install(
                 FabricPlatformServices::configFolder, FabricPlatformServices::modVersion);
+        ServerConfig.install(new JsonServerConfig());
         FabricRegistry.init();
         FabricItemStorage.init();
         WorldEdits.setAuthority(new FabricEditAuthority());
@@ -41,13 +42,6 @@ public final class SomeStacksFabric implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTING.register(SomeStacksServer::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> SomeStacksServer.onServerStopped());
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
-                (server, resourceManager, success) -> {
-                    if (success) {
-                        SomeStacksServer.onTagsReloaded();
-                    }
-                });
-
         ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
             if (!ServerConfigurationNetworking.canSend(handler, ProtocolPkt.TYPE)) {
                 handler.disconnect(Component.translatable("somestacks.disconnect.protocol"));

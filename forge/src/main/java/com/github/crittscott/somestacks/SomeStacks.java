@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -37,8 +36,14 @@ public class SomeStacks {
 
     private final ForgeEditAuthority editAuthority = new ForgeEditAuthority();
 
-    public SomeStacks() {
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public SomeStacks(FMLJavaModLoadingContext context) {
+        IEventBus modBus = context.getModEventBus();
+
+        ForgeServerConfig config = ForgeServerConfig.INSTANCE;
+        context.registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, config.spec);
+        ServerConfig.install(config);
+        modBus.addListener(config::onLoading);
+        modBus.addListener(config::onReloading);
 
         PlatformServices.install(
                 ForgePlatformServices::configFolder, ForgePlatformServices::modVersion);
@@ -54,7 +59,6 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
-        MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
         MinecraftForge.EVENT_BUS.addListener(this::onLevelUnload);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
@@ -63,15 +67,9 @@ public class SomeStacks {
                 "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(MODID));
     }
 
-    /** Loads the world-specific server config; {@code /ss reload} can reread it later. */
+    /** Publishes the loader-managed server policy for this world. */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         SomeStacksServer.onServerStarting(event.getServer());
-    }
-
-    private void onTagsUpdated(TagsUpdatedEvent event) {
-        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
-            SomeStacksServer.onTagsReloaded();
-        }
     }
 
     private void onLevelUnload(LevelEvent.Unload event) {

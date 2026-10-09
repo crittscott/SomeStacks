@@ -24,6 +24,9 @@
   "mixins": [
     "somestacks.mixins.json"
   ],
+  "suggests": {
+    "common-protection-api": ">=1.0.0"
+  },
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",

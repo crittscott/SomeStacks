@@ -16,7 +16,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
@@ -33,7 +32,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
-    public SomeStacksNeoForge(IEventBus modBus) {
+    public SomeStacksNeoForge(IEventBus modBus, net.neoforged.fml.ModContainer container) {
+        NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, config.spec);
+        ServerConfig.install(config);
+        modBus.addListener(config::onLoading);
+        modBus.addListener(config::onReloading);
+
         PlatformServices.install(
                 NeoForgePlatformServices::configFolder, NeoForgePlatformServices::modVersion);
         WorldEdits.setAuthority(new NeoForgeEditAuthority());
@@ -49,7 +54,6 @@ public class SomeStacksNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogout);
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onServerTick);
-        NeoForge.EVENT_BUS.addListener(this::onTagsUpdated);
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -62,12 +66,6 @@ public class SomeStacksNeoForge {
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
         SomeStacksServer.onServerStarting(event.getServer());
-    }
-
-    private void onTagsUpdated(TagsUpdatedEvent event) {
-        if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
-            SomeStacksServer.onTagsReloaded();
-        }
     }
 
     private void onServerStopped(ServerStoppedEvent event) {

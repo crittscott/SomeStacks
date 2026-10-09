@@ -8,12 +8,10 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.function.Consumer;
 
@@ -93,7 +91,7 @@ public final class BarColumnGameTests {
     }
 
     /**
-     * Validity gates insertion only, so a bar stored before an {@code ss ingot} edit or a data pack
+     * Validity gates insertion only, so a bar stored before a data pack
      * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
      * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
      * contents the current ingot set no longer covers.

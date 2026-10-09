@@ -1,15 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.SomeStacks;
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.items.IItemHandler;
 
@@ -123,4 +119,10 @@ public final class StoragePileGameTests {
     public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
+    /** See {@link StoragePileChecks#comparatorContributionLoadsAndTracksMutations}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
+        StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
+    }
+
 }

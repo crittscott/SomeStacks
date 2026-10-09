@@ -10,7 +10,10 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,10 +24,10 @@ import java.util.Map;
  * only after its outer commit, so an aborted transaction never edits the world. Singles and Bar
  * accept one extraction position per transaction because each extraction remaps later positions.
  */
-final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
+public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
         implements SlottedStorage<ItemVariant> {
     private final StackBlockEntity blockEntity;
-    private final Map<Integer, RunSlot> slotViews = new HashMap<>();
+    private final List<RunSlot> slotViews = new ArrayList<>();
     /** First live value observed for each touched slot, in the order its final diff must replay. */
     private LinkedHashMap<Integer, ItemStack> originals = new LinkedHashMap<>();
     /** Latest transaction-visible value for each touched slot. */
@@ -32,7 +35,7 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
     /** The one Singles or Bar position whose structural extraction this transaction may stage. */
     private int structuralExtractionSlot = -1;
 
-    FabricRunItemStorage(StackBlockEntity blockEntity) {
+    public FabricRunItemStorage(StackBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
     }
 
@@ -47,7 +50,15 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         if (slot < 0 || slot >= getSlotCount()) {
             throw new IndexOutOfBoundsException("Slot " + slot + " is outside this run");
         }
-        return slotViews.computeIfAbsent(slot, RunSlot::new);
+        while (slotViews.size() <= slot) {
+            slotViews.add(null);
+        }
+        RunSlot view = slotViews.get(slot);
+        if (view == null) {
+            view = new RunSlot(slot);
+            slotViews.set(slot, view);
+        }
+        return view;
     }
 
     @Override
@@ -85,22 +96,37 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
         return extracted;
     }
 
+    /** All adapters addressing one run share its bottom block's transaction ledger. */
+    private FabricRunItemStorage ledger() {
+        if (blockEntity.isRemoved()) return this;
+        StackRunItemAccess access = blockEntity.itemRun();
+        if (access instanceof StackRun<?> run) {
+            StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
+            return ((FabricStorageOwner) base).someStacksStorage();
+        }
+        return this;
+    }
+
     private ItemStack currentStack(int slot) {
+        FabricRunItemStorage ledger = ledger();
+        if (ledger != this) {
+            return ledger.currentStack(slot);
+        }
         ItemStack pending = staged.get(slot);
         return pending != null ? pending : liveStack(slot);
     }
 
     private ItemStack liveStack(int slot) {
+        if (blockEntity.isRemoved()) return ItemStack.EMPTY;
         StackRunItemAccess run = blockEntity.itemRun();
         if (run != null) {
             return run.getSlot(slot);
         }
-        return slot >= 0 && slot < blockEntity.getItems().getSlots()
-                ? blockEntity.getItems().getStackInSlot(slot)
-                : ItemStack.EMPTY;
+        return ItemStack.EMPTY;
     }
 
     private boolean canInsert(int slot, ItemStack stack) {
+        if (blockEntity.isRemoved()) return false;
         StackRunItemAccess run = blockEntity.itemRun();
         return run != null && run.insertAt(slot, stack, true) > 0;
     }
@@ -215,6 +241,11 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
 
         @Override
         public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+            FabricRunItemStorage ledger = ledger();
+            if (ledger != FabricRunItemStorage.this) {
+                return slot < ledger.getSlotCount()
+                        ? ledger.getSlot(slot).insert(resource, maxAmount, transaction) : 0;
+            }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
                     && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
@@ -245,6 +276,11 @@ final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorag
 
         @Override
         public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+            FabricRunItemStorage ledger = ledger();
+            if (ledger != FabricRunItemStorage.this) {
+                return slot < ledger.getSlotCount()
+                        ? ledger.getSlot(slot).extract(resource, maxAmount, transaction) : 0;
+            }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
                     && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {

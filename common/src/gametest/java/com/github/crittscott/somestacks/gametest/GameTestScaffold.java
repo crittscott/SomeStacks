@@ -100,7 +100,7 @@ public final class GameTestScaffold {
     /**
      * Puts {@code stack} straight into a slot, bypassing the validity test an insertion runs.
      *
-     * <p>This is how a test reaches the state an {@code ss ingot} edit, an {@code ss deny mod} edit
+     * <p>This is how a test reaches the state an {@code ss deny mod} edit
      * or a data pack reload leaves behind: contents a block holds and must keep handing back, which
      * that same block would refuse from a deposit today. Validity gates insertion only, so the
      * stored side of that rule has to be set up without going through insertion.

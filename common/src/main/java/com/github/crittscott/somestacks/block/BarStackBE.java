@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
@@ -62,13 +61,11 @@ public class BarStackBE extends StackBlockEntity {
         cachedShape = null;
     }
 
-    /**
-     * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is the server's {@code ingots} list
-     * resolved against the loaded item tags and named item ids, so an admin widens or narrows it
-     * without a data pack; because the Singles rule is this rule's complement, widening it narrows
-     * Singles by as much.
-     */
+    /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
+    public static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> INGOTS =
+            net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -76,7 +73,7 @@ public class BarStackBE extends StackBlockEntity {
         if (ItemOps.isItemFromDisabledMod(stack)) {
             return false;
         }
-        return ServerConfig.isIngotItem(stack.getItem());
+        return stack.is(INGOTS);
     }
 
     /**

@@ -66,6 +66,11 @@ public final class ForgeEditAuthority implements EditAuthority {
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
         return new EditAuthority.PlacementVeto() {
             @Override
+            public void restore() {
+                snapshot.restore(true, true);
+            }
+
+            @Override
             public boolean isVetoedAfter(Player placer, Direction placedAgainst) {
                 return ForgeEventFactory.onBlockPlace(placer, snapshot, placedAgainst);
             }

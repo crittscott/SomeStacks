@@ -114,10 +114,8 @@ public final class RenderGalleryGenerator {
      * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
      * registry grouping this one is rebuilt whenever Bar validity can have changed.
      */
-    private static Map<String, List<Item>> barItemsByNamespace;
 
     /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
-    private static int barItemsGeneration;
 
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
@@ -138,21 +136,13 @@ public final class RenderGalleryGenerator {
     }
 
     private static Map<String, List<Item>> barItemsByNamespace() {
-        int generation = ServerConfig.ingotGeneration();
-        if (barItemsByNamespace == null || barItemsGeneration != generation) {
-            Map<String, List<Item>> map = new TreeMap<>();
-            itemsByNamespace().forEach((namespace, items) -> {
-                List<Item> ingots = items.stream()
-                        .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item)))
-                        .toList();
-                if (!ingots.isEmpty()) {
-                    map.put(namespace, ingots);
-                }
-            });
-            barItemsByNamespace = map;
-            barItemsGeneration = generation;
-        }
-        return barItemsByNamespace;
+        Map<String, List<Item>> map = new TreeMap<>();
+        itemsByNamespace().forEach((namespace, items) -> {
+            List<Item> ingots = items.stream()
+                    .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item))).toList();
+            if (!ingots.isEmpty()) map.put(namespace, ingots);
+        });
+        return map;
     }
 
     /** Planned gallery size, known before placement begins. */

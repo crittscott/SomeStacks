@@ -17,11 +17,11 @@ public final class StackInteractionEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide()
-                || event.isCanceled()
-                || !(event.getEntity() instanceof ServerPlayer player)) {
+                || event.isCanceled()) {
             return;
         }
 
+        ServerPlayer player = (ServerPlayer) event.getEntity();
         boolean blockAllowed = event.getUseBlock() != Event.Result.DENY;
         boolean itemAllowed = event.getUseItem() != Event.Result.DENY;
         boolean handled = StackInteractions.handleSneakingRotation(

@@ -4,12 +4,10 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -84,7 +82,7 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     /**
-     * Validity gates insertion only, so a bar stored before an {@code ss ingot} edit or a data pack
+     * Validity gates insertion only, so a bar stored before a data pack
      * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
      * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
      * contents the current ingot set no longer covers.

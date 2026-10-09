@@ -5,46 +5,29 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Comparator;
 
 /** Comparator used to lay out the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort(){}
 
-    /**
-     * Orders stacks by item id, damage, data components, and descending count, with empty stacks
-     * last. This gives identical piles the same layout and leaves a group's partial stack at its
-     * end.
-     */
-    public static final Comparator<ItemStack> COMPARATOR = (a, b) -> {
-        if (a.isEmpty() && b.isEmpty()) return 0;
-        if (a.isEmpty()) return 1;
-        if (b.isEmpty()) return -1;
+    /** Computes the identity's sortable fields once for a settlement group. */
+    public static SortKey key(ItemStack stack) {
+        DataComponentPatch patch = stack.getComponentsPatch();
+        return new SortKey(BuiltInRegistries.ITEM.getKey(stack.getItem()), stack.getDamageValue(),
+                patch.isEmpty() ? null : patch.toString());
+    }
 
-        ResourceLocation aKey = BuiltInRegistries.ITEM.getKey(a.getItem());
-        ResourceLocation bKey = BuiltInRegistries.ITEM.getKey(b.getItem());
-        int c = aKey.compareTo(bKey);
-        if (c != 0) return c;
-
-        // Damage is already part of the component patch, but comparing it numerically first gives
-        // damaged variants a deliberate, human-readable order instead of patch-text order.
-        c = Integer.compare(a.getDamageValue(), b.getDamageValue());
-        if (c != 0) return c;
-
-        // Component-free variants precede variants carrying components; patch text gives the latter
-        // a stable order.
-        DataComponentPatch aPatch = a.getComponentsPatch();
-        DataComponentPatch bPatch = b.getComponentsPatch();
-        boolean aPlain = aPatch.isEmpty();
-        boolean bPlain = bPatch.isEmpty();
-        if (aPlain || bPlain) {
-            if (aPlain != bPlain) return aPlain ? -1 : 1;
-        } else {
-            c = aPatch.toString().compareTo(bPatch.toString());
-            if (c != 0) return c;
+    public record SortKey(ResourceLocation itemId, int damage, String components)
+            implements Comparable<SortKey> {
+        @Override
+        public int compareTo(SortKey other) {
+            int order = itemId.compareTo(other.itemId);
+            if (order != 0) return order;
+            order = Integer.compare(damage, other.damage);
+            if (order != 0) return order;
+            if (components == null) return other.components == null ? 0 : -1;
+            if (other.components == null) return 1;
+            return components.compareTo(other.components);
         }
-
-        // Fullest first leaves a group's partial stack at its end.
-        return Integer.compare(b.getCount(), a.getCount());
-    };
+    }
 }

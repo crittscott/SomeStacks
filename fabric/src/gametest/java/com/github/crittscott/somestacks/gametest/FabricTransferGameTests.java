@@ -152,4 +152,43 @@ public final class FabricTransferGameTests implements FabricGameTest {
                 "Refused second position changed");
         helper.succeed();
     }
+    /**
+     * No in-game reproduction applies: repeated sided lookups and different blocks in a run must
+     * observe the same staged contents, including nested rollback and outer abort.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void repeatedLookupsShareOneRunLedger(GameTestHelper helper) {
+        StorageStackBE base = placeStorage(helper, ORIGIN);
+        StorageStackBE top = placeStorage(helper, ORIGIN.above());
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 4), false);
+        SlottedStorage<ItemVariant> first = FabricGameTestSupport.storage(base);
+        SlottedStorage<ItemVariant> second = (SlottedStorage<ItemVariant>) ItemStorage.SIDED.find(
+                helper.getLevel(), base.getBlockPos(), base.getBlockState(), base, Direction.DOWN);
+        SlottedStorage<ItemVariant> above = FabricGameTestSupport.storage(top);
+        check(first == second, "Sided lookup did not retain the adapter");
+        ItemVariant stone = ItemVariant.of(Items.STONE);
+        try (Transaction outer = Transaction.openOuter()) {
+            checkEquals(3L, first.getSlot(0).extract(stone, 3, outer), "First staged extraction");
+            try (Transaction nested = Transaction.openNested(outer)) {
+                checkEquals(1L, above.getSlot(0).extract(stone, 3, nested), "Shared remainder");
+            }
+            checkEquals(1L, second.getSlot(0).getAmount(), "Nested rollback remainder");
+        }
+        checkEquals(4L, first.getSlot(0).getAmount(), "Outer abort remainder");
+        try (Transaction outer = Transaction.openOuter()) {
+            checkEquals(3L, first.getSlot(0).extract(stone, 3, outer), "Committed first extraction");
+            checkEquals(1L, above.getSlot(0).extract(stone, 3, outer), "Committed shared remainder");
+            outer.commit();
+        }
+        checkEquals(0L, first.getSlot(0).getAmount(), "Extraction committed twice");
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 60), false);
+        try (Transaction outer = Transaction.openOuter()) {
+            checkEquals(3L, second.getSlot(0).insert(stone, 3, outer), "First insertion");
+            checkEquals(1L, above.getSlot(0).insert(stone, 3, outer), "Shared remaining capacity");
+            outer.commit();
+        }
+        checkEquals(64L, first.getSlot(0).getAmount(), "Committed insertion count");
+        helper.succeed();
+    }
+
 }

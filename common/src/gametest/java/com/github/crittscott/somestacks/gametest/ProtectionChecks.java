@@ -1,6 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
@@ -22,6 +25,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.concurrent.atomic.AtomicReference;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -101,7 +109,8 @@ public final class ProtectionChecks {
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
             StackInteractions.handleExistingStack(
-                    player, InteractionHand.MAIN_HAND, centerHit(target));
+                    player, InteractionHand.MAIN_HAND, centerHit(target),
+                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK);
             checkEquals(64, player.getMainHandItem().getCount(),
                     "A creative deposit spent the held stack");
         } finally {
@@ -151,6 +160,96 @@ public final class ProtectionChecks {
                 "A stack placed into water was not waterlogged");
         check(level.getFluidState(target).getType() == Fluids.WATER,
                 "A stack placed into water swallowed the water");
+        helper.succeed();
+    }
+
+    /** Native removal observation whose returned action unregisters the hook. */
+    @FunctionalInterface
+    public interface RemovalObserver {
+        Runnable install(ServerLevel level, BlockPos pos, Consumer<Player> observed,
+                         Predicate<Player> allowed);
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then extract the last
+     * Bar. Cleanup carries the player and removes the empty block.
+     */
+    public static void playerBarExtractionUsesPlayerForCleanup(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            RemovalObserver observer) {
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()), false);
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        AtomicReference<Player> actor = new AtomicReference<>();
+        Runnable unregister = observer.install(helper.getLevel(), bars.getBlockPos(), actor::set,
+                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+        try {
+            check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            unregister.run();
+        }
+        check(actor.get() == player, "Bar cleanup did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks], extract one of two Storage items
+     * by hand and the other by automation before settlement. Mixed cleanup uses [SomeStacks], so
+     * the empty block remains until removal is allowed.
+     */
+    public static void mixedStorageSettlementUsesAutomationForCleanup(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            RemovalObserver observer) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        AtomicReference<Player> actor = new AtomicReference<>();
+        Runnable unregister = observer.install(helper.getLevel(), storage.getBlockPos(), actor::set,
+                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+        try {
+            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
+                    "Player extraction count");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve");
+            checkEquals(1, pile.extract(0, 1, false).getCount(), "Automation extraction count");
+            pile.settle();
+        } finally {
+            unregister.run();
+        }
+        check(actor.get() != null, "Cleanup break event did not fire");
+        checkEquals(AutomationActor.PROFILE.getId(), actor.get().getUUID(), "Mixed cleanup actor");
+        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        storage.pile().settle();
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: deny stack placement over a modded replaceable container containing
+     * items. The refused placement restores the container's contents. This stages the rollback
+     * directly with a chest so no test-only replaceable block registration is needed.
+     */
+    public static void vetoedPlacementRestoresBlockEntity(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
+            Runnable installVeto, Runnable removeVeto) {
+        ServerLevel level = helper.getLevel();
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        level.setBlock(pos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
+        ChestBlockEntity chest = (ChestBlockEntity) level.getBlockEntity(pos);
+        chest.setItem(0, new ItemStack(Items.DIAMOND, 3));
+        installVeto.run();
+        try {
+            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
+                    CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(), Direction.DOWN),
+                    "Vetoed placement succeeded");
+        } finally {
+            removeVeto.run();
+        }
+        helper.assertBlockPresent(Blocks.CHEST, ORIGIN);
+        ChestBlockEntity restored = (ChestBlockEntity) level.getBlockEntity(pos);
+        checkEquals(Items.DIAMOND, restored.getItem(0).getItem(), "Restored container item");
+        checkEquals(3, restored.getItem(0).getCount(), "Restored container count");
         helper.succeed();
     }
 

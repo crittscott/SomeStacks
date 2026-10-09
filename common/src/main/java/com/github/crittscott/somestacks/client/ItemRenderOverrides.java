@@ -43,7 +43,7 @@ import java.util.TreeMap;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
- * entire presentation: server-synced admin overrides, then the user's override file, then bundled
+ * entire presentation: the user's override file, then bundled
  * resource overrides. Items absent from every layer use measured profiles.
  *
  * <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
@@ -61,11 +61,14 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
-    /** Admin overrides synced from the server. */
-    public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static boolean userFileLoaded = false;
+    private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
+
+    static void clearResolvedProfiles() {
+        RESOLVED_PROFILES.clear();
+    }
 
     @Override
     protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -119,24 +122,21 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     protected void apply(Map<ResourceLocation, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         CONFIG_MAP.clear();
         CONFIG_MAP.putAll(prepared);
-    }
-
-    /** Replaces the highest-precedence profile layer with the server's synchronized overrides. */
-    public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
-        SERVER_OVERRIDES.clear();
-        SERVER_OVERRIDES.putAll(overrides);
+        clearResolvedProfiles();
     }
 
     /** Changes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
+        clearResolvedProfiles();
     }
 
     /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);
+        clearResolvedProfiles();
     }
 
     /**
@@ -154,11 +154,12 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         ensureUserFileLoaded();
 
+        return RESOLVED_PROFILES.computeIfAbsent(stack.getItem(), ignored -> resolveUncached(stack));
+    }
+
+    private static RenderProfile resolveUncached(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
-        if (entry == null) {
-            entry = USER_OVERRIDES.get(itemId);
-        }
+        ItemRenderConfig entry = USER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = CONFIG_MAP.get(itemId);
         }
@@ -200,7 +201,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * under {@code generated_overrides}, and reports the result to the player. Entries are
      * complete. The generated directory is output only, not an active override layer, so dumping a
      * modpack does not freeze its current profiles into the user layer. Each file can be edited and
-     * copied into a resource pack's {@code item_render_overrides} or the server override directory.
+     * copied into a resource pack's {@code item_render_overrides}.
      *
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the

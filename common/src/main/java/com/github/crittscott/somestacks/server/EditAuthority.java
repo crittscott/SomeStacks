@@ -24,6 +24,10 @@ public interface EditAuthority {
             return false;
         }
 
+        /** Restores the captured block and block-entity data after a post-placement veto. */
+        default void restore() {
+        }
+
         /** Whether the loader refuses the placement after the new state exists. */
         default boolean isVetoedAfter(Player placer, Direction placedAgainst) {
             return false;

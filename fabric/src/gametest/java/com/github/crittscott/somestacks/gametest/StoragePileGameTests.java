@@ -1,17 +1,13 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -118,4 +114,10 @@ public final class StoragePileGameTests implements FabricGameTest {
     public void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
     }
+    /** See {@link StoragePileChecks#comparatorContributionLoadsAndTracksMutations}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
+        StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
+    }
+
 }

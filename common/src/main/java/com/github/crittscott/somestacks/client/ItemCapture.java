@@ -54,6 +54,7 @@ public final class ItemCapture {
     private boolean gui3d;
     private boolean vertexGeometry;
     private boolean bounded;
+    private boolean recordBounds;
     private float minX, minY, minZ, maxX, maxY, maxZ;
 
     private ItemCapture() {}
@@ -66,8 +67,20 @@ public final class ItemCapture {
      */
     public static ItemCapture capture(ItemStack stack, ItemDisplayContext context, @Nullable Level level,
                                       PoseStack pose) {
+        return capture(stack, context, level, pose, true);
+    }
+
+    /** Captures baked quads and tints without transforming vertices for unused bounds. */
+    public static ItemCapture captureQuads(ItemStack stack, ItemDisplayContext context,
+                                          @Nullable Level level, PoseStack pose) {
+        return capture(stack, context, level, pose, false);
+    }
+
+    private static ItemCapture capture(ItemStack stack, ItemDisplayContext context,
+                                       @Nullable Level level, PoseStack pose, boolean bounds) {
         ItemCapture capture = INSTANCE;
         capture.reset();
+        capture.recordBounds = bounds;
 
         // A foil layer writes through a multi-consumer that duplicates every vertex into the glint
         // buffer, which would arrive here as loose vertices. The glint is not geometry.
@@ -123,6 +136,7 @@ public final class ItemCapture {
     }
 
     private void accept(float x, float y, float z) {
+        if (!recordBounds) return;
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         minZ = Math.min(minZ, z);
@@ -134,6 +148,7 @@ public final class ItemCapture {
 
     private void acceptQuad(PoseStack.Pose pose, BakedQuad quad, float r, float g, float b, float a) {
         quads.add(new TintedQuad(quad, color(r, g, b, a)));
+        if (!recordBounds) return;
         Matrix4f matrix = pose.pose();
         int[] vertices = quad.getVertices();
         for (int i = 0; i < 4; i++) {

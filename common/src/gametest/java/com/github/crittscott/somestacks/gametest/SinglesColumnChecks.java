@@ -134,7 +134,7 @@ public final class SinglesColumnChecks {
      * Validity gates insertion only, so an item stored before the rule narrowed under it has to
      * survive the shift that closes the gap beneath it. An ingot stands in for such an item: a
      * Singles Stack refuses one from a deposit, because Bar accepts it, but may be holding one that
-     * predates an {@code ss ingot} edit or a data pack reload.
+     * predates a data pack reload.
      *
      * <p>To reproduce in-game: store an item in Singles, change the ingot list so Singles would now
      * reject it, place another item below it, and extract the lower item. The newly rejected stored

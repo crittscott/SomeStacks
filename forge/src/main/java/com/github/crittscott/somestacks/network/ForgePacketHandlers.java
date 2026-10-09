@@ -1,12 +1,10 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.Objects;
 
 /**
  * Forge side adapters around the loader-neutral packet codecs and behavior. Registered through
@@ -18,9 +16,7 @@ final class ForgePacketHandlers {
     private ForgePacketHandlers() {}
 
     static void handleGestureState(GestureStatePkt msg, CustomPayloadEvent.Context ctx) {
-        ServerPlayer player = Objects.requireNonNull(
-                ctx.getSender(), "Serverbound payload has no sending player");
-        GestureStatePkt.handleServer(msg, player);
+        GestureStatePkt.handleServer(msg, ctx.getSender());
     }
 
     static void handleClient(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {

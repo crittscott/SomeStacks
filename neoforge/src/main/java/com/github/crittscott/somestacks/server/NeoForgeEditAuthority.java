@@ -31,6 +31,11 @@ public final class NeoForgeEditAuthority implements EditAuthority {
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
         return new EditAuthority.PlacementVeto() {
             @Override
+            public void restore() {
+                snapshot.restore();
+            }
+
+            @Override
             public boolean isVetoedAfter(Player placer, Direction placedAgainst) {
                 return EventHooks.onBlockPlace(placer, snapshot, placedAgainst);
             }

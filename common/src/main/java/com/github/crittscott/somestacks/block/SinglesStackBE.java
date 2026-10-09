@@ -245,7 +245,7 @@ public class SinglesStackBE extends StackBlockEntity {
      * <p>The cell moved into is always empty — vacated by the extraction that started the pass,
      * emptied by the previous step, or empty already — so the item is written straight into it
      * rather than inserted. Validity gates what a deposit may add rather than what the structure may
-     * carry, so an item stored before an {@code ss ingot} edit or a data pack reload narrowed the
+     * carry, so an item stored before a data pack reload narrowed the
      * rule still moves with its column.
      */
     private void shiftColumnDown(int column, int fromY) {

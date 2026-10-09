@@ -318,4 +318,26 @@ public final class StoragePileChecks {
         checkEquals(15, pile.comparatorSignal(), "Full pile signal");
         helper.succeed();
     }
+    /**
+     * To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
+     * the world, then extract an item. Comparators match the contents immediately after loading
+     * and again after extraction, before the deferred settlement runs.
+     */
+    public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
+        StorageStackBE source = placeStorage(helper, ORIGIN);
+        source.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 64));
+        source.getItems().setStackInSlot(1, new ItemStack(Items.WOODEN_PICKAXE));
+        StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
+        loaded.loadWithComponents(source.saveWithoutMetadata(helper.getLevel().registryAccess()),
+                helper.getLevel().registryAccess());
+        checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
+                "Signal after loading saved contents");
+        checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");
+        loaded.getItems().extractItem(1, 1, false);
+        checkEquals(1, loaded.pile().comparatorSignal(), "Signal after extraction");
+        loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
+        checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
+        helper.succeed();
+    }
+
 }

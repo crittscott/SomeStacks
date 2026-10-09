@@ -170,19 +170,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return extracted;
     }
 
-    /** The sum of every slot's fractional fullness, divided by the pile's current slot count. */
-    @Override
-    public double fillLevel() {
-        double sum = 0.0;
-        for (int i = 0; i < totalSlots(); i++) {
-            ItemStack stack = getSlot(i);
-            if (!stack.isEmpty()) {
-                sum += (double) stack.getCount() / stack.getMaxStackSize();
-            }
-        }
-        return sum / totalSlots();
-    }
-
     // Deposit
 
     /**
@@ -391,15 +378,27 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     public void settle() {
         ServerPlayer cleanupActor = blocks.get(0).takeCleanupActor();
-        List<ItemStack> contents = new ArrayList<>();
-        for (int i = 0; i < totalSlots(); i++) {
-            ItemStack stack = getSlot(i);
+        Map<StackKey, SettlementGroup> groups = new LinkedHashMap<>();
+        for (int slot = 0; slot < totalSlots(); slot++) {
+            ItemStack stack = getSlot(slot);
             if (!stack.isEmpty()) {
-                contents.add(stack.copy());
+                groups.computeIfAbsent(StackKey.of(stack), ignored -> new SettlementGroup(stack))
+                        .count += stack.getCount();
             }
         }
-
-        List<ItemStack> packed = consolidate(contents);
+        List<SettlementGroup> ordered = new ArrayList<>(groups.values());
+        ordered.sort(java.util.Comparator.comparing(group -> group.sortKey));
+        List<ItemStack> packed = new ArrayList<>();
+        for (SettlementGroup group : ordered) {
+            int remaining = group.count;
+            int limit = Math.max(1, group.model.getMaxStackSize());
+            while (remaining > 0) {
+                ItemStack piece = group.model.copy();
+                piece.setCount(Math.min(remaining, limit));
+                packed.add(piece);
+                remaining -= piece.getCount();
+            }
+        }
         boolean permanent = isPermanent();
 
         for (StorageStackBE sbe : blocks) {
@@ -457,39 +456,15 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         blocks.subList(removedDownTo, blocks.size()).clear();
     }
 
-    /**
-     * Totals the input by exact item identity, then re-cuts each total into whole stacks plus at
-     * most one remainder. Grouping by identity rather than by adjacency means two compatible
-     * stacks always merge, wherever they sat in the pile.
-     */
-    private static List<ItemStack> consolidate(List<ItemStack> stacks) {
-        Map<StackKey, ItemStack> models = new LinkedHashMap<>();
-        Map<StackKey, Integer> totals = new LinkedHashMap<>();
+    /** One exact identity, its precomputed sort fields, and its total stored count. */
+    private static final class SettlementGroup {
+        private final ItemStack model;
+        private final StackSort.SortKey sortKey;
+        private int count;
 
-        for (ItemStack stack : stacks) {
-            if (stack.isEmpty()) continue;
-
-            StackKey key = StackKey.of(stack);
-            models.putIfAbsent(key, stack);
-            totals.merge(key, stack.getCount(), Integer::sum);
+        private SettlementGroup(ItemStack stack) {
+            model = stack;
+            sortKey = StackSort.key(stack);
         }
-
-        List<ItemStack> out = new ArrayList<>();
-
-        for (Map.Entry<StackKey, Integer> entry : totals.entrySet()) {
-            ItemStack model = models.get(entry.getKey());
-            int max = Math.max(1, model.getMaxStackSize());
-            int remaining = entry.getValue();
-
-            while (remaining > 0) {
-                ItemStack piece = model.copy();
-                piece.setCount(Math.min(remaining, max));
-                out.add(piece);
-                remaining -= piece.getCount();
-            }
-        }
-
-        out.sort(StackSort.COMPARATOR);
-        return out;
     }
 }

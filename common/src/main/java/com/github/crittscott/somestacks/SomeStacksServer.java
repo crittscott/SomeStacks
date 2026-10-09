@@ -19,19 +19,32 @@ import java.util.UUID;
 public final class SomeStacksServer {
     private SomeStacksServer() {}
 
+    private static volatile MinecraftServer runningServer;
+
     public static void onServerStarting(MinecraftServer server) {
+        runningServer = server;
         StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
-        ServerOverridesLoader.reload();
         ConfigSyncPkt.rebuildCurrent();
     }
 
     public static void onServerStopped() {
+        runningServer = null;
         StackDataMigration.endSession();
     }
 
-    public static void onTagsReloaded() {
-        ServerConfig.rebakeIngots();
+    /** Native config events publish gameplay changes on the server thread. */
+    public static void onPolicyReloaded() {
+        MinecraftServer server = runningServer;
+        if (server != null) {
+            server.execute(() -> {
+                ServerConfig.Settings previous = ServerConfig.settings();
+                ServerConfig.reload();
+                if (previous.equals(ServerConfig.settings())) return;
+                ConfigSyncPkt.rebuildCurrent();
+                ConfigSyncNetwork.syncAllPlayers(server);
+            });
+        }
     }
 
     public static void onPlayerJoined(ServerPlayer player) {

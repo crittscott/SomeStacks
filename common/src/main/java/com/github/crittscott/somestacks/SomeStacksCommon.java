@@ -12,6 +12,6 @@ public final class SomeStacksCommon {
     }
 
     public static final String MODID = "somestacks";
-    public static final int PROTOCOL_VERSION = 4;
+    public static final int PROTOCOL_VERSION = 5;
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 }

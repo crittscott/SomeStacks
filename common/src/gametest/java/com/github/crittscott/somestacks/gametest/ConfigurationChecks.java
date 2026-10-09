@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.JsonServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -17,9 +18,7 @@ import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderSet;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -100,11 +99,11 @@ public final class ConfigurationChecks {
     }
 
     /**
-     * Render scale and offset bounds are inclusive, finite, and shared by file and network values.
+     * Render scale and offset bounds are inclusive, finite, and shared by authored file values.
      * No in-game reproduction applies: this directly verifies validation at the serialization
      * boundary.
      */
-    public static void overrideJsonUsesInclusiveBoundsForFilesAndNetworkValues(
+    public static void overrideJsonUsesInclusiveBounds(
             GameTestHelper helper) {
         check(OverrideJsonCodec.inRange(
                         OverrideJsonCodec.MIN_SCALE,
@@ -168,30 +167,25 @@ public final class ConfigurationChecks {
 
     /**
      * Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-     * resolves exact and wildcard ingot entries. To reproduce in-game: edit the world's
+     * validates Fabric JSON fields independently. To reproduce in-game on Fabric: edit the world's
      * {@code somestacks-server.json}, run {@code /ss reload}, and verify the height limits, enabled
      * stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
      * field while malformed fields revert independently to defaults.
      */
-    public static void serverConfigLoadsBoundsListsAndIngotGlobs(GameTestHelper helper) {
+    public static void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
         Path serverConfigDir = helper.getLevel().getServer()
                 .getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig");
-        Path original = serverConfigDir.resolve(SomeStacksCommon.MODID + "-server.json");
+        ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigDir.resolve(SomeStacksCommon.MODID + "-gametest.json");
-        Item knownIngot = GameTestScaffold.firstBarItem();
-        String matchingTag = tagContaining(knownIngot);
-        String glob = matchingTag.substring(0, matchingTag.length() - 1) + "*";
 
         try {
             Files.createDirectories(serverConfigDir);
             Files.deleteIfExists(fixture);
-            ServerConfig.load(fixture);
-            checkEquals(List.of("#c:ingots*", "#somestacks:ingots"),
-                    ServerConfig.INGOTS.get(), "Default ingot list");
+            new JsonServerConfig().load(fixture);
 
-            Files.writeString(fixture, configJson(999, -3, 0, "#" + glob));
-            ServerConfig.load(fixture);
+            Files.writeString(fixture, configJson(999, -3, 0));
+            new JsonServerConfig().load(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
             checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
@@ -210,31 +204,13 @@ public final class ConfigurationChecks {
             check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
             check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
                     "Disabled item was not baked");
-            check(ServerConfig.isIngotItem(knownIngot), "Wildcard ingot tag did not admit its item");
-            boolean foundNonIngot = false;
-            for (Item item : BuiltInRegistries.ITEM) {
-                if (!ServerConfig.isIngotItem(item)) {
-                    foundNonIngot = true;
-                    break;
-                }
-            }
-            check(foundNonIngot, "Ingot glob unexpectedly admitted every registered item");
-
-            Files.writeString(fixture, configJson(-9, 99, 7, "#" + matchingTag));
-            ServerConfig.load(fixture);
+            Files.writeString(fixture, configJson(-9, 99, 7));
+            new JsonServerConfig().load(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
             checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
-            check(ServerConfig.isIngotItem(knownIngot), "Exact ingot tag did not admit its item");
-
-            Files.writeString(fixture, configJson(8, 2, 8,
-                    String.valueOf(BuiltInRegistries.ITEM.getKey(knownIngot))));
-            ServerConfig.load(fixture);
-            check(ServerConfig.isIngotItem(knownIngot), "Bare item id did not admit its own item");
-            checkEquals(1, ServerConfig.ingotItemCount(), "Bare item id admitted more than itself");
-
             Files.writeString(fixture, """
                     {
                       "piles": {"max_pile_height": "not-a-number"},
@@ -256,7 +232,8 @@ public final class ConfigurationChecks {
         } catch (IOException e) {
             throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
         } finally {
-            ServerConfig.load(original);
+            ServerConfig.install(original);
+            ServerConfig.reload();
             try {
                 Files.deleteIfExists(fixture);
             } catch (IOException e) {
@@ -275,7 +252,7 @@ public final class ConfigurationChecks {
      */
     public static void denyPoliciesRespectPlayerAutomationAndExistingContents(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
-        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-policy-gametest.json");
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 4));
@@ -283,10 +260,11 @@ public final class ConfigurationChecks {
             Files.createDirectories(fixture.getParent());
             Files.writeString(fixture, policyJson(8, true, true, true,
                     List.of(), List.of("minecraft:stone")));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             StackInteractions.handleExistingStack(
-                    player, InteractionHand.MAIN_HAND, centerHit(storage.getBlockPos()));
+                    player, InteractionHand.MAIN_HAND, centerHit(storage.getBlockPos()),
+                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK);
             checkEquals(4, player.getMainHandItem().getCount(),
                     "Exact-item denial changed the player hand");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.STONE),
@@ -297,7 +275,7 @@ public final class ConfigurationChecks {
                     "Exact-item denial reached automation");
             Files.writeString(fixture, policyJson(8, true, true, true,
                     List.of("minecraft"), List.of()));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
             checkEquals(0, storage.itemRun().insertAt(
                     1, new ItemStack(Items.STONE), false),
                     "Namespace denial did not reach automation");
@@ -320,12 +298,12 @@ public final class ConfigurationChecks {
      */
     public static void disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
-        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-limits-gametest.json");
         try {
             Files.createDirectories(fixture.getParent());
             Files.writeString(fixture, policyJson(1, true, true, false, List.of(), List.of()));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
 
             StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
             for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -371,7 +349,7 @@ public final class ConfigurationChecks {
             }
 
             Files.writeString(fixture, policyJson(8, true, true, false, List.of(), List.of()));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
             BarStackBE bars = GameTestScaffold.placeBar(
                     helper, GameTestScaffold.ORIGIN.east(7));
             for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
@@ -382,7 +360,7 @@ public final class ConfigurationChecks {
                     "Disabled Bar type allowed automation growth");
 
             Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
             ServerPlayer invalidPlayer = playerFactory.apply(new ItemStack(Items.STICK, 2));
             ServerGestureState.set(invalidPlayer, StackMode.BAR_STACK, true);
             try {
@@ -415,13 +393,13 @@ public final class ConfigurationChecks {
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
-        Path original = serverConfigPath(helper, SomeStacksCommon.MODID + "-server.json");
+        ServerConfig.Backend original = ServerConfig.backend();
         Path fixture = serverConfigPath(helper, SomeStacksCommon.MODID + "-commands-gametest.json");
         MinecraftServer server = helper.getLevel().getServer();
         try {
             Files.createDirectories(fixture.getParent());
             Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
-            ServerConfig.load(fixture);
+            new JsonServerConfig().load(fixture);
             var commands = server.getCommands();
             var lowPermission = server.createCommandSourceStack().withPermission(0);
             checkEquals(0, execute(commands.getDispatcher(), lowPermission,
@@ -435,9 +413,6 @@ public final class ConfigurationChecks {
                     "ss deny item add minecraft:stone") > 0,
                     "Operator deny command failed");
             check(execute(commands.getDispatcher(), operator,
-                    "ss ingot add minecraft:iron_ingot") > 0,
-                    "Operator ingot command failed");
-            check(execute(commands.getDispatcher(), operator,
                     "ss gen mod add examplemod") > 0,
                     "Operator gallery-list command failed");
             JsonObject written = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
@@ -445,8 +420,6 @@ public final class ConfigurationChecks {
                             .getAsJsonArray("disable_items").contains(
                                     JsonParser.parseString("\"minecraft:stone\"")),
                     "Deny command was not saved immediately");
-            check(ServerConfig.INGOTS.get().contains("minecraft:iron_ingot"),
-                    "Ingot command did not update policy");
             check(ServerConfig.GEN_MODS.get().contains("examplemod"),
                     "Gen command did not update policy");
 
@@ -464,6 +437,30 @@ public final class ConfigurationChecks {
             throw new GameTestAssertException("Could not prepare command fixture: " + e);
         } finally {
             restoreConfig(original, fixture);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: add an item to somestacks:ingots with a data pack and reload. Bar accepts
+     * that item and Singles refuses it; items outside the tag follow the opposite admission rule.
+     */
+    public static void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
+        ServerConfig.Settings original = ServerConfig.settings();
+        try {
+            ServerConfig.apply(ServerConfig.defaults());
+            ItemStack ingot = new ItemStack(GameTestScaffold.firstBarItem());
+            check(ingot.is(BarStackBE.INGOTS), "Bar item was not in the ingot tag");
+            check(BarStackBE.isValidBarItem(ingot), "Tag item was refused by Bar");
+            check(!com.github.crittscott.somestacks.block.SinglesStackBE.isValidSinglesItem(ingot),
+                    "Tag item was admitted by Singles");
+            ItemStack stick = new ItemStack(Items.STICK);
+            check(!stick.is(BarStackBE.INGOTS), "Fixture stick unexpectedly belongs to the ingot tag");
+            check(!BarStackBE.isValidBarItem(stick), "Non-tag item was admitted by Bar");
+            check(com.github.crittscott.somestacks.block.SinglesStackBE.isValidSinglesItem(stick),
+                    "Non-tag item was refused by Singles");
+        } finally {
+            ServerConfig.apply(original);
         }
         helper.succeed();
     }
@@ -519,8 +516,9 @@ public final class ConfigurationChecks {
         return array;
     }
 
-    private static void restoreConfig(Path original, Path fixture) {
-        ServerConfig.load(original);
+    private static void restoreConfig(ServerConfig.Backend original, Path fixture) {
+        ServerConfig.install(original);
+            ServerConfig.reload();
         try {
             Files.deleteIfExists(fixture);
         } catch (IOException e) {
@@ -528,7 +526,18 @@ public final class ConfigurationChecks {
         }
     }
 
-    private static String configJson(int height, int permission, int placements, String ingotEntry) {
+    private static void checkOffsetEquals(RenderOffset expected, RenderOffset actual, String message) {
+        checkEquals(expected, actual, message);
+    }
+
+    private static void checkConfigEquals(ItemRenderConfig expected, ItemRenderConfig actual, String message) {
+        check(actual != null, message + ": missing override");
+        checkEquals(expected.mode(), actual.mode(), message + " mode");
+        checkEquals(expected.scale(), actual.scale(), message + " scale");
+        checkOffsetEquals(expected.offset(), actual.offset(), message + " offset");
+    }
+
+    private static String configJson(int height, int permission, int placements) {
         return """
                 {
                   "piles": {"max_pile_height": %d},
@@ -539,8 +548,7 @@ public final class ConfigurationChecks {
                   },
                   "compatibility": {
                     "disable_mods": [" MineCraft ", "ExampleMod"],
-                    "disable_items": ["minecraft:stone", "not an item id"],
-                    "ingots": ["%s"]
+                    "disable_items": ["minecraft:stone", "not an item id"]
                   },
                   "render_gallery": {
                     "placements_per_tick": %d,
@@ -550,29 +558,7 @@ public final class ConfigurationChecks {
                     "gen_items": ["minecraft:stone"]
                   }
                 }
-                """.formatted(height, ingotEntry, placements, permission);
+                """.formatted(height, placements, permission);
     }
 
-    private static String tagContaining(Item item) {
-        for (HolderSet.Named<Item> tag : BuiltInRegistries.ITEM.getTags().toList()) {
-            for (var holder : tag) {
-                if (holder.value() == item) {
-                    return tag.key().location().toString();
-                }
-            }
-        }
-        throw new GameTestAssertException("Known Bar item belongs to no item tag");
-    }
-
-    private static void checkConfigEquals(
-            ItemRenderConfig expected, ItemRenderConfig actual, String message) {
-        check(actual != null, message + " was absent");
-        checkEquals(expected.mode(), actual.mode(), message + " mode");
-        checkEquals(expected.scale(), actual.scale(), message + " scale");
-        checkOffsetEquals(expected.offset(), actual.offset(), message + " offset");
-    }
-
-    private static void checkOffsetEquals(RenderOffset expected, RenderOffset actual, String message) {
-        checkEquals(expected, actual, message);
-    }
 }

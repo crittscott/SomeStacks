@@ -4,13 +4,9 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.server.StackInteractionEvents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-import java.util.function.Function;
 
 /**
  * Forge delegates for loader-neutral interaction and validation checks.

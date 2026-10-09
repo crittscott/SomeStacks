@@ -29,6 +29,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private boolean batchTouched;
     private boolean publishPending;
     private int publishedSignal = -1;
+    private double comparatorContribution;
     private StackRunItemAccess cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
 
@@ -39,6 +40,7 @@ public abstract class StackBlockEntity extends BlockEntity {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
+                refreshComparatorContribution();
                 onLocalContentsChanged(slot);
                 if (isBatching()) {
                     batchTouched = true;
@@ -94,6 +96,23 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     protected int localSlotLimit() {
         return 64;
+    }
+
+    /** Cached local numerator of the run's comparator fill fraction. */
+    final double comparatorContribution() {
+        return comparatorContribution;
+    }
+
+    private void refreshComparatorContribution() {
+        double sum = 0.0;
+        for (int slot = 0; slot < items.getSlots(); slot++) {
+            ItemStack stack = items.getStackInSlot(slot);
+            if (!stack.isEmpty()) {
+                sum += localSlotLimit() == 1 ? 1.0
+                        : (double) stack.getCount() / stack.getMaxStackSize();
+            }
+        }
+        comparatorContribution = sum;
     }
 
     protected void onLocalContentsChanged(int slot) {
@@ -256,6 +275,7 @@ public abstract class StackBlockEntity extends BlockEntity {
             items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
         }
         loadStackData(tag, registries);
+        refreshComparatorContribution();
     }
 
     @Override

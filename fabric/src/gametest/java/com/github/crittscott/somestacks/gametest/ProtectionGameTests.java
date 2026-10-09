@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.FabricAdjacentEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -20,24 +19,18 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.border.WorldBorder;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -70,8 +63,8 @@ public final class ProtectionGameTests implements FabricGameTest {
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
             RemovalProbe probe = REMOVAL_PROBES.get(new TestTarget(level, pos));
             if (probe != null) {
-                probe.actor().set(player);
-                return probe.allowed();
+                probe.actor().accept(player);
+                return probe.allowed().test(player);
             }
             return true;
         });
@@ -208,65 +201,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /**
-     * Player-triggered Bar cleanup retains that player as the break-event actor.
-     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, place one Bar, and
-     * extract it. The now-empty Bar block is removed because cleanup is attributed to the player.
-     */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        bars.getItems().insertItem(
-                0, new ItemStack(GameTestScaffold.firstBarItem()), false);
-        ServerPlayer player = FakePlayer.get(level);
-        TestTarget key = new TestTarget(level, helper.absolutePos(ORIGIN));
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        REMOVAL_PROBES.put(key, new RemovalProbe(true, observedActor));
-        try {
-            check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
-        } finally {
-            REMOVAL_PROBES.remove(key);
-        }
 
-        check(observedActor.get() == player, "Bar cleanup event did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
-        helper.succeed();
-    }
-
-    /**
-     * Mixed player and machine mutations attribute deferred Storage cleanup to [SomeStacks].
-     * To reproduce in-game: allow a player but deny [SomeStacks], put two items in a temporary
-     * Storage pile, extract one by hand and the other by automation before settlement, and let
-     * settlement run. The empty block remains because mixed cleanup uses the automation actor.
-     */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
-        ServerPlayer player = FakePlayer.get(level);
-        TestTarget key = new TestTarget(level, helper.absolutePos(ORIGIN));
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        REMOVAL_PROBES.put(key, new RemovalProbe(false, observedActor));
-        try {
-            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
-                    "Player extraction count");
-            StoragePile pile = storage.pile();
-            check(pile != null, "Pile did not resolve before automation extraction");
-            checkEquals(1, pile.extract(0, 1, false).getCount(),
-                    "Automation extraction count");
-            pile.settle();
-        } finally {
-            REMOVAL_PROBES.remove(key);
-        }
-
-        check(observedActor.get() != null, "Cleanup break event did not fire");
-        checkEquals(AutomationActor.PROFILE.getId(), observedActor.get().getUUID(),
-                "Mixed cleanup actor UUID");
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        helper.succeed();
-    }
 
     /**
      * A Fabric item-use denial vetoes an adjacent-stack consultation. To reproduce in-game: deny
@@ -363,7 +298,32 @@ public final class ProtectionGameTests implements FabricGameTest {
     private record PlacementProbe(
             InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir) {}
 
-    private record RemovalProbe(boolean allowed, AtomicReference<Player> actor) {}
+    private record RemovalProbe(java.util.function.Predicate<Player> allowed, java.util.function.Consumer<Player> actor) {
+        RemovalProbe(boolean allowed, AtomicReference<Player> actor) {
+            this(player -> allowed, actor::set);
+        }
+    }
+
+    /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
+                helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
+        ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
+            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+        TestTarget key = new TestTarget(level, pos);
+        REMOVAL_PROBES.put(key, new RemovalProbe(allowed, observed));
+        return () -> REMOVAL_PROBES.remove(key);
+    }
 
     // Growth under protection
     //

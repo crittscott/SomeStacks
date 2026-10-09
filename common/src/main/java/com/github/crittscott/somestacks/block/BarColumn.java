@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -110,31 +109,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
         return StackRun.columnHasRoomFor(level, pos, CommonRegistry.BAR_STACK_BLOCK.get());
-    }
-
-    // Comparator output
-
-    /**
-     * The share of the column's positions that hold a bar. A position takes one bar and no more, so
-     * occupancy is the whole of it — which is what vanilla's container measure reduces to when a
-     * slot's limit is one, rather than the sum of stack fractions a Storage pile computes.
-     */
-    @Override
-    public double fillLevel() {
-        int total = totalSlots();
-        if (total == 0) {
-            return 0.0;
-        }
-        int occupied = 0;
-        for (BarStackBE be : blocks) {
-            SlotAccess handler = be.getItems();
-            for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-                if (!handler.getStackInSlot(slot).isEmpty()) {
-                    occupied++;
-                }
-            }
-        }
-        return (double) occupied / total;
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
@@ -273,8 +247,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Nothing is dropped and nothing is left unsupported.
      *
      * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
-     * deposit may add rather than what the column may carry, so a bar stored before an
-     * {@code ss ingot} edit or a data pack reload narrowed the ingot set still moves.
+     * deposit may add rather than what the column may carry, so a bar stored before a
+     * data pack reload narrowed the ingot set still moves.
      *
      * @param flatSlot the position to extract, numbered from the bottom block upward
      * @param amount the requested maximum; any positive value can extract the position's one bar

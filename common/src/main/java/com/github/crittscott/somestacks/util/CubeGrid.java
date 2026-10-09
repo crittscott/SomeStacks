@@ -16,6 +16,7 @@ public final class CubeGrid {
     private final int[] starts;
     private final AABB[] localBoxes;
     private final VoxelShape[] localShapes;
+    private final int[][] rotatedIndices;
 
     public CubeGrid(int edge, double cellPixels, int... starts) {
         if (edge < 1 || starts.length != edge) {
@@ -28,10 +29,15 @@ public final class CubeGrid {
         this.starts = Arrays.copyOf(starts, starts.length);
         this.localBoxes = new AABB[cells];
         this.localShapes = new VoxelShape[cells];
+        this.rotatedIndices = new int[4][cells];
         for (int y = 0; y < edge; y++) {
             for (int z = 0; z < edge; z++) {
                 for (int x = 0; x < edge; x++) {
                     int index = indexFromXYZ(x, y, z);
+                    for (int rotation = 0; rotation < rotatedIndices.length; rotation++) {
+                        int[] visual = rotateXYZ(x, y, z, rotation);
+                        rotatedIndices[rotation][index] = indexFromXYZ(visual[0], visual[1], visual[2]);
+                    }
                     double minX = starts[x] / 16.0;
                     double minY = starts[y] / 16.0;
                     double minZ = starts[z] / 16.0;
@@ -95,15 +101,11 @@ public final class CubeGrid {
 
     /** Returns the cached block-local bounds for one stored cell at the given layout rotation. */
     public AABB localBox(int storageIndex, int rotation) {
-        int[] storage = xyzFromIndex(storageIndex);
-        int[] visual = rotateXYZ(storage[0], storage[1], storage[2], rotation);
-        return localBoxes[indexFromXYZ(visual[0], visual[1], visual[2])];
+        return localBoxes[rotatedIndices[QuarterTurns.normalize(rotation)][storageIndex]];
     }
 
     public VoxelShape localShape(int storageIndex, int rotation) {
-        int[] storage = xyzFromIndex(storageIndex);
-        int[] visual = rotateXYZ(storage[0], storage[1], storage[2], rotation);
-        return localShapes[indexFromXYZ(visual[0], visual[1], visual[2])];
+        return localShapes[rotatedIndices[QuarterTurns.normalize(rotation)][storageIndex]];
     }
 
     private int indexFromXYZ(int x, int y, int z) {

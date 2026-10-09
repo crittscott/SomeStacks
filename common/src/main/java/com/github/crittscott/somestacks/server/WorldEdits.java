@@ -79,12 +79,11 @@ public final class WorldEdits {
         if (placementVeto.isVetoedBefore(placer, placedAgainst)) {
             return false;
         }
-        BlockState previous = level.getBlockState(pos);
         if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
             return false;
         }
         if (placementVeto.isVetoedAfter(placer, placedAgainst)) {
-            level.setBlock(pos, previous, Block.UPDATE_ALL);
+            placementVeto.restore();
             return false;
         }
         BlockState placedState = level.getBlockState(pos);

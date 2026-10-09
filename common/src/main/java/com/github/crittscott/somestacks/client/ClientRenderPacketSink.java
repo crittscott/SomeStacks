@@ -1,14 +1,10 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.util.BlockType;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /** Stages config chunks and atomically publishes a complete server snapshot. */
 public final class ClientRenderPacketSink {
@@ -16,11 +12,8 @@ public final class ClientRenderPacketSink {
     private static boolean enableStack;
     private static boolean enableSingles;
     private static boolean enableBar;
-    private static int expectedOverrides;
     private static int expectedGenMods;
     private static int expectedDisabledMods;
-    private static final Map<ResourceLocation, ItemRenderConfig> OVERRIDES =
-            new LinkedHashMap<>();
     private static final List<String> GEN_MODS = new ArrayList<>();
     private static final List<String> DISABLED_MODS = new ArrayList<>();
 
@@ -35,13 +28,6 @@ public final class ClientRenderPacketSink {
         }
 
         verifyMetadata(packet);
-        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry
-                : packet.renderOverrides().entrySet()) {
-            if (OVERRIDES.put(entry.getKey(), entry.getValue()) != null) {
-                throw new IllegalStateException(
-                        "Duplicate synchronized render override: " + entry.getKey());
-            }
-        }
         addUnique(GEN_MODS, packet.genMods(), "gallery mod");
         addUnique(DISABLED_MODS, packet.disabledMods(), "disabled mod");
         verifyNotOverfull();
@@ -56,10 +42,8 @@ public final class ClientRenderPacketSink {
         enableStack = packet.enableStack();
         enableSingles = packet.enableSingles();
         enableBar = packet.enableBar();
-        expectedOverrides = packet.totalOverrides();
         expectedGenMods = packet.totalGenMods();
         expectedDisabledMods = packet.totalDisabledMods();
-        OVERRIDES.clear();
         GEN_MODS.clear();
         DISABLED_MODS.clear();
     }
@@ -68,7 +52,6 @@ public final class ClientRenderPacketSink {
         if (packet.enableStack() != enableStack
                 || packet.enableSingles() != enableSingles
                 || packet.enableBar() != enableBar
-                || packet.totalOverrides() != expectedOverrides
                 || packet.totalGenMods() != expectedGenMods
                 || packet.totalDisabledMods() != expectedDisabledMods) {
             throw new IllegalStateException(
@@ -77,8 +60,7 @@ public final class ClientRenderPacketSink {
     }
 
     private static void verifyNotOverfull() {
-        if (OVERRIDES.size() > expectedOverrides
-                || GEN_MODS.size() > expectedGenMods
+        if (GEN_MODS.size() > expectedGenMods
                 || DISABLED_MODS.size() > expectedDisabledMods) {
             throw new IllegalStateException("Config sync exceeded its declared totals");
         }
@@ -95,8 +77,7 @@ public final class ClientRenderPacketSink {
     }
 
     private static void finish() {
-        if (OVERRIDES.size() != expectedOverrides
-                || GEN_MODS.size() != expectedGenMods
+        if (GEN_MODS.size() != expectedGenMods
                 || DISABLED_MODS.size() != expectedDisabledMods) {
             throw new IllegalStateException("Config sync ended before reaching its declared totals");
         }
@@ -104,7 +85,6 @@ public final class ClientRenderPacketSink {
         StackState.setBlockEnabled(BlockType.STORAGE_STACK, enableStack);
         StackState.setBlockEnabled(BlockType.SINGLES_STACK, enableSingles);
         StackState.setBlockEnabled(BlockType.BAR_STACK, enableBar);
-        ItemRenderOverrides.setSyncedServerOverrides(OVERRIDES);
         ClientRenderToolState.replace(GEN_MODS, DISABLED_MODS);
         generation = -1;
     }

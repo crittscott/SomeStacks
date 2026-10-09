@@ -6,7 +6,6 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.Protection;
 import net.minecraft.core.BlockPos;
@@ -15,15 +14,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.border.WorldBorder;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -33,7 +27,6 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -165,34 +158,6 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /**
-     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-     * extract the last Bar. Player-attributed cleanup removes the empty block.
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
-        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()), false);
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
-            if (event.getPos().equals(target)) {
-                observedActor.set(event.getPlayer());
-            }
-        };
-
-        MinecraftForge.EVENT_BUS.addListener(captureActor);
-        try {
-            check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
-        } finally {
-            MinecraftForge.EVENT_BUS.unregister(captureActor);
-        }
-
-        check(observedActor.get() == player, "Bar cleanup event did not carry the player");
-        helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
-        helper.succeed();
-    }
 
     /**
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
@@ -227,42 +192,6 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /**
-     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, extract one of two
-     * Storage items by hand and the other by automation before settling, and verify the empty block
-     * remains because mixed cleanup is attributed to [SomeStacks].
-     */
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
-        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
-        ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
-        BlockPos target = helper.absolutePos(ORIGIN);
-        AtomicReference<Player> observedActor = new AtomicReference<>();
-        Consumer<BlockEvent.BreakEvent> captureActor = event -> {
-            if (event.getPos().equals(target)) {
-                observedActor.set(event.getPlayer());
-            }
-        };
-
-        MinecraftForge.EVENT_BUS.addListener(captureActor);
-        try {
-            checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
-                    "Player extraction count");
-            StoragePile pile = storage.pile();
-            check(pile != null, "Pile did not resolve before automation extraction");
-            checkEquals(1, pile.extract(0, 1, false).getCount(), "Automation extraction count");
-            pile.settle();
-        } finally {
-            MinecraftForge.EVENT_BUS.unregister(captureActor);
-        }
-
-        check(observedActor.get() != null, "Cleanup break event did not fire");
-        checkEquals(AutomationActor.PROFILE.getId(), observedActor.get().getUUID(),
-                "Mixed cleanup actor UUID");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        helper.succeed();
-    }
 
     // Waterlogging
 
@@ -297,6 +226,49 @@ public final class ProtectionGameTests {
             MinecraftForge.EVENT_BUS.unregister(denyItem);
         }
         helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
+        ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
+        ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
+                helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
+    }
+
+    private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
+            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+        Consumer<BlockEvent.BreakEvent> listener = event -> {
+            if (event.getLevel() == level && event.getPos().equals(pos)) {
+                observed.accept(event.getPlayer());
+                if (!allowed.test(event.getPlayer())) {
+                    event.setCanceled(true);
+                }
+            }
+        };
+        MinecraftForge.EVENT_BUS.addListener(listener);
+        return () -> MinecraftForge.EVENT_BUS.unregister(listener);
+    }
+
+    /** See {@link ProtectionChecks#vetoedPlacementRestoresBlockEntity}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
+            if (event.getPos().equals(pos)) {
+                event.setCanceled(true);
+            }
+        };
+        ProtectionChecks.vetoedPlacementRestoresBlockEntity(helper,
+                GameTestSupport.playerFactory(helper),
+                () -> MinecraftForge.EVENT_BUS.addListener(listener),
+                () -> MinecraftForge.EVENT_BUS.unregister(listener));
     }
 
     // Growth under protection

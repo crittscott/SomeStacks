@@ -4,14 +4,10 @@ import com.github.crittscott.somestacks.SomeStacksNeoForge;
 import com.github.crittscott.somestacks.server.StackInteractionEvents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-import java.util.function.Function;
 
 /**
  * NeoForge delegates for loader-neutral interaction and validation checks.

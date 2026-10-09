@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -100,31 +99,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
         return StackRun.columnHasRoomFor(level, pos, CommonRegistry.SINGLES_STACK_BLOCK.get());
-    }
-
-    // Comparator output
-
-    /**
-     * The share of the column's cells that hold something. A cell takes one item and no more, so
-     * occupancy is the whole of it — which is what vanilla's container measure reduces to when a
-     * slot's limit is one, rather than the sum of stack fractions a Storage pile computes.
-     */
-    @Override
-    public double fillLevel() {
-        int total = totalSlots();
-        if (total == 0) {
-            return 0.0;
-        }
-        int occupied = 0;
-        for (SinglesStackBE be : blocks) {
-            SlotAccess handler = be.getItems();
-            for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-                if (!handler.getStackInSlot(slot).isEmpty()) {
-                    occupied++;
-                }
-            }
-        }
-        return (double) occupied / total;
     }
 
     // Insertion

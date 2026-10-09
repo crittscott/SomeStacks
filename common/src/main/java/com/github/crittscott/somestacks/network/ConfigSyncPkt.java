@@ -1,9 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.ServerOverridesLoader;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,12 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 /** One byte-bounded chunk of the server settings synchronized to clients. */
 public record ConfigSyncPkt(
@@ -27,10 +22,8 @@ public record ConfigSyncPkt(
         boolean enableStack,
         boolean enableSingles,
         boolean enableBar,
-        int totalOverrides,
         int totalGenMods,
         int totalDisabledMods,
-        Map<ResourceLocation, ItemRenderConfig> renderOverrides,
         List<String> genMods,
         List<String> disabledMods) implements CustomPacketPayload {
 
@@ -41,16 +34,13 @@ public record ConfigSyncPkt(
 
     private static final int MAX_PACKET_BYTES = 256 * 1024;
     private static final int PACKET_OVERHEAD_BYTES = 64;
-    private static final int MAX_TOTAL_OVERRIDES = 65_536;
     private static final int MAX_TOTAL_NAMESPACES = 4_096;
     private static final int MAX_NAMESPACE_LENGTH = 256;
-    private static final int MAX_RESOURCE_ID_BYTES = 1_024;
 
     private static volatile List<ConfigSyncPkt> currentPackets = List.of();
     private static int nextGeneration;
 
     public ConfigSyncPkt {
-        renderOverrides = Map.copyOf(renderOverrides);
         genMods = List.copyOf(genMods);
         disabledMods = List.copyOf(disabledMods);
     }
@@ -60,12 +50,10 @@ public record ConfigSyncPkt(
         return TYPE;
     }
 
-    /** Rebuilds the immutable packet sequence after server config or overrides change. */
+    /** Rebuilds the immutable packet sequence after server policy changes. */
     public static synchronized void rebuildCurrent() {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
-        Map<ResourceLocation, ItemRenderConfig> overrides = boundedOverrides(
-                ServerOverridesLoader.current());
         List<String> genMods = boundedNamespaces(ServerConfig.GEN_MODS.get(), "gallery mod");
         List<String> disabledMods = boundedNamespaces(
                 ServerConfig.DISABLE_MODS.get(), "disabled mod");
@@ -75,7 +63,6 @@ public record ConfigSyncPkt(
                 ServerConfig.enableStorageStackBlock(),
                 ServerConfig.enableSinglesStackBlock(),
                 ServerConfig.enableBarStackBlock(),
-                overrides,
                 genMods,
                 disabledMods);
     }
@@ -83,28 +70,6 @@ public record ConfigSyncPkt(
     /** The packet sequence most recently built at server start or by {@code /ss reload}. */
     public static List<ConfigSyncPkt> currentPackets() {
         return currentPackets;
-    }
-
-    private static Map<ResourceLocation, ItemRenderConfig> boundedOverrides(
-            Map<ResourceLocation, ItemRenderConfig> source) {
-        Map<ResourceLocation, ItemRenderConfig> result = new LinkedHashMap<>();
-        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry
-                : new TreeMap<>(source).entrySet()) {
-            if (result.size() == MAX_TOTAL_OVERRIDES) {
-                SomeStacksCommon.LOGGER.warn(
-                        "Server render overrides exceed the synchronization limit of {}; "
-                                + "remaining entries will not be sent",
-                        MAX_TOTAL_OVERRIDES);
-                break;
-            }
-            if (encodedResourceLocationSize(entry.getKey()) > MAX_RESOURCE_ID_BYTES) {
-                SomeStacksCommon.LOGGER.warn(
-                        "Server render override id is too large to synchronize: {}", entry.getKey());
-                continue;
-            }
-            result.put(entry.getKey(), entry.getValue());
-        }
-        return Map.copyOf(result);
     }
 
     private static List<String> boundedNamespaces(List<String> source, String label) {
@@ -137,22 +102,11 @@ public record ConfigSyncPkt(
             boolean enableStack,
             boolean enableSingles,
             boolean enableBar,
-            Map<ResourceLocation, ItemRenderConfig> overrides,
             List<String> genMods,
             List<String> disabledMods) {
         List<Chunk> chunks = new ArrayList<>();
         Chunk chunk = new Chunk();
 
-        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : overrides.entrySet()) {
-            int size = encodedResourceLocationSize(entry.getKey())
-                    + encodedConfigSize(entry.getValue());
-            if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
-                chunks.add(chunk);
-                chunk = new Chunk();
-            }
-            chunk.overrides.put(entry.getKey(), entry.getValue());
-            chunk.encodedBytes += size;
-        }
         for (String namespace : genMods) {
             int size = encodedStringSize(namespace);
             if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
@@ -185,10 +139,8 @@ public record ConfigSyncPkt(
                     enableStack,
                     enableSingles,
                     enableBar,
-                    overrides.size(),
                     genMods.size(),
                     disabledMods.size(),
-                    current.overrides,
                     current.genMods,
                     current.disabledMods));
         }
@@ -202,16 +154,9 @@ public record ConfigSyncPkt(
         buf.writeBoolean(packet.enableStack);
         buf.writeBoolean(packet.enableSingles);
         buf.writeBoolean(packet.enableBar);
-        buf.writeVarInt(packet.totalOverrides);
         buf.writeVarInt(packet.totalGenMods);
         buf.writeVarInt(packet.totalDisabledMods);
 
-        buf.writeVarInt(packet.renderOverrides.size());
-        for (Map.Entry<ResourceLocation, ItemRenderConfig> entry
-                : packet.renderOverrides.entrySet()) {
-            buf.writeResourceLocation(entry.getKey());
-            ItemRenderConfig.STREAM_CODEC.encode(buf, entry.getValue());
-        }
         writeNamespaces(buf, packet.genMods);
         writeNamespaces(buf, packet.disabledMods);
     }
@@ -226,31 +171,17 @@ public record ConfigSyncPkt(
         boolean enableStack = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
-        int totalOverrides = readBoundedCount(buf, MAX_TOTAL_OVERRIDES, "override total");
         int totalGenMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "gallery mod total");
         int totalDisabledMods = readBoundedCount(
                 buf, MAX_TOTAL_NAMESPACES, "disabled mod total");
-
-        int overrideCount = readBoundedCount(buf, totalOverrides, "override chunk");
-        Map<ResourceLocation, ItemRenderConfig> overrides = new LinkedHashMap<>();
-        for (int i = 0; i < overrideCount; i++) {
-            ResourceLocation itemId = buf.readResourceLocation();
-            if (encodedResourceLocationSize(itemId) > MAX_RESOURCE_ID_BYTES) {
-                throw new DecoderException(
-                        "Synchronized render override id is too large: " + itemId);
-            }
-            if (overrides.put(itemId, ItemRenderConfig.STREAM_CODEC.decode(buf)) != null) {
-                throw new DecoderException("Duplicate render override in one config chunk: " + itemId);
-            }
-        }
 
         List<String> genMods = readNamespaces(buf, totalGenMods, "gallery mod chunk");
         List<String> disabledMods = readNamespaces(
                 buf, totalDisabledMods, "disabled mod chunk");
         return new ConfigSyncPkt(
                 generation, first, last, enableStack, enableSingles, enableBar,
-                totalOverrides, totalGenMods, totalDisabledMods,
-                overrides, genMods, disabledMods);
+                totalGenMods, totalDisabledMods,
+                genMods, disabledMods);
     }
 
     private static void writeNamespaces(RegistryFriendlyByteBuf buf, List<String> namespaces) {
@@ -283,27 +214,9 @@ public record ConfigSyncPkt(
         return count;
     }
 
-    private static int encodedResourceLocationSize(ResourceLocation id) {
-        return encodedStringSize(id.toString());
-    }
-
     private static int encodedStringSize(String value) {
         int bytes = value.getBytes(StandardCharsets.UTF_8).length;
         return varIntSize(bytes) + bytes;
-    }
-
-    private static int encodedConfigSize(ItemRenderConfig config) {
-        int size = 3;
-        if (config.mode() != null) {
-            size += encodedStringSize(config.mode().getId());
-        }
-        if (config.scale() != null) {
-            size += Float.BYTES;
-        }
-        if (config.offset() != null) {
-            size += 3 * Float.BYTES;
-        }
-        return size;
     }
 
     private static int varIntSize(int value) {
@@ -316,13 +229,12 @@ public record ConfigSyncPkt(
     }
 
     private static final class Chunk {
-        private final Map<ResourceLocation, ItemRenderConfig> overrides = new LinkedHashMap<>();
         private final List<String> genMods = new ArrayList<>();
         private final List<String> disabledMods = new ArrayList<>();
         private int encodedBytes = PACKET_OVERHEAD_BYTES;
 
         private boolean isEmpty() {
-            return overrides.isEmpty() && genMods.isEmpty() && disabledMods.isEmpty();
+            return genMods.isEmpty() && disabledMods.isEmpty();
         }
     }
 }

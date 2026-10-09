@@ -27,6 +27,12 @@ import net.minecraft.world.phys.AABB;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
+    private static final java.util.Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
+            new java.util.IdentityHashMap<>();
+
+    static void onResourceReload() {
+        SPRITE_REGIONS.clear();
+    }
 
     public BarStackBER(BlockEntityRendererProvider.Context ctx) {
     }
@@ -51,7 +57,6 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                     .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
                     .apply(textureData.texture());
 
-            int[] xyz = BarCubeIdx.xyzFromIndex(idx);
             AABB bounds = BarCubeIdx.localBox(idx);
 
             float sx = (float) bounds.minX;
@@ -65,7 +70,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
             pose.translate(sx, sy, sz);
             pose.scale(width, height, depth);
 
-            emitBar(pose, vc, sprite, barLight, xyz[1], textureData);
+            emitBar(pose, vc, sprite, barLight, idx / BarCubeIdx.LAYER_SIZE, textureData);
 
             pose.popPose();
         }
@@ -74,16 +79,16 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
     private static void emitBar(PoseStack pose, VertexConsumer vc, TextureAtlasSprite sp, int light, int layer,
                                 BarTextureStore.BarTextureData textureData) {
         int overlay = OverlayTexture.NO_OVERLAY;
-        float u0 = sp.getU0(), v0 = sp.getV0(), u1 = sp.getU1(), v1 = sp.getV1();
-
-        float uRange = u1 - u0;
-        float vRange = v1 - v0;
-
-        // The sprite stacks three regions down a 32-unit grid: the 24x12 top/bottom face
-        // at the origin, the 24x8 long side below it, and the 12x8 end cap below that.
-        UvRegion top = region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f);
-        UvRegion longSide = region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f);
-        UvRegion endCap = region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f);
+        UvRegion[] regions = SPRITE_REGIONS.computeIfAbsent(sp, sprite -> {
+            float u0 = sprite.getU0(), v0 = sprite.getV0();
+            float uRange = sprite.getU1() - u0, vRange = sprite.getV1() - v0;
+            // Top/bottom, long side, and end cap on the sprite's 32-unit grid.
+            return new UvRegion[]{
+                    region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f),
+                    region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f),
+                    region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f)};
+        });
+        UvRegion top = regions[0], longSide = regions[1], endCap = regions[2];
 
         // Even layers lay their bars along X (6x2x3), so the Z faces are the long sides and
         // the X faces the end caps. Odd layers lay them along Z (3x2x6) and the two trade places.

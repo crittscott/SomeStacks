@@ -37,17 +37,12 @@ public final class StackInteractions {
 
     /** Handles a vanilla use call on an existing stack block. */
     public static boolean handleExistingStack(
-            ServerPlayer player, InteractionHand hand, BlockHitResult hit) {
+            ServerPlayer player, InteractionHand hand, BlockHitResult hit, BlockType clickedType) {
         if (AdjacentEdits.isConsulting() || hand != InteractionHand.MAIN_HAND) {
             return false;
         }
 
-        Level level = player.level();
         BlockPos clickedPos = hit.getBlockPos();
-        BlockType clickedType = BlockType.of(level.getBlockState(clickedPos).getBlock());
-        if (clickedType == null) {
-            return false;
-        }
 
         ServerGestureState.State gesture = ServerGestureState.get(player);
         ViewRay ray = ViewRays.through(player, hit.getLocation());

@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import net.minecraft.core.component.DataComponentPatch;
 import java.util.Set;
 import java.util.function.IntUnaryOperator;
 
@@ -121,6 +124,7 @@ public final class CubeRenderHelper {
             Level level, BlockPos blockPos, PoseStack pose, MultiBufferSource buffers,
             BlockRenderDispatcher blockRenderer) {
         int cubeLight = LevelRenderer.getLightColor(level, blockPos);
+        Map<CaptureKey, List<ItemCapture.TintedQuad>> captures = new HashMap<>();
         for (int index = 0; index < slots; index++) {
             ItemStack stack = items.getStackInSlot(index);
             if (stack.isEmpty()) {
@@ -140,7 +144,7 @@ public final class CubeRenderHelper {
                 pose.translate(-CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE);
             }
 
-            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level);
+            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level, captures);
             pose.popPose();
         }
     }
@@ -156,14 +160,15 @@ public final class CubeRenderHelper {
     /** The pose {@code 2d} captures run under; render-thread only, and never pushed. */
     private static final PoseStack SCRATCH_POSE = new PoseStack();
 
-    /**
-     * Draws {@code stack} inside the current cell, in whichever presentation
-     * {@link ItemRenderOverrides#resolve} selects for it, or draws nothing if {@code stack} is
-     * empty. {@code pose} must already be positioned at the cell being drawn; this method only
-     * pushes/pops the transforms needed for the item's own presentation within it.
-     */
-    public static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level) {
+    private record CaptureKey(Item item, DataComponentPatch components, int count) {
+        static CaptureKey of(ItemStack stack) {
+            return new CaptureKey(stack.getItem(), stack.getComponentsPatch(), stack.getCount());
+        }
+    }
+
+    private static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers,
+            int light, BlockRenderDispatcher blockRenderer, Level level,
+            Map<CaptureKey, List<ItemCapture.TintedQuad>> captures) {
         RenderProfile profile = ItemRenderOverrides.resolve(stack);
         if (profile == null) {
             return;
@@ -172,7 +177,7 @@ public final class CubeRenderHelper {
         RenderOffset offset = profile.offset();
 
         switch (profile.mode()) {
-            case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
+            case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset, captures);
             case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
             case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);
             case GUI -> renderGuiItem(stack, pose, buffers, light, level, scale, offset);
@@ -232,15 +237,17 @@ public final class CubeRenderHelper {
     }
 
     private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float scale, RenderOffset offset) {
+                                     float scale, RenderOffset offset,
+                                     Map<CaptureKey, List<ItemCapture.TintedQuad>> captures) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        // The capture's own pose only feeds bounds, which this path does not use.
-        ItemCapture capture = ItemCapture.capture(stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE);
-        render2DItemCube(pose, buffers, capture.quads(), light, scale, offset);
+        List<ItemCapture.TintedQuad> quads = captures.computeIfAbsent(CaptureKey.of(stack), ignored ->
+                List.copyOf(ItemCapture.captureQuads(
+                        stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads()));
+        render2DItemCube(pose, buffers, quads, light, scale, offset);
         pose.popPose();
     }
 
@@ -311,6 +318,8 @@ public final class CubeRenderHelper {
     /** Clears failure state tied to models being replaced by a resource reload. */
     public static void onResourceReload() {
         BLOCK_RENDER_FAILURES.clear();
+        BarStackBER.onResourceReload();
+        ItemRenderOverrides.clearResolvedProfiles();
     }
 
     /**
