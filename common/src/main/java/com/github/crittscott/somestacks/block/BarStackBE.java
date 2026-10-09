@@ -281,15 +281,8 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * A Bar Stack has gone from beneath {@code removed}, so the column above it has lost the seam it
-     * stood on. Carries an empty seam upward, which is the same thing a cascade hands on when it
-     * empties a block: nothing overlaps it, so the column comes down.
-     *
-     * <p>Server only, as the extraction route into the cascade is. A client reaches this while
-     * applying the server's own removal, and would go on to empty block entities and set blocks to
-     * air on its own authority — deciding a collapse the server has already decided and is sending.
-     * The re-entrancy flag a cascade sets is runtime state that is never synced, so a client could
-     * not even tell it was inside one.
+     * Propagates an empty support seam above a removed Bar block on the server. Unsupported bars
+     * enter the supplied drop batch, and emptied blocks are removed through automation authority.
      */
     static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {

@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -109,6 +109,23 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="StackItemStorage.LoadResult.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Counts of newly retained entries and persisted entries that still could not be restored.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -154,67 +171,72 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag,net.minecraft.core.BlockPos)" class="member-name-link">deserializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
- net.minecraft.nbt.CompoundTag&nbsp;nbt,
- net.minecraft.core.BlockPos&nbsp;owner)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">deserializeClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">deserializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int,boolean)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int,boolean)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
  removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
  <a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onContentsChanged(int)" class="member-name-link">onContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onContentsChanged(int)" class="member-name-link">onContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called after a slot's contents change, including a direct <a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)"><code>setStackInSlot(int, net.minecraft.world.item.ItemStack)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeNBT(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">serializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeNBT(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">serializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
 </div>
 </div>
@@ -410,13 +432,22 @@ implements <a href="SlotAccess.html" title="interface in com.github.crittscott.s
 </section>
 </li>
 <li>
-<section class="detail" id="deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag,net.minecraft.core.BlockPos)">
+<section class="detail" id="deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
 <h3>deserializeNBT</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deserializeNBT</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
- net.minecraft.nbt.CompoundTag&nbsp;nbt,
- net.minecraft.core.BlockPos&nbsp;owner)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">deserializeNBT</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
- already be in the running game's format; <code>owner</code> names the block in the log.</div>
+ already be in the running game's format. Ordinary entries take precedence over retries;
+ loading bypasses admission and does not call contents-change hooks. The caller reports
+ returned retention counts once it knows the world location.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
+<h3>deserializeClientUpdate</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">deserializeClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
+<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
 </section>
 </li>
 <li>

@@ -108,26 +108,48 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onPlayerJoined(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerJoined</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends the startup/reload snapshot on the server thread after play networking is ready.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onPlayerLeft(java.util.UUID)" class="member-name-link">onPlayerLeft</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clears gesture and sound state when this player disconnects, before a later reconnect.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStarting(net.minecraft.server.MinecraftServer)" class="member-name-link">onServerStarting</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onPolicyReloaded()" class="member-name-link">onPolicyReloaded</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Queues a native policy reload on the running server thread; inactive sessions are ignored.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStopped()" class="member-name-link">onServerStopped</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStarting(net.minecraft.server.MinecraftServer)" class="member-name-link">onServerStarting</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Starts session accounting, loads world policy, then builds the login snapshot.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerTickEnd()" class="member-name-link">onServerTickEnd</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStopped()" class="member-name-link">onServerStopped</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Releases the stopped server and clears session diagnostics after world activity ends.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onTagsReloaded()" class="member-name-link">onTagsReloaded</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerTickEnd()" class="member-name-link">onServerTickEnd</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Advances queued gallery work once at the end of each server tick.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCommands(com.mojang.brigadier.CommandDispatcher,net.minecraft.commands.CommandBuildContext)" class="member-name-link">registerCommands</a><wbr>(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
  net.minecraft.commands.CommandBuildContext&nbsp;buildContext)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers server commands with the loader's dispatcher and current registry context.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ <a href="util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a>&nbsp;result)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
+ per dimension and block position per server session.</div>
+</div>
 </div>
 </div>
 </div>
@@ -149,36 +171,55 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onServerStarting(net.minecraft.server.MinecraftServer)">
 <h3>onServerStarting</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onServerStarting</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+<div class="block">Starts session accounting, loads world policy, then builds the login snapshot. Loader
+ backends and networking must be installed before this server-thread callback, which runs
+ before world loading and player joins.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onServerStopped()">
 <h3>onServerStopped</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onServerStopped</span>()</div>
+<div class="block">Releases the stopped server and clears session diagnostics after world activity ends.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="onTagsReloaded()">
-<h3>onTagsReloaded</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onTagsReloaded</span>()</div>
+<section class="detail" id="reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)">
+<h3>reportSavedItems</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportSavedItems</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ <a href="util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a>&nbsp;result)</span></div>
+<div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
+ per dimension and block position per server session. Call only for server disk loads.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onPolicyReloaded()">
+<h3>onPolicyReloaded</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPolicyReloaded</span>()</div>
+<div class="block">Queues a native policy reload on the running server thread; inactive sessions are ignored.
+ Changed policy rebuilds the cached snapshot before synchronizing connected players.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onPlayerJoined(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerJoined</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerJoined</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Sends the startup/reload snapshot on the server thread after play networking is ready.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onPlayerLeft(java.util.UUID)">
 <h3>onPlayerLeft</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerLeft</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</span></div>
+<div class="block">Clears gesture and sound state when this player disconnects, before a later reconnect.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="onServerTickEnd()">
 <h3>onServerTickEnd</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onServerTickEnd</span>()</div>
+<div class="block">Advances queued gallery work once at the end of each server tick.</div>
 </section>
 </li>
 <li>
@@ -186,6 +227,7 @@ loadScripts(document, 'script');</script>
 <h3>registerCommands</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerCommands</span><wbr><span class="parameters">(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
  net.minecraft.commands.CommandBuildContext&nbsp;buildContext)</span></div>
+<div class="block">Registers server commands with the loader's dispatcher and current registry context.</div>
 </section>
 </li>
 </ul>

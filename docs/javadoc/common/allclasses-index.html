@@ -55,14 +55,6 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="all-classes-table-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/server/AdjacentEditAuthority.html" title="interface in com.github.crittscott.somestacks.server">AdjacentEditAuthority</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
-<div class="block">Loader-native permission consultation for a stack reached through its neighboring block.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/AdjacentEdits.html" title="class in com.github.crittscott.somestacks.server">AdjacentEdits</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Protection seam used only when a click reaches a stack through a neighboring block.</div>
-</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/AutomationActor.html" title="class in com.github.crittscott.somestacks.server">AutomationActor</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The loader-independent identity attributed to Some Stacks automation.</div>
@@ -117,6 +109,12 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/client/ClientRenderCommands.Feedback.html" title="interface in com.github.crittscott.somestacks.client">ClientRenderCommands.Feedback&lt;S&gt;</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.html" title="class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Server-safe syntax shared by local render commands and server help.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.Action.html" title="enum class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax.Action</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ClientRenderPacketSink.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPacketSink</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stages config chunks and atomically publishes a complete server snapshot.</div>
@@ -127,7 +125,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/CommonRegistry.html" title="class in com.github.crittscott.somestacks">CommonRegistry</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loader-neutral access to registered blocks, block entity types, and action sounds.</div>
+<div class="block">Shared identifiers and access to values after loader-native registration completes.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -147,8 +145,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/DepositIntoAdjacentStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoAdjacentStackRule</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Modifier plus an item, clicking a face of some other block that has a Singles or Bar Stack
- against it, deposits into that stack.</div>
+<div class="block">Consumes a modified neighbor click toward a Singles or Bar Stack.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/DepositIntoClickedStackRule.html" title="class in com.github.crittscott.somestacks.client.interaction">DepositIntoClickedStackRule</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -160,51 +157,53 @@ loadScripts(document, 'script');</script>
 <div class="block">The loader-specific half of stack world edits: who performs automation, and whether a claim or
  logging mod vetoes an edit.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/server/EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">An unmodified right-click on any stack takes from the nearest occupied cell along the player's
  reach ray.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Client-to-server state needed to interpret the next vanilla block interaction.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
  were held, and the placement mode in force.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/client/interaction/InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/client/interaction/InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">One loader-neutral player gesture.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/InteractionRuleRegistry.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionRuleRegistry</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/InteractionRuleRegistry.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionRuleRegistry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ItemCapture.html" title="class in com.github.crittscott.somestacks.client">ItemCapture</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ItemCapture.html" title="class in com.github.crittscott.somestacks.client">ItemCapture</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Resolves a stack through vanilla's item model pipeline and records what drawing it would emit,
  without drawing anything.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/client/ItemCapture.TintedQuad.html" title="class in com.github.crittscott.somestacks.client">ItemCapture.TintedQuad</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/client/ItemCapture.TintedQuad.html" title="class in com.github.crittscott.somestacks.client">ItemCapture.TintedQuad</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">A baked quad together with the color vanilla multiplies into it.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/ItemOps.html" title="class in com.github.crittscott.somestacks.util">ItemOps</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Item handling shared by all three stack types: what a hand can accept, how a taken stack reaches
  the player, how a broken block sheds its contents, and how stored items add up to a light level.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">One override entry in the shared override vocabulary.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The client's item render configuration, layered by authority.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/JsonServerConfig.html" title="class in com.github.crittscott.somestacks">JsonServerConfig</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">JSON persistence installed by Fabric and used by loader-neutral configuration fixtures.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/ModeCycleRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ModeCycleRule</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -230,142 +229,155 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loader-specific paths and installed-mod information.</div>
+<div class="block">The active loader's paths, networking, and world-edit services.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">All required services supplied together by the selected loader.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Normalization and display conversion for block and item quarter-turn rotations.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Generates galleries of stacks filled with given groups of items, for reviewing render settings in
  the world.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
 <div class="block">What a gallery is built from.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Planned gallery size, known before placement begins.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Result.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Result</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Result.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Result</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Actual placement totals for a completed gallery.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">How a stored item is drawn inside its cell.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Immutable three-axis render offset, expressed in cell widths.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/client/RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/client/RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">A complete, ready-to-render presentation for one item: the output of resolving the
  override layers, or of measuring the item's model when no layer configures it.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/RotateBlockWithRedstoneTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateBlockWithRedstoneTorchRule</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Shift plus a redstone torch rotates a Storage or Singles Stack's layout 90 degrees.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/RotateItemWithSoulTorchRule.html" title="class in com.github.crittscott.somestacks.client.interaction">RotateItemWithSoulTorchRule</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Shift plus a soul torch rotates one rendered item within a Singles Stack, leaving the block's own
  layout alone.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Limits repeated rotation sounds without limiting the rotations themselves.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunEdit.html" title="class in com.github.crittscott.somestacks.block">RunEdit</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunEdit.html" title="class in com.github.crittscott.somestacks.block">RunEdit</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Holds off an automation edit that arrives while another one is still running.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Shared item-handler behavior over whichever complete run owns the attached stack block.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The server config values and the resolved lookup sets behind them, loaded from and saved to a
- per-world JSON file located by <a href="com/github/crittscott/somestacks/ServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)"><code>ServerConfig.loadFor(MinecraftServer)</code></a>.</div>
+<div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">A mutable, named text list backed by the config, the way <code>/ss</code> list editing addresses one.</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Persistence and lifecycle supplied by the selected loader.</div>
 </div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A command-editable policy list.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/ServerGestureState.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Server-side placement mode and modifier state last reported by each connected client.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/server/ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ServerOverridesLoader.html" title="class in com.github.crittscott.somestacks">ServerOverridesLoader</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loads the server's admin render overrides from <code>config/somestacks/server_item_overrides</code>.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Dynamic occupied-content shapes shared by Singles and Bar stacks.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
  support.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">One Singles Stack: 64 single items drawn as a rotatable 4 x 4 x 4 grid.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/SinglesStackBER.html" title="class in com.github.crittscott.somestacks.client">SinglesStackBER</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/SinglesStackBER.html" title="class in com.github.crittscott.somestacks.client">SinglesStackBER</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loader-neutral renderer for a Singles Stack's 64 stored items.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The Singles Stack block: the world-facing half of <a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>SinglesStackBE</code></a>, holding the block
  state, the shapes, and the breaking behavior.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">A numbered range of item slots, matching the Forge and NeoForge <code>IItemHandler</code> contract so
  their capability views stay thin adapters.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Shared mod identity for common code.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loader-neutral server lifecycle operations called by each loader's native event adapters.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The server-side <code>ss</code> command: render gallery generation, server list editing, and
  override reloading.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Block-state and interaction plumbing shared by all three stack blocks.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Local storage, persistence, synchronization, lighting, and batching shared by every stack.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackDataMigration.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StackDataMigration.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Brings a stack block entity's saved tag up to the running game's data version before the block
  entity reads any of it.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackInteractions.html" title="class in com.github.crittscott.somestacks.server">StackInteractions</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackInteractions.html" title="class in com.github.crittscott.somestacks.server">StackInteractions</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Applies stack gestures carried by the vanilla right-click interaction.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A fixed-size, NBT-persisted <a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="block">Counts of newly retained entries and persisted entries that still could not be restored.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab3">
@@ -388,53 +400,55 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Comparator used to lay out the contents of a settled Storage pile.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loader-neutral access to the registered stack action sounds.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/util/StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackSounds.html" title="class in com.github.crittscott.somestacks.server">StackSounds</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Stack action sound levels and throttled rotation playback.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The loader-neutral client copy of which stack types the server has enabled, delivered by the configuration
  sync.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The geometry of a Storage Stack's 3 x 3 x 3 grid: where each of the 27 cells sits in the block,
  what box it occupies, and which one a player's reach ray hits first.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A maximal contiguous vertical run of Storage Stacks, treated as one inventory.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">One Storage Stack: 27 item stacks drawn as a 3 x 3 x 3 grid.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/StorageStackBER.html" title="class in com.github.crittscott.somestacks.client">StorageStackBER</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/StorageStackBER.html" title="class in com.github.crittscott.somestacks.client">StorageStackBER</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loader-neutral renderer for a Storage Stack's 27 stored stacks.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StorageStackBlock.html" title="class in com.github.crittscott.somestacks.block">StorageStackBlock</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/StorageStackBlock.html" title="class in com.github.crittscott.somestacks.block">StorageStackBlock</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The Storage Stack block: the world-facing half of <a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block"><code>StorageStackBE</code></a>, holding the block
  state, shapes, and breaking behavior.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Modifier plus an empty-handed right-click on a Storage Stack, in Toggle Permanent mode, switches
  automatic removal for the whole pile.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">The segment a player's view ray sweeps against a block they are interacting with: their eye
  position out to the far end of their block reach.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/util/ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Builds a <a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util"><code>ViewRay</code></a> from a player's eye position and block reach.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
  entity obstruction, actor propagation, and the actual block edit.</div>
 </div>

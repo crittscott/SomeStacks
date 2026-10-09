@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.client.interaction;
 
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.
@@ -32,24 +33,33 @@ public final class InteractionRuleRegistry {
             new ExtractionRule()
     );
 
-    public static void processEmptyHandRules(InteractionContext ctx) {
-        processFirstMatch(EMPTY_HAND_RULES, ctx);
+    /** Runs the first matching main-hand air rule; returns that rule or null when none claims it. */
+    @Nullable
+    public static InteractionRule processEmptyHandRules(InteractionContext ctx) {
+        return processFirstMatch(EMPTY_HAND_RULES, ctx);
     }
 
-    public static void processItemRules(InteractionContext ctx) {
-        processFirstMatch(ITEM_RULES, ctx);
+    /** Runs the first matching main-hand held-item rule; returns the claimed rule or null. */
+    @Nullable
+    public static InteractionRule processItemRules(InteractionContext ctx) {
+        return processFirstMatch(ITEM_RULES, ctx);
     }
 
-    public static void processBlockRules(InteractionContext ctx) {
-        processFirstMatch(BLOCK_RULES, ctx);
+    /** Runs the first matching main-hand block rule; returns the claimed rule or null. */
+    @Nullable
+    public static InteractionRule processBlockRules(InteractionContext ctx) {
+        return processFirstMatch(BLOCK_RULES, ctx);
     }
 
-    private static void processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
+    @Nullable
+    private static InteractionRule processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
+        if (!ctx.isMainHand()) return null;
         for (InteractionRule rule : rules) {
             if (rule.matches(ctx)) {
                 rule.execute(ctx);
-                break;
+                return rule;
             }
         }
+        return null;
     }
 }

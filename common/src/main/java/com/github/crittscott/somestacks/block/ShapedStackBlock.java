@@ -16,6 +16,10 @@ public abstract class ShapedStackBlock extends StackBlock {
         super(properties);
     }
 
+    /**
+     * Current local contents' shape for outline and collision queries on either side. Return an
+     * empty shape when the block entity is absent or empty; interaction stays full-block separately.
+     */
     protected abstract VoxelShape occupiedShape(BlockGetter level, BlockPos pos);
 
     @Override

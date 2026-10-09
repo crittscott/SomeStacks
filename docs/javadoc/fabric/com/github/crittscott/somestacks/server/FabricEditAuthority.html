@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li><a href="#nested-class-summary">Nested</a></li>
+<li>Nested</li>
 <li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -96,26 +96,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricEditAuthority</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
-<div class="block">Fabric's <code>EditAuthority</code>: the automation actor is a synthetic <code>ServerPlayer</code>, and
- removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
- so claim and protection mods can veto automation-driven removal the same way they can on Forge.
-
- <p>Player placement consults the destination through <a href="FabricAdjacentEditAuthority.html" title="class in com.github.crittscott.somestacks.server"><code>FabricAdjacentEditAuthority</code></a> before
- changing the world. Automated growth has no corresponding click, and Fabric API has no generic
- block-place event, so claim mods that implement Common Protection API are consulted directly
- through <code>CommonProtectionCheck</code>. Both checks run before placement.</div>
+<div class="block">Fabric protection queries and native block-break lifecycle for player-attributed edits.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="inherited-list">
-<h2 id="nested-classes-inherited-from-class-com.github.crittscott.somestacks.server.EditAuthority">Nested classes/interfaces inherited from interface&nbsp;com.github.crittscott.somestacks.server.EditAuthority</h2>
-<code>com.github.crittscott.somestacks.server.EditAuthority.PlacementVeto</code></div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -150,9 +134,21 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.server.level.ServerPlayer</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.crittscott.somestacks.server.EditAuthority.PlacementVeto</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
@@ -203,13 +199,39 @@ implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
-<h3>preparePlacement</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.crittscott.somestacks.server.EditAuthority.PlacementVeto</span>&nbsp;<span class="element-name">preparePlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
+<section class="detail" id="mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
+<h3>mayUseAdjacent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayUseAdjacent</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>preparePlacement</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
+<dd><code>mayUseAdjacent</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<h3>mayPlace</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>mayPlace</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
+<h3>place</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>place</code>&nbsp;in interface&nbsp;<code>com.github.crittscott.somestacks.server.EditAuthority</code></dd>
 </dl>
 </section>
 </li>

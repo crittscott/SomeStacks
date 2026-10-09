@@ -95,38 +95,49 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CommonRegistry.html" title="class in com.github.crittscott.somestacks">CommonRegistry</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral access to registered blocks, block entity types, and action sounds.</div>
+<div class="block">Shared identifiers and access to values after loader-native registration completes.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JsonServerConfig.html" title="class in com.github.crittscott.somestacks">JsonServerConfig</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Loader-specific paths and installed-mod information.</div>
+<div class="block">JSON persistence installed by Fabric and used by loader-neutral configuration fixtures.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">The active loader's paths, networking, and world-edit services.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">All required services supplied together by the selected loader.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The server config values and the resolved lookup sets behind them, loaded from and saved to a
- per-world JSON file located by <a href="ServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)"><code>ServerConfig.loadFor(MinecraftServer)</code></a>.</div>
+<div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">A mutable, named text list backed by the config, the way <code>/ss</code> list editing addresses one.</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">Persistence and lifecycle supplied by the selected loader.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerOverridesLoader.html" title="class in com.github.crittscott.somestacks">ServerOverridesLoader</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loads the server's admin render overrides from <code>config/somestacks/server_item_overrides</code>.</div>
+<div class="block">A command-editable policy list.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SomeStacksCommon.html" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Shared mod identity for common code.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral server lifecycle operations called by each loader's native event adapters.</div>
+</div>
 </div>
 </div>
 </div>

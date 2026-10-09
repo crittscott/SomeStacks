@@ -116,6 +116,12 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
         CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
     }
 
+    /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
+    }
+
     /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
@@ -131,7 +137,8 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(helper);
+        CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(
+                helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** No in-game reproduction applies: a reentrant Fabric storage edit is refused. */

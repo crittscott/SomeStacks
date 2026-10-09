@@ -26,8 +26,12 @@ public final class ClientGestures {
     private static boolean lastSentModifier;
     private static Consumer<CustomPacketPayload> sender;
 
-    public static void setSender(Consumer<CustomPacketPayload> sender) {
-        ClientGestures.sender = Objects.requireNonNull(sender);
+    /** Replaces the loader sender and returns its predecessor; null detaches the sender. */
+    @Nullable
+    public static Consumer<CustomPacketPayload> setSender(@Nullable Consumer<CustomPacketPayload> sender) {
+        Consumer<CustomPacketPayload> previous = ClientGestures.sender;
+        ClientGestures.sender = sender;
+        return previous;
     }
 
     public static StackMode currentMode() {
@@ -56,7 +60,8 @@ public final class ClientGestures {
         if (lastSentMode == stackMode && lastSentModifier == modifierDown) {
             return;
         }
-        sender.accept(new GestureStatePkt(stackMode, modifierDown));
+        Objects.requireNonNull(sender, "Client gesture sender is not installed")
+                .accept(new GestureStatePkt(stackMode, modifierDown));
         lastSentMode = stackMode;
         lastSentModifier = modifierDown;
     }
@@ -71,5 +76,10 @@ public final class ClientGestures {
         return player.getMainHandItem().isEmpty()
                 && hit != null
                 && hit.getType() == HitResult.Type.MISS;
+    }
+
+    /** Classifies the loader's current crosshair hit without consulting the client singleton. */
+    public static boolean isHittingBlock(@Nullable HitResult hit) {
+        return hit != null && hit.getType() == HitResult.Type.BLOCK;
     }
 }

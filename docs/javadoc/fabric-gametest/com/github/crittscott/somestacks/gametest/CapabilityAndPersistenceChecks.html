@@ -90,9 +90,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CapabilityAndPersistenceChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The saved-state half of the automation surface: each type's update tag round-tripping the
- contents and presentation state it is responsible for, upgrading a world saved by the previous
- release, and cached-shape invalidation. The
+<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
+ The
  automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in each
  loader's own <code>CapabilityAndPersistenceGameTests</code>, since it addresses the loader-native
  storage view directly.</div>
@@ -116,41 +115,47 @@ loadScripts(document, 'script');</script>
 <div class="block">Bar disk data preserves the item in each position.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Singles and Bar collision and outline shapes update when their contents change.</div>
+<div class="block">Singles and Bar block queries follow occupied contents, while empty blocks stay clickable.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Singles disk data preserves contents plus block-state and per-item rotations.</div>
+<div class="block">Set-aside entries recover only into free valid slots and disappear from retained disk data.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Storage disk data preserves items, data components, block-state rotation, and permanence.</div>
+<div class="block">Singles disk data preserves contents plus block-state and per-item rotations.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Storage disk data preserves items, data components, block-state rotation, and permanence.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Structure rotation transforms the outer facing of Storage and Singles while leaving their
  internal slot identities intact.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Unreadable and unplaceable saved entries remain byte-for-byte in disk data and never enter a
  live slot.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unversionedSaveUpgradesItemsOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unversionedSaveUpgradesItemsOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A Storage Stack saved by Some Stacks for Minecraft 1.21.1 keeps its contents in the current
  item format, and the block is marked for saving in that format.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Client update tags carry every field the renderers need while omitting server-only state.</div>
 </div>
 </div>
@@ -176,8 +181,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageDiskSaveRoundTripsItemsRotationAndPermanence</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Storage disk data preserves items, data components, block-state rotation, and permanence. To
  reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
- permanent, then unload and revisit the chunk or observe it from a joining client. All four
- properties remain visible.</div>
+ permanent, then save and restart the world. Verify the item and its components by extraction,
+ the layout by observation, and permanence by emptying the pile and checking that it remains.</div>
 </section>
 </li>
 <li>
@@ -186,7 +191,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesDiskSaveRoundTripsItemsAndBothRotations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
  in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
- chunk or observe it from a joining client. Both orientations and the item remain unchanged.</div>
+ chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.</div>
 </section>
 </li>
 <li>
@@ -194,7 +199,7 @@ loadScripts(document, 'script');</script>
 <h3>barDiskSaveRoundTripsItems</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barDiskSaveRoundTripsItems</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
- unload and revisit the chunk or join from another client, and verify the same Bar positions
+ save and restart the world, and verify the same Bar positions
  remain occupied.</div>
 </section>
 </li>
@@ -203,9 +208,10 @@ loadScripts(document, 'script');</script>
 <h3>updateTagsCarryRenderStateAndOmitServerOnlyData</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateTagsCarryRenderStateAndOmitServerOnlyData</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Client update tags carry every field the renderers need while omitting server-only state. To
- reproduce in-game: deposit and rotate Storage, Singles, and Bar contents, make the Storage
- pile permanent, then join with another client. The contents and rotations appear without
- exposing permanence or unreadable saved entries to that client.</div>
+ reproduce the visible portion in-game: deposit into all three types, rotate Storage and
+ Singles, and join with another client. Contents and rotations appear. Verifying omission of
+ Permanent and Items.SetAside requires inspecting the update tags; no purely in-game
+ reproduction proves those fields are absent.</div>
 </section>
 </li>
 <li>
@@ -215,6 +221,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Unreadable and unplaceable saved entries remain byte-for-byte in disk data and never enter a
  live slot. To reproduce in-game: remove an item-providing mod, open and save the world, then
  restore the mod. Its stored item returns instead of having been discarded.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>setAsideItemsRecoverIntoFreeSlots</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAsideItemsRecoverIntoFreeSlots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">Set-aside entries recover only into free valid slots and disappear from retained disk data.
+ To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
+ with that item mod absent, then restore the mod and reopen the world. The item returns.
+ Occupied-slot and invalid-slot retention require inspecting the saved tag.</div>
 </section>
 </li>
 <li>
@@ -239,12 +255,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)">
+<section class="detail" id="cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>cachedShapesInvalidateWhenContentsChange</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedShapesInvalidateWhenContentsChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Singles and Bar collision and outline shapes update when their contents change. To reproduce
- in-game: deposit into an empty Singles or Bar block and then extract the item. Its occupied
- shape appears on deposit and disappears on extraction.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedShapesInvalidateWhenContentsChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Singles and Bar block queries follow occupied contents, while empty blocks stay clickable.
+ To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
+ extract an item. Empty blocks have no outline/collision, occupied blocks follow their contents,
+ and the camera has no block fog. Mobs avoid both types. Empty-block interaction is exercised
+ before deposit; exact interaction-shape and path-type assertions require the GameTest.</div>
 </section>
 </li>
 </ul>

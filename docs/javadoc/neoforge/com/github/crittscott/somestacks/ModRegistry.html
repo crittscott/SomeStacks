@@ -92,8 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ModRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">The mod's registered blocks and block entity types, and the NeoForge registration glue behind
- them. Common code never registers anything itself; <code>CommonRegistry</code> is populated below so it
- can still read back what got registered.</div>
+ them. Common code reads the registered values through <code>CommonRegistry</code>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

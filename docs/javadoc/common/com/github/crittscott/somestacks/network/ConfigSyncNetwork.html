@@ -107,14 +107,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#install(java.util.function.BiConsumer)" class="member-name-link">install</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;net.minecraft.server.level.ServerPlayer,<wbr>net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;send)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sendCurrent(java.util.function.Consumer)" class="member-name-link">sendCurrent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&gt;&nbsp;sender)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Delivers every cached chunk in order on the caller's thread, without rebuilding policy.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncAllPlayers(net.minecraft.server.MinecraftServer)" class="member-name-link">syncAllPlayers</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends the rebuilt snapshot to all connected players; returns the connected player count.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncPlayer(net.minecraft.server.level.ServerPlayer)" class="member-name-link">syncPlayer</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sends the cached sequence after backend installation and startup/reload snapshot rebuild.</div>
+</div>
 </div>
 </div>
 </div>
@@ -133,21 +139,24 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="install(java.util.function.BiConsumer)">
-<h3>install</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">install</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;net.minecraft.server.level.ServerPlayer,<wbr>net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;send)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="syncPlayer(net.minecraft.server.level.ServerPlayer)">
 <h3>syncPlayer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">syncPlayer</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Sends the cached sequence after backend installation and startup/reload snapshot rebuild.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sendCurrent(java.util.function.Consumer)">
+<h3>sendCurrent</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendCurrent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&gt;&nbsp;sender)</span></div>
+<div class="block">Delivers every cached chunk in order on the caller's thread, without rebuilding policy.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="syncAllPlayers(net.minecraft.server.MinecraftServer)">
 <h3>syncAllPlayers</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">syncAllPlayers</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+<div class="block">Sends the rebuilt snapshot to all connected players; returns the connected player count.</div>
 </section>
 </li>
 </ul>

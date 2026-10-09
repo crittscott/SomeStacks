@@ -152,6 +152,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lastEmptyBeforeOccupied(int,com.github.crittscott.somestacks.util.SlotAccess,java.util.function.IntFunction)" class="member-name-link">lastEmptyBeforeOccupied</a><wbr>(int&nbsp;count,
+ <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;slots,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;boxAt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Last empty hit before the first occupied hit; null slots describe a prospective block.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nearestOccupied(com.github.crittscott.somestacks.util.SlotAccess,java.util.function.IntFunction)" class="member-name-link">nearestOccupied</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;slots,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;boxAt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Nearest occupied hit; equal distances retain ascending slot order.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -195,6 +208,24 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="nearestOccupied(com.github.crittscott.somestacks.util.SlotAccess,java.util.function.IntFunction)">
+<h3>nearestOccupied</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nearestOccupied</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;slots,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;boxAt)</span></div>
+<div class="block">Nearest occupied hit; equal distances retain ascending slot order.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lastEmptyBeforeOccupied(int,com.github.crittscott.somestacks.util.SlotAccess,java.util.function.IntFunction)">
+<h3>lastEmptyBeforeOccupied</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">lastEmptyBeforeOccupied</span><wbr><span class="parameters">(int&nbsp;count,
+ @Nullable
+ <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;slots,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.phys.AABB&gt;&nbsp;boxAt)</span></div>
+<div class="block">Last empty hit before the first occupied hit; null slots describe a prospective block.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="toString()">
 <h3>toString</h3>

@@ -98,7 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ItemRenderOverrides</span>
 <span class="extends-implements">extends net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</span></div>
 <div class="block">The client's item render configuration, layered by authority. The first matching entry owns the
- entire presentation: server-synced admin overrides, then the user's override file, then bundled
+ entire presentation: the user's override file, then bundled
  resource overrides. Items absent from every layer use measured profiles.
 
  <p>A bundled resource-override file is named for the namespace whose items it covers, and covers
@@ -134,11 +134,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second odd-row-color"><code><a href="#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SERVER_OVERRIDES" class="member-name-link">SERVER_OVERRIDES</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Admin overrides synced from the server.</div>
-</div>
 </div>
 </section>
 </li>
@@ -203,11 +198,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the item's presentation through the override layers.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSyncedServerOverrides(java.util.Map)" class="member-name-link">setSyncedServerOverrides</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;overrides)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Replaces the highest-precedence profile layer with the server's synchronized overrides.</div>
-</div>
 </div>
 </div>
 </div>
@@ -242,13 +232,6 @@ loadScripts(document, 'script');</script>
 <h3>CONFIG_MAP</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">CONFIG_MAP</span></div>
 <div class="block">Bundled resource overrides, from client resource reload.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="SERVER_OVERRIDES">
-<h3>SERVER_OVERRIDES</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;</span>&nbsp;<span class="element-name">SERVER_OVERRIDES</span></div>
-<div class="block">Admin overrides synced from the server.</div>
 </section>
 </li>
 </ul>
@@ -294,13 +277,6 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code>apply</code>&nbsp;in class&nbsp;<code>net.minecraft.server.packs.resources.SimplePreparableReloadListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&gt;</code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setSyncedServerOverrides(java.util.Map)">
-<h3>setSyncedServerOverrides</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSyncedServerOverrides</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.ResourceLocation,<wbr><a href="../renderconfig/ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;overrides)</span></div>
-<div class="block">Replaces the highest-precedence profile layer with the server's synchronized overrides.</div>
 </section>
 </li>
 <li>
@@ -350,7 +326,7 @@ loadScripts(document, 'script');</script>
  under <code>generated_overrides</code>, and reports the result to the player. Entries are
  complete. The generated directory is output only, not an active override layer, so dumping a
  modpack does not freeze its current profiles into the user layer. Each file can be edited and
- copied into a resource pack's <code>item_render_overrides</code> or the server override directory.
+ copied into a resource pack's <code>item_render_overrides</code>.
 
  <p>Every item a layer does not configure is measured here rather than at first sight of it,
  so a dump of a large pack is the measurement pass for all of it. The results reach the

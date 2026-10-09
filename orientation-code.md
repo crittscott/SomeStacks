@@ -8,11 +8,11 @@ See `orientation-player.md` for behavior; `build-env.md` for the build.
 
 ## Project shape
 
-Java 21, Minecraft 1.21.4; package `com.github.crittscott.somestacks`, mod id `somestacks`.
+Java 21, Minecraft 1.21.4; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into each loader JAR without loader imports. One `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Gestures and automation adapters remain loader-owned. `CommonRegistry` provides identifiers and post-registration lookups.
 
-Three registered blocks and block entity types; no block items, menus, or recipes:
+Three blocks and block entity types; no block items, menus, or recipes:
 
 | Block | Block entity | Local storage |
 | --- | --- | --- |
@@ -49,13 +49,13 @@ Three registered blocks and block entity types; no block items, menus, or recipe
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla, required Common Protection API queries, break callbacks |
 
-Matching loader builds are required on both sides. Forge/NeoForge enforce the protocol through channels; Fabric checks a configuration-phase marker in both directions.
+Matching loader builds are required. Forge/NeoForge enforce channel protocols; Fabric checks configuration-phase markers in both directions.
 
 ## Runtime and movement model
 
-A maximal contiguous vertical run of one type is the central abstraction. Block entities own local slots; server-only `StackRun` owns resolution, flattened slots, headroom, publication and comparators. Concrete runs own movement. Resolution caches per tick and invalidates on structural changes.
+A maximal vertical run of one type is the central abstraction. Block entities own local slots; server-only `StackRun` owns resolution, flat slots, headroom, publication and comparators. Concrete runs own movement. Resolution caches per tick and invalidates on structural edits.
 
-Block entities do not tick. `StackBlockEntity` owns local persistence and a nesting-safe batch depth; mutations schedule one deferred pass on the run's bottom block that coalesces client updates, lighting, comparator publication, and Storage settlement. Every block in a run reports the same run-wide comparator signal, computed from cached per-block fill contributions refreshed on mutation and NBT load.
+Block entities do not tick. `StackBlockEntity` owns persistence and nested batching; mutations schedule one pass on the run's base for client updates, lighting, comparators, and Storage settlement. Every run block reports the same comparator signal, using local fill contributions refreshed on mutation and NBT load.
 
 The three movement models are distinct:
 
@@ -65,7 +65,7 @@ The three movement models are distinct:
 
 `StackItemStorage` persists local inventory through block-entity NBT using Data Components and a `HolderLookup.Provider`. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-Saved-world loading starts with `StackDataMigration`: absent `DataVersion` means 1.21.1 (3955), older items pass through DataFixerUpper, and legacy `Rotation` becomes block state. Unreadable items remain in `SetAside`, logged and retried each load. Client updates require current format, bounded inventory, unique valid slots, exact valid Singles rotations, and no server-only fields. Invalid updates leave client state untouched without migration, retention or logs. Permanence belongs to the pile base; block rotations are local; Singles item rotation travels with the item.
+`StackDataMigration` upgrades saved items through DataFixerUpper; absent `DataVersion` means 1.21.1 (3955), and legacy `Rotation` becomes block state. Unreadable/unplaceable entries persist in `SetAside` and retry each load. Warnings include dimension and position: new retention warns after attachment, failed retries once per location per session. Client updates require current format, bounded inventory, unique valid slots, valid Singles rotations, and no server-only fields; rejection changes nothing and performs no migration, retention, or logging. Permanence belongs to the base; block rotation is local; item rotation travels with Singles.
 
 ## Admission, automation, and edits
 
@@ -77,7 +77,7 @@ Every loader-native view adapts `StackRunItemAccess` and spans the whole run plu
 
 ## Player interaction and networking
 
-Shared client rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. They suppress local vanilla block/item behavior without replacing the click: Forge/NeoForge cancellation and Fabric `SUCCESS` still send the normal block-use packet. A small payload sends placement mode and modifier-down state only when that state changes.
+Main-hand client rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in order. Loader callbacks supply hit classification. Forge/NeoForge cancellation and Fabric `SUCCESS` suppress local use while retaining vanilla block-use packets. A payload sends mode and modifier state only when changed.
 
 The only play-phase server-to-client payload is a cached config snapshot. Decoding bounds packet bytes; staging bounds generation bytes/chunks and rejects duplicates, inconsistent metadata and empty intermediate chunks. Rejection/disconnect clear staging; complete totals publish enable flags and namespace lists atomically. `/ss item` and `/ss write` act locally; no server packet requests client writes.
 
@@ -91,9 +91,9 @@ The real event covers the clicked block; no right-click events are fabricated. F
 
 Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
 
-Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Complete resolved profiles cache per item and invalidate on override changes or resource reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass. `CubeGrid` precomputes rotated indices; Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. All render overrides and Bar appearance are client resource data. Galleries spread work across ticks but bypass normal placement protection.
+Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Complete resolved profiles cache per item and invalidate on override changes or resource reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass. `CubeGrid` precomputes rotated indices; Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Appearance is client resource data. Galleries spread work across ticks and bypass placement protection.
 
 ## GameTests
 
-`somestacks_gametest` is development-only, excluded from `build`. Shared scenarios live in `common/src/gametest`; native checks stay loader-local.
+Development-only `somestacks_gametest` is excluded from `build`. Shared checks in `common/src/gametest` include gesture decisions with explicit hits and a recording sender; native checks are loader-local. In each loader's `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to assert callback outputs.
 

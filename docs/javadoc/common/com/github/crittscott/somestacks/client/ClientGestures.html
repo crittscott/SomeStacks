@@ -141,17 +141,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether an input is the main-hand air click used for empty-hand placement-mode cycling.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isHittingBlock(net.minecraft.world.phys.HitResult)" class="member-name-link">isHittingBlock</a><wbr>(net.minecraft.world.phys.HitResult&nbsp;hit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Forces the next interaction to establish state on a new connection.</div>
+<div class="block">Classifies the loader's current crosshair hit without consulting the client singleton.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Forces the next interaction to establish state on a new connection.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a><wbr>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Replaces the loader sender and returns its predecessor; null detaches the sender.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sends only state that changed since the last interaction on this connection.</div>
 </div>
 </div>
@@ -210,7 +217,10 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="setSender(java.util.function.Consumer)">
 <h3>setSender</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSender</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</span></div>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</span>&nbsp;<span class="element-name">setSender</span><wbr><span class="parameters">(@Nullable
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</span></div>
+<div class="block">Replaces the loader sender and returns its predecessor; null detaches the sender.</div>
 </section>
 </li>
 <li>
@@ -253,6 +263,14 @@ loadScripts(document, 'script');</script>
  @Nullable
  net.minecraft.world.phys.HitResult&nbsp;hit)</span></div>
 <div class="block">Whether an input is the main-hand air click used for empty-hand placement-mode cycling.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isHittingBlock(net.minecraft.world.phys.HitResult)">
+<h3>isHittingBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isHittingBlock</span><wbr><span class="parameters">(@Nullable
+ net.minecraft.world.phys.HitResult&nbsp;hit)</span></div>
+<div class="block">Classifies the loader's current crosshair hit without consulting the client singleton.</div>
 </section>
 </li>
 </ul>

@@ -19,6 +19,11 @@ public final class ClientRenderToolState {
         return genMods;
     }
 
+    /** Immutable synchronized namespace deny set used by local authoring commands. */
+    public static Set<String> disabledMods() {
+        return disabledMods;
+    }
+
     public static boolean isDisabled(String namespace) {
         return disabledMods.contains(namespace);
     }

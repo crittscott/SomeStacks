@@ -6,6 +6,10 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.block.ShapedStackBlock;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
@@ -18,6 +22,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,6 +32,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -36,9 +52,8 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /**
- * The saved-state half of the automation surface: each type's update tag round-tripping the
- * contents and presentation state it is responsible for, upgrading a world saved by the previous
- * release, and cached-shape invalidation. The
+ * Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
+ * The
  * automation-surface half (whole-run capability/Transfer-API presence and headroom) stays in each
  * loader's own {@code CapabilityAndPersistenceGameTests}, since it addresses the loader-native
  * storage view directly.
@@ -49,8 +64,8 @@ public final class CapabilityAndPersistenceChecks {
     /**
      * Storage disk data preserves items, data components, block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
-     * permanent, then unload and revisit the chunk or observe it from a joining client. All four
-     * properties remain visible.
+     * permanent, then save and restart the world. Verify the item and its components by extraction,
+     * the layout by observation, and permanence by emptying the pile and checking that it remains.
      */
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -84,7 +99,7 @@ public final class CapabilityAndPersistenceChecks {
     /**
      * Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
-     * chunk or observe it from a joining client. Both orientations and the item remain unchanged.
+     * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
      */
     public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -108,7 +123,7 @@ public final class CapabilityAndPersistenceChecks {
 
     /**
      * Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
-     * unload and revisit the chunk or join from another client, and verify the same Bar positions
+     * save and restart the world, and verify the same Bar positions
      * remain occupied.
      */
     public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
@@ -129,9 +144,10 @@ public final class CapabilityAndPersistenceChecks {
 
     /**
      * Client update tags carry every field the renderers need while omitting server-only state. To
-     * reproduce in-game: deposit and rotate Storage, Singles, and Bar contents, make the Storage
-     * pile permanent, then join with another client. The contents and rotations appear without
-     * exposing permanence or unreadable saved entries to that client.
+     * reproduce the visible portion in-game: deposit into all three types, rotate Storage and
+     * Singles, and join with another client. Contents and rotations appear. Verifying omission of
+     * Permanent and Items.SetAside requires inspecting the update tags; no purely in-game
+     * reproduction proves those fields are absent.
      */
     public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -213,6 +229,12 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(0, GameTestScaffold.occupied(loaded.getItems()),
                 "Unreadable entries reached live slots");
 
+        var probe = new StackItemStorage(StorageStackBE.SLOTS);
+        checkEquals(new StackItemStorage.LoadResult(2, 0), probe.deserializeNBT(registries, storage),
+                "New retention diagnostic counts");
+        checkEquals(new StackItemStorage.LoadResult(0, 2),
+                probe.deserializeNBT(registries, probe.serializeNBT(registries)), "Persisted retry diagnostic counts");
+
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
         ListTag setAside = persisted.getCompound("Items")
                 .getList("SetAside", Tag.TAG_COMPOUND);
@@ -221,6 +243,45 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(outsideRange, setAside.getCompound(1), "Out-of-range item tag changed");
         check(!loaded.getUpdateTag(registries).getCompound("Items").contains("SetAside"),
                 "Client update tag exposed set-aside entries");
+        helper.succeed();
+    }
+
+    /**
+     * Set-aside entries recover only into free valid slots and disappear from retained disk data.
+     * To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
+     * with that item mod absent, then restore the mod and reopen the world. The item returns.
+     * Occupied-slot and invalid-slot retention require inspecting the saved tag.
+     */
+    public static void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        StorageStackBE loaded = placeStorage(helper, ORIGIN);
+        var storage = new StackItemStorage(StorageStackBE.SLOTS);
+        storage.setStackInSlot(0, new ItemStack(Items.STONE, 3));
+        CompoundTag inventory = storage.serializeNBT(registries);
+        ListTag retries = new ListTag();
+        for (int slot : new int[] {1, 0, StorageStackBE.SLOTS}) {
+            CompoundTag entry = (CompoundTag) new ItemStack(Items.DIAMOND, 2)
+                    .save(registries, new CompoundTag());
+            entry.putInt("Slot", slot);
+            retries.add(entry);
+        }
+        inventory.put("SetAside", retries.copy());
+        checkEquals(new StackItemStorage.LoadResult(0, 2), storage.deserializeNBT(registries, inventory),
+                "Recovery counted a restored entry as a failed retry");
+        CompoundTag saved = new CompoundTag();
+        NbtUtils.addCurrentDataVersion(saved);
+        saved.put("Items", inventory);
+        loaded.loadWithComponents(saved, registries);
+        checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
+        checkEquals(Items.DIAMOND, loaded.getItems().getStackInSlot(1).getItem(), "Retry did not recover");
+        checkEquals(2, loaded.getItems().getStackInSlot(1).getCount(), "Recovered count");
+        CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+        ListTag remaining = persisted.getCompound("Items").getList("SetAside", Tag.TAG_COMPOUND);
+        checkEquals(2, remaining.size(), "Recovered retry remained set aside");
+        checkEquals(retries.getCompound(1), remaining.getCompound(0), "Occupied retry changed");
+        checkEquals(retries.getCompound(2), remaining.getCompound(1), "Out-of-range retry changed");
+        loaded.loadWithComponents(persisted, registries);
+        checkEquals(2, GameTestScaffold.count(loaded.getItems(), Items.DIAMOND), "Reload duplicated recovered item");
         helper.succeed();
     }
 
@@ -304,17 +365,37 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Singles and Bar collision and outline shapes update when their contents change. To reproduce
-     * in-game: deposit into an empty Singles or Bar block and then extract the item. Its occupied
-     * shape appears on deposit and disappears on extraction.
+     * Singles and Bar block queries follow occupied contents, while empty blocks stay clickable.
+     * To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
+     * extract an item. Empty blocks have no outline/collision, occupied blocks follow their contents,
+     * and the camera has no block fog. Mobs avoid both types. Empty-block interaction is exercised
+     * before deposit; exact interaction-shape and path-type assertions require the GameTest.
      */
-    public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
+    public static void cachedShapesInvalidateWhenContentsChange(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BarStackBE bar = placeBar(helper, ORIGIN.east(3));
         Item barItem = firstBarItem();
 
-        check(singles.getCachedShape().isEmpty(), "Empty Singles shape was not empty");
-        check(bar.getCachedShape().isEmpty(), "Empty Bar shape was not empty");
+        for (StackBlockEntity be : List.of(singles, bar)) {
+            assertBlockShapes(helper, be, Shapes.empty());
+            ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+            boolean originalShift = player.isShiftKeyDown();
+            player.setShiftKeyDown(false);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            try {
+                var block = (ShapedStackBlock) be.getBlockState().getBlock();
+                BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(be.getBlockPos()),
+                        Direction.UP, be.getBlockPos(), false);
+                checkEquals(InteractionResult.CONSUME, block.useWithoutItem(
+                        be.getBlockState(), helper.getLevel(), be.getBlockPos(), player, hit),
+                        "Empty block-use was not consumed");
+                check(player.getMainHandItem().isEmpty(), "Empty block extracted an item");
+            } finally {
+                player.setShiftKeyDown(originalShift);
+                ServerGestureState.clear(player.getUUID());
+            }
+        }
         singles.getItems().insertItem(0, new ItemStack(Items.APPLE), false);
         bar.getItems().insertItem(0, new ItemStack(barItem), false);
 
@@ -322,13 +403,35 @@ public final class CapabilityAndPersistenceChecks {
                 "Singles shape cache did not reflect insertion");
         check(!bar.getCachedShape().isEmpty(),
                 "Bar shape cache did not reflect insertion");
+        assertBlockShapes(helper, singles, singles.getCachedShape());
+        assertBlockShapes(helper, bar, bar.getCachedShape());
         singles.getItems().extractItem(0, 1, false);
         bar.getItems().extractItem(0, 1, false);
         check(singles.getCachedShape().isEmpty(),
                 "Singles shape cache did not reflect extraction");
         check(bar.getCachedShape().isEmpty(),
                 "Bar shape cache did not reflect extraction");
+        assertBlockShapes(helper, singles, Shapes.empty());
+        assertBlockShapes(helper, bar, Shapes.empty());
         helper.succeed();
+    }
+
+    private static void assertBlockShapes(GameTestHelper helper, StackBlockEntity be, VoxelShape occupied) {
+        var block = (ShapedStackBlock) be.getBlockState().getBlock();
+        BlockState state = be.getBlockState();
+        BlockPos pos = be.getBlockPos();
+        var level = helper.getLevel();
+        var context = CollisionContext.empty();
+        check(!Shapes.joinIsNotEmpty(occupied, block.getShape(state, level, pos, context), BooleanOp.NOT_SAME),
+                "Block outline differs from occupied shape");
+        check(!Shapes.joinIsNotEmpty(occupied, block.getCollisionShape(state, level, pos, context), BooleanOp.NOT_SAME),
+                "Block collision differs from occupied shape");
+        check(!Shapes.joinIsNotEmpty(Shapes.block(), block.getInteractionShape(state, level, pos), BooleanOp.NOT_SAME),
+                "Interaction shape is not a full block");
+        check(block.getVisualShape(state, level, pos, context).isEmpty(), "Visual shape is not empty");
+        for (PathComputationType type : PathComputationType.values()) {
+            check(!block.isPathfindable(state, type), "Stack permits pathfinding: " + type);
+        }
     }
 
     private static void copyFacing(

@@ -18,15 +18,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Attaches {@code ForgeCapabilities.ITEM_HANDLER} to the mod's block entities from outside them,
- * through the ordinary Forge capability-attachment event rather than an overridden
- * {@code getCapability}. This is what keeps the block entity classes themselves loader-neutral: the
- * common module's unpatched compile environment has no {@code getCapability} to override in the
- * first place.
+ * Attaches one whole-run {@code ForgeCapabilities.ITEM_HANDLER} view to each stack block entity
+ * through Forge's capability-attachment event. The same view serves every queried side.
  *
  * <p>One {@link LazyOptional} is created per block entity and invalidated through the event's own
- * listener hook, the same lifecycle the block entity's own {@code invalidateCaps}/{@code reviveCaps}
- * would have driven if it owned the field itself.
+ * listener hook when the attached provider is invalidated.
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {

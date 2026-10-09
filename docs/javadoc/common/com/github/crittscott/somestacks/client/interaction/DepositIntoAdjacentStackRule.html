@@ -96,9 +96,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">DepositIntoAdjacentStackRule</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="InteractionRule.html" title="interface in com.github.crittscott.somestacks.client.interaction">InteractionRule</a></span></div>
-<div class="block">Modifier plus an item, clicking a face of some other block that has a Singles or Bar Stack
- against it, deposits into that stack. The vanilla click names the neighbor, and the server also
- checks protection at the adjacent stack before depositing.</div>
+<div class="block">Consumes a modified neighbor click toward a Singles or Bar Stack. The server decides whether
+ the loader can authorize the destination without another click; otherwise it refuses the deposit.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

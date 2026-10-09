@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegist
 import com.github.crittscott.somestacks.network.ModNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
@@ -55,7 +56,8 @@ public final class ClientEvents {
         // air click to suppress, so the rules run but nothing is canceled.
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
     }
@@ -67,7 +69,8 @@ public final class ClientEvents {
 
         InteractionContext ctx = InteractionContext.forAirClick(
                 evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processItemRules(ctx);
 

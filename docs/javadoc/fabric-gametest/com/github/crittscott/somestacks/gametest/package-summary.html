@@ -71,7 +71,7 @@ loadScripts(document, 'script');</script>
 <ul class="summary-list">
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
 <div id="class-summary.tabpanel" role="tabpanel">
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
@@ -95,9 +95,23 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">The saved-state half of the automation surface: each type's update tag round-tripping the
- contents and presentation state it is responsible for, upgrading a world saved by the previous
- release, and cached-shape invalidation.</div>
+<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientCallbackChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Development-client assertions for the loader callback's cancellation result.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientCallbackGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Fabric development-client registration for <a href="ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientGestureChecks</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Client decision and state checks with explicit hit classification, runnable without a client singleton.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -146,59 +160,67 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral placement and player-deposit protection scenarios.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ProtectionChecks.RemovalObserver.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">Native removal observation whose returned action unregisters the hook.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="RenderGalleryChecks.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryChecks</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
- and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RenderGalleryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryGameTests</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RenderGalleryChecks.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryChecks</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
  and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="RenderGalleryGameTests.html" title="class in com.github.crittscott.somestacks.gametest">RenderGalleryGameTests</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">The render-gallery world builder: that a queued gallery lays out its floor and rows as described
+ and reports the totals it finished with, spread across ticks by the configured placement limit.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Singles support and gravity in a live level that does not touch loader-native automation
  directly: grounding at the bottom of a column, a cell resting on the one below it, visual
  columns lining up across differently rotated blocks, and extraction shifting a column down while
  carrying each item's rotation with it.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Singles support and gravity in a live level: grounding at the bottom of a column, a cell resting
  on the one below it, visual columns lining up across differently rotated blocks, and extraction
  shifting a column down while carrying each item's rotation with it.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Storage settling order across every item-identity component used by the comparator.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Storage settling order across every item-identity component used by the comparator.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Storage settling order across every item-identity component used by the comparator.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The automation surface and the saved state behind it: the whole-run storage exposed on every
  side, a run advertising its reachable headroom, and each type's update tag round-tripping the
  contents and presentation state it is responsible for.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Storage pile behavior in a live level that does not touch loader-native automation directly:
  deposits filling partial stacks before empty ones, growth when a pile fills, and settling
  consolidating, packing, and sorting.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Storage pile behavior in a live level: deposits filling partial stacks before empty ones, growth
  when a pile fills, storage insertion addressing the specified slot, obstruction refusing growth,
  and settling consolidating, packing, and sorting.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Wire boundaries, independent of forgiving saved-world recovery.</div>
 </div>
 </div>
 </div>

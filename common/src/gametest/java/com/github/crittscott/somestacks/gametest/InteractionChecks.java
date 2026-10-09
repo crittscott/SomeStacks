@@ -401,8 +401,8 @@ public final class InteractionChecks {
     /**
      * Rotation sound pacing permits one sound per player within its throttle window and resets when
      * player state clears. To reproduce in-game: perform rotation gestures faster than the throttle
-     * interval, then pause and rotate again. The rapid repeats do not each play a sound; the later
-     * rotation does.
+     * interval, disconnect and reconnect, then rotate immediately. Rapid repeats are suppressed;
+     * the reconnect clears the old player's pacing state so the first new rotation can sound.
      */
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {

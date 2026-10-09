@@ -115,13 +115,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#capabilitySimulationDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">capabilitySimulationDoesNotMutateAnyStack</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: this verifies that simulated loader capability insertion and
  extraction leave Storage, Singles, and Bar stacks unchanged.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientInventoryUpdatesRejectMalformedDataAtomically</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="SynchronizationChecks.html#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)"><code>SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientSinglesUpdatesValidateRotationBeforeInventory</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="SynchronizationChecks.html#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)"><code>SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemCapabilityIsAvailableFromEverySide(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">itemCapabilityIsAvailableFromEverySide</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -135,39 +145,44 @@ loadScripts(document, 'script');</script>
 <div class="block">No in-game reproduction applies: a reentrant NeoForge capability edit is refused.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singleBlockCapabilitiesAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singleBlockCapabilitiesAdvertiseConfiguredHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singleBlockCapabilitiesAdvertiseConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singleBlockCapabilitiesAdvertiseConfiguredHeadroom</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: connect item automation to a one-block stack below its height limit and
  verify it can address one additional block of empty positions for growth.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unversionedSaveUpgradesItemsOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unversionedSaveUpgradesItemsOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="CapabilityAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </div>
 </div>
@@ -239,6 +254,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>setAsideItemsRecoverIntoFreeSlots</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAsideItemsRecoverIntoFreeSlots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="unversionedSaveUpgradesItemsOnLoad(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>unversionedSaveUpgradesItemsOnLoad</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unversionedSaveUpgradesItemsOnLoad</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
@@ -256,7 +278,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>cachedShapesInvalidateWhenContentsChange</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedShapesInvalidateWhenContentsChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -272,6 +294,20 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">capabilitySimulationDoesNotMutateAnyStack</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">No in-game reproduction applies: this verifies that simulated loader capability insertion and
  extraction leave Storage, Singles, and Bar stacks unchanged.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>clientInventoryUpdatesRejectMalformedDataAtomically</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clientInventoryUpdatesRejectMalformedDataAtomically</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="SynchronizationChecks.html#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)"><code>SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>clientSinglesUpdatesValidateRotationBeforeInventory</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clientSinglesUpdatesValidateRotationBeforeInventory</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="SynchronizationChecks.html#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)"><code>SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </section>
 </li>
 </ul>

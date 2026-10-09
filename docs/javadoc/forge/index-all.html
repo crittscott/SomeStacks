@@ -49,7 +49,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor(ServerLevel)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
@@ -100,21 +100,20 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a> - package com.github.crittscott.somestacks.server</dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#configFolder()" class="member-name-link">configFolder()</a> - Static method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
+<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#configFolder()" class="member-name-link">configFolder()</a> - Method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#extractItem(int,int,boolean)" class="member-name-link">extractItem(int, int, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
+<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#editAuthority()" class="member-name-link">editAuthority()</a> - Method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/block/ForgeCapabilityAttachment.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">ForgeCapabilityAttachment</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
 <dd>
-<div class="block">Attaches <code>ForgeCapabilities.ITEM_HANDLER</code> to the mod's block entities from outside them,
- through the ordinary Forge capability-attachment event rather than an overridden
- <code>getCapability</code>.</div>
+<div class="block">Attaches one whole-run <code>ForgeCapabilities.ITEM_HANDLER</code> view to each stack block entity
+ through Forge's capability-attachment event.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
@@ -128,15 +127,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Forge implementations of the common platform services.</div>
 </dd>
-</dl>
-<h2 class="title" id="I:G">G</h2>
-<dl class="index">
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
+<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#%3Cinit%3E()" class="member-name-link">ForgePlatformServices()</a> - Constructor for class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getSlots()" class="member-name-link">getSlots()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getStackInSlot(int)" class="member-name-link">getStackInSlot(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
+<dd>
+<div class="block">Loader-managed server configuration exposed as one immutable common policy snapshot.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
@@ -148,9 +144,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#init(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">init(IEventBus)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid(int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#INSTANCE" class="member-name-link">INSTANCE</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:K">K</h2>
@@ -160,10 +154,13 @@ loadScripts(document, 'script');</script>
 <div class="block">The mod's key bindings.</div>
 </dd>
 </dl>
+<h2 class="title" id="I:L">L</h2>
+<dl class="index">
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor(MinecraftServer)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
+<dd>&nbsp;</dd>
+</dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/server/Protection.html#mayUseItemAt(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseItemAt(ServerPlayer, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/Protection.html" title="class in com.github.crittscott.somestacks.server">Protection</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacks.html#MODID" class="member-name-link">MODID</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacks.html" title="class in com.github.crittscott.somestacks">SomeStacks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/ModNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ModNetworking</a> - Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
@@ -174,14 +171,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The mod's registered blocks and block entity types, and the Forge registration glue behind them.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#modVersion(java.lang.String)" class="member-name-link">modVersion(String)</a> - Static method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
+<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#modVersion(java.lang.String)" class="member-name-link">modVersion(String)</a> - Method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/block/ForgeCapabilityAttachment.html#onAttachCapabilities(net.minecraftforge.event.AttachCapabilitiesEvent)" class="member-name-link">onAttachCapabilities(AttachCapabilitiesEvent&lt;BlockEntity&gt;)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/ForgeCapabilityAttachment.html" title="class in com.github.crittscott.somestacks.block">ForgeCapabilityAttachment</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#onLoading(net.minecraftforge.fml.event.config.ModConfigEvent.Loading)" class="member-name-link">onLoading(ModConfigEvent.Loading)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientEvents.html#onRegisterClientCommands(net.minecraftforge.client.event.RegisterClientCommandsEvent)" class="member-name-link">onRegisterClientCommands(RegisterClientCommandsEvent)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#onReloading(net.minecraftforge.fml.event.config.ModConfigEvent.Reloading)" class="member-name-link">onReloading(ModConfigEvent.Reloading)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientEvents.html#onRightClick(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock)" class="member-name-link">onRightClick(PlayerInteractEvent.RightClickBlock)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></dt>
 <dd>&nbsp;</dd>
@@ -194,17 +195,17 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement(ServerLevel, BlockPos)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#path()" class="member-name-link">path()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/server/Protection.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">Protection</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
-<dd>
-<div class="block">Forge protection consultation for a stack reached through its neighboring block.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/server/Protection.html#%3Cinit%3E()" class="member-name-link">Protection()</a> - Constructor for class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/Protection.html" title="class in com.github.crittscott.somestacks.server">Protection</a></dt>
+<dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place(Player, ServerLevel, BlockPos, BlockState, Direction)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#reload()" class="member-name-link">reload()</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
+<dd>
+<div class="block">Reads the values published by the loader's load/reload lifecycle.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
 <dd>
 <div class="block">Forge item-handler view over whichever complete run owns the attached stack block.</div>
@@ -214,6 +215,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#save(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">save(ServerConfig.Settings)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig(ServerPlayer, ConfigSyncPkt)</a> - Method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#SINGLES_DEPOSIT_SOUND" class="member-name-link">SINGLES_DEPOSIT_SOUND</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
@@ -231,9 +236,11 @@ loadScripts(document, 'script');</script>
 <div class="block">The mod entry point: registers the blocks and block entities, the network channel, and the
  listeners behind server config loading, login sync, and commands.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/SomeStacks.html#%3Cinit%3E()" class="member-name-link">SomeStacks()</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacks.html" title="class in com.github.crittscott.somestacks">SomeStacks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/SomeStacks.html#%3Cinit%3E(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext)" class="member-name-link">SomeStacks(FMLJavaModLoadingContext)</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacks.html" title="class in com.github.crittscott.somestacks">SomeStacks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#SOUNDS" class="member-name-link">SOUNDS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#spec" class="member-name-link">spec</a> - Variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/KeyMappings.html#STACK_MODE_KEY" class="member-name-link">STACK_MODE_KEY</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/KeyMappings.html" title="class in com.github.crittscott.somestacks.client">KeyMappings</a></dt>
 <dd>
@@ -266,7 +273,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval(ServerPlayer, ServerLevel, BlockPos, BlockState, BlockEntity)</a> - Method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
 </div>
 </div>
 </body>

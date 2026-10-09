@@ -48,7 +48,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li><a href="#field-detail">Field</a></li>
 <li>Constr</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </li>
 </ul>
@@ -66,7 +66,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><a href="../../../../search.html">SEARCH</a>
@@ -91,8 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CommonRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral access to registered blocks, block entity types, and action sounds. Each loader's
- registration glue assigns these once registration is set up; common code only reads them back.</div>
+<div class="block">Shared identifiers and access to values after loader-native registration completes.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,96 +104,51 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#BAR_DEPOSIT_SOUND" class="member-name-link">BAR_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_DEPOSIT_SOUND_PATH" class="member-name-link">BAR_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT_SOUND" class="member-name-link">BAR_EXTRACT_SOUND</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#BAR_EXTRACT_SOUND" class="member-name-link">BAR_EXTRACT_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_EXTRACT_SOUND_PATH" class="member-name-link">BAR_EXTRACT_SOUND_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#BAR_STACK_BE" class="member-name-link">BAR_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BE_PATH" class="member-name-link">BAR_STACK_BE_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BLOCK" class="member-name-link">BAR_STACK_BLOCK</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#BAR_STACK_BLOCK" class="member-name-link">BAR_STACK_BLOCK</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#BAR_STACK_BLOCK_PATH" class="member-name-link">BAR_STACK_BLOCK_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_DEPOSIT_SOUND" class="member-name-link">SINGLES_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_DEPOSIT_SOUND_PATH" class="member-name-link">SINGLES_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_EXTRACT_SOUND" class="member-name-link">SINGLES_EXTRACT_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_EXTRACT_SOUND_PATH" class="member-name-link">SINGLES_EXTRACT_SOUND_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE_ITEM_SOUND" class="member-name-link">SINGLES_ROTATE_ITEM_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_ITEM_SOUND_PATH" class="member-name-link">SINGLES_ROTATE_ITEM_SOUND_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_SOUND" class="member-name-link">SINGLES_ROTATE_SOUND</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_ROTATE_SOUND" class="member-name-link">SINGLES_ROTATE_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_ROTATE_SOUND_PATH" class="member-name-link">SINGLES_ROTATE_SOUND_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#SINGLES_STACK_BE" class="member-name-link">SINGLES_STACK_BE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BE_PATH" class="member-name-link">SINGLES_STACK_BE_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BLOCK" class="member-name-link">SINGLES_STACK_BLOCK</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#SINGLES_STACK_BLOCK" class="member-name-link">SINGLES_STACK_BLOCK</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#SINGLES_STACK_BLOCK_PATH" class="member-name-link">SINGLES_STACK_BLOCK_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_DEPOSIT_SOUND" class="member-name-link">STORAGE_DEPOSIT_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_DEPOSIT_SOUND_PATH" class="member-name-link">STORAGE_DEPOSIT_SOUND_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_EXTRACT_SOUND" class="member-name-link">STORAGE_EXTRACT_SOUND</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_EXTRACT_SOUND" class="member-name-link">STORAGE_EXTRACT_SOUND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_EXTRACT_SOUND_PATH" class="member-name-link">STORAGE_EXTRACT_SOUND_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.sounds.SoundEvent&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_ROTATE_SOUND" class="member-name-link">STORAGE_ROTATE_SOUND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_ROTATE_SOUND_PATH" class="member-name-link">STORAGE_ROTATE_SOUND_PATH</a></code></div>
+<div class="col-first odd-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
+<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BE" class="member-name-link">STORAGE_STACK_BE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BE_PATH" class="member-name-link">STORAGE_STACK_BE_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;net.minecraft.world.level.block.Block&gt;</code></div>
+<div class="col-first even-row-color"><code>static final net.minecraft.resources.ResourceLocation</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_STACK_BLOCK" class="member-name-link">STORAGE_STACK_BLOCK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#STORAGE_STACK_BLOCK_PATH" class="member-name-link">STORAGE_STACK_BLOCK_PATH</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -202,6 +156,61 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel">
+<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barDepositSound()" class="member-name-link">barDepositSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barExtractSound()" class="member-name-link">barExtractSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.entity.BlockEntityType<wbr>&lt;<a href="block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barStackBe()" class="member-name-link">barStackBe</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.Block</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barStackBlock()" class="member-name-link">barStackBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDepositSound()" class="member-name-link">singlesDepositSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesExtractSound()" class="member-name-link">singlesExtractSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesRotateItemSound()" class="member-name-link">singlesRotateItemSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesRotateSound()" class="member-name-link">singlesRotateSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.entity.BlockEntityType<wbr>&lt;<a href="block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesStackBe()" class="member-name-link">singlesStackBe</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.Block</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesStackBlock()" class="member-name-link">singlesStackBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDepositSound()" class="member-name-link">storageDepositSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageExtractSound()" class="member-name-link">storageExtractSound</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.sounds.SoundEvent</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageRotateSound()" class="member-name-link">storageRotateSound</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.entity.BlockEntityType<wbr>&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageStackBe()" class="member-name-link">storageStackBe</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.level.block.Block</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageStackBlock()" class="member-name-link">storageStackBlock</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -217,303 +226,191 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="STORAGE_STACK_BLOCK_PATH">
-<h3>STORAGE_STACK_BLOCK_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_STACK_BLOCK_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_STACK_BLOCK_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_STACK_BLOCK_PATH">
-<h3>SINGLES_STACK_BLOCK_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_STACK_BLOCK_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_STACK_BLOCK_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_STACK_BLOCK_PATH">
-<h3>BAR_STACK_BLOCK_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_STACK_BLOCK_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_STACK_BLOCK_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_STACK_BE_PATH">
-<h3>STORAGE_STACK_BE_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_STACK_BE_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_STACK_BE_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_STACK_BE_PATH">
-<h3>SINGLES_STACK_BE_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_STACK_BE_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_STACK_BE_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_STACK_BE_PATH">
-<h3>BAR_STACK_BE_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_STACK_BE_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_STACK_BE_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_DEPOSIT_SOUND_PATH">
-<h3>STORAGE_DEPOSIT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_DEPOSIT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_EXTRACT_SOUND_PATH">
-<h3>STORAGE_EXTRACT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_EXTRACT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="STORAGE_ROTATE_SOUND_PATH">
-<h3>STORAGE_ROTATE_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STORAGE_ROTATE_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.STORAGE_ROTATE_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_DEPOSIT_SOUND_PATH">
-<h3>SINGLES_DEPOSIT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_DEPOSIT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_EXTRACT_SOUND_PATH">
-<h3>SINGLES_EXTRACT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_EXTRACT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE_SOUND_PATH">
-<h3>SINGLES_ROTATE_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_ROTATE_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_ROTATE_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="SINGLES_ROTATE_ITEM_SOUND_PATH">
-<h3>SINGLES_ROTATE_ITEM_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.SINGLES_ROTATE_ITEM_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_DEPOSIT_SOUND_PATH">
-<h3>BAR_DEPOSIT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_DEPOSIT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_DEPOSIT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="BAR_EXTRACT_SOUND_PATH">
-<h3>BAR_EXTRACT_SOUND_PATH</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">BAR_EXTRACT_SOUND_PATH</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.CommonRegistry.BAR_EXTRACT_SOUND_PATH">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="STORAGE_STACK_BLOCK">
 <h3>STORAGE_STACK_BLOCK</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</span>&nbsp;<span class="element-name">STORAGE_STACK_BLOCK</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STORAGE_STACK_BLOCK</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_STACK_BLOCK">
 <h3>SINGLES_STACK_BLOCK</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</span>&nbsp;<span class="element-name">SINGLES_STACK_BLOCK</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_STACK_BLOCK</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="BAR_STACK_BLOCK">
 <h3>BAR_STACK_BLOCK</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.Block&gt;</span>&nbsp;<span class="element-name">BAR_STACK_BLOCK</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">BAR_STACK_BLOCK</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="STORAGE_STACK_BE">
 <h3>STORAGE_STACK_BE</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;&gt;</span>&nbsp;<span class="element-name">STORAGE_STACK_BE</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STORAGE_STACK_BE</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_STACK_BE">
 <h3>SINGLES_STACK_BE</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;&gt;</span>&nbsp;<span class="element-name">SINGLES_STACK_BE</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_STACK_BE</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="BAR_STACK_BE">
 <h3>BAR_STACK_BE</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;&gt;</span>&nbsp;<span class="element-name">BAR_STACK_BE</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">BAR_STACK_BE</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="STORAGE_DEPOSIT_SOUND">
 <h3>STORAGE_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_DEPOSIT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STORAGE_DEPOSIT_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="STORAGE_EXTRACT_SOUND">
 <h3>STORAGE_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_EXTRACT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STORAGE_EXTRACT_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="STORAGE_ROTATE_SOUND">
 <h3>STORAGE_ROTATE_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">STORAGE_ROTATE_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">STORAGE_ROTATE_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_DEPOSIT_SOUND">
 <h3>SINGLES_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_DEPOSIT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_DEPOSIT_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_EXTRACT_SOUND">
 <h3>SINGLES_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_EXTRACT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_EXTRACT_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_ROTATE_SOUND">
 <h3>SINGLES_ROTATE_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_ROTATE_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_ROTATE_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="SINGLES_ROTATE_ITEM_SOUND">
 <h3>SINGLES_ROTATE_ITEM_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">SINGLES_ROTATE_ITEM_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="BAR_DEPOSIT_SOUND">
 <h3>BAR_DEPOSIT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">BAR_DEPOSIT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">BAR_DEPOSIT_SOUND</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="BAR_EXTRACT_SOUND">
 <h3>BAR_EXTRACT_SOUND</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;net.minecraft.sounds.SoundEvent&gt;</span>&nbsp;<span class="element-name">BAR_EXTRACT_SOUND</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.resources.ResourceLocation</span>&nbsp;<span class="element-name">BAR_EXTRACT_SOUND</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="storageStackBlock()">
+<h3>storageStackBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.Block</span>&nbsp;<span class="element-name">storageStackBlock</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesStackBlock()">
+<h3>singlesStackBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.Block</span>&nbsp;<span class="element-name">singlesStackBlock</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barStackBlock()">
+<h3>barStackBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.Block</span>&nbsp;<span class="element-name">barStackBlock</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageStackBe()">
+<h3>storageStackBe</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a>&gt;</span>&nbsp;<span class="element-name">storageStackBe</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesStackBe()">
+<h3>singlesStackBe</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&gt;</span>&nbsp;<span class="element-name">singlesStackBe</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barStackBe()">
+<h3>barStackBe</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.entity.BlockEntityType&lt;<a href="block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&gt;</span>&nbsp;<span class="element-name">barStackBe</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageDepositSound()">
+<h3>storageDepositSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageDepositSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageExtractSound()">
+<h3>storageExtractSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageExtractSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageRotateSound()">
+<h3>storageRotateSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">storageRotateSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesDepositSound()">
+<h3>singlesDepositSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesDepositSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesExtractSound()">
+<h3>singlesExtractSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesExtractSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesRotateSound()">
+<h3>singlesRotateSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesRotateSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="singlesRotateItemSound()">
+<h3>singlesRotateItemSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">singlesRotateItemSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barDepositSound()">
+<h3>barDepositSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">barDepositSound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="barExtractSound()">
+<h3>barExtractSound</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.sounds.SoundEvent</span>&nbsp;<span class="element-name">barExtractSound</span>()</div>
 </section>
 </li>
 </ul>

@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Some Stacks turns held items into visible storage. It adds three blocks, with no block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; removing its last contents normally removes it.
 
-Requires Minecraft 1.21.4 and matching loader builds on client and server. Fabric also requires Common Protection API.
+Requires Minecraft 1.21.4, matching client/server loader builds, and Common Protection API on Fabric.
 
 ## The three stack types
 
@@ -169,13 +169,13 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 
 ## Protection and validation
 
-Gestures use vanilla block-use and honor loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge require direct existing-stack clicks; Fabric queries Common Protection API for neighbor deposits and placement. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed deferred Storage cleanup uses automation. Forge/NeoForge publish placement only after acceptance and restore full snapshots on denial without notifying neighbors. All loaders fire native break hooks. Surviving player edits emit sculk-detectable change; removing the final Single or Bar emits only destruction at that position.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge require direct stack clicks; Fabric queries Common Protection API for neighbor deposits and placement. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
-The gesture payload carries mode and modifier state; actions use vanilla block-use and its exact hit. The server validates hand, spectator/protection state, item, target, support, enablement, height and obstruction. It selects cells independently along the reach ray through the hit point; clients never choose cell indices.
+The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 
 ## Saved worlds
 
-A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved, are logged, and return when readable again.
+A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
 
 ## Boundaries
 

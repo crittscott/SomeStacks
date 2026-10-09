@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li><a href="#nested-class-summary">Nested</a></li>
+<li>Nested</li>
 <li>Field</li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -90,26 +90,11 @@ loadScripts(document, 'script');</script>
 <div class="block">The loader-specific half of stack world edits: who performs automation, and whether a claim or
  logging mod vetoes an edit. <a href="WorldEdits.html" title="class in com.github.crittscott.somestacks.server"><code>WorldEdits</code></a> owns the vanilla mechanics and actor propagation.
 
- <p>The loader's entry point installs an implementation via <a href="WorldEdits.html#setAuthority(com.github.crittscott.somestacks.server.EditAuthority)"><code>WorldEdits.setAuthority(com.github.crittscott.somestacks.server.EditAuthority)</code></a> before
- any world logic can run.</div>
+ <p>The loader supplies this authority as part of its <a href="../PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks"><code>PlatformServices.Backend</code></a> before any
+ world logic can run.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Interface</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="EditAuthority.PlacementVeto.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -135,11 +120,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">The actor automation-driven growth and removal are attributed to.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">preparePlacement</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Side-effect-free placement permission, where the loader provides a query API.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Whether a neighboring click may edit an existing destination stack without another click.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">place</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Captures the loader-specific checks needed before and after a placement.</div>
+<div class="block">Places a block through the loader's native protection transaction.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vetoesRemoval(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">vetoesRemoval</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;actor,
@@ -165,18 +166,38 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="mayPlace(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
+<h3>mayPlace</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayPlace</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<div class="block">Side-effect-free placement permission, where the loader provides a query API.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="place(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
+<h3>place</h3>
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">place</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
+ net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state,
+ net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
+<div class="block">Places a block through the loader's native protection transaction.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
+<h3>mayUseAdjacent</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayUseAdjacent</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<div class="block">Whether a neighboring click may edit an existing destination stack without another click.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="automationActor(net.minecraft.server.level.ServerLevel)">
 <h3>automationActor</h3>
 <div class="member-signature"><span class="return-type">net.minecraft.server.level.ServerPlayer</span>&nbsp;<span class="element-name">automationActor</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level)</span></div>
 <div class="block">The actor automation-driven growth and removal are attributed to.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="preparePlacement(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
-<h3>preparePlacement</h3>
-<div class="member-signature"><span class="return-type"><a href="EditAuthority.PlacementVeto.html" title="interface in com.github.crittscott.somestacks.server">EditAuthority.PlacementVeto</a></span>&nbsp;<span class="element-name">preparePlacement</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Captures the loader-specific checks needed before and after a placement.</div>
 </section>
 </li>
 <li>

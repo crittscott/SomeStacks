@@ -55,6 +55,7 @@ loadScripts(document, 'script');</script>
 <li><a href="com/github/crittscott/somestacks/block/package-tree.html">com.github.crittscott.somestacks.block</a>, </li>
 <li><a href="com/github/crittscott/somestacks/client/package-tree.html">com.github.crittscott.somestacks.client</a>, </li>
 <li><a href="com/github/crittscott/somestacks/fabric/package-tree.html">com.github.crittscott.somestacks.fabric</a>, </li>
+<li><a href="com/github/crittscott/somestacks/mixin/package-tree.html">com.github.crittscott.somestacks.mixin</a>, </li>
 <li><a href="com/github/crittscott/somestacks/network/package-tree.html">com.github.crittscott.somestacks.network</a>, </li>
 <li><a href="com/github/crittscott/somestacks/server/package-tree.html">com.github.crittscott.somestacks.server</a></li>
 </ul>
@@ -63,7 +64,6 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
-<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricAdjacentEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricAdjacentEditAuthority</a> (implements com.github.crittscott.somestacks.server.AdjacentEditAuthority)</li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricClientEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricClientEvents</a></li>
 <li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricClientNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">FabricClientNetworking</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricClientRendering.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricClientRendering</a></li>
@@ -71,7 +71,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/FabricItemStorage.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">FabricItemStorage</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricKeyMappings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricKeyMappings</a></li>
 <li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/FabricNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">FabricNetworking</a></li>
-<li class="circle">com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a></li>
+<li class="circle">com.github.crittscott.somestacks.fabric.<a href="com/github/crittscott/somestacks/fabric/FabricPlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks.fabric">FabricPlatformServices</a> (implements com.github.crittscott.somestacks.PlatformServices.Backend)</li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/FabricRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks">FabricRegistry</a></li>
 <li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/FabricRenderCacheReloadListener.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">FabricRenderCacheReloadListener</a> (implements net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener, net.minecraft.server.packs.resources.ResourceManagerReloadListener)</li>
 <li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/FabricStackInteractionEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">FabricStackInteractionEvents</a></li>
@@ -89,10 +89,22 @@ loadScripts(document, 'script');</script>
 </li>
 </ul>
 </li>
-<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabric.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabric</a> (implements net.fabricmc.api.ModInitializer)</li>
-<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabricClient.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabricClient</a> (implements net.fabricmc.api.ClientModInitializer)</li>
+<li class="circle">net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;T&gt; (implements net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext.CloseCallback, net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext.OuterCloseCallback)
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/FabricRunItemStorage.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">FabricRunItemStorage</a> (implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;T&gt;)</li>
 </ul>
 </li>
+<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabric.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabric</a> (implements net.fabricmc.api.ModInitializer)</li>
+<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksFabricClient.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksFabricClient</a> (implements net.fabricmc.api.ClientModInitializer)</li>
+<li class="circle">com.github.crittscott.somestacks.mixin.<a href="com/github/crittscott/somestacks/mixin/StackBlockEntityMixin.html" class="type-name-link" title="class in com.github.crittscott.somestacks.mixin">StackBlockEntityMixin</a> (implements com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/FabricStorageOwner.html" title="interface in com.github.crittscott.somestacks.block">FabricStorageOwner</a>)</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class="hierarchy">
+<h2 title="Interface Hierarchy">Interface Hierarchy</h2>
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/FabricStorageOwner.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">FabricStorageOwner</a></li>
 </ul>
 </section>
 <section class="hierarchy">

@@ -21,6 +21,11 @@ loom {
     }
 
     runs {
+        clientGameTests {
+            client()
+            name 'Client Game Tests'
+            source sourceSets.gametest
+        }
         gameTestServer {
             server()
             environment 'gametestserver'

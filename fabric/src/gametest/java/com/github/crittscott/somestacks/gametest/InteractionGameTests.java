@@ -148,4 +148,46 @@ public final class InteractionGameTests implements FabricGameTest {
         SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
     }
 
+    /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
+        SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configStagingChecksSequencesAndTotals}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
+        SynchronizationChecks.configStagingChecksSequencesAndTotals(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configDecoderRejectsMalformedCountsAndNamespaces}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper helper) {
+        SynchronizationChecks.configDecoderRejectsMalformedCountsAndNamespaces(helper);
+    }
+
+    /** See {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void blockRulesRespectPrecedenceAndHands(GameTestHelper helper) {
+        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
+        ClientGestureChecks.fullTopFacesFallThroughToPlacement(helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#airRulesAndDisabledModeCycling}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void airRulesAndDisabledModeCycling(GameTestHelper helper) {
+        ClientGestureChecks.airRulesAndDisabledModeCycling(helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
+        ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
+    }
+
 }

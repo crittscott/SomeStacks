@@ -110,10 +110,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adjacentConsultationHonorsUseItemDeny(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentConsultationHonorsUseItemDeny</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adjacentStackRequiresDirectClick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentStackRequiresDirectClick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: deny SomeStacks item use at the destination beside a stack, then
- right-click the neighboring face and verify no block or item is placed there.</div>
+<div class="block">To reproduce in-game: hold the modifier and click a neighbor toward a Singles Stack.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationActorDiscardsClientMessages(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationActorDiscardsClientMessages</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -154,22 +153,29 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="ProtectionChecks.html#creativeDepositFillsTheStackWithoutSpendingTheHand(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mixedStorageSettlementUsesAutomationForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">deniedCleanupEmitsOnlyBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, extract one of two
- Storage items by hand and the other by automation before settling, and verify the empty block
- remains because mixed cleanup is attributed to [SomeStacks].</div>
+<div class="block">See <a href="InteractionChecks.html#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>InteractionChecks.deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">mixedStorageSettlementUsesAutomationForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ProtectionChecks.html#mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementIntoWaterKeepsTheWater</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="ProtectionChecks.html#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementPublicationAnswersToVeto</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ProtectionChecks.html#placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)"><code>ProtectionChecks.placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, java.lang.Runnable, java.lang.Runnable)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerBarExtractionUsesPlayerForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
- extract the last Bar.</div>
+<div class="block">See <a href="ProtectionChecks.html#playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionUsesPlayerForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -212,6 +218,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: stand in the growth space above a full Storage pile and insert through
  item automation; it accepts nothing and does not grow into the entity.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vetoedPlacementRestoresBlockEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ProtectionChecks.html#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)"><code>ProtectionChecks.vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, java.lang.Runnable, java.lang.Runnable)</code></a>.</div>
 </div>
 </div>
 </div>
@@ -283,28 +294,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>playerBarExtractionUsesPlayerForCleanup</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerBarExtractionUsesPlayerForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
- extract the last Bar. Player-attributed cleanup removes the empty block.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>playerStorageSettlementUsesPlayerForCleanup</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerStorageSettlementUsesPlayerForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
  extract the last Storage item. Deferred cleanup retains the player and removes the block.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>mixedStorageSettlementUsesAutomationForCleanup</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">mixedStorageSettlementUsesAutomationForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, extract one of two
- Storage items by hand and the other by automation before settling, and verify the empty block
- remains because mixed cleanup is attributed to [SomeStacks].</div>
 </section>
 </li>
 <li>
@@ -315,11 +309,39 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="adjacentConsultationHonorsUseItemDeny(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>adjacentConsultationHonorsUseItemDeny</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adjacentConsultationHonorsUseItemDeny</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: deny SomeStacks item use at the destination beside a stack, then
- right-click the neighboring face and verify no block or item is placed there.</div>
+<section class="detail" id="adjacentStackRequiresDirectClick(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>adjacentStackRequiresDirectClick</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">adjacentStackRequiresDirectClick</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: hold the modifier and click a neighbor toward a Singles Stack.
+ No deposit occurs; click the stack directly to deposit. No destination click is fabricated.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>placementPublicationAnswersToVeto</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementPublicationAnswersToVeto</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ProtectionChecks.html#placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)"><code>ProtectionChecks.placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, java.lang.Runnable, java.lang.Runnable)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>playerBarExtractionUsesPlayerForCleanup</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerBarExtractionUsesPlayerForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ProtectionChecks.html#playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>mixedStorageSettlementUsesAutomationForCleanup</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">mixedStorageSettlementUsesAutomationForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ProtectionChecks.html#mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>vetoedPlacementRestoresBlockEntity</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">vetoedPlacementRestoresBlockEntity</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ProtectionChecks.html#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)"><code>ProtectionChecks.vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, java.lang.Runnable, java.lang.Runnable)</code></a>.</div>
 </section>
 </li>
 <li>
@@ -368,6 +390,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGrowthRejectsAnObstructingEntityInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: stand in the growth space above a full Bar column and insert through
  item automation; it accepts nothing and does not grow into the entity.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>deniedCleanupEmitsOnlyBlockChange</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deniedCleanupEmitsOnlyBlockChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="InteractionChecks.html#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>InteractionChecks.deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
 </section>
 </li>
 </ul>

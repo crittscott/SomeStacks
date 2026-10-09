@@ -67,7 +67,10 @@ public record ConfigSyncPkt(
         return TYPE;
     }
 
-    /** Rebuilds the immutable packet sequence after server policy changes. */
+    /**
+     * Replaces the immutable cached sequence with a new generation after world policy is loaded
+     * or changed. Call before sending login or reload synchronization; this does not send packets.
+     */
     public static synchronized void rebuildCurrent() {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
@@ -218,7 +221,7 @@ public record ConfigSyncPkt(
 
     private static void validateNamespaces(List<String> namespaces) {
         for (String namespace : namespaces) {
-            if (namespace.length() > MAX_NAMESPACE_LENGTH
+            if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
                     || ResourceLocation.tryBuild(namespace, "validation") == null) {
                 throw new DecoderException("Invalid synchronized namespace");
             }
@@ -238,7 +241,7 @@ public record ConfigSyncPkt(
         List<String> namespaces = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             String namespace = buf.readUtf(MAX_NAMESPACE_LENGTH);
-            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
+            if (namespace.isEmpty() || ResourceLocation.tryBuild(namespace, "validation") == null) {
                 throw new DecoderException("Invalid synchronized namespace: " + namespace);
             }
             namespaces.add(namespace);

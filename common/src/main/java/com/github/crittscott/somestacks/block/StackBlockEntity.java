@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
@@ -27,6 +28,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected final StackItemStorage items;
     @Nullable
     private Integer pendingBlockRotation;
+    @Nullable
+    private StackItemStorage.LoadResult pendingLoadResult;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -35,6 +38,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private StackRunItemAccess cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
 
+    /** Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication. */
     protected StackBlockEntity(
             BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
         super(type, pos, state);
@@ -63,6 +67,10 @@ public abstract class StackBlockEntity extends BlockEntity {
         };
     }
 
+    /**
+     * Admission for new local/automation inserts, including current namespace and type policy.
+     * Existing saved or internally relocated items bypass this check; no slot is selected here.
+     */
     protected abstract boolean isStoredItemValid(ItemStack stack);
 
     /** Resolves the current server-side run without consulting the per-tick cache. */
@@ -96,6 +104,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
+    /** Local slot capacity before the item's own stack limit, or one for positional display types. */
     protected int localSlotLimit() {
         return 64;
     }
@@ -117,9 +126,18 @@ public abstract class StackBlockEntity extends BlockEntity {
         comparatorContribution = sum;
     }
 
+    /**
+     * Invalidates subtype-derived local state after a mutation to {@code 0 <= slot < getItems().getSlots()}.
+     * Runs on either side after dirty/fill updates, even inside a batch, before deferred publication.
+     * Disk and client snapshot loads bypass this hook and must refresh subtype state in loadStackData.
+     */
     protected void onLocalContentsChanged(int slot) {
     }
 
+    /**
+     * Loads subtype metadata and refreshes derived state after inventory replacement. Disk data is
+     * already migrated; client data is already validated. Runs on either side without publication.
+     */
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
     }
 
@@ -128,6 +146,10 @@ public abstract class StackBlockEntity extends BlockEntity {
         return true;
     }
 
+    /**
+     * Adds current subtype metadata after version and inventory serialization. Used for both disk
+     * saves and update tags; remove private fields in stripServerOnlyUpdateData before transmission.
+     */
     protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
     }
 
@@ -135,10 +157,12 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected void stripServerOnlyUpdateData(CompoundTag tag) {
     }
 
+    /** Whether every live local slot is empty; retained disk entries do not count as live contents. */
     public final boolean isEmpty() {
         return ItemOps.isHandlerEmpty(items);
     }
 
+    /** Mutable local storage, indexed from zero to its slot count exclusively, not the whole run. */
     public final StackItemStorage getItems() {
         return items;
     }
@@ -158,14 +182,17 @@ public abstract class StackBlockEntity extends BlockEntity {
         applyPendingBlockRotation();
     }
 
+    /** Per-position automation capacity before the offered item's own stack limit. */
     public final int automationSlotLimit() {
         return localSlotLimit();
     }
 
+    /** Checks new automation admission without choosing a slot or checking support/growth authority. */
     public final boolean acceptsAutomation(ItemStack stack) {
         return isStoredItemValid(stack);
     }
 
+    /** Immediately notifies block updates when attached; server callers send the local render state. */
     public final void syncToClients() {
         if (level != null) {
             BlockState state = getBlockState();
@@ -173,6 +200,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
+    /** Records the last published comparator signal; returns true only when it changed. */
     final boolean exchangePublishedSignal(int signal) {
         if (publishedSignal == signal) {
             return false;
@@ -181,12 +209,14 @@ public abstract class StackBlockEntity extends BlockEntity {
         return true;
     }
 
+    /** Begins a nesting-safe mutation batch; every call must pair with exactly one end method. */
     final void beginBatch() {
         if (batchDepth++ == 0) {
             batchTouched = false;
         }
     }
 
+    /** Ends a batch, scheduling one server publication pass when the outermost touched batch ends. */
     final void endBatch() {
         if (--batchDepth == 0 && batchTouched) {
             batchTouched = false;
@@ -209,10 +239,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
+    /** Whether a mutation batch is active, including nested batches; derived-state hooks still run. */
     protected final boolean isBatching() {
         return batchDepth > 0;
     }
 
+    /** Marks local publication pending and coalesces a run tick; unattached/client entities do nothing. */
     protected final void schedulePublish() {
         if (level == null || level.isClientSide) {
             return;
@@ -225,6 +257,16 @@ public abstract class StackBlockEntity extends BlockEntity {
     public void setLevel(Level level) {
         super.setLevel(level);
         applyPendingBlockRotation();
+        reportSavedItems();
+    }
+
+    /** Reports disk recovery only after server attachment supplies a dimension. */
+    private void reportSavedItems() {
+        if (pendingLoadResult == null || level == null) return;
+        if (level instanceof ServerLevel serverLevel) {
+            SomeStacksServer.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
+        }
+        pendingLoadResult = null;
     }
 
     /** Applies a requested or migrated rotation once the block belongs to a server level. */
@@ -246,6 +288,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
+    /** Publishes pending contents and light on the owning server level; returns whether it did work. */
     final boolean publishIfPending(ServerLevel currentLevel) {
         if (!publishPending) {
             return false;
@@ -269,6 +312,7 @@ public abstract class StackBlockEntity extends BlockEntity {
             return;
         }
         super.loadAdditional(tag, registries);
+        pendingLoadResult = null;
         if (StackDataMigration.upgrade(tag, registries)) {
             setChanged();
         }
@@ -279,7 +323,8 @@ public abstract class StackBlockEntity extends BlockEntity {
             setChanged();
         }
         if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS), getBlockPos());
+            pendingLoadResult = items.deserializeNBT(registries, tag.getCompound(TAG_ITEMS));
+            reportSavedItems();
         }
         loadStackData(tag, registries);
         refreshComparatorContribution();

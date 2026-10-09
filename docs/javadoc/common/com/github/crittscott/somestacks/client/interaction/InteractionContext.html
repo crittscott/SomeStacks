@@ -120,12 +120,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether the placement and deposit rules may claim this click.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">forAirClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)" class="member-name-link">forAirClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.world.InteractionHand&nbsp;hand,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
- boolean&nbsp;modeKeyDown)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+ boolean&nbsp;modeKeyDown,
+ boolean&nbsp;hittingBlock)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Builds an air/item event context with the loader's explicit crosshair classification.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,net.minecraft.core.BlockPos,net.minecraft.core.Direction,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">forBlockClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.level.Level&nbsp;level,
@@ -134,7 +137,9 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;face,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Builds a block context from the clicked position and face; its hit classification is always block.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.core.BlockPos</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getClickedPos()" class="member-name-link">getClickedPos</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -205,13 +210,15 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean)">
+<section class="detail" id="forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)">
 <h3>forAirClick</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></span>&nbsp;<span class="element-name">forAirClick</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.world.InteractionHand&nbsp;hand,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
- boolean&nbsp;modeKeyDown)</span></div>
+ boolean&nbsp;modeKeyDown,
+ boolean&nbsp;hittingBlock)</span></div>
+<div class="block">Builds an air/item event context with the loader's explicit crosshair classification.</div>
 </section>
 </li>
 <li>
@@ -224,6 +231,7 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.Direction&nbsp;face,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown)</span></div>
+<div class="block">Builds a block context from the clicked position and face; its hit classification is always block.</div>
 </section>
 </li>
 <li>

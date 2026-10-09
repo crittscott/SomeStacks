@@ -91,17 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ServerConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The server config values and the resolved lookup sets behind them, loaded from and saved to a
- per-world JSON file located by <a href="#loadFor(net.minecraft.server.MinecraftServer)"><code>loadFor(MinecraftServer)</code></a>.
-
- <p>The text lists are stored as patterns and baked into sets that the hot paths can test cheaply.
- Baking happens on load and whenever a list is edited, and for the ingot list, whenever item tags
- are rebuilt with <a href="#rebakeIngots()"><code>rebakeIngots()</code></a>, since its <code>#</code> entries name item tags whose
- membership a data pack decides. The baked sets are volatile because a rebake can run off the main
- thread relative to gameplay reads.
-
- <p>Everything here is server-side. Only the stack-type enable flags reach the client, through the
- configuration sync.</div>
+<div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,11 +104,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Backend.html" class="type-name-link" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">A mutable, named text list backed by the config, the way <code>/ss</code> list editing addresses one.</div>
+<div class="block">Persistence and lifecycle supplied by the selected loader.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A command-editable policy list.</div>
+</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -131,6 +129,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">DEFAULT_GALLERY_PLACEMENTS_PER_TICK</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_MAX_PILE_HEIGHT" class="member-name-link">DEFAULT_MAX_PILE_HEIGHT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
 <div class="col-second even-row-color"><code><a href="#DISABLE_ITEMS" class="member-name-link">DISABLE_ITEMS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -143,8 +147,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#GEN_MODS" class="member-name-link">GEN_MODS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second even-row-color"><code><a href="#INGOTS" class="member-name-link">INGOTS</a></code></div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MAX_PILE_HEIGHT" class="member-name-link">MAX_PILE_HEIGHT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -167,83 +171,54 @@ loadScripts(document, 'script');</script>
 <div class="block">Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">apply</a><wbr>(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;policy)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#backend()" class="member-name-link">backend</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bakeServerLists()" class="member-name-link">bakeServerLists</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves the server's free-form text lists into lookup sets: the disabled-mod and
- disabled-item compatibility lists, and the ingot list.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableBarStackBlock()" class="member-name-link">enableBarStackBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#defaults()" class="member-name-link">defaults</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableSinglesStackBlock()" class="member-name-link">enableSinglesStackBlock</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableBarStackBlock()" class="member-name-link">enableBarStackBlock</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableStorageStackBlock()" class="member-name-link">enableStorageStackBlock</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableSinglesStackBlock()" class="member-name-link">enableSinglesStackBlock</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryEnabled()" class="member-name-link">galleryEnabled</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether <code>ss gallery</code> and <code>ss ingotgallery</code> may be run at all.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryRequiredPermissionLevel()" class="member-name-link">galleryRequiredPermissionLevel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The vanilla permission level <code>ss gallery</code> and <code>ss ingotgallery</code> require.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ingotGeneration()" class="member-name-link">ingotGeneration</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">How many times the ingot item set has been resolved.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ingotItemCount()" class="member-name-link">ingotItemCount</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">How many items the ingot list currently resolves to.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isIngotItem(net.minecraft.world.item.Item)" class="member-name-link">isIngotItem</a><wbr>(net.minecraft.world.item.Item&nbsp;item)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether <code>item</code> is an ingot, which is what a Bar Stack holds and a Singles Stack refuses.</div>
-</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enableStorageStackBlock()" class="member-name-link">enableStorageStackBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryEnabled()" class="member-name-link">galleryEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#galleryRequiredPermissionLevel()" class="member-name-link">galleryRequiredPermissionLevel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#install(com.github.crittscott.somestacks.ServerConfig.Backend)" class="member-name-link">install</a><wbr>(<a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a>&nbsp;implementation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isItemDisabled(net.minecraft.resources.ResourceLocation)" class="member-name-link">isItemDisabled</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;itemId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the item registered as <code>itemId</code> is barred from stacks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isModDisabled(java.lang.String)" class="member-name-link">isModDisabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether items from <code>namespace</code>, in any case, are barred from stacks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#itemTagNames()" class="member-name-link">itemTagNames</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Every item tag name the server knows, for completing a <code>#</code> ingot entry.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#load(java.nio.file.Path)" class="member-name-link">load</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Loads the config from <code>file</code>, writing it with defaults first if it does not exist yet.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Loads the policy file belonging to <code>server</code>'s current world.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxPileHeight()" class="member-name-link">maxPileHeight</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rebakeIngots()" class="member-name-link">rebakeIngots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Re-resolves the ingot list against the tags just bound.</div>
-</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxPileHeight()" class="member-name-link">maxPileHeight</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Re-reads the current world's policy file.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</code></div>
@@ -255,9 +230,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Writes the current values to the file <a href="#load(java.nio.file.Path)"><code>load(java.nio.file.Path)</code></a> was given.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -276,6 +252,48 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="DEFAULT_MAX_PILE_HEIGHT">
+<h3>DEFAULT_MAX_PILE_HEIGHT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_MAX_PILE_HEIGHT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_MAX_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MAX_PILE_HEIGHT">
+<h3>MAX_PILE_HEIGHT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MAX_PILE_HEIGHT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MAX_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_GALLERY_PLACEMENTS_PER_TICK">
+<h3>DEFAULT_GALLERY_PLACEMENTS_PER_TICK</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_GALLERY_PLACEMENTS_PER_TICK</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="DISABLE_MODS">
 <h3>DISABLE_MODS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">DISABLE_MODS</span></div>
@@ -285,12 +303,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DISABLE_ITEMS">
 <h3>DISABLE_ITEMS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">DISABLE_ITEMS</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="INGOTS">
-<h3>INGOTS</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">INGOTS</span></div>
 </section>
 </li>
 <li>
@@ -313,6 +325,54 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="install(com.github.crittscott.somestacks.ServerConfig.Backend)">
+<h3>install</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">install</span><wbr><span class="parameters">(<a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a>&nbsp;implementation)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="backend()">
+<h3>backend</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></span>&nbsp;<span class="element-name">backend</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="settings()">
+<h3>settings</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></span>&nbsp;<span class="element-name">settings</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="apply(com.github.crittscott.somestacks.ServerConfig.Settings)">
+<h3>apply</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a>&nbsp;policy)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="loadFor(net.minecraft.server.MinecraftServer)">
+<h3>loadFor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadFor</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="reload()">
+<h3>reload</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reload</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="save()">
+<h3>save</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">save</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="defaults()">
+<h3>defaults</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></span>&nbsp;<span class="element-name">defaults</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="maxPileHeight()">
 <h3>maxPileHeight</h3>
@@ -347,66 +407,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="galleryEnabled()">
 <h3>galleryEnabled</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">galleryEnabled</span>()</div>
-<div class="block">Whether <code>ss gallery</code> and <code>ss ingotgallery</code> may be run at all. Off by default.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="galleryRequiredPermissionLevel()">
 <h3>galleryRequiredPermissionLevel</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">galleryRequiredPermissionLevel</span>()</div>
-<div class="block">The vanilla permission level <code>ss gallery</code> and <code>ss ingotgallery</code> require.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="load(java.nio.file.Path)">
-<h3>load</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;file)</span></div>
-<div class="block">Loads the config from <code>file</code>, writing it with defaults first if it does not exist yet.
- Remembers <code>file</code> so later edits save back to it, then bakes the lookup sets.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="loadFor(net.minecraft.server.MinecraftServer)">
-<h3>loadFor</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadFor</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
-<div class="block">Loads the policy file belonging to <code>server</code>'s current world.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="reload()">
-<h3>reload</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">reload</span>()</div>
-<div class="block">Re-reads the current world's policy file.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="save()">
-<h3>save</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">save</span>()</div>
-<div class="block">Writes the current values to the file <a href="#load(java.nio.file.Path)"><code>load(java.nio.file.Path)</code></a> was given.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>whether the file was written; false before the first load or after a write failure</dd>
-</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="bakeServerLists()">
 <h3>bakeServerLists</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">bakeServerLists</span>()</div>
-<div class="block">Resolves the server's free-form text lists into lookup sets: the disabled-mod and
- disabled-item compatibility lists, and the ingot list. Mod ids are lowercased and item ids
- are parsed once here; a malformed item id is reported and dropped rather than being re-parsed
- and swallowed on every deposit.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="rebakeIngots()">
-<h3>rebakeIngots</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rebakeIngots</span>()</div>
-<div class="block">Re-resolves the ingot list against the tags just bound. Item tags are data pack state, so the
- set of items a Bar Stack accepts changes with a data pack reload even though the config naming
- those tags has not. The loader's entry point calls this from its own tags-updated hook.</div>
 </section>
 </li>
 <li>
@@ -445,38 +457,6 @@ loadScripts(document, 'script');</script>
 <h3>isItemDisabled</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemDisabled</span><wbr><span class="parameters">(net.minecraft.resources.ResourceLocation&nbsp;itemId)</span></div>
 <div class="block">Whether the item registered as <code>itemId</code> is barred from stacks.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isIngotItem(net.minecraft.world.item.Item)">
-<h3>isIngotItem</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIngotItem</span><wbr><span class="parameters">(net.minecraft.world.item.Item&nbsp;item)</span></div>
-<div class="block">Whether <code>item</code> is an ingot, which is what a Bar Stack holds and a Singles Stack refuses.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="ingotItemCount()">
-<h3>ingotItemCount</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">ingotItemCount</span>()</div>
-<div class="block">How many items the ingot list currently resolves to.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="itemTagNames()">
-<h3>itemTagNames</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">itemTagNames</span>()</div>
-<div class="block">Every item tag name the server knows, for completing a <code>#</code> ingot entry. Read on demand
- rather than cached: tags change with a data pack reload, and a completion request is rare
- next to the deposits the baked set serves.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="ingotGeneration()">
-<h3>ingotGeneration</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">ingotGeneration</span>()</div>
-<div class="block">How many times the ingot item set has been resolved. A caller that groups or filters by
- ingot-ness holds this alongside its own cache and rebuilds when it changes, which covers a
- data pack reload and a config edit alike.</div>
 </section>
 </li>
 </ul>

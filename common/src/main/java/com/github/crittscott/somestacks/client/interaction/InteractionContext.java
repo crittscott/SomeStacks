@@ -2,14 +2,12 @@ package com.github.crittscott.somestacks.client.interaction;
 
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.HitResult;
 
 /**
  * One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
@@ -28,12 +26,13 @@ public final class InteractionContext {
     private final Direction face;
     private final StackMode currentMode;
     private final boolean modeKeyDown;
+    private final boolean hittingBlock;
 
     private boolean shouldCancel = false;
 
     private InteractionContext(Player player, Level level, InteractionHand hand,
                                BlockPos clickedPos, Block clickedBlock, Direction face,
-                               StackMode currentMode, boolean modeKeyDown) {
+                               StackMode currentMode, boolean modeKeyDown, boolean hittingBlock) {
         this.player = player;
         this.level = level;
         this.hand = hand;
@@ -42,11 +41,13 @@ public final class InteractionContext {
         this.face = face;
         this.currentMode = currentMode;
         this.modeKeyDown = modeKeyDown;
+        this.hittingBlock = hittingBlock;
     }
 
+    /** Builds an air/item event context with the loader's explicit crosshair classification. */
     public static InteractionContext forAirClick(
             Player player, Level level, InteractionHand hand,
-            StackMode currentMode, boolean modeKeyDown) {
+            StackMode currentMode, boolean modeKeyDown, boolean hittingBlock) {
         return new InteractionContext(
                 player,
                 level,
@@ -55,10 +56,12 @@ public final class InteractionContext {
                 null,
                 null,
                 currentMode,
-                modeKeyDown
+                modeKeyDown,
+                hittingBlock
         );
     }
 
+    /** Builds a block context from the clicked position and face; its hit classification is always block. */
     public static InteractionContext forBlockClick(
             Player player, Level level, InteractionHand hand, BlockPos pos, Direction face,
             StackMode currentMode, boolean modeKeyDown) {
@@ -72,7 +75,8 @@ public final class InteractionContext {
                 block,
                 face,
                 currentMode,
-                modeKeyDown
+                modeKeyDown,
+                true
         );
     }
 
@@ -97,8 +101,7 @@ public final class InteractionContext {
      * the placement mode, from one that merely missed the block-click event.
      */
     public boolean isHittingBlock() {
-        HitResult hit = Minecraft.getInstance().hitResult;
-        return hit != null && hit.getType() == HitResult.Type.BLOCK;
+        return hittingBlock;
     }
 
     public boolean isAnyStackBlock() {

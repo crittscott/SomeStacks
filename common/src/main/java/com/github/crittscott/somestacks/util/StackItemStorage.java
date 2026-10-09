@@ -1,7 +1,5 @@
 package com.github.crittscott.somestacks.util;
 
-import com.github.crittscott.somestacks.SomeStacksCommon;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -36,6 +34,9 @@ public class StackItemStorage implements SlotAccess {
 
     private final ItemStack[] stacks;
     private final ListTag setAside = new ListTag();
+
+    /** Counts of newly retained entries and persisted entries that still could not be restored. */
+    public record LoadResult(int newlySetAside, int failedRetries) {}
 
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
@@ -172,17 +173,17 @@ public class StackItemStorage implements SlotAccess {
 
     /**
      * Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
-     * already be in the running game's format; {@code owner} names the block in the log.
+     * already be in the running game's format. Ordinary entries take precedence over retries;
+     * loading bypasses admission and does not call contents-change hooks. The caller reports
+     * returned retention counts once it knows the world location.
      */
-    public void deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt, BlockPos owner) {
+    public LoadResult deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
         setAside.clear();
         readItems(registries, nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND));
+        int newlySetAside = setAside.size();
         readItems(registries, nbt.getList(TAG_SET_ASIDE, Tag.TAG_COMPOUND));
-        if (!setAside.isEmpty()) {
-            SomeStacksCommon.LOGGER.warn("Kept {} unreadable saved item stack(s) aside in the stack block at {}",
-                    setAside.size(), owner.toShortString());
-        }
+        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
     }
 
     private void readItems(HolderLookup.Provider registries, ListTag list) {

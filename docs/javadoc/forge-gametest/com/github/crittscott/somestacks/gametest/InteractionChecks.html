@@ -139,9 +139,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">everyStackTypeBlocksPistons</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">deniedCleanupEmitsOnlyBlockChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
+ <a href="ProtectionChecks.RemovalObserver.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a>&nbsp;observer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: deny cleanup of a Singles or Bar block, then extract its final item.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#everyStackTypeBlocksPistons(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">everyStackTypeBlocksPistons</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: extend a piston into each SomeStacks block type.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionEventsFollowBlockSurvival(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionEventsFollowBlockSurvival</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractionRefusesIncompatibleOrFullHands(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">extractionRefusesIncompatibleOrFullHands</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -370,8 +383,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">Rotation sound pacing permits one sound per player within its throttle window and resets when
  player state clears. To reproduce in-game: perform rotation gestures faster than the throttle
- interval, then pause and rotate again. The rapid repeats do not each play a sound; the later
- rotation does.</div>
+ interval, disconnect and reconnect, then rotate immediately. Rapid repeats are suppressed;
+ the reconnect clears the old player's pacing state so the first new rotation can sound.</div>
 </section>
 </li>
 <li>
@@ -381,6 +394,25 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
 <div class="block">A successful mutation inside a stack emits one block-change game event. To reproduce
  in-game: put a sculk sensor beside a Storage Stack and deposit an item; the sensor activates.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractionEventsFollowBlockSurvival(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>extractionEventsFollowBlockSurvival</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractionEventsFollowBlockSurvival</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">To reproduce in-game: extract one of two Singles or Bars beside a sculk sensor, then the last.
+ The surviving block emits only change; removing the last item emits only destroy.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)">
+<h3>deniedCleanupEmitsOnlyBlockChange</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deniedCleanupEmitsOnlyBlockChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
+ <a href="ProtectionChecks.RemovalObserver.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a>&nbsp;observer)</span></div>
+<div class="block">To reproduce in-game: deny cleanup of a Singles or Bar block, then extract its final item.
+ The empty block survives and emits one change vibration, with no destroy vibration.</div>
 </section>
 </li>
 </ul>

@@ -133,26 +133,32 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stagedInsertionIsInvisibleUntilCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">stagedInsertionIsInvisibleUntilCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#repeatedLookupsShareOneRunLedger(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">repeatedLookupsShareOneRunLedger</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">No in-game reproduction applies: repeated sided lookups and different blocks in a run must
+ observe the same staged contents, including nested rollback and outer abort.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stagedInsertionIsInvisibleUntilCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">stagedInsertionIsInvisibleUntilCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: Fabric automation stages an insertion without publishing
  it to the block entity, then publishes the complete edit when the transaction commits.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageUtilMovesItemsFromChestIntoRun(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageUtilMovesItemsFromChestIntoRun</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageUtilMovesItemsFromChestIntoRun(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageUtilMovesItemsFromChestIntoRun</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">To reproduce in-game: connect Fabric Transfer API automation between a chest and a SomeStacks
  run; moving an item removes it from the chest and inserts it into the run.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transactionAllowsOnlyOneStructuralExtractionPosition(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">transactionAllowsOnlyOneStructuralExtractionPosition</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transactionAllowsOnlyOneStructuralExtractionPosition(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">transactionAllowsOnlyOneStructuralExtractionPosition</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: this verifies one Fabric transaction cannot stage structural
  extraction from two run positions whose simultaneous gravity updates would conflict.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#wholeStorageInsertExtractAndNestedRollbackAreAtomic(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">wholeStorageInsertExtractAndNestedRollbackAreAtomic</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#wholeStorageInsertExtractAndNestedRollbackAreAtomic(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">wholeStorageInsertExtractAndNestedRollbackAreAtomic</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: this verifies whole-storage Fabric transactions, including
  nested rollback, commit all mutations together or leave the run unchanged.</div>
 </div>
@@ -220,6 +226,14 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">transactionAllowsOnlyOneStructuralExtractionPosition</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">No in-game reproduction applies: this verifies one Fabric transaction cannot stage structural
  extraction from two run positions whose simultaneous gravity updates would conflict.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="repeatedLookupsShareOneRunLedger(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>repeatedLookupsShareOneRunLedger</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">repeatedLookupsShareOneRunLedger</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">No in-game reproduction applies: repeated sided lookups and different blocks in a run must
+ observe the same staged contents, including nested rollback and outer abort.</div>
 </section>
 </li>
 </ul>

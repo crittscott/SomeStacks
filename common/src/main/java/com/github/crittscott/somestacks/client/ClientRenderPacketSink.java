@@ -22,6 +22,11 @@ public final class ClientRenderPacketSink {
 
     private ClientRenderPacketSink() {}
 
+    /**
+     * Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging;
+     * only a complete final chunk publishes flags and lists. Rejection clears staging and throws
+     * a runtime exception to the loader's receive handler.
+     */
     public static void apply(ConfigSyncPkt packet) {
         try {
             stage(packet);

@@ -4,7 +4,7 @@
   "version": "${mod_version}",
   "name": "Some Stacks GameTests",
   "description": "Development-only Fabric GameTests for Some Stacks.",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
       "com.github.crittscott.somestacks.gametest.StackSortGameTests",
@@ -18,6 +18,9 @@
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
       "com.github.crittscott.somestacks.gametest.ProtectionGameTests"
+    ],
+    "client": [
+      "com.github.crittscott.somestacks.gametest.ClientCallbackGameTests"
     ]
   },
   "depends": {

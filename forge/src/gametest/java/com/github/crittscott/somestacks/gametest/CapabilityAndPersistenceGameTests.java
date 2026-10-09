@@ -117,6 +117,12 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
     }
 
+    /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
+    }
+
     /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
@@ -132,7 +138,8 @@ public final class CapabilityAndPersistenceGameTests {
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(helper);
+        CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(
+                helper, GameTestSupport.playerFactory(helper));
     }
 
     /** No in-game reproduction applies: a reentrant Forge capability edit is refused. */

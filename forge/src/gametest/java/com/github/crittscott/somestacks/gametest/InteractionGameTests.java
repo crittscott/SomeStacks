@@ -129,4 +129,46 @@ public final class InteractionGameTests {
         SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
     }
 
+    /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
+        SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configStagingChecksSequencesAndTotals}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
+        SynchronizationChecks.configStagingChecksSequencesAndTotals(helper);
+    }
+
+    /** See {@link SynchronizationChecks#configDecoderRejectsMalformedCountsAndNamespaces}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper helper) {
+        SynchronizationChecks.configDecoderRejectsMalformedCountsAndNamespaces(helper);
+    }
+
+    /** See {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void blockRulesRespectPrecedenceAndHands(GameTestHelper helper) {
+        ClientGestureChecks.blockRulesRespectPrecedenceAndHands(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void fullTopFacesFallThroughToPlacement(GameTestHelper helper) {
+        ClientGestureChecks.fullTopFacesFallThroughToPlacement(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#airRulesAndDisabledModeCycling}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void airRulesAndDisabledModeCycling(GameTestHelper helper) {
+        ClientGestureChecks.airRulesAndDisabledModeCycling(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void gestureSyncSendsChangesAndResets(GameTestHelper helper) {
+        ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
+    }
+
 }
