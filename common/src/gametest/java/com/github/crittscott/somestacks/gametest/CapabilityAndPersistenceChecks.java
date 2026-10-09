@@ -365,11 +365,12 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Singles and Bar targeting covers the full block, while collision follows occupied contents.
+     * Singles and Bar targeting, outlines, and collision follow occupied contents.
      * To reproduce in-game: use /setblock to place an empty Singles or Bar block, then deposit and
-     * extract items in different bottom-layer positions. Empty positions remain targetable, the
-     * outline covers the full block, and collision follows the items. Empty blocks have no collision
-     * or camera fog. Mobs avoid both types. Exact shape and path-type assertions require the GameTest.
+     * extract items in different bottom-layer positions. The outline follows the occupied positions;
+     * aim through empty space at an occupied cell in another stack behind it to target that stack.
+     * Empty blocks have no outline, collision, or camera fog. Mobs avoid both types.
+     * Exact shape and path-type assertions require the GameTest.
      */
     public static void cachedShapesInvalidateWhenContentsChange(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -422,8 +423,8 @@ public final class CapabilityAndPersistenceChecks {
         BlockPos pos = be.getBlockPos();
         var level = helper.getLevel();
         var context = CollisionContext.empty();
-        check(!Shapes.joinIsNotEmpty(Shapes.block(), block.getShape(state, level, pos, context), BooleanOp.NOT_SAME),
-                "Block targeting shape is not a full block");
+        check(!Shapes.joinIsNotEmpty(occupied, block.getShape(state, level, pos, context), BooleanOp.NOT_SAME),
+                "Block targeting differs from occupied shape");
         check(!Shapes.joinIsNotEmpty(occupied, block.getCollisionShape(state, level, pos, context), BooleanOp.NOT_SAME),
                 "Block collision differs from occupied shape");
         check(!Shapes.joinIsNotEmpty(Shapes.block(), block.getInteractionShape(state, level, pos), BooleanOp.NOT_SAME),

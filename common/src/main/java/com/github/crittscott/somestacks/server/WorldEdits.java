@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.PlatformServices;
+import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -9,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -18,6 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
+    private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
     private WorldEdits() {
     }
 
@@ -41,10 +45,31 @@ public final class WorldEdits {
         return mayPlace(automationActor(level), pos);
     }
 
-    /** Consults a dedicated loader protection query for an existing adjacent stack. */
+    /** Consults destination protection without allowing the consultation to execute gestures. */
     public static boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        return !isProtected(player, pos)
-                && PlatformServices.editAuthority().mayUseAdjacent(player, pos);
+        if (isConsultingAdjacent() || isProtected(player, pos)) {
+            return false;
+        }
+        consultingAdjacent.set(true);
+        try {
+            return PlatformServices.editAuthority().mayUseAdjacent(player, pos);
+        } finally {
+            consultingAdjacent.remove();
+        }
+    }
+
+    public static boolean isConsultingAdjacent() {
+        return consultingAdjacent.get();
+    }
+
+    /** Destination hit used by loader protection listeners for a neighboring deposit. */
+    public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
+        var level = player.serverLevel();
+        var ray = ViewRays.of(player);
+        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
+                .clip(ray.eye(), ray.end(), pos);
+        return hit != null ? hit
+                : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
     /** The actor automation-driven growth and removal are attributed to. */

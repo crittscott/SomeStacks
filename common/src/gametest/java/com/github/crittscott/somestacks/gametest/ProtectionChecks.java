@@ -10,6 +10,8 @@ import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -195,6 +197,52 @@ public final class ProtectionChecks {
         } finally {
             ServerGestureState.clear(player.getUUID());
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        }
+    }
+
+    /**
+     * Empty grounded cells remain depositable beside occupied cells in both stack types.
+     * To reproduce in-game: place a Singles or Bar Stack on stone, put an item in one bottom cell,
+     * then hold the modifier and aim down through two other empty bottom cells at the stone.
+     * Each deposit fills the aimed cell without changing the first item or adding an upper layer.
+     */
+    public static void adjacentDepositsFillGroundedCells(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        var bars = GameTestScaffold.placeBar(helper, ORIGIN.east(3));
+        ItemStack singleItem = new ItemStack(Items.STONE);
+        ItemStack barItem = new ItemStack(GameTestScaffold.firstBarItem());
+        for (var be : java.util.List.of(singles, bars)) {
+            boolean isSingles = be == singles;
+            ItemStack item = isSingles ? singleItem : barItem;
+            be.getItems().setStackInSlot(0, item.copy());
+            BlockPos target = be.getBlockPos();
+            BlockPos support = target.below();
+            helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+            ServerPlayer player = playerFactory.apply(item.copyWithCount(2));
+            ServerGestureState.set(player, StackMode.SINGLES_STACK, true);
+            try {
+                for (int slot = 1; slot <= 2; slot++) {
+                    var box = (isSingles
+                            ? SinglesCubeIdx.shapeFor(slot, 0)
+                            : BarCubeIdx.shapeFor(slot)).bounds();
+                    double x = target.getX() + (box.minX + box.maxX) / 2;
+                    double z = target.getZ() + (box.minZ + box.maxZ) / 2;
+                    player.setPos(x, target.getY() + 2 - player.getEyeHeight(), z);
+                    check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                            new BlockHitResult(new Vec3(x, target.getY(), z), Direction.UP,
+                                    support, false), true, true), "Grounded deposit was not consumed");
+                    check(!be.getItems().getStackInSlot(slot).isEmpty(), "Aimed grounded cell stayed empty");
+                    checkEquals(2 - slot, player.getMainHandItem().getCount(), "Grounded deposit hand");
+                }
+                check(ItemStack.matches(item, be.getItems().getStackInSlot(0)),
+                        "Grounded deposits changed the first item");
+                checkEquals(3, GameTestScaffold.occupied(be.getItems()),
+                        "Grounded deposits filled unintended cells");
+            } finally {
+                ServerGestureState.clear(player.getUUID());
+                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            }
         }
     }
 

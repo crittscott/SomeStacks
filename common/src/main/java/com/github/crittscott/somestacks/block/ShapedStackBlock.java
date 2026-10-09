@@ -8,7 +8,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Full-block targeting and occupied-content collision shared by Singles and Bar stacks. */
+/** Occupied-content targeting and collision shared by Singles and Bar stacks. */
 public abstract class ShapedStackBlock extends StackBlock {
     private static final VoxelShape FULL_BLOCK_SHAPE = Shapes.block();
 
@@ -25,7 +25,7 @@ public abstract class ShapedStackBlock extends StackBlock {
     @Override
     public VoxelShape getShape(
             BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return FULL_BLOCK_SHAPE;
+        return occupiedShape(level, pos);
     }
 
     @Override

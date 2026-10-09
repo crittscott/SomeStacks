@@ -41,7 +41,7 @@ public final class StackInteractions {
     /** Handles a vanilla use call on an existing stack block. */
     public static boolean handleExistingStack(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit, BlockType clickedType) {
-        if (hand != InteractionHand.MAIN_HAND) {
+        if (WorldEdits.isConsultingAdjacent() || hand != InteractionHand.MAIN_HAND) {
             return false;
         }
 
@@ -61,7 +61,7 @@ public final class StackInteractions {
     public static boolean handleSneakingRotation(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit,
             boolean blockAllowed, boolean itemAllowed) {
-        if (hand != InteractionHand.MAIN_HAND
+        if (WorldEdits.isConsultingAdjacent() || hand != InteractionHand.MAIN_HAND
                 || !blockAllowed
                 || !itemAllowed
                 || !player.isShiftKeyDown()
@@ -87,7 +87,7 @@ public final class StackInteractions {
     public static boolean handleAdjacentClick(
             ServerPlayer player, InteractionHand hand, BlockHitResult hit,
             boolean blockAllowed, boolean itemAllowed) {
-        if (hand != InteractionHand.MAIN_HAND) {
+        if (WorldEdits.isConsultingAdjacent() || hand != InteractionHand.MAIN_HAND) {
             return false;
         }
 

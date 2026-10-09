@@ -5,11 +5,6 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import eu.pb4.common.protection.api.CommonProtection;
-import eu.pb4.common.protection.api.ProtectionProvider;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.AABB;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -45,39 +40,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.
  */
 public final class ProtectionGameTests implements FabricGameTest {
-    private static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
+    static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
             new ConcurrentHashMap<>();
     private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES =
             new ConcurrentHashMap<>();
 
     static {
-        CommonProtection.register(ResourceLocation.fromNamespaceAndPath("somestacks", "test_protection"),
-                new ProtectionProvider() {
-                    @Override
-                    public boolean isProtected(Level level, BlockPos pos) { return false; }
-
-                    @Override
-                    public boolean isAreaProtected(Level level, AABB area) { return false; }
-
-                    @Override
-                    public boolean canPlaceBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
-                        return consult(level, pos, player);
-                    }
-
-                    @Override
-                    public boolean canInteractBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
-                        return consult(level, pos, player);
-                    }
-
-                    private boolean consult(Level level, BlockPos pos, Player player) {
-                        PlacementProbe probe = PLACEMENT_PROBES.get(new TestTarget(level, pos));
-                        if (probe == null) return true;
-                        probe.invoked().set(true);
-                        probe.sawAir().set(level.getBlockState(pos).isAir());
-                        probe.actor().set(player);
-                        return probe.result() == InteractionResult.PASS;
-                    }
-                });
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
             PlacementProbe probe = PLACEMENT_PROBES.get(new TestTarget(level, hit.getBlockPos()));
             if (probe != null) probe.syntheticClick().set(true);
@@ -93,11 +61,19 @@ public final class ProtectionGameTests implements FabricGameTest {
         });
     }
 
+    static boolean consult(Level level, BlockPos pos, Player player) {
+        PlacementProbe probe = PLACEMENT_PROBES.get(new TestTarget(level, pos));
+        if (probe == null) return true;
+        probe.invoked().set(true);
+        probe.sawAir().set(level.getBlockState(pos).isAir());
+        probe.actor().set(player);
+        return probe.result() == InteractionResult.PASS;
+    }
+
     /**
      * To reproduce in-game: deny [SomeStacks] placement in a Common Protection API claim, then
      * insert into a full Storage pile through automation. Growth accepts nothing and keeps the input.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationGrowthConsultsProtectionWithoutSyntheticClick(GameTestHelper helper) {
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -145,7 +121,6 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: stand outside a claim and click toward a denied destination inside it.
      * Fabric consults that destination while it is still air and places nothing there.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void destinationConsultationRunsBeforePlacement(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayer.get(level);
@@ -262,7 +237,6 @@ public final class ProtectionGameTests implements FabricGameTest {
      * item use at a claimed destination, then hold the modifier and right-click the neighboring
      * block toward it. No item is deposited and no stack is placed in the denied position.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void adjacentConsultationHonorsProtectionQuery(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayer.get(level);
@@ -349,9 +323,9 @@ public final class ProtectionGameTests implements FabricGameTest {
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    private record TestTarget(Level level, BlockPos pos) {}
+    record TestTarget(Level level, BlockPos pos) {}
 
-    private record PlacementProbe(
+    record PlacementProbe(
             InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir,
             AtomicReference<Player> actor, AtomicBoolean syntheticClick) {}
 
@@ -573,7 +547,6 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: hold the modifier and click a neighboring face toward a Singles Stack
      * allowed by Common Protection API. One item is deposited without inventing a destination click.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void allowedAdjacentDepositUsesProtectionQuery(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
         PlacementProbe probe = new PlacementProbe(InteractionResult.PASS,

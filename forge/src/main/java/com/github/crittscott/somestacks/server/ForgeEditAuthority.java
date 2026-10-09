@@ -8,6 +8,7 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,6 +17,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,16 @@ import java.util.ArrayList;
  * a connection-safe {@code ServerPlayer} and caches one actor per dimension.
  */
 public final class ForgeEditAuthority implements EditAuthority {
+    @Override
+    public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        var event = new PlayerInteractEvent.RightClickBlock(
+                player, InteractionHand.MAIN_HAND, pos, WorldEdits.adjacentHit(player, pos));
+        MinecraftForge.EVENT_BUS.post(event);
+        return !event.isCanceled()
+                && event.getUseBlock() != Event.Result.DENY
+                && event.getUseItem() != Event.Result.DENY;
+    }
+
     private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();
 
     @Override

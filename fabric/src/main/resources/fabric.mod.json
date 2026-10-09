@@ -25,10 +25,12 @@
     "somestacks.mixins.json"
   ],
   "depends": {
-    "common-protection-api": ">=${common_protection_api_version}",
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",
     "minecraft": "${minecraft_version}",
     "java": ">=21"
+  },
+  "suggests": {
+    "common-protection-api": ">=${common_protection_api_version}"
   }
 }

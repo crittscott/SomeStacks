@@ -33,9 +33,9 @@ The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `
 
 Fabric uses Loom's current Mixin remapping path without the legacy annotation processor. Forge and NeoForge use their loader-specific Loom setup.
 
-Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric declares Common Protection API through non-transitive `modImplementation` for compilation, runtime, and development runs. Fabric metadata requires it at runtime; the API is not bundled. Placement and neighboring-stack interaction consult claim mods that implement its providers.
+Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric declares Common Protection API through non-transitive `modCompileOnly`; `-PwithCommonProtectionApi=true` adds it to development runtime through `modRuntimeOnly`. Fabric metadata suggests it without requiring or bundling it. When installed, placement and neighboring-stack interaction consult claim mods that implement its providers; without it, placement uses vanilla checks and neighboring-stack deposits require direct clicks.
 
-Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. That command checks a main/off-hand block-use callback while aimed at a stack with Shift and the Stack Modifier released. The same source set is wired into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run.
+Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. That command checks a main/off-hand block-use callback while aimed at a stack with Shift and the Stack Modifier released. The same source set is wired into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Fabric's GameTest metadata includes absence-specific checks by default and provider-backed checks when `-PwithCommonProtectionApi=true` is set.
 
 On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions.
 
@@ -57,7 +57,7 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 | NeoForge | `net.neoforged:neoforge:21.4.158` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.119.4+1.21.4` | Fabric runtime and development API |
-| Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Fabric required protection-query API, also on development runs |
+| Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection-query API; development runtime only with `-PwithCommonProtectionApi=true` |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -76,7 +76,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 | NeoForge compatibility | `[21.4.158,22)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.19.5` |
-| Common Protection API runtime declaration | `>=1.0.0`; compilation uses `1.0.0` |
+| Common Protection API suggested version | `>=1.0.0`; compilation uses `1.0.0` |
 | Fabric API runtime declaration | `>=0.119.4+1.21.4`; compilation uses `0.119.4+1.21.4` |
 
 ## Resolution and version authorities

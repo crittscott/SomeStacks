@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
@@ -184,25 +185,50 @@ public final class ProtectionGameTests {
     }
 
     /**
-     * To reproduce in-game: hold the modifier and click a neighbor toward a Singles Stack.
-     * No deposit occurs; click the stack directly to deposit. No destination click is fabricated.
+     * Neighbor deposits consult protection at the destination and honor cancellation or either
+     * use denial. To reproduce in-game: hold the modifier and click the support beneath an empty
+     * Singles cell; it fills when allowed and preserves the held item when a claim denies use.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void adjacentStackRequiresDirectClick(GameTestHelper helper) {
+    public static void adjacentStackConsultsDestinationProtection(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
         java.util.concurrent.atomic.AtomicInteger clicks = new java.util.concurrent.atomic.AtomicInteger();
+        java.util.concurrent.atomic.AtomicInteger denial = new java.util.concurrent.atomic.AtomicInteger();
         Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
-            if (event.getEntity() == player && event.getPos().equals(target)) clicks.incrementAndGet();
+            if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return;
+            clicks.incrementAndGet();
+            check(WorldEdits.isConsultingAdjacent(), "Destination consultation lacks its gesture guard");
+            switch (denial.get()) {
+                case 1 -> event.setCanceled(true);
+                case 2 -> event.setUseBlock(TriState.FALSE);
+                case 3 -> event.setUseItem(TriState.FALSE);
+                default -> { }
+            }
         };
         NeoForge.EVENT_BUS.addListener(observe);
         try {
-            check(!WorldEdits.mayUseAdjacent(player, target), "Adjacent edit bypassed the direct-click gate");
-            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), false);
-            checkEquals(0, clicks.get(), "Authorization fabricated an interaction event");
+            check(WorldEdits.mayUseAdjacent(player, target), "Allowed destination was refused");
+            checkEquals(1, clicks.get(), "Destination consultation count");
+            helper.getLevel().removeBlock(target, false);
+            ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), true);
+            for (int reason = 1; reason <= 3; reason++) {
+                denial.set(reason);
+                check(!WorldEdits.mayUseAdjacent(player, target), "Destination denial was ignored");
+                helper.getLevel().removeBlock(target, false);
+                ProtectionChecks.checkAdjacentAndDirectDeposits(helper, GameTestSupport.playerFactory(helper), false);
+            }
+            check(!WorldEdits.isConsultingAdjacent(), "Destination consultation guard leaked");
         } finally {
             NeoForge.EVENT_BUS.unregister(observe);
         }
+        helper.succeed();
+    }
+
+    /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
+        ProtectionChecks.adjacentDepositsFillGroundedCells(helper, GameTestSupport.playerFactory(helper));
         helper.succeed();
     }
 

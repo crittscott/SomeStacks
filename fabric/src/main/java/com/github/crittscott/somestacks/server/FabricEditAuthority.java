@@ -1,8 +1,8 @@
 package com.github.crittscott.somestacks.server;
 
-import eu.pb4.common.protection.api.CommonProtection;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,6 +16,10 @@ import javax.annotation.Nullable;
 
 /** Fabric protection queries and native block-break lifecycle for player-attributed edits. */
 public final class FabricEditAuthority implements EditAuthority {
+    @Nullable
+    private final FabricProtectionQueries protectionQueries = FabricLoader.getInstance()
+            .isModLoaded("common-protection-api") ? new CommonProtectionQueries() : null;
+
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return FakePlayer.get(level, AutomationActor.PROFILE);
@@ -23,13 +27,12 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        return CommonProtection.canInteractBlock(
-                player.serverLevel(), pos, player.getGameProfile(), player);
+        return protectionQueries != null && protectionQueries.mayUseAdjacent(player, pos);
     }
 
     @Override
     public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
-        return CommonProtection.canPlaceBlock(level, pos, placer.getGameProfile(), placer);
+        return protectionQueries == null || protectionQueries.mayPlace(placer, level, pos);
     }
 
     @Override

@@ -66,13 +66,21 @@ repositories {
     maven { url = 'https://maven.nucleoid.xyz/' }
 }
 
+def withCommonProtectionApi = providers.gradleProperty('withCommonProtectionApi')
+        .map { it.toBoolean() }.getOrElse(false)
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-    modImplementation("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
+    modCompileOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
         transitive = false
+    }
+    if (withCommonProtectionApi) {
+        modRuntimeOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
+            transitive = false
+        }
     }
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
@@ -99,6 +107,12 @@ tasks.named('processGametestResources', ProcessResources).configure {
             mod_version          : mod_version,
             fabric_loader_version: fabric_loader_version,
             fabric_api_version   : fabric_api_version,
+            protection_api_gametest_entrypoint: withCommonProtectionApi
+                    ? ',\n      "com.github.crittscott.somestacks.gametest.ProtectionApiGameTests"'
+                    : '',
+            no_protection_api_gametest_entrypoint: withCommonProtectionApi
+                    ? ''
+                    : ',\n      "com.github.crittscott.somestacks.gametest.NoProtectionApiGameTests"',
     ]
     inputs.properties replaceProperties
 

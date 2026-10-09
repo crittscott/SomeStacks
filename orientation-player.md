@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Some Stacks turns held items into visible storage. It adds three blocks, with no block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; removing its last contents normally removes it.
 
-Requires Minecraft 1.21.4, matching client/server loader builds, and Common Protection API on Fabric.
+Requires Minecraft 1.21.4 and matching client/server loader builds. Fabric requires Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
@@ -30,13 +30,13 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode |
 | Hold `V` + item, right-click a stack | Deposit into that stack, whatever the selected mode |
-| Hold `V` + item, right-click another block | Place the selected type against that face and make the first deposit; on Fabric, an allowed adjacent Singles/Bar Stack can instead receive the deposit |
+| Hold `V` + item, right-click another block | Place the selected type against that face and make the first deposit; an allowed adjacent Singles/Bar Stack can instead receive the deposit (Fabric requires Common Protection API) |
 | Right-click a stack, no `V`, no Shift | Extract the nearest stored item on the view ray |
 | Toggle Permanent mode, hold `V`, empty hand, right-click a Storage Stack | Toggle whether that pile keeps empty blocks |
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Forge/NeoForge require direct existing-stack clicks. Fabric allows neighbor deposits when Common Protection API permits them.
+Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric allows neighbor deposits when Common Protection API is installed and permits them; otherwise it requires direct clicks.
 
 Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound is limited to once every 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
 
@@ -90,7 +90,7 @@ Every bar above the bottom layer must overlap a bar directly below, and support 
 - **Light:** each cell holding a glowing `BlockItem` contributes a quarter of that block's light level by integer division; contributions add, capped at 15. Item count in a Storage slot does not matter.
 - **Pistons:** all three block piston movement.
 - **Collision:** Storage is a full block. Singles and Bar collide only on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unpathable.
-- **Targeting:** Singles and Bar have a full-block selection outline, so empty positions remain clickable; empty blocks remain clickable and breakable without collision.
+- **Targeting:** Singles and Bar have selection outlines around occupied cells or bars. Aiming through empty space can target a block behind the stack; empty stacks have no outline.
 - **Sounds:** deposits, extraction, and rotations use registered Some Stacks sound events with specific subtitles; resource packs can replace them per type and action through ordinary `sounds.json` entries.
 
 ## Automation
@@ -169,7 +169,7 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge require direct stack clicks; Fabric queries Common Protection API for neighbor deposits and placement. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge consult destination interaction protection for neighbor deposits. Fabric requires direct stack clicks unless Common Protection API is installed and permits a neighbor deposit. Fabric consults that API for placement and automation growth when available; otherwise those edits use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
 The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 
@@ -177,10 +177,3 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
 
-## Boundaries
-
-- No inventory screen, portable stack item, recipe, creative-tab entry, or block-item drop.
-- Only Storage piles can be permanent; empty Singles and Bar blocks are cleaned up.
-- Exact-item denial applies to player gestures only; namespace denial applies to automation too.
-- Item profiles and Bar mappings are client resources; local item-profile overrides take priority over resource packs.
-- Existing contents stay legal to extract and move internally after a config or tag change that would reject a new deposit.
