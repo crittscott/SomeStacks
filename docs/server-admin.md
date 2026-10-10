@@ -2,7 +2,12 @@
 
 ## The config file
 
-Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestacks-server.json`, so it travels with the world. `/ss` list edits update the running values and save the file immediately. A direct file edit takes effect after restarting the server; `/ss reload` does not reread this JSON.
+World policy is stored per world, so it travels with the world:
+
+- **Forge and NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SERVER config with a comment on every setting. The loader picks up file edits on its own.
+- **Fabric:** `<world>/serverconfig/somestacks-server.json`, created with defaults on first start. After editing it, run `/ss reload`. A malformed field falls back to its default and is logged; the rest of the file still applies.
+
+`/ss deny` and `/ss gen` edits update the running values and save the file immediately.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -10,26 +15,43 @@ Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestac
 | `enable_storage_stack_block` | `stacks` | `true` | When false, no new Storage Stacks are placed or grown. Existing ones keep working. |
 | `enable_singles_stack_block` | `stacks` | `true` | The same for Singles Stacks. |
 | `enable_bar_stack_block` | `stacks` | `true` | The same for Bar Stacks. |
-| `disable_mods` | `compatibility` | empty | Namespaces whose items no stack will accept. |
-| `disable_items` | `compatibility` | empty | Item ids refused on the player deposit gestures. |
-| `ingots` | `compatibility` | Forge: `#forge:ingots*`; Fabric and NeoForge: `#c:ingots*`; all: `#somestacks:ingots` | What a Bar Stack accepts: `#name` is an item-tag pattern, a bare id is one item. |
+| `disable_mods` | `compatibility` | empty | Namespaces whose items players and automation may not put into stacks. |
+| `disable_items` | `compatibility` | `evilcraft:broom_part` | Item ids refused on player deposits. Automation is not affected. The default lists items that crash clients when drawn. |
 | `placements_per_tick` | `render_gallery` | `64` | Blocks the gallery commands place per tick, floor included. |
 | `enabled` | `render_gallery` | `false` | Whether `/ss gallery` and `/ss ingotgallery` can be run at all. |
 | `required_permission_level` | `render_gallery` | `3` | Permission level `/ss gallery` and `/ss ingotgallery` require. Range 0–4. |
 | `gen_mods` | `render_gallery` | empty | Namespaces the `list` gallery forms build, in the order given. |
 | `gen_items` | `render_gallery` | empty | Items `/ss gallery items` builds a row from. |
 
-Disabling a mod or an item bars *new* contents. Anything already stored can still be taken out.
+Disabling a type, mod, or item bars *new* contents. Anything already stored can still be taken out.
 
-### Ingots
+## Ingots
 
-`ingots` decides what a Bar Stack holds — and, by complement, what a Singles Stack refuses. Widening one narrows the other by exactly as much.
+What a Bar Stack holds is the item tag `somestacks:ingots`. Singles Stacks take everything allowed that the tag does not, so widening one narrows the other by exactly as much. There is no config setting or command for it; it is ordinary data-pack data.
 
-An entry beginning with `#` names an item tag and may contain `*`, matching a run of any characters. The Forge default `#forge:ingots*` covers `#forge:ingots` itself and every `forge:ingots/<metal>` beneath it. Fabric and NeoForge use the corresponding conventional `#c:ingots*` default.
+The shipped tag includes `#c:ingots` and `#forge:ingots` (both optional, so a missing one is ignored) plus a hand-picked list of vanilla and modded ingots. Child tags such as `c:ingots/iron` count only when the parent tag includes them, which the loaders' conventional tags normally do.
 
-Any other entry is a single item id, for accepting one hand-picked item without a data pack tag. A bare id is checked against the registry when added; a `#` tag entry is taken as typed, since it may name a tag no loaded data pack declares. To hand-pick a larger set, declare an item tag in a data pack and add it here with `#` — the mod ships `#somestacks:ingots` for exactly this.
+To change it, add a data pack to the world, e.g. `<world>/datapacks/my_ingots/`, containing `pack.mcmeta` and `data/somestacks/tags/item/ingots.json`:
 
-The item set is re-resolved whenever the config changes *and* whenever tags are bound, so a data pack reload is picked up without touching the config.
+```json
+{
+  "replace": false,
+  "values": [
+    "examplemod:steel_ingot",
+    { "id": "#othermod:alloys", "required": false }
+  ]
+}
+```
+
+- `"replace": false` adds to the shipped list. `"replace": true` discards it, so the tag holds only what you list.
+- An entry is an item id or `#` and a tag id. Mark entries from mods that may be absent `"required": false`; a missing required entry makes the whole tag fail to load.
+- You cannot remove a single entry from the shipped list. To drop one, use `"replace": true` and list everything you want to keep.
+
+Run `/reload` to apply the change. Items already in a stack stay where they are; the tag only decides what new deposits a Bar or Singles Stack accepts. `/ss ingotgallery` shows what the current tag accepts.
+
+### Coming from 1.21.1
+
+1.21.1 kept an ingot list in `compatibility.ingots` of `<world>/serverconfig/somestacks-server.json`. That field is no longer read. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
 
 ## Permissions
 
@@ -45,27 +67,26 @@ Some subcommands additionally require a **player** rather than the console, beca
 
 | Command | Gate | Purpose |
 | --- | --- | --- |
-| `/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]` | Level 2, in game | Set how one item is drawn, in your own view, in memory. |
-| `/ss item <item> reset` | Level 2, in game | Drop your entry for that item. |
-| `/ss write changed` | Level 2, in game | Save what `/ss item` set to `config/somestacks/item_overrides.json`. |
-| `/ss write <modid \| all \| list>` | Level 2, in game | Dump resolved profiles to `config/somestacks/generated_overrides/`. |
+| `/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]` | Anyone, client-local | Set how one item is drawn, in your own view, in memory. |
+| `/ss item <item> reset` | Anyone, client-local | Drop your entry for that item. |
+| `/ss write changed` | Anyone, client-local | Save what `/ss item` set to `config/somestacks/item_overrides.json`. |
+| `/ss write <modid \| all \| list>` | Anyone, client-local | Dump resolved profiles to `config/somestacks/generated_overrides/`. |
 | `/ss gallery <modid \| all \| list \| items>` | `render_gallery.required_permission_level` (default 3), in game; disabled by default | Build Storage Stack render galleries. |
 | `/ss ingotgallery <modid \| all \| list>` | `render_gallery.required_permission_level` (default 3), in game; disabled by default | Build Bar Stack render galleries. |
 | `/ss gen mod add\|remove\|list <modid>` | Level 2 | Edit the gallery namespace list. |
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
-| `/ss ingot add\|remove\|list <#tag \| item>` | Level 2 | Edit the ingot list — `#` tag patterns and item ids. |
-| `/ss reload` | Level 2 | Re-read server render overrides and re-sync every player. |
+| `/ss reload` | Level 2 | Refresh server policy and re-sync every player. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
-Command edits to the five text lists update both the running server and the config file, so a later save cannot undo them.
+Command edits to the four text lists update both the running server and the config file, so a later save cannot undo them.
 
 An item id is checked against the registry when it is added to a list, because those lists are matched by exact id and a typo would sit there looking effective. A mod id is taken as typed, since it may name a mod that is not installed yet.
 
 ### `/ss reload`
 
-Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. It does **not** re-read `<world>/serverconfig/somestacks-server.json`; restart the server after editing that file directly.
+Refreshes server policy and pushes the client-facing settings to every player. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on Forge and NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
 
 ### Render galleries
 
@@ -75,11 +96,13 @@ Galleries **overwrite** their floor and stack positions directly and do not appl
 
 ## What the server tells the client
 
-On login and `/ss reload`, the server sends each player the three stack-type enable flags and the server render overrides. The disabled-mod and disabled-item lists, the ingot list, and the pile settings stay server-side and are never sent.
+On login and whenever policy changes, the server sends each player the three stack-type enable flags and the namespace lists the client needs. The disabled-item list and the pile settings stay server-side. The ingot tag reaches clients the vanilla way, with the other item tags.
+
+Item appearance is client resource data. To give players shared render profiles or Bar textures, ship them in a server resource pack.
 
 ## Protection and claim mods
 
-On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge require direct clicks to deposit into existing stacks and fire native placement events before publishing new blocks, restoring full snapshots on denial. Fabric requires Common Protection API for placement and neighboring-stack interaction queries; claim mods must implement its providers to protect those edits. Player placement and automated growth both query it before changing the world.
+On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits, and queries Common Protection API for placement, growth, and neighbor deposits when it is installed; without it, vanilla checks govern placement and growth.
 
 Blocks the mod removes during cleanup fire native break hooks: Forge/NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
 

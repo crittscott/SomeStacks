@@ -149,7 +149,7 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spreading work across ticks, and skip disabled mods and items. They bypass placement protection and are off by default. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods and items. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
 
 ## Item appearance
 
@@ -175,5 +175,5 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 ## Saved worlds
 
-A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
+A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
 

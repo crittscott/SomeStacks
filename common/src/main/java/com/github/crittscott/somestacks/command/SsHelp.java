@@ -82,7 +82,10 @@ final class SsHelp {
 
         DENY(SsCommand.COMMAND_DENY, "somestacks.command.help.deny.summary", Gate.OPERATOR,
                 List.of("somestacks.command.help.deny.detail.1",
-                        "somestacks.command.help.deny.detail.2"));
+                        "somestacks.command.help.deny.detail.2")),
+
+        HELP(SsCommand.COMMAND_HELP, "somestacks.command.help.help.summary", Gate.ANYONE,
+                List.of("somestacks.command.help.help.detail.1"));
 
         private final String name;
         private final String summaryKey;
