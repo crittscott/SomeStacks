@@ -53,7 +53,7 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 | Minecraft | `1.21.4` | Compile and runtime target |
 | Mojang mappings | Official mappings for `1.21.4` | Base mapping layer; no separate mapping version is declared |
 | Parchment mappings | `org.parchmentmc.data:parchment-1.21.4:2025.03.23@zip` | Layer over the official mappings |
-| Forge | `net.minecraftforge:forge:1.21.4-54.1.18` | Exact Forge compile and development-run baseline |
+| Forge | `net.minecraftforge:forge:1.21.4-54.1.14` | Exact Forge compile and development-run baseline |
 | NeoForge | `net.neoforged:neoforge:21.4.158` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.119.4+1.21.4` | Fabric runtime and development API |
@@ -71,7 +71,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 | Some Stacks artifact | `0.8.2` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
 | Minecraft compatibility | exactly `1.21.4`; Forge and NeoForge syntax `[1.21.4]`, Fabric syntax `1.21.4` |
-| Forge compatibility | `[54.1.18,55)` |
+| Forge compatibility | `[54.1.14,55)` |
 | Forge JavaFML loader compatibility | `[54,55)` |
 | NeoForge compatibility | `[21.4.158,22)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |

@@ -6,9 +6,10 @@
 
 ### Platform
 
-- Forge **54.x** (accepts `[54.1.18,55)`), NeoForge **21.4.x** (accepts `[21.4.158,22)`).
+- Forge **54.x** (accepts `[54.1.14,55)`), NeoForge **21.4.x** (accepts `[21.4.158,22)`).
 - Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.119.4+1.21.4**. Common Protection API **1.0.0** is optional.
 - Mappings updated to Mojang official + Parchment **2025.03.23-1.21.4**.
+- Build toolchain: Architectury Loom **1.17.493**; Gradle **9.5.1** and Shadow **9.4.3** unchanged.
 - Client and server must run the same loader build of the mod. Fabric checks this both ways when a player connects.
 
 ### Breaking — worlds, configs, and packs
