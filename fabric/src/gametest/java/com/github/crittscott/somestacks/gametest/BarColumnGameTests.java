@@ -33,6 +33,12 @@ public final class BarColumnGameTests implements FabricGameTest {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
+    /** See {@link BarColumnChecks#bricksAreBarItemsButBrickBlocksAreNot}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void bricksAreBarItemsButBrickBlocksAreNot(GameTestHelper helper) {
+        BarColumnChecks.bricksAreBarItemsButBrickBlocksAreNot(helper);
+    }
+
     /** See {@link BarColumnChecks#upperBarRequiresOverlappingSupport}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void upperBarRequiresOverlappingSupport(GameTestHelper helper) {

@@ -27,9 +27,9 @@ Disabling a type, mod, or item bars *new* contents. Anything already stored can 
 
 ## Ingots
 
-What a Bar Stack holds is the item tag `somestacks:ingots`. Singles Stacks take everything allowed that the tag does not, so widening one narrows the other by exactly as much. There is no config setting or command for it; it is ordinary data-pack data.
+What a Bar Stack holds is the item tag `somestacks:ingots`: ingots and bricks, despite the name. Singles Stacks take everything allowed that the tag does not, so widening one narrows the other by exactly as much. There is no config setting or command for it; it is ordinary data-pack data.
 
-The shipped tag includes `#c:ingots` and `#forge:ingots` (both optional, so a missing one is ignored) plus a hand-picked list of vanilla and modded ingots. Child tags such as `c:ingots/iron` count only when the parent tag includes them, which the loaders' conventional tags normally do.
+The shipped tag includes `#c:ingots`, `#forge:ingots`, and `#c:bricks` (all optional, so a missing one is ignored) plus a hand-picked list of vanilla and modded ingots and brick items. Blocks made from bricks, such as `minecraft:bricks` or brick stairs, are not included. Bricks draw with a brick-shaped bar texture rather than the ingot one. Child tags such as `c:ingots/iron` count only when the parent tag includes them, which the loaders' conventional tags normally do.
 
 To change it, add a data pack to the world, e.g. `<world>/datapacks/my_ingots/`, containing `pack.mcmeta` and `data/somestacks/tags/item/ingots.json`:
 

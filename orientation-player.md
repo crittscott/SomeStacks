@@ -16,7 +16,7 @@ Requires Minecraft 1.21.4 and matching client/server loader builds. Fabric requi
 | --- | --- | --- | --- |
 | **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, and grows or shrinks |
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
-| **Bar Stack** | 64 items | Data-pack-defined ingots | Eight alternating layers of bars |
+| **Bar Stack** | 64 items | Data-pack-defined ingots and bricks | Eight alternating layers of bars |
 
 A vertical run of one stack type is a single pile or column with one shared inventory. Default maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
 
@@ -163,7 +163,7 @@ For Bar appearance, resource packs map item ids to textures and tints under `ass
 
 ## Extension points
 
-- Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots` and `forge:ingots` tags plus explicitly listed ingots; child tags are included only through normal tag composition.
+- Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
 - Resource pack: replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 

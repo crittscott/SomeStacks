@@ -57,6 +57,25 @@ public final class BarColumnChecks {
     }
 
     /**
+     * Bar holds brick items on every loader but not blocks built from bricks. To reproduce in-game:
+     * deposit a brick, a nether brick, and a resin brick into a Bar Stack, then try a bricks block and
+     * brick stairs. Only the three brick items are stored.
+     */
+    public static void bricksAreBarItemsButBrickBlocksAreNot(GameTestHelper helper) {
+        for (Item brick : List.of(Items.BRICK, Items.NETHER_BRICK, Items.RESIN_BRICK)) {
+            check(BarStackBE.isValidBarItem(new ItemStack(brick)), brick + " is not a Bar item");
+        }
+        for (Item block : List.of(Items.BRICKS, Items.BRICK_STAIRS, Items.NETHER_BRICKS)) {
+            check(!BarStackBE.isValidBarItem(new ItemStack(block)), block + " is a Bar item");
+        }
+
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        check(bars.depositAt(0, new ItemStack(Items.RESIN_BRICK)), "Resin brick deposit was rejected");
+        check(!bars.depositAt(1, new ItemStack(Items.BRICKS)), "Bricks block deposit was accepted");
+        helper.succeed();
+    }
+
+    /**
      * A Bar above the bottom layer needs footprint overlap with a Bar beneath it. To reproduce
      * in-game: place one bottom Bar, then try depositing above both an overlapping and a disjoint
      * position. Only the overlapping Bar remains.

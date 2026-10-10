@@ -10,6 +10,10 @@
       "required": false
     },
     {
+      "id": "#c:bricks",
+      "required": false
+    },
+    {
       "id": "advancednetherite:netherite_diamond_ingot",
       "required": false
     },
@@ -50,6 +54,34 @@
       "required": false
     },
     {
+      "id": "deeperdarker:grime_brick",
+      "required": false
+    },
+    {
+      "id": "gtceu:coke_oven_brick",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_clay",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_coke_clay",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_fireclay",
+      "required": false
+    },
+    {
+      "id": "gtceu:firebrick",
+      "required": false
+    },
+    {
+      "id": "minecraft:brick",
+      "required": false
+    },
+    {
       "id": "minecraft:copper_ingot",
       "required": false
     },
@@ -62,11 +94,27 @@
       "required": false
     },
     {
+      "id": "minecraft:nether_brick",
+      "required": false
+    },
+    {
       "id": "minecraft:netherite_ingot",
       "required": false
     },
     {
+      "id": "minecraft:resin_brick",
+      "required": false
+    },
+    {
       "id": "mobs_of_mythology:bronze_ingot",
+      "required": false
+    },
+    {
+      "id": "tconstruct:scorched_brick",
+      "required": false
+    },
+    {
+      "id": "tconstruct:seared_brick",
       "required": false
     }
   ]

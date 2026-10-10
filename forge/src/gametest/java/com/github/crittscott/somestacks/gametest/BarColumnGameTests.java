@@ -42,6 +42,12 @@ public final class BarColumnGameTests {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
+    /** See {@link BarColumnChecks#bricksAreBarItemsButBrickBlocksAreNot}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void bricksAreBarItemsButBrickBlocksAreNot(GameTestHelper helper) {
+        BarColumnChecks.bricksAreBarItemsButBrickBlocksAreNot(helper);
+    }
+
     /** See {@link BarColumnChecks#upperBarRequiresOverlappingSupport}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {

@@ -330,6 +330,7 @@
   "minecraft:iron_ingot": {"texture": "somestacks:block/minecraft/base_ingot", "tint": "#d8d8d8"},
   "minecraft:nether_brick": {"texture": "somestacks:block/minecraft/base_brick", "tint": "#3e1e24"},
   "minecraft:netherite_ingot": {"texture": "somestacks:block/minecraft/base_ingot", "tint": "#4c4143"},
+  "minecraft:resin_brick": {"texture": "somestacks:block/minecraft/base_brick"},
   "morered:red_alloy_ingot": {"texture": "somestacks:block/minecraft/base_ingot"},
   "mysticalagradditions:insanium_ingot": {"texture": "somestacks:block/minecraft/base_ingot"},
   "mysticalagriculture:awakened_supremium_ingot": {"texture": "somestacks:block/minecraft/base_ingot"},
