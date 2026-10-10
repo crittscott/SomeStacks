@@ -294,7 +294,7 @@ public final class SsCommand {
                 disabledMods.add(modId);
                 return true;
             }
-            return false;
+            return kind.itemsIn(modId).isEmpty();
         });
 
         if (modIds.isEmpty()) {
@@ -356,7 +356,7 @@ public final class SsCommand {
      * a row reads the same way however the list was built up. Like {@code all} and {@code list} and
      * unlike a single named namespace, an entry that cannot be used is skipped and reported rather
      * than failing the command. The two reasons are reported apart: an item barred by the
-     * disabled-mod list is doing what the server was told, while one the registry does not know is
+     * disabled-mod or disabled-item list is doing what the server was told, while one the registry does not know is
      * a typo, or a mod that has been removed since the entry was added.
      */
     @Nullable
@@ -375,7 +375,8 @@ public final class SsCommand {
             ResourceLocation itemId = ResourceLocation.tryParse(trimmed);
             if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
                 unknownItems.add(trimmed);
-            } else if (ServerConfig.isModDisabled(itemId.getNamespace())) {
+            } else if (ServerConfig.isModDisabled(itemId.getNamespace())
+                    || ServerConfig.isItemDisabled(itemId)) {
                 disabledItems.add(trimmed);
             } else {
                 itemIds.add(itemId);
@@ -398,7 +399,7 @@ public final class SsCommand {
         return new ItemSelection(
                 itemIds.stream().map(BuiltInRegistries.ITEM::getValue).toList(),
                 List.of(new Skips(Component.translatable(
-                                "somestacks.command.skip.from_disabled_mods"), disabledItems),
+                                "somestacks.command.skip.disabled"), disabledItems),
                         new Skips(Component.translatable("somestacks.command.skip.unknown"), unknownItems)));
     }
 

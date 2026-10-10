@@ -48,7 +48,6 @@
   "somestacks.command.gen_items_unusable": "No item in the %s can be shown: %s from disabled mods, %s unknown",
   "somestacks.command.skip.disabled": "disabled",
   "somestacks.command.skip.not_loaded": "not loaded or with no %s",
-  "somestacks.command.skip.from_disabled_mods": "from disabled mods",
   "somestacks.command.skip.unknown": "unknown",
   "somestacks.command.subject.mod": "%s",
   "somestacks.command.subject.mods": "%s mods",

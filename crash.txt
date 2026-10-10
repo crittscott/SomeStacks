@@ -1,0 +1,341 @@
+---- Minecraft Crash Report ----
+// Surprise! Haha. Well, this is awkward.
+
+Time: 2026-10-09 20:46:43
+Description: Rendering entity in world
+
+java.lang.UnsupportedOperationException: null
+	at TRANSFORMER/evilcraft@1.2.62/org.cyclops.evilcraft.core.client.model.BroomPartModelBaked.handleBlockState(BroomPartModelBaked.java:62) ~[evilcraft-1.21.4-neoforge-1.2.62-649.jar%23245!/:1.2.62] {re:classloading}
+	at TRANSFORMER/cyclopscore@1.25.5/org.cyclops.cyclopscore.client.model.DynamicItemAndBlockModel.getQuads(DynamicItemAndBlockModel.java:54) ~[cyclopscore-1.21.4-neoforge-1.25.5-769.jar%23244!/:1.25.5-769] {re:classloading}
+	at TRANSFORMER/cyclopscore@1.25.5/org.cyclops.cyclopscore.client.model.DynamicItemAndBlockModel.getQuads(DynamicItemAndBlockModel.java:41) ~[cyclopscore-1.21.4-neoforge-1.25.5-769.jar%23244!/:1.25.5-769] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemRenderer.renderModelLists(ItemRenderer.java:53) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemRenderer.renderItem(ItemRenderer.java:85) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState.render(ItemStackRenderState.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.item.ItemStackRenderState.render(ItemStackRenderState.java:85) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.renderMultipleFromCount(ItemEntityRenderer.java:93) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.render(ItemEntityRenderer.java:55) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.render(ItemEntityRenderer.java:17) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:155) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntity(LevelRenderer.java:967) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntities(LevelRenderer.java:843) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.lambda$addMainPass$2(LevelRenderer.java:609) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/com.mojang.blaze3d.framegraph.FrameGraphBuilder.execute(FrameGraphBuilder.java:67) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderLevel(LevelRenderer.java:513) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.renderLevel(GameRenderer.java:698) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:460) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.runTick(Minecraft.java:1252) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.run(Minecraft.java:849) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.main.Main.main(Main.java:241) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:128) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.NeoForgeClientLaunchHandler.runService(NeoForgeClientLaunchHandler.java:39) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at io.github.zekerzhayard.forgewrapper.installer.Main.main(Main.java:67) [ForgeWrapper-mmc7.jar:mmc7] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at org.multimc.onesix.OneSixLauncher.launchWithMainClass(OneSixLauncher.java:243) [NewLaunch.jar:?] {}
+	at org.multimc.onesix.OneSixLauncher.launch(OneSixLauncher.java:278) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.listen(EntryPoint.java:143) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.main(EntryPoint.java:34) [NewLaunch.jar:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at TRANSFORMER/evilcraft@1.2.62/org.cyclops.evilcraft.core.client.model.BroomPartModelBaked.handleBlockState(BroomPartModelBaked.java:62) ~[evilcraft-1.21.4-neoforge-1.2.62-649.jar%23245!/:1.2.62] {re:classloading}
+	at TRANSFORMER/cyclopscore@1.25.5/org.cyclops.cyclopscore.client.model.DynamicItemAndBlockModel.getQuads(DynamicItemAndBlockModel.java:54) ~[cyclopscore-1.21.4-neoforge-1.25.5-769.jar%23244!/:1.25.5-769] {re:classloading}
+	at TRANSFORMER/cyclopscore@1.25.5/org.cyclops.cyclopscore.client.model.DynamicItemAndBlockModel.getQuads(DynamicItemAndBlockModel.java:41) ~[cyclopscore-1.21.4-neoforge-1.25.5-769.jar%23244!/:1.25.5-769] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemRenderer.renderModelLists(ItemRenderer.java:53) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemRenderer.renderItem(ItemRenderer.java:85) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState.render(ItemStackRenderState.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.item.ItemStackRenderState.render(ItemStackRenderState.java:85) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.renderMultipleFromCount(ItemEntityRenderer.java:93) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.render(ItemEntityRenderer.java:55) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.ItemEntityRenderer.render(ItemEntityRenderer.java:17) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:155) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntity(LevelRenderer.java:967) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntities(LevelRenderer.java:843) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.lambda$addMainPass$2(LevelRenderer.java:609) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/com.mojang.blaze3d.framegraph.FrameGraphBuilder.execute(FrameGraphBuilder.java:67) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderLevel(LevelRenderer.java:513) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.renderLevel(GameRenderer.java:698) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+-- Entity being rendered --
+Details:
+	Entity Type: minecraft:item (net.minecraft.world.entity.item.ItemEntity)
+	Entity ID: 713
+	Entity Name: Broom Part
+	Entity's Exact location: 20.73, 105.60, -97.72
+	Entity's Block location: World: (20,105,-98), Section: (at 4,9,14 in 1,6,-7; chunk contains blocks 16,-64,-112 to 31,319,-97), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+	Entity's Momentum: 0.03, 0.21, 0.02
+	Entity's Passengers: []
+	Entity's Vehicle: null
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:155) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntity(LevelRenderer.java:967) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntities(LevelRenderer.java:843) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.lambda$addMainPass$2(LevelRenderer.java:609) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/com.mojang.blaze3d.framegraph.FrameGraphBuilder.execute(FrameGraphBuilder.java:67) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderLevel(LevelRenderer.java:513) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.renderLevel(GameRenderer.java:698) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:460) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.runTick(Minecraft.java:1252) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.run(Minecraft.java:849) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.main.Main.main(Main.java:241) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:128) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.NeoForgeClientLaunchHandler.runService(NeoForgeClientLaunchHandler.java:39) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at io.github.zekerzhayard.forgewrapper.installer.Main.main(Main.java:67) [ForgeWrapper-mmc7.jar:mmc7] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at org.multimc.onesix.OneSixLauncher.launchWithMainClass(OneSixLauncher.java:243) [NewLaunch.jar:?] {}
+	at org.multimc.onesix.OneSixLauncher.launch(OneSixLauncher.java:278) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.listen(EntryPoint.java:143) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.main(EntryPoint.java:34) [NewLaunch.jar:?] {}
+
+
+-- Renderer details --
+Details:
+	Assigned renderer: net.minecraft.client.renderer.entity.ItemEntityRenderer@78633092
+	Location: -1.45,-1.02,-0.05 - World: (-2,-2,-1), Section: (at 14,14,15 in -1,-1,-1; chunk contains blocks -16,-64,-16 to -1,319,-1), Region: (-1,-1; contains chunks -32,-32 to -1,-1, blocks -512,-64,-512 to -1,319,-1)
+	Delta: 0.46000728
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:177) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.entity.EntityRenderDispatcher.render(EntityRenderDispatcher.java:155) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.EntityRenderDispatcherMixin from mod geckolib,pl:mixin:APP:friendsandfoes-common.mixins.json:EntityRenderDispatcherMixin from mod friendsandfoes,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntity(LevelRenderer.java:967) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderEntities(LevelRenderer.java:843) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.lambda$addMainPass$2(LevelRenderer.java:609) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/com.mojang.blaze3d.framegraph.FrameGraphBuilder.execute(FrameGraphBuilder.java:67) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.LevelRenderer.renderLevel(LevelRenderer.java:513) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:geckolib.mixins.json:client.LevelRendererMixin from mod geckolib,pl:mixin:APP:supermartijn642corelib.mixins.json:LevelRendererMixin from mod supermartijn642corelib,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.renderLevel(GameRenderer.java:698) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.renderer.GameRenderer.render(GameRenderer.java:460) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:supermartijn642corelib.mixins.json:GameRendererMixin from mod supermartijn642corelib,pl:mixin:APP:sometesting.mixins.json:GameRendererMixin from mod sometesting,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.runTick(Minecraft.java:1252) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.run(Minecraft.java:849) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.main.Main.main(Main.java:241) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:128) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.NeoForgeClientLaunchHandler.runService(NeoForgeClientLaunchHandler.java:39) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at io.github.zekerzhayard.forgewrapper.installer.Main.main(Main.java:67) [ForgeWrapper-mmc7.jar:mmc7] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at org.multimc.onesix.OneSixLauncher.launchWithMainClass(OneSixLauncher.java:243) [NewLaunch.jar:?] {}
+	at org.multimc.onesix.OneSixLauncher.launch(OneSixLauncher.java:278) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.listen(EntryPoint.java:143) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.main(EntryPoint.java:34) [NewLaunch.jar:?] {}
+
+
+-- Uptime --
+Details:
+	JVM uptime: 89.487s
+	Wall uptime: 80.963s
+	High-res time: 87.280s
+	Client ticks: 1498 ticks / 74.900s
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.fillReport(Minecraft.java:2286) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.emergencySaveAndCrash(Minecraft.java:913) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.Minecraft.run(Minecraft.java:869) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:mixin,pl:accesstransformer:B,pl:runtimedistcleaner:A,re:classloading,pl:accesstransformer:B,pl:mixin:APP:sometesting.mixins.json:MinecraftMixin from mod sometesting,pl:mixin:APP:balm.neoforge.mixins.json:MinecraftMixin from mod balm,pl:mixin:A,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.4/net.minecraft.client.main.Main.main(Main.java:241) ~[client-1.21.4-20241203.161809-srg.jar%23240!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:128) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:120) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.NeoForgeClientLaunchHandler.runService(NeoForgeClientLaunchHandler.java:39) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/fml_loader@6.0.18/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:114) ~[loader-6.0.18.jar%23186!/:6.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.4/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.4.jar%23191!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at io.github.zekerzhayard.forgewrapper.installer.Main.main(Main.java:67) [ForgeWrapper-mmc7.jar:mmc7] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at org.multimc.onesix.OneSixLauncher.launchWithMainClass(OneSixLauncher.java:243) [NewLaunch.jar:?] {}
+	at org.multimc.onesix.OneSixLauncher.launch(OneSixLauncher.java:278) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.listen(EntryPoint.java:143) [NewLaunch.jar:?] {}
+	at org.multimc.EntryPoint.main(EntryPoint.java:34) [NewLaunch.jar:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [LocalPlayer['crittens'/82, l='ClientLevel', x=22.18, y=105.00, z=-97.67]]
+	Chunk stats: 961, 637
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (80,69,-112), Section: (at 0,5,0 in 5,4,-7; chunk contains blocks 80,-64,-112 to 95,319,-97), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+	Level time: 1508 game time, 1508 day time
+	Server brand: neoforge
+	Server type: Integrated singleplayer server
+	Tracked entity count: 173
+
+-- Last reload --
+Details:
+	Reload number: 1
+	Reload reason: initial
+	Finished: Yes
+	Packs: vanilla, mod_resources, mod/cyclopscore, mod/kuma_api, mod/terrablender, mod/livingthings, mod/supermartijn642configlib, mod/geckolib, mod/sophisticatedstorage, mod/variantsandventures, mod/ohthetreesyoullgrow, mod/illagerinvasion, mod/supermartijn642corelib, mod/corgilib, mod/biomeswevegone, mod/sophisticatedcore, mod/sometesting, mod/itemcollectors, mod/neoforge, mod/storagedrawers, mod/evilcraft, mod/neoforgedatapackextensions, mod/farmingforblockheads, mod/sophisticatedbackpacks, mod/resourcefullib, mod/somebuckets, mod/balm, mod/puzzleslib, mod/somestacks, mod/somegoogly, mod/extensibleenums, mod/friendsandfoes, mod/tinyskeletons, tinyskeletons:dynamically_copied_skeleton_textures
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.4
+	Minecraft Version ID: 1.21.4
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 21.0.2, Eclipse Adoptium
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Eclipse Adoptium
+	Memory: 543661112 bytes (518 MiB) / 2051014656 bytes (1956 MiB) up to 8589934592 bytes (8192 MiB)
+	CPUs: 12
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 5 5600X 6-Core Processor             
+	Identifier: AuthenticAMD Family 25 Model 33 Stepping 0
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.70
+	Number of physical packages: 1
+	Number of physical CPUs: 6
+	Number of logical CPUs: 12
+	Graphics card #0 name: NVIDIA GeForce RTX 3070
+	Graphics card #0 vendor: NVIDIA
+	Graphics card #0 VRAM (MiB): 8192.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.15.7270
+	Memory slot #0 capacity (MiB): 16384.00
+	Memory slot #0 clockSpeed (GHz): 3.20
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 16384.00
+	Memory slot #1 clockSpeed (GHz): 3.20
+	Memory slot #1 type: DDR4
+	Virtual memory max (MiB): 42934.09
+	Virtual memory used (MiB): 31139.84
+	Swap memory total (MiB): 10240.00
+	Swap memory used (MiB): 285.18
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 394872.78, total: 953204.19
+	Space in storage for workdir (MiB): available: 394872.78, total: 953204.19
+	JVM Flags: 3 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xms819m -Xmx8192m
+	Launched Version: 1.21.4
+	Backend library: LWJGL version 3.3.3+5
+	Backend API: NVIDIA GeForce RTX 3070/PCIe/SSE2 GL version 4.6.0 NVIDIA 572.70, NVIDIA Corporation
+	Window size: 2560x1417
+	GFLW Platform: win32
+	GL Caps: Using framebuffer using OpenGL 3.2
+	GL debug messages: 
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Universe: 400921fb54442d18
+	Type: Integrated Server (map_client.txt)
+	Graphics mode: fancy
+	Render Distance: 12/12 chunks
+	Resource Packs: vanilla, mod_resources, mod/cyclopscore (incompatible), mod/kuma_api (incompatible), mod/terrablender (incompatible), mod/livingthings (incompatible), mod/supermartijn642configlib (incompatible), mod/geckolib, mod/sophisticatedstorage (incompatible), mod/variantsandventures (incompatible), mod/ohthetreesyoullgrow (incompatible), mod/illagerinvasion, mod/supermartijn642corelib, mod/corgilib (incompatible), mod/biomeswevegone, mod/sophisticatedcore (incompatible), mod/sometesting, mod/itemcollectors, mod/neoforge, mod/storagedrawers, mod/evilcraft, mod/neoforgedatapackextensions, mod/farmingforblockheads (incompatible), mod/sophisticatedbackpacks (incompatible), mod/resourcefullib, mod/somebuckets, mod/balm (incompatible), mod/puzzleslib, mod/somestacks, mod/somegoogly (incompatible), mod/extensibleenums, mod/friendsandfoes (incompatible), mod/tinyskeletons, tinyskeletons:dynamically_copied_skeleton_textures
+	Current Language: en_us
+	Locale: en_US
+	System encoding: Cp1252
+	File encoding: UTF-8
+	CPU: 12x AMD Ryzen 5 5600X 6-Core Processor 
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['crittens'/82, l='ServerLevel[New World]', x=22.18, y=105.00, z=-97.67]]
+	Active Data Packs: vanilla, mod_data, mod/cyclopscore (incompatible), mod/kuma_api (incompatible), mod/terrablender (incompatible), mod/livingthings (incompatible), mod/supermartijn642configlib (incompatible), mod/geckolib, mod/sophisticatedstorage (incompatible), mod/variantsandventures (incompatible), mod/ohthetreesyoullgrow (incompatible), mod/illagerinvasion (incompatible), mod/supermartijn642corelib, mod/corgilib, mod/biomeswevegone, mod/sophisticatedcore (incompatible), mod/sometesting (incompatible), mod/itemcollectors, mod/neoforge, mod/storagedrawers, mod/evilcraft, mod/neoforgedatapackextensions (incompatible), mod/farmingforblockheads (incompatible), mod/sophisticatedbackpacks (incompatible), mod/resourcefullib, mod/somebuckets, mod/balm (incompatible), mod/puzzleslib (incompatible), mod/somestacks, mod/somegoogly, mod/extensibleenums (incompatible), mod/friendsandfoes (incompatible), mod/tinyskeletons (incompatible)
+	Available Data Packs: minecart_improvements, redstone_experiments, trade_rebalance, vanilla, mod/balm (incompatible), mod/biomeswevegone, mod/corgilib, mod/cyclopscore (incompatible), mod/evilcraft, mod/extensibleenums (incompatible), mod/farmingforblockheads (incompatible), mod/friendsandfoes (incompatible), mod/geckolib, mod/illagerinvasion (incompatible), mod/itemcollectors, mod/kuma_api (incompatible), mod/livingthings (incompatible), mod/neoforge, mod/neoforgedatapackextensions (incompatible), mod/ohthetreesyoullgrow (incompatible), mod/puzzleslib (incompatible), mod/resourcefullib, mod/somebuckets, mod/somegoogly, mod/somestacks, mod/sometesting (incompatible), mod/sophisticatedbackpacks (incompatible), mod/sophisticatedcore (incompatible), mod/sophisticatedstorage (incompatible), mod/storagedrawers, mod/supermartijn642configlib (incompatible), mod/supermartijn642corelib, mod/terrablender (incompatible), mod/tinyskeletons (incompatible), mod/variantsandventures (incompatible), mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: -5778708053660953741
+	Suppressed Exceptions: ~~NONE~~
+	ModLauncher: 11.0.4+main.d2e20e43
+	ModLauncher launch target: neoforgeclient
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-6.0.18.jar slf4jfixer PLUGINSERVICE 
+		loader-6.0.18.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-11.0.2.jar accesstransformer PLUGINSERVICE 
+		loader-6.0.18.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-11.0.4.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-11.0.4.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@6.0
+		lowcodefml@6.0
+		minecraft@6.0
+	Mod List: 
+		balm-neoforge-1.21.4-21.4.42.jar                  |Balm                          |balm                          |21.4.42             |Manifest: NOSIGNATURE
+		Corgilib-NeoForge-1.21.4-6.0.0.3.jar              |CorgiLib                      |corgilib                      |6.0.0.3             |Manifest: NOSIGNATURE
+		cyclopscore-1.21.4-neoforge-1.25.5-769.jar        |Cyclops Core                  |cyclopscore                   |1.25.5              |Manifest: NOSIGNATURE
+		evilcraft-1.21.4-neoforge-1.2.62-649.jar          |EvilCraft                     |evilcraft                     |1.2.62              |Manifest: NOSIGNATURE
+		extensibleenums-neoforge-21.4.0.jar               |Extensible Enums              |extensibleenums               |21.4.0              |Manifest: NOSIGNATURE
+		farmingforblockheads-neoforge-1.21.4-21.4.5.jar   |Farming for Blockheads        |farmingforblockheads          |21.4.5              |Manifest: NOSIGNATURE
+		friendsandfoes-neoforge-5.0.0+mc1.21.4.jar        |Friends&Foes                  |friendsandfoes                |5.0.0               |Manifest: NOSIGNATURE
+		geckolib-neoforge-1.21.4-4.8.5.jar                |GeckoLib 4                    |geckolib                      |4.8.5               |Manifest: NOSIGNATURE
+		IllagerInvasion-v21.4.1-1.21.4-NeoForge.jar       |Illager Invasion              |illagerinvasion               |21.4.1              |Manifest: NOSIGNATURE
+		itemcollectors-1.1.12-neoforge-mc1.21.4.jar       |Item Collectors               |itemcollectors                |1.1.12              |Manifest: NOSIGNATURE
+		kuma-api-neoforge-21.4.8+1.21.4.jar               |KumaAPI                       |kuma_api                      |21.4.8              |Manifest: NOSIGNATURE
+		livingthings-neoforge-1.21.4-2.3.1.jar            |Living Things                 |livingthings                  |1.21.4-2.3.1        |Manifest: NOSIGNATURE
+		client-1.21.4-20241203.161809-srg.jar             |Minecraft                     |minecraft                     |1.21.4              |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		neoforge-21.4.158-universal.jar                   |NeoForge                      |neoforge                      |21.4.158            |Manifest: NOSIGNATURE
+		neoforgedatapackextensions-neoforge-21.4.0.jar    |NeoForge Data Pack Extensions |neoforgedatapackextensions    |21.4.0              |Manifest: NOSIGNATURE
+		Oh-The-Biomes-Weve-Gone-NeoForge-3.2.5.jar        |Oh The Biomes We've Gone      |biomeswevegone                |3.2.5               |Manifest: NOSIGNATURE
+		Oh-The-Trees-Youll-Grow-neoforge-1.21.4-6.1.1.jar |Oh The Trees You'll Grow      |ohthetreesyoullgrow           |6.1.1               |Manifest: NOSIGNATURE
+		PuzzlesLib-v21.4.14-1.21.4-NeoForge.jar           |Puzzles Lib                   |puzzleslib                    |21.4.14             |Manifest: NOSIGNATURE
+		ResourcefulLib-neoforge-1.21.4-3.4.5.jar          |Resourceful Lib               |resourcefullib                |3.4.5               |Manifest: NOSIGNATURE
+		somebuckets-neoforge-1.21.4-0.8.2.jar             |Some Buckets                  |somebuckets                   |0.8.2               |Manifest: NOSIGNATURE
+		somegoogly-neoforge-1.21.4-0.8.2.jar              |Some Googly Eyes              |somegoogly                    |0.8.2               |Manifest: NOSIGNATURE
+		somestacks-neoforge-1.21.4-0.8.2.jar              |Some Stacks                   |somestacks                    |0.8.2               |Manifest: NOSIGNATURE
+		sometesting-neoforge-1.21.4-0.1.0.jar             |Some Testing                  |sometesting                   |0.1.0               |Manifest: NOSIGNATURE
+		sophisticatedbackpacks-1.21.4-3.27.2.2166.jar     |Sophisticated Backpacks       |sophisticatedbackpacks        |3.27.2              |Manifest: NOSIGNATURE
+		sophisticatedcore-1.21.4-1.5.1.2350.jar           |Sophisticated Core            |sophisticatedcore             |1.5.1               |Manifest: NOSIGNATURE
+		sophisticatedstorage-1.21.4-1.6.0.2138.jar        |Sophisticated Storage         |sophisticatedstorage          |1.6.0               |Manifest: NOSIGNATURE
+		Storage Drawers-neoforge-1.21.4-15.0.4.jar        |Storage Drawers               |storagedrawers                |15.0.4              |Manifest: NOSIGNATURE
+		supermartijn642configlib-1.1.8-neoforge-mc1.21.jar|SuperMartijn642's Config Libra|supermartijn642configlib      |1.1.8               |Manifest: NOSIGNATURE
+		supermartijn642corelib-1.1.24b-neoforge-mc1.21.4.j|SuperMartijn642's Core Lib    |supermartijn642corelib        |1.1.24+b            |Manifest: NOSIGNATURE
+		TerraBlender-neoforge-1.21.4-4.3.0.2.jar          |TerraBlender                  |terrablender                  |4.3.0.2             |Manifest: NOSIGNATURE
+		TinySkeletons-v21.4.1-1.21.4-NeoForge.jar         |Tiny Skeletons                |tinyskeletons                 |21.4.1              |Manifest: NOSIGNATURE
+		variantsandventures-neoforge-1.0.28+mc1.21.4.jar  |Variants&Ventures             |variantsandventures           |1.0.28              |Manifest: NOSIGNATURE
+	Crash Report UUID: 3d6d15f4-c189-4915-8790-57375f539ceb
+	FML: 6.0.18
+	NeoForge: 21.4.158

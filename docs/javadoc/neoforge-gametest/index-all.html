@@ -51,9 +51,18 @@ loadScripts(document, 'script');</script>
 <a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentStackRequiresDirectClick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentStackRequiresDirectClick(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsFillGroundedCells(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsFillGroundedCells(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
-<div class="block">To reproduce in-game: hold the modifier and click a neighbor toward a Singles Stack.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adjacentDepositsFillGroundedCells(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.adjacentDepositsFillGroundedCells(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adjacentDepositsFillGroundedCells(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">adjacentDepositsFillGroundedCells(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
+<div class="block">Empty grounded cells remain depositable beside occupied cells in both stack types.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentStackConsultsDestinationProtection(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentStackConsultsDestinationProtection(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">Neighbor deposits consult protection at the destination and honor cancellation or either
+ use denial.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">airRulesAndDisabledModeCycling(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
@@ -189,7 +198,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>
-<div class="block">Singles and Bar block queries follow occupied contents, while empty blocks stay clickable.</div>
+<div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestSupport.html#capability(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">capability(BlockEntity)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">GameTestSupport</a></dt>
 <dd>&nbsp;</dd>

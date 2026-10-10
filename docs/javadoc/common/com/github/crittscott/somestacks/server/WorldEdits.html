@@ -108,11 +108,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerPlayer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.BlockHitResult</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#adjacentHit(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">adjacentHit</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Destination hit used by loader protection listeners for a neighboring deposit.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerPlayer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#automationActor(net.minecraft.server.level.ServerLevel)" class="member-name-link">automationActor</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The actor automation-driven growth and removal are attributed to.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
@@ -146,7 +155,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Consults a dedicated loader protection query for an existing adjacent stack.</div>
+<div class="block">Consults destination protection without allowing the consultation to execute gestures.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">placeChecked</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
@@ -236,7 +245,21 @@ loadScripts(document, 'script');</script>
 <h3>mayUseAdjacent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayUseAdjacent</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Consults a dedicated loader protection query for an existing adjacent stack.</div>
+<div class="block">Consults destination protection without allowing the consultation to execute gestures.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isConsultingAdjacent()">
+<h3>isConsultingAdjacent</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isConsultingAdjacent</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="adjacentHit(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)">
+<h3>adjacentHit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.phys.BlockHitResult</span>&nbsp;<span class="element-name">adjacentHit</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<div class="block">Destination hit used by loader protection listeners for a neighboring deposit.</div>
 </section>
 </li>
 <li>

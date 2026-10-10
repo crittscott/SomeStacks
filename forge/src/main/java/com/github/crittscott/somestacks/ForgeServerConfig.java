@@ -26,17 +26,56 @@ public final class ForgeServerConfig implements ServerConfig.Backend {
 
     private ForgeServerConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        maxHeight = builder.defineInRange("piles.max_pile_height", ServerConfig.DEFAULT_MAX_PILE_HEIGHT, 1, ServerConfig.MAX_PILE_HEIGHT);
-        storage = builder.define("stacks.enable_storage_stack_block", true);
-        singles = builder.define("stacks.enable_singles_stack_block", true);
-        bars = builder.define("stacks.enable_bar_stack_block", true);
-        placements = builder.defineInRange("render_gallery.placements_per_tick", ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK, 1, Integer.MAX_VALUE);
-        gallery = builder.define("render_gallery.enabled", false);
-        permission = builder.defineInRange("render_gallery.required_permission_level", net.minecraft.commands.Commands.LEVEL_ADMINS, 0, 4);
-        disabledMods = builder.defineListAllowEmpty("compatibility.disable_mods", List.<String>of(), value -> value instanceof String);
-        disabledItems = builder.defineListAllowEmpty("compatibility.disable_items", List.<String>of(), value -> value instanceof String);
-        genMods = builder.defineListAllowEmpty("render_gallery.gen_mods", List.<String>of(), value -> value instanceof String);
-        genItems = builder.defineListAllowEmpty("render_gallery.gen_items", List.<String>of(), value -> value instanceof String);
+
+        builder.comment("Stack piles: vertical runs of one stack type that share one inventory.").push("piles");
+        maxHeight = builder
+                .comment("Tallest a run of one stack type may grow, in blocks. Player deposits and automation stop growing a run at this height.")
+                .defineInRange("max_pile_height", ServerConfig.DEFAULT_MAX_PILE_HEIGHT, 1, ServerConfig.MAX_PILE_HEIGHT);
+        builder.pop();
+
+        builder.comment("Which stack types players and automation may create.",
+                "Turning a type off blocks new placement and growth only; existing stacks keep working and their contents stay extractable.").push("stacks");
+        storage = builder
+                .comment("Storage Stack: 27 item stacks per block that merge, sort, and pack down.")
+                .define("enable_storage_stack_block", true);
+        singles = builder
+                .comment("Singles Stack: a 4 x 4 x 4 display grid holding one item per cell.")
+                .define("enable_singles_stack_block", true);
+        bars = builder
+                .comment("Bar Stack: 64 ingots per block in eight alternating layers; ingots are the somestacks:ingots item tag.")
+                .define("enable_bar_stack_block", true);
+        builder.pop();
+
+        builder.comment("Items refused by stacks. Disabling never removes or ejects existing contents.").push("compatibility");
+        disabledMods = builder
+                .comment("Mod ids (item namespaces) whose items players and automation may not put into stacks, e.g. [\"examplemod\"].",
+                        "Galleries skip these mods. Edit in game with /ss deny.")
+                .defineListAllowEmpty("disable_mods", List.<String>of(), value -> value instanceof String);
+        disabledItems = builder
+                .comment("Item ids players may not deposit into stacks, e.g. [\"minecraft:stone\"]. Automation is not affected.",
+                        "Galleries skip these items. The default lists items known to crash clients when drawn. Edit in game with /ss deny.")
+                .defineListAllowEmpty("disable_items", ServerConfig.DEFAULT_DISABLE_ITEMS, value -> value instanceof String);
+        builder.pop();
+
+        builder.comment("Render galleries: /ss gallery and /ss ingotgallery build rows of stacks showing every item of chosen mods,",
+                "for checking how items render. Galleries bypass placement protection, so they are off by default.").push("render_gallery");
+        gallery = builder
+                .comment("Whether /ss gallery and /ss ingotgallery are available.")
+                .define("enabled", false);
+        permission = builder
+                .comment("Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
+                .defineInRange("required_permission_level", net.minecraft.commands.Commands.LEVEL_ADMINS, 0, 4);
+        placements = builder
+                .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
+                .defineInRange("placements_per_tick", ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK, 1, Integer.MAX_VALUE);
+        genMods = builder
+                .comment("Mod ids the gallery 'list' form builds, one column per mod. Edit in game with /ss gen.")
+                .defineListAllowEmpty("gen_mods", List.<String>of(), value -> value instanceof String);
+        genItems = builder
+                .comment("Item ids the gallery 'items' form builds as a single column. Edit in game with /ss gen.")
+                .defineListAllowEmpty("gen_items", List.<String>of(), value -> value instanceof String);
+        builder.pop();
+
         spec = builder.build();
     }
 

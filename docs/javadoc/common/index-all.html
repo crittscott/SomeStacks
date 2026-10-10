@@ -60,6 +60,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#adjacentHit(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">adjacentHit(ServerPlayer, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
+<dd>
+<div class="block">Destination hit used by loader protection listeners for a neighboring deposit.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#adoptNeighbourState(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.StorageStackBE)" class="member-name-link">adoptNeighbourState(Level, BlockPos, StorageStackBE)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
 <div class="block">Gives a Storage Stack that has just been placed the mode of the pile it joins, taking it
@@ -1260,6 +1264,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/StackState.html#isBlockTypeEnabled(com.github.crittscott.somestacks.util.BlockType)" class="member-name-link">isBlockTypeEnabled(BlockType)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent()</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#isDisabled(java.lang.String)" class="member-name-link">isDisabled(String)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
@@ -1630,7 +1636,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent(ServerPlayer, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>
-<div class="block">Consults a dedicated loader protection query for an existing adjacent stack.</div>
+<div class="block">Consults destination protection without allowing the consultation to execute gestures.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html#measure(net.minecraft.world.item.ItemStack)" class="member-name-link">measure(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement</a></dt>
 <dd>
@@ -1751,7 +1757,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">occupiedShape(BlockGetter, BlockPos)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></dt>
 <dd>
-<div class="block">Current local contents' shape for outline and collision queries on either side.</div>
+<div class="block">Current local contents' collision shape on either side.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">occupiedShape(BlockGetter, BlockPos)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></dt>
 <dd>&nbsp;</dd>
@@ -2263,7 +2269,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
 <dd>
-<div class="block">Dynamic occupied-content shapes shared by Singles and Bar stacks.</div>
+<div class="block">Occupied-content targeting and collision shared by Singles and Bar stacks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html#%3Cinit%3E(net.minecraft.world.level.block.state.BlockBehaviour.Properties)" class="member-name-link">ShapedStackBlock(BlockBehaviour.Properties)</a> - Constructor for class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></dt>
 <dd>&nbsp;</dd>

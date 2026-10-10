@@ -82,9 +82,14 @@ public final class RenderGalleryGenerator {
             return List.copyOf(index().keySet());
         }
 
-        /** The items of one namespace this kind can show, in registry order. */
+        /**
+         * The items of one namespace this kind can show, in registry order. Items the server
+         * disabled by id are left out, so a gallery never hands players an item barred from stacks.
+         */
         public List<Item> itemsIn(String modId) {
-            return index().getOrDefault(modId, List.of());
+            return index().getOrDefault(modId, List.of()).stream()
+                    .filter(item -> !ServerConfig.isItemDisabled(BuiltInRegistries.ITEM.getKey(item)))
+                    .toList();
         }
 
         private Map<String, List<Item>> index() {

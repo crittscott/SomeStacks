@@ -128,7 +128,7 @@ Forge and NeoForge use loader-managed `somestacks-server.toml`, with per-world o
 | `piles.max_pile_height` | `8` | Maximum height of every same-type run, 1-64 |
 | `stacks.enable_*_stack_block` | `true` | When false, blocks new placement and growth of that type |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
-| `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
+| `compatibility.disable_items` | `evilcraft:broom_part` | Refuses exact items in player deposits only; the default lists items that crash clients when drawn |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those two commands need |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
@@ -149,11 +149,11 @@ Disabling a type, item, mod, or ingot category never removes or ejects existing 
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spreading work across ticks. They bypass placement protection and are off by default. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
+Galleries build east over sandstone, one alphabetized column per mod, spreading work across ticks, and skip disabled mods and items. They bypass placement protection and are off by default. Fabric `/ss reload` rereads JSON, using defaults for malformed fields; Forge/NeoForge validate TOML through their config lifecycle. Edit ingot classification through `somestacks:ingots`, applied on `/reload`.
 
 ## Item appearance
 
-Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED renderer), `gui` (the inventory renderer), and `block` (a BlockItem's state, falling back to `3d`). Profiles also set scale and a three-component offset.
+Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED renderer), `gui` (the inventory renderer), and `block` (a BlockItem's state, falling back to `3d`). Profiles also set scale and a three-component offset. A `2d` item whose model throws while being drawn shows a cube marked with a red "ERR" until the next resource reload, and the client log names the item.
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 

@@ -35,6 +35,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -58,6 +59,9 @@ public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube");
+    /** The {@code 2d} background drawn without art for an item whose model threw when captured. */
+    public static final ResourceLocation STACK_CUBE_ERROR_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube_error");
     public static final ResourceLocation RENDER_CACHE_RELOAD_LISTENER_ID =
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_caches");
 
@@ -157,6 +161,12 @@ public final class CubeRenderHelper {
      */
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
+    /**
+     * Items whose model threw while its {@code 2d} art was captured. Cached so the model is asked
+     * once per bake; these draw the error cube until the next resource reload.
+     */
+    private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+
     /** The pose {@code 2d} captures run under; render-thread only, and never pushed. */
     private static final PoseStack SCRATCH_POSE = new PoseStack();
 
@@ -244,11 +254,35 @@ public final class CubeRenderHelper {
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        List<ItemCapture.TintedQuad> quads = captures.computeIfAbsent(CaptureKey.of(stack), ignored ->
-                List.copyOf(ItemCapture.captureQuads(
-                        stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads()));
-        render2DItemCube(pose, buffers, quads, light, scale, offset);
+        List<ItemCapture.TintedQuad> quads = captures.computeIfAbsent(CaptureKey.of(stack),
+                ignored -> captureFlatArt(stack, level));
+        if (quads == null) {
+            render2DItemCube(pose, buffers, List.of(), STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
+        } else {
+            render2DItemCube(pose, buffers, quads, STACK_CUBE_TEXTURE, light, scale, offset);
+        }
         pose.popPose();
+    }
+
+    /**
+     * The baked quads {@code 2d} lays onto the cube, or null when the item's model has thrown. The
+     * capture records without drawing, so a model that throws partway leaves no buffer mid-quad.
+     */
+    @Nullable
+    private static List<ItemCapture.TintedQuad> captureFlatArt(ItemStack stack, Level level) {
+        Item item = stack.getItem();
+        if (FLAT_CAPTURE_FAILURES.contains(item)) {
+            return null;
+        }
+        try {
+            return List.copyOf(ItemCapture.captureQuads(
+                    stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads());
+        } catch (RuntimeException e) {
+            FLAT_CAPTURE_FAILURES.add(item);
+            SomeStacksCommon.LOGGER.warn("Item model threw while capturing 2d art for {}; drawing the error cube instead",
+                    BuiltInRegistries.ITEM.getKey(item), e);
+            return null;
+        }
     }
 
     private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
@@ -297,7 +331,7 @@ public final class CubeRenderHelper {
     }
 
     private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, List<ItemCapture.TintedQuad> quads,
-                                         int light, float scale, RenderOffset offset) {
+                                         ResourceLocation background, int light, float scale, RenderOffset offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
@@ -305,12 +339,15 @@ public final class CubeRenderHelper {
 
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
                 .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-                .apply(STACK_CUBE_TEXTURE);
+                .apply(background);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         for (FaceTarget target : faces) {
             emitBackgroundFace(pose.last().pose(), solidVc, backgroundSprite, light, target);
         }
 
+        if (quads.isEmpty()) {
+            return;
+        }
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
         emitPlates(vc, quads, light, faces);
     }
@@ -318,6 +355,7 @@ public final class CubeRenderHelper {
     /** Clears failure state tied to models being replaced by a resource reload. */
     public static void onResourceReload() {
         BLOCK_RENDER_FAILURES.clear();
+        FLAT_CAPTURE_FAILURES.clear();
         BarStackBER.onResourceReload();
         ItemRenderOverrides.clearResolvedProfiles();
     }

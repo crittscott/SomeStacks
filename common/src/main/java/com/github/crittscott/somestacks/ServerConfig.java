@@ -23,6 +23,17 @@ public final class ServerConfig {
     public static final int MAX_PILE_HEIGHT = 64;
     public static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
 
+    /**
+     * Items barred by default. Each crashes the client when its plain {@link
+     * net.minecraft.world.item.ItemStack} is drawn, as a gallery creates it and as extracting it
+     * drops or hands it to the player:
+     * <ul>
+     *   <li>{@code evilcraft:broom_part} (EvilCraft 1.2.62): its model throws
+     *       {@code UnsupportedOperationException}.</li>
+     * </ul>
+     */
+    public static final List<String> DEFAULT_DISABLE_ITEMS = List.of("evilcraft:broom_part");
+
     private static Backend backend;
     private static volatile Settings settings = defaults();
     private static volatile Set<String> disabledMods = Set.of();
@@ -70,7 +81,7 @@ public final class ServerConfig {
                 true,
                 true,
                 List.of(),
-                List.of(),
+                DEFAULT_DISABLE_ITEMS,
                 DEFAULT_GALLERY_PLACEMENTS_PER_TICK,
                 false,
                 Commands.LEVEL_ADMINS,

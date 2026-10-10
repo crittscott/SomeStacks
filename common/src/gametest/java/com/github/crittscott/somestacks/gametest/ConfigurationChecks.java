@@ -227,8 +227,8 @@ public final class ConfigurationChecks {
                     "Missing field retained the previous file's value");
             checkEquals(List.of("minecraft"), ServerConfig.DISABLE_MODS.get(),
                     "Malformed list member invalidated valid members");
-            checkEquals(List.of(), ServerConfig.DISABLE_ITEMS.get(),
-                    "Missing list retained the previous file's value");
+            checkEquals(ServerConfig.DEFAULT_DISABLE_ITEMS, ServerConfig.DISABLE_ITEMS.get(),
+                    "Missing list did not fall back to its default");
         } catch (IOException e) {
             throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
         } finally {

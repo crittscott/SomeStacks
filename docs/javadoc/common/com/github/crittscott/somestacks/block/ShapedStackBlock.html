@@ -105,7 +105,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">ShapedStackBlock</span>
 <span class="extends-implements">extends <a href="StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></span></div>
-<div class="block">Dynamic occupied-content shapes shared by Singles and Bar stacks.</div>
+<div class="block">Occupied-content targeting and collision shared by Singles and Bar stacks.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -193,7 +193,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">occupiedShape</a><wbr>(net.minecraft.world.level.BlockGetter&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Current local contents' shape for outline and collision queries on either side.</div>
+<div class="block">Current local contents' collision shape on either side.</div>
 </div>
 </div>
 </div>
@@ -249,8 +249,8 @@ loadScripts(document, 'script');</script>
 <h3>occupiedShape</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">occupiedShape</span><wbr><span class="parameters">(net.minecraft.world.level.BlockGetter&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">Current local contents' shape for outline and collision queries on either side. Return an
- empty shape when the block entity is absent or empty; interaction stays full-block separately.</div>
+<div class="block">Current local contents' collision shape on either side. Return an empty shape when the block
+ entity is absent or empty.</div>
 </section>
 </li>
 <li>
