@@ -1,70 +1,58 @@
 # Pack authors
 
-Some Stacks is extensible from data packs, resource packs, and the server config folder. Nothing here requires a Java addon.
+Some Stacks is extensible from data packs and resource packs. Nothing here requires a Java addon.
 
 ## Quick map
 
 | What | Where | Side |
 | --- | --- | --- |
-| Which items a Bar Stack accepts | `data/<ns>/tags/item/…` + the `ingots` config | server |
-| Sounds per stack type and action | `data/<ns>/somestacks_sounds/*.json` | server (data pack) |
+| Which items a Bar Stack accepts | `data/somestacks/tags/item/ingots.json` | server (data pack) |
+| Sounds per stack type and action | `assets/somestacks/sounds.json` | client (resource pack) |
 | Bar textures and tints | `assets/<ns>/textures/bars/*.json` | client (resource pack) |
 | How items are drawn in cells | `assets/<ns>/item_render_overrides/*.json` | client (resource pack) |
-| Server-imposed render overrides | `config/somestacks/server_item_overrides/*.json` | server, synced to clients |
+
+A server that wants every player to see the same thing ships the client-side files in its server resource pack.
 
 ## Bar-valid items (data pack)
 
-A Bar Stack holds whatever the server's `ingots` list resolves to. The mod ships an item tag for packs to extend:
-
-`data/<yourpack>/tags/item/ingots.json`, added to `somestacks:ingots`:
+A Bar Stack holds exactly the items in the `somestacks:ingots` item tag. The shipped tag pulls in `#c:ingots`, `#forge:ingots`, and `#c:bricks` plus a list of vanilla and modded ingots and bricks, all optional. Extend it with `data/somestacks/tags/item/ingots.json` in your pack:
 
 ```json
 {
   "replace": false,
   "values": [
     "yourmod:mithril_ingot",
-    "yourmod:adamant_ingot"
+    { "id": "#othermod:alloys", "required": false }
   ]
 }
 ```
 
-Anything a Bar Stack accepts, a Singles Stack refuses — the two rules are complements. The item set is rebuilt on every tag reload, so a `/reload` picks up your changes.
+Mark entries from mods that may be absent `"required": false`; a missing required entry makes the whole tag fail to load. `"replace": true` discards the shipped list.
 
-## Sounds (data pack)
+Anything a Bar Stack accepts, a Singles Stack refuses: the two rules are complements. A `/reload` picks up your changes. Items already stored stay where they are.
 
-`data/<ns>/somestacks_sounds/<name>.json` maps each stack type's actions to sound events. This is server-side data: the server resolves it, plays it, and broadcasts it.
+## Sounds (resource pack)
+
+Every action plays a sound event the mod registers, each with its own subtitle:
+
+| Type | Sound events |
+| --- | --- |
+| Storage | `somestacks:block.storage_stack.deposit`, `.extract`, `.rotate` |
+| Singles | `somestacks:block.singles_stack.deposit`, `.extract`, `.rotate`, `.rotate_item` |
+| Bar | `somestacks:block.bar_stack.deposit`, `.extract` |
+
+By default they play the vanilla wood place, break, and hit sounds. Replace any of them the ordinary way, with `assets/somestacks/sounds.json` in a resource pack:
 
 ```json
 {
-  "storage_stack_block": {
-    "deposit": "minecraft:block.wood.place",
-    "extract": "minecraft:block.wood.break",
-    "rotate": "minecraft:block.wood.hit"
-  },
-  "singles_stack_block": {
-    "deposit": "minecraft:block.amethyst_block.place",
-    "rotate_item": "minecraft:block.amethyst_block.chime"
-  },
-  "bar_stack_block": {
-    "deposit": "minecraft:block.metal.place",
-    "extract": "minecraft:block.metal.break"
+  "block.bar_stack.deposit": {
+    "replace": true,
+    "sounds": [{ "name": "minecraft:block.metal.place", "type": "event" }]
   }
 }
 ```
 
-Each type carries only the actions its gestures reach:
-
-| Type | Actions |
-| --- | --- |
-| `storage_stack_block` | `deposit`, `extract`, `rotate` |
-| `singles_stack_block` | `deposit`, `extract`, `rotate`, `rotate_item` |
-| `bar_stack_block` | `deposit`, `extract` |
-
-**Layering.** Files layer one action at a time, so naming a single action leaves that type's other actions standing. The mod's own namespace holds the bundled defaults and is the base layer; every other namespace applies over it, and among those the file whose id sorts last wins.
-
-**Entries name sounds that already exist.** The mod registers no sound events of its own, so an entry must name something already in the sound registry. Unknown types and actions are ignored with a warning, and anything missing or unresolvable falls back to the bundled wood sounds.
-
-Deposit and extraction are heard every time. Rotation is limited to one sound per player every four ticks, with slight pitch variation, because the gesture is free and repeatable — the rotation itself is never withheld.
+Rotation is limited to one sound per player every four ticks, because the gesture is free and repeatable; the rotation itself is never withheld.
 
 ## Bar textures (resource pack)
 
@@ -105,10 +93,9 @@ Storage and Singles Stacks draw stored items inside their cells. Each item resol
 
 Profiles resolve by precedence, first match wins:
 
-1. Server overrides — `config/somestacks/server_item_overrides/*.json`
-2. User overrides — `config/somestacks/item_overrides.json`
-3. Resource pack overrides — `assets/<ns>/item_render_overrides/*.json`
-4. Automatic measurement
+1. User overrides — `config/somestacks/item_overrides.json`
+2. Resource pack overrides — `assets/<ns>/item_render_overrides/*.json`, including the server's resource pack
+3. Automatic measurement
 
 ### Override file format
 
@@ -135,9 +122,11 @@ Every field is optional, but **an entry owns the whole presentation**: an omitte
 
 Items that no override layer configures are measured from their model. Results are cached in `config/somestacks/measured_cache.json` and invalidated by a relevant mod-version change, a change of selected resource packs between sessions, or a manual resource reload mid-session.
 
+An item whose model throws while being drawn in `2d` mode shows a cube marked with a red "ERR" instead, until the next resource reload, and the client log names the item. Giving it a different mode in an override is usually the fix.
+
 ### Authoring workflow
 
-The `/ss` command exists mostly for this loop. In game, as an operator:
+The `/ss` command exists mostly for this loop. `/ss item` and `/ss write` run on your own client and need no permission; the galleries need the server to enable them.
 
 1. `/ss gallery <modid>` — build a wall of Storage Stacks holding that namespace's items, so you can see everything at once. `/ss ingotgallery <modid>` does the same for Bar Stacks.
 2. `/ss item <item> <mode> [<scale> [<x> <y> [<z>]]]` — correct one item. It applies to your view immediately, in memory.
@@ -145,12 +134,10 @@ The `/ss` command exists mostly for this loop. In game, as an operator:
 4. `/ss write changed` — save your entries to `config/somestacks/item_overrides.json`, which your client loads at startup. Only entries you set are ever written.
 5. `/ss write <modid>` — dump a *complete* resolved profile for every item of that namespace to `config/somestacks/generated_overrides/<namespace>.json`, measuring whatever no layer configures.
 
-Nothing reads `generated_overrides` back. A file there is a starting point: correct it by hand and drop it into a resource pack's `item_render_overrides`, or into a server's `server_item_overrides`.
+Nothing reads `generated_overrides` back. A file there is a starting point: correct it by hand and drop it into a resource pack's `item_render_overrides`.
 
 The dump runs on your own client and holds it busy until it finishes, so name a namespace — or keep a review session's mods in the gen mod list and use `/ss write list` — rather than reaching for `all` in a large pack.
 
-## Server-imposed overrides
+## Sharing profiles from a server
 
-`config/somestacks/server_item_overrides/*.json` uses the same format and takes precedence over everything a client has locally. The server sends these to each player on login; `/ss reload` re-reads the folder and pushes it to every connected player again.
-
-Use this when a pack needs every player to see the same thing regardless of what they have in their own config.
+Put `item_render_overrides` files, and bar mappings if you like, in the server's resource pack. Players get them like any other pack content. A player's own `item_overrides.json` still wins on that player's screen.

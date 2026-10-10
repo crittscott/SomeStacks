@@ -16,7 +16,7 @@ Slots are numbered from the bottom block of the run upward: 27 per Storage block
 
 Because a slot names a *place*, Singles and Bar insertion **refuses** an empty position that nothing is holding up, rather than quietly putting the item somewhere else. A caller that walks the slot range from the bottom fills supported positions in order, which fills the structure layer by layer — each placement is standing by the time the next position is offered.
 
-Forge simulations use the structure's real current occupancy. Fabric stages changes inside the caller's Transfer API transaction and applies structural edits only when its outer transaction commits. Aborted Fabric transactions leave the world unchanged.
+Forge and NeoForge simulations use the structure's real current occupancy. Fabric stages changes inside the caller's Transfer API transaction and applies structural edits only when its outer transaction commits. Aborted Fabric transactions leave the world unchanged.
 
 ## Growth
 
@@ -29,7 +29,7 @@ Inserting into that headroom grows the run by a block and stores the item there.
 - the target is inside build height, replaceable, and not obstructed by an entity,
 - and the position passes the world border and spawn protection checks.
 
-Automated growth uses the shared `[SomeStacks]` identity and answers to vanilla protection checks. Forge and NeoForge fire native placement events before publishing block updates and restore captured snapshots on denial. Fabric requires Common Protection API and queries placement permission before changing the world. Claim mods on Fabric must implement that API's providers to veto growth.
+Automated growth uses the shared `[SomeStacks]` identity on every loader, so machine and claim policies can recognize it, and answers to vanilla protection checks. Forge and NeoForge fire native placement events before publishing block updates and restore captured snapshots on denial. On Fabric, when Common Protection API is installed, growth asks it for placement permission before changing the world, and a refused insertion keeps its items; claim mods veto growth by implementing that API's providers. Without it, Fabric growth answers to the vanilla checks only.
 
 The advertised range is deliberately "what is there plus one block" — not the full potential height, which would leave a caller re-deriving a mostly empty range every tick, and not only what exists, which would mean a full run never gets offered the insertion that grows it.
 

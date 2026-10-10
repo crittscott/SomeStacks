@@ -55,11 +55,11 @@ Run `/reload` to apply the change. Items already in a stack stay where they are;
 
 ## Permissions
 
-The `/ss` command is an administrator's tool throughout. Most of it is gated by vanilla's **Level 2**, the gamerule and world-editing level.
+The server side of `/ss` is an administrator's tool. Most of it is gated by vanilla's **Level 2**, the gamerule and world-editing level. `/ss item` and `/ss write` are the exception: they run entirely on the player's own client, change only that player's view and files, and need no permission.
 
 The two gallery commands overwrite a region of the world outright without the protection checks a placement gesture answers to, so they answer to server config instead of a fixed level: `render_gallery.enabled` (`false` by default — both commands are refused until an admin turns this on) and `render_gallery.required_permission_level` (default `3`, the server-administration level an operator holds under the default `op-permission-level`).
 
-Some subcommands additionally require a **player** rather than the console, because they act on the sender's own client view or build where the sender stands.
+The gallery commands also require a **player** rather than the console, because they build where the sender stands.
 
 `/ss help` is gated by nothing, so a player who cannot run a subcommand can still read what it needs.
 

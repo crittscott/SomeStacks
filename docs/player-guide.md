@@ -24,13 +24,15 @@ The mode decides only what gets *placed*. Depositing into a stack that already e
 Hold `V` with something in your hand and right-click:
 
 - **a stack** — the items go into it.
-- **any other block** — if a Singles or Bar Stack sits on the face you clicked, the items go into that. Otherwise a stack of the selected type is created in that empty space and takes the first deposit.
+- **any other block** — if a Singles or Bar Stack sits against the face you clicked, which usually means you aimed through its empty space at the block holding it up, the item goes into the cell you aimed through, provided protection there allows it. Otherwise a stack of the selected type is created in that empty space and takes the first deposit.
 
 If you click the **top face** of a Singles or Bar Stack and the cell you are aiming at cannot take the item — it is occupied, or nothing is under it to hold it up — the gesture places a new stack on top instead and deposits there. That is how you build a column upward by hand.
 
 A deposit that would create a block only happens if the deposit itself would succeed, so you never end up with an empty block you did not ask for.
 
 In **creative mode**, depositing does not spend the stack in your hand, the same way placing a block does not.
+
+Only your **main hand** acts. Whatever is in your off hand never gets deposited and never blocks a gesture.
 
 ## Taking things back
 
@@ -51,7 +53,7 @@ A **vertical run of Storage Stacks is one pile** — one inventory over its whol
 
 Shortly after any change, the pile **settles**:
 
-- compatible stacks merge, by exact item, damage, and NBT;
+- stacks of exactly the same item, with the same data components, merge;
 - everything packs down toward the base and sorts;
 - empty blocks at the top remove themselves.
 
@@ -71,9 +73,9 @@ Sixty-four items, one per cell, in a 4×4×4 grid. Anything a Bar Stack accepts,
 
 ## Bar Stacks
 
-Sixty-four ingots rendered as bars: eight layers of eight, each layer laid across the one beneath it.
+Sixty-four ingots or bricks rendered as bars: eight layers of eight, each layer laid across the one beneath it. Bricks get a brick-shaped bar, ingots an ingot-shaped one.
 
-Which items count as ingots is a server setting (see [Server administration](server-admin.md)) — by default, everything under the `forge:ingots` tags on Forge or `c:ingots` on Fabric and NeoForge, plus the mod's own `somestacks:ingots` tag, which a data pack can extend.
+What a Bar Stack takes is the `somestacks:ingots` item tag: the loaders' ingot and brick tags plus a list of vanilla and modded ingots and bricks. Blocks made from bricks are not included. A data pack can change the tag (see [Server administration](server-admin.md)).
 
 **Support:** every bar above the bottom layer must overlap a bar in the layer below.
 
@@ -85,6 +87,7 @@ Bar Stacks have no rotation gesture; bars are fixed to their layer.
 
 - **Light.** A cell holding a block that glows contributes a quarter of that block's light, and the block's total is capped at 15. A stack of glowstone is a lamp.
 - **Water.** All three types are waterloggable, and a stack placed into water keeps the water.
-- **Shape.** Singles and Bar Stacks are shaped by what they hold, so an empty one shows no outline — but you can still click and break it. Neither one suffocates you, and mobs will not path through them.
+- **Shape.** Singles and Bar Stacks are shaped by what they hold. The selection outline surrounds only the occupied cells, and aiming through empty space reaches the block behind. Neither one suffocates you, and mobs will not path through them.
+- **Sounds.** Each stack type has its own deposit, extraction, and rotation sounds with subtitles. Resource packs can replace them.
 - **Breaking.** Breaking a stack drops what that block holds. There is no block item to pick back up.
 - **Height.** Piles and columns are limited to 8 blocks by default. The server can change this.

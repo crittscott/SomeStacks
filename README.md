@@ -1,5 +1,5 @@
-![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.1/images/somestacks-splash.png)
-![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.3 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.3%201.21.1%201.20.1-8a5a9b?style=for-the-badge)
+![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/1.21.4/images/somestacks-splash.png)
+![Loaders: Fabric Forge Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Forge%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC: 1.21.4 1.21.1 1.20.1](https://img.shields.io/badge/MC-1.21.4%201.21.1%201.20.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
@@ -13,7 +13,7 @@ An extension and complete rewrite of [Stackable](https://www.curseforge.com/mine
 | --- | --- | --- |
 | **Storage Stack** | 27 item stacks in a 3×3×3 grid | The bulk option. A vertical run of them is one shared inventory that fills from the bottom, sorts itself, packs down, and shrinks when you empty it. |
 | **Singles Stack** | 64 items, one per cell, in a 4×4×4 grid | The display case. Every item needs something under it, and pulling one out drops the rest of its column down a layer. Rotate individual items to line them up. |
-| **Bar Stack** | 64 ingots as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
+| **Bar Stack** | 64 ingots or bricks as stacked bars | The vault. Eight alternating layers of eight bars, each resting on the ones below. Pull a bar out from underneath and everything it was holding up comes down. |
 
 No items and no recipes. A stack exists because you put something in it, and it goes away when you take everything back out, unless you set it permanent for connection to inventory management systems.
 
@@ -32,7 +32,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 | --- | --- |
 | Hold `V`, right-click air | Cycle placement mode. Stack types the server has disabled are skipped. |
 | Hold `V` + item, right-click a stack | Deposit into it. |
-| Hold `V` + item, right-click any other block | Place the selected type in the empty space and make the first deposit. Fabric can also deposit into an allowed adjacent Singles or Bar Stack; Forge/NeoForge require clicking an existing stack directly. |
+| Hold `V` + item, right-click any other block | Place the selected type in the empty space and make the first deposit. If you aimed through the empty space of a Singles or Bar Stack, the item goes into that cell instead. |
 | Right-click a stack, no `V`, no Shift | Take from the nearest item you are looking at. Storage gives you as much as your hand will hold; Singles and Bar give one. |
 | Select Toggle Permanent, hold `V`, right-click a Storage Stack empty-handed | Stop that pile from removing itself when emptied. |
 | Shift + right-click a Storage or Singles Stack with a **redstone torch** | Rotate the whole block 90°. |
@@ -49,7 +49,7 @@ Every stack block exposes loader-native item storage on **every side** (`IItemHa
 
 ## Server-friendly
 
-Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods or single items can be barred from storage. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge additionally fire their place/break events so claim mods using those hooks can allow, deny, or record the edit. Forge/NeoForge publish placement updates only after acceptance, restoring snapshots on denial. Fabric requires Common Protection API for player placement, automated growth, and neighboring-stack interaction queries, and fires its native break lifecycle for removal. Fabric claim mods must implement the API's providers to protect those placement and neighboring-stack edits.
+Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. Forge and NeoForge also fire their place and break events, so claim mods using those hooks can allow, deny, or record the edit. Fabric fires its break events, and when Common Protection API is installed, asks it before placing, growing, or depositing into a neighboring stack.
 
 See **[Server administration](docs/server-admin.md)** for the config file and the `/ss` command.
 
@@ -59,11 +59,10 @@ See **[Server administration](docs/server-admin.md)** for the config file and th
 - **[Automation](docs/automation.md)** — item handlers, slot layout, comparators, growth
 - **[Server administration](docs/server-admin.md)** — config settings and the full `/ss` command reference
 - **[Pack authors](docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
-- **[Player-facing behavior](orientation-player.md)** — the mod's observable behavior in full
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server. See [Pack authors](docs/pack-authors.md).
+Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server through its server resource pack. See [Pack authors](docs/pack-authors.md).
 
 ## Issues and suggestions
 
