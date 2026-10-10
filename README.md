@@ -40,7 +40,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 ## Automation and redstone
 
-Every stack block exposes loader-native item storage on **every side** (`IItemHandler` on Forge and NeoForge, Transfer API storage on Fabric), and a block in a vertical run exposes the **entire run** so a hopper under the bottom and a pipe halfway up address the same inventory.
+Every stack block exposes loader-native item storage on every side (`IItemHandler` on Forge and NeoForge, Transfer API storage on Fabric), and a block in a vertical run exposes the entire run so a hopper under the bottom and a pipe halfway up address the same inventory.
 
 - Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
@@ -70,4 +70,4 @@ Please report bugs and ideas on the [issue tracker](https://github.com/crittscot
 
 ## License
 
-[GNU General Public License v3.0](LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.
+[GNU General Public License v3.0](LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it, provided derivative works carry the same license and make their source available.
