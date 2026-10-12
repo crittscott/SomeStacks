@@ -128,4 +128,34 @@ class SinglesCubeIdxTest {
         occupancy[SinglesCubeIdx.indexFromColumn(column, 1)] = true;
         assertTrue(SinglesCubeIdx.isGroundedIn(occupancy, target, 0, null));
     }
+
+    @Test
+    void cachedBoundsPreserveEveryCellAndRotation() {
+        int[] starts = {0, 4, 8, 12};
+        for (int rotation = 0; rotation < 4; rotation++) {
+            for (int index = 0; index < 64; index++) {
+                int x = index % 4, y = index / 16, z = index / 4 % 4;
+                int visualX = switch (rotation) {
+                    case 0 -> x;
+                    case 1 -> z;
+                    case 2 -> 3 - x;
+                    default -> 3 - z;
+                };
+                int visualZ = switch (rotation) {
+                    case 0 -> z;
+                    case 1 -> 3 - x;
+                    case 2 -> 3 - z;
+                    default -> x;
+                };
+                var box = SinglesCubeIdx.localBox(index, rotation);
+                assertEquals(starts[visualX] / 16.0, box.minX);
+                assertEquals(starts[y] / 16.0, box.minY);
+                assertEquals(starts[visualZ] / 16.0, box.minZ);
+                assertEquals((starts[visualX] + 4.0) / 16.0, box.maxX);
+                assertEquals((starts[y] + 4.0) / 16.0, box.maxY);
+                assertEquals((starts[visualZ] + 4.0) / 16.0, box.maxZ);
+                assertEquals(box, SinglesCubeIdx.shapeFor(index, rotation).bounds());
+            }
+        }
+    }
 }

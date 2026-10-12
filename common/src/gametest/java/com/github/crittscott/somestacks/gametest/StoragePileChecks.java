@@ -76,6 +76,7 @@ public final class StoragePileChecks {
         compatible.setTag(firstTag.copy());
         ItemStack distinct = new ItemStack(Items.STONE, 5);
         distinct.setTag(secondTag);
+        storage.getItems().insertItem(0, distinct.copy(), false);
         storage.getItems().insertItem(10, first, false);
         storage.getItems().insertItem(20, compatible, false);
         storage.getItems().insertItem(25, distinct, false);
@@ -86,7 +87,7 @@ public final class StoragePileChecks {
 
         checkEquals(64, pile.getSlot(0).getCount(), "Consolidated full stack");
         checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
-        checkEquals(5, pile.getSlot(2).getCount(), "Distinct tagged stack");
+        checkEquals(10, pile.getSlot(2).getCount(), "Distinct tagged stack");
         check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
         checkEquals(firstTag, pile.getSlot(0).getTag(), "First tag identity");
         checkEquals(secondTag, pile.getSlot(2).getTag(), "Distinct tag identity");

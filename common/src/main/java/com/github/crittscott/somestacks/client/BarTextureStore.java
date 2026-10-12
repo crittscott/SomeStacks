@@ -140,6 +140,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
     @Override
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+        BarStackBER.onResourceReload();
         textureMap.clear();
         unmappedTints.clear();
         int autoTinted = 0;

@@ -57,11 +57,12 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     private static final Path GENERATED_DIR = PlatformServices.configFolder().resolve("somestacks/generated_overrides");
 
     /** Bundled corpus, from client resource reload. */
-    public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
+    private static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
     /** Admin overrides synced from the server. */
-    public static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
+    private static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
+    private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
     private static boolean userFileLoaded = false;
 
     @Override
@@ -116,21 +117,25 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     protected void apply(Map<ResourceLocation, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         CONFIG_MAP.clear();
         CONFIG_MAP.putAll(prepared);
+        clearResolvedProfiles();
     }
 
     public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
         SERVER_OVERRIDES.clear();
         SERVER_OVERRIDES.putAll(overrides);
+        clearResolvedProfiles();
     }
 
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
+        clearResolvedProfiles();
     }
 
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);
+        clearResolvedProfiles();
     }
 
     /**
@@ -148,6 +153,15 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         ensureUserFileLoaded();
 
+        return RESOLVED_PROFILES.computeIfAbsent(stack.getItem(), ignored -> resolveUncached(stack));
+    }
+
+    /** Discards profiles after override or baked-model changes. */
+    public static void clearResolvedProfiles() {
+        RESOLVED_PROFILES.clear();
+    }
+
+    private static RenderProfile resolveUncached(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
         if (entry == null) {

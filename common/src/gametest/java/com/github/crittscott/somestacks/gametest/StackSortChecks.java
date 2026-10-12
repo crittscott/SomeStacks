@@ -36,6 +36,16 @@ public final class StackSortChecks {
                 "Tag identity was not ordered stably");
         check(StackSort.COMPARATOR.compare(tagOneFull, tagOnePartial) < 0,
                 "Full stack did not sort before compatible partial");
+        check(StackSort.key(tagOneFull).equals(StackSort.key(tagOnePartial)),
+                "Precomputed identity fields depended on stack count");
+        StackSort.SortKey snapshot = StackSort.key(tagOneFull);
+        tagOneFull.getTag().putInt("variant", 99);
+        check(snapshot.compareTo(StackSort.key(tagTwo)) < 0,
+                "Sort key changed when the source NBT changed");
+        ItemStack emptyTag = new ItemStack(Items.STONE);
+        emptyTag.setTag(new CompoundTag());
+        check(StackSort.key(untagged).compareTo(StackSort.key(emptyTag)) < 0,
+                "Explicit empty NBT was treated as absent NBT");
         helper.succeed();
     }
 

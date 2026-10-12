@@ -431,22 +431,32 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             totals.merge(key, stack.getCount(), Integer::sum);
         }
 
-        List<ItemStack> out = new ArrayList<>();
+        List<SortedPiece> pieces = new ArrayList<>();
 
         for (Map.Entry<StackKey, Integer> entry : totals.entrySet()) {
             ItemStack model = models.get(entry.getKey());
+            StackSort.SortKey sortKey = StackSort.key(model);
             int max = Math.max(1, model.getMaxStackSize());
             int remaining = entry.getValue();
 
             while (remaining > 0) {
                 ItemStack piece = model.copy();
                 piece.setCount(Math.min(remaining, max));
-                out.add(piece);
+                pieces.add(new SortedPiece(piece, sortKey));
                 remaining -= piece.getCount();
             }
         }
 
-        out.sort(StackSort.COMPARATOR);
+        pieces.sort((a, b) -> {
+            int order = a.key.compareTo(b.key);
+            return order != 0 ? order : Integer.compare(b.stack.getCount(), a.stack.getCount());
+        });
+        List<ItemStack> out = new ArrayList<>(pieces.size());
+        for (SortedPiece piece : pieces) {
+            out.add(piece.stack);
+        }
         return out;
     }
+
+    private record SortedPiece(ItemStack stack, StackSort.SortKey key) {}
 }

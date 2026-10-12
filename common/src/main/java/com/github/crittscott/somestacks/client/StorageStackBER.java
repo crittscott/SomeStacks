@@ -40,12 +40,10 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
             ItemStack stack = handler.getStackInSlot(idx);
             if (stack.isEmpty()) continue;
 
-            int[] xyz = StorageCubeIdx.xyzFromIndex(idx);
-            int[] visualXYZ = StorageCubeIdx.rotateXYZ(xyz[0], xyz[1], xyz[2], rotation);
-
-            float sx = StorageCubeIdx.startPixel(visualXYZ[0]) / 16.0f;
-            float sy = StorageCubeIdx.startPixel(visualXYZ[1]) / 16.0f;
-            float sz = StorageCubeIdx.startPixel(visualXYZ[2]) / 16.0f;
+            var box = StorageCubeIdx.localBox(idx, rotation);
+            float sx = (float) box.minX;
+            float sy = (float) box.minY;
+            float sz = (float) box.minZ;
 
             pose.pushPose();
             pose.translate(sx, sy, sz);

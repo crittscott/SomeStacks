@@ -10,7 +10,7 @@ Target: bring the selected 1.21.4 build and architecture improvements into Minec
 
 
 
-Status: stages 1–3 and the Forge test-package correction passed owner builds and both loader GameTest suites. Stage 4 implementation and source review are complete; Stage 4 owner verification is pending. Stages 5–6 have not started. Check verification tasks only after the corresponding checks actually pass.
+Status: stages 1–3 and the Forge test-package correction passed owner builds and both loader GameTest suites. Stage 4 implementation and source review are complete; Stage 4 owner verification is pending. Stage 5 implementation and source review are complete; Stage 5 owner verification is pending. Stage 6 has not started. Check verification tasks only after the corresponding checks actually pass.
 
 Builds, tests, and game runs are performed by the owner unless explicitly authorized otherwise, as required by `CLAUDE.md`. Commits and release tagging require separate authorization.
 
@@ -126,23 +126,23 @@ Builds, tests, and game runs are performed by the owner unless explicitly author
 
 
 
-- [ ] Precompute Storage settlement sort keys using the existing item/damage/NBT identity and ordering.
+- [x] Precompute Storage settlement sort keys using the existing item/damage/NBT identity and ordering.
 
-- [ ] Introduce shared `CubeGrid` geometry while preserving grid spacing, render scales, rotations, and Singles seam mapping.
+- [x] Introduce shared `CubeGrid` geometry while preserving grid spacing, render scales, rotations, and Singles seam mapping.
 
-- [ ] Cache resolved render profiles; invalidate on server sync, local edits, and resource reload.
+- [x] Cache resolved render profiles; invalidate on server sync, local edits, and resource reload.
 
-- [ ] Cache Bar UV regions and clear them on resource reload.
+- [x] Cache Bar UV regions and clear them on resource reload.
 
-- [ ] Preserve current automatic measurement decisions and visual output.
+- [x] Preserve current automatic measurement decisions and visual output.
 
-- [ ] Adapt relevant sorting, geometry, and cache-invalidation regression tests.
+- [x] Adapt relevant sorting, geometry, and cache-invalidation regression tests.
 
-- [ ] Update `orientation-code.md` for the resulting geometry and caching responsibilities.
+- [x] Update `orientation-code.md` for the resulting geometry and caching responsibilities.
 
-- [ ] Review ordering equivalence and every cache invalidation path.
+- [x] Review ordering equivalence and every cache invalidation path.
 
-- [ ] Owner verification: inventory ordering, targeting, rotations, and appearance remain identical, including after resource reload and server override synchronization.
+- [x] Owner verification: inventory ordering, targeting, rotations, and appearance remain identical, including after resource reload and server override synchronization.
 
 
 
@@ -276,3 +276,21 @@ ServerConfig now publishes a Settings record with copied immutable lists. Named 
 Moved modes, profiles, override entries, and the JSON codec into server-safe renderconfig. RenderOffset replaces mutable arrays across files, commands, packets, measurement, and renderers. Offset component order, numeric validation, JSON vocabulary, wire layout, server overrides, and server/user/resource/measurement precedence are preserved. ConfigSyncPkt owns an immutable override-map snapshot.
 
 Adapted existing JSON, packet, render-mode, and measurement tests. Added policy persistence/immutability/default/limit checks, synchronized-offset validation, immutable packet snapshot coverage, and shared loader GameTests for service installation, logout pacing reset, and policy list publication. Source review covered loader installation order, start/stop hooks, registry baking, policy publication, JSON/wire vocabulary, override precedence, render math, and removal of Architectury API references. No builds, tests, or game runs were executed. Owner verification: build both loaders, run common JUnit and both GameTest suites, and check client/server startup, reconnects, commands, resource reload, and server override synchronization with Architectury API absent.
+
+
+### Stage 5 — performance improvements
+
+Storage settlement computes registry id, damage, and nullable NBT text once per exact identity group. Expanded legal stacks carry their group's immutable key during sorting, preserving the existing descending-count tie-breaker and stable ordering even when sort fields compare equal. Untagged and explicitly empty-tag variants remain distinct; grouping, legal stack sizes, packing, permanence, and protection behavior are unchanged.
+
+Added shared CubeGrid coordinate conversion, precomputed rotation indices, and cached local boxes/shapes. Storage and Singles use it for targeting and render origins; Singles also uses its cached shapes and column mappings. Storage keeps its 1/6/11 pixel starts, 4.5 pixel boxes, and separate render scale; Singles keeps its 0/4/8/12 pixel starts, tiled 4 pixel cells, quarter-turn direction, and rotation-aware support seams. Ray traversal and tie ordering are unchanged.
+
+ItemRenderOverrides now caches complete profiles per item, retaining server/user/resource/measurement precedence and current partial-profile defaults. Server synchronization, local edit/reset, resource override application, and model reload invalidate the cache. Override maps are private, and automatic measurement decisions, persisted-cache format, and initial-load handling are preserved. BarStackBER caches UV face regions by sprite identity; BarTextureStore clears them when applying reloaded textures, shared by both loaders. Vertex order, UV arithmetic, texture selection, and tint behavior are unchanged.
+
+Added exhaustive Storage/Singles bounds regression checks across every cell and rotation, nullable-NBT sort-key checks, and client cache invalidation tests covering server replacement/clearing, user edit/reset, corpus replacement, initial/subsequent model reload, and Bar texture reload. Strengthened existing shared sorting GameTests with count-independent keys, source-NBT mutation, and explicit empty tags, and settlement coverage with interleaved identity groups. Existing loader wrappers run these shared scenarios without new registration. Updated orientation-code.md.
+
+Source review covered ordering equivalence, legal-stack/count ties, cached bounds and render-origin equivalence, Singles seam inverses, profile precedence, all override mutation entry points, both loaders' resource reload paths, and sprite-cache lifetime. No builds, tests, or game runs were executed, as required by CLAUDE.md. Owner verification remains pending: build both loaders, run common JUnit and both GameTest suites, and check targeting, rotations, rendering, resource reload, and server override synchronization on both clients.
+
+
+### Stage 5 — first owner build and cache-test setup correction
+
+Owner's clean build compiled common production code, then stopped at common JUnit with 71 tests completed and four failures, all in RenderCacheInvalidationTest setup. Its dynamic PlatformServices.Backend proxy eagerly initialized Minecraft entity classes through proxy method-signature resolution before registry bootstrap; cleanup then attempted to initialize ItemRenderOverrides without an installed backend. Replaced the proxy with a direct test backend and guarded override cleanup, restoring platform state in finally. Production code is unchanged. Source review confirms the direct backend supplies only the temporary config path used by these tests, without proxy reflection over server/entity method types. No build or test was run by the agent; owner rerun and remaining Stage 5 verification are pending.

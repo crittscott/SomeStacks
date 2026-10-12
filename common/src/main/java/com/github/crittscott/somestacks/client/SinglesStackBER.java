@@ -41,12 +41,10 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
             ItemStack stack = handler.getStackInSlot(storageIndex);
             if (stack.isEmpty()) continue;
 
-            int[] storageXYZ = SinglesCubeIdx.xyzFromIndex(storageIndex);
-            int[] visualXYZ = SinglesCubeIdx.rotateXYZ(storageXYZ[0], storageXYZ[1], storageXYZ[2], blockRotation);
-
-            float sx = SinglesCubeIdx.startPixel(visualXYZ[0]) / 16.0f;
-            float sy = SinglesCubeIdx.startPixel(visualXYZ[1]) / 16.0f;
-            float sz = SinglesCubeIdx.startPixel(visualXYZ[2]) / 16.0f;
+            var box = SinglesCubeIdx.localBox(storageIndex, blockRotation);
+            float sx = (float) box.minX;
+            float sy = (float) box.minY;
+            float sz = (float) box.minZ;
             float scale = CubeRenderHelper.CELL_RENDER_SCALE;
 
             pose.pushPose();

@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.client.measure;
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
@@ -91,6 +92,7 @@ public final class AutoRenderProfiles {
      * the in-memory cache and the file are discarded.
      */
     public static void onResourceReload() {
+        ItemRenderOverrides.clearResolvedProfiles();
         if (!initialResourceLoadSeen) {
             initialResourceLoadSeen = true;
             return;

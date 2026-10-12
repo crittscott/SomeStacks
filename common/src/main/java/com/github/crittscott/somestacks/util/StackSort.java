@@ -20,25 +20,30 @@ public final class StackSort {
         if (a.isEmpty()) return 1;
         if (b.isEmpty()) return -1;
 
-        ResourceLocation aKey = BuiltInRegistries.ITEM.getKey(a.getItem());
-        ResourceLocation bKey = BuiltInRegistries.ITEM.getKey(b.getItem());
-        int c = aKey.compareTo(bKey);
+        int c = key(a).compareTo(key(b));
         if (c != 0) return c;
-
-        c = Integer.compare(a.getDamageValue(), b.getDamageValue());
-        if (c != 0) return c;
-
-        // Untagged variants precede tagged variants; tag text gives the latter a stable order.
-        CompoundTag aTag = a.getTag();
-        CompoundTag bTag = b.getTag();
-        if (aTag == null || bTag == null) {
-            if (aTag != bTag) return aTag != null ? 1 : -1;
-        } else {
-            c = aTag.toString().compareTo(bTag.toString());
-            if (c != 0) return c;
-        }
 
         // Fullest first leaves a group's partial stack at its end.
         return Integer.compare(b.getCount(), a.getCount());
     };
+
+    /** Computes the expensive sortable fields once for an exact settlement identity. */
+    public static SortKey key(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return new SortKey(BuiltInRegistries.ITEM.getKey(stack.getItem()), stack.getDamageValue(),
+                tag == null ? null : tag.toString());
+    }
+
+    public record SortKey(ResourceLocation itemId, int damage, String tag) implements Comparable<SortKey> {
+        @Override
+        public int compareTo(SortKey other) {
+            int order = itemId.compareTo(other.itemId);
+            if (order != 0) return order;
+            order = Integer.compare(damage, other.damage);
+            if (order != 0) return order;
+            if (tag == null) return other.tag == null ? 0 : -1;
+            if (other.tag == null) return 1;
+            return tag.compareTo(other.tag);
+        }
+    }
 }

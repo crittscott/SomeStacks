@@ -63,4 +63,33 @@ class StorageCubeIdxTest {
             assertArrayEquals(original, rotated);
         }
     }
+
+    @Test
+    void cachedBoundsPreserveEveryCellAndRotation() {
+        int[] starts = {1, 6, 11};
+        for (int rotation = 0; rotation < 4; rotation++) {
+            for (int index = 0; index < 27; index++) {
+                int x = index % 3, y = index / 9, z = index / 3 % 3;
+                int visualX = switch (rotation) {
+                    case 0 -> x;
+                    case 1 -> z;
+                    case 2 -> 2 - x;
+                    default -> 2 - z;
+                };
+                int visualZ = switch (rotation) {
+                    case 0 -> z;
+                    case 1 -> 2 - x;
+                    case 2 -> 2 - z;
+                    default -> x;
+                };
+                var box = StorageCubeIdx.localBox(index, rotation);
+                assertEquals(starts[visualX] / 16.0, box.minX);
+                assertEquals(starts[y] / 16.0, box.minY);
+                assertEquals(starts[visualZ] / 16.0, box.minZ);
+                assertEquals((starts[visualX] + 4.5) / 16.0, box.maxX);
+                assertEquals((starts[y] + 4.5) / 16.0, box.maxY);
+                assertEquals((starts[visualZ] + 4.5) / 16.0, box.maxZ);
+            }
+        }
+    }
 }
