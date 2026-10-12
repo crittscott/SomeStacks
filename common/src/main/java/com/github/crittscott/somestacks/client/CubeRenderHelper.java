@@ -1,9 +1,17 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.renderconfig.RenderProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,8 +20,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -31,13 +39,6 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Draws one stored item inside one cell according to its render profile. The Storage
@@ -141,7 +142,7 @@ public final class CubeRenderHelper {
             return;
         }
         float scale = profile.scale();
-        float[] offset = profile.offset();
+        RenderOffset offset = profile.offset();
 
         switch (profile.mode()) {
             case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset);
@@ -152,12 +153,12 @@ public final class CubeRenderHelper {
     }
 
     private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float finalScale, float[] offset) {
+                                     float finalScale, RenderOffset offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
+        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(
                 stack,
@@ -174,12 +175,12 @@ public final class CubeRenderHelper {
     }
 
     private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                      float finalScale, float[] offset) {
+                                      float finalScale, RenderOffset offset) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
+        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
 
         // Counter-rotate the GUI display context transforms
         pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
@@ -200,7 +201,7 @@ public final class CubeRenderHelper {
     }
 
     private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float scale, float[] offset) {
+                                     float scale, RenderOffset offset) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         pose.translate(0.5f, 0.5f, 0.5f);
@@ -213,7 +214,7 @@ public final class CubeRenderHelper {
 
     private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
                                         BlockRenderDispatcher blockRenderer, Level level,
-                                        float finalScale, float[] offset) {
+                                        float finalScale, RenderOffset offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             // Block mode has no meaningful rendering path for a non-BlockItem.
             return;
@@ -235,7 +236,7 @@ public final class CubeRenderHelper {
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset[0] / finalScale, offset[1] / finalScale, offset[2] / finalScale);
+        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(-0.5, -0.5, -0.5);
 
@@ -271,7 +272,7 @@ public final class CubeRenderHelper {
     }
 
     private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
-                                         float scale, float[] offset) {
+                                         float scale, RenderOffset offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
@@ -350,7 +351,7 @@ public final class CubeRenderHelper {
      * cell center lies on the face's inward side. The faces that fail the test are behind the
      * opaque background cube, so skipping them removes nothing that could be seen.
      */
-    private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, float[] offset) {
+    private static List<FaceTarget> visibleFaces(PoseStack pose, float scale, RenderOffset offset) {
         Matrix3f cellNormal = pose.last().normal();
         Vector3f centre = pose.last().pose().transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
 
@@ -373,7 +374,7 @@ public final class CubeRenderHelper {
      * the target face, sit just outside it keeping a sliver of the quad's own depth, then shrink the
      * art about the face center to leave a border and apply the profile's offset.
      */
-    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, float[] offset) {
+    private static Matrix4f artMatrix(PoseStack pose, Direction face, float scale, RenderOffset offset) {
         pose.pushPose();
 
         Quaternionf rotation = FACE_ROTATIONS[face.ordinal()];
@@ -386,7 +387,7 @@ public final class CubeRenderHelper {
         pose.translate(0.0f, 0.0f, 1.0f + FACE_OFFSET);
         pose.scale(1.0f, 1.0f, FACE_DEPTH);
 
-        pose.translate(0.5f + offset[0], 0.5f + offset[1], 0.0f);
+        pose.translate(0.5f + offset.x(), 0.5f + offset.y(), 0.0f);
         pose.scale(ART_INSET * scale, ART_INSET * scale, 1.0f);
         pose.translate(-0.5f, -0.5f, 0.0f);
 

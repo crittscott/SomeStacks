@@ -1,14 +1,14 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Server-to-client synchronization of the settings the client must agree with the server about:
@@ -32,7 +32,7 @@ public class ConfigSyncPkt {
         this.enableStack = enableStack;
         this.enableSingles = enableSingles;
         this.enableBar = enableBar;
-        this.renderOverrides = renderOverrides;
+        this.renderOverrides = renderOverrides == null ? null : Map.copyOf(renderOverrides);
     }
 
     public static void encode(ConfigSyncPkt msg, FriendlyByteBuf buf) {
@@ -55,9 +55,9 @@ public class ConfigSyncPkt {
             }
             buf.writeBoolean(config.offset() != null);
             if (config.offset() != null) {
-                buf.writeFloat(config.offset()[0]);
-                buf.writeFloat(config.offset()[1]);
-                buf.writeFloat(config.offset()[2]);
+                buf.writeFloat(config.offset().x());
+                buf.writeFloat(config.offset().y());
+                buf.writeFloat(config.offset().z());
             }
         }
     }
@@ -83,8 +83,8 @@ public class ConfigSyncPkt {
             ResourceLocation itemId = buf.readResourceLocation();
             RenderMode mode = buf.readBoolean() ? RenderMode.fromString(buf.readUtf()) : null;
             Float scale = buf.readBoolean() ? buf.readFloat() : null;
-            float[] offset = buf.readBoolean()
-                    ? new float[]{buf.readFloat(), buf.readFloat(), buf.readFloat()}
+            RenderOffset offset = buf.readBoolean()
+                    ? new RenderOffset(buf.readFloat(), buf.readFloat(), buf.readFloat())
                     : null;
             renderOverrides.put(itemId,
                     OverrideJsonCodec.sanitize(new ItemRenderConfig(mode, scale, offset)));

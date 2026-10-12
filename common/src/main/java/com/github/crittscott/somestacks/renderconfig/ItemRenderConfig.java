@@ -1,4 +1,4 @@
-package com.github.crittscott.somestacks.client;
+package com.github.crittscott.somestacks.renderconfig;
 
 import javax.annotation.Nullable;
 
@@ -11,5 +11,5 @@ import javax.annotation.Nullable;
 public record ItemRenderConfig(
         @Nullable RenderMode mode,
         @Nullable Float scale,
-        @Nullable float[] offset
+        @Nullable RenderOffset offset
 ) {}

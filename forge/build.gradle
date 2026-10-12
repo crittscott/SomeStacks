@@ -7,13 +7,7 @@ architectury {
     forge()
 }
 
-sourceSets {
-    gametest {
-        java { srcDir project(':common').file('src/gametest/java') }
-        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
-        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
-    }
-}
+rootProject.configureGameTests(project)
 
 loom {
     mods {
@@ -59,26 +53,8 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
-    modImplementation "dev.architectury:architectury-forge:$rootProject.architectury_api_version"
 }
 
-def gameTestStructureSource = layout.projectDirectory.file(
-        'src/gametest/fixtures/somestacks_empty.nbt.b64')
-def gameTestStructureOutput = layout.buildDirectory.file(
-        'generated/gametest/resources/data/somestacks/structures/somestacks_empty.nbt')
-
-tasks.register('generateGameTestStructures') {
-    inputs.file(gameTestStructureSource)
-    outputs.file(gameTestStructureOutput)
-
-    doLast {
-        def output = gameTestStructureOutput.get().asFile
-        output.parentFile.mkdirs()
-        output.bytes = Base64.getDecoder().decode(gameTestStructureSource.asFile.text.trim())
-    }
-}
-
-sourceSets.gametest.resources { srcDir layout.buildDirectory.dir('generated/gametest/resources') }
 tasks.named('processGametestResources', ProcessResources).configure {
     var replaceProperties = [mod_version: mod_version]
     inputs.properties replaceProperties
@@ -86,18 +62,13 @@ tasks.named('processGametestResources', ProcessResources).configure {
     filesMatching('META-INF/mods.toml') {
         expand replaceProperties + [project: project]
     }
-
-    dependsOn tasks.named('generateGameTestStructures')
 }
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).
 tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+    var replaceProperties = rootProject.sharedModProperties + [
+            minecraft_version_range: minecraft_version_range,
             forge_version_range: forge_version_range, loader_version_range: loader_version_range,
-            architectury_version_range: architectury_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
@@ -117,8 +88,7 @@ shadowJar {
                 'Specification-Version'   : '1',
                 'Implementation-Title'    : project.name,
                 'Implementation-Version'  : project.version,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                'Implementation-Vendor'   : mod_authors
         ])
     }
 }

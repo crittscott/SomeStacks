@@ -21,237 +21,267 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-/**
- * The server config values and the resolved lookup sets behind them, loaded from and saved to a
- * per-world JSON file the loader's entry point locates and hands to {@link #load(Path)}.
- *
- * <p>The text lists are stored as patterns and baked into sets that the hot paths can test cheaply.
- * Baking happens on load and whenever a list is edited, and for the ingot tags, whenever item tags
- * are rebuilt with {@link #rebakeIngotTags()}, since those name item tags whose membership a data
- * pack decides. The baked sets are volatile because a rebake can run off the main thread relative to
- * gameplay reads.
- *
- * <p>Everything here is server-side. Only the stack-type enable flags reach the client, through the
- * configuration sync.
- */
+/** Per-world immutable policy, JSON persistence, and resolved admission sets. */
 public final class ServerConfig {
-    private ServerConfig() {
-    }
+    private ServerConfig() {}
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
     private static final int MAX_PILE_HEIGHT_LIMIT = 64;
-
-    /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
     private static final int GALLERY_PERMISSION_LEVEL_MAX = 4;
-
-    private static int maxPileHeight = 8;
-    private static boolean enableStorageStackBlock = true;
-    private static boolean enableSinglesStackBlock = true;
-    private static boolean enableBarStackBlock = true;
-    private static List<String> disableModsRaw = new ArrayList<>();
-    private static List<String> disableItemsRaw = new ArrayList<>();
-    private static List<String> ingotTagsRaw = new ArrayList<>(List.of("forge:ingots*", "somestacks:ingots"));
-    private static int renderGalleryPlacementsPerTick = 64;
-    private static boolean galleryEnabled = false;
-    private static int galleryPermissionLevel = 3;
-    private static List<String> genModsRaw = new ArrayList<>();
-    private static List<String> genItemsRaw = new ArrayList<>();
-
-    private static Path configFile;
-
+    private static boolean fabricDefaults;
+    private static volatile Settings settings = Settings.defaults(false);
+    private static Persistence persistence;
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
     private static volatile Set<Item> ingotItems = Set.of();
     private static final AtomicInteger ingotGeneration = new AtomicInteger();
 
-    /** A mutable, named text list backed by the config, the way {@code /ss} list editing addresses one. */
-    public static final class ListSetting {
-        private final Supplier<List<String>> getter;
-        private final Consumer<List<String>> setter;
-
-        private ListSetting(Supplier<List<String>> getter, Consumer<List<String>> setter) {
-            this.getter = getter;
-            this.setter = setter;
+    /** One immutable publication of server policy; lists cannot be changed by readers. */
+    public record Settings(
+            int maxPileHeight,
+            boolean enableStorageStackBlock,
+            boolean enableSinglesStackBlock,
+            boolean enableBarStackBlock,
+            List<String> disableMods,
+            List<String> disableItems,
+            List<String> ingotTags,
+            int renderGalleryPlacementsPerTick,
+            boolean galleryEnabled,
+            int galleryPermissionLevel,
+            List<String> genMods,
+            List<String> genItems) {
+        public Settings {
+            disableMods = List.copyOf(disableMods);
+            disableItems = List.copyOf(disableItems);
+            ingotTags = List.copyOf(ingotTags);
+            genMods = List.copyOf(genMods);
+            genItems = List.copyOf(genItems);
         }
 
+        static Settings defaults(boolean fabric) {
+            return new Settings(
+                    8,
+                    true,
+                    true,
+                    true,
+                    List.of(),
+                    List.of(),
+                    List.of(fabric ? "c:ingots*" : "forge:ingots*", "somestacks:ingots"),
+                    64,
+                    false,
+                    3,
+                    List.of(),
+                    List.of());
+        }
+
+        private Settings withList(ListSetting list, List<String> value) {
+            return new Settings(
+                    maxPileHeight,
+                    enableStorageStackBlock,
+                    enableSinglesStackBlock,
+                    enableBarStackBlock,
+                    list == ListSetting.DISABLE_MODS ? value : disableMods,
+                    list == ListSetting.DISABLE_ITEMS ? value : disableItems,
+                    list == ListSetting.INGOT_TAGS ? value : ingotTags,
+                    renderGalleryPlacementsPerTick,
+                    galleryEnabled,
+                    galleryPermissionLevel,
+                    list == ListSetting.GEN_MODS ? value : genMods,
+                    list == ListSetting.GEN_ITEMS ? value : genItems);
+        }
+    }
+
+    /** The named lists edited by /ss; each edit replaces the complete policy snapshot. */
+    public enum ListSetting {
+        DISABLE_MODS, DISABLE_ITEMS, INGOT_TAGS, GEN_MODS, GEN_ITEMS;
+
         public List<String> get() {
-            return getter.get();
+            Settings current = settings;
+            return switch (this) {
+                case DISABLE_MODS -> current.disableMods();
+                case DISABLE_ITEMS -> current.disableItems();
+                case INGOT_TAGS -> current.ingotTags();
+                case GEN_MODS -> current.genMods();
+                case GEN_ITEMS -> current.genItems();
+            };
         }
 
         private void set(List<String> value) {
-            setter.accept(List.copyOf(value));
+            settings = settings.withList(this, value);
         }
     }
 
-    public static final ListSetting DISABLE_MODS = new ListSetting(() -> disableModsRaw, v -> disableModsRaw = v);
-    public static final ListSetting DISABLE_ITEMS = new ListSetting(() -> disableItemsRaw, v -> disableItemsRaw = v);
-    public static final ListSetting INGOT_TAGS = new ListSetting(() -> ingotTagsRaw, v -> ingotTagsRaw = v);
-    public static final ListSetting GEN_MODS = new ListSetting(() -> genModsRaw, v -> genModsRaw = v);
-    public static final ListSetting GEN_ITEMS = new ListSetting(() -> genItemsRaw, v -> genItemsRaw = v);
+    public static Settings settings() {
+        return settings;
+    }
 
     public static int maxPileHeight() {
-        return maxPileHeight;
+        return settings.maxPileHeight();
     }
 
     public static boolean enableStorageStackBlock() {
-        return enableStorageStackBlock;
+        return settings.enableStorageStackBlock();
     }
 
     public static boolean enableSinglesStackBlock() {
-        return enableSinglesStackBlock;
+        return settings.enableSinglesStackBlock();
     }
 
     public static boolean enableBarStackBlock() {
-        return enableBarStackBlock;
+        return settings.enableBarStackBlock();
     }
 
     public static int renderGalleryPlacementsPerTick() {
-        return renderGalleryPlacementsPerTick;
+        return settings.renderGalleryPlacementsPerTick();
     }
 
-    /** Whether {@code ss gallery} and {@code ss ingotgallery} may be run at all. Off by default. */
     public static boolean galleryEnabled() {
-        return galleryEnabled;
+        return settings.galleryEnabled();
     }
 
-    /** The vanilla permission level {@code ss gallery} and {@code ss ingotgallery} require. */
     public static int galleryRequiredPermissionLevel() {
-        return galleryPermissionLevel;
+        return settings.galleryPermissionLevel();
     }
 
-    /** Selects Fabric convention tags for a new config; an existing file remains authoritative. */
+    /** Selects defaults for new Fabric worlds; existing files remain authoritative. */
     public static void useFabricIngotTagDefaults() {
-        if (configFile == null) {
-            ingotTagsRaw = new ArrayList<>(List.of("c:ingots*", "somestacks:ingots"));
+        if (persistence == null) {
+            fabricDefaults = true;
+            settings = Settings.defaults(true);
         }
     }
 
-    // --- Loading and saving ---
-
-    /**
-     * Loads the config from {@code file}, writing it with defaults first if it does not exist yet.
-     * Remembers {@code file} so later edits save back to it, then bakes the lookup sets.
-     */
+    /** Starts a world session from loader defaults, never from the previous world's values. */
     public static void load(Path file) {
-        configFile = file;
-
-        if (Files.exists(file)) {
-            try {
-                JsonObject root = GSON.fromJson(Files.readString(file), JsonObject.class);
-                if (root != null) {
-                    applyJson(root);
-                }
-            } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", file, e.getMessage());
-            }
-        } else {
-            save();
-        }
-
+        persistence = new Persistence(file);
+        settings = persistence.read(Settings.defaults(fabricDefaults));
         bakeServerLists();
     }
 
-    private static void applyJson(JsonObject root) {
-        JsonObject piles = obj(root, "piles");
-        maxPileHeight = clamp(intOr(piles, "max_pile_height", maxPileHeight), 1, MAX_PILE_HEIGHT_LIMIT);
-
-        JsonObject stacks = obj(root, "stacks");
-        enableStorageStackBlock = boolOr(stacks, "enable_storage_stack_block", enableStorageStackBlock);
-        enableSinglesStackBlock = boolOr(stacks, "enable_singles_stack_block", enableSinglesStackBlock);
-        enableBarStackBlock = boolOr(stacks, "enable_bar_stack_block", enableBarStackBlock);
-
-        JsonObject compatibility = obj(root, "compatibility");
-        disableModsRaw = stringListOr(compatibility, "disable_mods", disableModsRaw);
-        disableItemsRaw = stringListOr(compatibility, "disable_items", disableItemsRaw);
-        ingotTagsRaw = stringListOr(compatibility, "ingot_tags", ingotTagsRaw);
-
-        JsonObject gallery = obj(root, "render_gallery");
-        renderGalleryPlacementsPerTick =
-                Math.max(1, intOr(gallery, "placements_per_tick", renderGalleryPlacementsPerTick));
-        galleryEnabled = boolOr(gallery, "enabled", galleryEnabled);
-        galleryPermissionLevel = clamp(
-                intOr(gallery, "required_permission_level", galleryPermissionLevel), 0, GALLERY_PERMISSION_LEVEL_MAX);
-        genModsRaw = stringListOr(gallery, "gen_mods", genModsRaw);
-        genItemsRaw = stringListOr(gallery, "gen_items", genItemsRaw);
-    }
-
-    /** Writes the current values to the file {@link #load} was given. A no-op before the first load. */
+    /** Writes command edits immediately; /ss reload does not call this policy reader. */
     public static void save() {
-        if (configFile == null) {
-            return;
-        }
-
-        JsonObject piles = new JsonObject();
-        piles.addProperty("max_pile_height", maxPileHeight);
-
-        JsonObject stacks = new JsonObject();
-        stacks.addProperty("enable_storage_stack_block", enableStorageStackBlock);
-        stacks.addProperty("enable_singles_stack_block", enableSinglesStackBlock);
-        stacks.addProperty("enable_bar_stack_block", enableBarStackBlock);
-
-        JsonObject compatibility = new JsonObject();
-        compatibility.add("disable_mods", stringArray(disableModsRaw));
-        compatibility.add("disable_items", stringArray(disableItemsRaw));
-        compatibility.add("ingot_tags", stringArray(ingotTagsRaw));
-
-        JsonObject gallery = new JsonObject();
-        gallery.addProperty("placements_per_tick", renderGalleryPlacementsPerTick);
-        gallery.addProperty("enabled", galleryEnabled);
-        gallery.addProperty("required_permission_level", galleryPermissionLevel);
-        gallery.add("gen_mods", stringArray(genModsRaw));
-        gallery.add("gen_items", stringArray(genItemsRaw));
-
-        JsonObject root = new JsonObject();
-        root.add("piles", piles);
-        root.add("stacks", stacks);
-        root.add("compatibility", compatibility);
-        root.add("render_gallery", gallery);
-
-        try {
-            Files.createDirectories(configFile.getParent());
-            Files.writeString(configFile, GSON.toJson(root));
-        } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", configFile, e.getMessage());
+        if (persistence != null) {
+            persistence.write(settings);
         }
     }
 
-    private static JsonObject obj(JsonObject parent, String key) {
-        return parent.has(key) && parent.get(key).isJsonObject() ? parent.getAsJsonObject(key) : new JsonObject();
+    /** Releases the world path and derived admission state on server shutdown. */
+    public static void clear() {
+        persistence = null;
+        settings = Settings.defaults(fabricDefaults);
+        disabledMods = Set.of();
+        disabledItems = Set.of();
+        ingotItems = Set.of();
+        ingotGeneration.incrementAndGet();
     }
 
-    private static int intOr(JsonObject obj, String key, int fallback) {
-        return obj.has(key) && obj.get(key).isJsonPrimitive() ? obj.get(key).getAsInt() : fallback;
-    }
+    /** JSON boundary, independent of registry baking and gameplay. */
+    static final class Persistence {
+        private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+        private final Path file;
 
-    private static boolean boolOr(JsonObject obj, String key, boolean fallback) {
-        return obj.has(key) && obj.get(key).isJsonPrimitive() ? obj.get(key).getAsBoolean() : fallback;
-    }
-
-    private static List<String> stringListOr(JsonObject obj, String key, List<String> fallback) {
-        if (!obj.has(key) || !obj.get(key).isJsonArray()) {
-            return fallback;
+        Persistence(Path file) {
+            this.file = file;
         }
-        List<String> out = new ArrayList<>();
-        for (JsonElement entry : obj.getAsJsonArray(key)) {
-            out.add(entry.getAsString());
+
+        Settings read(Settings defaults) {
+            if (!Files.exists(file)) {
+                write(defaults);
+                return defaults;
+            }
+            try {
+                JsonObject root = GSON.fromJson(Files.readString(file), JsonObject.class);
+                return root == null ? defaults : decode(root, defaults);
+            } catch (Exception exception) {
+                SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", file, exception.getMessage());
+                return defaults;
+            }
         }
-        return out;
-    }
 
-    private static JsonArray stringArray(List<String> values) {
-        JsonArray array = new JsonArray();
-        values.forEach(array::add);
-        return array;
-    }
+        private static Settings decode(JsonObject root, Settings defaults) {
+            JsonObject piles = obj(root, "piles");
+            JsonObject stacks = obj(root, "stacks");
+            JsonObject compatibility = obj(root, "compatibility");
+            JsonObject gallery = obj(root, "render_gallery");
+            return new Settings(
+                    clamp(intOr(piles, "max_pile_height", defaults.maxPileHeight()), 1, MAX_PILE_HEIGHT_LIMIT),
+                    boolOr(stacks, "enable_storage_stack_block", defaults.enableStorageStackBlock()),
+                    boolOr(stacks, "enable_singles_stack_block", defaults.enableSinglesStackBlock()),
+                    boolOr(stacks, "enable_bar_stack_block", defaults.enableBarStackBlock()),
+                    stringListOr(compatibility, "disable_mods", defaults.disableMods()),
+                    stringListOr(compatibility, "disable_items", defaults.disableItems()),
+                    stringListOr(compatibility, "ingot_tags", defaults.ingotTags()),
+                    Math.max(1, intOr(gallery, "placements_per_tick", defaults.renderGalleryPlacementsPerTick())),
+                    boolOr(gallery, "enabled", defaults.galleryEnabled()),
+                    clamp(intOr(gallery, "required_permission_level", defaults.galleryPermissionLevel()), 0, GALLERY_PERMISSION_LEVEL_MAX),
+                    stringListOr(gallery, "gen_mods", defaults.genMods()),
+                    stringListOr(gallery, "gen_items", defaults.genItems()));
+        }
 
-    private static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
+        void write(Settings values) {
+            JsonObject piles = new JsonObject();
+            piles.addProperty("max_pile_height", values.maxPileHeight());
+            JsonObject stacks = new JsonObject();
+            stacks.addProperty("enable_storage_stack_block", values.enableStorageStackBlock());
+            stacks.addProperty("enable_singles_stack_block", values.enableSinglesStackBlock());
+            stacks.addProperty("enable_bar_stack_block", values.enableBarStackBlock());
+            JsonObject compatibility = new JsonObject();
+            compatibility.add("disable_mods", stringArray(values.disableMods()));
+            compatibility.add("disable_items", stringArray(values.disableItems()));
+            compatibility.add("ingot_tags", stringArray(values.ingotTags()));
+            JsonObject gallery = new JsonObject();
+            gallery.addProperty("placements_per_tick", values.renderGalleryPlacementsPerTick());
+            gallery.addProperty("enabled", values.galleryEnabled());
+            gallery.addProperty("required_permission_level", values.galleryPermissionLevel());
+            gallery.add("gen_mods", stringArray(values.genMods()));
+            gallery.add("gen_items", stringArray(values.genItems()));
+            JsonObject root = new JsonObject();
+            root.add("piles", piles);
+            root.add("stacks", stacks);
+            root.add("compatibility", compatibility);
+            root.add("render_gallery", gallery);
+            try {
+                Files.createDirectories(file.getParent());
+                Files.writeString(file, GSON.toJson(root));
+            } catch (IOException exception) {
+                SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", file, exception.getMessage());
+            }
+        }
+
+        private static JsonObject obj(JsonObject parent, String key) {
+            return parent.has(key) && parent.get(key).isJsonObject() ? parent.getAsJsonObject(key) : new JsonObject();
+        }
+
+        private static int intOr(JsonObject obj, String key, int fallback) {
+            return obj.has(key) && obj.get(key).isJsonPrimitive() ? obj.get(key).getAsInt() : fallback;
+        }
+
+        private static boolean boolOr(JsonObject obj, String key, boolean fallback) {
+            return obj.has(key) && obj.get(key).isJsonPrimitive() ? obj.get(key).getAsBoolean() : fallback;
+        }
+
+        private static List<String> stringListOr(JsonObject obj, String key, List<String> fallback) {
+            if (!obj.has(key) || !obj.get(key).isJsonArray()) {
+                return fallback;
+            }
+            List<String> out = new ArrayList<>();
+            for (JsonElement entry : obj.getAsJsonArray(key)) {
+                out.add(entry.getAsString());
+            }
+            return out;
+        }
+
+        private static JsonArray stringArray(List<String> values) {
+            JsonArray array = new JsonArray();
+            values.forEach(array::add);
+            return array;
+        }
+
+        private static int clamp(int value, int min, int max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
     }
 
     // --- Baking ---
@@ -264,7 +294,7 @@ public final class ServerConfig {
      */
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
-        for (String entry : DISABLE_MODS.get()) {
+        for (String entry : ListSetting.DISABLE_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
             if (!modId.isEmpty()) {
                 mods.add(modId);
@@ -272,7 +302,7 @@ public final class ServerConfig {
         }
 
         Set<ResourceLocation> items = new HashSet<>();
-        for (String entry : DISABLE_ITEMS.get()) {
+        for (String entry : ListSetting.DISABLE_ITEMS.get()) {
             ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
             if (itemId == null) {
                 SomeStacksCommon.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);
@@ -297,7 +327,7 @@ public final class ServerConfig {
     private static void bakeIngotItems() {
         List<Pattern> patterns = new ArrayList<>();
         List<String> names = new ArrayList<>();
-        for (String entry : INGOT_TAGS.get()) {
+        for (String entry : ListSetting.INGOT_TAGS.get()) {
             String glob = entry.trim().toLowerCase(Locale.ROOT);
             if (!glob.isEmpty()) {
                 patterns.add(globToPattern(glob));
@@ -367,7 +397,7 @@ public final class ServerConfig {
      * naming those tags has not. The loader's entry point calls this from its own tags-updated hook.
      */
     public static void rebakeIngotTags() {
-        if (configFile == null) {
+        if (persistence == null) {
             return;
         }
         bakeIngotItems();

@@ -4,21 +4,17 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,13 +43,9 @@ import java.util.List;
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
  * current tick, and placement or removal invalidates every affected cache immediately.
  */
-public final class BarColumn {
-    private final Level level;
-    private final List<BarStackBE> blocks;
-
-    private BarColumn(Level level, List<BarStackBE> blocks) {
-        this.level = level;
-        this.blocks = blocks;
+public final class BarColumn extends StackRun<BarStackBE> {
+    private BarColumn(ServerLevel level, List<BarStackBE> blocks) {
+        super(level, blocks, BarStackBE.SLOTS, CommonRegistry.BAR_STACK_BLOCK.get());
     }
 
     /**
@@ -75,20 +67,8 @@ public final class BarColumn {
      * Walks the world for the run containing {@code pos}. Every caller reaches this through the
      * cache {@link BarStackBE#column()} keeps; see there for why.
      */
-    static BarColumn resolve(Level level, BlockPos pos) {
-        BlockPos base = pos;
-        while (level.getBlockEntity(base.below()) instanceof BarStackBE) {
-            base = base.below();
-        }
-
-        List<BarStackBE> blocks = new ArrayList<>();
-        BlockPos current = base;
-        while (level.getBlockEntity(current) instanceof BarStackBE be) {
-            blocks.add(be);
-            current = current.above();
-        }
-
-        return new BarColumn(level, blocks);
+    static BarColumn resolve(ServerLevel level, BlockPos pos) {
+        return new BarColumn(level, resolveBlocks(level, pos, BarStackBE.class));
     }
 
     /**
@@ -96,9 +76,7 @@ public final class BarColumn {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        invalidateRun(level, pos, Direction.UP);
-        invalidateRun(level, pos.above(), Direction.UP);
-        invalidateRun(level, pos.below(), Direction.DOWN);
+        invalidateAround(level, pos, BarStackBE.class);
     }
 
     /**
@@ -112,31 +90,13 @@ public final class BarColumn {
      * are walked fresh and the value published is the one they settle on.
      */
     static void publishAround(Level level, BlockPos pos) {
-        publishAt(level, pos);
-        publishAt(level, pos.below());
-        publishAt(level, pos.above());
-    }
-
-    private static void publishAt(Level level, BlockPos pos) {
-        BarColumn column = at(level, pos);
-        if (column != null) {
-            column.publishComparatorSignal();
-        }
+        publishAround(level, pos, BarColumn::at);
     }
 
     /** Schedules the publication pass for the column at {@code pos}, if one is there. */
     static void markDirtyAt(@Nullable Level level, BlockPos pos) {
-        BarColumn column = at(level, pos);
-        if (column != null) {
-            column.markDirty();
-        }
-    }
-
-    private static void invalidateRun(Level level, BlockPos from, Direction direction) {
-        BlockPos current = from;
-        while (level.getBlockEntity(current) instanceof BarStackBE be) {
-            be.invalidateColumn();
-            current = current.relative(direction);
+        if (level != null) {
+            markDirtyAt(level, pos, BarColumn::at);
         }
     }
 
@@ -150,155 +110,7 @@ public final class BarColumn {
      * counting the runs both below and above it, must fit the configured maximum.
      */
     public static boolean columnHasRoomFor(Level level, BlockPos pos) {
-        return 1 + runLength(level, pos, Direction.DOWN) + runLength(level, pos, Direction.UP) <= maxHeight();
-    }
-
-    private static int runLength(Level level, BlockPos from, Direction direction) {
-        Block bar = CommonRegistry.BAR_STACK_BLOCK.get();
-        int length = 0;
-        BlockPos current = from.relative(direction);
-        while (level.getBlockState(current).is(bar)) {
-            length++;
-            current = current.relative(direction);
-        }
-        return length;
-    }
-
-    public int height() {
-        return blocks.size();
-    }
-
-    /** Positions the column actually holds: 64 per block, indexed from the bottom block upward. */
-    public int totalSlots() {
-        return blocks.size() * BarStackBE.SLOTS;
-    }
-
-    /**
-     * Positions the column advertises to automation: its current positions plus one block of
-     * reachable headroom while growth is allowed. Advertising the entire potential height would
-     * expose unreachable gaps; advertising only current positions would leave automation no slot
-     * through which to grow the column.
-     */
-    public int advertisedSlots() {
-        int levels = blocks.size() < maxHeight() ? blocks.size() + 1 : blocks.size();
-        return BarStackBE.SLOTS * levels;
-    }
-
-    public ItemStack getSlot(int flatSlot) {
-        if (flatSlot < 0 || flatSlot >= totalSlots()) {
-            return ItemStack.EMPTY;
-        }
-        return handlerOf(flatSlot).getStackInSlot(flatSlot % BarStackBE.SLOTS);
-    }
-
-    private BarStackBE blockOf(int flatSlot) {
-        return blocks.get(flatSlot / BarStackBE.SLOTS);
-    }
-
-    private SlotAccess handlerOf(int flatSlot) {
-        return blockOf(flatSlot).getItems();
-    }
-
-    // Comparator output
-
-    /**
-     * The share of the column's positions that hold a bar. A position takes one bar and no more, so
-     * occupancy is the whole of it — which is what vanilla's container measure reduces to when a
-     * slot's limit is one, rather than the sum of stack fractions a Storage pile computes.
-     */
-    public double fillLevel() {
-        int total = totalSlots();
-        if (total == 0) {
-            return 0.0;
-        }
-        int occupied = 0;
-        for (BarStackBE be : blocks) {
-            SlotAccess handler = be.getItems();
-            for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-                if (!handler.getStackInSlot(slot).isEmpty()) {
-                    occupied++;
-                }
-            }
-        }
-        return (double) occupied / total;
-    }
-
-    /**
-     * The comparator output for the whole column, which is what every block of it reports. Vanilla's
-     * container conversion, reserving the bottom of the range rather than scaling into it: any
-     * nonempty column reads at least 1, so signal 0 means empty and nothing else. Full means every
-     * position of every block occupied.
-     */
-    public int comparatorSignal() {
-        double fill = fillLevel();
-        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
-    }
-
-    /**
-     * Tells the column's neighbors to read the comparator output again, but only when that output
-     * has actually changed.
-     *
-     * <p>Every block reports the whole column's fill, so an edit anywhere in it changes the value
-     * every block reports, including blocks that publish nothing of their own and are exactly
-     * the ones a comparator may be sitting against. The whole run is notified; the guard is what
-     * keeps that from costing a run-length of neighbor updates per bar moved, and reduces a
-     * collapse crossing several signal values to the one update that outlives it. The bottom block
-     * holds the last published value, because the bottom is what identifies a column.
-     */
-    void publishComparatorSignal() {
-        if (blocks.isEmpty()) {
-            return;
-        }
-        int signal = comparatorSignal();
-        if (!blocks.get(0).exchangePublishedSignal(signal)) {
-            return;
-        }
-
-        Block block = CommonRegistry.BAR_STACK_BLOCK.get();
-        for (BarStackBE be : blocks) {
-            // The comparator-aware update vanilla containers use: it reaches a comparator sitting one
-            // block further away behind a solid block, which the plain neighbor update does not.
-            level.updateNeighbourForOutputSignal(be.getBlockPos(), block);
-        }
-    }
-
-    // Deferred publication
-
-    /**
-     * Schedules the publication pass for the next tick, on the column's bottom block so that every
-     * edit anywhere in the run coalesces into one pass.
-     *
-     * <p>A position holds one bar, so a caller moving a stack through the capability makes one call
-     * per bar. Deferring avoids an update packet, a full-column comparator walk, and a light
-     * recompute for every individual call.
-     */
-    void markDirty() {
-        if (blocks.isEmpty() || !(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-        Block block = CommonRegistry.BAR_STACK_BLOCK.get();
-        BlockPos bottom = blocks.get(0).getBlockPos();
-        if (!serverLevel.getBlockTicks().hasScheduledTick(bottom, block)) {
-            serverLevel.scheduleTick(bottom, block, 1);
-        }
-    }
-
-    /**
-     * Publishes deferred contents and light for changed blocks, then publishes comparator output
-     * once for the whole column.
-     *
-     * <p>Nothing outstanding means nothing to publish, and the comparator walk is skipped with it: a
-     * structural change publishes through {@link #publishAround} at the moment it happens, so this
-     * pass handles only changes deferred by content edits.
-     */
-    void publishPending() {
-        boolean published = false;
-        for (BarStackBE be : blocks) {
-            published |= be.publishIfPending();
-        }
-        if (published) {
-            publishComparatorSignal();
-        }
+        return columnHasRoomFor(level, pos, CommonRegistry.BAR_STACK_BLOCK.get());
     }
 
     /** The highest occupied position in the column, or -1 when it holds no bars. */
@@ -327,25 +139,26 @@ public final class BarColumn {
      * it by the time the walk arrives there.
      *
      * @param simulate when true, nothing is placed
-     * @return whether a bar was, or would be, taken from {@code stack}
+     * @return how many bars were, or would be, taken from {@code stack}
      */
-    public boolean insertOneAt(int flatSlot, ItemStack stack, boolean simulate) {
+    @Override
+    public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
-            return false;
+            return 0;
         }
         if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
-            return false;
+            return 0;
         }
         if (simulate) {
-            return true;
+            return 1;
         }
-        if (flatSlot >= totalSlots() && !grow(flatSlot % BarStackBE.SLOTS)) {
-            return false;
+        if (flatSlot >= totalSlots() && !grow(localSlot(flatSlot))) {
+            return 0;
         }
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one, false).isEmpty();
+        return handlerOf(flatSlot).insertItem(localSlot(flatSlot), one, false).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -360,7 +173,7 @@ public final class BarColumn {
      */
     private boolean positionAccepts(int flatSlot) {
         int blockIndex = flatSlot / BarStackBE.SLOTS;
-        int slot = flatSlot % BarStackBE.SLOTS;
+        int slot = localSlot(flatSlot);
 
         if (blockIndex < blocks.size()) {
             boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
@@ -396,41 +209,36 @@ public final class BarColumn {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()
-                || !(level instanceof ServerLevel serverLevel)) {
+        if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()) {
             return false;
         }
         BlockPos above = topPos().above();
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return !WorldEdits.isProtected(serverLevel, above)
-                && WorldEdits.isUnobstructed(serverLevel, above, finalCollision);
+        return !WorldEdits.isProtected(level, above)
+                && WorldEdits.isUnobstructed(level, above, finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
     private boolean grow(int slot) {
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        if (!canGrow(finalCollision) || !(level instanceof ServerLevel serverLevel)) {
+        if (!canGrow(finalCollision)) {
             return false;
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(serverLevel);
+        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.BAR_STACK_BLOCK.get(), serverLevel, above);
+                CommonRegistry.BAR_STACK_BLOCK.get(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, serverLevel, above, newStack, Direction.DOWN, finalCollision)) {
+                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
 
         blocks.add(grown);
         return true;
-    }
-
-    private BlockPos topPos() {
-        return blocks.get(blocks.size() - 1).getBlockPos();
     }
 
     // Extraction
@@ -443,6 +251,7 @@ public final class BarColumn {
      * deposit may add rather than what the column may carry, so a bar stored before an
      * {@code ss ingot} edit or a data pack reload narrowed the ingot set still moves.
      */
+    @Override
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {
         if (flatSlot < 0 || flatSlot >= totalSlots() || amount < 1) {
             return ItemStack.EMPTY;
@@ -463,12 +272,12 @@ public final class BarColumn {
             be.beginBatch();
         }
         try {
-            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1, false);
+            handlerOf(flatSlot).extractItem(localSlot(flatSlot), 1, false);
 
             int top = topmostOccupied();
             if (top > flatSlot) {
-                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1, false);
-                blockOf(flatSlot).relocateInto(flatSlot % BarStackBE.SLOTS, moved);
+                ItemStack moved = handlerOf(top).extractItem(localSlot(top), 1, false);
+                blockOf(flatSlot).relocateInto(localSlot(flatSlot), moved);
             }
         } finally {
             for (BarStackBE be : blocks) {
@@ -493,13 +302,9 @@ public final class BarColumn {
             keep--;
         }
 
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(serverLevel, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

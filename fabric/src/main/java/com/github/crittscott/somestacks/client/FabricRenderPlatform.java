@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -23,10 +22,4 @@ public final class FabricRenderPlatform implements ClientRenderPlatform.Backend 
         return provider == null ? 0xFFFFFFFF : provider.getColor(stack, tintIndex);
     }
 
-    @Override
-    public String modVersion(String namespace) {
-        return FabricLoader.getInstance().getModContainer(namespace)
-                .map(container -> container.getMetadata().getVersion().getFriendlyString())
-                .orElse("unknown");
-    }
 }

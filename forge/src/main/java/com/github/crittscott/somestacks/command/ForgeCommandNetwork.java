@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.command;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
@@ -12,7 +12,7 @@ import net.minecraftforge.network.PacketDistributor;
 public final class ForgeCommandNetwork implements CommandNetwork.Handler {
     @Override
     public int syncAllPlayers(MinecraftServer server) {
-        return SomeStacks.syncAllPlayers(server);
+        return ServerLifecycle.syncAllPlayers(server);
     }
 
     @Override

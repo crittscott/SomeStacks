@@ -20,6 +20,7 @@ out
 # other
 eclipse
 run/
+run-gametest/
 run-data/
 other/
 logs/

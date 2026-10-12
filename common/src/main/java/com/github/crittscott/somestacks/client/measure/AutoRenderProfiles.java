@@ -1,17 +1,24 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ClientRenderPlatform;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.client.RenderProfile;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.renderconfig.RenderProfile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -23,14 +30,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.phys.AABB;
-
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Per-item cache of measured render profiles, persisted client-side so each item is normally
@@ -194,7 +193,7 @@ public final class AutoRenderProfiles {
     }
 
     private static Path cacheFile() {
-        return Platform.getConfigFolder().resolve("somestacks/measured_cache.json");
+        return PlatformServices.configFolder().resolve("somestacks/measured_cache.json");
     }
 
     static boolean isCurrentCacheFormat(@Nullable JsonObject root) {
@@ -214,7 +213,7 @@ public final class AutoRenderProfiles {
     }
 
     private static String modVersion(String namespace) {
-        return ClientRenderPlatform.modVersion(namespace);
+        return PlatformServices.modVersion(namespace);
     }
 
     private static RenderProfile compute(ItemStack stack) {
@@ -233,7 +232,7 @@ public final class AutoRenderProfiles {
         ModelMeasurement.Result result = ModelMeasurement.measure(stack);
         RenderMode mode = selectMode(result);
         if (mode == RenderMode.TWO_D) {
-            return new RenderProfile(RenderMode.TWO_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.TWO_D, 1.0f, RenderOffset.ZERO);
         }
 
         if (result.failure() != null) {
@@ -244,7 +243,7 @@ public final class AutoRenderProfiles {
             if (result.failure() == null) {
                 logFallback(stack, "3d fit failed");
             }
-            return new RenderProfile(RenderMode.THREE_D, 1.0f, new float[3]);
+            return new RenderProfile(RenderMode.THREE_D, 1.0f, RenderOffset.ZERO);
         }
         return fitted;
     }
@@ -300,11 +299,11 @@ public final class AutoRenderProfiles {
 
         // The measured bounds already include the renderer's -0.5 shift, so the geometry
         // center directly gives the offset that recenters it on the cell center.
-        float[] offset = new float[]{
+        RenderOffset offset = new RenderOffset(
                 (float) (-scale * (bounds.minX + bounds.maxX) * 0.5),
                 (float) (-scale * (bounds.minY + bounds.maxY) * 0.5),
                 (float) (-scale * (bounds.minZ + bounds.maxZ) * 0.5)
-        };
+        );
 
         return new RenderProfile(mode, scale, offset);
     }

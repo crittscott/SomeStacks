@@ -25,12 +25,6 @@ public final class ClientRenderPlatform {
          */
         int itemColor(ItemStack stack, int tintIndex);
 
-        /**
-         * The installed version string of the mod with the given {@code namespace}, or a
-         * placeholder if it isn't loaded. Used to detect when a measured item's source mod has
-         * updated and cached measurements need to be invalidated.
-         */
-        String modVersion(String namespace);
     }
 
     private static Backend backend;
@@ -51,8 +45,4 @@ public final class ClientRenderPlatform {
         return backend.itemColor(stack, tintIndex);
     }
 
-    /** @see Backend#modVersion */
-    public static String modVersion(String namespace) {
-        return backend.modVersion(namespace);
-    }
 }

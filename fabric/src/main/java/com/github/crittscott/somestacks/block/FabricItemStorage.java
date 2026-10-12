@@ -10,13 +10,13 @@ public final class FabricItemStorage {
 
     public static void init() {
         ItemStorage.SIDED.registerForBlockEntity(
-                (blockEntity, direction) -> new FabricRunItemStorage(blockEntity),
+                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
                 FabricRegistry.STORAGE_STACK_BE);
         ItemStorage.SIDED.registerForBlockEntity(
-                (blockEntity, direction) -> new FabricRunItemStorage(blockEntity),
+                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
                 FabricRegistry.SINGLES_STACK_BE);
         ItemStorage.SIDED.registerForBlockEntity(
-                (blockEntity, direction) -> new FabricRunItemStorage(blockEntity),
+                (blockEntity, direction) -> ((FabricStorageOwner) blockEntity).someStacksStorage(),
                 FabricRegistry.BAR_STACK_BE);
     }
 }

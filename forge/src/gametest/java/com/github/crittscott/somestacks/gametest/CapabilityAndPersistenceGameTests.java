@@ -119,4 +119,40 @@ public final class CapabilityAndPersistenceGameTests {
                 "A cell takes one item, so one call should accept one");
         helper.succeed();
     }
+
+    /** To reproduce in-game: Perform several automation edits before a tick, including a nested Bar collapse; contents and light publish together. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void nestedBatchesPublishOnlyAfterTheOuterBatch(GameTestHelper helper) {
+        StackFoundationChecks.nestedBatchesPublishOnlyAfterTheOuterBatch(helper);
+    }
+
+    /** To reproduce in-game: Connect automation to a stack, add a block above it, then remove that block; the slot view follows each edit immediately. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void structuralEditsInvalidateRunBoundsWithinTheTick(GameTestHelper helper) {
+        StackFoundationChecks.structuralEditsInvalidateRunBoundsWithinTheTick(helper);
+    }
+
+    /** To reproduce in-game: Save and reload partly filled stacks; comparators retain their fill, and loading empty contents clears shapes and fill. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void loadedContentsRefreshComparatorFillAndShapes(GameTestHelper helper) {
+        StackFoundationChecks.loadedContentsRefreshComparatorFillAndShapes(helper);
+    }
+
+    /** To reproduce in-game: Automate each stack type; Storage settles, Singles applies column gravity, and Bar backfills from its top position. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
+        StackFoundationChecks.runContractPreservesTypeSpecificMutations(helper);
+    }
+
+    /** To reproduce in-game: reconnect and rotate a stack; gesture/sound pacing resets for the new session. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void installedServicesAndLogoutResetPacing(GameTestHelper helper) {
+        ServiceAndConfigChecks.installedServicesAndLogoutResetPacing(helper, net.minecraftforge.common.util.FakePlayerFactory.getMinecraft(helper.getLevel()));
+    }
+
+    /** To reproduce in-game: add then remove a namespace with /ss deny mod; admission changes immediately without changing other policy. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
+        ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
 }

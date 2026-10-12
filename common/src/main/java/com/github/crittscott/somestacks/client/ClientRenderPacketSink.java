@@ -3,11 +3,11 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.util.BlockType;
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.List;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 
 /** Retains render-related S2C state until the loader's rendering layer is installed. */
 public final class ClientRenderPacketSink {

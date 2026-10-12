@@ -5,18 +5,13 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.ForgePlayerEditAuthority;
-import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -25,11 +20,11 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.PacketDistributor;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -47,7 +42,8 @@ public class SomeStacks {
     public SomeStacks() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        WorldEdits.setAuthority(new ForgeEditAuthority());
+        PlatformServices.install(new ForgePlatformServices());
+        WorldEdits.setAuthority(PlatformServices.editAuthority());
         PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.getBlockReach());
 
@@ -55,6 +51,7 @@ public class SomeStacks {
         ModNetworking.init();
         CommandNetwork.setHandler(new ForgeCommandNetwork());
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
@@ -70,8 +67,11 @@ public class SomeStacks {
      * effect on the next server start.
      */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        var configDir = event.getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-        ServerConfig.load(configDir.resolve(MODID + "-server.json"));
+        ServerLifecycle.starting(event.getServer());
+    }
+
+    private void onServerStopped(ServerStoppedEvent event) {
+        ServerLifecycle.stopped();
     }
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -83,11 +83,11 @@ public class SomeStacks {
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        sendConfigSync((ServerPlayer) event.getEntity());
+        ServerLifecycle.login((ServerPlayer) event.getEntity());
     }
 
     private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        GestureThrottle.clear(event.getEntity().getUUID());
+        ServerLifecycle.logout(event.getEntity().getUUID());
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
@@ -100,27 +100,4 @@ public class SomeStacks {
         }
     }
 
-    private void sendConfigSync(ServerPlayer player) {
-        ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), buildConfigSync());
-    }
-
-    /**
-     * Sends the current server config to every player, reading the override directory once
-     * for the whole broadcast.
-     *
-     * @return the number of players synced
-     */
-    public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = buildConfigSync();
-        ModNetworking.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
-        return server.getPlayerList().getPlayerCount();
-    }
-
-    private static ConfigSyncPkt buildConfigSync() {
-        return new ConfigSyncPkt(
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
-    }
 }

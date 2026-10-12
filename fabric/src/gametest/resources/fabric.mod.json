@@ -12,6 +12,7 @@
       "com.github.crittscott.somestacks.gametest.RenderGalleryGameTests",
       "com.github.crittscott.somestacks.gametest.PacketBoundaryGameTests",
       "com.github.crittscott.somestacks.gametest.CapabilityAndPersistenceGameTests",
+      "com.github.crittscott.somestacks.gametest.FabricTransferGameTests",
       "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",

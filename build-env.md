@@ -1,9 +1,10 @@
 # Some Stacks Build Environment
 
 This records the toolchain and dependency versions used by this repository, based on the active
-Gradle configuration, this machine's installed JDKs and Gradle cache, and the current IntelliJ
-project settings. See [as-built.md](as-built.md) for the runtime architecture; this file covers the
-environment that builds and launches it.
+Gradle configuration and the recorded machine and IntelliJ settings. Build declarations do not
+imply that the updated plugins or wrapper have been verified by a build. See
+[orientation-code.md](orientation-code.md) for the runtime architecture; this file covers the environment that
+builds and launches it.
 
 The `working-build-env/` directory is not part of the active Gradle build. The root
 `settings.gradle` includes only `common`, `forge`, and `fabric`; declarations under
@@ -16,8 +17,8 @@ The `working-build-env/` directory is not part of the active Gradle build. The r
 | Gradle | Wrapper pinned in `gradle/wrapper/gradle-wrapper.properties` | **9.5.1** |
 | Java toolchain | Language version 17; source/target 17; `--release 17` | Temurin **17.0.15+6** from `JAVA_HOME` |
 | IntelliJ Gradle JVM | `.idea/gradle.xml` sets `gradleJvm="21"` | Temurin **21.0.2+13** |
-| Architectury Loom | `1.17.491` | 1.17.491 cached |
-| Architectury Plugin | `3.5.169` | 3.5.169 cached |
+| Architectury Loom | `1.17.493` | Owner builds passed through stage 3 |
+| Architectury Plugin | `3.5.170` | Owner builds passed through stage 3 |
 | Shadow (`com.gradleup.shadow`) | `9.4.3` | 9.4.3 cached |
 | Mixin patched by Loom | transitive | `dev.architectury:mixin-patched:0.8.5.12` cached |
 
@@ -46,26 +47,29 @@ Architectury Plugin are pinned to numbered versions rather than moving snapshot 
 | Forge | **1.20.1-47.4.10** | Forge `[47.4.10,48)`; FML `[47,48)` |
 | Fabric Loader | **0.19.3** | `>=0.19.3` |
 | Fabric API | **0.92.7+1.20.1** | `>=0.92.7+1.20.1` |
-| Architectury API | **9.2.14** | `>=9.2.14` / `[9.2.14,)` |
 | JUnit | BOM **5.10.2**, Jupiter | common-module tests only |
 | JSR-305 | **3.0.2** | compile-only annotation dependency |
 
 `forge_compile_version` is both Forge's compile dependency and the minimum accepted Forge runtime.
-The production metadata requires Architectury API on both loaders and Fabric API on Fabric. There
-are no optional third-party mod integrations or third-party mod repositories in the active build.
+Fabric requires Fabric API. Neither loader depends on Architectury API at runtime; Architectury Loom and the Architectury Plugin remain build tooling. Loader-backed PlatformServices supplies configuration paths, mod versions, config transport, and automation authority.
+Fabric has optional compile-only integrations with FTB Chunks **2001.3.8** and Open Parties and
+Claims **fabric-1.20.1-0.29.2**, resolved through FTB and Modrinth Maven repositories. Neither is
+bundled or required at runtime; their protection adapters are used only when installed.
 
 The Fabric API baseline is currently lowered from 0.92.11+1.20.1 to 0.92.7+1.20.1 as an in-progress
 test of compatibility with a modpack pinned to the older version. Revert `fabric_api_version` in
 `gradle.properties` if the test does not pan out.
 
 Plugin resolution uses the Fabric, Architectury, and Forge Maven repositories plus the Gradle
-Plugin Portal. Subprojects use the Architectury and Parchment repositories. All active version pins
-are in the root build scripts and `gradle.properties`; there is no `buildSrc`, version catalog, or
+Plugin Portal. Subprojects use the Architectury and Parchment repositories; Fabric additionally
+uses FTB and Modrinth for its optional integrations. All active version pins are in the root build scripts and `gradle.properties`; there is no `buildSrc`, version catalog, or
 dependency locking.
 
 ## Module and packaging setup
 
-The active build has three subprojects:
+The active mod version is **0.8.3**, declared in `gradle.properties`. `settings.gradle` always
+includes `common` and selects the loader modules from `enabled_platforms` (currently
+`fabric,forge`); only those two loader names are accepted. The active build has three subprojects:
 
 ```text
 common/   shared source and resources; transformed into each loader artifact
@@ -79,8 +83,8 @@ the common and loader source sets into one logical mod under `loom.mods.main`. T
 artifacts are:
 
 ```text
-forge/build/libs/somestacks-forge-<version>.jar
-fabric/build/libs/somestacks-fabric-<version>.jar
+forge/build/libs/somestacks-forge-1.20.1-<version>.jar
+fabric/build/libs/somestacks-fabric-1.20.1-<version>.jar
 ```
 
 The `*-dev-shadow.jar` and `*-sources.jar` files in those directories are development artifacts,
@@ -102,35 +106,40 @@ the current project.
 The Forge GameTest run is configured by `forge/build.gradle`. It loads ordinary Forge and common
 production output as `somestacks`, and `forge/src/gametest` as the separate development-only
 `somestacks_gametest` mod. The run enables the `somestacks` GameTest namespace. Its empty test
-structure is stored as the textual fixture
-`forge/src/gametest/fixtures/somestacks_empty.nbt.b64`; `generateGameTestStructures` decodes it into
-the build directory before GameTest resources are processed.
+structure is stored as the shared textual fixture
+`common/src/gametest/fixtures/somestacks_empty.nbt.b64`; the root `configureGameTests` helper
+registers each loader's source set and `generateGameTestStructures` task. Each task decodes the
+fixture into its own build directory under `data/somestacks/structures/` before GameTest resources
+are processed.
 
 Fabric's GameTest run is configured the same way by `fabric/build.gradle`: `fabric/src/gametest`
 becomes the separate development-only `somestacks_gametest` mod, and the run passes
-`-Dfabric-api.gametest`. Its empty test structure uses the same fixture mechanism as Forge's, from
-its own checked-in Base64 fixture at `fabric/src/gametest/fixtures/somestacks_empty.nbt.b64`.
+`-Dfabric-api.gametest`. It uses the same shared fixture and root setup helper as Forge. Its
+dedicated working directory is `fabric/run-gametest`; `runGameTestServer` clears only the `world` directory inside it before
+launch and writes its report to `fabric/build/gametest-report.xml`. Ordinary development runs
+continue to use `fabric/run`. Existing IntelliJ configurations must be regenerated by a Gradle
+refresh to pick up the new GameTest directory.
 
 ## Environment traps
 
 - **Compile-only dependencies from `common` do not automatically reach loader compilation.**
   Architectury's `common` and `shadowBundle` configurations carry common output, not all of its
-  dependency declarations. Fabric therefore redeclares JSR-305 for `javax.annotation.Nullable`;
-  Forge currently receives it through its dependency graph.
+  dependency declarations. The root build therefore declares JSR-305 for every module.
 - **Development must expose common and loader output as one logical mod.** Each loader's
   `loom.mods.main` includes both source sets. Adding common as a separate runtime mod can produce
   duplicate loading or Forge JPMS split-package failures; production bundling belongs in
   `shadowBundle`.
 - **The Forge `gametest` source set needs main output on both classpaths.** Main's dependency
   classpath alone does not contain the mod's own compiled classes. The explicit
-  `sourceSets.main.output` additions in `forge/build.gradle` are required.
+  `main.output` additions in the root `configureGameTests` helper are required.
+- **GameTest Java packages must stay separate from production packages.** Forge loads the test mod and production mod as separate JPMS modules; a shared package prevents launch. Foundation checks live under `com.github.crittscott.somestacks.gametest` and use test-only reflection for package-private batching controls.
 - **Forge scans GameTests only from registered Loom mod output.** The `somestacks_gametest`
   `loom.mods` entry, its `mods.toml`, stub `@Mod` class, and `pack.mcmeta` are all part of making the
   custom source set visible to FML and making its structure resource load. A launch that discovers
   zero tests can otherwise look like a successful run.
 - **The generated GameTest NBT is not a source file.** Edit the Base64 fixture under
-  `forge/src/gametest/fixtures`; the decoded file under `forge/build/generated` is disposable build
-  output.
+  `common/src/gametest/fixtures`; the decoded files under each loader's `build/generated` are
+  disposable build output.
 - **Forge and Fabric register GameTest classes differently.** Forge discovers test methods by
   scanning the loaded mod for classes annotated `@GameTestHolder`; Fabric instead requires each
   class to implement `FabricGameTest` and to be listed under a `fabric-gametest` entrypoint in the
@@ -150,7 +159,25 @@ Use the wrapper from the repository root in PowerShell:
 .\gradlew :common:test
 .\gradlew :forge:runGameTestServer
 .\gradlew :fabric:runGameTestServer
+.\gradlew generateDocs
 ```
 
 The root `build` covers the configured subproject builds and common JUnit tests. The Forge and
 Fabric GameTest servers are separate development runs, each covering only its own loader.
+
+## Metadata, documentation, and build snapshot
+
+The root `sharedModProperties` map supplies common metadata expansion values. Loader scripts add
+only their compatibility constraints; common still expands `pack.mcmeta`. Forge and Fabric
+GameTest metadata retain their own expansion blocks and remain outside production resources.
+The build has no Maven publication configuration, and Forge's manifest has no build timestamp.
+
+Each module retains the standard production `javadoc` task. Each selected loader also has
+`gametestJavadoc`, including shared scenarios and its own test holders. The root `generateDocs`
+task synchronizes those outputs into `docs/javadoc/common`, `docs/javadoc/<loader>`, and
+`docs/javadoc/<loader>-gametest`. Documentation generation is separate from `build`.
+
+`build-env/` is a reference snapshot of the active root and module Gradle scripts, properties,
+and wrapper inputs; it excludes inactive NeoForge files. It is not a standalone source tree.
+The wrapper inputs match the 1.21.4 reference while retaining Gradle 9.5.1; its properties specify
+URL validation, zero retries, and a 500 ms retry backoff. Owner reports builds and both loader GameTest suites passed through stage 3, including the Forge test-package correction. Stage 4 dependency removal and shared service/configuration changes await owner build, GameTest, and client/server verification without Architectury API installed. Documentation generation remains a separate check.

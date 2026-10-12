@@ -1,19 +1,18 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
-import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.client.StackState;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /** Forge thread and side adapters around loader-neutral packet codecs and behavior. */
 final class ForgePacketHandlers {

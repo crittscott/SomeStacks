@@ -55,6 +55,11 @@ public final class GestureThrottle {
         return true;
     }
 
+    public static void clearAll() {
+        lastGestureTick.clear();
+        lastRotationSoundTick.clear();
+    }
+
     public static void clear(UUID id) {
         lastGestureTick.remove(id);
         lastRotationSoundTick.remove(id);

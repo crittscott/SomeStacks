@@ -1,21 +1,24 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.util.BlockType;
 import io.netty.buffer.Unpooled;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PacketCodecTest {
 
@@ -81,7 +84,7 @@ class PacketCodecTest {
                                 new ItemRenderConfig(
                                         RenderMode.BLOCK,
                                         2.5f,
-                                        new float[]{0.1f, -0.2f, 0.3f}))),
+                                        new RenderOffset(0.1f, -0.2f, 0.3f)))),
                 ConfigSyncPkt::encode,
                 ConfigSyncPkt::decode);
 
@@ -101,7 +104,7 @@ class PacketCodecTest {
         ResourceLocation id = new ResourceLocation("test", "item");
 
         assertRoundTrip(
-                RenderOverridePkt.set(id, "3d", 1.5f, new float[]{0.0f, 0.25f, -0.5f}),
+                RenderOverridePkt.set(id, "3d", 1.5f, new RenderOffset(0.0f, 0.25f, -0.5f)),
                 RenderOverridePkt::encode,
                 RenderOverridePkt::decode);
         assertRoundTrip(
@@ -120,6 +123,18 @@ class PacketCodecTest {
                 WriteOverridesPkt.dump(List.of("minecraft", "somestacks")),
                 WriteOverridesPkt::encode,
                 WriteOverridesPkt::decode);
+    }
+
+    @Test
+    void configSyncOwnsAnImmutableOverrideSnapshot() {
+        ResourceLocation id = new ResourceLocation("test", "item");
+        ItemRenderConfig config = new ItemRenderConfig(RenderMode.GUI, 1.0f, RenderOffset.ZERO);
+        Map<ResourceLocation, ItemRenderConfig> authored = new HashMap<>();
+        authored.put(id, config);
+        ConfigSyncPkt packet = new ConfigSyncPkt(true, true, true, authored);
+        authored.clear();
+        assertEquals(Map.of(id, config), packet.renderOverrides());
+        assertThrows(UnsupportedOperationException.class, () -> packet.renderOverrides().clear());
     }
 
     private static <T> void assertRoundTrip(

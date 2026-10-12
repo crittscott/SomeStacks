@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
-import net.minecraft.resources.ResourceLocation;
-
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 
 /** Applies render-related S2C packets to the shared client override layers. */
 public final class DefaultClientRenderPacketHandler implements ClientRenderPacketSink.Handler {

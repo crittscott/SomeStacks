@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModList;
 
 import java.util.List;
 
@@ -21,10 +20,4 @@ public final class ForgeRenderPlatform implements ClientRenderPlatform.Backend {
         return Minecraft.getInstance().getItemColors().getColor(stack, tintIndex);
     }
 
-    @Override
-    public String modVersion(String namespace) {
-        return ModList.get().getModContainerById(namespace)
-                .map(container -> container.getModInfo().getVersion().toString())
-                .orElse("unknown");
-    }
 }

@@ -1,15 +1,14 @@
 package com.github.crittscott.somestacks.command;
 
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
-import net.minecraft.commands.CommandSourceStack;
-import org.junit.jupiter.api.Test;
-
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.commands.CommandSourceStack;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;

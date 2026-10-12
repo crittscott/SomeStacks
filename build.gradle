@@ -1,13 +1,59 @@
 plugins {
     id 'eclipse'
     id 'idea'
-    id 'dev.architectury.loom' version '1.17.491' apply false
-    id 'architectury-plugin' version '3.5.169'
+    id 'dev.architectury.loom' version '1.17.493' apply false
+    id 'architectury-plugin' version '3.5.170'
     id 'com.gradleup.shadow' version '9.4.3' apply false
 }
 
 architectury {
     minecraft = project.minecraft_version
+}
+
+ext.sharedModProperties = [
+        mod_id: mod_id, mod_name: mod_name, mod_license: mod_license,
+        mod_version: mod_version, mod_authors: mod_authors, mod_description: mod_description,
+        minecraft_version: minecraft_version,
+]
+
+// Loader-local test holders and metadata accompany the shared scenarios and structure fixture.
+ext.configureGameTests = { Project loaderProject ->
+    def main = loaderProject.sourceSets.main
+    def gametest = loaderProject.sourceSets.create('gametest')
+    def generatedResources = loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
+    gametest.java.srcDir rootProject.file('common/src/gametest/java')
+    gametest.resources.srcDir generatedResources
+    gametest.compileClasspath += main.compileClasspath + main.output
+    gametest.runtimeClasspath += main.runtimeClasspath + main.output
+    if (loaderProject.name == 'fabric') {
+        gametest.runtimeClasspath += project(':common').sourceSets.main.output
+    }
+
+    def structureSource = rootProject.layout.projectDirectory.file(
+            'common/src/gametest/fixtures/somestacks_empty.nbt.b64')
+    def structureOutput = generatedResources.map {
+        it.file('data/somestacks/structures/somestacks_empty.nbt')
+    }
+    def generateStructures = loaderProject.tasks.register('generateGameTestStructures') {
+        inputs.file(structureSource)
+        outputs.file(structureOutput)
+        doLast {
+            def output = structureOutput.get().asFile
+            output.parentFile.mkdirs()
+            output.bytes = Base64.getDecoder().decode(structureSource.asFile.text.trim())
+        }
+    }
+    loaderProject.tasks.named(gametest.processResourcesTaskName).configure {
+        dependsOn generateStructures
+    }
+    loaderProject.tasks.register('gametestJavadoc', Javadoc) {
+        group = 'documentation'
+        description = "Generates ${loaderProject.name} GameTest Javadoc."
+        source gametest.allJava
+        classpath = gametest.compileClasspath
+        destinationDir = loaderProject.layout.buildDirectory.dir('docs/gametestJavadoc').get().asFile
+        options.addBooleanOption('package', true)
+    }
 }
 
 allprojects {
@@ -18,10 +64,9 @@ allprojects {
 subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
-    apply plugin: 'maven-publish'
 
     base {
-        archivesName = "$rootProject.mod_id-$project.name"
+        archivesName = "$rootProject.mod_id-$project.name-$rootProject.minecraft_version"
     }
 
     repositories {
@@ -39,6 +84,7 @@ subprojects {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
         }
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     }
 
     java {
@@ -63,17 +109,24 @@ subprojects {
             languageVersion = JavaLanguageVersion.of(17)
         })
     }
+}
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = base.archivesName.get()
-                from components.java
-            }
+// Resolve documentation tasks after loader scripts have registered their GameTest tasks.
+gradle.projectsEvaluated {
+    def loaders = rootProject.enabled_platforms.split(',').collect { project(":${it.trim()}") }
+    tasks.register('generateDocs', Sync) {
+        group = 'documentation'
+        description = 'Generates production and GameTest Javadoc under docs/javadoc.'
+        into layout.projectDirectory.dir('docs/javadoc')
+        ([project(':common')] + loaders).each { module ->
+            def documentation = module.tasks.named('javadoc', Javadoc)
+            dependsOn documentation
+            from(documentation.map { it.destinationDir }) { into module.name }
         }
-
-        repositories {
-            // Add repositories to publish to here.
+        loaders.each { loader ->
+            def documentation = loader.tasks.named('gametestJavadoc', Javadoc)
+            dependsOn documentation
+            from(documentation.map { it.destinationDir }) { into "${loader.name}-gametest" }
         }
     }
 }

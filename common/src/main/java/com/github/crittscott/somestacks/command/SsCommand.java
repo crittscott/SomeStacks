@@ -1,10 +1,11 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
 import com.github.crittscott.somestacks.network.RenderOverridePkt;
 import com.github.crittscott.somestacks.network.WriteOverridesPkt;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,6 +14,16 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -23,17 +34,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * The {@code ss} command: render override authoring, render gallery generation, server list
@@ -182,28 +182,28 @@ public final class SsCommand {
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("modid", StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL, false))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, "item").toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
 
     /**
@@ -220,28 +220,28 @@ public final class SsCommand {
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.getModIdsWithItems(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("modid", StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
                                         .suggests(SsCommand::suggestItems)
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("item", ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, "item").toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
 
     /**
@@ -261,17 +261,17 @@ public final class SsCommand {
                         .then(Commands.argument("tag", StringArgumentType.greedyString())
                                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                         ServerConfig.itemTagNames(), builder))
-                                .executes(ctx -> reportIngotEdit(ctx, addEntry(ctx, ServerConfig.INGOT_TAGS,
+                                .executes(ctx -> reportIngotEdit(ctx, addEntry(ctx, ServerConfig.ListSetting.INGOT_TAGS,
                                         INGOT_TAGS_LABEL,
                                         StringArgumentType.getString(ctx, "tag").trim())))))
                 .then(Commands.literal("remove")
                         .then(Commands.argument("tag", StringArgumentType.greedyString())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.INGOT_TAGS, builder))
-                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.INGOT_TAGS,
+                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.INGOT_TAGS, builder))
+                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.ListSetting.INGOT_TAGS,
                                         INGOT_TAGS_LABEL,
                                         StringArgumentType.getString(ctx, "tag").trim())))))
                 .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.INGOT_TAGS, INGOT_TAGS_LABEL, true)));
+                        .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.INGOT_TAGS, INGOT_TAGS_LABEL, true)));
     }
 
     /**
@@ -335,26 +335,26 @@ public final class SsCommand {
      * passes its own values down rather than probing the context.
      */
     private static int setMode(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, 1.0f, new float[3]);
+        return setItem(ctx, 1.0f, RenderOffset.ZERO);
     }
 
     private static int setModeAndScale(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[3]);
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), RenderOffset.ZERO);
     }
 
     private static int setModeScaleAndXy(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
-                FloatArgumentType.getFloat(ctx, "x"), FloatArgumentType.getFloat(ctx, "y"), 0.0f});
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new RenderOffset(
+                FloatArgumentType.getFloat(ctx, "x"), FloatArgumentType.getFloat(ctx, "y"), 0.0f));
     }
 
     private static int setModeScaleAndXyz(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new float[]{
+        return setItem(ctx, FloatArgumentType.getFloat(ctx, "scale"), new RenderOffset(
                 FloatArgumentType.getFloat(ctx, "x"),
                 FloatArgumentType.getFloat(ctx, "y"),
-                FloatArgumentType.getFloat(ctx, "z")});
+                FloatArgumentType.getFloat(ctx, "z")));
     }
 
-    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, float[] offset)
+    private static int setItem(CommandContext<CommandSourceStack> ctx, float scale, RenderOffset offset)
             throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
 
@@ -377,7 +377,7 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.override_set", itemId.toString(), modeString, scale,
-                offset[0], offset[1], offset[2]), false);
+                offset.x(), offset.y(), offset.z()), false);
         return 1;
     }
 
@@ -479,7 +479,7 @@ public final class SsCommand {
         List<String> unusableMods = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_MODS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
             if (modId.isEmpty() || !seen.add(modId)) {
                 continue;
@@ -523,7 +523,7 @@ public final class SsCommand {
         List<String> unknownItems = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_ITEMS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_ITEMS.get()) {
             String trimmed = entry.trim().toLowerCase(Locale.ROOT);
             if (trimmed.isEmpty() || !seen.add(trimmed)) {
                 continue;

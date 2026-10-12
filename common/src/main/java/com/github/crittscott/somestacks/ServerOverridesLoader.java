@@ -1,19 +1,17 @@
 package com.github.crittscott.somestacks;
 
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.architectury.platform.Platform;
-import net.minecraft.resources.ResourceLocation;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Loads the server's admin render overrides from {@code config/somestacks/server_item_overrides}.
@@ -23,21 +21,21 @@ import java.util.stream.Stream;
  */
 public final class ServerOverridesLoader {
     private static final Gson GSON = new GsonBuilder().create();
-    private static final Path DIR = Platform.getConfigFolder().resolve("somestacks/server_item_overrides");
 
     private ServerOverridesLoader() {}
 
     public static Map<ResourceLocation, ItemRenderConfig> load() {
+        Path dir = PlatformServices.modConfigFolder().resolve("server_item_overrides");
         Map<ResourceLocation, ItemRenderConfig> map = new HashMap<>();
 
         try {
-            Files.createDirectories(DIR);
+            Files.createDirectories(dir);
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to create {}: {}", DIR, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to create {}: {}", dir, e.getMessage());
             return map;
         }
 
-        try (Stream<Path> files = Files.list(DIR)) {
+        try (Stream<Path> files = Files.list(dir)) {
             files.filter(path -> path.getFileName().toString().endsWith(".json"))
                     .sorted()
                     .forEach(path -> {
@@ -51,7 +49,7 @@ public final class ServerOverridesLoader {
                         }
                     });
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to list {}: {}", DIR, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to list {}: {}", dir, e.getMessage());
         }
 
         return map;

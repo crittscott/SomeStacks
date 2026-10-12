@@ -1,16 +1,13 @@
-package com.github.crittscott.somestacks.util;
+package com.github.crittscott.somestacks.renderconfig;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
-
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.annotation.Nullable;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Parses and serializes the item render override schema shared by bundled resources, the client
@@ -53,12 +50,8 @@ public final class OverrideJsonCodec {
             scale = null;
         }
 
-        float[] offset = config.offset();
-        if (offset != null
-                && (offset.length != 3
-                        || !inRange(offset[0], MIN_OFFSET, MAX_OFFSET)
-                        || !inRange(offset[1], MIN_OFFSET, MAX_OFFSET)
-                        || !inRange(offset[2], MIN_OFFSET, MAX_OFFSET))) {
+        RenderOffset offset = config.offset();
+        if (offset != null && !offset.isValid()) {
             SomeStacksCommon.LOGGER.warn("Dropping out of range offset from a synchronized override");
             offset = null;
         }
@@ -91,7 +84,7 @@ public final class OverrideJsonCodec {
     public static ItemRenderConfig parseEntry(String itemKey, JsonObject json) {
         RenderMode mode = null;
         Float scale = null;
-        float[] offset = null;
+        RenderOffset offset = null;
 
         if (json.has(FIELD_MODE)) {
             try {
@@ -124,14 +117,14 @@ public final class OverrideJsonCodec {
                 if (offsetArray.size() != 3) {
                     SomeStacksCommon.LOGGER.warn("Invalid offset array size for item '{}', expected 3 elements", itemKey);
                 } else {
-                    float[] parsed = new float[]{
+                    RenderOffset parsed = new RenderOffset(
                             offsetArray.get(0).getAsFloat(),
                             offsetArray.get(1).getAsFloat(),
                             offsetArray.get(2).getAsFloat()
-                    };
-                    if (inRange(parsed[0], MIN_OFFSET, MAX_OFFSET)
-                            && inRange(parsed[1], MIN_OFFSET, MAX_OFFSET)
-                            && inRange(parsed[2], MIN_OFFSET, MAX_OFFSET)) {
+                    );
+                    if (inRange(parsed.x(), MIN_OFFSET, MAX_OFFSET)
+                            && inRange(parsed.y(), MIN_OFFSET, MAX_OFFSET)
+                            && inRange(parsed.z(), MIN_OFFSET, MAX_OFFSET)) {
                         offset = parsed;
                     } else {
                         SomeStacksCommon.LOGGER.warn("Out of range offset for item '{}', each component must be between {} and {}; ignoring it",
@@ -166,9 +159,9 @@ public final class OverrideJsonCodec {
         }
         if (config.offset() != null) {
             JsonArray offsetArray = new JsonArray();
-            for (float component : config.offset()) {
-                offsetArray.add(component);
-            }
+            offsetArray.add(config.offset().x());
+            offsetArray.add(config.offset().y());
+            offsetArray.add(config.offset().z());
             entry.add(FIELD_OFFSET, offsetArray);
         }
         return entry;

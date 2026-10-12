@@ -1,20 +1,19 @@
 package com.github.crittscott.somestacks.resource;
 
-import com.github.crittscott.somestacks.client.RenderMode;
-import com.github.crittscott.somestacks.util.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.resources.ResourceLocation;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -121,8 +120,25 @@ class BundledResourceTest {
         JsonArray values = root.getAsJsonArray("values");
         assertTrue(values.size() > 0);
         for (JsonElement value : values) {
-            assertTrue(value.isJsonPrimitive());
-            assertFalse(value.getAsString().isBlank());
+            JsonElement id = value;
+            if (value.isJsonObject()) {
+                JsonObject entry = value.getAsJsonObject();
+                assertTrue(Set.of("id", "required").containsAll(entry.keySet()));
+                assertTrue(entry.has("id"));
+                id = entry.get("id");
+                if (entry.has("required")) {
+                    JsonElement required = entry.get("required");
+                    assertTrue(required.isJsonPrimitive());
+                    assertTrue(required.getAsJsonPrimitive().isBoolean());
+                }
+            }
+            assertTrue(id.isJsonPrimitive());
+            assertTrue(id.getAsJsonPrimitive().isString());
+            String name = id.getAsString();
+            assertFalse(name.isBlank());
+            String location = name.startsWith("#") ? name.substring(1) : name;
+            assertFalse(location.isBlank());
+            assertDoesNotThrow(() -> new ResourceLocation(location), name);
         }
     }
 

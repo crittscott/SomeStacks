@@ -1,16 +1,16 @@
 package com.github.crittscott.somestacks.util;
 
-import com.github.crittscott.somestacks.client.ItemRenderConfig;
-import com.github.crittscott.somestacks.client.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -43,7 +43,7 @@ class OverrideJsonCodecTest {
 
         assertEquals(RenderMode.GUI, config.mode());
         assertEquals(0.75f, config.scale());
-        assertArrayEquals(new float[]{0.1f, -0.2f, 0.3f}, config.offset());
+        assertEquals(new RenderOffset(0.1f, -0.2f, 0.3f), config.offset());
     }
 
     @Test
@@ -120,7 +120,7 @@ class OverrideJsonCodecTest {
                 new ItemRenderConfig(
                         RenderMode.THREE_D,
                         1.25f,
-                        new float[]{-0.25f, 0.5f, 0.75f}));
+                        new RenderOffset(-0.25f, 0.5f, 0.75f)));
 
         Map<ResourceLocation, ItemRenderConfig> parsed =
                 OverrideJsonCodec.parse(OverrideJsonCodec.toJson(original), "round-trip");
@@ -128,7 +128,24 @@ class OverrideJsonCodecTest {
 
         assertEquals(RenderMode.THREE_D, result.mode());
         assertEquals(1.25f, result.scale());
-        assertArrayEquals(new float[]{-0.25f, 0.5f, 0.75f}, result.offset());
+        assertEquals(new RenderOffset(-0.25f, 0.5f, 0.75f), result.offset());
+    }
+
+    @Test
+    void synchronizedOffsetsRejectNonFiniteAndOutOfRangeComponents() {
+        for (RenderOffset offset : java.util.List.of(
+                new RenderOffset(Float.NaN, 0, 0),
+                new RenderOffset(0, Float.POSITIVE_INFINITY, 0),
+                new RenderOffset(0, 0, 1.01f))) {
+            ItemRenderConfig sanitized = OverrideJsonCodec.sanitize(
+                    new ItemRenderConfig(RenderMode.GUI, 1.0f, offset));
+            assertNull(sanitized.offset());
+            assertEquals(RenderMode.GUI, sanitized.mode());
+            assertEquals(1.0f, sanitized.scale());
+        }
+        RenderOffset boundary = new RenderOffset(-1, 1, 0);
+        assertEquals(boundary, OverrideJsonCodec.sanitize(
+                new ItemRenderConfig(null, null, boundary)).offset());
     }
 
     private static JsonObject object(String json) {

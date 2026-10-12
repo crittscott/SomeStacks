@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.client.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.google.gson.JsonObject;
 import net.minecraft.world.phys.AABB;
 import org.junit.jupiter.api.Test;

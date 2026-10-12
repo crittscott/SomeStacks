@@ -6,10 +6,8 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.server.FabricEditAuthority;
 import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackSoundData;
-import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.api.ModInitializer;
@@ -21,16 +19,16 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.level.storage.LevelResource;
 
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
     @Override
     public void onInitialize() {
+        PlatformServices.install(new FabricPlatformServices());
         FabricRegistry.init();
         FabricItemStorage.init();
         ServerConfig.useFabricIngotTagDefaults();
-        WorldEdits.setAuthority(new FabricEditAuthority());
+        WorldEdits.setAuthority(PlatformServices.editAuthority());
         PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.initServer();
         CommandNetwork.setHandler(new FabricCommandNetwork());
@@ -42,10 +40,8 @@ public final class SomeStacksFabric implements ModInitializer {
         ResourceManagerHelper.get(PackType.SERVER_DATA)
                 .registerReloadListener(new FabricStackSoundData());
 
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            var configDir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig");
-            ServerConfig.load(configDir.resolve(SomeStacksCommon.MODID + "-server.json"));
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycle::starting);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycle.stopped());
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {
                     if (success) {
@@ -60,9 +56,9 @@ public final class SomeStacksFabric implements ModInitializer {
                 return;
             }
             FabricNetworking.sendProtocol(player);
-            FabricNetworking.sendConfig(player);
+            ServerLifecycle.login(player);
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
-                GestureThrottle.clear(handler.player.getUUID()));
+                ServerLifecycle.logout(handler.player.getUUID()));
     }
 }

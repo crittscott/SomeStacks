@@ -1,10 +1,10 @@
 package com.github.crittscott.somestacks.client;
 
-import org.junit.jupiter.api.Test;
-
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

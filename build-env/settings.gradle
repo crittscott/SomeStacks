@@ -3,14 +3,15 @@ pluginManagement {
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.architectury.dev/' }
         maven { url = 'https://files.minecraftforge.net/maven/' }
-        maven { url = 'https://maven.neoforged.net/releases/' }
         gradlePluginPortal()
     }
 }
 
-rootProject.name = 'somebuckets'
-
+rootProject.name = 'somestacks'
 include 'common'
-include 'fabric'
-include 'forge'
-include 'neoforge'
+def platforms = enabled_platforms.split(',').collect { it.trim() }
+if (platforms.isEmpty() || platforms.any { !(it in ['fabric', 'forge']) } ||
+        platforms.unique(false).size() != platforms.size()) {
+    throw new GradleException('enabled_platforms must list fabric and/or forge once each.')
+}
+platforms.each { include it }

@@ -1,6 +1,8 @@
 plugins {
-    id 'dev.architectury.loom' version '1.17.491' apply false
-    id 'architectury-plugin' version '3.5.169'
+    id 'eclipse'
+    id 'idea'
+    id 'dev.architectury.loom' version '1.17.493' apply false
+    id 'architectury-plugin' version '3.5.170'
     id 'com.gradleup.shadow' version '9.4.3' apply false
 }
 
@@ -8,55 +10,68 @@ architectury {
     minecraft = project.minecraft_version
 }
 
-ext.configureGameTestStructures = { Project loaderProject ->
-    def structureSource = rootProject.layout.projectDirectory.file(
-            'common/src/gametest/fixtures/empty_9x6x9.nbt.b64')
-    def structureOutput = loaderProject.layout.buildDirectory.file(
-            'generated/gametest/resources/data/somebuckets/structure/empty_9x6x9.nbt')
+ext.sharedModProperties = [
+        mod_id: mod_id, mod_name: mod_name, mod_license: mod_license,
+        mod_version: mod_version, mod_authors: mod_authors, mod_description: mod_description,
+        minecraft_version: minecraft_version,
+]
 
-    loaderProject.tasks.register('generateGameTestStructures') {
+// Loader-local test holders and metadata accompany the shared scenarios and structure fixture.
+ext.configureGameTests = { Project loaderProject ->
+    def main = loaderProject.sourceSets.main
+    def gametest = loaderProject.sourceSets.create('gametest')
+    def generatedResources = loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
+    gametest.java.srcDir rootProject.file('common/src/gametest/java')
+    gametest.resources.srcDir generatedResources
+    gametest.compileClasspath += main.compileClasspath + main.output
+    gametest.runtimeClasspath += main.runtimeClasspath + main.output
+    if (loaderProject.name == 'fabric') {
+        gametest.runtimeClasspath += project(':common').sourceSets.main.output
+    }
+
+    def structureSource = rootProject.layout.projectDirectory.file(
+            'common/src/gametest/fixtures/somestacks_empty.nbt.b64')
+    def structureOutput = generatedResources.map {
+        it.file('data/somestacks/structures/somestacks_empty.nbt')
+    }
+    def generateStructures = loaderProject.tasks.register('generateGameTestStructures') {
         inputs.file(structureSource)
         outputs.file(structureOutput)
-
         doLast {
             def output = structureOutput.get().asFile
             output.parentFile.mkdirs()
-            output.bytes = Base64.getMimeDecoder().decode(structureSource.asFile.text)
+            output.bytes = Base64.getDecoder().decode(structureSource.asFile.text.trim())
         }
     }
-
-    loaderProject.sourceSets.gametest.resources {
-        srcDir loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
+    loaderProject.tasks.named(gametest.processResourcesTaskName).configure {
+        dependsOn generateStructures
     }
-    loaderProject.tasks.named('processGametestResources').configure {
-        dependsOn loaderProject.tasks.named('generateGameTestStructures')
+    loaderProject.tasks.register('gametestJavadoc', Javadoc) {
+        group = 'documentation'
+        description = "Generates ${loaderProject.name} GameTest Javadoc."
+        source gametest.allJava
+        classpath = gametest.compileClasspath
+        destinationDir = loaderProject.layout.buildDirectory.dir('docs/gametestJavadoc').get().asFile
+        options.addBooleanOption('package', true)
     }
 }
 
 allprojects {
-    group = rootProject.maven_group
+    group = rootProject.mod_group_id
     version = rootProject.mod_version
 }
 
 subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
-    apply plugin: 'maven-publish'
 
     base {
-        // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-        archivesName = "$rootProject.archives_name-$project.name"
+        archivesName = "$rootProject.mod_id-$project.name-$rootProject.minecraft_version"
     }
 
     repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-        maven { url = 'https://maven.ftb.dev/releases' }
+        maven { url = 'https://maven.architectury.dev/' }
         maven { url = 'https://maven.parchmentmc.org' }
-        maven { url = 'https://maven.neoforged.net/releases/' }
     }
 
     loom {
@@ -69,47 +84,49 @@ subprojects {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
         }
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     }
 
     java {
         // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
         // if it is present.
-        // If you remove this line, sources will not be generated.
         withSourcesJar()
 
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(17)
         }
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
+        it.options.release = 17
     }
 
     tasks.withType(JavaExec).configureEach {
         javaLauncher.set(javaToolchains.launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(17)
         })
     }
+}
 
-    // Configure Maven publishing.
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = base.archivesName.get()
-                from components.java
-            }
+// Resolve documentation tasks after loader scripts have registered their GameTest tasks.
+gradle.projectsEvaluated {
+    def loaders = rootProject.enabled_platforms.split(',').collect { project(":${it.trim()}") }
+    tasks.register('generateDocs', Sync) {
+        group = 'documentation'
+        description = 'Generates production and GameTest Javadoc under docs/javadoc.'
+        into layout.projectDirectory.dir('docs/javadoc')
+        ([project(':common')] + loaders).each { module ->
+            def documentation = module.tasks.named('javadoc', Javadoc)
+            dependsOn documentation
+            from(documentation.map { it.destinationDir }) { into module.name }
         }
-
-        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-        repositories {
-            // Add repositories to publish to here.
-            // Notice: This block does NOT have the same function as the block in the top level.
-            // The repositories here will be used for publishing your artifact, not for
-            // retrieving dependencies.
+        loaders.each { loader ->
+            def documentation = loader.tasks.named('gametestJavadoc', Javadoc)
+            dependsOn documentation
+            from(documentation.map { it.destinationDir }) { into "${loader.name}-gametest" }
         }
     }
 }

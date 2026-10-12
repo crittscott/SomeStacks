@@ -201,6 +201,14 @@ public final class RenderGalleryGenerator {
     }
 
     /** Drains the queued galleries, bounded by {@code render_gallery.placements_per_tick}. */
+    /** Releases jobs and world-derived indexes at server-session boundaries. */
+    public static void clear() {
+        jobs.clear();
+        itemsByNamespace = null;
+        barItemsByNamespace = null;
+        barItemsGeneration = 0;
+    }
+
     public static void onServerTick() {
         if (jobs.isEmpty()) {
             return;

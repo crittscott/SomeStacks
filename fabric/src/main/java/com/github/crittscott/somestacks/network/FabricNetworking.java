@@ -1,13 +1,10 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.ServerOverridesLoader;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.BiConsumer;
@@ -47,21 +44,10 @@ public final class FabricNetworking {
         ServerPlayNetworking.send(player, PROTOCOL, PacketByteBufs.create());
     }
 
-    public static void sendConfig(ServerPlayer player) {
-        ConfigSyncPkt packet = buildConfigSync();
+    public static void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         ConfigSyncPkt.encode(packet, buf);
         ServerPlayNetworking.send(player, CONFIG_SYNC, buf);
-    }
-
-    public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = buildConfigSync();
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            ConfigSyncPkt.encode(packet, buf);
-            ServerPlayNetworking.send(player, CONFIG_SYNC, buf);
-        }
-        return server.getPlayerList().getPlayerCount();
     }
 
     public static void sendRenderOverride(ServerPlayer player, RenderOverridePkt packet) {
@@ -74,14 +60,6 @@ public final class FabricNetworking {
         FriendlyByteBuf buf = PacketByteBufs.create();
         WriteOverridesPkt.encode(packet, buf);
         ServerPlayNetworking.send(player, WRITE_OVERRIDES, buf);
-    }
-
-    private static ConfigSyncPkt buildConfigSync() {
-        return new ConfigSyncPkt(
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                ServerOverridesLoader.load());
     }
 
     private static <T> void registerServer(
