@@ -7,11 +7,11 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
-import com.github.crittscott.somestacks.server.Protection;
+import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackMode;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -37,16 +38,13 @@ import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.function.Consumer;
-
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
 /**
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
- * and the same-tick claim that stops the vanilla interaction following a gesture from acting on the
- * position the gesture just used.
+ * and native placement and interaction protection.
  *
  * <p>These fire the Forge events themselves, so they cover the order a consult and the commit that
  * follows must agree on.
@@ -91,106 +89,6 @@ public final class ProtectionGameTests {
     }
 
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void sameTickSuppressionVetoesOnlyTheMarkedPosition(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-        BlockPos other = marked.east();
-
-        check(Protection.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-
-        check(!Protection.mayInteract(player, marked),
-                "Marked same-tick interaction was not suppressed");
-        check(Protection.mayInteract(player, other),
-                "Different position was suppressed");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 20)
-    public static void suppressionExpiresOnTheNextTick(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos marked = helper.absolutePos(ORIGIN);
-
-        check(Protection.claimInteraction(player, marked, marked),
-                "The claim itself was refused");
-        helper.runAfterDelay(1, () -> {
-            check(Protection.mayInteract(player, marked),
-                    "Expired suppression still vetoed interaction");
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositSuppressesTheClickedBlockAndStillDeposits(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                DepositPkt.apply(player, new DepositPkt(target, clicked)));
-
-        checkEquals(64, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit did not reach the stack");
-        check(!Protection.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
-                "The deposit target was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementSuppressesTheClickedBlockAndStillPlaces(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.below();
-
-        withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
-
-        helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
-        check(!Protection.mayInteract(player, clicked),
-                "The clicked block was left open to the vanilla interaction");
-        check(Protection.mayInteract(player, target),
-                "The placed position was suppressed instead of the clicked block");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void depositConsultsTheAdjacentBlockThatWasActuallyClicked(GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos target = helper.absolutePos(ORIGIN);
-        BlockPos clicked = target.north();
-        GameTestScaffold.placeStorage(helper, ORIGIN);
-
-        // The stack itself is open; the block the player put their cursor on is not. The deposit
-        // reaches the stack through that click, so refusing the click refuses the deposit.
-        Consumer<PlayerInteractEvent.RightClickBlock> denyClicked = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseBlock(Event.Result.DENY);
-            }
-        };
-
-        MinecraftForge.EVENT_BUS.addListener(denyClicked);
-        try {
-            withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                    DepositPkt.apply(player, new DepositPkt(target, clicked)));
-        } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyClicked);
-        }
-
-        checkEquals(0, GameTestScaffold.heldAt(helper, target, Items.DIRT),
-                "Deposit ran despite the clicked block being denied");
-        helper.succeed();
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ServerPlayer player = FakePlayerFactory.getMinecraft(level);
@@ -200,7 +98,7 @@ public final class ProtectionGameTests {
         player.getAbilities().instabuild = true;
         try {
             withMainHand(player, new ItemStack(Items.DIRT, 64), () -> {
-                DepositPkt.apply(player, new DepositPkt(target, target));
+                nativeGesture(player, target, Direction.WEST);
                 checkEquals(64, player.getMainHandItem().getCount(),
                         "A creative deposit spent the held stack");
             });
@@ -262,8 +160,7 @@ public final class ProtectionGameTests {
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
 
         withMainHand(player, new ItemStack(Items.DIRT, 64), () ->
-                PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                        BlockType.STORAGE_STACK, Direction.UP, target)));
+                nativeGesture(player, target.below(), Direction.UP));
 
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
@@ -284,30 +181,6 @@ public final class ProtectionGameTests {
         } finally {
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         }
-    }
-
-    @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void placementHonorsUseItemDenyWithoutChangingBlockAccess(
-            GameTestHelper helper) {
-        ServerLevel level = helper.getLevel();
-        ServerPlayer player = FakePlayerFactory.getMinecraft(level);
-        BlockPos clicked = helper.absolutePos(ORIGIN);
-        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
-            if (event.getEntity() == player && event.getPos().equals(clicked)) {
-                event.setUseItem(Event.Result.DENY);
-            }
-        };
-
-        MinecraftForge.EVENT_BUS.addListener(denyItem);
-        try {
-            check(Protection.mayInteract(player, clicked),
-                    "Item-use denial incorrectly vetoed block access");
-            check(!Protection.mayUseItemOn(player, clicked),
-                    "Item-use denial did not veto placement");
-        } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyItem);
-        }
-        helper.succeed();
     }
 
     // Growth under protection
@@ -508,5 +381,153 @@ public final class ProtectionGameTests {
             border.setCenter(centerX, centerZ);
             border.setSize(size);
         }
+    }
+    /** To reproduce: deny item use on a stack, then modifier-deposit and plain-extract. Deposit is refused; permitted block access still extracts. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void nativeClickHonorsSplitPermissions(GameTestHelper helper) {
+        var storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 3));
+        var player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
+            if (event.getEntity() == player && event.getPos().equals(storage.getBlockPos())) event.setUseItem(Event.Result.DENY);
+        };
+        MinecraftForge.EVENT_BUS.addListener(denyItem);
+        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            var hit = InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2);
+            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, storage.getBlockPos(), hit);
+            checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT), "Denied item deposited");
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            GestureThrottle.clear(player.getUUID());
+            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, storage.getBlockPos(), hit);
+            checkEquals(3, player.getMainHandItem().getCount(), "Item denial incorrectly blocked extraction");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(denyItem);
+        }
+        helper.succeed();
+    }
+
+    /** To reproduce: deny right-click access either to an ordinary clicked block or the adjacent Singles stack. Neither boundary can be bypassed by depositing through the neighbor. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void nativeAdjacentDepositConsultsBothPositions(GameTestHelper helper) {
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        BlockPos destination = singles.getBlockPos();
+        BlockPos clicked = destination.west();
+        helper.getLevel().setBlock(clicked, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        var player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        for (BlockPos denied : new BlockPos[] {clicked, destination}) {
+            Consumer<PlayerInteractEvent.RightClickBlock> veto = event -> {
+                if (event.getEntity() == player && event.getPos().equals(denied)) event.setUseBlock(Event.Result.DENY);
+            };
+            MinecraftForge.EVENT_BUS.addListener(veto);
+            try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
+                ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+                var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
+                ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
+                        new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                checkEquals(0, GameTestScaffold.count(singles.getItems(), Items.STONE), "Denied adjacent deposit");
+            } finally {
+                MinecraftForge.EVENT_BUS.unregister(veto);
+            }
+        }
+        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
+            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
+                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+            checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
+        }
+        helper.succeed();
+    }
+
+    /** To reproduce: deny stack placement in a claim. The rejected block produces no neighbor update; an accepted placement publishes after the event permits it. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementDefersNeighborPublicationAndRestoresDeniedInventory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        // Changing the chest's facing captures its inventory without removing the container.
+        var originalState = Blocks.CHEST.defaultBlockState();
+        var placedState = originalState.setValue(net.minecraft.world.level.block.ChestBlock.FACING, Direction.EAST);
+        level.setBlock(target, originalState, Block.UPDATE_ALL);
+        var chest = (net.minecraft.world.level.block.entity.ChestBlockEntity) level.getBlockEntity(target);
+        chest.setItem(0, new ItemStack(Items.DIAMOND, 7));
+        chest.setCustomName(net.minecraft.network.chat.Component.literal("Snapshot chest"));
+        var before = chest.saveWithFullMetadata();
+        int[] neighbors = {0};
+        boolean[] deny = {true};
+        Consumer<BlockEvent.NeighborNotifyEvent> observe = event -> {
+            if (event.getLevel() == level && event.getPos().equals(target)) neighbors[0]++;
+        };
+        Consumer<BlockEvent.EntityPlaceEvent> placement = event -> {
+            if (event.getLevel() == level && event.getPos().equals(target)) {
+                checkEquals(0, neighbors[0], "Placement published before acceptance");
+                if (deny[0]) {
+                    ((net.minecraft.world.level.block.entity.ChestBlockEntity) level.getBlockEntity(target))
+                            .setItem(0, new ItemStack(Items.DIRT));
+                    event.setCanceled(true);
+                }
+            }
+        };
+        MinecraftForge.EVENT_BUS.addListener(observe);
+        MinecraftForge.EVENT_BUS.addListener(placement);
+        try {
+            var player = FakePlayerFactory.getMinecraft(level);
+            check(!WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Denied placement accepted");
+            checkEquals(originalState, level.getBlockState(target), "Denied state not restored");
+            var restored = level.getBlockEntity(target);
+            checkEquals(before, restored.saveWithFullMetadata(), "Denied inventory/name not restored");
+            checkEquals(0, neighbors[0], "Denied placement notified neighbors");
+            check(!level.captureBlockSnapshots && !level.restoringBlockSnapshots && level.capturedBlockSnapshots.isEmpty(), "Snapshot state leaked");
+            deny[0] = false;
+            check(WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Accepted placement rejected");
+            check(neighbors[0] > 0, "Accepted placement never notified neighbors");
+            checkEquals(placedState, level.getBlockState(target), "Accepted placement state");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(observe);
+            MinecraftForge.EVENT_BUS.unregister(placement);
+        }
+        helper.succeed();
+    }
+
+    /** To reproduce: a placement listener attempts another stack placement. Reentrant edits are refused without corrupting the outer transaction. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementRefusesReentrancyAndForeignCapture(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        var player = FakePlayerFactory.getMinecraft(level);
+        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
+            if (event.getLevel() == level && event.getPos().equals(target)) {
+                check(!WorldEdits.placeChecked(player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN), "Reentrant placement accepted");
+            }
+        };
+        MinecraftForge.EVENT_BUS.addListener(listener);
+        try {
+            check(WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN), "Outer placement failed");
+            level.captureBlockSnapshots = true;
+            check(!WorldEdits.placeChecked(player, level, target.east(), Blocks.STONE.defaultBlockState(), Direction.DOWN), "Foreign capture accepted");
+            check(level.captureBlockSnapshots, "Foreign capture changed");
+        } finally {
+            level.captureBlockSnapshots = false;
+            MinecraftForge.EVENT_BUS.unregister(listener);
+        }
+        helper.succeed();
+    }
+
+    private static void nativeGesture(ServerPlayer player, BlockPos clicked, Direction face) {
+        boolean creative = player.getAbilities().instabuild;
+        ItemStack result;
+        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            player.getAbilities().instabuild = creative;
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
+            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
+                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
+            result = player.getMainHandItem().copy();
+        }
+        player.setItemInHand(InteractionHand.MAIN_HAND, result);
     }
 }

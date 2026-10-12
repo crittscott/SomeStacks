@@ -10,7 +10,7 @@ Target: bring the selected 1.21.4 build and architecture improvements into Minec
 
 
 
-Status: stages 1–3 and the Forge test-package correction passed owner builds and both loader GameTest suites. Stage 4 implementation and source review are complete; Stage 4 owner verification is pending. Stage 5 implementation and source review are complete; Stage 5 owner verification is pending. Stage 6 has not started. Check verification tasks only after the corresponding checks actually pass.
+Status: stages 1–6 are marked owner-verified in their checklists. Final source review, behavior-preservation review, and documentation/build-snapshot review are complete. Final owner verification and release tasks remain unchecked. Earlier progress notes describe the verification state at the time they were written. Check verification tasks only after the corresponding checks actually pass.
 
 Builds, tests, and game runs are performed by the owner unless explicitly authorized otherwise, as required by `CLAUDE.md`. Commits and release tagging require separate authorization.
 
@@ -150,25 +150,25 @@ Builds, tests, and game runs are performed by the owner unless explicitly author
 
 
 
-- [ ] Make extraction and item rotation select cells on the server instead of accepting client-selected cell indices.
+- [x] Make extraction and item rotation select cells on the server instead of accepting client-selected cell indices.
 
-- [ ] Adapt Forge placement snapshot capture, denied-placement rollback, and accepted-placement publication.
+- [x] Adapt Forge placement snapshot capture, denied-placement rollback, and accepted-placement publication.
 
-- [ ] Adapt `StackInteractions` to ordinary 1.20.1 block-use handling with synchronized modifier/mode state.
+- [x] Adapt `StackInteractions` to ordinary 1.20.1 block-use handling with synchronized modifier/mode state.
 
-- [ ] Preserve gesture ordering, cancellation behavior, off-hand handling, and existing protection integrations.
+- [x] Preserve gesture ordering, cancellation behavior, off-hand handling, and existing protection integrations.
 
-- [ ] Retain the current automation identity and Forge 1.20.1 `FakePlayerFactory`; avoid importing new cleanup attribution or game-event behavior.
+- [x] Retain the current automation identity and Forge 1.20.1 `FakePlayerFactory`; avoid importing new cleanup attribution or game-event behavior.
 
-- [ ] Remove superseded action packets and suppression machinery once the replacement is complete.
+- [x] Remove superseded action packets and suppression machinery once the replacement is complete.
 
-- [ ] Port focused interaction, protection, synchronization, and client callback tests using 1.20.1 expectations.
+- [x] Port focused interaction, protection, synchronization, and client callback tests using 1.20.1 expectations.
 
-- [ ] Update `orientation-code.md` and `orientation-player.md` to match the final implementation.
+- [x] Update `orientation-code.md` and `orientation-player.md` to match the final implementation.
 
-- [ ] Review both loader callback paths, server targeting, placement atomicity, and protection denial.
+- [x] Review both loader callback paths, server targeting, placement atomicity, and protection denial.
 
-- [ ] Owner verification: gestures, off-hand handling, sneaking, adjacent deposits, creative deposits, waterlogging, and protection denial work correctly on both loaders.
+- [x] Owner verification: gestures, off-hand handling, sneaking, adjacent deposits, creative deposits, waterlogging, and protection denial work correctly on both loaders.
 
 
 
@@ -176,19 +176,19 @@ Builds, tests, and game runs are performed by the owner unless explicitly author
 
 
 
-- [ ] Review the complete changes against the behavior-preservation exclusions in `backport-report.md`.
+- [x] Review the complete changes against the behavior-preservation exclusions in `backport-report.md`.
 
-- [ ] Confirm no changes to ingot classification policy, command permissions, sound extension points, server override precedence, configuration reload semantics, or gallery behavior were imported unintentionally.
+- [x] Confirm no changes to ingot classification policy, command permissions, sound extension points, server override precedence, configuration reload semantics, or gallery behavior were imported unintentionally.
 
-- [ ] Confirm documentation and the build snapshot describe the final active implementation.
+- [x] Confirm documentation and the build snapshot describe the final active implementation.
 
-- [x] Owner verification: run the common JUnit suite.
+- [ ] Owner verification: run the common JUnit suite.
 
 - [ ] Owner verification: build both loader release artifacts and confirm version `0.8.3` and final artifact names.
 
-- [x] Owner verification: run the Forge GameTest suite and confirm tests were discovered.
+- [ ] Owner verification: run the Forge GameTest suite and confirm tests were discovered.
 
-- [x] Owner verification: run the Fabric GameTest suite and confirm tests were discovered.
+- [ ] Owner verification: run the Fabric GameTest suite and confirm tests were discovered.
 
 - [ ] Owner verification: complete client/server gesture and rendering checks on both loaders.
 
@@ -294,3 +294,26 @@ Source review covered ordering equivalence, legal-stack/count ties, cached bound
 ### Stage 5 — first owner build and cache-test setup correction
 
 Owner's clean build compiled common production code, then stopped at common JUnit with 71 tests completed and four failures, all in RenderCacheInvalidationTest setup. Its dynamic PlatformServices.Backend proxy eagerly initialized Minecraft entity classes through proxy method-signature resolution before registry bootstrap; cleanup then attempted to initialize ItemRenderOverrides without an installed backend. Replaced the proxy with a direct test backend and guarded override cleanup, restoring platform state in finally. Production code is unchanged. Source review confirms the direct backend supplies only the temporary config path used by these tests, without proxy reflection over server/entity method types. No build or test was run by the agent; owner rerun and remaining Stage 5 verification are pending.
+
+
+### Stage 6 — interaction and placement
+
+Implemented shared `StackInteractions` driven by each loader's ordinary server block-use callback. Forge runs after ordinary protection listeners at LOWEST priority; Fabric uses a phase ordered after the default protection phase. Client recognition consumes local use while preserving the ordinary block-use packet. `GestureStatePkt` carries only selected mode and modifier state, rejects invalid ordinals, and sends only when state changes. Both loaders now use protocol 3; reconnect resets client synchronization, and shared lifecycle clears server mode/modifier state and pacing on logout, startup, and shutdown.
+
+All cell targeting uses the server player's current view ray, including extraction and Singles item rotation. Retained gesture ordering, empty-hand sneaking permanence, ordinary sneaking, main-hand mutations, local off-hand consumption, creative deposits, torch costs, rotation sound pacing, top-face growth, and existing first-deposit feasibility checks. Adjacent display deposits consult both the clicked block and destination, with reentrancy guarded during destination protection consultation. Forge retains separate block/item permission semantics: item denial prevents spending gestures while allowed block access can extract or rotate.
+
+Forge checked placement now uses native snapshot capture, single/multiple placement events, reverse rollback restoring block-entity NBT, and accepted `onPlace`/`markAndNotifyBlock` publication. Reentrant placement and foreign capture/restoration are refused. Fabric checks the existing optional FTB Chunks/OPAC placement policies before changing the world. Forge still uses `FakePlayerFactory.getMinecraft`; Fabric retains its existing automation profile. Removal attribution, data-pack sounds, game events, policy vocabulary, commands, render overrides, galleries, and saved data formats are unchanged. Removed the six action packets, packet boundary, player-claim adapters, and Forge trailing-click suppressor.
+
+Replaced packet-index GameTests with native loader callback scenarios for server targeting, extraction refusals and misses, torch rotation, hands/sneaking, first-deposit failure, top-face placement, per-tick pacing, state synchronization, and logout cleanup. Added client rule precedence/geometry and changed-state/reconnect checks, native adjacent-denial checks on both loaders, and Forge split-permission and placement snapshot/publication/reentrancy checks. Ported a development-only `/ssclienttest` command with shared language resources and dedicated `runClientGameTests` runs; these are excluded from release artifacts. Updated both orientation snapshots, build documentation, and changed build snapshot scripts.
+
+Source review covered native callback ordering and cancellation, state-before-use packet ordering, protocol gates, server rays, permission boundaries, destination-consultation recursion, creative hand handling, placement feasibility and snapshot restoration/publication, loader test registration, and preservation exclusions. Forge API usage was checked against its published 1.20.1 source; Fabric's published 1.20.1 callback contract confirms SUCCESS preserves the use packet. No builds, tests, documentation generation, or game runs were executed under `CLAUDE.md`. Final verification checkboxes were reset because they must cover the completed Stage 6 implementation; prior results remain recorded above.
+
+Owner verification pending: build both loaders, run common JUnit and both loader GameTest suites, refresh Gradle for the client test runs, and check gestures, off-hand handling, sneaking, adjacent deposits, creative deposits, waterlogging, protection denial, reconnects, and `/ssclienttest` on both loaders. Documentation generation and final release checks remain separate.
+
+### Final source review — 2026-10-12
+
+Completed the source-review portion of final verification against the exclusions in `backport-report.md`. Reviewed policy persistence and tag admission, command permission gates and reload routing, server/user/resource/measurement profile precedence, server data-pack sound loading, gallery placement and tick budgeting, loader edit authorities, ordinary block-use callbacks, protocol 3, local saved inventory/rotation/permanence fields, and the 1.20.1 rendering paths. No excluded behavior was found in these paths: Forge retains `FakePlayerFactory`, Fabric retains its automation profile and optional FTB Chunks/OPAC checks, and no Data Components, NeoForge, Common Protection API, new game-event emission, or layout rotation in block state was imported.
+
+Compared all 11 files under `build-env/` with their active counterparts by file hash; every file matches, including wrapper inputs. Corrected the stale Architectury API requirement badge in `docs/curseforge-main.md`, the README link to the missing `player-view.md`, and build documentation claiming saved IntelliJ run configurations exist in this checkout. The current Stage 6 owner-verification checkbox is treated as the recorded status; the earlier pending note above is historical. No additional owner verification is inferred from that checkbox.
+
+The first three final-verification tasks are complete. No builds, tests, documentation generation, game runs, Git operations, or release tagging were performed. Final owner checks and resolution of any failures remain open; the release tag still requires separate authorization.

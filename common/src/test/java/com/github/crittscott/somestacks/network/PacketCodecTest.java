@@ -3,15 +3,13 @@ package com.github.crittscott.somestacks.network;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
-import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackMode;
 import io.netty.buffer.Unpooled;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
@@ -23,54 +21,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PacketCodecTest {
 
     @Test
-    void placeAndDepositRoundTrips() {
-        assertRoundTrip(
-                new PlaceAndDepositPkt(
-                        BlockType.SINGLES_STACK,
-                        Direction.NORTH,
-                        new BlockPos(12, -4, 91)),
-                PlaceAndDepositPkt::encode,
-                PlaceAndDepositPkt::decode);
+    void gestureStateRoundTripsEveryModeAndModifier() {
+        for (StackMode mode : StackMode.values()) {
+            for (boolean down : new boolean[] {false, true}) {
+                assertRoundTrip(new GestureStatePkt(mode, down), GestureStatePkt::encode, GestureStatePkt::decode);
+            }
+        }
     }
 
     @Test
-    void depositRoundTrips() {
-        assertRoundTrip(
-                new DepositPkt(new BlockPos(-3, 70, 4), new BlockPos(-3, 69, 4)),
-                DepositPkt::encode,
-                DepositPkt::decode);
-    }
-
-    @Test
-    void extractRoundTrips() {
-        assertRoundTrip(
-                new ExtractPkt(new BlockPos(2, 8, -5), 63),
-                ExtractPkt::encode,
-                ExtractPkt::decode);
-    }
-
-    @Test
-    void rotateBlockRoundTrips() {
-        assertRoundTrip(
-                new RotateBlockPkt(new BlockPos(1, 2, 3)),
-                RotateBlockPkt::encode,
-                RotateBlockPkt::decode);
-    }
-
-    @Test
-    void rotateItemRoundTrips() {
-        assertRoundTrip(
-                new RotateItemPkt(new BlockPos(1, 2, 3), 37),
-                RotateItemPkt::encode,
-                RotateItemPkt::decode);
-    }
-
-    @Test
-    void togglePermanentRoundTrips() {
-        assertRoundTrip(
-                new TogglePermanentPkt(new BlockPos(1, 2, 3)),
-                TogglePermanentPkt::encode,
-                TogglePermanentPkt::decode);
+    void gestureStateRejectsInvalidModes() {
+        for (int id : new int[] {StackMode.values().length, 255}) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            try {
+                buf.writeByte(id);
+                buf.writeBoolean(true);
+                assertThrows(io.netty.handler.codec.DecoderException.class, () -> GestureStatePkt.decode(buf));
+            } finally {
+                buf.release();
+            }
+        }
     }
 
     @Test

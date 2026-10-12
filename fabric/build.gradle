@@ -21,6 +21,12 @@ loom {
     }
 
     runs {
+        clientGameTests {
+            client()
+            name 'Client Game Tests'
+            runDir 'run-client-gametest'
+            source sourceSets.gametest
+        }
         gameTestServer {
             server()
             name 'Game Test Server'

@@ -6,8 +6,6 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.ForgePlayerEditAuthority;
-import com.github.crittscott.somestacks.server.PlayerEdits;
 import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
@@ -44,7 +42,6 @@ public class SomeStacks {
 
         PlatformServices.install(new ForgePlatformServices());
         WorldEdits.setAuthority(PlatformServices.editAuthority());
-        PlayerEdits.setAuthority(new ForgePlayerEditAuthority());
         PlayerReach.setProvider(player -> player.getBlockReach());
 
         ModRegistry.init(modBus);

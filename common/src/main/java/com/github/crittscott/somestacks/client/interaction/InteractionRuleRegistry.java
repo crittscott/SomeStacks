@@ -32,24 +32,25 @@ public final class InteractionRuleRegistry {
             new ExtractionRule()
     );
 
-    public static void processEmptyHandRules(InteractionContext ctx) {
-        processFirstMatch(EMPTY_HAND_RULES, ctx);
+    public static InteractionRule processEmptyHandRules(InteractionContext ctx) {
+        return processFirstMatch(EMPTY_HAND_RULES, ctx);
     }
 
-    public static void processItemRules(InteractionContext ctx) {
-        processFirstMatch(ITEM_RULES, ctx);
+    public static InteractionRule processItemRules(InteractionContext ctx) {
+        return processFirstMatch(ITEM_RULES, ctx);
     }
 
-    public static void processBlockRules(InteractionContext ctx) {
-        processFirstMatch(BLOCK_RULES, ctx);
+    public static InteractionRule processBlockRules(InteractionContext ctx) {
+        return processFirstMatch(BLOCK_RULES, ctx);
     }
 
-    private static void processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
+    private static InteractionRule processFirstMatch(List<InteractionRule> rules, InteractionContext ctx) {
         for (InteractionRule rule : rules) {
             if (rule.matches(ctx)) {
                 rule.execute(ctx);
-                break;
+                return rule;
             }
         }
+        return null;
     }
 }

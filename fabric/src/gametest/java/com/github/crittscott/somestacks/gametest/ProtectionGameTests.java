@@ -5,11 +5,11 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.network.DepositPkt;
-import com.github.crittscott.somestacks.network.PlaceAndDepositPkt;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -38,10 +38,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * and waterlogging, plus growth answering to the same checks in both simulation and commit.
  *
- * <p>Forge's tests also cover same-tick click suppression and Forge-event-driven claim/mod
- * integration; those exercise {@code Protection} and Forge's event bus, which have no Fabric
- * counterpart in this port (Fabric has no general claim-event hook), so they are not duplicated
- * here.
  */
 public final class ProtectionGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
@@ -85,7 +81,7 @@ public final class ProtectionGameTests implements FabricGameTest {
 
         player.getAbilities().instabuild = true;
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
-        DepositPkt.apply(player, new DepositPkt(target, target));
+        nativeGesture(player, target, Direction.WEST);
         checkEquals(64, player.getMainHandItem().getCount(),
                 "A creative deposit spent the held stack");
 
@@ -102,8 +98,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT, 64));
 
-        PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
-                BlockType.STORAGE_STACK, Direction.UP, target));
+        nativeGesture(player, target.below(), Direction.UP);
 
         helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         check(level.getBlockState(target).getValue(StorageStackBlock.WATERLOGGED),
@@ -310,5 +305,60 @@ public final class ProtectionGameTests implements FabricGameTest {
             border.setCenter(centerX, centerZ);
             border.setSize(size);
         }
+    }
+    private static ServerPlayer deniedPlayer;
+    private static BlockPos deniedPosition;
+    static {
+        UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+                player == deniedPlayer && hit.getBlockPos().equals(deniedPosition)
+                        ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
+    }
+
+    /** To reproduce: deny use of the clicked block or adjacent Singles stack. Depositing through a neighbor honors both permissions; an allowed click deposits once. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void nativeAdjacentDepositConsultsBothPositions(GameTestHelper helper) {
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        BlockPos destination = singles.getBlockPos();
+        BlockPos clicked = destination.west();
+        helper.getLevel().setBlock(clicked, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        var player = FakePlayer.get(helper.getLevel());
+        try {
+            for (BlockPos denied : new BlockPos[] {clicked, destination}) {
+                deniedPlayer = player; deniedPosition = denied;
+                try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+                    player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
+                    ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+                    var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
+                    UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
+                            new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+                    checkEquals(0, GameTestScaffold.count(singles.getItems(), Items.STONE), "Denied adjacent deposit");
+                }
+            }
+        } finally {
+            deniedPlayer = null; deniedPosition = null;
+        }
+        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE));
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            var hit = InteractionChecks.aim(player, clicked, 0.125, 0.125);
+            UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
+                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
+            checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
+        }
+        helper.succeed();
+    }
+
+    private static void nativeGesture(ServerPlayer player, BlockPos clicked, Direction face) {
+        boolean creative = player.getAbilities().instabuild;
+        ItemStack result;
+        try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            player.getAbilities().instabuild = creative;
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
+            UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
+                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
+            result = player.getMainHandItem().copy();
+        }
+        player.setItemInHand(InteractionHand.MAIN_HAND, result);
     }
 }

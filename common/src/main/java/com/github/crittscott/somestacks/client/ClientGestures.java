@@ -1,8 +1,9 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import com.github.crittscott.somestacks.network.GestureStatePkt;
+import java.util.function.Consumer;
+import java.util.Objects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
@@ -10,25 +11,16 @@ import net.minecraft.world.entity.player.Player;
 public final class ClientGestures {
     private ClientGestures() {}
 
-    public interface Sender {
-        void sendTogglePermanent(BlockPos pos);
-
-        void sendPlaceAndDeposit(StackMode mode, BlockPos placePos, Direction face);
-
-        void sendDeposit(BlockPos pos, BlockPos clickedPos);
-
-        void sendExtract(BlockPos pos, int index);
-
-        void sendRotateBlock(BlockPos pos);
-
-        void sendRotateItem(BlockPos pos, int slotIndex);
-    }
-
     private static StackMode stackMode = StackMode.STORAGE_STACK;
-    private static Sender sender;
+    private static StackMode lastSentMode;
+    private static boolean lastSentModifier;
+    private static Consumer<GestureStatePkt> sender;
 
-    public static void setSender(Sender sender) {
+    public static Consumer<GestureStatePkt> setSender(Consumer<GestureStatePkt> sender) {
+        Consumer<GestureStatePkt> previous = ClientGestures.sender;
         ClientGestures.sender = sender;
+        resetSync();
+        return previous;
     }
 
     public static StackMode currentMode() {
@@ -51,27 +43,17 @@ public final class ClientGestures {
                 Component.translatable("somestacks.message.storage_mode", modeComponent), true);
     }
 
-    public static void sendTogglePermanent(BlockPos pos) {
-        sender.sendTogglePermanent(pos);
+    /** Sends changed state before the loader allows the ordinary use packet to proceed. */
+    public static void syncState(boolean modifierDown) {
+        if (lastSentMode == stackMode && lastSentModifier == modifierDown) return;
+        Objects.requireNonNull(sender, "Client gesture sender is not installed")
+                .accept(new GestureStatePkt(stackMode, modifierDown));
+        lastSentMode = stackMode;
+        lastSentModifier = modifierDown;
     }
 
-    public static void sendPlaceAndDeposit(BlockPos placePos, Direction face) {
-        sender.sendPlaceAndDeposit(stackMode, placePos, face);
-    }
-
-    public static void sendDeposit(BlockPos pos, BlockPos clickedPos) {
-        sender.sendDeposit(pos, clickedPos);
-    }
-
-    public static void sendExtract(BlockPos pos, int index) {
-        sender.sendExtract(pos, index);
-    }
-
-    public static void sendRotateBlock(BlockPos pos) {
-        sender.sendRotateBlock(pos);
-    }
-
-    public static void sendRotateItem(BlockPos pos, int slotIndex) {
-        sender.sendRotateItem(pos, slotIndex);
+    /** A new connection must establish state even when the selected mode has not changed. */
+    public static void resetSync() {
+        lastSentMode = null;
     }
 }

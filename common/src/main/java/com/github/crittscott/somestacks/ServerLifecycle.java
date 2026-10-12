@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.ServerGestureState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
@@ -16,6 +17,7 @@ public final class ServerLifecycle {
     public static void starting(MinecraftServer server) {
         RenderGalleryGenerator.clear();
         GestureThrottle.clearAll();
+        ServerGestureState.clearAll();
         ServerConfig.load(server.getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig").resolve(SomeStacksCommon.MODID + "-server.json"));
     }
@@ -23,6 +25,7 @@ public final class ServerLifecycle {
     public static void stopped() {
         RenderGalleryGenerator.clear();
         GestureThrottle.clearAll();
+        ServerGestureState.clearAll();
         ServerConfig.clear();
     }
 
@@ -32,6 +35,7 @@ public final class ServerLifecycle {
 
     public static void logout(UUID playerId) {
         GestureThrottle.clear(playerId);
+        ServerGestureState.clear(playerId);
     }
 
     /** Reads render overrides once per broadcast; policy files are not reread. */

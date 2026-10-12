@@ -14,26 +14,14 @@ import java.util.function.Function;
 public final class FabricNetworking {
     private FabricNetworking() {}
 
-    public static final ResourceLocation PROTOCOL = id("protocol_2");
-    public static final ResourceLocation PLACE_AND_DEPOSIT = id("place_and_deposit");
-    public static final ResourceLocation DEPOSIT = id("deposit");
-    public static final ResourceLocation TOGGLE_PERMANENT = id("toggle_permanent");
+    public static final ResourceLocation PROTOCOL = id("protocol_3");
+    public static final ResourceLocation GESTURE_STATE = id("gesture_state");
     public static final ResourceLocation CONFIG_SYNC = id("config_sync");
     public static final ResourceLocation RENDER_OVERRIDE = id("render_override");
-    public static final ResourceLocation ROTATE_BLOCK = id("rotate_block");
-    public static final ResourceLocation ROTATE_ITEM = id("rotate_item");
-    public static final ResourceLocation EXTRACT = id("extract");
     public static final ResourceLocation WRITE_OVERRIDES = id("write_overrides");
 
     public static void initServer() {
-        registerServer(PLACE_AND_DEPOSIT, PlaceAndDepositPkt::decode,
-                PlaceAndDepositPkt::handleServer);
-        registerServer(DEPOSIT, DepositPkt::decode, DepositPkt::handleServer);
-        registerServer(TOGGLE_PERMANENT, TogglePermanentPkt::decode,
-                TogglePermanentPkt::handleServer);
-        registerServer(ROTATE_BLOCK, RotateBlockPkt::decode, RotateBlockPkt::handleServer);
-        registerServer(ROTATE_ITEM, RotateItemPkt::decode, RotateItemPkt::handleServer);
-        registerServer(EXTRACT, ExtractPkt::decode, ExtractPkt::handleServer);
+        registerServer(GESTURE_STATE, GestureStatePkt::decode, GestureStatePkt::handleServer);
     }
 
     public static boolean supportsClient(ServerPlayer player) {

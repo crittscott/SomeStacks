@@ -2,14 +2,12 @@ package com.github.crittscott.somestacks.client.interaction;
 
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.HitResult;
 
 /**
  * One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
@@ -28,6 +26,8 @@ public final class InteractionContext {
     private final Direction face;
     private final StackMode currentMode;
     private final boolean modeKeyDown;
+
+    private boolean hittingBlock;
 
     private boolean shouldCancel = false;
 
@@ -101,11 +101,12 @@ public final class InteractionContext {
      * the placement mode, from one that merely missed the block-click event.
      */
     public boolean isHittingBlock() {
-        if (!level.isClientSide) {
-            return false;
-        }
-        HitResult hit = Minecraft.getInstance().hitResult;
-        return hit != null && hit.getType() == HitResult.Type.BLOCK;
+        return hittingBlock;
+    }
+
+    public InteractionContext withHittingBlock(boolean hittingBlock) {
+        this.hittingBlock = hittingBlock;
+        return this;
     }
 
     public boolean isAnyStackBlock() {

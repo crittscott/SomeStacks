@@ -18,30 +18,8 @@ import net.minecraftforge.network.NetworkEvent;
 final class ForgePacketHandlers {
     private ForgePacketHandlers() {}
 
-    static void handlePlaceAndDeposit(
-            PlaceAndDepositPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> PlaceAndDepositPkt.handleServer(msg, player));
-    }
-
-    static void handleDeposit(DepositPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> DepositPkt.handleServer(msg, player));
-    }
-
-    static void handleTogglePermanent(
-            TogglePermanentPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> TogglePermanentPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateBlock(RotateBlockPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> RotateBlockPkt.handleServer(msg, player));
-    }
-
-    static void handleRotateItem(RotateItemPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> RotateItemPkt.handleServer(msg, player));
-    }
-
-    static void handleExtract(ExtractPkt msg, Supplier<NetworkEvent.Context> context) {
-        enqueueServer(context, player -> ExtractPkt.handleServer(msg, player));
+    static void handleGestureState(GestureStatePkt msg, Supplier<NetworkEvent.Context> context) {
+        enqueueServer(context, player -> GestureStatePkt.handleServer(msg, player));
     }
 
     static void handleConfigSync(ConfigSyncPkt msg, Supplier<NetworkEvent.Context> context) {

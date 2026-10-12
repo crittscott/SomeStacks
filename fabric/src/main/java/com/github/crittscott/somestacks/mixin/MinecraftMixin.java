@@ -36,5 +36,6 @@ abstract class MinecraftMixin {
                 player, player.level(), InteractionHand.MAIN_HAND,
                 ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(context);
+        ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
     }
 }

@@ -23,6 +23,7 @@ ext.configureGameTests = { Project loaderProject ->
     def generatedResources = loaderProject.layout.buildDirectory.dir('generated/gametest/resources')
     gametest.java.srcDir rootProject.file('common/src/gametest/java')
     gametest.resources.srcDir generatedResources
+    gametest.resources.srcDir rootProject.file('common/src/gametest/resources')
     gametest.compileClasspath += main.compileClasspath + main.output
     gametest.runtimeClasspath += main.runtimeClasspath + main.output
     if (loaderProject.name == 'fabric') {

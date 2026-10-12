@@ -10,8 +10,7 @@ import java.util.UUID;
  * Enforces one stack gesture per player per tick and separately rate-limits rotation sounds.
  *
  * <p>The client matches at most one interaction rule per click and cancels the off-hand pass, but
- * custom packets bypass vanilla's interaction pacing. The server therefore restores that limit at
- * the packet boundary. An attempt spends the tick even if later validation rejects it.
+ * the native server callback also enforces the per-tick limit. An attempt spends the tick even if later validation rejects it.
  *
  * <p>Rotation remains available every tick, but its sound is limited to once every four ticks so a
  * held gesture does not broadcast twenty sounds per second.

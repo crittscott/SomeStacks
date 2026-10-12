@@ -6,9 +6,8 @@ import com.github.crittscott.somestacks.command.CommandNetwork;
 import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.server.FabricPlayerEditAuthority;
 import com.github.crittscott.somestacks.server.FabricStackSoundData;
-import com.github.crittscott.somestacks.server.PlayerEdits;
+import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -29,8 +28,8 @@ public final class SomeStacksFabric implements ModInitializer {
         FabricItemStorage.init();
         ServerConfig.useFabricIngotTagDefaults();
         WorldEdits.setAuthority(PlatformServices.editAuthority());
-        PlayerEdits.setAuthority(new FabricPlayerEditAuthority());
         FabricNetworking.initServer();
+        FabricStackInteractionEvents.init();
         CommandNetwork.setHandler(new FabricCommandNetwork());
 
         CommandRegistrationCallback.EVENT.register(

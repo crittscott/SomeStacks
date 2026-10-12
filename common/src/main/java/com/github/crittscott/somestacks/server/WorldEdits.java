@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -9,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -24,6 +27,7 @@ public final class WorldEdits {
     private WorldEdits() {
     }
 
+    private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
     private static EditAuthority authority;
 
     /** Installed once by the loader's entry point before any world logic can run. */
@@ -48,6 +52,31 @@ public final class WorldEdits {
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
         return authority().automationActor(level);
+    }
+
+    /** Consults destination protection without allowing the consultation to run a gesture. */
+    public static boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        if (isConsultingAdjacent() || isProtected(player, pos)) return false;
+        consultingAdjacent.set(true);
+        try {
+            return authority().mayUseAdjacent(player, pos);
+        } finally {
+            consultingAdjacent.remove();
+        }
+    }
+
+    public static boolean isConsultingAdjacent() {
+        return consultingAdjacent.get();
+    }
+
+    /** Destination hit reported to protection listeners for an adjacent deposit. */
+    public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
+        var level = player.serverLevel();
+        var ray = ViewRays.of(player);
+        BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
+                .clip(ray.eye(), ray.end(), pos);
+        return hit != null ? hit
+                : new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
 
     /** Vanilla's placement obstruction test for a block-local collision shape. */
@@ -81,8 +110,8 @@ public final class WorldEdits {
     }
 
     /**
-     * Places {@code state} at {@code pos}, restoring the previous state if a claim/logging mod
-     * vetoes it. {@code finalCollision} is the completed placement's collision shape, since a
+     * Places {@code state} through the loader transaction, restoring captured state and block-entity
+     * data when protection denies it. {@code finalCollision} is the completed placement's collision shape, since a
      * block-entity stack can start empty and acquire its real shape only with its first deposit.
      */
     public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
@@ -91,16 +120,7 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        EditAuthority.PlacementVeto placementVeto = authority().preparePlacement(level, pos);
-        BlockState previous = level.getBlockState(pos);
-        if (!level.setBlock(pos, state, Block.UPDATE_ALL)) {
-            return false;
-        }
-        if (placementVeto.isVetoed(placer, placedAgainst)) {
-            level.setBlock(pos, previous, Block.UPDATE_ALL);
-            return false;
-        }
-        return true;
+        return authority().place(placer, level, pos, state, placedAgainst);
     }
 
     /**

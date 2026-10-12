@@ -15,16 +15,15 @@ import net.minecraft.world.level.block.state.BlockState;
  * any world logic can run.
  */
 public interface EditAuthority {
-    @FunctionalInterface
-    interface PlacementVeto {
-        boolean isVetoed(Player placer, Direction placedAgainst);
-    }
-
     /** The actor automation-driven growth and removal are attributed to. */
     ServerPlayer automationActor(ServerLevel level);
 
-    /** Captures the loader-specific state needed to evaluate a placement after it occurs. */
-    PlacementVeto preparePlacement(ServerLevel level, BlockPos pos);
+    /** Places through loader-native protection, restoring denied state before publication. */
+    boolean place(Player placer, ServerLevel level, BlockPos pos,
+                  BlockState state, Direction placedAgainst);
+
+    /** Whether a neighboring click may deposit into an existing destination stack. */
+    boolean mayUseAdjacent(ServerPlayer player, BlockPos pos);
 
     /** Whether a claim, protection, or logging mod refuses this removal. */
     boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state);

@@ -5,8 +5,8 @@ package com.github.crittscott.somestacks.client.interaction;
  * the first rule that matches, so a rule states only its own conditions and relies on its position
  * in that list to settle overlaps with broader rules behind it.
  *
- * <p>Rules run on the client, which owns gesture recognition. A rule that acts sends a packet and
- * leaves the world untouched; the server decides whether the gesture is allowed.
+ * <p>Rules run on the client, which owns gesture recognition. Block rules consume local use and
+ * leave the world untouched; the ordinary server block-use callback applies the gesture.
  */
 public interface InteractionRule {
     /**
@@ -16,7 +16,7 @@ public interface InteractionRule {
     boolean matches(InteractionContext ctx);
 
     /**
-     * Acts on the claimed gesture, normally by sending a packet and calling
+     * Acts on the claimed gesture, normally by calling
      * {@link InteractionContext#cancelEvent()} to take the click away from the vanilla interaction.
      * A matched rule ends the walk whether or not it cancels.
      */
