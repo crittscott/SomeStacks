@@ -28,6 +28,10 @@ public abstract class StackBlockEntity extends BlockEntity {
     private boolean publishPending;
     private int publishedSignal = -1;
     private double comparatorContribution;
+    private final double[] slotContributions;
+    private double contributionCorrection;
+    private int occupiedSlots;
+    private int fullSlots;
     private StackRunItemAccess cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
 
@@ -36,11 +40,12 @@ public abstract class StackBlockEntity extends BlockEntity {
                                int slots, IntegerProperty lightProperty) {
         super(type, pos, state);
         this.lightProperty = lightProperty;
+        slotContributions = new double[slots];
         items = new StackItemStorage(slots) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
-                refreshComparatorContribution();
+                updateComparatorContribution(slot);
                 onLocalContentsChanged(slot);
                 if (isBatching()) {
                     batchTouched = true;
@@ -87,6 +92,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         cachedRun = null;
     }
 
+    /** Installs the same resolved run on each member without another world walk. */
+    final void cacheRun(StackRunItemAccess run, long tick) {
+        cachedRun = run;
+        cachedRunTick = tick;
+    }
+
     /** Capacity before the item's own stack limit. */
     protected int localSlotLimit() {
         return DEFAULT_SLOT_LIMIT;
@@ -98,15 +109,35 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     private void refreshComparatorContribution() {
-        double sum = 0.0;
+        comparatorContribution = 0.0;
+        contributionCorrection = 0.0;
+        occupiedSlots = 0;
+        fullSlots = 0;
         for (int slot = 0; slot < items.getSlots(); slot++) {
-            ItemStack stack = items.getStackInSlot(slot);
-            if (!stack.isEmpty()) {
-                sum += localSlotLimit() == 1 ? 1.0
-                        : (double) stack.getCount() / stack.getMaxStackSize();
-            }
+            slotContributions[slot] = 0.0;
+            updateComparatorContribution(slot);
         }
-        comparatorContribution = sum;
+    }
+
+    private void updateComparatorContribution(int slot) {
+        ItemStack stack = items.getStackInSlot(slot);
+        double previous = slotContributions[slot];
+        double current = stack.isEmpty() ? 0.0 : localSlotLimit() == 1 ? 1.0
+                : (double) stack.getCount() / stack.getMaxStackSize();
+        slotContributions[slot] = current;
+        occupiedSlots += (current != 0.0 ? 1 : 0) - (previous != 0.0 ? 1 : 0);
+        fullSlots += (current == 1.0 ? 1 : 0) - (previous == 1.0 ? 1 : 0);
+
+        // Compensated addition limits drift from repeated fractional slot changes.
+        double delta = (current - previous) - contributionCorrection;
+        double total = comparatorContribution + delta;
+        contributionCorrection = (total - comparatorContribution) - delta;
+        comparatorContribution = total;
+        // Empty and completely full inventories must retain exact comparator endpoints.
+        if (occupiedSlots == 0 || fullSlots == slotContributions.length) {
+            comparatorContribution = occupiedSlots == 0 ? 0.0 : slotContributions.length;
+            contributionCorrection = 0.0;
+        }
     }
 
     /** Refreshes subtype-derived state after a local slot changes, including inside a batch. */

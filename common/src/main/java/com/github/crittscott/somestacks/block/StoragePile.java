@@ -59,7 +59,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * slot and a machine reading the whole handler does that hundreds of times a tick.
      */
     static StoragePile resolve(ServerLevel level, BlockPos pos) {
-        return new StoragePile(level, resolveBlocks(level, pos, StorageStackBE.class));
+        StoragePile run = new StoragePile(level, resolveBlocks(level, pos, StorageStackBE.class));
+        run.cacheOnBlocks();
+        return run;
     }
 
     /**

@@ -1,5 +1,10 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.SharedConstants;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -11,6 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SinglesCubeIdxTest {
+    @BeforeAll
+    static void bootstrapItems() {
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
+    }
+
     @Test
     void everyIndexMapsToOneInRangeCoordinate() {
         Set<String> coordinates = new HashSet<>();
@@ -112,6 +123,31 @@ class SinglesCubeIdxTest {
                 seam[supportingVisual] = true;
                 assertTrue(SinglesCubeIdx.isGroundedIn(
                         occupancy, index, rotation, seam));
+            }
+        }
+    }
+
+    @Test
+    void liveSeamReadsOneTopCellAcrossEveryPairOfRotations() {
+        for (int rotation = 0; rotation < 4; rotation++) {
+            for (int belowRotation = 0; belowRotation < 4; belowRotation++) {
+                for (int column = 0; column < 16; column++) {
+                    int[] xyz = SinglesCubeIdx.xyzFromIndex(column);
+                    int[] visual = SinglesCubeIdx.rotateXYZ(xyz[0], 0, xyz[2], rotation);
+                    int[] belowXYZ = SinglesCubeIdx.rotateXYZ(visual[0], 0, visual[2],
+                            (4 - belowRotation) % 4);
+                    int expectedSlot = 48 + belowXYZ[2] * 4 + belowXYZ[0];
+                    StackItemStorage below = new StackItemStorage(64) {
+                        @Override
+                        public ItemStack getStackInSlot(int slot) {
+                            assertEquals(expectedSlot, slot, "Read the wrong supporting cell");
+                            return super.getStackInSlot(slot);
+                        }
+                    };
+                    assertFalse(SinglesCubeIdx.supportedBy(column, rotation, below, belowRotation));
+                    below.setStackInSlot(expectedSlot, new ItemStack(Items.PAPER));
+                    assertTrue(SinglesCubeIdx.supportedBy(column, rotation, below, belowRotation));
+                }
             }
         }
     }

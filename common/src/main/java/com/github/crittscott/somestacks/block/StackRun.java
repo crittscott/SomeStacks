@@ -33,6 +33,14 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         this.block = block;
     }
 
+    /** Shares a fully resolved run among its members for the current tick. */
+    protected final void cacheOnBlocks() {
+        long tick = level.getGameTime();
+        for (BE blockEntity : blocks) {
+            blockEntity.cacheRun(this, tick);
+        }
+    }
+
     /** Walks the maximal run containing {@code pos}, from its bottom block upward. */
     protected static <BE extends StackBlockEntity> List<BE> resolveBlocks(
             ServerLevel level, BlockPos pos, Class<BE> blockEntityClass) {

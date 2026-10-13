@@ -52,7 +52,7 @@ public final class SinglesCubeIdx {
      * blocks are unrotated, so {@code index} is already in the visual frame.
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
-        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
+        return index < LAYER_SIZE && (seamBelow == null || seamSupports(index, 0, seamBelow));
     }
 
     /**
@@ -104,6 +104,13 @@ public final class SinglesCubeIdx {
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
         return GRID.visualIndex(visualColumn, (4 - blockRotation % 4) % 4);
+    }
+
+    /** Reads the top cell beneath a bottom-layer cell in the same visual column. */
+    public static boolean supportedBy(int index, int blockRotation, SlotAccess below, int belowRotation) {
+        int visualColumn = visualColumnFromStorage(columnFromIndex(index), blockRotation);
+        int belowColumn = storageColumnFromVisual(visualColumn, belowRotation);
+        return !below.getStackInSlot(indexFromColumn(belowColumn, TOP_LAYER_Y)).isEmpty();
     }
 
     /**

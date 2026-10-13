@@ -79,11 +79,15 @@ public final class StackFoundationChecks {
             invoke(BEGIN_BATCH, block);
             try {
                 block.getItems().setStackInSlot(0, item.copy());
+                checkLocalFill(block, block.automationSlotLimit() == 1 ? 1.0
+                        : 1.0 / item.getMaxStackSize());
             } finally {
                 invoke(END_BATCH, block);
             }
             check(!(boolean) invoke(PUBLISH, block, helper.getLevel()), "Inner batch published contents");
             block.getItems().setStackInSlot(1, item.copy());
+            checkLocalFill(block, block.automationSlotLimit() == 1 ? 2.0
+                    : 2.0 / item.getMaxStackSize());
             check(!(boolean) invoke(PUBLISH, block, helper.getLevel()), "Outer batch published before ending");
         } finally {
             invoke(END_BATCH, block);
@@ -100,19 +104,32 @@ public final class StackFoundationChecks {
     }
 
     /**
-     * To reproduce in-game: connect automation to the bottom of two stacked blocks, then remove
-     * the top block. Its slot view immediately gains and loses that block without waiting a tick.
+     * To reproduce in-game: attach automation at different heights, add and remove stack blocks,
+     * and split a Storage or Singles run. Every attachment sees the new bounds immediately.
      */
     public static void structuralEditsInvalidateRunBoundsWithinTheTick(GameTestHelper helper) {
-        checkBounds(helper, placeStorage(helper, ORIGIN), ORIGIN);
-        checkBounds(helper, placeSingles(helper, ORIGIN.east(3)), ORIGIN.east(3));
-        checkBounds(helper, placeBar(helper, ORIGIN.east(6)), ORIGIN.east(6));
-        helper.succeed();
+        StackBlockEntity[] blocks = {
+                placeStorage(helper, ORIGIN), placeSingles(helper, ORIGIN.east(3)),
+                placeBar(helper, ORIGIN.east(6))
+        };
+        StackRunItemAccess[] runs = new StackRunItemAccess[blocks.length];
+        for (int i = 0; i < blocks.length; i++) {
+            checkBounds(helper, blocks[i], ORIGIN.east(i * 3));
+            runs[i] = blocks[i].itemRun();
+        }
+        helper.runAfterDelay(2, () -> {
+            for (int i = 0; i < blocks.length; i++) {
+                check(blocks[i].itemRun() != runs[i], "Run cache did not expire with the tick");
+                checkEquals(1, ((StackRun<?>) blocks[i].itemRun()).height(), "Expired run bounds");
+            }
+            helper.succeed();
+        });
     }
 
     private static void checkBounds(GameTestHelper helper, StackBlockEntity bottom, BlockPos relative) {
         StackRun<?> initial = (StackRun<?>) bottom.itemRun();
         int localSlots = bottom.getItems().getSlots();
+        bottom.getItems().setStackInSlot(0, new ItemStack(Items.PAPER));
         check(initial == bottom.itemRun(), "Run cache missed within the same tick");
         BlockPos topPos = helper.absolutePos(relative.above());
         helper.getLevel().setBlock(topPos, bottom.getBlockState(), Block.UPDATE_ALL);
@@ -124,12 +141,26 @@ public final class StackFoundationChecks {
         checkEquals(Items.PAPER, joined.getSlot(localSlots).getItem(), "Flat slot mapping");
         int advertisedLevels = ServerConfig.maxPileHeight() > 2 ? 3 : 2;
         checkEquals(localSlots * advertisedLevels, joined.advertisedSlots(), "Joined headroom");
-        checkEquals(joined.totalSlots(), ((StackRun<?>) top.itemRun()).totalSlots(), "Upper run view");
+        check(joined == top.itemRun(), "Members did not share the resolved run");
         helper.getLevel().setBlock(topPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         StackRun<?> remaining = (StackRun<?>) bottom.itemRun();
         check(remaining != joined, "Removal retained stale run bounds");
         checkEquals(1, remaining.height(), "Remaining height");
         check(remaining.getSlot(localSlots).isEmpty(), "Removed block remained in flat slots");
+        if (!(bottom instanceof BarStackBE)) {
+            helper.getLevel().setBlock(topPos, bottom.getBlockState(), Block.UPDATE_ALL);
+            BlockPos upperPos = topPos.above();
+            helper.getLevel().setBlock(upperPos, bottom.getBlockState(), Block.UPDATE_ALL);
+            StackBlockEntity upper = (StackBlockEntity) helper.getLevel().getBlockEntity(upperPos);
+            upper.getItems().setStackInSlot(0, new ItemStack(Items.PAPER));
+            StackRun<?> whole = (StackRun<?>) upper.itemRun();
+            checkEquals(3, whole.height(), "Three-block run");
+            check(whole == bottom.itemRun(), "Upper resolution was not shared with the base");
+            helper.getLevel().setBlock(topPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            checkEquals(1, ((StackRun<?>) bottom.itemRun()).height(), "Split lower bounds");
+            checkEquals(1, ((StackRun<?>) upper.itemRun()).height(), "Split upper bounds");
+            check(bottom.itemRun() != upper.itemRun(), "Split runs shared a stale cache");
+        }
     }
 
     /**
@@ -179,12 +210,40 @@ public final class StackFoundationChecks {
         checkEquals(1, run.extract(0, 64, false).getCount(), "Bar extraction");
         check(!bars.getItems().getStackInSlot(0).isEmpty(), "Bar backfill left a hole");
         check(bars.getItems().getStackInSlot(1).isEmpty(), "Topmost Bar did not move");
+        checkGrowth(helper, storage, new ItemStack(Items.STONE));
+        checkGrowth(helper, singles, new ItemStack(Items.STICK));
+        checkGrowth(helper, bars, new ItemStack(firstBarItem()));
         helper.succeed();
+    }
+
+    private static void checkGrowth(GameTestHelper helper, StackBlockEntity bottom, ItemStack item) {
+        int slots = bottom.getItems().getSlots();
+        if (bottom.automationSlotLimit() == 1) {
+            for (int slot = 0; slot < slots; slot++) {
+                bottom.getItems().setStackInSlot(slot, item.copy());
+            }
+        }
+        StackRun<?> initial = (StackRun<?>) bottom.itemRun();
+        checkEquals(1, initial.insertAt(slots, item, true), "Simulated growth insertion");
+        checkEquals(1, initial.height(), "Simulation grew the run");
+        checkEquals(1, initial.insertAt(slots, item, false), "Growth insertion");
+        StackBlockEntity top = (StackBlockEntity) helper.getLevel().getBlockEntity(bottom.getBlockPos().above());
+        StackRun<?> grown = (StackRun<?>) top.itemRun();
+        checkEquals(2, grown.height(), "Grown run bounds");
+        check(grown == bottom.itemRun(), "Growth members did not share their cache");
+        checkEquals(item.getItem(), grown.getSlot(slots).getItem(), "Grown contents");
+    }
+
+    private static void checkLocalFill(StackBlockEntity block, double expected) {
+        StackRun<?> run = (StackRun<?>) block.itemRun();
+        check(Math.abs(run.fillLevel() - expected / block.getItems().getSlots()) < 1.0e-12,
+                "Local fill changed inside a batch or after a load");
     }
 
     /**
      * To reproduce in-game: save and reload partly filled stacks, including an unstackable Storage
      * item. Comparators retain their whole-run fill; loading empty contents clears shapes and fill.
+     * Fill and empty the blocks repeatedly: full reads 15 and empty reads 0 after every cycle.
      */
     public static void loadedContentsRefreshComparatorFillAndShapes(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -214,6 +273,47 @@ public final class StackFoundationChecks {
         }
         check(singles.getCachedShape().isEmpty(), "Singles load retained cached shape");
         check(bars.getCachedShape().isEmpty(), "Bar load retained cached shape");
+        checkComparatorMutations(storage, new ItemStack(Items.STONE, 64));
+        checkComparatorMutations(singles, new ItemStack(Items.PAPER));
+        checkComparatorMutations(bars, new ItemStack(firstBarItem()));
         helper.succeed();
+    }
+
+    private static void checkComparatorMutations(StackBlockEntity block, ItemStack fullSlot) {
+        int slots = block.getItems().getSlots();
+        invoke(BEGIN_BATCH, block);
+        try {
+            for (int cycle = 0; cycle < 32; cycle++) {
+                ItemStack partial = block.automationSlotLimit() == 1 ? fullSlot.copy()
+                        : new ItemStack(Items.ENDER_PEARL);
+                block.getItems().setStackInSlot(0, partial);
+                checkLocalFill(block, block.automationSlotLimit() == 1 ? 1.0
+                        : 1.0 / partial.getMaxStackSize());
+                block.getItems().setStackInSlot(0, ItemStack.EMPTY);
+                checkEquals(0, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Empty endpoint");
+            }
+            for (int slot = 0; slot < slots; slot++) {
+                ItemStack full = fullSlot.copy();
+                if (block instanceof StorageStackBE) {
+                    full = switch (slot % 3) {
+                        case 0 -> new ItemStack(Items.STONE, 64);
+                        case 1 -> new ItemStack(Items.ENDER_PEARL, 16);
+                        default -> new ItemStack(Items.WOODEN_SWORD);
+                    };
+                }
+                block.getItems().setStackInSlot(slot, full);
+                checkLocalFill(block, slot + 1.0);
+            }
+            checkEquals(15, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Full endpoint");
+            block.load(block.getUpdateTag());
+            checkLocalFill(block, slots);
+            for (int slot = 0; slot < slots; slot++) {
+                block.getItems().extractItem(slot, 64, false);
+                checkLocalFill(block, slots - slot - 1.0);
+            }
+            checkEquals(0, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Empty after loaded mutations");
+        } finally {
+            invoke(END_BATCH, block);
+        }
     }
 }

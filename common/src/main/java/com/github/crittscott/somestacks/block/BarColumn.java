@@ -68,7 +68,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * cache {@link BarStackBE#column()} keeps; see there for why.
      */
     static BarColumn resolve(ServerLevel level, BlockPos pos) {
-        return new BarColumn(level, resolveBlocks(level, pos, BarStackBE.class));
+        BarColumn run = new BarColumn(level, resolveBlocks(level, pos, BarStackBE.class));
+        run.cacheOnBlocks();
+        return run;
     }
 
     /**
@@ -176,29 +178,28 @@ public final class BarColumn extends StackRun<BarStackBE> {
         int slot = localSlot(flatSlot);
 
         if (blockIndex < blocks.size()) {
-            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
-            if (occupancy[slot]) {
+            BarStackBE be = blocks.get(blockIndex);
+            if (!be.getItems().getStackInSlot(slot).isEmpty()) {
                 return false;
             }
-            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
+            if (slot >= BarCubeIdx.LAYER_SIZE) {
+                return BarCubeIdx.supportedBy(slot, be.getItems());
+            }
+            return seamSupports(blockIndex, slot);
         }
 
-        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        return canGrow(finalCollision)
-                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
+        return slot < BarCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot)
+                && canGrow(BarCubeIdx.shapeFor(slot));
     }
 
     /**
-     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
-     * below, or null for the bottom block of the column, which stands on the world and is grounded
-     * outright.
+     * Reads only overlapping bars in the top layer below. The bottom block stands on the world.
      */
-    @Nullable
-    private boolean[] seamUnder(int blockIndex) {
+    private boolean seamSupports(int blockIndex, int slot) {
         if (blockIndex == 0) {
-            return null;
+            return true;
         }
-        return BarCubeIdx.topLayerOccupancy(blocks.get(blockIndex - 1).getItems());
+        return BarCubeIdx.supportedBy(slot, blocks.get(blockIndex - 1).getItems());
     }
 
     /**

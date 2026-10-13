@@ -1,7 +1,12 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -12,6 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BarCubeIdxTest {
+
+    @BeforeAll
+    static void bootstrapItems() {
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
+    }
 
     @Test
     void everyIndexMapsToOneInRangeCoordinate() {
@@ -91,6 +102,29 @@ class BarCubeIdxTest {
         }
 
         throw new AssertionError("No supporting position found");
+    }
+
+    @Test
+    void liveSupportReadsOnlyOverlappingPositionsInTheSupportingLayer() {
+        for (int target = 0; target < 64; target++) {
+            int layer = target / 8;
+            int layerStart = layer == 0 ? 56 : (layer - 1) * 8;
+            for (int occupied = 0; occupied < 64; occupied++) {
+                int targetIndex = target;
+                int occupiedIndex = occupied;
+                StackItemStorage supporting = new StackItemStorage(64) {
+                    @Override
+                    public ItemStack getStackInSlot(int slot) {
+                        assertTrue(slot >= layerStart && slot < layerStart + 8);
+                        assertTrue(overlaps(targetIndex, slot), "Read a nonoverlapping bar");
+                        return slot == occupiedIndex ? new ItemStack(Items.IRON_INGOT) : ItemStack.EMPTY;
+                    }
+                };
+                boolean expected = occupied >= layerStart && occupied < layerStart + 8
+                        && overlaps(target, occupied);
+                assertEquals(expected, BarCubeIdx.supportedBy(target, supporting));
+            }
+        }
     }
 
     @Test

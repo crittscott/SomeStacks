@@ -59,7 +59,9 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * cache {@link SinglesStackBE#column()} keeps; see there for why.
      */
     static SinglesColumn resolve(ServerLevel level, BlockPos pos) {
-        return new SinglesColumn(level, resolveBlocks(level, pos, SinglesStackBE.class));
+        SinglesColumn run = new SinglesColumn(level, resolveBlocks(level, pos, SinglesStackBE.class));
+        run.cacheOnBlocks();
+        return run;
     }
 
     /**
@@ -156,30 +158,29 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
         if (blockIndex < blocks.size()) {
             SinglesStackBE be = blocks.get(blockIndex);
-            boolean[] occupancy = SinglesCubeIdx.occupancyOf(be.getItems());
-            if (occupancy[slot]) {
+            if (!be.getItems().getStackInSlot(slot).isEmpty()) {
                 return false;
             }
-            return SinglesCubeIdx.isGroundedIn(occupancy, slot, be.getRotation(), seamUnder(blockIndex));
+            if (slot >= SinglesCubeIdx.LAYER_SIZE) {
+                return !be.getItems().getStackInSlot(slot - SinglesCubeIdx.LAYER_SIZE).isEmpty();
+            }
+            return seamSupports(blockIndex, slot, be.getRotation());
         }
 
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
-        return canGrow(finalCollision) && SinglesCubeIdx.isGroundedIn(
-                new boolean[SinglesStackBE.SLOTS], slot, 0, seamUnder(blockIndex));
+        return slot < SinglesCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot, 0)
+                && canGrow(SinglesCubeIdx.shapeFor(slot, 0));
     }
 
     /**
-     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
-     * below, read in visual columns because two stacked blocks may carry different rotations, or
-     * null for the bottom block of the column, which stands on the world and is grounded outright.
+     * Reads only the supporting top cell, matching visual columns across differently rotated blocks.
+     * The bottom block of the column stands on the world.
      */
-    @Nullable
-    private boolean[] seamUnder(int blockIndex) {
+    private boolean seamSupports(int blockIndex, int slot, int rotation) {
         if (blockIndex == 0) {
-            return null;
+            return true;
         }
         SinglesStackBE below = blocks.get(blockIndex - 1);
-        return SinglesCubeIdx.topLayerOccupancy(below.getItems(), below.getRotation());
+        return SinglesCubeIdx.supportedBy(slot, rotation, below.getItems(), below.getRotation());
     }
 
     /**

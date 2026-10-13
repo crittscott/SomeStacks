@@ -16,11 +16,13 @@ out
 # gradle
 **/build
 **/.gradle
+/.architectury-transformer/
 
 # other
 eclipse
 run/
 run-gametest/
+run-client-gametest/
 run-data/
 other/
 logs/

@@ -49,18 +49,6 @@ public final class CubeGrid {
         }
     }
 
-    public int edge() {
-        return edge;
-    }
-
-    public int layerSize() {
-        return layerSize;
-    }
-
-    public int cells() {
-        return cells;
-    }
-
     /** Converts a bottom-up slot index to its x, y, z coordinates. */
     public int[] xyzFromIndex(int index) {
         int y = index / layerSize;

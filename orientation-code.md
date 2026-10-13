@@ -10,9 +10,9 @@ See `orientation-player.md` for behavior; `build-env.md` for the build.
 
 Java 17 / Minecraft 1.20.1; package `com.github.crittscott.somestacks`, id `somestacks`. Baselines: Forge 47.4.10, Fabric Loader 0.19.3 / API 0.92.7+1.20.1. Architectury is build-time only.
 
-`common` folds into each loader JAR without loader imports. Registries, services, edit authority, networking, and storage adapters provide loader seams, installed before common initialization.
+`common` folds into each loader JAR without loader imports. Loader seams install before common initialization.
 
-Release JARs: `<loader>/build/libs/somestacks-<loader>-1.20.1-<version>.jar`; Fabric uses Loom-remapped mixins without a runtime refmap.
+Fabric uses Loom-remapped mixins without a runtime refmap.
 
 Three blocks and block entity types; no block items, menus, recipes, or portable containers:
 
@@ -58,13 +58,13 @@ Three blocks and block entity types; no block items, menus, recipes, or portable
 
 ## Runtime and movement model
 
-`StackBlockEntity` owns slots, NBT, batches, and per-tick run caches. `StackRun` shares bounds, flat slots, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
+`StackBlockEntity` owns slots, NBT, batches, and per-tick run caches. A resolved run is cached on every member for that tick. `StackRun` shares bounds, flat slots, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
 
-Block entities do not tick. Mutations schedule the base block for updates, light, comparators, and Storage settlement. Local fill contributions refresh on edits/load. All blocks are waterloggable, hold derived local light, and report the same run signal.
+Block entities do not tick. Mutations schedule the base block for updates, light, comparators, and Storage settlement. Local fill contributions update from the changed slot, including inside batches, and rebuild on load. All blocks are waterloggable, hold derived local light, and report the same run signal.
 
 The movement models are distinct:
 
-- `StoragePile` merges deposits, fills bottom-up, and grows. Settlement groups exact identities, precomputes item/damage/NBT sort keys once per group, restores legal stack sizes, sorts with descending-count ties, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and separates runs.
+- `StoragePile` merges, fills bottom-up, and grows. Settlement groups exact identities, caches item/damage/NBT sort keys, restores legal sizes, sorts with descending-count ties, packs, and trims empty tops unless permanent/protected. Extraction schedules settlement; breaking drops local contents and splits runs.
 - `SinglesColumn` inserts into one empty supported cell. Extraction shifts one visual column down across rotated seams, carrying item rotation and preserving unrelated gaps. Cleanup trims empty tops; breaking leaves the column above.
 - `BarColumn` uses positional overlap support and alternating axes. Player extraction/removal cascades unsupported bars; automation backfills from the topmost bar. Insertion names an empty supported position.
 
@@ -76,7 +76,7 @@ The movement models are distinct:
 | Singles | `Items`, block `Rotation`, one `CubeRotations` entry per cell |
 | Bar | `Items` |
 
-Storage permanence logically belongs to the base and propagates during settlement. Storage/Singles block rotation is local to each block; Singles item rotation travels with the item through gravity.
+Storage permanence belongs to the base and propagates during settlement. Storage/Singles block rotation is local; Singles item rotation travels through gravity.
 
 ## Admission, automation, and edits
 
@@ -84,25 +84,27 @@ Storage accepts ordinary nonempty items. Bar accepts items resolved from configu
 
 Forge's per-entity `RunItemHandler` uses `LazyOptional` invalidation. Fabric's `StackBlockEntityMixin`/`FabricStorageOwner` caches one adapter per entity; every side/block shares the base ledger. Commit applies staging; abort restores snapshots; Singles/Bar allow one extraction position per transaction. Views span the run plus headroom below maximum height. `RunEdit` refuses reentrant automation.
 
+Singles/Bar insertion probes read the target slot and only its immediate supporting positions; rotated Singles seams map visual columns between blocks. Bar support candidates cache fixed footprint overlaps. Collapse retains mutable occupancy snapshots.
+
 `WorldEdits` gates growth/cleanup on build limits, replaceability, obstruction, border, and spawn checks. Forge retains `FakePlayerFactory` and place/break events. Placement captures snapshots, restores denied state/NBT, and publishes accepted `onPlace`/`markAndNotifyBlock`; reentrancy and foreign capture/restoration are refused. Fabric queries optional protection before placement.
 
 Fabric removal fires `PlayerBlockBreakEvents`. Growth has no generic placement event; `FtbChunksProtection`/`OpacProtection` query optional FTB Chunks/Open Parties and Claims. Their types stay in loaded-mod-gated compat classes. Other Fabric claim mods are not consulted for growth.
 
 ## Player interaction and networking
 
-Gesture order: permanence, block rotation, item rotation, deposit, placement, extraction. `ClientGestures` sends changed mode/modifier state before ordinary block-use packets. Reconnect resets sync; lifecycle clears server state/pacing on logout/start/stop. Fabric retains its air-click mixin.
+Gesture order: permanence, block rotation, item rotation, deposit, placement, extraction. `ClientGestures` sends changed mode/modifier state before block-use packets. Reconnect resets sync; logout/start/stop clear state/pacing. Fabric retains its air-click mixin.
 
 `StackInteractions.handleBlockClick` runs after native protection listeners, validating pacing, spectator status, loaded targets, reach, main hand, prerequisites, admission, support, and permissions. First placement/deposit is atomic. Protocol 3 uses `GestureStatePkt` instead of action packets; decoding rejects invalid modes.
 
 Deposit, placement, extraction, and Singles item rotation all trace the server player's current view. Client hit coordinates do not select cells.
 
-Client SUCCESS consumes local use while retaining ordinary block-use packets. Server callbacks consume recognized gestures even on admission failure; ordinary sneaking/off-hand actions do not mutate stacks. Forge item denial prevents deposits/placement while permitted block access can extract/rotate. Adjacent display deposits consult both positions; a recursion guard prevents consultation from executing gestures. No trailing-click suppressor remains.
+Client SUCCESS consumes local use and retains block-use packets. Server callbacks consume recognized gestures even on admission failure; ordinary sneaking/off-hand actions do not mutate stacks. Forge item denial prevents deposits/placement while permitted block access can extract/rotate. Adjacent deposits consult both positions under a gesture recursion guard.
 
 ## Configuration and presentation
 
-`ServerLifecycle` owns policy loading, sync, and session cleanup. `ServerConfig.Settings` copies lists; command edits replace snapshots, and `Persistence` owns JSON. `/ss deny`, `ingot`, and `gen` save immediately. `/ss reload` refreshes render overrides and resyncs; policy file edits need restart.
+`ServerLifecycle` loads/syncs policy and clears sessions. `ServerConfig.Settings` copies lists; commands replace snapshots, and `Persistence` owns JSON. `/ss deny`, `ingot`, and `gen` save immediately. `/ss reload` refreshes render overrides and resyncs; policy file edits need restart.
 
-Gallery commands use policy enablement (false) and permission (3), without a command editor; other permissions are fixed. Gallery jobs spread across ticks but bypass placement protection.
+Galleries default to disabled/permission 3, spread work across ticks, and bypass placement protection. Other command permissions are fixed.
 
 Ingot patterns match full tag names with `*`; membership rebuilds on config/tag changes. Shared resources: `common/src/main/resources`. Extension points:
 
@@ -116,26 +118,26 @@ Ingot patterns match full tag names with `*`; membership rebuilds on config/tag 
 
 Flat models use 2-D; others use 3-D. Forge measures all passes/custom vertices; custom output uses 3-D. Fabric measures non-custom quads regardless of `isVanillaAdapter`; missing quads use 3-D ItemRenderer.
 
-`measured_cache.json` records format, selected packs, and owning-mod versions; mismatches/reload invalidate measurements. `/ss item` edits memory; `/ss write changed` saves changes; namespace forms generate output-only profiles.
+`measured_cache.json` keys measurements by format, packs, and owning-mod versions; mismatches/reload invalidate them. `/ss item` edits memory; `/ss write changed` saves; namespace forms generate output-only profiles.
 
 ## Maintenance boundaries
 
-State is local; runs own movement. Internal moves bypass admission; automation shares feasibility. `WorldEdits` owns structural edits; scheduled ticks batch publication/settlement.
+State is local; runs own movement. Internal moves bypass admission. `WorldEdits` owns structural edits; scheduled ticks batch publication/settlement.
 
 Protection types stay gated. Server validation is independent of client recognition. Measurement changes increment cache format. Storage has its own render scale; Singles cells tile edge to edge.
 
 ## Tests
 
-Root `build` includes common JUnit; loader `test` sets are empty. Dev-only GameTests use `runGameTestServer`.
+Root `build` includes common JUnit; loader `test` sets are empty. GameTests use `runGameTestServer`.
 
 `configureGameTests` combines common/loader tests in dev-only `somestacks_gametest`; a shared Base64 fixture generates `data/somestacks/structures/`.
 
-`GameTestScaffold`/`*Checks` hold loader-neutral assertions via `CommonRegistry`. Forge uses `@GameTestHolder`; Fabric uses `FabricGameTest`/`fabric-gametest`. Native storage assertions stay loader-local; Fabric uses `FakePlayer` instead of `FakePlayerFactory`.
+`GameTestScaffold`/`*Checks` hold shared assertions via `CommonRegistry`. Forge uses `@GameTestHolder`; Fabric uses `FabricGameTest`/`fabric-gametest` and `FakePlayer`. Native storage assertions stay loader-local.
 
 `ProtectionGameTests` stays loader-local: both test adjacent denial; Forge also tests split permissions, rollback/publication, and placement reentrancy. Fabric GameTests use `fabric/run-gametest`.
 
-`StackFoundationChecks` covers nested publication, same-tick bounds/headroom, loaded fill/shapes, and shared mutations through both loaders.
+`StackFoundationChecks` covers nested publication/fill, shared caches/expiry, same-tick bounds/headroom/splits, growth, loaded fill/shapes, comparator endpoints, and shared mutations.
 
 `FabricTransferGameTests` checks deferred commit, nested rollback, shared sided/multi-block counts and capacity, and run-wide structural limits.
 
-`ServiceAndConfigChecks` covers services, logout pacing, and policy publication. `InteractionChecks`/`ClientGestureChecks` cover native gestures, server rays, rejection, hands, ordering, sync, and logout. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption without world actions.
+`ServiceAndConfigChecks` covers services, logout pacing, and policy publication. `InteractionChecks`/`ClientGestureChecks` cover gestures, server rays, rejection, hands, ordering, sync, and logout. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.
