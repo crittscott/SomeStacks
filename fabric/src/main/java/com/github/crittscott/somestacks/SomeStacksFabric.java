@@ -26,7 +26,6 @@ public final class SomeStacksFabric implements ModInitializer {
         PlatformServices.install(new FabricPlatformServices());
         FabricRegistry.init();
         FabricItemStorage.init();
-        ServerConfig.useFabricIngotTagDefaults();
         WorldEdits.setAuthority(PlatformServices.editAuthority());
         FabricNetworking.initServer();
         FabricStackInteractionEvents.init();
@@ -39,7 +38,10 @@ public final class SomeStacksFabric implements ModInitializer {
         ResourceManagerHelper.get(PackType.SERVER_DATA)
                 .registerReloadListener(new FabricStackSoundData());
 
-        ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycle::starting);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            ServerLifecycle.starting();
+            FabricServerConfig.start(server);
+        });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycle.stopped());
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
                 (server, resourceManager, success) -> {

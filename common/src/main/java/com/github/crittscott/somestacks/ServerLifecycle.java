@@ -6,7 +6,6 @@ import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 
 import java.util.UUID;
 
@@ -14,12 +13,10 @@ import java.util.UUID;
 public final class ServerLifecycle {
     private ServerLifecycle() {}
 
-    public static void starting(MinecraftServer server) {
+    public static void starting() {
         RenderGalleryGenerator.clear();
         GestureThrottle.clearAll();
         ServerGestureState.clearAll();
-        ServerConfig.load(server.getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig").resolve(SomeStacksCommon.MODID + "-server.json"));
     }
 
     public static void stopped() {

@@ -11,6 +11,9 @@ import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import net.minecraft.world.phys.shapes.Shapes;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -345,6 +348,33 @@ public final class ProtectionGameTests {
      * Puts a living placement-blocking entity across the bottom north-west cell and bar position
      * of {@code relative}.
      */
+    /** To reproduce: place Singles or Bar beside a cow. An occupied cell overlapping it is refused; cells in free space remain placeable. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void completedShapesDistinguishOccupiedCellsFromEmptySpace(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        Cow cow = EntityType.COW.create(level);
+        check(cow != null, "Could not create obstruction cow");
+        cow.moveTo(target.getX() + 1.25, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
+        check(level.addFreshEntity(cow), "Could not add obstruction cow");
+        try {
+            check(!WorldEdits.isUnobstructed(level, target, Shapes.block()), "Full block missed obstruction");
+            check(WorldEdits.isUnobstructed(level, target, Shapes.empty()), "Empty shape was obstructed");
+            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.shapeFor(0, 0)),
+                    "Free Singles cell was obstructed by another cell's occupant");
+            check(!WorldEdits.isUnobstructed(level, target,
+                            SinglesCubeIdx.shapeFor(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
+                    "Occupied Singles shape missed obstruction");
+            check(WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
+                    "Free Bar position was obstructed by another position's occupant");
+            check(!WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(BarCubeIdx.LAYER_SIZE - 1)),
+                    "Occupied Bar shape missed obstruction");
+        } finally {
+            cow.discard();
+        }
+        helper.succeed();
+    }
+
     private static void putCowIn(GameTestHelper helper, BlockPos relative) {
         ServerLevel level = helper.getLevel();
         BlockPos target = helper.absolutePos(relative);

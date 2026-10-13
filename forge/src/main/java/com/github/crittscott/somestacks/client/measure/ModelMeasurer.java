@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.client.measure;
 
-import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.client.ForgeRenderPlatform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -80,7 +80,7 @@ public final class ModelMeasurer implements ModelMeasurement.Backend {
         Matrix4f matrix = pose.last().pose();
         RandomSource random = RandomSource.create();
 
-        for (BakedModel pass : model.getRenderPasses(stack, CubeRenderHelper.fabulousFlag(stack, context))) {
+        for (BakedModel pass : model.getRenderPasses(stack, ForgeRenderPlatform.fabulousFlag(stack, context))) {
             for (Direction direction : Direction.values()) {
                 // Seed 42 per group matches ItemRenderer.renderModelLists.
                 random.setSeed(42L);

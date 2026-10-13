@@ -45,6 +45,7 @@ public class SomeStacks {
         PlayerReach.setProvider(player -> player.getBlockReach());
 
         ModRegistry.init(modBus);
+        ForgeServerConfig.register(modBus);
         ModNetworking.init();
         CommandNetwork.setHandler(new ForgeCommandNetwork());
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
@@ -58,16 +59,14 @@ public class SomeStacks {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }
 
-    /**
-     * Loads the world-specific server config. There is no automatic file-watch reload behind this
-     * hand-rolled reader/writer; command edits are saved immediately, while manual file edits take
-     * effect on the next server start.
-     */
+    /** Starts common session state and publishes Forge's already-loaded world policy. */
     private void onServerAboutToStart(ServerAboutToStartEvent event) {
-        ServerLifecycle.starting(event.getServer());
+        ServerLifecycle.starting();
+        ForgeServerConfig.start(event.getServer());
     }
 
     private void onServerStopped(ServerStoppedEvent event) {
+        ForgeServerConfig.stop();
         ServerLifecycle.stopped();
     }
 

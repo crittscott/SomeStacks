@@ -8,8 +8,12 @@ import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -22,6 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -308,10 +313,38 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
     private static ServerPlayer deniedPlayer;
     private static BlockPos deniedPosition;
+    private static BlockPos automatedRemovalPosition;
+    private static Player removalActor;
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) ->
                 player == deniedPlayer && hit.getBlockPos().equals(deniedPosition)
                         ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
+        PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
+            if (!pos.equals(automatedRemovalPosition)) return true;
+            removalActor = player;
+            return false;
+        });
+    }
+
+    /** To reproduce: deny automated cleanup through a protection mod; the empty stack stays and the action is attributed to Fabric's fake player. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void automatedRemovalUsesNativeActorAndHonorsVeto(GameTestHelper helper) {
+        StorageStackBE stack = GameTestScaffold.placeStorage(helper, ORIGIN);
+        BlockPos target = stack.getBlockPos();
+        automatedRemovalPosition = target;
+        try {
+            check(WorldEdits.automationActor(helper.getLevel()) == FakePlayer.get(helper.getLevel()),
+                    "Automation does not use Fabric's native actor");
+            check(!WorldEdits.removeChecked(helper.getLevel(), target), "Vetoed removal was accepted");
+            check(removalActor == FakePlayer.get(helper.getLevel()), "Break callback received a different actor");
+            helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        } finally {
+            automatedRemovalPosition = null;
+            removalActor = null;
+        }
+        check(WorldEdits.removeChecked(helper.getLevel(), target), "Allowed removal was rejected");
+        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+        helper.succeed();
     }
 
     /** To reproduce: deny use of the clicked block or adjacent Singles stack. Depositing through a neighbor honors both permissions; an allowed click deposits once. */
@@ -344,6 +377,33 @@ public final class ProtectionGameTests implements FabricGameTest {
             UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
                     new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), Direction.EAST, clicked, false));
             checkEquals(1, GameTestScaffold.count(singles.getItems(), Items.STONE), "Allowed adjacent deposit");
+        }
+        helper.succeed();
+    }
+
+    /** To reproduce: place Singles or Bar beside a cow. An occupied cell overlapping it is refused; cells in free space remain placeable. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void completedShapesDistinguishOccupiedCellsFromEmptySpace(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        Cow cow = EntityType.COW.create(level);
+        check(cow != null, "Could not create obstruction cow");
+        cow.moveTo(target.getX() + 1.25, target.getY(), target.getZ() + 0.5, 0.0F, 0.0F);
+        check(level.addFreshEntity(cow), "Could not add obstruction cow");
+        try {
+            check(!WorldEdits.isUnobstructed(level, target, Shapes.block()), "Full block missed obstruction");
+            check(WorldEdits.isUnobstructed(level, target, Shapes.empty()), "Empty shape was obstructed");
+            check(WorldEdits.isUnobstructed(level, target, SinglesCubeIdx.shapeFor(0, 0)),
+                    "Free Singles cell was obstructed by another cell's occupant");
+            check(!WorldEdits.isUnobstructed(level, target,
+                            SinglesCubeIdx.shapeFor(SinglesCubeIdx.LAYER_SIZE - 1, 0)),
+                    "Occupied Singles shape missed obstruction");
+            check(WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(0)),
+                    "Free Bar position was obstructed by another position's occupant");
+            check(!WorldEdits.isUnobstructed(level, target, BarCubeIdx.shapeFor(BarCubeIdx.LAYER_SIZE - 1)),
+                    "Occupied Bar shape missed obstruction");
+        } finally {
+            cow.discard();
         }
         helper.succeed();
     }

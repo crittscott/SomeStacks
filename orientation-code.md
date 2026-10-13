@@ -31,14 +31,14 @@ Three blocks and block entity types; no block items, menus, recipes, or portable
 | `StackRun`, `StackRunItemAccess`, `StoragePile`, `SinglesColumn`, `BarColumn` | Run bounds, flat slots, headroom, comparators, publication, concrete movement |
 | `StackItemStorage`, `SlotAccess` | Loader-neutral fixed-slot storage and automation contract |
 | `CubeGrid`, `util/*CubeIdx`, `ViewRay` | Cached cell geometry/rotation, support, seams, targeting |
-| `ServerConfig` | Immutable `Settings`, JSON `Persistence`, deny/ingot sets |
+| `ServerConfig` | Immutable `Settings`, session saver, deny/ingot sets; loader-owned persistence |
 | `PlatformServices`, `ServerLifecycle` | Loader paths/version/transport/authority; shared session and sync |
 | `renderconfig` | Server-safe profiles, modes, offsets, JSON codec |
 | `WorldEdits`, `EditAuthority` | Native placement transactions, adjacent protection, automated removal |
 | `StackInteractions`, `ServerGestureState` | Native block-use gestures, server targeting, synchronized mode/modifier state |
 | Loader entry points / registries | Registration, lifecycle, common service installation |
 | Loader network packages | Native transport around common validation and payloads |
-| `RunItemHandlerBase`, Forge `RunItemHandler`, Fabric Transfer adapter | Whole-run native storage views |
+| Forge `RunItemHandler`, Fabric Transfer adapter | Whole-run native storage views |
 | `common/.../client` | Renderers, profiles, model measurement, bar textures |
 | Loader client packages | Renderer registration, gestures, keys, events, packet transport |
 | `SsCommand`, `RenderGalleryGenerator` | Administration, profile authoring, galleries |
@@ -53,12 +53,13 @@ Three blocks and block entity types; no block items, menus, recipes, or portable
 | Gestures | Native server `RightClickBlock` at LOWEST priority | Native server `UseBlockCallback` after the default phase; client air-click mixin |
 | Rendering | Shared BERs through registration/render seams | Shared BERs through Renderer API-aware seams |
 | Automation | Whole-run `IItemHandler` capabilities | Whole-run Transfer API `Storage<ItemVariant>` providers |
+| Server policy | Native `SERVER` `ForgeConfigSpec` / TOML / reload events | World JSON via `FabricServerConfig` |
 | Player protection | Vanilla plus interaction/place events | Vanilla plus `UseBlockCallback` |
 | Automated edits | Vanilla plus place/break events | Vanilla plus removal break callbacks; growth optionally queries FTB Chunks/OPAC |
 
 ## Runtime and movement model
 
-`StackBlockEntity` owns slots, NBT, batches, and per-tick run caches. A resolved run is cached on every member for that tick. `StackRun` shares bounds, flat slots, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
+`StackBlockEntity` owns slots, NBT, batches, and run caches shared by members for one tick. `StackRun` shares bounds, slots, headroom, fill, comparators, and publication; concrete runs own movement. Structural edits invalidate bounds immediately.
 
 Block entities do not tick. Mutations schedule the base block for updates, light, comparators, and Storage settlement. Local fill contributions update from the changed slot, including inside batches, and rebuild on load. All blocks are waterloggable, hold derived local light, and report the same run signal.
 
@@ -86,7 +87,7 @@ Forge's per-entity `RunItemHandler` uses `LazyOptional` invalidation. Fabric's `
 
 Singles/Bar insertion probes read the target slot and only its immediate supporting positions; rotated Singles seams map visual columns between blocks. Bar support candidates cache fixed footprint overlaps. Collapse retains mutable occupancy snapshots.
 
-`WorldEdits` gates growth/cleanup on build limits, replaceability, obstruction, border, and spawn checks. Forge retains `FakePlayerFactory` and place/break events. Placement captures snapshots, restores denied state/NBT, and publishes accepted `onPlace`/`markAndNotifyBlock`; reentrancy and foreign capture/restoration are refused. Fabric queries optional protection before placement.
+`WorldEdits` gates growth/cleanup on height, replaceability, completed-shape obstruction, border, and spawn checks. Vanilla checks entity obstruction. Forge uses `FakePlayerFactory`, place/break events, snapshot rollback, and accepted `onPlace`/`markAndNotifyBlock` publication; reentrancy and foreign capture/restoration are refused. Fabric uses API `FakePlayer.get(level)` and optional placement protection.
 
 Fabric removal fires `PlayerBlockBreakEvents`. Growth has no generic placement event; `FtbChunksProtection`/`OpacProtection` query optional FTB Chunks/Open Parties and Claims. Their types stay in loaded-mod-gated compat classes. Other Fabric claim mods are not consulted for growth.
 
@@ -98,11 +99,11 @@ Gesture order: permanence, block rotation, item rotation, deposit, placement, ex
 
 Deposit, placement, extraction, and Singles item rotation all trace the server player's current view. Client hit coordinates do not select cells.
 
-Client SUCCESS consumes local use and retains block-use packets. Server callbacks consume recognized gestures even on admission failure; ordinary sneaking/off-hand actions do not mutate stacks. Forge item denial prevents deposits/placement while permitted block access can extract/rotate. Adjacent deposits consult both positions under a gesture recursion guard.
+Client SUCCESS consumes use while retaining block-use packets. Server callbacks consume recognized gestures even on admission failure; ordinary sneaking/off-hand actions do not mutate stacks. Forge item denial blocks deposits/placement but can allow extraction/rotation. Adjacent deposits consult both positions under a recursion guard.
 
 ## Configuration and presentation
 
-`ServerLifecycle` loads/syncs policy and clears sessions. `ServerConfig.Settings` copies lists; commands replace snapshots, and `Persistence` owns JSON. `/ss deny`, `ingot`, and `gen` save immediately. `/ss reload` refreshes render overrides and resyncs; policy file edits need restart.
+`ServerLifecycle` syncs policy and clears sessions. Loaders start common immutable `Settings` with a session saver. Forge registers `ForgeServerConfig.SPEC` as `SERVER`, reads world TOML at startup, and publishes reloads on the server thread; changed enable flags resync players. `FabricServerConfig` owns JSON; file edits need restart. List commands save through the loader. `/ss reload` refreshes render overrides and resyncs, without rereading policy.
 
 Galleries default to disabled/permission 3, spread work across ticks, and bypass placement protection. Other command permissions are fixed.
 
@@ -114,7 +115,7 @@ Ingot patterns match full tag names with `*`; membership rebuilds on config/tag 
 - `assets/<namespace>/textures/bars/*.json` defines Bar textures/tints.
 - `config/somestacks/server_item_overrides/*.json` defines server-imposed profiles.
 
-`CubeGrid` caches cell rotations, boxes, and shapes; spacing, scales, and seams stay type-specific. BERs use `CubeRenderHelper` for cubes and cuboids for Bar. Bar UV regions cache by sprite identity and clear on texture reload. Profiles use immutable `RenderOffset`; precedence is server -> user -> resource pack -> measurement. `ItemRenderOverrides` caches profiles, invalidated by sync, edits, and corpus/model reload. Bar appearance is client-only.
+`CubeGrid` caches rotations, boxes, and shapes; geometry stays type-specific. BERs use `CubeRenderHelper` for cubes and cuboids for Bar. Bar UV regions cache by sprite identity and clear on texture reload. Profiles use immutable `RenderOffset`; precedence is server -> user -> resource pack -> measurement. `ItemRenderOverrides` caches profiles, invalidated by sync, edits, and corpus/model reload. Bar appearance is client-only.
 
 Flat models use 2-D; others use 3-D. Forge measures all passes/custom vertices; custom output uses 3-D. Fabric measures non-custom quads regardless of `isVanillaAdapter`; missing quads use 3-D ItemRenderer.
 
@@ -122,22 +123,20 @@ Flat models use 2-D; others use 3-D. Forge measures all passes/custom vertices; 
 
 ## Maintenance boundaries
 
-State is local; runs own movement. Internal moves bypass admission. `WorldEdits` owns structural edits; scheduled ticks batch publication/settlement.
-
-Protection types stay gated. Server validation is independent of client recognition. Measurement changes increment cache format. Storage has its own render scale; Singles cells tile edge to edge.
+Protection types stay gated; server validation is independent. Measurement changes increment cache format. Storage has its own scale; Singles cells tile edge to edge.
 
 ## Tests
 
-Root `build` includes common JUnit; loader `test` sets are empty. GameTests use `runGameTestServer`.
+Root `build` includes common JUnit and Fabric JSON-persistence JUnit; Forge has no JUnit tests. GameTests use `runGameTestServer`.
 
 `configureGameTests` combines common/loader tests in dev-only `somestacks_gametest`; a shared Base64 fixture generates `data/somestacks/structures/`.
 
-`GameTestScaffold`/`*Checks` hold shared assertions via `CommonRegistry`. Forge uses `@GameTestHolder`; Fabric uses `FabricGameTest`/`fabric-gametest` and `FakePlayer`. Native storage assertions stay loader-local.
+Shared `*Checks` use `GameTestScaffold`/`CommonRegistry`; native assertions stay loader-local. Forge uses `@GameTestHolder`; Fabric uses `FabricGameTest`/`fabric-gametest`.
 
-`ProtectionGameTests` stays loader-local: both test adjacent denial; Forge also tests split permissions, rollback/publication, and placement reentrancy. Fabric GameTests use `fabric/run-gametest`.
+`ProtectionGameTests` covers adjacent denial and partial shapes; Forge adds split permissions, rollback/publication, and reentrancy; Fabric adds native actor/removal vetoes. Fabric runs in `fabric/run-gametest`.
 
-`StackFoundationChecks` covers nested publication/fill, shared caches/expiry, same-tick bounds/headroom/splits, growth, loaded fill/shapes, comparator endpoints, and shared mutations.
+`StackFoundationChecks` covers batching, caches, bounds, growth, loading, fill/shapes, comparators, and mutations.
 
-`FabricTransferGameTests` checks deferred commit, nested rollback, shared sided/multi-block counts and capacity, and run-wide structural limits.
+`FabricTransferGameTests` covers commit, nested rollback, shared contents/capacity, and structural limits.
 
-`ServiceAndConfigChecks` covers services, logout pacing, and policy publication. `InteractionChecks`/`ClientGestureChecks` cover gestures, server rays, rejection, hands, ordering, sync, and logout. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.
+`ServiceAndConfigChecks` covers services, logout, and policy; Forge adds native TOML saves/reloads. `InteractionChecks`/`ClientGestureChecks` cover gestures, server rays, rejection, hands, ordering, sync, and logout. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.

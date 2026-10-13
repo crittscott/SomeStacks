@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ForgeServerConfig;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarColumn;
 import com.github.crittscott.somestacks.block.BarStackBE;
@@ -10,12 +12,19 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.LevelResource;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -154,5 +163,52 @@ public final class CapabilityAndPersistenceGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
+
+    /** To reproduce: use /ss deny mod add, inspect somestacks-server.toml, then remove the entry; command edits persist through Forge's native config. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void commandPolicyEditsPersistToNativeForgeConfig(GameTestHelper helper) throws IOException {
+        String marker = "somestacks_gametest_native_save";
+        var policy = ServerConfig.ListSetting.DISABLE_MODS;
+        var spec = ForgeServerConfig.SPEC;
+        check(spec.isLoaded(), "Forge server config is not loaded");
+        check(ServerConfig.addListEntry(policy, marker), "Could not add marker");
+        try {
+            ForgeConfigSpec.ConfigValue<?> nativeValue =
+                    spec.getValues().get("compatibility.disable_mods");
+            check(((List<?>) nativeValue.get()).contains(marker), "Native config omitted command edit");
+            var file = helper.getLevel().getServer().getWorldPath(LevelResource.ROOT)
+                    .resolve("serverconfig/somestacks-server.toml");
+            check(Files.readString(file).contains(marker), "TOML omitted command edit");
+        } finally {
+            ServerConfig.removeListEntry(policy, marker);
+        }
+        helper.succeed();
+    }
+
+    /** To reproduce: edit render_gallery.gen_mods in somestacks-server.toml while the server runs; /ss gen list reflects Forge's reload without restart. */
+    @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 200)
+    public static void nativeForgeReloadPublishesPolicy(GameTestHelper helper) {
+        String marker = "somestacks_gametest_native_reload";
+        var spec = ForgeServerConfig.SPEC;
+        ForgeConfigSpec.ConfigValue<List<? extends String>> nativeValue =
+                spec.getValues().get("render_gallery.gen_mods");
+        List<String> before = List.copyOf(nativeValue.get());
+        List<String> updated = new ArrayList<>(before);
+        updated.add(marker);
+        nativeValue.set(updated);
+        spec.save();
+        helper.runAfterDelay(60, () -> {
+            try {
+                check(ServerConfig.ListSetting.GEN_MODS.get().contains(marker),
+                        "Native Forge reload did not publish policy");
+            } finally {
+                nativeValue.set(before);
+                spec.save();
+                ServerConfig.removeListEntry(
+                        ServerConfig.ListSetting.GEN_MODS, marker);
+            }
+            helper.succeed();
+        });
     }
 }

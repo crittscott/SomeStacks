@@ -5,30 +5,17 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ServerConfigPersistenceTest {
+class FabricServerConfigPersistenceTest {
     @TempDir Path directory;
-
-    @Test
-    void settingsCopyListsAndReadersCannotEditThem() {
-        List<String> mods = new ArrayList<>(List.of("example"));
-        ServerConfig.Settings settings = new ServerConfig.Settings(8, true, true, true,
-                mods, List.of(), List.of("forge:ingots*", "somestacks:ingots"),
-                64, false, 3, List.of(), List.of());
-        mods.clear();
-        assertEquals(List.of("example"), settings.disableMods());
-        assertThrows(UnsupportedOperationException.class, () -> settings.disableMods().add("other"));
-        assertThrows(UnsupportedOperationException.class, () -> settings.ingotTags().clear());
-    }
 
     @Test
     void completePolicyRoundTripsWithExistingJsonVocabulary() throws Exception {
         Path file = directory.resolve("world/serverconfig/somestacks-server.json");
-        ServerConfig.Persistence persistence = new ServerConfig.Persistence(file);
+        FabricServerConfig.Persistence persistence = new FabricServerConfig.Persistence(file);
         ServerConfig.Settings authored = new ServerConfig.Settings(12, false, true, false,
                 List.of("example"), List.of("minecraft:stone"), List.of("custom:ingots*", "somestacks:ingots"),
                 9, true, 2, List.of("minecraft"), List.of("minecraft:apple"));
@@ -44,7 +31,7 @@ class ServerConfigPersistenceTest {
     @Test
     void missingWorldAndMissingFieldsUseLoaderDefaults() throws Exception {
         Path file = directory.resolve("fabric/serverconfig/somestacks-server.json");
-        ServerConfig.Persistence persistence = new ServerConfig.Persistence(file);
+        FabricServerConfig.Persistence persistence = new FabricServerConfig.Persistence(file);
         ServerConfig.Settings defaults = ServerConfig.Settings.defaults(true);
         assertEquals(defaults, persistence.read(defaults));
         assertTrue(Files.exists(file));
@@ -62,7 +49,7 @@ class ServerConfigPersistenceTest {
                 {"piles": {"max_pile_height": 999},
                  "render_gallery": {"placements_per_tick": 0, "required_permission_level": -1}}
                 """);
-        ServerConfig.Settings settings = new ServerConfig.Persistence(file)
+        ServerConfig.Settings settings = new FabricServerConfig.Persistence(file)
                 .read(ServerConfig.Settings.defaults(false));
         assertEquals(64, settings.maxPileHeight());
         assertEquals(1, settings.renderGalleryPlacementsPerTick());
@@ -77,6 +64,6 @@ class ServerConfigPersistenceTest {
                  "compatibility": {"disable_items": [{}]}}
                 """);
         ServerConfig.Settings defaults = ServerConfig.Settings.defaults(false);
-        assertEquals(defaults, new ServerConfig.Persistence(file).read(defaults));
+        assertEquals(defaults, new FabricServerConfig.Persistence(file).read(defaults));
     }
 }

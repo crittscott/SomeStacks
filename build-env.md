@@ -47,7 +47,7 @@ Architectury Plugin are pinned to numbered versions rather than moving snapshot 
 | Forge | **1.20.1-47.4.10** | Forge `[47.4.10,48)`; FML `[47,48)` |
 | Fabric Loader | **0.19.3** | `>=0.19.3` |
 | Fabric API | **0.92.7+1.20.1** | `>=0.92.7+1.20.1` |
-| JUnit | BOM **5.10.2**, Jupiter | common-module tests only |
+| JUnit | BOM **5.10.2**, Jupiter | common and Fabric JSON-persistence tests |
 | JSR-305 | **3.0.2** | compile-only annotation dependency |
 
 `forge_compile_version` is both Forge's compile dependency and the minimum accepted Forge runtime.
@@ -157,6 +157,7 @@ Use the wrapper from the repository root in PowerShell:
 .\gradlew :forge:build
 .\gradlew :fabric:build
 .\gradlew :common:test
+.\gradlew :fabric:test
 .\gradlew :forge:runGameTestServer
 .\gradlew :fabric:runGameTestServer
 .\gradlew :forge:runClientGameTests
@@ -164,7 +165,7 @@ Use the wrapper from the repository root in PowerShell:
 .\gradlew generateDocs
 ```
 
-The root `build` covers the configured subproject builds and common JUnit tests. The Forge and
+The root `build` covers the configured subproject builds, common JUnit tests, and Fabric JSON-persistence JUnit tests. The Forge and
 Fabric GameTest servers are separate development runs, each covering only its own loader.
 
 ## Metadata, documentation, and build snapshot

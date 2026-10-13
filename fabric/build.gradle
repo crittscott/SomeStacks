@@ -78,6 +78,10 @@ repositories {
 }
 
 dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
     modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
@@ -91,6 +95,10 @@ dependencies {
     // Optional: lets OpacProtection compile against Open Parties and Claims' protection API. Never
     // bundled and not required at runtime; consulted only when the mod is actually installed.
     modCompileOnly "maven.modrinth:open-parties-and-claims:$rootProject.opac_version"
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 // Expands ${...} placeholders in fabric.mod.json (this module's own resource).

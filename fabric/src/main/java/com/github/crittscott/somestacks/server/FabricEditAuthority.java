@@ -1,9 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
-import com.mojang.authlib.GameProfile;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.WeakHashMap;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
@@ -17,7 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Fabric's {@link EditAuthority}: the automation actor is a synthetic {@link ServerPlayer}, and
+ * Fabric's {@link EditAuthority}: the automation actor is Fabric API's native {@link FakePlayer}, and
  * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
  * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
  *
@@ -28,16 +25,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * and {@link OpacProtection}, when either is installed; other claim mods are not covered.
  */
 public final class FabricEditAuthority implements EditAuthority {
-    private static final GameProfile PROFILE = new GameProfile(
-            java.util.UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
-            "[SomeStacks]");
-
-    private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();
-
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return actors.computeIfAbsent(level,
-                key -> new ServerPlayer(key.getServer(), key, PROFILE));
+        return FakePlayer.get(level);
     }
 
     @Override

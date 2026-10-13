@@ -2,7 +2,7 @@
 
 ## The config file
 
-Some Stacks stores loader-neutral world policy at `<world>/serverconfig/somestacks-server.json`, so it travels with the world. `/ss` list edits update the running values and save the file immediately. A direct file edit takes effect after restarting the server; `/ss reload` does not reread this JSON.
+Some Stacks stores world policy at `<world>/serverconfig/somestacks-server.toml` on Forge and `<world>/serverconfig/somestacks-server.json` on Fabric, so it travels with the world. `/ss` list edits update the running values and save immediately through the loader. Forge uses its native server-config system and reloads TOML edits while running; Fabric JSON edits require a server restart. `/ss reload` does not reread either policy file.
 
 | Setting | Section | Default | Effect |
 | --- | --- | --- | --- |
@@ -73,7 +73,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. It does **not** re-read `<world>/serverconfig/somestacks-server.json`; restart the server after editing that file directly.
+Re-reads `config/somestacks/server_item_overrides/` and pushes the current synchronized config to every player. World-policy loading is separate: Forge reloads `somestacks-server.toml` edits through its native config events; restart Fabric after directly editing `somestacks-server.json`.
 
 ### Render galleries
 

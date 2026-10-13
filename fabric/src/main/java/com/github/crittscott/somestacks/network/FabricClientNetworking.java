@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** Fabric client receivers and the packet sender used by the shared gesture rules. */
@@ -41,7 +42,7 @@ public final class FabricClientNetworking {
 
     private static <T> void registerClient(
             ResourceLocation channel, Function<FriendlyByteBuf, T> decoder,
-            java.util.function.Consumer<T> handler) {
+            Consumer<T> handler) {
         ClientPlayNetworking.registerGlobalReceiver(channel,
                 (client, networkHandler, buf, responseSender) -> {
                     T packet = decoder.apply(buf);

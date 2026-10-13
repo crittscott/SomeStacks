@@ -18,7 +18,7 @@ Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.1
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one supported item per cell |
 | **Bar Stack** | 64 items | Server-defined ingots | Eight alternating layers of supported bars |
 
-A vertical run of one stack type is one pile or column. Default maximum height is eight blocks (216 Storage slots, 512 Singles or Bar positions).
+Contiguous vertical blocks of one type form a run, limited by default to eight blocks (216 Storage slots or 512 Singles/Bar positions).
 
 ## Controls
 
@@ -36,7 +36,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; torches are not spent. Rotation shows the new angle above the hotbar and may happen every tick; its sound is limited to once every four ticks per player. Sneaking retains ordinary item/block interaction except for the torch gestures.
+Only the main hand acts; torches are not spent. Rotation displays its angle and can occur every tick; sound plays at most once every four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
 
 ## Depositing and placing
 
@@ -44,7 +44,7 @@ Placement and first deposit are atomic: they require a valid item, supported tar
 
 Water placement waterlogs the stack and preserves water. A top-face deposit onto an occupied or unsupported cell can add the selected type above the run. Different types can sit beside or atop each other; only contiguous same-type blocks share a run.
 
-Creative deposits leave the held stack unchanged.
+Creative deposits do not spend items.
 
 Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only configured ingots, Singles takes everything allowed that Bar does not.
 
@@ -56,7 +56,7 @@ Plain right-click targets the nearest rendered item on the view ray inside the c
 - Singles: one item.
 - Bar: one bar, possibly collapsing unsupported bars above it.
 
-The main hand must be empty or hold the exact same item, damage, and NBT with room. Plain stack clicks are consumed even if extraction fails, preventing unrelated held-item use.
+The main hand must be empty or hold matching item/damage/NBT with room. Plain stack clicks are consumed even when extraction fails.
 
 Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently in place. Singles leaves separated runs standing. Removing a Bar Stack removes the support seam beneath the Bars above it, so unsupported bars collapse and drop.
 
@@ -107,7 +107,7 @@ Storage insertion is positional at the moment of the call, then the next settlem
 
 Storage extraction removes from the named slot then settles; Singles uses the same one-column gravity as player extraction; Bar moves the whole column's topmost bar into the hole, avoiding the item-dropping collapse caused by player extraction.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried later. Fabric stages mutations until the outer Transfer API transaction commits. All sides and blocks in a run share staged contents and capacity. Singles and Bar permit one structural extraction position per run per transaction; bulk callers retry for subsequent items.
+Reentrant automation during a structural mutation is refused; callers can retry. Fabric stages edits until the outer Transfer API commit, sharing contents/capacity across all sides and run members. Singles/Bar allow one structural extraction position per run per transaction; bulk callers retry.
 
 ## Comparators
 
@@ -121,7 +121,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-Both loaders store per-world JSON at `<world>/serverconfig/somestacks-server.json`.
+World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded while running; Fabric uses `<world>/serverconfig/somestacks-server.json`, read on restart. Both use these settings:
 
 | Setting | Default | Effect |
 | --- | --- | --- |
@@ -161,11 +161,11 @@ Ingot-tag entries may contain `*`: `forge:ingots*` matches `forge:ingots` and ch
 
 Galleries build east of the player over sandstone, with rows running north, spread across server ticks. They directly replace floor and stack positions without ordinary placement protection, so they are disabled by default and default to permission level 3 once enabled.
 
-`/ss reload` does not reread world-policy JSON. Command edits save immediately; direct file edits take effect after server restart.
+`/ss reload` refreshes render overrides and synchronization. Policy command edits save immediately; Forge TOML edits reload automatically, while Fabric JSON edits need restart.
 
 ## Item appearance
 
-Storage and Singles have four modes: `2d` (flat item art projected onto visible faces of a small background cube), `3d` (the item's FIXED renderer), `gui` (the inventory renderer adjusted to the cell), and `block` (a BlockItem's state, falling back to `3d` when it cannot be drawn safely). Profiles also set scale and a three-component offset.
+Storage/Singles modes: `2d` projects item art onto cube faces; `3d` uses the FIXED renderer; `gui` fits the inventory renderer; `block` draws a BlockItem state, falling back to `3d` when unsafe. Profiles also set scale and a three-component offset.
 
 Resolution order is server override, local override, resource-pack data, then automatic model measurement. Server overrides win over local preferences. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
 
@@ -183,4 +183,4 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 
 Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection as applicable. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal uses a loader-provided automation actor. Fabric has no automation placement event, so growth also consults FTB Chunks and Open Parties and Claims directly when installed; other Fabric claim mods are not consulted for that growth check.
 
-Ordinary block-use clicks use synchronized mode/modifier state. The server validates per-tick pacing, spectator status, loaded targets, reach, main hand, items, adjacency, support, enablement, height, and protection. Deposit, placement, extraction, and Singles item rotation select cells from the server player's current view. Forge restores denied placement state and block-entity data, publishing neighbor updates after acceptance.
+Block-use clicks use synchronized mode/modifier state. The server validates pacing, player status, loaded targets, reach, hand, items, adjacency, support, enablement, height, and protection; its view ray selects cells. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.

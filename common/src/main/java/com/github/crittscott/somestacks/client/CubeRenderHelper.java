@@ -30,10 +30,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -255,20 +252,6 @@ public final class CubeRenderHelper {
         }
 
         pose.popPose();
-    }
-
-    /**
-     * The flag Forge's item renderer uses when selecting a model's passes and render types:
-     * false only for the translucent blocks
-     * vanilla draws through the indirect buffers outside GUI and first-person contexts.
-     */
-    public static boolean fabulousFlag(ItemStack stack, ItemDisplayContext context) {
-        if (context == ItemDisplayContext.GUI || context.firstPerson()
-                || !(stack.getItem() instanceof BlockItem blockItem)) {
-            return true;
-        }
-        Block block = blockItem.getBlock();
-        return !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
     }
 
     private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
