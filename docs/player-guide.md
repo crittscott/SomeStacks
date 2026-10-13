@@ -32,6 +32,12 @@ A deposit that would create a block only happens if the deposit itself would suc
 
 In **creative mode**, depositing does not spend the stack in your hand, the same way placing a block does not.
 
+### Item placement conflicts
+
+Another mod's item-placement feature can intercept your right-click even while you hold `V`, creating its own block or preventing a deposit. Caverns & Chasms has a known Forge conflict with ingots; disable its **Placeable items** option in its common config to use Some Stacks placement and deposits. See [Server administration](server-admin.md#item-placement-conflicts) for the setting.
+
+If a stack looks wrong, press **F3** while aiming at it and check **Targeted Block**. A Some Stacks Bar Stack is `somestacks:bar_stack_block`; another namespace identifies another mod's block.
+
 ## Taking things back
 
 Right-click a stack with **no `V` and no Shift**. The nearest item along your line of sight comes out.

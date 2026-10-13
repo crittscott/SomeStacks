@@ -65,6 +65,8 @@ See **[Server administration](https://github.com/crittscott/SomeStacks/blob/1.20
 
 Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server. See [Pack authors](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/pack-authors.md).
 
+Mods that make ordinary items placeable can intercept right-clicks before Some Stacks handles them, even while you hold `V`. **Caverns & Chasms on Forge** has a known conflict with ingot placement: its own ingot piles can appear instead of Bar Stacks, and its placement handling can prevent deposits into existing Bar Stacks.  See [Server administration](https://github.com/crittscott/SomeStacks/blob/1.20.1/docs/server-admin.md#item-placement-conflicts).
+
 ## Issues and suggestions
 
 Please report bugs and ideas on the [issue tracker](https://github.com/crittscott/SomeStacks/issues).

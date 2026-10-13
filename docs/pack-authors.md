@@ -2,6 +2,10 @@
 
 Some Stacks is extensible from data packs, resource packs, and the server config folder. Nothing here requires a Java addon.
 
+## Item placement conflicts in modpacks
+
+Mods that make ordinary items placeable can intercept Some Stacks placement and deposit gestures, even while the Stack Modifier is held. Caverns & Chasms has a known Forge conflict with ingots. When using Some Stacks for these gestures, set `"Placeable items" = false` under `[items]` in Caverns & Chasms' common config and distribute the setting with the pack. See [Server administration](server-admin.md#item-placement-conflicts) for configuration and diagnosis. Item tags and render overrides do not change which mod handles a right-click first.
+
 ## Quick map
 
 | What | Where | Side |

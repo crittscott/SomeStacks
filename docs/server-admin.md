@@ -31,6 +31,14 @@ To accept a hand-picked set of items, declare an item tag holding them in a data
 
 The item set is re-resolved whenever the config changes *and* whenever tags are bound, so a data pack reload is picked up without touching the config.
 
+## Item placement conflicts
+
+Mods that add right-click placement for ordinary items can handle and cancel a click before Some Stacks receives it. Holding the Stack Modifier does not guarantee precedence over another mod. This can create the other mod's block instead of a Some Stacks block, or prevent deposits into an existing stack.
+
+**Caverns & Chasms on Forge** has a known conflict with ingot placement. Disable its item-placement feature in its common config by setting; check its config file.
+
+Gallery-generated stacks can look correct even while manual deposits are intercepted, because gallery construction does not use the right-click placement path.
+
 ## Permissions
 
 The `/ss` command is an administrator's tool throughout. Most of it is gated by vanilla's **Level 2**, the gamerule and world-editing level.

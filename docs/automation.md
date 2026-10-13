@@ -2,6 +2,8 @@
 
 Every stack block exposes loader-native storage on every side: Forge `IItemHandler` and Fabric Transfer API `Storage<ItemVariant>`. A block that is part of a vertical run exposes the **whole run**. A hopper under the bottom block and a pipe attached halfway up address the same inventory and see the same contents.
 
+When placing stacks by hand, another mod's item-placement feature may create its own block instead. Check **Targeted Block** with **F3** before wiring storage: a Some Stacks Bar Stack is `somestacks:bar_stack_block`. Caverns & Chasms has a known Forge ingot-placement conflict and a **Placeable items** config option to disable its feature; see [Server administration](server-admin.md#item-placement-conflicts).
+
 ## Slots are positions
 
 This is the one thing to understand before wiring anything up.

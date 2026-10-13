@@ -31,6 +31,7 @@ forge*changelog.txt
 
 # work files
 /code-review*
+!/code-review.md
 
 # other
 /functional-gradle-files/
