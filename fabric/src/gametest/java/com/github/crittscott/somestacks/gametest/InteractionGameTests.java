@@ -13,66 +13,125 @@ import net.minecraft.world.InteractionResult;
 
 /** Loader wrappers for the reproduction scenarios documented in InteractionChecks. */
 public final class InteractionGameTests implements FabricGameTest {
+    /**
+     * Loader entry point for {@link InteractionChecks#depositExtractAndPlacement}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void depositExtractAndPlacement(GameTestHelper helper) {
         InteractionChecks.depositExtractAndPlacement(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#extractionUsesServerRay}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void extractionUsesServerRay(GameTestHelper helper) {
         InteractionChecks.extractionUsesServerRay(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#rotationUsesServerRayAndConsumesMiss}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void rotationUsesServerRayAndConsumesMiss(GameTestHelper helper) {
         InteractionChecks.rotationUsesServerRayAndConsumesMiss(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link
+     * InteractionChecks#incompatibleAndFullHandsLeaveAllTypesUntouched}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void incompatibleAndFullHandsLeaveAllTypesUntouched(GameTestHelper helper) {
         InteractionChecks.incompatibleAndFullHandsLeaveAllTypesUntouched(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#extractionMissConsumesWithoutMutation}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void extractionMissConsumesWithoutMutation(GameTestHelper helper) {
         InteractionChecks.extractionMissConsumesWithoutMutation(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#handsSneakingAndRotationPrecedence}; see that
+     * method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void handsSneakingAndRotationPrecedence(GameTestHelper helper) {
         InteractionChecks.handsSneakingAndRotationPrecedence(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#permanenceAndSameTickPacing}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void permanenceAndSameTickPacing(GameTestHelper helper) {
         InteractionChecks.permanenceAndSameTickPacing(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#fullTopFaceUsesSelectedType}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void fullTopFaceUsesSelectedType(GameTestHelper helper) {
         InteractionChecks.fullTopFaceUsesSelectedType(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#firstDepositFailureLeavesNoBlock}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void firstDepositFailureLeavesNoBlock(GameTestHelper helper) {
         InteractionChecks.firstDepositFailureLeavesNoBlock(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link InteractionChecks#stateAndLogout}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void stateAndLogout(GameTestHelper helper) {
         InteractionChecks.stateAndLogout(helper, factory(helper), InteractionGameTests::click);
     }
 
+    /**
+     * Loader entry point for {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void clientBlockRulesRespectPrecedenceAndHands(GameTestHelper helper) {
         ClientGestureChecks.blockRulesRespectPrecedenceAndHands(helper, factory(helper));
     }
 
+    /**
+     * Loader entry point for {@link ClientGestureChecks#fullTopFacesFallThroughToPlacement}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void clientFullTopFacesFallThroughToPlacement(GameTestHelper helper) {
         ClientGestureChecks.fullTopFacesFallThroughToPlacement(helper, factory(helper));
     }
 
+    /**
+     * Loader entry point for {@link ClientGestureChecks#gestureSyncSendsChangesAndResets}; see that
+     * method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void clientGestureSyncSendsChangesAndResets(GameTestHelper helper) {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);

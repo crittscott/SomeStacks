@@ -17,10 +17,22 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 public final class RenderGalleryGameTests {
     private RenderGalleryGameTests() {}
 
+    /**
+     * Loader entry point for {@link
+     * RenderGalleryChecks#queuedStorageGalleryBuildsFloorRowsAndCompletionTotals}; see that method
+     * for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE, timeoutTicks = 100)
     public static void queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(
             GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
+    }
+
+    /** See {@link RenderGalleryChecks#commandsEnforcePolicyAndGalleryPermissions} for permissions and manual checks. */
+    @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_commands")
+    public static void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper) {
+        RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
 }

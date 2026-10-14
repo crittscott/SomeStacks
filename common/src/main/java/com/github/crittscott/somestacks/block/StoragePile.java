@@ -54,9 +54,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Walks the world for the run containing {@code pos}. Every caller reaches this through the
-     * cache {@link StorageStackBE#pile()} keeps, because a capability read resolves the run once per
-     * slot and a machine reading the whole handler does that hundreds of times a tick.
+     * Resolves the contiguous same-type run containing {@code pos} from the world, without consulting
+     * an entity cache. Callers obtain cached run access through {@link StackBlockEntity#itemRun()}.
      */
     static StoragePile resolve(ServerLevel level, BlockPos pos) {
         StoragePile run = new StoragePile(level, resolveBlocks(level, pos, StorageStackBE.class));
@@ -181,22 +180,14 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * Puts what it can of {@code stack} into the one slot at {@code flatSlot}, growing the pile when
-     * that slot lies in the block above it.
+     * Inserts into only the named flat slot, leaving the caller's stack unchanged. A successful
+     * insertion schedules settlement to pack and sort the pile on the next block tick.
      *
-     * <p>A pile is genuinely a bag, so unlike the two structures its automated insertion is an
-     * ordinary positional one: the slot named takes what a slot takes, and the settle scheduled
-     * behind it packs the pile down from the base on the next tick. Filling from the base is
-     * therefore still what a pile ends up doing, just a tick later than a player's own deposit does
-     * it. Answering for the slot given rather than for the pile is what makes the handler's slot
-     * range mean something: a caller that walks the range and sums what each slot accepts gets the
-     * pile's real capacity; reporting whole-pile capacity at every slot would multiply it.
+     * A slot in advertised headroom can grow the pile only when height, enablement, space,
+     * obstruction, and the loader's automation edit authority permit it.
      *
-     * <p>An automated insertion carries no player, so growth is checked against the loader-provided
-     * automation actor that would place the block.
-     *
-     * @param simulate when true, nothing is stored and the pile does not grow
-     * @return how many items were, or would be, taken from {@code stack}
+     * @param simulate when true, evaluates current capacity and growth checks without storing or growing
+     * @return the accepted item count, or the count currently acceptable when simulating; zero on refusal
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {

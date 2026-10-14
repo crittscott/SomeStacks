@@ -64,8 +64,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /**
-     * Walks the world for the run containing {@code pos}. Every caller reaches this through the
-     * cache {@link BarStackBE#column()} keeps; see there for why.
+     * Resolves the contiguous same-type run containing {@code pos} from the world, without consulting
+     * an entity cache. Callers obtain cached run access through {@link StackBlockEntity#itemRun()}.
      */
     static BarColumn resolve(ServerLevel level, BlockPos pos) {
         BarColumn run = new BarColumn(level, resolveBlocks(level, pos, BarStackBE.class));
@@ -128,20 +128,14 @@ public final class BarColumn extends StackRun<BarStackBE> {
     // Insertion
 
     /**
-     * Places one bar at {@code flatSlot}, growing the column when that position lies in the block
-     * above it.
+     * Inserts one bar into only the named empty position with footprint support,
+     * leaving the caller's stack unchanged. Admission and support are checked before insertion.
      *
-     * <p>Answering for the position it was given rather than for the column is what makes the
-     * handler's slot range mean something: a caller that walks the range and sums what each position
-     * accepts gets the column's real capacity; reporting whole-column capacity at every position
-     * would multiply it.
+     * A slot in advertised headroom can grow the column only when height, enablement, space,
+     * obstruction, and the loader's automation edit authority permit it.
      *
-     * <p>A caller walking the range in ascending order still fills the column, because each
-     * placement stands before the next position is offered: a filled layer supports the layer above
-     * it by the time the walk arrives there.
-     *
-     * @param simulate when true, nothing is placed
-     * @return how many bars were, or would be, taken from {@code stack}
+     * @param simulate when true, evaluates current capacity and growth checks without storing or growing
+     * @return the accepted item count, or the count currently acceptable when simulating; zero on refusal
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {

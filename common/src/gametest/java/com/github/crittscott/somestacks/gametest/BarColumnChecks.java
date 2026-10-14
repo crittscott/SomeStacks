@@ -35,6 +35,11 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
 public final class BarColumnChecks {
     private BarColumnChecks() {}
 
+    /**
+     * To reproduce: select Bar with V + right-click air, then V + right-click a floor with two
+     * accepted ingots. One bar is placed and one ingot remains in Survival. Offer a stick to a
+     * bottom position; it is refused without spending the stick.
+     */
     public static void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -49,6 +54,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: create one bottom-layer Bar with an accepted ingot. Try depositing into a
+     * second-layer position with no bar under its footprint, then into a position overlapping the
+     * bottom bar. Only the supported position accepts the ingot.
+     */
     public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -62,6 +72,12 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: deposit one accepted ingot on the bottom layer and one overlapping bar on the
+     * next layer, with no other supports. Release V and plain-right-click the bottom bar with an
+     * empty hand. One ingot enters the hand, the unsupported upper bar drops, and the empty block
+     * disappears.
+     */
     public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -80,6 +96,11 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: place two neighboring bottom bars and an upper bar overlapping the second.
+     * Plain-right-click the first bottom bar with an empty hand. The upper bar remains supported by
+     * the second bottom bar and no bar drops.
+     */
     public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -99,6 +120,14 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * The fixture directly fills a top-layer position of the lower block and deposits into an
+     * overlapping bottom position of the upper block.
+     *
+     * <p>To check the visible seam: build a supported Bar column to its top layer, then V-deposit
+     * an accepted ingot into an overlapping position in a Bar block above it. The perpendicular
+     * layers support the new bar through footprint overlap.
+     */
     public static void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -112,6 +141,13 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * The fixture seeds one top-layer bar below one dependent bar in the next block.
+     *
+     * <p>To check manually: build a supported two-block Bar column and break the lower block. Its
+     * contents drop and dependent bars above collapse; an emptied upper block disappears. The
+     * sparse fixture asserts two total dropped ingots.
+     */
     public static void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -129,6 +165,12 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: fill two contiguous Bar blocks with 128 identical accepted ingots, then break
+     * the lower block. Both blocks disappear and all 128 ingots drop. The automated check asserts
+     * two item entities of 64 at the originating blocks; later vanilla item-entity merging is
+     * outside this check.
+     */
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -159,6 +201,12 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: build a chain of one bar in each of the sixteen layers of two Bar blocks, each
+     * overlapping its sole support below. Plain-right-click the lowest bar with an empty hand. One
+     * ingot enters the hand and fifteen drop; both empty blocks disappear. The check inspects drops
+     * before vanilla merging: seven from below and eight from above.
+     */
     public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
@@ -201,6 +249,12 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: use /give to obtain two accepted ingots with distinct custom NBT, such as
+     * {somestacks_test_variant:1} and {somestacks_test_variant:2}. Place them in the two
+     * second-layer positions supported by a single bottom bar. Extract that support with an empty
+     * hand. Both upper bars drop with their original tags and remain distinct stacks.
+     */
     public static void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -231,8 +285,12 @@ public final class BarColumnChecks {
     }
 
     /**
-     * The comparator range reserves 0 for an empty column, as a vanilla container's does, and a
-     * position holds one bar, so full means every position of every block occupied.
+     * The fixture checks an empty Bar block, one occupied position, then all 64 positions: signals
+     * are 0, 1, and 15.
+     *
+     * <p>To reproduce the visible readings: place a comparator facing away from a Bar block,
+     * deposit one accepted ingot, then fill all positions. Read 1 and 15; after extracting all
+     * bars, the block disappears and the comparator reads 0.
      */
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -251,6 +309,15 @@ public final class BarColumnChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal layout check: the fixture fills all 64 positions of a lower Bar block and leaves its
+     * contiguous upper block empty. Both block signal queries return 8 for the half-full run. Empty
+     * upper blocks are temporary, so there is no stable manual reproduction of that exact layout.
+     *
+     * <p>For the visible behavior, build two contiguous partly filled Bar blocks and put an
+     * outward-facing comparator beside each on a solid support. Both report the same whole-run fill
+     * after updates.
+     */
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         placeBar(helper, ORIGIN.above());
@@ -266,8 +333,12 @@ public final class BarColumnChecks {
     }
 
     /**
-     * The fill is measured against the column's current height, so a run that loses a block reports
-     * the same contents as a larger share of a smaller column.
+     * Internal layout check: a full lower Bar block and empty upper block report 8; removing the
+     * upper block changes the lower signal to 15.
+     *
+     * <p>To check the visible capacity change, fill a lower Bar block and add one bar in a
+     * supported block above. The comparator reads 8. Extract the upper bar; its empty block
+     * disappears and the full remaining block reads 15.
      */
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);

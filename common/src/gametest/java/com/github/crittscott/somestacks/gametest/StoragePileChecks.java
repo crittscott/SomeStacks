@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -28,6 +29,84 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 public final class StoragePileChecks {
     private StoragePileChecks() {}
 
+    /**
+     * To reproduce: create a permanent three-block Storage pile and use /data merge block to seed
+     * sparse glowstone contents in its end blocks and diamonds in its middle block. Place
+     * comparators beside both ends and break the middle before another inventory mutation.
+     * Seed two full glowstone stacks below, seven diamonds in the middle, and two single glowstone
+     * items above. Only seven diamonds drop. The lower pile packs to two slots (signal 2, light 6);
+     * the upper pile merges to one slot (signal 1, light 3).
+     * The fixture first drains placement ticks, then seeds sparse local slots and makes a pending
+     * upper edit in the removal tick, so it specifically checks rescheduling at the new upper base.
+     * That same-tick pending-publication assertion is internal; ordinary deposits pack from the
+     * base and cannot create this sparse starting layout.
+     */
+    public static void middleRemovalSettlesAndPublishesBothSurvivingPiles(GameTestHelper helper) {
+        StorageStackBE lower = placeStorage(helper, ORIGIN);
+        StorageStackBE middle = placeStorage(helper, ORIGIN.above());
+        StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
+        StoragePile original = lower.pile();
+        check(original != null, "Initial pile missing");
+        original.setPermanent(true);
+        BlockPos lowerComparator = GameTestScaffold.placeComparator(helper, ORIGIN);
+        BlockPos upperComparator = GameTestScaffold.placeComparator(helper, ORIGIN.above(2));
+        helper.runAfterDelay(6, () -> {
+            check(!helper.getLevel().getBlockTicks().hasScheduledTick(upper.getBlockPos(),
+                    upper.getBlockState().getBlock()), "Fixture retained an upper placement tick");
+            StoragePile cached = lower.pile();
+            check(cached != null && cached == upper.pile(), "Ends did not share the initial cache");
+            checkEquals(3, cached.height(), "Initial height");
+            lower.getItems().setStackInSlot(17, new ItemStack(Items.GLOWSTONE, 64));
+            lower.getItems().setStackInSlot(25, new ItemStack(Items.GLOWSTONE, 64));
+            middle.getItems().setStackInSlot(7, new ItemStack(Items.DIAMOND, 7));
+            upper.getItems().setStackInSlot(12, new ItemStack(Items.GLOWSTONE));
+            upper.getItems().setStackInSlot(24, new ItemStack(Items.GLOWSTONE));
+            checkEquals(0, upper.getBlockState().getValue(
+                    StorageStackBlock.LIGHT_LEVEL),
+                    "Upper edit published before the split");
+            check(helper.getLevel().setBlock(middle.getBlockPos(), Blocks.AIR.defaultBlockState(),
+                    Block.UPDATE_ALL), "Middle removal failed");
+            checkEquals(7, GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+                    "Removed block drops");
+            checkEquals(0L, GameTestScaffold.droppedInColumn(helper, lower.getBlockPos(), upper.getBlockPos())
+                    .stream().filter(entity -> !entity.getItem().is(Items.DIAMOND)).count(),
+                    "A surviving block dropped contents");
+            helper.runAfterDelay(6, () -> {
+                StoragePile below = lower.pile();
+                StoragePile above = upper.pile();
+                check(below != null && above != null && below != above, "Split piles not independent");
+                checkEquals(lower.getBlockPos(), below.basePos(), "Lower base");
+                checkEquals(upper.getBlockPos(), above.basePos(), "Upper base");
+                checkEquals(1, below.height(), "Lower height");
+                checkEquals(1, above.height(), "Upper height");
+                checkEquals(64, below.getSlot(0).getCount(), "Lower packed first slot");
+                checkEquals(64, below.getSlot(1).getCount(), "Lower packed second slot");
+                checkEquals(2, above.getSlot(0).getCount(), "Upper merged and packed contents");
+                checkEquals(2, GameTestScaffold.occupied(lower.getItems()), "Lower occupied slots");
+                checkEquals(1, GameTestScaffold.occupied(upper.getItems()), "Upper occupied slots");
+                checkEquals(128, GameTestScaffold.count(lower.getItems(), Items.GLOWSTONE), "Lower conservation");
+                checkEquals(2, GameTestScaffold.count(upper.getItems(), Items.GLOWSTONE), "Upper conservation");
+                checkEquals(7, GameTestScaffold.droppedNear(helper, middle.getBlockPos(), Items.DIAMOND),
+                        "Dropped contents after settlement");
+                checkEquals(6, lower.getBlockState().getValue(
+                        StorageStackBlock.LIGHT_LEVEL), "Lower light");
+                checkEquals(3, upper.getBlockState().getValue(
+                        StorageStackBlock.LIGHT_LEVEL), "Upper light");
+                checkEquals(2, GameTestScaffold.comparatorOutput(helper, lowerComparator), "Lower comparator");
+                checkEquals(1, GameTestScaffold.comparatorOutput(helper, upperComparator), "Upper comparator");
+                helper.succeed();
+            });
+        });
+    }
+
+    /**
+     * The fixture seeds 60 stone in local slot 5 and offers eight more; slot 5 reaches 64 and slot
+     * 0 receives four.
+     *
+     * <p>To check manually, V-deposit 60 stone into Storage, then eight more in Survival. All eight
+     * leave the hand; one full stack and a four-item remainder occupy the pile. The exact
+     * pre-settlement slot placement is an internal assertion.
+     */
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
@@ -44,6 +123,11 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: allow pile height of at least two, fill all 27 slots of a Storage block with
+     * full dirt stacks, and leave replaceable, unobstructed space above. V-deposit one stone. A
+     * second Storage block appears and stores it; the hand is emptied in Survival.
+     */
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -63,6 +147,15 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
+     * stacks of five with {variant:2} in separated slots, then settle. Slots 0-2 contain 64, 6, and
+     * 10, preserving the two tag identities.
+     *
+     * <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
+     * After settlement, matching tags merge into legal stacks, distinct tags stay separate, and
+     * occupied cells pack toward the base. The test's initial gaps require direct fixture writes.
+     */
     public static void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         CompoundTag firstTag = new CompoundTag();
@@ -94,6 +187,12 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: store one full stone stack and one dirt item in Storage. Plain-right-click the
+     * stone cell with an empty hand. The stone enters the hand, and after the scheduled block
+     * update the remaining dirt packs into the base slot. The test directly seeds the initial order
+     * and waits two ticks.
+     */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
@@ -113,6 +212,12 @@ public final class StoragePileChecks {
         });
     }
 
+    /**
+     * To reproduce: place two Storage piles with one item each. Select Toggle Permanent, hold V,
+     * and empty-hand right-click one pile. Release V and extract the last item from each. After
+     * settlement, the temporary pile disappears while the permanent pile remains empty. The
+     * automated fixture starts with empty blocks and invokes settlement directly.
+     */
     public static void emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper helper) {
         StorageStackBE temporary = placeStorage(helper, ORIGIN);
         StoragePile temporaryPile = temporary.pile();
@@ -133,6 +238,14 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * The fixture puts a full stone stack in the lower block of a two-block pile and checks that
+     * both blocks return the pile signal.
+     *
+     * <p>To reproduce: create a permanent two-block Storage pile by filling until it grows, then
+     * toggling permanence. Extract until only one full stack remains. Put outward-facing
+     * comparators beside both blocks on solid supports; both read the same whole-pile fill.
+     */
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
@@ -151,6 +264,17 @@ public final class StoragePileChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal native-placement check: create a full, permanent Storage block above an empty
+     * position with an outward-facing comparator. Its output is 15. Directly place an empty Storage
+     * block below it with neighbor updates. After settlement, both blocks remain permanent,
+     * contents move into the new base, and the comparator reads 8.
+     *
+     * <p>To reproduce this placement path, prepare the upper pile on a temporary support, fill it,
+     * toggle permanence, remove the support, and use /setblock to place
+     * somestacks:storage_stack_block below it. Ordinary item deposits do not create the test's
+     * empty new base.
+     */
     public static void ordinaryPlacementBelowPermanentPileRepairsDerivedState(
             GameTestHelper helper) {
         var level = helper.getLevel();
@@ -211,9 +335,12 @@ public final class StoragePileChecks {
     }
 
     /**
-     * The comparator range reserves 0 for an empty pile, as a vanilla container's does. A pile is
-     * large enough that a proportional conversion would round hundreds of items down to 0, so the
-     * reserved value is what makes an emptiness circuit read a pile correctly.
+     * The fixture reads an empty pile, adds one stone, then fills all 27 slots with full stone
+     * stacks: signals are 0, 1, and 15.
+     *
+     * <p>To reproduce: make a permanent one-block Storage pile with an outward-facing comparator.
+     * Empty it, deposit one stone, then fill it without allowing growth. Read 0, 1, and 15 after
+     * updates.
      */
     public static void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);

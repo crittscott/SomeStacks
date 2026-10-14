@@ -25,16 +25,34 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * and settling consolidating, packing, and sorting.
  */
 public final class StoragePileGameTests implements FabricGameTest {
+    /**
+     * Loader entry point for {@link
+     * StoragePileChecks#depositFillsCompatiblePartialBeforeEmptySlot}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StoragePileChecks.depositFillsCompatiblePartialBeforeEmptySlot(helper);
     }
 
+    /**
+     * Loader entry point for {@link StoragePileChecks#fullPileGrowsByOneBlock}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StoragePileChecks.fullPileGrowsByOneBlock(helper);
     }
 
+    /**
+     * Internal Storage slot check: insert eight stone into local slot 20, reject dirt offered to
+     * that incompatible slot, then settle. Before settlement stone occupies slot 20; afterward it
+     * occupies slot 0. Simulation and caller-owned input are unchanged.
+     *
+     * <p>To check manually, use slot-addressing automation to insert into an empty Storage slot,
+     * then observe the next settlement pack its contents toward the base. Precise pre-tick
+     * placement and dry-run results require an automation probe.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityInsertionAnswersForTheSlotItIsGiven(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -67,6 +85,12 @@ public final class StoragePileGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: fill all 27 slots of a Storage block with full dirt stacks, allow height above
+     * one, and put solid stone directly above. Offer four stone through automation to first
+     * headroom slot 27. All four are refused and the obstruction remains. A simulated offer must
+     * report the same refusal without modifying input.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -92,21 +116,43 @@ public final class StoragePileGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * Loader entry point for {@link StoragePileChecks#settleConsolidatesExactIdentityAndPacksDown};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
         StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(helper);
     }
 
+    /**
+     * Loader entry point for {@link StoragePileChecks#extractionSettlesOnScheduledBlockTick}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StoragePileChecks.extractionSettlesOnScheduledBlockTick(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * StoragePileChecks#emptyTemporaryPileDisappearsButPermanentPileRemains}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void emptyTemporaryPileDisappearsButPermanentPileRemains(GameTestHelper helper) {
         StoragePileChecks.emptyTemporaryPileDisappearsButPermanentPileRemains(helper);
     }
 
+    /**
+     * Internal shared-view check: seed twelve stone in the base of two contiguous Storage blocks.
+     * Slot 0 and advertised slot count agree through adapters attached to either block.
+     *
+     * <p>To reproduce visibly, make a permanent two-block Storage pile, leave twelve stone stored,
+     * and attach machines at different heights. Both access the same inventory and capacity.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
@@ -125,18 +171,40 @@ public final class StoragePileGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * Loader entry point for {@link StoragePileChecks#comparatorReadsTheWholePileFromEveryBlock};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StoragePileChecks.comparatorReadsTheWholePileFromEveryBlock(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * StoragePileChecks#ordinaryPlacementBelowPermanentPileRepairsDerivedState}; see that method
+     * for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE, timeoutTicks = 20)
     public void ordinaryPlacementBelowPermanentPileRepairsDerivedState(GameTestHelper helper) {
         StoragePileChecks.ordinaryPlacementBelowPermanentPileRepairsDerivedState(helper);
     }
 
+    /**
+     * Loader entry point for {@link StoragePileChecks#comparatorReservesZeroForAnEmptyPile}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorReservesZeroForAnEmptyPile(GameTestHelper helper) {
         StoragePileChecks.comparatorReservesZeroForAnEmptyPile(helper);
+    }
+
+    /** See {@link StoragePileChecks#middleRemovalSettlesAndPublishesBothSurvivingPiles} for the split scenario and manual procedure. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void middleRemovalSettlesAndPublishesBothSurvivingPiles(GameTestHelper helper) {
+        StoragePileChecks.middleRemovalSettlesAndPublishesBothSurvivingPiles(helper);
     }
 }

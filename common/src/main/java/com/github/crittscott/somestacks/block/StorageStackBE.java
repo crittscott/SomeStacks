@@ -20,8 +20,8 @@ import javax.annotation.Nullable;
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
  * <p>Capability exposure ({@code ForgeCapabilities.ITEM_HANDLER} or its Fabric equivalent) is
- * loader-specific and lives outside this class; {@link #getItems()} is what a loader-specific
- * capability view adapts.
+ * loader-specific and lives outside this class. Automation adapts {@link StackBlockEntity#itemRun()}
+ * for whole-pile access; {@link #getItems()} exposes only this block's local slots.
  */
 public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
@@ -52,13 +52,9 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /**
-     * The pile this block belongs to, or null on the client and for a block being removed.
-     *
-     * <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
-     * pile once per slot it walks, which is hundreds of times a tick for one attached storage
-     * network, and the run cannot change between two of those reads without passing through the
-     * block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is what
-     * drops it for anything that edits the world without them.
+     * Returns the server pile containing this block, or null on the client or when removed.
+     * Delegates to {@link StackBlockEntity#itemRun()}, whose per-tick cache is invalidated by
+     * structural edits.
      */
     @Nullable
     public StoragePile pile() {

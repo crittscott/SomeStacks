@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -15,6 +16,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -156,6 +160,24 @@ public final class GameTestScaffold {
         BlockPos absolute = helper.absolutePos(relative);
         BlockState state = helper.getLevel().getBlockState(absolute);
         return state.getBlock().getAnalogOutputSignal(state, helper.getLevel(), absolute);
+    }
+
+    /** Places a supported comparator east of a stack, facing away from its west-side input. */
+    public static BlockPos placeComparator(GameTestHelper helper, BlockPos stackRelative) {
+        BlockPos pos = helper.absolutePos(stackRelative.east());
+        check(helper.getLevel().setBlock(pos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
+                "Could not place comparator support");
+        check(helper.getLevel().setBlock(pos, Blocks.COMPARATOR.defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST), Block.UPDATE_ALL),
+                "Could not place comparator");
+        return pos;
+    }
+
+    /** Reads the actual comparator's published output, rather than querying its input block. */
+    public static int comparatorOutput(GameTestHelper helper, BlockPos absolutePos) {
+        BlockEntity blockEntity = helper.getLevel().getBlockEntity(absolutePos);
+        check(blockEntity instanceof ComparatorBlockEntity, "Missing comparator at " + absolutePos);
+        return ((ComparatorBlockEntity) blockEntity).getOutputSignal();
     }
 
     public static void check(boolean condition, String message) {

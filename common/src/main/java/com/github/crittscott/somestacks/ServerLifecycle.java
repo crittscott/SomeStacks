@@ -13,12 +13,20 @@ import java.util.UUID;
 public final class ServerLifecycle {
     private ServerLifecycle() {}
 
+    /**
+     * Clears queued galleries, gesture pacing, and synchronized gesture state for a new server
+     * session. The loader must separately initialize its world policy before players log in.
+     */
     public static void starting() {
         RenderGalleryGenerator.clear();
         GestureThrottle.clearAll();
         ServerGestureState.clearAll();
     }
 
+    /**
+     * Clears galleries and gesture state and releases world policy, its saver, and derived
+     * admission sets after server shutdown. Loader-owned cleanup remains the loader's responsibility.
+     */
     public static void stopped() {
         RenderGalleryGenerator.clear();
         GestureThrottle.clearAll();
@@ -26,10 +34,17 @@ public final class ServerLifecycle {
         ServerConfig.clear();
     }
 
+    /**
+     * Sends the current enable flags and freshly read server render overrides to this player.
+     * World policy must already be initialized; this does not reread policy files.
+     */
     public static void login(ServerPlayer player) {
         PlatformServices.sendConfig(player, configSync());
     }
 
+    /**
+     * Removes this player's gesture pacing and synchronized mode/modifier state.
+     */
     public static void logout(UUID playerId) {
         GestureThrottle.clear(playerId);
         ServerGestureState.clear(playerId);

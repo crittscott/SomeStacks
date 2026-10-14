@@ -61,10 +61,9 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * The column this block belongs to, or null on the client and for a block being removed.
-     *
-     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
-     * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
+     * Returns the server column containing this block, or null on the client or when removed.
+     * Delegates to {@link StackBlockEntity#itemRun()}, whose per-tick cache is invalidated by
+     * structural edits.
      */
     @Nullable
     public BarColumn column() {
@@ -189,14 +188,12 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * Settles {@code start} against the seam beneath it, then carries the result up the column so a
-     * vertical run of Bar Stacks behaves as one stack. Support crosses the seam per footprint, so a
-     * block above loses only the bars whose support went away rather than collapsing wholesale. Only
-     * the top layer can hold up the block above, so a block whose top layer survives intact ends the
-     * walk. A block emptied along the way removes itself and passes on its now-empty top layer,
-     * which is why an emptied or vanished block needs no case of its own: nothing overlaps an empty
-     * seam. {@code topBefore} is {@code start}'s top layer as it stood before the edit that prompted
-     * the settle, which the edit itself may already have changed.
+     * Drops unsupported bars from {@code start} and dependent blocks above, collecting drops in
+     * {@code drops}. Footprint support crosses seams; supported bars remain. Empty blocks are
+     * removed only when edit authority permits, and a refused removal still leaves an empty seam.
+     *
+     * @param seamBelow occupancy immediately below start, or null when start is grounded
+     * @param topBefore start's top-layer occupancy before the triggering edit
      */
     static void cascadeFrom(Level columnLevel, BarStackBE start,
                             @Nullable boolean[] seamBelow, boolean[] topBefore,
@@ -229,6 +226,7 @@ public class BarStackBE extends StackBlockEntity {
                 }
             }
 
+            // An unchanged top layer cannot alter support for the next block.
             if (Arrays.equals(before, after)) {
                 return;
             }

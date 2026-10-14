@@ -207,10 +207,9 @@ public final class SsCommand {
     }
 
     /**
-     * The {@code ss deny} subtree, editing the two compatibility lists. A namespace is taken as
-     * typed because the shipped defaults name mods that need not be installed, so the list is
-     * expected to hold namespaces the registry cannot confirm; an item id is checked against the
-     * registry, where a typo would otherwise sit in the list looking effective.
+     * The {@code ss deny} subtree edits the disabled namespace and exact-item lists. Namespace
+     * entries may intentionally name unloaded mods and are not checked against loaded namespaces.
+     * Exact item ids are checked against the registry so an unknown id does not appear effective.
      */
     private static LiteralArgumentBuilder<CommandSourceStack> denyTree() {
         return Commands.literal("deny")

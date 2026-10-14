@@ -60,8 +60,14 @@ public final class StackFoundationChecks {
     }
 
     /**
-     * To reproduce in-game: perform several automation edits before a tick, including a Bar
-     * extraction that starts a nested collapse. Contents and light publish together after the edits.
+     * Internal publication-order check with no direct manual reproduction. Reflection opens two
+     * nested batches on each stack type; direct writes fill slots 0 and 1 while local fill updates
+     * immediately. Publication is deferred until the outer batch ends, then occurs exactly once.
+     * Storage and Singles also assert derived light from glowstone; Bar uses an ordinary accepted
+     * ingot. The fixture performs no extraction or collapse.
+     *
+     * <p>For visible Bar collapse checks, see {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}
+     * and {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}.
      */
     public static void nestedBatchesPublishOnlyAfterTheOuterBatch(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);

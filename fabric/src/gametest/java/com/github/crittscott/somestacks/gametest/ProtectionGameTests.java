@@ -45,6 +45,15 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  *
  */
 public final class ProtectionGameTests implements FabricGameTest {
+    /**
+     * Internal checked-placement test: place stone at an in-bounds position, then try a position
+     * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
+     * has no direct player reproduction.
+     *
+     * <p>Nearest manual check: select Storage and V-place an admissible item against a floor in
+     * bounds, then try to grow a stack beyond the world's upper build limit. No out-of-bounds block
+     * should appear.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -64,6 +73,13 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * The fixture puts a cow inside the proposed full stone shape and calls checked placement;
+     * placement fails.
+     *
+     * <p>Nearest manual check: confine a cow in the destination above a floor, select Storage, and
+     * V-right-click the floor holding dirt. The obstructed Storage block must not appear.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -78,6 +94,11 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: enter Creative, hold 64 dirt, and V-right-click an existing Storage block. All
+     * 64 dirt enter the pile and the hand still holds 64. The test exercises the loader's native
+     * block-use callback.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
@@ -95,6 +116,11 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: place source water above a solid floor, select Storage, and V-right-click the
+     * floor with dirt. The new Storage block is waterlogged and water remains at that position. The
+     * test exercises native placement and inspects the fluid state.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -121,6 +147,16 @@ public final class ProtectionGameTests implements FabricGameTest {
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
+    /**
+     * World-border fixture: fill one Storage block, first confirm a free headroom offer has
+     * capacity, then move the border to exclude the target and try simulation and commit. Both
+     * refuse the entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Storage pile, and use /worldborder center and
+     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
+     * headroom through slot-addressing automation. No upper block appears. Restore the original
+     * border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -147,6 +183,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * World-border fixture: fill one Singles block, first confirm a free headroom offer has
+     * capacity, then move the border to exclude the target and try simulation and commit. Both
+     * refuse the entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Singles column, and use /worldborder center
+     * and /worldborder set to exclude its prospective growth position. Offer admissible items to
+     * first headroom through slot-addressing automation. No upper block appears. Restore the
+     * original border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -174,6 +220,16 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * World-border fixture: fill one Bar block, first confirm a free headroom offer has capacity,
+     * then move the border to exclude the target and try simulation and commit. Both refuse the
+     * entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Bar column, and use /worldborder center and
+     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
+     * headroom through slot-addressing automation. No upper block appears. Restore the original
+     * border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -204,6 +260,13 @@ public final class ProtectionGameTests implements FabricGameTest {
 
     // Growth through entities
 
+    /**
+     * To reproduce: allow height above one, fill one Storage block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -226,6 +289,13 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: allow height above one, fill one Singles block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -248,6 +318,13 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: allow height above one, fill one Bar block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -347,7 +424,18 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /** To reproduce: deny use of the clicked block or adjacent Singles stack. Depositing through a neighbor honors both permissions; an allowed click deposits once. */
+    /**
+     * Native adjacent-deposit fixture: put stone west of an empty Singles block and aim through the
+     * stone's east face toward its bottom cell. A Fabric UseBlockCallback veto is applied first at
+     * the clicked stone and then at the Singles destination. Either veto prevents deposit; allowing
+     * both deposits one stone.
+     *
+     * <p>To check manually, put an existing Singles block east of a stone block and aim through
+     * that face while V-depositing stone. Configure protection to deny interaction at the clicked
+     * block, then only at the destination, then at neither. Only the last configuration deposits;
+     * loader-exact callback vetoes require a test listener if the protection mod lacks separate
+     * rules.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void nativeAdjacentDepositConsultsBothPositions(GameTestHelper helper) {
         var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -381,7 +469,15 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /** To reproduce: place Singles or Bar beside a cow. An occupied cell overlapping it is refused; cells in free space remain placeable. */
+    /**
+     * Internal obstruction-shape check: a cow overlaps one edge of the target position. Full and
+     * occupied-edge shapes are obstructed; empty shapes and distant Singles/Bar positions are
+     * clear. No block placement or deposit is performed.
+     *
+     * <p>Nearest manual check: hold a cow at one edge of a destination and attempt first placement
+     * of Singles or Bar into occupied-edge and clear positions. Only shapes overlapping the cow
+     * should prevent placement.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void completedShapesDistinguishOccupiedCellsFromEmptySpace(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();

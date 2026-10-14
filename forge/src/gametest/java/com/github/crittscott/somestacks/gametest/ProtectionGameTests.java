@@ -57,6 +57,15 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
+    /**
+     * Internal checked-placement test: place stone at an in-bounds position, then try a position
+     * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
+     * has no direct player reproduction.
+     *
+     * <p>Nearest manual check: select Storage and V-place an admissible item against a floor in
+     * bounds, then try to grow a stack beyond the world's upper build limit. No out-of-bounds block
+     * should appear.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
@@ -77,6 +86,13 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * The fixture puts a cow inside the proposed full stone shape and calls checked placement;
+     * placement fails.
+     *
+     * <p>Nearest manual check: confine a cow in the destination above a floor, select Storage, and
+     * V-right-click the floor holding dirt. The obstructed Storage block must not appear.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -91,6 +107,11 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: enter Creative, hold 64 dirt, and V-right-click an existing Storage block. All
+     * 64 dirt enter the pile and the hand still holds 64. The test exercises the loader's native
+     * block-use callback.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -120,6 +141,16 @@ public final class ProtectionGameTests {
     // actor left to ask, so it uses the level's fake player exactly as growth does. A refusal
     // has to leave the block standing without leaving the run's own model out of step with it.
 
+    /**
+     * Forge fixture: cancel BlockEvent.BreakEvent at an empty upper Storage block above a base
+     * holding one dirt. Settlement keeps the refused block and height two; removing the veto and
+     * settling again removes the empty top.
+     *
+     * <p>To check manually, grow a temporary two-block pile and configure protection to deny
+     * removal by the automation actor at the upper position while allowing extraction. Empty the
+     * upper block and allow settlement; it remains. Lift the denial and trigger another inventory
+     * change; subsequent settlement trims it.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
@@ -155,6 +186,11 @@ public final class ProtectionGameTests {
 
     // Waterlogging
 
+    /**
+     * To reproduce: place source water above a solid floor, select Storage, and V-right-click the
+     * floor with dirt. The new Storage block is waterlogged and water remains at that position. The
+     * test exercises native placement and inspects the fluid state.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -194,6 +230,16 @@ public final class ProtectionGameTests {
     // with the world border. Spawn protection, the other half of the same predicate, cannot be staged
     // here: it is implemented on DedicatedServer, and the server running these tests is not one.
 
+    /**
+     * World-border fixture: fill one Storage block, first confirm a free headroom offer has
+     * capacity, then move the border to exclude the target and try simulation and commit. Both
+     * refuse the entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Storage pile, and use /worldborder center and
+     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
+     * headroom through slot-addressing automation. No upper block appears. Restore the original
+     * border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -220,6 +266,16 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * World-border fixture: fill one Singles block, first confirm a free headroom offer has
+     * capacity, then move the border to exclude the target and try simulation and commit. Both
+     * refuse the entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Singles column, and use /worldborder center
+     * and /worldborder set to exclude its prospective growth position. Offer admissible items to
+     * first headroom through slot-addressing automation. No upper block appears. Restore the
+     * original border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -247,6 +303,16 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * World-border fixture: fill one Bar block, first confirm a free headroom offer has capacity,
+     * then move the border to exclude the target and try simulation and commit. Both refuse the
+     * entire four-item offer without growth or input mutation.
+     *
+     * <p>To reproduce, allow height above one, fill a Bar column, and use /worldborder center and
+     * /worldborder set to exclude its prospective growth position. Offer admissible items to first
+     * headroom through slot-addressing automation. No upper block appears. Restore the original
+     * border after the check; dry-run results require simulation/abort support.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -277,6 +343,13 @@ public final class ProtectionGameTests {
 
     // Growth through entities
 
+    /**
+     * To reproduce: allow height above one, fill one Storage block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -299,6 +372,13 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: allow height above one, fill one Singles block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -321,6 +401,13 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: allow height above one, fill one Bar block, and confine a cow in the
+     * prospective upper block's first occupied position. Offer four admissible items to first
+     * headroom through automation. Commit refuses them all and creates no block. The automated
+     * check also asserts dry-run refusal and unchanged caller input; simulation/abort needs an
+     * automation probe.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
@@ -348,7 +435,15 @@ public final class ProtectionGameTests {
      * Puts a living placement-blocking entity across the bottom north-west cell and bar position
      * of {@code relative}.
      */
-    /** To reproduce: place Singles or Bar beside a cow. An occupied cell overlapping it is refused; cells in free space remain placeable. */
+    /**
+     * Internal obstruction-shape check: a cow overlaps one edge of the target position. Full and
+     * occupied-edge shapes are obstructed; empty shapes and distant Singles/Bar positions are
+     * clear. No block placement or deposit is performed.
+     *
+     * <p>Nearest manual check: hold a cow at one edge of a destination and attempt first placement
+     * of Singles or Bar into occupied-edge and clear positions. Only shapes overlapping the cow
+     * should prevent placement.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void completedShapesDistinguishOccupiedCellsFromEmptySpace(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -412,7 +507,16 @@ public final class ProtectionGameTests {
             border.setSize(size);
         }
     }
-    /** To reproduce: deny item use on a stack, then modifier-deposit and plain-extract. Deposit is refused; permitted block access still extracts. */
+    /**
+     * Forge permission fixture: a RightClickBlock listener sets useItem to DENY while leaving block
+     * use permitted. A dirt deposit is refused, but plain empty-hand extraction returns the three
+     * stored stone.
+     *
+     * <p>To check manually, use a protection rule or test listener that denies item use at the
+     * stack while allowing block use. V-deposit dirt, then release V and extract stored stone. Only
+     * extraction succeeds. A generic claim that denies both kinds of use does not reproduce this
+     * split.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void nativeClickHonorsSplitPermissions(GameTestHelper helper) {
         var storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -439,7 +543,18 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
 
-    /** To reproduce: deny right-click access either to an ordinary clicked block or the adjacent Singles stack. Neither boundary can be bypassed by depositing through the neighbor. */
+    /**
+     * Native adjacent-deposit fixture: put stone west of an empty Singles block and aim through the
+     * stone's east face toward its bottom cell. A Forge RightClickBlock listener denying block use
+     * is applied first at the clicked stone and then at the Singles destination. Either veto
+     * prevents deposit; allowing both deposits one stone.
+     *
+     * <p>To check manually, put an existing Singles block east of a stone block and aim through
+     * that face while V-depositing stone. Configure protection to deny interaction at the clicked
+     * block, then only at the destination, then at neither. Only the last configuration deposits;
+     * loader-exact callback vetoes require a test listener if the protection mod lacks separate
+     * rules.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void nativeAdjacentDepositConsultsBothPositions(GameTestHelper helper) {
         var singles = GameTestScaffold.placeSingles(helper, ORIGIN);

@@ -16,6 +16,13 @@ public final class ClientGestures {
     private static boolean lastSentModifier;
     private static Consumer<GestureStatePkt> sender;
 
+    /**
+     * Installs the loader packet sender and resets synchronization so the next state sync sends
+     * even unchanged mode/modifier state. Does not change the selected mode.
+     *
+     * @param sender sender to install, or null to clear it; syncing requires an installed sender
+     * @return the previous sender, which may be null
+     */
     public static Consumer<GestureStatePkt> setSender(Consumer<GestureStatePkt> sender) {
         Consumer<GestureStatePkt> previous = ClientGestures.sender;
         ClientGestures.sender = sender;
@@ -27,6 +34,10 @@ public final class ClientGestures {
         return stackMode;
     }
 
+    /**
+     * Advances the selected mode, skipping server-disabled block types. Toggle Permanent remains
+     * available. This changes local selection only; it neither sends state nor displays a message.
+     */
     public static void cycleMode() {
         StackMode startMode = stackMode;
         do {

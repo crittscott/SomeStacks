@@ -26,6 +26,11 @@ public class StackItemStorage implements SlotAccess {
 
     private final ItemStack[] stacks;
 
+    /**
+     * Creates an empty inventory with this fixed slot count. Loading NBT never resizes it.
+     *
+     * @param size nonnegative number of slots
+     */
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
         Arrays.fill(stacks, ItemStack.EMPTY);
@@ -36,17 +41,33 @@ public class StackItemStorage implements SlotAccess {
         return stacks.length;
     }
 
+    /**
+     * Returns the stored stack itself, without copying it. Callers must not mutate this reference
+     * to bypass notifications; use storage mutations or {@link #setStackInSlot(int, ItemStack)}.
+     */
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
         return stacks[slot];
     }
 
+    /**
+     * Stores the supplied stack reference without copying or checking admission or stack limits,
+     * then calls {@link #onContentsChanged(int)}. The caller transfers ownership and must not mutate
+     * the stack afterward. Slot indices must be within this inventory's fixed capacity.
+     */
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         stacks[slot] = stack;
         onContentsChanged(slot);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>A full insertion into an empty slot can retain the supplied stack reference. Callers
+     * must relinquish an accepted offer or supply a copy before further mutation. Successful
+     * committed insertions notify {@link #onContentsChanged(int)}; simulations do not.
+     */
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -138,6 +159,10 @@ public class StackItemStorage implements SlotAccess {
         return copy;
     }
 
+    /**
+     * Creates an NBT snapshot containing {@code Size} and nonempty {@code Items} entries with
+     * local slot indices. Does not mutate the inventory or call change notifications.
+     */
     public CompoundTag serializeNBT() {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
@@ -154,6 +179,11 @@ public class StackItemStorage implements SlotAccess {
         return nbt;
     }
 
+    /**
+     * Clears and replaces contents from {@code Items}, ignoring {@code Size} and out-of-range
+     * slot entries. Does not check admission or call {@link #onContentsChanged(int)}. Callers must
+     * refresh their derived fill, shapes, and run caches and arrange publication as needed.
+     */
     public void deserializeNBT(CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
         ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);

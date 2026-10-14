@@ -12,6 +12,15 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 public final class StackSortChecks {
     private StackSortChecks() {}
 
+    /**
+     * Internal ordering check with no direct manual reproduction: compare registry ids, empty
+     * stacks, damage, absent versus present NBT, NBT variants, and descending count ties; assert
+     * that sort-key snapshots survive source NBT mutation and exclude stack count.
+     *
+     * <p>Nearest visible check: deposit dirt, stone, and differently damaged wooden pickaxes into
+     * Storage. After settlement, items pack in deterministic identity order and distinct damage/NBT
+     * identities stay separate.
+     */
     public static void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         ItemStack dirt = new ItemStack(Items.DIRT);
         ItemStack stone = new ItemStack(Items.STONE);

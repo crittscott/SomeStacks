@@ -101,9 +101,11 @@ Deposit, placement, extraction, and Singles item rotation all trace the server p
 
 Client SUCCESS consumes use while retaining block-use packets. Server callbacks consume recognized gestures even on admission failure; ordinary sneaking/off-hand actions do not mutate stacks. Forge item denial blocks deposits/placement but can allow extraction/rotation. Adjacent deposits consult both positions under a recursion guard.
 
+Both loaders use `ClientRenderPacketSink`: rejected config/write counts do nothing; valid empty payloads clear overrides or request a user-layer write.
+
 ## Configuration and presentation
 
-`ServerLifecycle` syncs policy and clears sessions. Loaders start common immutable `Settings` with a session saver. Forge registers `ForgeServerConfig.SPEC` as `SERVER`, reads world TOML at startup, and publishes reloads on the server thread; changed enable flags resync players. `FabricServerConfig` owns JSON; file edits need restart. List commands save through the loader. `/ss reload` refreshes render overrides and resyncs, without rereading policy.
+`ServerLifecycle` syncs policy and clears sessions. Loaders install immutable `Settings` and a saver. Forge uses `ForgeServerConfig.SPEC` as native `SERVER` TOML, publishing reloads on the server thread and resyncing changed enable flags. Fabric JSON edits need restart. List commands save through the loader; `/ss reload` refreshes render overrides and sync without rereading policy.
 
 Galleries default to disabled/permission 3, spread work across ticks, and bypass placement protection. Other command permissions are fixed.
 
@@ -115,7 +117,7 @@ Ingot patterns match full tag names with `*`; membership rebuilds on config/tag 
 - `assets/<namespace>/textures/bars/*.json` defines Bar textures/tints.
 - `config/somestacks/server_item_overrides/*.json` defines server-imposed profiles.
 
-`CubeGrid` caches rotations, boxes, and shapes; geometry stays type-specific. BERs use `CubeRenderHelper` for cubes and cuboids for Bar. Bar UV regions cache by sprite identity and clear on texture reload. Profiles use immutable `RenderOffset`; precedence is server -> user -> resource pack -> measurement. `ItemRenderOverrides` caches profiles, invalidated by sync, edits, and corpus/model reload. Bar appearance is client-only.
+`CubeGrid` caches rotations, boxes, and shapes. BERs use `CubeRenderHelper` for cubes and cuboids for Bar. Bar UVs cache by sprite identity until texture reload. Profiles use immutable `RenderOffset`; precedence is server -> user -> resource pack -> measurement. `ItemRenderOverrides` caches profiles until sync, edits, or corpus/model reload. Bar appearance is client-only.
 
 Flat models use 2-D; others use 3-D. Forge measures all passes/custom vertices; custom output uses 3-D. Fabric measures non-custom quads regardless of `isVanillaAdapter`; missing quads use 3-D ItemRenderer.
 
@@ -127,16 +129,10 @@ Protection types stay gated; server validation is independent. Measurement chang
 
 ## Tests
 
-Root `build` includes common JUnit and Fabric JSON-persistence JUnit; Forge has no JUnit tests. GameTests use `runGameTestServer`.
+Root `build` runs common JUnit and Fabric JSON-persistence tests; Forge has none. `configureGameTests` combines shared/loader scenarios in dev-only `somestacks_gametest`, generating structures from a Base64 fixture. Registration: Forge `@GameTestHolder`, Fabric `FabricGameTest`/`fabric-gametest`.
 
-`configureGameTests` combines common/loader tests in dev-only `somestacks_gametest`; a shared Base64 fixture generates `data/somestacks/structures/`.
+Shared checks cover batching, caches, bounds, movement, persistence, fill/shapes, real comparators, split-run conservation/publication, gestures, rays, rejection, and session policy. Forge adds native TOML saves/reloads; `FabricTransferGameTests` adds commit/rollback and shared capacity. Native protection checks cover adjacent denial, partial shapes, Forge split permissions/rollback/reentrancy, and Fabric actor/removal vetoes.
 
-Shared `*Checks` use `GameTestScaffold`/`CommonRegistry`; native assertions stay loader-local. Forge uses `@GameTestHolder`; Fabric uses `FabricGameTest`/`fabric-gametest`.
+`PacketCodecTest` checks rejection effects, empty payloads, and wire sanitization through a recording sink. `RenderGalleryChecks` checks command gates/deny edits in `somestacks_commands`, intercepting saves with a dev-only single-item Bar tag. Other shared scenarios use `GameTestScaffold`/`CommonRegistry`.
 
-`ProtectionGameTests` covers adjacent denial and partial shapes; Forge adds split permissions, rollback/publication, and reentrancy; Fabric adds native actor/removal vetoes. Fabric runs in `fabric/run-gametest`.
-
-`StackFoundationChecks` covers batching, caches, bounds, growth, loading, fill/shapes, comparators, and mutations.
-
-`FabricTransferGameTests` covers commit, nested rollback, shared contents/capacity, and structural limits.
-
-`ServiceAndConfigChecks` covers services, logout, and policy; Forge adds native TOML saves/reloads. `InteractionChecks`/`ClientGestureChecks` cover gestures, server rays, rejection, hands, ordering, sync, and logout. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.
+`runGameTestServer` runs loader scenarios; Fabric uses `fabric/run-gametest`. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.

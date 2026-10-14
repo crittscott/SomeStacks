@@ -28,46 +28,96 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 public final class SinglesColumnGameTests {
     private SinglesColumnGameTests() {}
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#standaloneBottomIsGroundedAndFloatingCellIsRejected}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper helper) {
         SinglesColumnChecks.standaloneBottomIsGroundedAndFloatingCellIsRejected(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#upperCellUsesTheCellImmediatelyBelow}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void upperCellUsesTheCellImmediatelyBelow(GameTestHelper helper) {
         SinglesColumnChecks.upperCellUsesTheCellImmediatelyBelow(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#differentlyRotatedBlocksShareVisualSeamColumns}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void differentlyRotatedBlocksShareVisualSeamColumns(GameTestHelper helper) {
         SinglesColumnChecks.differentlyRotatedBlocksShareVisualSeamColumns(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#extractionShiftsOneColumnAndCarriesItemRotation}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionShiftsOneColumnAndCarriesItemRotation(GameTestHelper helper) {
         SinglesColumnChecks.extractionShiftsOneColumnAndCarriesItemRotation(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#shiftKeepsAnItemItWouldNoLongerAccept}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesColumnChecks.shiftKeepsAnItemItWouldNoLongerAccept(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#drawDownKeepsAnItemItWouldNoLongerAccept};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesColumnChecks.drawDownKeepsAnItemItWouldNoLongerAccept(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#extractionPreservesAnExistingGap}; see that
+     * method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionPreservesAnExistingGap(GameTestHelper helper) {
         SinglesColumnChecks.extractionPreservesAnExistingGap(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#extractionDrawsAcrossDifferentlyRotatedBlockBoundary}; see that method
+     * for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void extractionDrawsAcrossDifferentlyRotatedBlockBoundary(GameTestHelper helper) {
         SinglesColumnChecks.extractionDrawsAcrossDifferentlyRotatedBlockBoundary(helper);
     }
 
+    /**
+     * Internal positional insertion check: offer three sticks to unsupported Singles slot 63, then
+     * grounded slot 0. Slot 63 refuses all three; slot 0 accepts exactly one without mutating the
+     * caller's offer. Simulation stores nothing.
+     *
+     * <p>To check manually, use a slot-addressing machine on an empty Singles fixture: an
+     * unsupported target must not redirect, and a grounded target stores one stick. A dry-run
+     * assertion requires automation that exposes simulation or abort.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForTheCellItIsGiven(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -100,6 +150,12 @@ public final class SinglesColumnGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: offer three sticks to an empty Singles fixture through a machine that visits
+     * slots in ascending order. The first three bottom-layer cells receive one stick each and
+     * nothing remains uninserted. The test also asserts that the adapter does not mutate its
+     * caller-owned offer.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityWalkFillsTheColumnFromTheBottom(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -119,6 +175,12 @@ public final class SinglesColumnGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: put a stick at the bottom of one Singles column and paper directly above.
+     * Automate extraction from the stick's slot. Exactly one stick is extracted and paper shifts
+     * into its cell. The test also performs a dry run first, which returns a stick without changing
+     * contents; this requires a machine or probe with simulation/abort support.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilityExtractionUsesThePlayerGravityPath(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -142,28 +204,59 @@ public final class SinglesColumnGameTests {
         helper.succeed();
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedCell}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedCell(GameTestHelper helper) {
         SinglesColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedCell(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#depositTraceUsesFarthestCellWhenNothingIsOccupied}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void depositTraceUsesFarthestCellWhenNothingIsOccupied(GameTestHelper helper) {
         SinglesColumnChecks.depositTraceUsesFarthestCellWhenNothingIsOccupied(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#comparatorReservesZeroForAnEmptyColumn};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         SinglesColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
+    /**
+     * Loader entry point for {@link
+     * SinglesColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         SinglesColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
+    /**
+     * Loader entry point for {@link SinglesColumnChecks#comparatorFollowsAColumnLosingABlock}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         SinglesColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
+    }
+
+    /** See {@link SinglesColumnChecks#middleRemovalPreservesAndPublishesBothSurvivingColumns} for the split scenario and manual procedure. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void middleRemovalPreservesAndPublishesBothSurvivingColumns(GameTestHelper helper) {
+        SinglesColumnChecks.middleRemovalPreservesAndPublishesBothSurvivingColumns(helper);
     }
 }

@@ -24,7 +24,12 @@ public final class RunEdit {
     private RunEdit() {
     }
 
-    /** Claims the right to edit, or reports that an edit is already running. */
+    /**
+     * Claims the server-wide automation mutation guard on the server thread.
+     *
+     * @return false if another edit owns the guard; on true, the caller must call {@link #end()}
+     * in a finally block after its edit
+     */
     public static boolean begin() {
         if (inProgress) {
             return false;
@@ -33,10 +38,17 @@ public final class RunEdit {
         return true;
     }
 
+    /**
+     * Reports whether an automation mutation owns the global guard. Use only on the server thread.
+     */
     public static boolean isInProgress() {
         return inProgress;
     }
 
+    /**
+     * Releases the guard after this caller's successful {@link #begin()}. Call on the server thread
+     * in a finally block; a caller whose begin failed must not release another caller's guard.
+     */
     public static void end() {
         inProgress = false;
     }

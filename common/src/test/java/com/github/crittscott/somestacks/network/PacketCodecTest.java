@@ -1,24 +1,178 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import io.netty.buffer.Unpooled;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PacketCodecTest {
+    private Object previousHandler;
+    private Object previousOverrides;
+    private final Map<BlockType, Boolean> previousEnablement = new HashMap<>();
+    private final RecordingHandler handler = new RecordingHandler();
+
+    private static Field sinkField(String name) throws ReflectiveOperationException {
+        Field field = ClientRenderPacketSink.class.getDeclaredField(name);
+        field.setAccessible(true);
+        return field;
+    }
+
+    @BeforeEach
+    void isolateClientState() throws ReflectiveOperationException {
+        previousHandler = sinkField("handler").get(null);
+        previousOverrides = sinkField("serverOverrides").get(null);
+        for (BlockType type : BlockType.values()) {
+            previousEnablement.put(type, StackState.isBlockTypeEnabled(type));
+        }
+        ClientRenderPacketSink.setHandler(handler);
+        handler.overrides.clear();
+    }
+
+    @AfterEach
+    void restoreClientState() throws ReflectiveOperationException {
+        sinkField("handler").set(null, previousHandler);
+        sinkField("serverOverrides").set(null, previousOverrides);
+        previousEnablement.forEach(StackState::setBlockEnabled);
+    }
+
+    @Test
+    void rejectedConfigCountsPreserveEnabledTypesAndRetainedOverrides() {
+        ResourceLocation id = new ResourceLocation("test", "retained");
+        Map<ResourceLocation, ItemRenderConfig> seed = Map.of(id,
+                new ItemRenderConfig(RenderMode.GUI, 1.0f, RenderOffset.ZERO));
+        ClientRenderPacketSink.apply(new ConfigSyncPkt(true, false, true, seed));
+        handler.overrides.clear();
+        for (int count : new int[]{-1, 65537}) {
+            ConfigSyncPkt packet = decode(buf -> {
+                buf.writeBoolean(false);
+                buf.writeBoolean(true);
+                buf.writeBoolean(false);
+                buf.writeInt(count);
+            }, ConfigSyncPkt::decode);
+            assertFalse(packet.isValid());
+            ClientRenderPacketSink.apply(packet);
+            assertTrue(StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK));
+            assertFalse(StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK));
+            assertTrue(StackState.isBlockTypeEnabled(BlockType.BAR_STACK));
+            assertTrue(handler.overrides.isEmpty());
+        }
+        // Installation exposes retained state without loading a renderer or touching disk.
+        RecordingHandler replacement = new RecordingHandler();
+        ClientRenderPacketSink.setHandler(replacement);
+        assertEquals(List.of(seed), replacement.overrides);
+    }
+
+    @Test
+    void validEmptyConfigClearsOverridesAndUpdatesEnabledTypes() {
+        ClientRenderPacketSink.apply(new ConfigSyncPkt(true, true, true, Map.of(
+                new ResourceLocation("test", "seed"), new ItemRenderConfig(RenderMode.GUI, null, null))));
+        handler.overrides.clear();
+        ConfigSyncPkt packet = decode(buf -> {
+            buf.writeBoolean(false);
+            buf.writeBoolean(true);
+            buf.writeBoolean(false);
+            buf.writeInt(0);
+        }, ConfigSyncPkt::decode);
+        assertTrue(packet.isValid());
+        ClientRenderPacketSink.apply(packet);
+        assertEquals(List.of(Map.of()), handler.overrides);
+        assertFalse(StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK));
+        assertTrue(StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK));
+        assertFalse(StackState.isBlockTypeEnabled(BlockType.BAR_STACK));
+        RecordingHandler replacement = new RecordingHandler();
+        ClientRenderPacketSink.setHandler(replacement);
+        assertEquals(List.of(Map.of()), replacement.overrides);
+    }
+
+    @Test
+    void rejectedWriteCountsDoNotBecomeUserLayerWrites() {
+        for (int count : new int[]{-1, 4097}) {
+            WriteOverridesPkt packet = decode(buf -> buf.writeInt(count), WriteOverridesPkt::decode);
+            assertNull(packet.namespaces());
+            ClientRenderPacketSink.apply(packet);
+            assertTrue(handler.writes.isEmpty());
+        }
+        WriteOverridesPkt empty = decode(buf -> buf.writeInt(0), WriteOverridesPkt::decode);
+        ClientRenderPacketSink.apply(empty);
+        assertEquals(List.of(List.of()), handler.writes);
+    }
+
+    @Test
+    void configWireDecoderSanitizesNumericFieldsBeforeApplication() {
+        ResourceLocation id = new ResourceLocation("test", "numeric");
+        ConfigSyncPkt packet = decode(buf -> {
+            buf.writeBoolean(true);
+            buf.writeBoolean(true);
+            buf.writeBoolean(true);
+            buf.writeInt(1);
+            buf.writeResourceLocation(id);
+            buf.writeBoolean(true);
+            buf.writeUtf("gui");
+            buf.writeBoolean(true);
+            buf.writeFloat(Float.NaN);
+            buf.writeBoolean(true);
+            buf.writeFloat(0.0f);
+            buf.writeFloat(Float.POSITIVE_INFINITY);
+            buf.writeFloat(0.0f);
+        }, ConfigSyncPkt::decode);
+        assertTrue(packet.isValid());
+        ItemRenderConfig sanitized = new ItemRenderConfig(RenderMode.GUI, null, null);
+        assertEquals(sanitized, packet.renderOverrides().get(id));
+        ClientRenderPacketSink.apply(packet);
+        assertEquals(List.of(Map.of(id, sanitized)), handler.overrides);
+    }
+
+    private static <T> T decode(Consumer<FriendlyByteBuf> writer,
+                                Function<FriendlyByteBuf, T> decoder) {
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            writer.accept(buffer);
+            return decoder.apply(buffer);
+        } finally {
+            buffer.release();
+        }
+    }
+
+    private static final class RecordingHandler implements ClientRenderPacketSink.Handler {
+        final List<Map<ResourceLocation, ItemRenderConfig>> overrides = new ArrayList<>();
+        final List<List<String>> writes = new ArrayList<>();
+
+        @Override public void setServerOverrides(Map<ResourceLocation, ItemRenderConfig> value) {
+            overrides.add(Map.copyOf(value));
+        }
+
+        @Override public void setUserOverride(RenderOverridePkt packet) {
+            throw new AssertionError("Unexpected individual override edit");
+        }
+
+        @Override public void writeOverrides(List<String> namespaces) {
+            writes.add(List.copyOf(namespaces));
+        }
+    }
 
     @Test
     void gestureStateRoundTripsEveryModeAndModifier() {

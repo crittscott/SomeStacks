@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 
-/** Retains render-related S2C state until the loader's rendering layer is installed. */
+/**
+ * Retains server configuration overrides and forwards render edits and writes to an installed handler.
+ * Packet application runs on the client thread; loaders must dispatch decoded packets there.
+ */
 public final class ClientRenderPacketSink {
     private ClientRenderPacketSink() {}
 
@@ -31,11 +34,20 @@ public final class ClientRenderPacketSink {
     private static Handler handler;
     private static Map<ResourceLocation, ItemRenderConfig> serverOverrides = Map.of();
 
+    /**
+     * Installs the nonnull rendering handler and immediately gives it the latest retained server
+     * overrides, initially an empty map. Earlier individual-edit and write packets are not replayed.
+     */
     public static void setHandler(Handler handler) {
         ClientRenderPacketSink.handler = handler;
         handler.setServerOverrides(serverOverrides);
     }
 
+    /**
+     * Applies a valid configuration packet: updates enabled types immediately and retains an
+     * immutable copy of its server overrides. Forwards those overrides when a handler is installed;
+     * otherwise the next handler installation receives them. Invalid packets leave state unchanged.
+     */
     public static void apply(ConfigSyncPkt packet) {
         if (!packet.isValid()) {
             return;
@@ -49,12 +61,20 @@ public final class ClientRenderPacketSink {
         }
     }
 
+    /**
+     * Forwards an individual override edit to the installed handler. Without a handler the packet
+     * is discarded; it is not retained for installation.
+     */
     public static void apply(RenderOverridePkt packet) {
         if (handler != null) {
             handler.setUserOverride(packet);
         }
     }
 
+    /**
+     * Forwards a write request when a handler is installed and the namespace list is nonnull.
+     * Otherwise the request is discarded; it is not retained for installation.
+     */
     public static void apply(WriteOverridesPkt packet) {
         if (handler != null && packet.namespaces() != null) {
             handler.writeOverrides(packet.namespaces());

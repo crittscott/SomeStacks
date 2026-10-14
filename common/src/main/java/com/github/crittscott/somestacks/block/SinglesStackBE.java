@@ -42,10 +42,9 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * The column this block belongs to, or null on the client and for a block being removed.
-     *
-     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
-     * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
+     * Returns the server column containing this block, or null on the client or when removed.
+     * Delegates to {@link StackBlockEntity#itemRun()}, whose per-tick cache is invalidated by
+     * structural edits.
      */
     @Nullable
     public SinglesColumn column() {
@@ -210,16 +209,9 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Closes the gap one column left behind: every occupied cell above {@code fromY} moves down
-     * exactly one layer, carrying its rotation. The shift is positional rather than a compaction, so
-     * gaps that capability inserts created are preserved rather than quietly closed, and it always
-     * leaves the top cell of the column empty for the block above to hand down into.
-     *
-     * <p>The cell moved into is always empty — vacated by the extraction that started the pass,
-     * emptied by the previous step, or empty already — so the item is written straight into it
-     * rather than inserted. Validity gates what a deposit may add rather than what the structure may
-     * carry, so an item stored before an {@code ss ingot} edit or a data pack reload narrowed the
-     * rule still moves with its column.
+     * Moves occupied cells above {@code fromY} down exactly one layer in this local column, carrying
+     * item rotation and preserving gaps. The caller supplies a gap at {@code fromY}; stored items
+     * remain movable even when current admission rules would refuse them.
      */
     private void shiftColumnDown(int column, int fromY) {
         for (int checkY = fromY + 1; checkY < SinglesCubeIdx.LAYERS; checkY++) {
@@ -228,6 +220,7 @@ public class SinglesStackBE extends StackBlockEntity {
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
                 int targetIndex = SinglesCubeIdx.indexFromColumn(column, checkY - 1);
 
+                // The destination is vacant; direct assignment preserves stored items regardless of admission.
                 items.setStackInSlot(targetIndex, items.extractItem(sourceIndex, 1, false));
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
@@ -236,12 +229,9 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Draws a column down through the Singles Stacks above, so a vertical run behaves as one stack.
-     * Each shift vacates the top cell of its column, so exactly one item crosses each block boundary
-     * and the receiving cell is always free. The column is matched between blocks through visual
-     * coordinates, because two stacked blocks may carry different rotations and the run the player
-     * sees as continuous is the visual one. The walk ends at the first block that hands nothing
-     * down. The receiving cell is written directly, for the reason {@link #shiftColumnDown} gives.
+     * Draws items down across contiguous Singles blocks along the same visual column, matching
+     * block rotations and carrying item rotations. Requires a vacant top cell in the receiving
+     * column; stops when the next block cannot hand an item down. Does not recheck admission.
      */
     private void drawDownColumn(int column) {
         Level columnLevel = level;
@@ -268,6 +258,7 @@ public class SinglesStackBE extends StackBlockEntity {
                     be.beginBatch();
                     above.beginBatch();
                     try {
+                        // Gravity transfers stored contents without applying deposit admission.
                         be.items.setStackInSlot(targetIndex,
                                 above.items.extractItem(sourceIndex, 1, false));
                         // Block rotation turns a cell's position but never the item in it, so the

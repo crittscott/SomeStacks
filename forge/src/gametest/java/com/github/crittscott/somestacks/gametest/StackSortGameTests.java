@@ -12,6 +12,11 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 public final class StackSortGameTests {
     private StackSortGameTests() {}
 
+    /**
+     * Loader entry point for {@link StackSortChecks#comparatorOrdersEveryIdentityComponent}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         StackSortChecks.comparatorOrdersEveryIdentityComponent(helper);

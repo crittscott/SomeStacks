@@ -28,6 +28,15 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 public final class CapabilityAndPersistenceChecks {
     private CapabilityAndPersistenceChecks() {}
 
+    /**
+     * Internal update-tag round trip: copy a Storage block's tag into a second block and assert 23
+     * tagged stone in slot 7, three quarter-turns of rotation, and permanence. This does not
+     * exercise a disk save or reconnect.
+     *
+     * <p>Nearest manual check: deposit tagged stone, rotate with a redstone torch, toggle
+     * permanence, then leave and reload the world. Contents, tags, rotation, and permanence should
+     * persist; the exact slot and tag-copy path remain internal.
+     */
     public static void storageUpdateTagRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         StorageStackBE source = placeStorage(helper, ORIGIN);
         StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
@@ -52,6 +61,14 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal update-tag round trip: copy a Singles tag into a second block and assert an apple in
+     * slot 21, two block quarter-turns, and three item quarter-turns. No disk save is performed.
+     *
+     * <p>Nearest manual check: build a supported apple cell, rotate the block twice with a redstone
+     * torch and the apple three times with a soul torch, then reload the world. Both rotations and
+     * the item should persist.
+     */
     public static void singlesUpdateTagRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         SinglesStackBE source = placeSingles(helper, ORIGIN);
         SinglesStackBE loaded = placeSingles(helper, ORIGIN.east(3));
@@ -68,6 +85,14 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal update-tag round trip: copy a Bar tag with one accepted ingot in slot 37 into a
+     * second block and assert its item and count. The fixture bypasses support and does not save to
+     * disk.
+     *
+     * <p>Nearest manual check: build a supported Bar layout, reload the world, and confirm its
+     * contents and positions persist.
+     */
     public static void barUpdateTagRoundTripsItems(GameTestHelper helper) {
         BarStackBE source = placeBar(helper, ORIGIN);
         BarStackBE loaded = placeBar(helper, ORIGIN.east(3));
@@ -83,6 +108,14 @@ public final class CapabilityAndPersistenceChecks {
         helper.succeed();
     }
 
+    /**
+     * Internal cache check: query empty Singles and Bar shapes, directly insert into bottom slot 0,
+     * then extract again. Cached shapes become occupied and empty immediately.
+     *
+     * <p>Nearest manual check: create each type with one item and check collision around its
+     * occupied position; after extraction no stale occupied collision should remain. Empty blocks
+     * may be removed, so direct cache identity is not observable.
+     */
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         BarStackBE bar = placeBar(helper, ORIGIN.east(3));

@@ -120,18 +120,30 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         clearResolvedProfiles();
     }
 
+    /**
+     * Replaces the entire server override layer with the supplied entries and invalidates resolved
+     * profiles. Copies map entries; does not save them to the local user file.
+     */
     public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
         SERVER_OVERRIDES.clear();
         SERVER_OVERRIDES.putAll(overrides);
         clearResolvedProfiles();
     }
 
+    /**
+     * Loads the user file if needed, then replaces this item's in-memory user override and invalidates
+     * resolved profiles. Does not save to disk; server overrides still take precedence.
+     */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
         clearResolvedProfiles();
     }
 
+    /**
+     * Loads the user file if needed, removes this item's user override, and invalidates resolved
+     * profiles. Does not save to disk; resolution falls through according to the remaining layers.
+     */
     public static void removeUser(ResourceLocation itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);

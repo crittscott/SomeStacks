@@ -29,31 +29,61 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
  * backfills from the top instead.
  */
 public final class BarColumnGameTests implements FabricGameTest {
+    /**
+     * Loader entry point for {@link BarColumnChecks#validityAndBottomGroundingAreEnforced}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#upperBarRequiresOverlappingSupport}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarColumnChecks.upperBarRequiresOverlappingSupport(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}; see that
+     * method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#supportedNeighborSurvivesPlayerExtraction}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#differentlyOrientedSeamUsesFootprintOverlap};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarColumnChecks.differentlyOrientedSeamUsesFootprintOverlap(helper);
     }
 
+    /**
+     * To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
+     * bottom-up to insert ten identical ingots. Extract one from bottom position 0 through
+     * automation. Nine remain, position 0 is backfilled from the topmost bar, and no ingot item
+     * entity is dropped.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automationBackfillsWithoutDropping(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -80,6 +110,15 @@ public final class BarColumnGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * Internal positional insertion check: offer four accepted ingots to unsupported slot 8, then
+     * grounded slot 0. Slot 8 refuses all four; slot 0 accepts exactly one, leaving the caller's
+     * offer unchanged. Simulation reports the same capacity without storing.
+     *
+     * <p>To check manually, use slot-addressing automation on an empty Bar fixture. An unsupported
+     * target must not redirect to another position; a bottom target stores one bar. Simulation
+     * requires a machine or probe exposing that operation.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -111,10 +150,15 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     /**
-     * Validity gates insertion only, so a bar stored before an {@code ss ingot} edit or a data pack
-     * reload narrowed the rule has to survive the backfill an automated extraction moves it through.
-     * A stick stands in for such a bar: a Bar Stack refuses one from a deposit, but may be holding
-     * contents the current ingot set no longer covers.
+     * Synthetic admission fixture: directly seed a refused stick at Bar slot 1 beside an accepted
+     * ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
+     * is conserved in storage plus nearby drops. The test does not change policy.
+     *
+     * <p>To check manually, record /ss ingot list, keep an existing accepted pattern, and /ss ingot
+     * add minecraft:planks to admit oak planks temporarily. Store an ordinary ingot at bottom
+     * position 0 and oak planks at position 1, then /ss ingot remove minecraft:planks. Automate
+     * extraction from position 0; the stored plank remains conserved despite its new refusal.
+     * Restore the original list.
      */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
@@ -136,6 +180,13 @@ public final class BarColumnGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * Internal extraction simulation: put one accepted ingot at Bar slot 0 and simulate extracting
+     * up to 64. The result is one ingot and the stored bar remains unchanged.
+     *
+     * <p>No player gesture performs this dry run. Use slot-addressing automation or a probe that
+     * simulates extraction without committing; the bar should remain visible.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
@@ -152,36 +203,69 @@ public final class BarColumnGameTests implements FabricGameTest {
         helper.succeed();
     }
 
+    /**
+     * Loader entry point for {@link
+     * BarColumnChecks#breakingLowerBlockCollapsesDependentUpperBlock}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarColumnChecks.breakingLowerBlockCollapsesDependentUpperBlock(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#breakingFullColumnConsolidatesDrops}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarColumnChecks.breakingFullColumnConsolidatesDrops(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#collapseDoesNotMergeDifferentTags}; see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void collapseDoesNotMergeDifferentTags(GameTestHelper helper) {
         BarColumnChecks.collapseDoesNotMergeDifferentTags(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}; see
+     * that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock};
+     * see that method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
+    /**
+     * Loader entry point for {@link BarColumnChecks#comparatorFollowsAColumnLosingABlock}; see that
+     * method for
+     * the scenario, manual check, and any internal-only assertions.
+     */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
