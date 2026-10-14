@@ -17,8 +17,8 @@ The `working-build-env/` directory is not part of the active Gradle build. The r
 | Gradle | Wrapper pinned in `gradle/wrapper/gradle-wrapper.properties` | **9.5.1** |
 | Java toolchain | Language version 17; source/target 17; `--release 17` | Temurin **17.0.15+6** from `JAVA_HOME` |
 | Recorded IntelliJ Gradle JVM | JDK 21; local IntelliJ settings are not present in this checkout | Temurin **21.0.2+13** |
-| Architectury Loom | `1.17.493` | Owner verification recorded through Stage 6 |
-| Architectury Plugin | `3.5.170` | Owner verification recorded through Stage 6 |
+| Architectury Loom | `1.17.493` | Recorded Stage 6 verification; historical evidence unavailable here |
+| Architectury Plugin | `3.5.170` | Recorded Stage 6 verification; historical evidence unavailable here |
 | Shadow (`com.gradleup.shadow`) | `9.4.3` | 9.4.3 cached |
 | Mixin patched by Loom | transitive | `dev.architectury:mixin-patched:0.8.5.12` cached |
 
@@ -28,11 +28,7 @@ The command-line environment resolves `java` through:
 C:\Users\Dad\AppData\Local\Programs\Eclipse Adoptium\jdk-17.0.15.6-hotspot
 ```
 
-The machine also has Temurin 21.0.2+13, Oracle JDK 17.0.9+11, and a Java 8 JRE installed. IntelliJ
-uses JDK 21 to run Gradle, while the project toolchain forces compilation and every Gradle
-`JavaExec` task, including Minecraft development runs, onto Java 17. Command-line wrapper
-invocations use the Java 17 `JAVA_HOME`. There is no global `gradle` command; the wrapper is the
-build entry point.
+The machine also has Temurin 21.0.2+13, Oracle JDK 17.0.9+11, and a Java 8 JRE installed. The recorded IntelliJ setup uses JDK 21 to run Gradle; no local IntelliJ configuration is available to verify that setting. The project toolchain forces compilation and every Gradle `JavaExec` task, including Minecraft development runs, onto Java 17. Command-line wrapper invocations use the Java 17 `JAVA_HOME`. There is no global `gradle` command; the wrapper is the build entry point.
 
 `gradle.properties` gives Gradle 3 GiB with `org.gradle.jvmargs=-Xmx3G` and disables the persistent
 daemon with `org.gradle.daemon=false`. It does not enable parallel execution. Loom and the
@@ -182,5 +178,6 @@ task synchronizes those outputs into `docs/javadoc/common`, `docs/javadoc/<loade
 
 `build-env/` is a reference snapshot of the active root and module Gradle scripts, properties,
 and wrapper inputs; it excludes inactive NeoForge files. It is not a standalone source tree.
-The wrapper inputs match the 1.21.4 reference while retaining Gradle 9.5.1; its properties specify
-URL validation, zero retries, and a 500 ms retry backoff. The backport plan records owner verification through Stage 6. Final source review and build-snapshot comparison are complete; the final common JUnit, release-artifact, both loader GameTest, and client/server checks remain unchecked. Documentation generation remains a separate check.
+The wrapper properties retain Gradle 9.5.1 and specify URL validation, zero retries, and a 500 ms retry backoff. The snapshot matches the active build files byte-for-byte, including the wrapper JAR. The recorded Stage 6/backport history and comparison with the 1.21.4 reference cannot be independently verified from this checkout.
+
+Existing results from October 13, 2026 show all 69 common JUnit tests, 4 Fabric JSON-persistence JUnit tests, 98 Fabric GameTests, and 99 Forge GameTests passing. Both loader release JARs are present; their contents were not inspected. Ordinary client/server checks and documentation generation remain unverified. These results were read from existing reports and logs; no builds or tests were run during this documentation check.
