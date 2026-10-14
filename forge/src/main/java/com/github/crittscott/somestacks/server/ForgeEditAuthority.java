@@ -9,6 +9,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import javax.annotation.Nullable;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -95,9 +97,9 @@ public final class ForgeEditAuthority implements EditAuthority {
     }
 
     @Override
-    public boolean vetoesRemoval(ServerLevel level, BlockPos pos, BlockState state) {
-        ServerPlayer breaker = FakePlayerFactory.getMinecraft(level);
-        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, breaker);
+    public boolean vetoesRemoval(ServerLevel level, ServerPlayer actor, BlockPos pos,
+                                 BlockState state, @Nullable BlockEntity blockEntity) {
+        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
         return MinecraftForge.EVENT_BUS.post(evt);
     }
 }

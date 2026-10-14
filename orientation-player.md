@@ -90,6 +90,7 @@ The bottom layer rests on the world. Every bar above it must overlap a bar direc
 - **Collision:** Storage is a full block. Singles and Bar collide on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unavailable for pathfinding.
 - **Empty dynamic blocks:** empty Singles and Bar blocks have no outline shape, but their full-block interaction shape makes them clickable and breakable.
 - **Sounds:** deposits, extraction, and rotations play server-selected sounds; data packs can replace them per type and action.
+- **Vibrations:** placement, growth, and successful cleanup/cascade removal emit placement/destruction game events, subject to ordinary sculk filtering. Denied edits emit none.
 
 ## Automation
 
@@ -140,7 +141,7 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 
 Disabling types prevents placement/growth; existing blocks and extraction remain. Item/mod/tag changes never eject contents. Enable flags sync on login; cycling skips disabled types.
 
-Ingot-tag entries may contain `*`: `forge:ingots*` matches `forge:ingots` and child tags such as `forge:ingots/copper`; Fabric defaults to `c:ingots*`. Data-pack tag changes are picked up on reload.
+Ingot patterns accept `*`: `forge:ingots*` matches the parent and child tags. Data-pack tag changes take effect on reload.
 
 ## Commands
 
@@ -159,7 +160,7 @@ Ingot-tag entries may contain `*`: `forge:ingots*` matches `forge:ingots` and ch
 | `/ss ingot ...` | Level 2 | Edit ingot-tag patterns |
 | `/ss reload` | Level 2 | Reload server render overrides and resync players |
 
-Galleries build east of the player over sandstone, with rows running north, spread across server ticks. They directly replace floor and stack positions without ordinary placement protection, so they are disabled by default and default to permission level 3 once enabled.
+Galleries build east over sandstone, with rows running north, across server ticks. They replace floor and stack positions without placement protection; defaults are disabled and permission level 3.
 
 `/ss reload` refreshes render overrides and synchronization. Policy command edits save immediately; Forge TOML edits reload automatically, while Fabric JSON edits need restart.
 
@@ -175,12 +176,14 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 
 ## Extension points
 
-- Data pack: add items to tags selected by `ingot_tags`, including the shipped `somestacks:ingots` tag; replace action sounds through `data/<namespace>/somestacks_sounds/*.json`.
-- Resource pack: add Storage/Singles profiles through `assets/<namespace>/item_render_overrides/*.json`; add Bar textures/tints through `assets/<namespace>/textures/bars/*.json`.
-- Server: impose Storage/Singles profiles through `config/somestacks/server_item_overrides/*.json`, synchronized on login or `/ss reload`.
+- Data packs: ingot admission through configured tags; action sounds through `data/<namespace>/somestacks_sounds/*.json`.
+- Resource packs: Storage/Singles profiles at `assets/<namespace>/item_render_overrides/*.json`; Bar mappings described above.
+- Server profiles: `config/somestacks/server_item_overrides/*.json`, synced on login or `/ss reload`.
 
 ## Protection and validation
 
 Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection as applicable. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal uses a loader-provided automation actor. Fabric has no automation placement event, so growth also consults FTB Chunks and Open Parties and Claims directly when installed; other Fabric claim mods are not consulted for that growth check.
+
+Fabric automatic removal sends cancellation on veto or completion on success, with the original actor, state, and block entity. Failed removal never reports success.
 
 Block-use clicks use synchronized mode/modifier state. The server validates pacing, player status, loaded targets, reach, hand, items, adjacency, support, enablement, height, and protection; its view ray selects cells. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.

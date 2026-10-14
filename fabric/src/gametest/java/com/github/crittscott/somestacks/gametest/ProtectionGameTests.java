@@ -32,8 +32,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.material.Fluids;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -45,6 +50,13 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  *
  */
 public final class ProtectionGameTests implements FabricGameTest {
+    /** To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void placementGrowthAndCleanupNotify(GameTestHelper helper) {
+        WorldEditChecks.placementGrowthAndCleanupNotify(helper, FakePlayer.get(helper.getLevel()),
+                player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
+    }
+
     /**
      * Internal checked-placement test: place stone at an in-bounds position, then try a position
      * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
@@ -87,9 +99,12 @@ public final class ProtectionGameTests implements FabricGameTest {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Entity-obstructed checked placement was accepted");
+        try (var events = new WorldEditChecks.EventProbe(level, target)) {
+            check(!WorldEdits.placeChecked(
+                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                    "Entity-obstructed checked placement was accepted");
+            events.expectNone();
+        }
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
     }
@@ -391,37 +406,84 @@ public final class ProtectionGameTests implements FabricGameTest {
     private static ServerPlayer deniedPlayer;
     private static BlockPos deniedPosition;
     private static BlockPos automatedRemovalPosition;
-    private static Player removalActor;
+    private static ServerLevel removalLevel;
+    private static boolean denyRemoval;
+    private static final List<RemovalNotice> removalNotices = new ArrayList<>();
+    private record RemovalNotice(String phase, Player actor, BlockState state, BlockEntity entity) {}
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) ->
                 player == deniedPlayer && hit.getBlockPos().equals(deniedPosition)
                         ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
-            if (!pos.equals(automatedRemovalPosition)) return true;
-            removalActor = player;
-            return false;
+            if (level != removalLevel || !pos.equals(automatedRemovalPosition)) return true;
+            removalNotices.add(new RemovalNotice("before", player, state, blockEntity));
+            return !denyRemoval;
+        });
+        PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
+            if (level == removalLevel && pos.equals(automatedRemovalPosition)) {
+                removalNotices.add(new RemovalNotice("after", player, state, blockEntity));
+                check(level.getBlockEntity(pos) != blockEntity, "AFTER ran before entity removal");
+            }
+        });
+        PlayerBlockBreakEvents.CANCELED.register((level, player, pos, state, blockEntity) -> {
+            if (level == removalLevel && pos.equals(automatedRemovalPosition)) {
+                removalNotices.add(new RemovalNotice("canceled", player, state, blockEntity));
+                check(level.getBlockEntity(pos) == blockEntity, "CANCELED lost the original entity");
+            }
         });
     }
 
-    /** To reproduce: deny automated cleanup through a protection mod; the empty stack stays and the action is attributed to Fabric's fake player. */
+    /** To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the native fake player and original block entity. A nearby sculk sensor receives only the accepted destruction vibration. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automatedRemovalUsesNativeActorAndHonorsVeto(GameTestHelper helper) {
         StorageStackBE stack = GameTestScaffold.placeStorage(helper, ORIGIN);
         BlockPos target = stack.getBlockPos();
+        BlockState state = helper.getLevel().getBlockState(target);
+        ServerPlayer actor = FakePlayer.get(helper.getLevel());
         automatedRemovalPosition = target;
-        try {
-            check(WorldEdits.automationActor(helper.getLevel()) == FakePlayer.get(helper.getLevel()),
+        removalLevel = helper.getLevel();
+        denyRemoval = true;
+        removalNotices.clear();
+        try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), target)) {
+            check(WorldEdits.automationActor(helper.getLevel()) == actor,
                     "Automation does not use Fabric's native actor");
+            outsideTheBorder(helper, () -> {
+                check(!WorldEdits.removeChecked(helper.getLevel(), target), "Protected removal was accepted");
+                checkEquals(0, removalNotices.size(), "Protected removal invoked break callbacks");
+                events.expectNone();
+            });
             check(!WorldEdits.removeChecked(helper.getLevel(), target), "Vetoed removal was accepted");
-            check(removalActor == FakePlayer.get(helper.getLevel()), "Break callback received a different actor");
+            expectRemovalNotices(actor, state, stack, "before", "canceled");
+            events.expectNone();
             helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+            denyRemoval = false;
+            check(WorldEdits.removeChecked(helper.getLevel(), target), "Allowed removal was rejected");
+            expectRemovalNotices(actor, state, stack, "before", "after");
+            events.expectOne(GameEvent.BLOCK_DESTROY, actor, state);
+            helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
+            check(!WorldEdits.removeChecked(helper.getLevel(), target), "Unchanged air reported successful removal");
+            expectRemovalNotices(actor, Blocks.AIR.defaultBlockState(), null, "before");
+            events.expectNone();
         } finally {
             automatedRemovalPosition = null;
-            removalActor = null;
+            removalLevel = null;
+            denyRemoval = false;
+            removalNotices.clear();
         }
-        check(WorldEdits.removeChecked(helper.getLevel(), target), "Allowed removal was rejected");
-        helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), ORIGIN);
         helper.succeed();
+    }
+
+    private static void expectRemovalNotices(Player actor, BlockState state, BlockEntity entity,
+                                             String... phases) {
+        checkEquals(phases.length, removalNotices.size(), "Removal callback count");
+        for (int i = 0; i < phases.length; i++) {
+            RemovalNotice notice = removalNotices.get(i);
+            checkEquals(phases[i], notice.phase(), "Removal callback order");
+            check(notice.actor() == actor, "Removal callback actor changed");
+            checkEquals(state, notice.state(), "Removal callback lost original state");
+            check(notice.entity() == entity, "Removal callback lost original block entity");
+        }
+        removalNotices.clear();
     }
 
     /**

@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -17,8 +19,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * Vanilla world-edit mechanics for automated growth and removal: world border and spawn
  * protection, entity obstruction, and the actual block placement/removal. The one loader-specific
- * decision each carries — who the automation actor is, and whether a claim/logging mod vetoes the
- * edit — is delegated to {@link EditAuthority}.
+ * authority — the automation actor, protection callbacks, and loader completion notifications —
+ * is delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
     private WorldEdits() {
@@ -105,7 +107,12 @@ public final class WorldEdits {
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
-        return authority().place(placer, level, pos, state, placedAgainst);
+        if (!authority().place(placer, level, pos, state, placedAgainst)) {
+            return false;
+        }
+        level.gameEvent(GameEvent.BLOCK_PLACE, pos,
+                GameEvent.Context.of(placer, level.getBlockState(pos)));
+        return true;
     }
 
     /**
@@ -115,13 +122,20 @@ public final class WorldEdits {
      * @return whether the block was removed
      */
     public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        if (isProtected(level, pos)) {
+        ServerPlayer actor = automationActor(level);
+        if (isProtected(actor, pos)) {
             return false;
         }
         BlockState state = level.getBlockState(pos);
-        if (authority().vetoesRemoval(level, pos, state)) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (authority().vetoesRemoval(level, actor, pos, state, blockEntity)) {
             return false;
         }
-        return level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        if (!level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL)) {
+            return false;
+        }
+        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
+        authority().afterRemoval(level, actor, pos, state, blockEntity);
+        return true;
     }
 }

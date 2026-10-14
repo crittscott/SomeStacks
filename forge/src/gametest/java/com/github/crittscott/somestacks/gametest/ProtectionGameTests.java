@@ -57,6 +57,14 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
 
+    /** To reproduce: place Storage near a sculk sensor, grow it with a full-pile deposit, then empty the top; each structural edit emits a vibration. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void placementGrowthAndCleanupNotify(GameTestHelper helper) {
+        WorldEditChecks.placementGrowthAndCleanupNotify(helper,
+                FakePlayerFactory.getMinecraft(helper.getLevel()),
+                player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
+    }
+
     /**
      * Internal checked-placement test: place stone at an in-bounds position, then try a position
      * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call
@@ -100,9 +108,12 @@ public final class ProtectionGameTests {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
-                "Entity-obstructed checked placement was accepted");
+        try (var events = new WorldEditChecks.EventProbe(level, target)) {
+            check(!WorldEdits.placeChecked(
+                            player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                    "Entity-obstructed checked placement was accepted");
+            events.expectNone();
+        }
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
     }
@@ -166,12 +177,13 @@ public final class ProtectionGameTests {
         };
 
         MinecraftForge.EVENT_BUS.addListener(denyTop);
-        try {
+        try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), top)) {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
             pile.settle();
             helper.assertBlockPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
+            events.expectNone();
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyTop);
         }
@@ -179,7 +191,12 @@ public final class ProtectionGameTests {
         // With nothing refusing it, the same settle takes the block down.
         StoragePile pile = base.pile();
         check(pile != null, "Pile did not resolve after the refusal");
-        pile.settle();
+        var state = helper.getLevel().getBlockState(top);
+        try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), top)) {
+            pile.settle();
+            events.expectOne(net.minecraft.world.level.gameevent.GameEvent.BLOCK_DESTROY,
+                    WorldEdits.automationActor(helper.getLevel()), state);
+        }
         helper.assertBlockNotPresent(CommonRegistry.STORAGE_STACK_BLOCK.get(), topRelative);
         helper.succeed();
     }
@@ -619,9 +636,10 @@ public final class ProtectionGameTests {
         };
         MinecraftForge.EVENT_BUS.addListener(observe);
         MinecraftForge.EVENT_BUS.addListener(placement);
-        try {
+        try (var events = new WorldEditChecks.EventProbe(level, target)) {
             var player = FakePlayerFactory.getMinecraft(level);
             check(!WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Denied placement accepted");
+            events.expectNone();
             checkEquals(originalState, level.getBlockState(target), "Denied state not restored");
             var restored = level.getBlockEntity(target);
             checkEquals(before, restored.saveWithFullMetadata(), "Denied inventory/name not restored");
@@ -631,6 +649,7 @@ public final class ProtectionGameTests {
             check(WorldEdits.placeChecked(player, level, target, placedState, Direction.DOWN), "Accepted placement rejected");
             check(neighbors[0] > 0, "Accepted placement never notified neighbors");
             checkEquals(placedState, level.getBlockState(target), "Accepted placement state");
+            events.expectOne(net.minecraft.world.level.gameevent.GameEvent.BLOCK_PLACE, player, placedState);
         } finally {
             MinecraftForge.EVENT_BUS.unregister(observe);
             MinecraftForge.EVENT_BUS.unregister(placement);
