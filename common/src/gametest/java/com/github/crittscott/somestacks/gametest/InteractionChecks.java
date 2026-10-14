@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -240,6 +241,71 @@ public final class InteractionChecks {
             check(!StackInteractions.withinReach(player, near.east(20)), "Far reach");
         }
         helper.succeed();
+    }
+
+    /**
+     * To reproduce: put a sculk sensor beside a Storage, a Singles, and a Bar Stack. Deposit into
+     * and extract from Storage, toggle its permanence, and rotate it with a redstone torch; rotate a
+     * Singles item with a soul torch. Each successful use vibrates. Extract one of two Singles items
+     * or bars, then the last: the first vibrates as a change, the last only as the block's
+     * destruction.
+     */
+    public static void successfulUseEmitsBlockChange(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
+        var storage = placeStorage(helper, TARGET);
+        var singles = placeSingles(helper, TARGET.east(3));
+        var bars = placeBar(helper, TARGET.east(6));
+        var barItem = firstBarItem();
+        singles.getItems().setStackInSlot(0, new ItemStack(Items.STONE));
+        singles.getItems().setStackInSlot(1, new ItemStack(Items.STONE));
+        bars.getItems().setStackInSlot(0, new ItemStack(barItem));
+        bars.getItems().setStackInSlot(1, new ItemStack(barItem));
+        try (PlayerScope scope = new PlayerScope(factory.apply(new ItemStack(Items.DIRT)))) {
+            var player = scope.player;
+            BlockPos pile = storage.getBlockPos();
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            expectUseEvent(helper, player, pile, GameEvent.BLOCK_CHANGE, () -> callback.click(player, HAND, aim(player, pile, 0.2, 0.2)));
+            checkEquals(1, count(storage.getItems(), Items.DIRT), "Deposit contents");
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            expectUseEvent(helper, player, pile, GameEvent.BLOCK_CHANGE, () -> callback.click(player, HAND, aim(player, pile, 0.2, 0.2)));
+            checkEquals(0, count(storage.getItems(), Items.DIRT), "Extraction contents");
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.TOGGLE_PERMANENT, true);
+            expectUseEvent(helper, player, pile, GameEvent.BLOCK_CHANGE, () -> callback.click(player, HAND, aim(player, pile, 0.5, 0.5)));
+            check(storage.pile().isPermanent(), "Toggle did not apply");
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            player.setShiftKeyDown(true);
+            player.setItemInHand(HAND, new ItemStack(Items.REDSTONE_TORCH));
+            expectUseEvent(helper, player, pile, GameEvent.BLOCK_CHANGE, () -> callback.click(player, HAND, aim(player, pile, 0.5, 0.5)));
+            checkEquals(1, storage.getRotation(), "Block rotation");
+            player.setItemInHand(HAND, new ItemStack(Items.SOUL_TORCH));
+            expectUseEvent(helper, player, singles.getBlockPos(), GameEvent.BLOCK_CHANGE,
+                    () -> callback.click(player, HAND, aim(player, singles.getBlockPos(), 0.125, 0.125)));
+            checkEquals(1, singles.getCubeRotation(0), "Item rotation");
+            player.setShiftKeyDown(false);
+            for (var be : new StackBlockEntity[] {singles, bars}) {
+                BlockPos pos = be.getBlockPos();
+                double y = be == bars ? 0.0625 : 0.125;
+                player.setItemInHand(HAND, ItemStack.EMPTY);
+                expectUseEvent(helper, player, pos, GameEvent.BLOCK_CHANGE, () -> callback.click(player, HAND, aim(player, pos, y, 0.125)));
+                checkEquals(1, player.getMainHandItem().getCount(), "First extraction");
+                expectUseEvent(helper, player, pos, GameEvent.BLOCK_DESTROY, () -> callback.click(player, HAND, aim(player, pos, y, 0.125)));
+                checkEquals(2, player.getMainHandItem().getCount(), "Last extraction");
+            }
+        }
+        helper.succeed();
+    }
+
+    /** Runs one gesture and requires exactly {@code event} at {@code pos}, attributed to the player. */
+    private static void expectUseEvent(GameTestHelper helper, ServerPlayer player, BlockPos pos,
+                                       GameEvent event, Runnable gesture) {
+        var level = helper.getLevel();
+        var before = level.getBlockState(pos);
+        GestureThrottle.clear(player.getUUID());
+        try (var events = new WorldEditChecks.EventProbe(level, pos)) {
+            gesture.run();
+            events.expectOne(event, player, event == GameEvent.BLOCK_DESTROY ? before : level.getBlockState(pos));
+        }
     }
 
     /** Positions the eye west of the named row and aims east, independently of client hit coordinates. */

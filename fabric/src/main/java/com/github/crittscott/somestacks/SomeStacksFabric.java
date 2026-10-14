@@ -43,12 +43,6 @@ public final class SomeStacksFabric implements ModInitializer {
             FabricServerConfig.start(server);
         });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycle.stopped());
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
-                (server, resourceManager, success) -> {
-                    if (success) {
-                        ServerConfig.rebakeIngotTags();
-                    }
-                });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.player;

@@ -109,38 +109,58 @@ public final class CapabilityAndPersistenceGameTests {
         helper.succeed();
     }
 
-    /**
-     * Loader entry point for {@link
-     * CapabilityAndPersistenceChecks#storageUpdateTagRoundTripsItemsRotationAndPermanence}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void storageUpdateTagRoundTripsItemsRotationAndPermanence(
-            GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.storageUpdateTagRoundTripsItemsRotationAndPermanence(helper);
+    public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /**
-     * Loader entry point for {@link
-     * CapabilityAndPersistenceChecks#singlesUpdateTagRoundTripsItemsAndBothRotations}; see that
-     * method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void singlesUpdateTagRoundTripsItemsAndBothRotations(
-            GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.singlesUpdateTagRoundTripsItemsAndBothRotations(helper);
+    public static void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
-    /**
-     * Loader entry point for {@link CapabilityAndPersistenceChecks#barUpdateTagRoundTripsItems};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#barDiskSaveRoundTripsItems}. */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void barUpdateTagRoundTripsItems(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.barUpdateTagRoundTripsItems(helper);
+    public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#clientUpdatesRejectMalformedDataAtomically}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void clientUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.clientUpdatesRejectMalformedDataAtomically(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
 
     /**
@@ -237,6 +257,12 @@ public final class CapabilityAndPersistenceGameTests {
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#reloadCommandPublishesStoredPolicy}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
+        ServiceAndConfigChecks.reloadCommandPublishesStoredPolicy(helper);
     }
 
     /** To reproduce: use /ss deny mod add, inspect somestacks-server.toml, then remove the entry; command edits persist through Forge's native config. */

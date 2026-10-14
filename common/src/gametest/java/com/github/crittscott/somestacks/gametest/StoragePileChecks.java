@@ -148,6 +148,32 @@ public final class StoragePileChecks {
     }
 
     /**
+     * To reproduce: build a two-block Storage pile, give its base one redstone-torch turn and its
+     * top block three, fill both blocks with full dirt stacks, then V-deposit one stone. The new
+     * third block shows the base's layout, not the top block's.
+     */
+    public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
+        StorageStackBE lower = placeStorage(helper, ORIGIN);
+        StorageStackBE upper = placeStorage(helper, ORIGIN.above());
+        lower.setRotation(1);
+        upper.setRotation(3);
+        for (StorageStackBE block : new StorageStackBE[]{lower, upper}) {
+            for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                block.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            }
+        }
+
+        checkEquals(1, lower.deposit(new ItemStack(Items.STONE)), "Moved count");
+
+        StorageStackBE grown = (StorageStackBE) helper.getLevel().getBlockEntity(
+                upper.getBlockPos().above());
+        check(grown != null, "Pile did not grow");
+        checkEquals(1, grown.getRotation(), "Grown block rotation");
+        checkEquals(3, upper.getRotation(), "Old top rotation changed");
+        helper.succeed();
+    }
+
+    /**
      * Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
      * stacks of five with {variant:2} in separated slots, then settle. Slots 0-2 contain 64, 6, and
      * 10, preserving the two tag identities.

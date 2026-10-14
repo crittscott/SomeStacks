@@ -17,29 +17,26 @@ class FabricServerConfigPersistenceTest {
         Path file = directory.resolve("world/serverconfig/somestacks-server.json");
         FabricServerConfig.Persistence persistence = new FabricServerConfig.Persistence(file);
         ServerConfig.Settings authored = new ServerConfig.Settings(12, false, true, false,
-                List.of("example"), List.of("minecraft:stone"), List.of("custom:ingots*", "somestacks:ingots"),
-                9, true, 2, List.of("minecraft"), List.of("minecraft:apple"));
+                List.of("example"), List.of("minecraft:stone"), 9, true, 2, List.of("minecraft"), List.of("minecraft:apple"));
         persistence.write(authored);
-        assertEquals(authored, persistence.read(ServerConfig.Settings.defaults(true)));
+        assertEquals(authored, persistence.read(ServerConfig.Settings.defaults()));
         String json = Files.readString(file);
         assertTrue(json.contains("max_pile_height"));
         assertTrue(json.contains("required_permission_level"));
         assertTrue(json.contains("disable_items"));
-        assertTrue(json.contains("custom:ingots*"));
+        assertFalse(json.contains("ingot_tags"));
     }
 
     @Test
     void missingWorldAndMissingFieldsUseLoaderDefaults() throws Exception {
         Path file = directory.resolve("fabric/serverconfig/somestacks-server.json");
         FabricServerConfig.Persistence persistence = new FabricServerConfig.Persistence(file);
-        ServerConfig.Settings defaults = ServerConfig.Settings.defaults(true);
+        ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
         assertEquals(defaults, persistence.read(defaults));
         assertTrue(Files.exists(file));
         Files.writeString(file, "{}");
         assertEquals(defaults, persistence.read(defaults));
-        assertEquals(List.of("c:ingots*", "somestacks:ingots"), defaults.ingotTags());
-        assertEquals(List.of("forge:ingots*", "somestacks:ingots"),
-                ServerConfig.Settings.defaults(false).ingotTags());
+        assertEquals(List.of("evilcraft:broom_part"), defaults.disableItems());
     }
 
     @Test
@@ -50,7 +47,7 @@ class FabricServerConfigPersistenceTest {
                  "render_gallery": {"placements_per_tick": 0, "required_permission_level": -1}}
                 """);
         ServerConfig.Settings settings = new FabricServerConfig.Persistence(file)
-                .read(ServerConfig.Settings.defaults(false));
+                .read(ServerConfig.Settings.defaults());
         assertEquals(64, settings.maxPileHeight());
         assertEquals(1, settings.renderGalleryPlacementsPerTick());
         assertEquals(0, settings.galleryPermissionLevel());
@@ -63,7 +60,7 @@ class FabricServerConfigPersistenceTest {
                 {"piles": {"max_pile_height": 2},
                  "compatibility": {"disable_items": [{}]}}
                 """);
-        ServerConfig.Settings defaults = ServerConfig.Settings.defaults(false);
+        ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
         assertEquals(defaults, new FabricServerConfig.Persistence(file).read(defaults));
     }
 }

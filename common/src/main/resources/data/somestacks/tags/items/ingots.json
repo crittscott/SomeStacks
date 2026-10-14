@@ -8,6 +8,110 @@
     {
       "id": "#c:ingots",
       "required": false
+    },
+    {
+      "id": "#c:bricks",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_diamond_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_emerald_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_gold_ingot",
+      "required": false
+    },
+    {
+      "id": "advancednetherite:netherite_iron_ingot",
+      "required": false
+    },
+    {
+      "id": "aether_treasure_reforging:pyral_ingot",
+      "required": false
+    },
+    {
+      "id": "aether_treasure_reforging:valkyrum_ingot",
+      "required": false
+    },
+    {
+      "id": "betterend:aeternium_ingot",
+      "required": false
+    },
+    {
+      "id": "betterend:terminite_ingot",
+      "required": false
+    },
+    {
+      "id": "betterend:thallasium_ingot",
+      "required": false
+    },
+    {
+      "id": "betternether:cincinnasite_ingot",
+      "required": false
+    },
+    {
+      "id": "deeperdarker:grime_brick",
+      "required": false
+    },
+    {
+      "id": "gtceu:coke_oven_brick",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_clay",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_coke_clay",
+      "required": false
+    },
+    {
+      "id": "gtceu:compressed_fireclay",
+      "required": false
+    },
+    {
+      "id": "gtceu:firebrick",
+      "required": false
+    },
+    {
+      "id": "minecraft:brick",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:gold_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:iron_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:nether_brick",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "required": false
+    },
+    {
+      "id": "mobs_of_mythology:bronze_ingot",
+      "required": false
+    },
+    {
+      "id": "tconstruct:scorched_brick",
+      "required": false
+    },
+    {
+      "id": "tconstruct:seared_brick",
+      "required": false
     }
   ]
 }

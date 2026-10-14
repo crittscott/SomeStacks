@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
@@ -55,6 +56,24 @@ public final class ProtectionGameTests implements FabricGameTest {
     public void placementGrowthAndCleanupNotify(GameTestHelper helper) {
         WorldEditChecks.placementGrowthAndCleanupNotify(helper, FakePlayer.get(helper.getLevel()),
                 player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
+    }
+
+    /** Loader entry point for {@link WorldEditChecks#automationUsesSharedIdentity}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void automationUsesSharedIdentity(GameTestHelper helper) {
+        WorldEditChecks.automationUsesSharedIdentity(helper);
+    }
+
+    /** Loader entry point for {@link WorldEditChecks#cleanupOfWaterloggedStackKeepsTheWater}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void cleanupOfWaterloggedStackKeepsTheWater(GameTestHelper helper) {
+        WorldEditChecks.cleanupOfWaterloggedStackKeepsTheWater(helper);
+    }
+
+    /** Loader entry point for {@link WorldEditChecks#playerCausedCleanupCarriesThePlayer}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerCausedCleanupCarriesThePlayer(GameTestHelper helper) {
+        WorldEditChecks.playerCausedCleanupCarriesThePlayer(helper, FakePlayer.get(helper.getLevel()));
     }
 
     /**
@@ -433,20 +452,20 @@ public final class ProtectionGameTests implements FabricGameTest {
         });
     }
 
-    /** To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the native fake player and original block entity. A nearby sculk sensor receives only the accepted destruction vibration. */
+    /** To reproduce: deny automated cleanup through a protection mod, then allow it. The empty stack stays on veto; Fabric listeners receive BEFORE/CANCELED or BEFORE/AFTER with the [SomeStacks] fake player and original block entity. A nearby sculk sensor receives only the accepted destruction vibration. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void automatedRemovalUsesNativeActorAndHonorsVeto(GameTestHelper helper) {
         StorageStackBE stack = GameTestScaffold.placeStorage(helper, ORIGIN);
         BlockPos target = stack.getBlockPos();
         BlockState state = helper.getLevel().getBlockState(target);
-        ServerPlayer actor = FakePlayer.get(helper.getLevel());
+        ServerPlayer actor = FakePlayer.get(helper.getLevel(), AutomationActor.PROFILE);
         automatedRemovalPosition = target;
         removalLevel = helper.getLevel();
         denyRemoval = true;
         removalNotices.clear();
         try (var events = new WorldEditChecks.EventProbe(helper.getLevel(), target)) {
             check(WorldEdits.automationActor(helper.getLevel()) == actor,
-                    "Automation does not use Fabric's native actor");
+                    "Automation does not use Fabric's native actor with the shared profile");
             outsideTheBorder(helper, () -> {
                 check(!WorldEdits.removeChecked(helper.getLevel(), target), "Protected removal was accepted");
                 checkEquals(0, removalNotices.size(), "Protected removal invoked break callbacks");
@@ -468,6 +487,33 @@ public final class ProtectionGameTests implements FabricGameTest {
             automatedRemovalPosition = null;
             removalLevel = null;
             denyRemoval = false;
+            removalNotices.clear();
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: with a protection or logging mod listening to Fabric block breaks, extract the
+     * last bar from a Bar Stack. The removal reaches BEFORE and AFTER as the extracting player, with
+     * the original block state and block entity.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void playerCleanupReachesBreakCallbacksAsThePlayer(GameTestHelper helper) {
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()), false);
+        BlockPos target = bars.getBlockPos();
+        BlockState state = helper.getLevel().getBlockState(target);
+        ServerPlayer player = FakePlayer.get(helper.getLevel());
+        automatedRemovalPosition = target;
+        removalLevel = helper.getLevel();
+        removalNotices.clear();
+        try {
+            checkEquals(1, bars.extractAt(0, player).getCount(), "Bar extraction");
+            expectRemovalNotices(player, state, bars, "before", "after");
+            helper.assertBlockNotPresent(CommonRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        } finally {
+            automatedRemovalPosition = null;
+            removalLevel = null;
             removalNotices.clear();
         }
         helper.succeed();

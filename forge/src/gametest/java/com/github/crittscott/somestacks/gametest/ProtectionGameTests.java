@@ -65,6 +65,25 @@ public final class ProtectionGameTests {
                 player -> nativeGesture(player, helper.absolutePos(ORIGIN.below()), Direction.UP));
     }
 
+    /** Loader entry point for {@link WorldEditChecks#automationUsesSharedIdentity}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void automationUsesSharedIdentity(GameTestHelper helper) {
+        WorldEditChecks.automationUsesSharedIdentity(helper);
+    }
+
+    /** Loader entry point for {@link WorldEditChecks#cleanupOfWaterloggedStackKeepsTheWater}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void cleanupOfWaterloggedStackKeepsTheWater(GameTestHelper helper) {
+        WorldEditChecks.cleanupOfWaterloggedStackKeepsTheWater(helper);
+    }
+
+    /** Loader entry point for {@link WorldEditChecks#playerCausedCleanupCarriesThePlayer}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerCausedCleanupCarriesThePlayer(GameTestHelper helper) {
+        WorldEditChecks.playerCausedCleanupCarriesThePlayer(helper,
+                FakePlayerFactory.getMinecraft(helper.getLevel()));
+    }
+
     /**
      * Internal checked-placement test: place stone at an in-bounds position, then try a position
      * one below the minimum build height. Only the in-bounds call succeeds. The out-of-world call

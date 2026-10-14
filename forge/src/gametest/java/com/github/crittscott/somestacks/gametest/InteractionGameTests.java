@@ -112,6 +112,15 @@ public final class InteractionGameTests {
     }
 
     /**
+     * Loader entry point for {@link InteractionChecks#successfulUseEmitsBlockChange}; see that
+     * method for the scenario, manual check, and any internal-only assertions.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void successfulUseEmitsBlockChange(GameTestHelper helper) {
+        InteractionChecks.successfulUseEmitsBlockChange(helper, factory(helper), InteractionGameTests::click);
+    }
+
+    /**
      * Loader entry point for {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}; see
      * that method for
      * the scenario, manual check, and any internal-only assertions.

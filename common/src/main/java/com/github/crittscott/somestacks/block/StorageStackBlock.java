@@ -13,13 +13,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -44,16 +47,30 @@ public class StorageStackBlock extends Block implements EntityBlock, SimpleWater
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
+    /** The layout rotation, so structure rotation and mirroring turn the layout with the block. */
+    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+
     public StorageStackBlock(Properties props) {
         super(props);
         registerDefaultState(defaultBlockState()
                 .setValue(LIGHT_LEVEL, 0)
-                .setValue(WATERLOGGED, false));
+                .setValue(WATERLOGGED, false)
+                .setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED);
+        builder.add(LIGHT_LEVEL, WATERLOGGED, HORIZONTAL_FACING);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
     }
 
     @Override

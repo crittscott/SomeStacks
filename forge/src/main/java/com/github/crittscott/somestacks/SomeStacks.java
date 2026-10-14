@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -55,7 +54,6 @@ public class SomeStacks {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
-        MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdated);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
     }
 
@@ -72,10 +70,6 @@ public class SomeStacks {
 
     private void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new StackSoundData());
-    }
-
-    private void onTagsUpdated(TagsUpdatedEvent event) {
-        ServerConfig.rebakeIngotTags();
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

@@ -16,7 +16,7 @@ Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.1
 | --- | --- | --- | --- |
 | **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, and grows or shrinks |
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one supported item per cell |
-| **Bar Stack** | 64 items | Server-defined ingots | Eight alternating layers of supported bars |
+| **Bar Stack** | 64 items | `somestacks:ingots` items | Eight alternating layers of supported bars |
 
 Contiguous vertical blocks of one type form a run, limited by default to eight blocks (216 Storage slots or 512 Singles/Bar positions).
 
@@ -46,7 +46,7 @@ Water placement waterlogs the stack and preserves water. A top-face deposit onto
 
 Creative deposits do not spend items.
 
-Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only configured ingots, Singles takes everything allowed that Bar does not.
+Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only the `somestacks:ingots` item tag, Singles takes everything allowed that Bar does not.
 
 ## Extracting
 
@@ -78,19 +78,21 @@ A redstone torch rotates a whole block; a soul torch rotates only the aimed item
 
 ### Bar
 
-64 server-approved ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The item model is not drawn; a resource pack supplies or derives the bar texture and tint.
+64 ingots rendered as fixed bar cuboids in eight layers of eight, each layer across the one below. The tag covers the loader's common ingot/brick tags, vanilla ingots and bricks, and listed modded ones. The item model is not drawn; a resource pack supplies or derives the bar texture and tint.
 
 The bottom layer rests on the world. Every bar above it must overlap a bar directly below, and support crosses seams between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Supported bars stay in place. Bars have no rotation gesture.
 
 ## Shared block behavior
 
-- **Water:** all three are waterloggable.
+- **Water:** all three are waterloggable; an emptied stack removed by cleanup leaves its water behind.
 - **Light:** each occupied cell holding a glowing `BlockItem` contributes a quarter of that block's default light level by integer division; contributions add, capped at 15. Item count within a Storage slot does not multiply its contribution.
 - **Pistons:** all three block piston movement.
+- **Structures:** structure rotation and mirroring turn Storage and Singles layouts with the build; per-item Singles rotations are kept.
+- **Missing mods:** a saved item whose mod is absent is kept aside, logged, and returns with the mod.
 - **Collision:** Storage is a full block. Singles and Bar collide on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unavailable for pathfinding.
 - **Empty dynamic blocks:** empty Singles and Bar blocks have no outline shape, but their full-block interaction shape makes them clickable and breakable.
 - **Sounds:** deposits, extraction, and rotations play server-selected sounds; data packs can replace them per type and action.
-- **Vibrations:** placement, growth, and successful cleanup/cascade removal emit placement/destruction game events, subject to ordinary sculk filtering. Denied edits emit none.
+- **Vibrations:** placement, growth, and cleanup/cascade removal emit placement/destruction events; each successful deposit, extraction, rotation, or permanence toggle emits a block change from the player (only destruction if it removed the block). Denied edits emit none.
 
 ## Automation
 
@@ -122,7 +124,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded while running; Fabric uses `<world>/serverconfig/somestacks-server.json`, read on restart. Both use these settings:
+World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded while running; Fabric uses `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`. Settings:
 
 | Setting | Default | Effect |
 | --- | --- | --- |
@@ -131,17 +133,14 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 | `stacks.enable_singles_stack_block` | `true` | Prevents new Singles placement and growth when false |
 | `stacks.enable_bar_stack_block` | `true` | Prevents new Bar placement and growth when false |
 | `compatibility.disable_mods` | empty | Refuses new items from listed namespaces in gestures and automation |
-| `compatibility.disable_items` | empty | Refuses exact items in player deposits only |
-| `compatibility.ingot_tags` | Forge: `forge:ingots*`; Fabric: `c:ingots*`; both: `somestacks:ingots` | Defines what Bar accepts and Singles refuses |
+| `compatibility.disable_items` | `evilcraft:broom_part` | Refuses exact items in player deposits only; galleries omit them |
 | `render_gallery.enabled` | `false` | Enables `/ss gallery` and `/ss ingotgallery` |
 | `render_gallery.required_permission_level` | `3` | Permission level those commands require, 0-4 |
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` | empty | Namespaces used by `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
-Disabling types prevents placement/growth; existing blocks and extraction remain. Item/mod/tag changes never eject contents. Enable flags sync on login; cycling skips disabled types.
-
-Ingot patterns accept `*`: `forge:ingots*` matches the parent and child tags. Data-pack tag changes take effect on reload.
+Disabling types prevents placement/growth; existing blocks and extraction remain. Item/mod/tag changes never eject contents. Enable flags sync on login and policy changes; cycling skips disabled types.
 
 ## Commands
 
@@ -157,12 +156,11 @@ Ingot patterns accept `*`: `forge:ingots*` matches the parent and child tags. Da
 | `/ss ingotgallery <modid\|all\|list>` | Configured gallery permission, player; off by default | Build Bar render galleries |
 | `/ss gen ...` | Level 2 | Edit gallery namespace/item lists |
 | `/ss deny ...` | Level 2 | Edit disabled namespace/exact-item lists |
-| `/ss ingot ...` | Level 2 | Edit ingot-tag patterns |
-| `/ss reload` | Level 2 | Reload server render overrides and resync players |
+| `/ss reload` | Level 2 | Reload world policy and server render overrides; resync players |
 
-Galleries build east over sandstone, with rows running north, across server ticks. They replace floor and stack positions without placement protection; defaults are disabled and permission level 3.
+Galleries build east over sandstone, with rows running north, across server ticks. Items appear in id order, without disabled items. They replace floor and stack positions without placement protection; defaults are disabled and permission level 3.
 
-`/ss reload` refreshes render overrides and synchronization. Policy command edits save immediately; Forge TOML edits reload automatically, while Fabric JSON edits need restart.
+Policy command edits save immediately. Forge TOML edits reload automatically and resync players; Fabric JSON edits apply on `/ss reload`.
 
 ## Item appearance
 
@@ -176,14 +174,14 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 
 ## Extension points
 
-- Data packs: ingot admission through configured tags; action sounds through `data/<namespace>/somestacks_sounds/*.json`.
+- Data packs: Bar admission through `somestacks:ingots`; action sounds through `data/<namespace>/somestacks_sounds/*.json`.
 - Resource packs: Storage/Singles profiles at `assets/<namespace>/item_render_overrides/*.json`; Bar mappings described above.
 - Server profiles: `config/somestacks/server_item_overrides/*.json`, synced on login or `/ss reload`.
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection as applicable. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal uses a loader-provided automation actor. Fabric has no automation placement event, so growth also consults FTB Chunks and Open Parties and Claims directly when installed; other Fabric claim mods are not consulted for that growth check.
+Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup caused only by one player's extraction or permanence toggle acts as that player. Fabric growth also consults FTB Chunks and Open Parties and Claims directly when installed; other Fabric claim mods are not consulted for growth.
 
-Fabric automatic removal sends cancellation on veto or completion on success, with the original actor, state, and block entity. Failed removal never reports success.
+Fabric stack removal sends cancellation on veto or completion on success, with the original actor, state, and block entity.
 
 Block-use clicks use synchronized mode/modifier state. The server validates pacing, player status, loaded targets, reach, hand, items, adjacency, support, enablement, height, and protection; its view ray selects cells. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.

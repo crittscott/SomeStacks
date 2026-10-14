@@ -94,36 +94,58 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         helper.succeed();
     }
 
-    /**
-     * Loader entry point for {@link
-     * CapabilityAndPersistenceChecks#storageUpdateTagRoundTripsItemsRotationAndPermanence}; see
-     * that method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void storageUpdateTagRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.storageUpdateTagRoundTripsItemsRotationAndPermanence(helper);
+    public void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
-    /**
-     * Loader entry point for {@link
-     * CapabilityAndPersistenceChecks#singlesUpdateTagRoundTripsItemsAndBothRotations}; see that
-     * method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void singlesUpdateTagRoundTripsItemsAndBothRotations(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.singlesUpdateTagRoundTripsItemsAndBothRotations(helper);
+    public void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
-    /**
-     * Loader entry point for {@link CapabilityAndPersistenceChecks#barUpdateTagRoundTripsItems};
-     * see that method for
-     * the scenario, manual check, and any internal-only assertions.
-     */
+    /** See {@link CapabilityAndPersistenceChecks#barDiskSaveRoundTripsItems}. */
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
-    public void barUpdateTagRoundTripsItems(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.barUpdateTagRoundTripsItems(helper);
+    public void barDiskSaveRoundTripsItems(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#clientUpdatesRejectMalformedDataAtomically}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void clientUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.clientUpdatesRejectMalformedDataAtomically(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
+    }
+
+    /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
 
     /**
@@ -220,5 +242,11 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
     @GameTest(template = FabricGameTestSupport.TEMPLATE)
     public void listEditsPublishImmutablePolicy(GameTestHelper helper) {
         ServiceAndConfigChecks.listEditsPublishImmutablePolicy(helper);
+    }
+
+    /** See {@link ServiceAndConfigChecks#reloadCommandPublishesStoredPolicy}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
+        ServiceAndConfigChecks.reloadCommandPublishesStoredPolicy(helper);
     }
 }

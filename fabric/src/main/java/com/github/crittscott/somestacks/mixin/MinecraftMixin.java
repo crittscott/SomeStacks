@@ -16,7 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-/** Supplies Fabric's missing empty-hand, open-air right-click callback. */
+/**
+ * Supplies Fabric's missing empty-main-hand, open-air right-click callback. The off hand does not
+ * matter: holding a shield or torch there, hold the Stack Modifier and right-click air with an
+ * empty main hand, and the placement mode still cycles.
+ */
 @Mixin(Minecraft.class)
 abstract class MinecraftMixin {
     @Shadow @Nullable public LocalPlayer player;
@@ -26,7 +30,6 @@ abstract class MinecraftMixin {
     private void somestacks$onEmptyHandAirClick(CallbackInfo callback) {
         if (player == null
                 || !player.getMainHandItem().isEmpty()
-                || !player.getOffhandItem().isEmpty()
                 || hitResult == null
                 || hitResult.getType() != HitResult.Type.MISS) {
             return;

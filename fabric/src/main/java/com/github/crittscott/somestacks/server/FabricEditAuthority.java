@@ -16,7 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import javax.annotation.Nullable;
 
 /**
- * Fabric's {@link EditAuthority}: the automation actor is Fabric API's native {@link FakePlayer}, and
+ * Fabric's {@link EditAuthority}: the automation actor is Fabric API's native {@link FakePlayer}
+ * with the shared {@link AutomationActor} profile, and
  * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
  * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
  * Vetoed removals report cancellation; successful removals report completion with the original
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
 public final class FabricEditAuthority implements EditAuthority {
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return FakePlayer.get(level);
+        return FakePlayer.get(level, AutomationActor.PROFILE);
     }
 
     @Override

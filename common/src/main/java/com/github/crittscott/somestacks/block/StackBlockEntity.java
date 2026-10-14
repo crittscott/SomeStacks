@@ -1,16 +1,23 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 import javax.annotation.Nonnull;
@@ -19,10 +26,15 @@ import javax.annotation.Nullable;
 /** Local inventory, persistence, synchronization, lighting, batching, and run caching for stacks. */
 public abstract class StackBlockEntity extends BlockEntity {
     private static final String TAG_ITEMS = "Items";
+    private static final String TAG_DATA_VERSION = "DataVersion";
     private static final int DEFAULT_SLOT_LIMIT = 64;
 
     protected final StackItemStorage items;
     private final IntegerProperty lightProperty;
+    @Nullable
+    private Integer pendingBlockRotation;
+    @Nullable
+    private StackItemStorage.LoadResult pendingLoadResult;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -144,12 +156,27 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected void onLocalContentsChanged(int slot) {
     }
 
-    /** Loads subtype metadata and derived state after inventory replacement, without publication. */
+    /**
+     * Loads subtype metadata and derived state after inventory replacement, without publication.
+     * Client data has already passed {@link #isValidClientStackData(CompoundTag)}.
+     */
     protected void loadStackData(CompoundTag tag) {
     }
 
-    /** Adds subtype metadata to both disk saves and client update tags. */
+    /** Checks type-specific update data before inventory or metadata is changed. */
+    protected boolean isValidClientStackData(CompoundTag tag) {
+        return true;
+    }
+
+    /**
+     * Adds subtype metadata to both disk saves and client update tags; private fields are removed
+     * in {@link #stripServerOnlyUpdateData(CompoundTag)} before transmission.
+     */
     protected void saveStackData(CompoundTag tag) {
+    }
+
+    /** Removes server-only state before a saved tag is sent as a client update. */
+    protected void stripServerOnlyUpdateData(CompoundTag tag) {
     }
 
     /** Whether all local slots are empty. */
@@ -160,6 +187,64 @@ public abstract class StackBlockEntity extends BlockEntity {
     /** Mutable block-local storage; indices exclude all other blocks in the run. */
     public final StackItemStorage getItems() {
         return items;
+    }
+
+    /**
+     * The block's layout rotation in the grid's counterclockwise quarter turns, read from its
+     * horizontal facing so structure rotation and mirroring turn the layout with the block.
+     */
+    protected final int blockRotation() {
+        applyPendingBlockRotation();
+        BlockState state = getBlockState();
+        return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
+                ? rotationOf(state.getValue(BlockStateProperties.HORIZONTAL_FACING))
+                : 0;
+    }
+
+    /**
+     * Changes the block's facing; the block-state update performs client synchronization. A request
+     * made before the entity belongs to a server level applies once it does.
+     */
+    protected final void setBlockRotation(int rotation) {
+        pendingBlockRotation = Math.floorMod(rotation, 4);
+        applyPendingBlockRotation();
+    }
+
+    private void applyPendingBlockRotation() {
+        if (pendingBlockRotation == null || level == null || level.isClientSide) {
+            return;
+        }
+        BlockState state = getBlockState();
+        if (!state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            pendingBlockRotation = null;
+            return;
+        }
+        BlockState rotated = state.setValue(
+                BlockStateProperties.HORIZONTAL_FACING, facingOf(pendingBlockRotation));
+        if (state == rotated || level.setBlock(getBlockPos(), rotated, Block.UPDATE_ALL)) {
+            pendingBlockRotation = null;
+            setChanged();
+        }
+    }
+
+    /** Maps the grid's counterclockwise quarter turns to a horizontal facing. */
+    private static Direction facingOf(int rotation) {
+        return switch (Math.floorMod(rotation, 4)) {
+            case 1 -> Direction.WEST;
+            case 2 -> Direction.SOUTH;
+            case 3 -> Direction.EAST;
+            default -> Direction.NORTH;
+        };
+    }
+
+    /** Inverse of {@link #facingOf(int)}. */
+    private static int rotationOf(Direction facing) {
+        return switch (facing) {
+            case WEST -> 1;
+            case SOUTH -> 2;
+            case EAST -> 3;
+            default -> 0;
+        };
     }
 
     /** Per-position automation capacity before the item's own stack limit. */
@@ -245,19 +330,68 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        applyPendingBlockRotation();
+        reportSavedItems();
+    }
+
+    /** Reports set-aside items only after server attachment supplies a dimension. */
+    private void reportSavedItems() {
+        if (pendingLoadResult == null || level == null) {
+            return;
+        }
+        if (level instanceof ServerLevel serverLevel) {
+            ServerLifecycle.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
+        }
+        pendingLoadResult = null;
+    }
+
+    /**
+     * Reads a disk save, or on the client an update tag. Every loader's chunk and block-entity
+     * update path on the client reaches this method with the client level already attached.
+     */
+    @Override
     public final void load(CompoundTag tag) {
+        if (level != null && level.isClientSide) {
+            loadClientUpdate(tag);
+            return;
+        }
         super.load(tag);
+        pendingLoadResult = null;
         if (tag.contains(TAG_ITEMS)) {
-            items.deserializeNBT(tag.getCompound(TAG_ITEMS));
+            pendingLoadResult = items.deserializeNBT(tag.getCompound(TAG_ITEMS));
+            reportSavedItems();
         }
         loadStackData(tag);
         refreshComparatorContribution();
         invalidateRunCache();
     }
 
+    /**
+     * Applies a server update only if it is wholly valid: the current data version, no server-only
+     * fields, a well-formed inventory, and valid subtype data. A rejected tag changes nothing.
+     */
+    public final boolean loadClientUpdate(CompoundTag tag) {
+        if (!tag.contains(TAG_DATA_VERSION, Tag.TAG_INT)
+                || tag.getInt(TAG_DATA_VERSION) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
+                || !tag.contains(TAG_ITEMS, Tag.TAG_COMPOUND)
+                || tag.contains(StackItemStorage.TAG_SET_ASIDE)
+                || tag.contains("Permanent") || tag.contains("Rotation")
+                || !isValidClientStackData(tag)
+                || !items.deserializeClientUpdate(tag.getCompound(TAG_ITEMS))) {
+            return false;
+        }
+        pendingBlockRotation = null;
+        loadStackData(tag);
+        refreshComparatorContribution();
+        return true;
+    }
+
     @Override
     protected final void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        NbtUtils.addCurrentDataVersion(tag);
         tag.put(TAG_ITEMS, items.serializeNBT());
         saveStackData(tag);
     }
@@ -271,6 +405,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     public final CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag);
+        StackItemStorage.stripSetAside(tag.getCompound(TAG_ITEMS));
+        stripServerOnlyUpdateData(tag);
         return tag;
     }
 }

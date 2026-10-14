@@ -1,13 +1,18 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,11 +49,14 @@ public class BarStackBE extends StackBlockEntity {
         super(CommonRegistry.BAR_STACK_BE.get(), pos, state, SLOTS, BarStackBlock.LIGHT_LEVEL);
     }
 
+    /** The item tag defining what a Bar Stack holds; data packs add to it. */
+    public static final TagKey<Item> INGOTS =
+            TagKey.create(Registries.ITEM, new ResourceLocation(SomeStacksCommon.MODID, "ingots"));
+
     /**
      * Whether a Bar Stack accepts this item, the single decision point every deposit, column
-     * insertion and capability path consults. Ingot-ness is the server's {@code ingot_tags} list
-     * resolved against the loaded item tags, so an admin widens or narrows it without a data pack;
-     * because the Singles rule is this rule's complement, widening it narrows Singles by as much.
+     * insertion and capability path consults. Ingot-ness is membership in {@link #INGOTS}; because
+     * the Singles rule is this rule's complement, widening the tag narrows Singles by as much.
      */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -57,7 +65,7 @@ public class BarStackBE extends StackBlockEntity {
         if (ItemOps.isItemFromDisabledMod(stack)) {
             return false;
         }
-        return ServerConfig.isIngotItem(stack.getItem());
+        return stack.is(INGOTS);
     }
 
     /**
@@ -140,6 +148,16 @@ public class BarStackBE extends StackBlockEntity {
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
      */
     public ItemStack extractAt(int index) {
+        return extractAt(index, null);
+    }
+
+    /**
+     * Player-facing extraction variant that preserves the actor through cascade cleanup.
+     *
+     * @param actor the player responsible for any block the cascade empties away, or null for
+     *              automation
+     */
+    public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         if (index < 0 || index >= SLOTS) {
             return ItemStack.EMPTY;
         }
@@ -153,7 +171,7 @@ public class BarStackBE extends StackBlockEntity {
             extracted = items.extractItem(index, 1, false);
 
             if (!extracted.isEmpty() && level != null && !level.isClientSide) {
-                cascadeFrom(level, this, seamBeneath(), topBefore, drops);
+                cascadeFrom(level, this, seamBeneath(), topBefore, drops, actor);
             }
         } finally {
             endBatch();
@@ -194,10 +212,11 @@ public class BarStackBE extends StackBlockEntity {
      *
      * @param seamBelow occupancy immediately below start, or null when start is grounded
      * @param topBefore start's top-layer occupancy before the triggering edit
+     * @param actor the player removals are attributed to, or null for automation
      */
     static void cascadeFrom(Level columnLevel, BarStackBE start,
                             @Nullable boolean[] seamBelow, boolean[] topBefore,
-                            BarDropBatch drops) {
+                            BarDropBatch drops, @Nullable ServerPlayer actor) {
         BarStackBE be = start;
         boolean[] seam = seamBelow;
         boolean[] before = topBefore;
@@ -221,7 +240,10 @@ public class BarStackBE extends StackBlockEntity {
             // the cascade is already walking its own way up, and lowered again if nothing went.
             if (be.isEmpty() && columnLevel instanceof ServerLevel serverLevel) {
                 be.removedByCascade = true;
-                if (!WorldEdits.removeChecked(serverLevel, be.getBlockPos())) {
+                boolean removed = actor == null
+                        ? WorldEdits.removeChecked(serverLevel, be.getBlockPos())
+                        : WorldEdits.removeChecked(actor, serverLevel, be.getBlockPos());
+                if (!removed) {
                     be.removedByCascade = false;
                 }
             }
@@ -258,7 +280,7 @@ public class BarStackBE extends StackBlockEntity {
         }
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(),
-                    BarCubeIdx.topLayerOccupancy(above.items), drops);
+                    BarCubeIdx.topLayerOccupancy(above.items), drops, null);
         }
     }
 

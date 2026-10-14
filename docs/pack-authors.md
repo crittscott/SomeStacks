@@ -10,7 +10,7 @@ Mods that make ordinary items placeable can intercept Some Stacks placement and 
 
 | What | Where | Side |
 | --- | --- | --- |
-| Which items a Bar Stack accepts | `data/<ns>/tags/items/…` + the `ingot_tags` config | server |
+| Which items a Bar Stack accepts | `data/somestacks/tags/items/ingots.json` | server (data pack) |
 | Sounds per stack type and action | `data/<ns>/somestacks_sounds/*.json` | server (data pack) |
 | Bar textures and tints | `assets/<ns>/textures/bars/*.json` | client (resource pack) |
 | How items are drawn in cells | `assets/<ns>/item_render_overrides/*.json` | client (resource pack) |
@@ -18,9 +18,7 @@ Mods that make ordinary items placeable can intercept Some Stacks placement and 
 
 ## Bar-valid items (data pack)
 
-A Bar Stack holds whatever the server's `ingot_tags` list resolves to. The mod ships an item tag for packs to extend:
-
-`data/<yourpack>/tags/items/ingots.json`, added to `somestacks:ingots`:
+A Bar Stack holds the items in the `somestacks:ingots` item tag. A data pack extends it with `data/somestacks/tags/items/ingots.json`:
 
 ```json
 {
@@ -32,7 +30,7 @@ A Bar Stack holds whatever the server's `ingot_tags` list resolves to. The mod s
 }
 ```
 
-Anything a Bar Stack accepts, a Singles Stack refuses — the two rules are complements. The item set is rebuilt on every tag reload, so a `/reload` picks up your changes.
+Anything a Bar Stack accepts, a Singles Stack refuses — the two rules are complements. A `/reload` picks up your changes.
 
 ## Sounds (data pack)
 

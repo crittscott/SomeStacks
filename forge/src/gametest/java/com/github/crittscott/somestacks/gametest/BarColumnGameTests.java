@@ -50,6 +50,12 @@ public final class BarColumnGameTests {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
+    /** See {@link BarColumnChecks#barAdmissionFollowsTheIngotTag}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void barAdmissionFollowsTheIngotTag(GameTestHelper helper) {
+        BarColumnChecks.barAdmissionFollowsTheIngotTag(helper);
+    }
+
     /**
      * Loader entry point for {@link BarColumnChecks#upperBarRequiresOverlappingSupport}; see that method for
      * the scenario, manual check, and any internal-only assertions.
@@ -165,11 +171,10 @@ public final class BarColumnGameTests {
      * ingot at slot 0, then automate extraction from slot 0. The ingot is extracted and the stick
      * is conserved in storage plus nearby drops. The test does not change policy.
      *
-     * <p>To check manually, record /ss ingot list, keep an existing accepted pattern, and /ss ingot
-     * add minecraft:planks to admit oak planks temporarily. Store an ordinary ingot at bottom
-     * position 0 and oak planks at position 1, then /ss ingot remove minecraft:planks. Automate
-     * extraction from position 0; the stored plank remains conserved despite its new refusal.
-     * Restore the original list.
+     * <p>To check manually, enable a data pack adding minecraft:oak_planks to the
+     * somestacks:ingots item tag and run /reload. Store an ordinary ingot at bottom position 0 and
+     * oak planks at position 1, then disable the data pack and /reload. Automate extraction from
+     * position 0; the stored plank remains conserved despite its new refusal.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {

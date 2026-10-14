@@ -37,7 +37,7 @@ import net.minecraft.world.item.Item;
 
 /**
  * The {@code ss} command: render override authoring, render gallery generation, server list
- * editing, and override reloading.
+ * editing, and policy and override reloading.
  *
  * <p>Everything here is an administrative tool, so every subcommand but {@code help} requires a
  * vanilla permission level. The render subcommands, {@code item} and {@code write}, are issued
@@ -61,7 +61,6 @@ public final class SsCommand {
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
     private static final String GEN_MODS_LABEL = "somestacks.command.label.gen_mods";
     private static final String GEN_ITEMS_LABEL = "somestacks.command.label.gen_items";
-    private static final String INGOT_TAGS_LABEL = "somestacks.command.label.ingot_tags";
 
     /** Override dumps cover all items, matching the Storage gallery's item selection. */
     private static final RenderGalleryGenerator.Kind DUMP_KIND = RenderGalleryGenerator.Kind.STORAGE;
@@ -102,7 +101,6 @@ public final class SsCommand {
                                 .executes(SsCommand::reload))
                         .then(genTree())
                         .then(denyTree())
-                        .then(ingotTree())
                         .then(SsHelp.tree())
         );
     }
@@ -181,7 +179,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
@@ -218,7 +216,7 @@ public final class SsCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("modid", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                RenderGalleryGenerator.getModIdsWithItems(), builder))
+                                                RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
                                         .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, "modid")))))
                         .then(Commands.literal("remove")
@@ -241,48 +239,6 @@ public final class SsCommand {
                                                 ResourceLocationArgument.getId(ctx, "item").toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
-    }
-
-    /**
-     * The {@code ss ingot} subtree, editing the tags a Bar Stack takes its contents from. An entry
-     * may carry {@code *} wildcards, so it is read as a greedy string rather than as a resource
-     * location: neither a wildcard nor an unquoted colon survives the word parser.
-     *
-     * <p>An entry is taken as typed, as a denied mod id is, because it may legitimately name a tag
-     * no loaded data pack declares or match one by wildcard. A typo is caught where it shows: the
-     * bake warns about an entry matching no tag, and an edit reports how many items the list now
-     * accepts, so an entry that did nothing says so.
-     */
-    private static LiteralArgumentBuilder<CommandSourceStack> ingotTree() {
-        return Commands.literal("ingot")
-                .requires(SsCommand::isAdmin)
-                .then(Commands.literal("add")
-                        .then(Commands.argument("tag", StringArgumentType.greedyString())
-                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                        ServerConfig.itemTagNames(), builder))
-                                .executes(ctx -> reportIngotEdit(ctx, addEntry(ctx, ServerConfig.ListSetting.INGOT_TAGS,
-                                        INGOT_TAGS_LABEL,
-                                        StringArgumentType.getString(ctx, "tag").trim())))))
-                .then(Commands.literal("remove")
-                        .then(Commands.argument("tag", StringArgumentType.greedyString())
-                                .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.INGOT_TAGS, builder))
-                                .executes(ctx -> reportIngotEdit(ctx, removeEntry(ctx, ServerConfig.ListSetting.INGOT_TAGS,
-                                        INGOT_TAGS_LABEL,
-                                        StringArgumentType.getString(ctx, "tag").trim())))))
-                .then(Commands.literal("list")
-                        .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.INGOT_TAGS, INGOT_TAGS_LABEL, true)));
-    }
-
-    /**
-     * Reports how an ingot-list edit changed the accepted item set. The config names tags, while
-     * Bar Stack behavior depends on the items those tags contain.
-     */
-    private static int reportIngotEdit(CommandContext<CommandSourceStack> ctx, int result) {
-        if (result != 0) {
-            ctx.getSource().sendSuccess(() -> Component.translatable(
-                    "somestacks.command.ingot.accepted", ServerConfig.ingotItemCount()), false);
-        }
-        return result;
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
@@ -311,7 +267,7 @@ public final class SsCommand {
         String remaining = builder.getRemaining();
 
         if (!remaining.contains(":")) {
-            List<String> namespaces = RenderGalleryGenerator.getModIdsWithItems()
+            List<String> namespaces = RenderGalleryGenerator.Kind.STORAGE.modIds()
                     .stream()
                     .map(ns -> ns + ":")
                     .collect(Collectors.toList());
@@ -319,7 +275,7 @@ public final class SsCommand {
         }
 
         String namespace = remaining.split(":")[0];
-        List<String> itemIds = RenderGalleryGenerator.collectModItems(namespace)
+        List<String> itemIds = RenderGalleryGenerator.Kind.STORAGE.itemsIn(namespace)
                 .stream()
                 .map(item -> String.valueOf(BuiltInRegistries.ITEM.getKey(item)))
                 .collect(Collectors.toList());
@@ -439,7 +395,10 @@ public final class SsCommand {
         return new Selection(kind, List.of(modId), List.of(), List.of());
     }
 
-    /** Every namespace this kind can use, minus those the server disabled; null when none remain. */
+    /**
+     * Every namespace this kind can use, minus those the server disabled and those left with no
+     * usable items once disabled items are removed; null when none remain.
+     */
     @Nullable
     private static Selection selectAll(CommandContext<CommandSourceStack> ctx, RenderGalleryGenerator.Kind kind) {
         List<String> modIds = new ArrayList<>(kind.modIds());
@@ -451,7 +410,7 @@ public final class SsCommand {
                 disabledMods.add(modId);
                 return true;
             }
-            return false;
+            return kind.itemsIn(modId).isEmpty();
         });
 
         if (modIds.isEmpty()) {
@@ -464,7 +423,7 @@ public final class SsCommand {
     }
 
     /**
-     * The namespaces of the {@code gen_mods} server config list, in the order that list holds.
+     * The namespaces of the {@code gen_mods} server config list, in id order like every gallery.
      * Like {@code all} and unlike a single namespace, an entry that cannot be used is skipped and
      * reported rather than failing the command, since the list is edited ahead of use and one bad
      * entry should not withhold the rest. The two reasons are reported apart: a namespace the
@@ -504,6 +463,7 @@ public final class SsCommand {
             return null;
         }
 
+        Collections.sort(modIds);
         return new Selection(kind, modIds, disabledMods, unusableMods);
     }
 
@@ -512,7 +472,7 @@ public final class SsCommand {
      * a row reads the same way however the list was built up. Like {@code all} and {@code list} and
      * unlike a single named namespace, an entry that cannot be used is skipped and reported rather
      * than failing the command. The two reasons are reported apart: an item barred by the
-     * disabled-mod list is doing what the server was told, while one the registry does not know is
+     * disabled-mod or disabled-item list is doing what the server was told, while one the registry does not know is
      * a typo, or a mod that has been removed since the entry was added.
      */
     @Nullable
@@ -531,7 +491,8 @@ public final class SsCommand {
             ResourceLocation itemId = ResourceLocation.tryParse(trimmed);
             if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
                 unknownItems.add(trimmed);
-            } else if (ServerConfig.isModDisabled(itemId.getNamespace())) {
+            } else if (ServerConfig.isModDisabled(itemId.getNamespace())
+                    || ServerConfig.isItemDisabled(itemId)) {
                 disabledItems.add(trimmed);
             } else {
                 itemIds.add(itemId);
@@ -554,7 +515,7 @@ public final class SsCommand {
         return new ItemSelection(
                 itemIds.stream().map(BuiltInRegistries.ITEM::get).toList(),
                 List.of(new Skips(Component.translatable(
-                                "somestacks.command.skip.from_disabled_mods"), disabledItems),
+                                "somestacks.command.skip.disabled"), disabledItems),
                         new Skips(Component.translatable("somestacks.command.skip.unknown"), unknownItems)));
     }
 
@@ -648,7 +609,9 @@ public final class SsCommand {
         return 1;
     }
 
+    /** Rereads world policy and server overrides, then resyncs every player. */
     private static int reload(CommandContext<CommandSourceStack> ctx) {
+        ServerConfig.reload();
         int synced = CommandNetwork.syncAllPlayers(ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);

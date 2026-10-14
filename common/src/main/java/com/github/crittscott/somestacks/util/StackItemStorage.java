@@ -1,30 +1,42 @@
 package com.github.crittscott.somestacks.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
  * A fixed-size, NBT-persisted {@link SlotAccess} implementation. Loader-neutral replacement for
- * Forge's {@code ItemStackHandler}, matching its insert/extract semantics and its NBT shape
- * ({@code {Size, Items:[{Slot, ...stack}]}}) exactly, so existing world saves keep loading.
+ * Forge's {@code ItemStackHandler}, matching its insert/extract semantics, with the NBT shape
+ * {@code {Items:[{Slot, ...stack}], SetAside:[...]}}.
+ *
+ * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
+ * aside rather than dropped: it is kept verbatim under {@code SetAside}, saved back with the
+ * block, and retried on every load, so contents from a temporarily missing mod return when it does.
  *
  * <p>Subclasses override {@link #onContentsChanged(int)}, {@link #isItemValid(int, ItemStack)}, and
  * {@link #getSlotLimit(int)} the way a Forge {@code ItemStackHandler} anonymous subclass would.
  */
 public class StackItemStorage implements SlotAccess {
-    private static final String TAG_SLOT = "Slot";
-    private static final String TAG_SIZE = "Size";
-    private static final String TAG_ITEMS = "Items";
+    public static final String TAG_SLOT = "Slot";
+    public static final String TAG_ITEMS = "Items";
+    public static final String TAG_SET_ASIDE = "SetAside";
+    private static final String TAG_ID = "id";
 
     /** Per-slot max-stack-size cap, mirroring Forge {@code ItemStackHandler}'s default. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
 
     private final ItemStack[] stacks;
+    private final ListTag setAside = new ListTag();
+
+    /** Counts of newly retained entries and persisted entries that still could not be restored. */
+    public record LoadResult(int newlySetAside, int failedRetries) {}
 
     /**
      * Creates an empty inventory with this fixed slot count. Loading NBT never resizes it.
@@ -160,8 +172,8 @@ public class StackItemStorage implements SlotAccess {
     }
 
     /**
-     * Creates an NBT snapshot containing {@code Size} and nonempty {@code Items} entries with
-     * local slot indices. Does not mutate the inventory or call change notifications.
+     * Creates an NBT snapshot containing nonempty {@code Items} entries with local slot indices and
+     * any set-aside tags. Does not mutate the inventory or call change notifications.
      */
     public CompoundTag serializeNBT() {
         ListTag list = new ListTag();
@@ -175,24 +187,83 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        nbt.putInt(TAG_SIZE, stacks.length);
+        if (!setAside.isEmpty()) {
+            nbt.put(TAG_SET_ASIDE, setAside.copy());
+        }
         return nbt;
     }
 
     /**
-     * Clears and replaces contents from {@code Items}, ignoring {@code Size} and out-of-range
-     * slot entries. Does not check admission or call {@link #onContentsChanged(int)}. Callers must
-     * refresh their derived fill, shapes, and run caches and arrange publication as needed.
+     * Loads slot contents from NBT, setting aside every item tag that cannot be placed. Ordinary
+     * entries take precedence over retries; loading bypasses admission and does not call
+     * {@link #onContentsChanged(int)}. The caller reports returned retention counts once it knows the
+     * world location, and refreshes derived fill, shapes, and run caches.
      */
-    public void deserializeNBT(CompoundTag nbt) {
+    public LoadResult deserializeNBT(CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
-        ListTag list = nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
+        setAside.clear();
+        readItems(nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND));
+        int newlySetAside = setAside.size();
+        readItems(nbt.getList(TAG_SET_ASIDE, Tag.TAG_COMPOUND));
+        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
+    }
+
+    private void readItems(ListTag list) {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag itemTag = list.getCompound(i);
             int slot = itemTag.getInt(TAG_SLOT);
-            if (slot >= 0 && slot < stacks.length) {
-                stacks[slot] = ItemStack.of(itemTag);
+            ItemStack parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
+                    ? parse(itemTag)
+                    : null;
+            if (parsed != null) {
+                stacks[slot] = parsed;
+            } else {
+                setAside.add(itemTag.copy());
             }
         }
+    }
+
+    /**
+     * Reads one saved stack, or returns null when its id is malformed or names no registered item.
+     * {@link ItemStack#of} reads both cases as an empty stack, which would lose the entry.
+     */
+    @Nullable
+    private static ItemStack parse(CompoundTag itemTag) {
+        ResourceLocation id = ResourceLocation.tryParse(itemTag.getString(TAG_ID));
+        if (id == null || !BuiltInRegistries.ITEM.containsKey(id)) {
+            return null;
+        }
+        ItemStack stack = ItemStack.of(itemTag);
+        return stack.isEmpty() ? null : stack;
+    }
+
+    /** Validates a client snapshot completely before replacing any local contents. */
+    public boolean deserializeClientUpdate(CompoundTag nbt) {
+        if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
+                || list.size() > stacks.length
+                || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
+            return false;
+        }
+        ItemStack[] decoded = new ItemStack[stacks.length];
+        Arrays.fill(decoded, ItemStack.EMPTY);
+        boolean[] used = new boolean[stacks.length];
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag entry = list.getCompound(i);
+            if (!entry.contains(TAG_SLOT, Tag.TAG_INT)) return false;
+            int slot = entry.getInt(TAG_SLOT);
+            if (slot < 0 || slot >= stacks.length || used[slot]) return false;
+            ItemStack parsed = parse(entry);
+            if (parsed == null) return false;
+            used[slot] = true;
+            decoded[slot] = parsed;
+        }
+        System.arraycopy(decoded, 0, stacks, 0, stacks.length);
+        setAside.clear();
+        return true;
+    }
+
+    /** Removes the set-aside tags from serialized storage, which clients have no use for. */
+    public static void stripSetAside(CompoundTag nbt) {
+        nbt.remove(TAG_SET_ASIDE);
     }
 }

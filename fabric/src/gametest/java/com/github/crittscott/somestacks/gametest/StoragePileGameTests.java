@@ -44,6 +44,12 @@ public final class StoragePileGameTests implements FabricGameTest {
         StoragePileChecks.fullPileGrowsByOneBlock(helper);
     }
 
+    /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
+        StoragePileChecks.grownBlockTakesTheBaseFacing(helper);
+    }
+
     /**
      * Internal Storage slot check: insert eight stone into local slot 20, reject dirt offered to
      * that incompatible slot, then settle. Before settlement stone occupies slot 20; afterward it

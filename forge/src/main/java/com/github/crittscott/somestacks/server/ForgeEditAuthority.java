@@ -21,7 +21,8 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
- * Forge's {@link EditAuthority}: the level's fake player stands in for automation, and claim,
+ * Forge's {@link EditAuthority}: a fake player with the shared {@link AutomationActor} profile
+ * stands in for automation, and claim,
  * protection, and logging mods are given the chance to veto through the ordinary Forge placement
  * and break events.
  */
@@ -36,7 +37,7 @@ public final class ForgeEditAuthority implements EditAuthority {
 
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
-        return FakePlayerFactory.getMinecraft(level);
+        return FakePlayerFactory.get(level, AutomationActor.PROFILE);
     }
 
     private static final int UPDATE_RECURSION_LIMIT = 512;

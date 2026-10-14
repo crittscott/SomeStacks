@@ -5,8 +5,13 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.List;
+import java.util.UUID;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
@@ -62,6 +67,41 @@ public final class ServiceAndConfigChecks {
             }
         }
         checkEquals(before, ServerConfig.settings(), "List edit/remove changed other policy");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: while the server runs, add a mod id to render_gallery.gen_mods in the
+     * world's somestacks-server.toml (Forge) or somestacks-server.json (Fabric), then run
+     * /ss reload. The reply counts every online player as synced, and /ss gen mod list shows the
+     * new entry. The fixture writes the stored policy through the loader's saver without
+     * publishing it, and restores both the file and the published policy afterward.
+     */
+    public static void reloadCommandPublishesStoredPolicy(GameTestHelper helper) {
+        MinecraftServer server = helper.getLevel().getServer();
+        ServerConfig.Settings before = ServerConfig.settings();
+        String marker = "somestacks_gametest_reload_" + UUID.randomUUID().toString().replace("-", "");
+        ServerConfig.Settings stored = new ServerConfig.Settings(before.maxPileHeight(),
+                before.enableStorageStackBlock(), before.enableSinglesStackBlock(), before.enableBarStackBlock(),
+                before.disableMods(), before.disableItems(), before.renderGalleryPlacementsPerTick(),
+                before.galleryEnabled(), before.galleryPermissionLevel(), List.of(marker), before.genItems());
+        try {
+            ServerConfig.publish(stored);
+            ServerConfig.save();
+            ServerConfig.publish(before);
+            check(!ServerConfig.ListSetting.GEN_MODS.get().contains(marker), "Fixture published the stored policy");
+
+            int synced = server.getCommands().getDispatcher().execute("ss reload",
+                    server.createCommandSourceStack().withSuppressedOutput());
+
+            checkEquals(List.of(marker), ServerConfig.ListSetting.GEN_MODS.get(), "Reload did not publish stored policy");
+            checkEquals(server.getPlayerList().getPlayerCount(), synced, "Reload did not resync every player");
+        } catch (CommandSyntaxException exception) {
+            throw new AssertionError("Reload command failed", exception);
+        } finally {
+            ServerConfig.publish(before);
+            ServerConfig.save();
+        }
         helper.succeed();
     }
 }

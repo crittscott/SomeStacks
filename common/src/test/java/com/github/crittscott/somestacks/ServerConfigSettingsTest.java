@@ -12,11 +12,10 @@ class ServerConfigSettingsTest {
     void settingsCopyListsAndReadersCannotEditThem() {
         List<String> mods = new ArrayList<>(List.of("example"));
         ServerConfig.Settings settings = new ServerConfig.Settings(8, true, true, true,
-                mods, List.of(), List.of("forge:ingots*", "somestacks:ingots"),
-                64, false, 3, List.of(), List.of());
+                mods, List.of(), 64, false, 3, List.of(), List.of());
         mods.clear();
         assertEquals(List.of("example"), settings.disableMods());
         assertThrows(UnsupportedOperationException.class, () -> settings.disableMods().add("other"));
-        assertThrows(UnsupportedOperationException.class, () -> settings.ingotTags().clear());
+        assertThrows(UnsupportedOperationException.class, () -> settings.genItems().clear());
     }
 }

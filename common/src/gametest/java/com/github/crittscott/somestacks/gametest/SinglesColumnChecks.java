@@ -209,10 +209,10 @@ public final class SinglesColumnChecks {
      * Bar and refused by Singles. Extracting the lower item must conserve the refused item, counted
      * in storage plus nearby drops; the test does not change policy.
      *
-     * <p>To check a policy change manually, remove the ingot-tag patterns with /ss ingot remove so
-     * a chosen ingot can enter Singles, deposit it above an apple, then restore its pattern with
-     * /ss ingot add. Extract the apple; the stored ingot is conserved despite being refused for new
-     * Singles deposits. Save the original tag list and restore it afterward.
+     * <p>To check a tag change manually, deposit a stick above an apple in Singles, then enable a
+     * data pack adding minecraft:stick to the somestacks:ingots item tag and run /reload. Extract
+     * the apple; the stored stick is conserved despite being refused for new Singles deposits.
+     * Disable the data pack and /reload afterward.
      */
     public static void shiftKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
@@ -239,10 +239,10 @@ public final class SinglesColumnChecks {
      * draw-down; it asserts conservation across both inventories and nearby drops, without changing
      * policy.
      *
-     * <p>For a visible policy-change check, temporarily remove the chosen ingot's tag patterns with
-     * /ss ingot remove, build a supported column spanning two Singles blocks with that ingot above
-     * the seam, then restore the patterns with /ss ingot add. Extract below the seam and confirm
-     * the ingot is conserved. Restore the original list afterward.
+     * <p>For a visible tag-change check, build a supported column spanning two Singles blocks with
+     * a stick above the seam, then enable a data pack adding minecraft:stick to the
+     * somestacks:ingots item tag and run /reload. Extract below the seam and confirm the stick is
+     * conserved. Disable the data pack and /reload afterward.
      */
     public static void drawDownKeepsAnItemItWouldNoLongerAccept(GameTestHelper helper) {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);

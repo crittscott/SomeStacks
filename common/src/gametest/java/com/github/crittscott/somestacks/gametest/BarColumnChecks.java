@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -51,6 +52,25 @@ public final class BarColumnChecks {
         ItemStack invalid = new ItemStack(Items.STICK);
         check(!bars.depositAt(1, invalid), "Invalid Bar item was accepted");
         checkEquals(1, invalid.getCount(), "Rejected stack changed");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: select Bar and V-deposit an iron, gold, copper, and netherite ingot, a brick,
+     * and a nether brick; each becomes a bar. V-deposit a stick or an iron nugget; nothing happens.
+     * Select Singles and V-deposit an iron ingot; it is refused there too.
+     */
+    public static void barAdmissionFollowsTheIngotTag(GameTestHelper helper) {
+        for (Item item : List.of(Items.IRON_INGOT, Items.GOLD_INGOT, Items.COPPER_INGOT,
+                Items.NETHERITE_INGOT, Items.BRICK, Items.NETHER_BRICK)) {
+            check(new ItemStack(item).is(BarStackBE.INGOTS), item + " is not in the ingot tag");
+            check(BarStackBE.isValidBarItem(new ItemStack(item)), item + " was refused by Bar");
+            check(!SinglesStackBE.isValidSinglesItem(new ItemStack(item)), item + " was accepted by Singles");
+        }
+        for (Item item : List.of(Items.STICK, Items.IRON_NUGGET)) {
+            check(!BarStackBE.isValidBarItem(new ItemStack(item)), item + " was accepted by Bar");
+            check(SinglesStackBE.isValidSinglesItem(new ItemStack(item)), item + " was refused by Singles");
+        }
         helper.succeed();
     }
 

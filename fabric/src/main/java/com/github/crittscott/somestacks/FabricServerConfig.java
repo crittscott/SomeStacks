@@ -19,11 +19,12 @@ import java.util.List;
 public final class FabricServerConfig {
     private FabricServerConfig() {}
 
+    /** Reads the world's JSON now; {@code /ss reload} rereads it. */
     public static void start(MinecraftServer server) {
         Path file = server.getWorldPath(LevelResource.ROOT)
                 .resolve("serverconfig").resolve(SomeStacksCommon.MODID + "-server.json");
         Persistence persistence = new Persistence(file);
-        ServerConfig.start(persistence.read(Settings.defaults(true)), persistence::write);
+        ServerConfig.start(() -> persistence.read(Settings.defaults()), persistence::write);
     }
 
     /** JSON boundary, independent of registry baking and gameplay. */
@@ -61,7 +62,6 @@ public final class FabricServerConfig {
                     boolOr(stacks, "enable_bar_stack_block", defaults.enableBarStackBlock()),
                     stringListOr(compatibility, "disable_mods", defaults.disableMods()),
                     stringListOr(compatibility, "disable_items", defaults.disableItems()),
-                    stringListOr(compatibility, "ingot_tags", defaults.ingotTags()),
                     Math.max(1, intOr(gallery, "placements_per_tick", defaults.renderGalleryPlacementsPerTick())),
                     boolOr(gallery, "enabled", defaults.galleryEnabled()),
                     clamp(intOr(gallery, "required_permission_level", defaults.galleryPermissionLevel()), 0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX),
@@ -79,7 +79,6 @@ public final class FabricServerConfig {
             JsonObject compatibility = new JsonObject();
             compatibility.add("disable_mods", stringArray(values.disableMods()));
             compatibility.add("disable_items", stringArray(values.disableItems()));
-            compatibility.add("ingot_tags", stringArray(values.ingotTags()));
             JsonObject gallery = new JsonObject();
             gallery.addProperty("placements_per_tick", values.renderGalleryPlacementsPerTick());
             gallery.addProperty("enabled", values.galleryEnabled());

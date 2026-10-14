@@ -49,6 +49,12 @@ public final class StoragePileGameTests {
         StoragePileChecks.fullPileGrowsByOneBlock(helper);
     }
 
+    /** See {@link StoragePileChecks#grownBlockTakesTheBaseFacing}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void grownBlockTakesTheBaseFacing(GameTestHelper helper) {
+        StoragePileChecks.grownBlockTakesTheBaseFacing(helper);
+    }
+
     /**
      * Internal Storage slot check: insert eight stone into local slot 20, reject dirt offered to
      * that incompatible slot, then settle. Before settlement stone occupies slot 20; afterward it

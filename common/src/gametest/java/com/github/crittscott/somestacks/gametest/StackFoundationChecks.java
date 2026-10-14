@@ -267,9 +267,7 @@ public final class StackFoundationChecks {
         check(!singles.getCachedShape().isEmpty(), "Singles shape missing before load");
         check(!bars.getCachedShape().isEmpty(), "Bar shape missing before load");
         for (StackBlockEntity block : new StackBlockEntity[]{storage, singles, bars}) {
-            CompoundTag saved = block.getUpdateTag();
-            checkEquals(block.getItems().getSlots(), saved.getCompound("Items").getInt("Size"),
-                    "Saved inventory size");
+            CompoundTag saved = block.saveWithoutMetadata();
             block.load(saved);
             checkEquals(1, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Loaded comparator");
             CompoundTag empty = saved.copy();
@@ -311,7 +309,7 @@ public final class StackFoundationChecks {
                 checkLocalFill(block, slot + 1.0);
             }
             checkEquals(15, ((StackRun<?>) block.itemRun()).comparatorSignal(), "Full endpoint");
-            block.load(block.getUpdateTag());
+            block.load(block.saveWithoutMetadata());
             checkLocalFill(block, slots);
             for (int slot = 0; slot < slots; slot++) {
                 block.getItems().extractItem(slot, 64, false);

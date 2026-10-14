@@ -243,8 +243,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * Nothing is dropped and nothing is left unsupported.
      *
      * <p>The backfilled bar is written into the hole rather than inserted. Validity gates what a
-     * deposit may add rather than what the column may carry, so a bar stored before an
-     * {@code ss ingot} edit or a data pack reload narrowed the ingot set still moves.
+     * deposit may add rather than what the column may carry, so a bar stored before a
+     * data pack reload narrowed the ingot tag still moves.
      */
     @Override
     public ItemStack extract(int flatSlot, int amount, boolean simulate) {

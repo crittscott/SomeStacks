@@ -108,6 +108,15 @@ public final class InteractionGameTests implements FabricGameTest {
     }
 
     /**
+     * Loader entry point for {@link InteractionChecks#successfulUseEmitsBlockChange}; see that
+     * method for the scenario, manual check, and any internal-only assertions.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void successfulUseEmitsBlockChange(GameTestHelper helper) {
+        InteractionChecks.successfulUseEmitsBlockChange(helper, factory(helper), InteractionGameTests::click);
+    }
+
+    /**
      * Loader entry point for {@link ClientGestureChecks#blockRulesRespectPrecedenceAndHands}; see
      * that method for
      * the scenario, manual check, and any internal-only assertions.

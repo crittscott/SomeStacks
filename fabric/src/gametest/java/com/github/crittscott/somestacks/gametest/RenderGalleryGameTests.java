@@ -28,4 +28,10 @@ public final class RenderGalleryGameTests implements FabricGameTest {
     public void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper) {
         RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(helper, FakePlayer.get(helper.getLevel()));
     }
+
+    /** See {@link RenderGalleryChecks#galleryItemsAreInIdOrderWithoutDeniedItems}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE, batch = "somestacks_commands")
+    public void galleryItemsAreInIdOrderWithoutDeniedItems(GameTestHelper helper) {
+        RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(helper);
+    }
 }

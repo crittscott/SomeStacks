@@ -6,8 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -122,7 +120,15 @@ public final class WorldEdits {
      * @return whether the block was removed
      */
     public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        ServerPlayer actor = automationActor(level);
+        return removeChecked(automationActor(level), level, pos);
+    }
+
+    /**
+     * Removes a stack block on behalf of {@code actor}, preserving that identity through vanilla
+     * protection, loader-native removal events, and the emitted game event. A waterlogged block
+     * leaves its water behind.
+     */
+    public static boolean removeChecked(ServerPlayer actor, ServerLevel level, BlockPos pos) {
         if (isProtected(actor, pos)) {
             return false;
         }
@@ -131,11 +137,11 @@ public final class WorldEdits {
         if (authority().vetoesRemoval(level, actor, pos, state, blockEntity)) {
             return false;
         }
-        if (!level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL)) {
+        if (!level.removeBlock(pos, false)) {
             return false;
         }
-        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
         authority().afterRemoval(level, actor, pos, state, blockEntity);
+        level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(actor, state));
         return true;
     }
 }

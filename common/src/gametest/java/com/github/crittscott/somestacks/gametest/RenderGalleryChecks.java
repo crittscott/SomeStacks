@@ -11,6 +11,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 import java.util.Deque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.lang.reflect.Field;
@@ -46,8 +48,8 @@ public final class RenderGalleryChecks {
      * alter policy. Use a clear gallery site and restore the original settings after checking.
      *
      * <p>The fixture executes a registered dispatcher, uses copied command sources rather than
-     * changing operator records, intercepts policy saves, and supplies a test-only single-item
-     * Bar tag. Accepted jobs are drained through the generator's tick entry point in this scenario;
+     * changing operator records, and intercepts policy saves. The Bar gallery covers the
+     * {@code minecraft} ingots, which fit one Bar Stack. Accepted jobs are drained through the generator's tick entry point in this scenario;
      * asynchronous construction is covered separately by the queued-gallery test.
      */
     public static void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper, ServerPlayer player) {
@@ -56,9 +58,8 @@ public final class RenderGalleryChecks {
         try (InteractionChecks.PlayerScope playerScope = new InteractionChecks.PlayerScope(player);
              CommandScope scope = new CommandScope()) {
             check(scope.jobs.isEmpty(), "Command batch started with unrelated gallery work");
-            ServerConfig.start(commandSettings(false, List.of()), scope.saved::add);
-            checkEquals(1, ServerConfig.ingotItemCount(), "Single-item command fixture tag");
-            check(BarStackBE.isValidBarItem(new ItemStack(Items.STONE)), "Command fixture stone is not Bar-valid");
+            ServerConfig.start(() -> commandSettings(false, List.of()), scope.saved::add);
+            check(BarStackBE.isValidBarItem(new ItemStack(Items.IRON_INGOT)), "Iron ingot is not Bar-valid");
             BlockPos playerPos = helper.absolutePos(ORIGIN);
             player.setPos(playerPos.getX() + 0.5, playerPos.getY(), playerPos.getZ() + 0.5);
             CommandSourceStack ordinary = player.createCommandSourceStack().withPermission(0).withSuppressedOutput();
@@ -124,7 +125,7 @@ public final class RenderGalleryChecks {
             checkEquals(1, GameTestScaffold.heldAt(helper, storageBase, Items.STONE), "Storage gallery contents");
             BlockPos barBase = barPlayerPos.east();
             check(helper.getLevel().getBlockEntity(barBase) instanceof BarStackBE, "Bar gallery missing");
-            checkEquals(1, GameTestScaffold.heldAt(helper, barBase, Items.STONE), "Bar gallery contents");
+            checkEquals(1, GameTestScaffold.heldAt(helper, barBase, Items.IRON_INGOT), "Bar gallery contents");
             check(helper.getLevel().getBlockState(storageBase.below()).is(Blocks.SMOOTH_SANDSTONE), "Storage floor");
             check(helper.getLevel().getBlockState(barBase.below()).is(Blocks.SMOOTH_SANDSTONE), "Bar floor");
         } catch (ReflectiveOperationException | CommandSyntaxException exception) {
@@ -133,9 +134,32 @@ public final class RenderGalleryChecks {
         helper.succeed();
     }
 
+    /**
+     * To reproduce: enable galleries, run /ss deny item add minecraft:stone, then /ss gallery
+     * minecraft on a clear site. The items read in id order and stone does not appear. Restore the
+     * deny list afterward.
+     */
+    public static void galleryItemsAreInIdOrderWithoutDeniedItems(GameTestHelper helper) {
+        ServerConfig.Settings policy = ServerConfig.settings();
+        try {
+            ServerConfig.publish(commandSettings(true, List.of("minecraft:stone")));
+            List<ResourceLocation> ids = RenderGalleryGenerator.Kind.STORAGE.itemsIn("minecraft").stream()
+                    .map(BuiltInRegistries.ITEM::getKey)
+                    .toList();
+            check(!ids.contains(BuiltInRegistries.ITEM.getKey(Items.STONE)), "Denied item stayed in the gallery");
+            check(ids.contains(BuiltInRegistries.ITEM.getKey(Items.DIRT)), "Allowed item left the gallery");
+            List<ResourceLocation> sorted = new ArrayList<>(ids);
+            Collections.sort(sorted);
+            checkEquals(sorted, ids, "Gallery items out of id order");
+        } finally {
+            ServerConfig.publish(policy);
+        }
+        helper.succeed();
+    }
+
     private static ServerConfig.Settings commandSettings(boolean galleryEnabled, List<String> disabledItems) {
         return new ServerConfig.Settings(8, true, true, true, List.of(), disabledItems,
-                List.of("somestacks:command_gallery"), 64, galleryEnabled, GALLERY_PERMISSION,
+                64, galleryEnabled, GALLERY_PERMISSION,
                 List.of("minecraft"), List.of("minecraft:stone"));
     }
 
@@ -168,9 +192,14 @@ public final class RenderGalleryChecks {
         }
     }
 
-    /** Saves are recorded in memory; only jobs created by this scenario are removed on failure. */
+    /**
+     * Saves are recorded in memory, and the world's policy reader and saver are restored on close;
+     * only jobs created by this scenario are removed on failure.
+     */
     private static final class CommandScope implements AutoCloseable {
         private final ServerConfig.Settings policy = ServerConfig.settings();
+        private final Field readerField;
+        private final Object reader;
         private final Field saverField;
         private final Object saver;
         private final Deque<Object> jobs;
@@ -179,6 +208,9 @@ public final class RenderGalleryChecks {
 
         @SuppressWarnings("unchecked")
         private CommandScope() throws ReflectiveOperationException {
+            readerField = ServerConfig.class.getDeclaredField("reader");
+            readerField.setAccessible(true);
+            reader = readerField.get(null);
             saverField = ServerConfig.class.getDeclaredField("saver");
             saverField.setAccessible(true);
             saver = saverField.get(null);
@@ -193,6 +225,7 @@ public final class RenderGalleryChecks {
                 jobs.removeAll(ownedJobs);
                 ServerConfig.publish(policy);
             } finally {
+                readerField.set(null, reader);
                 saverField.set(null, saver);
             }
         }

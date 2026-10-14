@@ -35,4 +35,10 @@ public final class RenderGalleryGameTests {
     public static void commandsEnforcePolicyAndGalleryPermissions(GameTestHelper helper) {
         RenderGalleryChecks.commandsEnforcePolicyAndGalleryPermissions(helper, FakePlayerFactory.getMinecraft(helper.getLevel()));
     }
+
+    /** See {@link RenderGalleryChecks#galleryItemsAreInIdOrderWithoutDeniedItems}. */
+    @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_commands")
+    public static void galleryItemsAreInIdOrderWithoutDeniedItems(GameTestHelper helper) {
+        RenderGalleryChecks.galleryItemsAreInIdOrderWithoutDeniedItems(helper);
+    }
 }
