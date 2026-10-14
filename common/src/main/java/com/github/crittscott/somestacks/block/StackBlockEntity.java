@@ -219,11 +219,18 @@ public abstract class StackBlockEntity extends BlockEntity {
             pendingBlockRotation = null;
             return;
         }
-        BlockState rotated = state.setValue(
-                BlockStateProperties.HORIZONTAL_FACING, facingOf(pendingBlockRotation));
-        if (state == rotated || level.setBlock(getBlockPos(), rotated, Block.UPDATE_ALL)) {
-            pendingBlockRotation = null;
+        // Cleared before setBlock: the loader may query this block's shape while the old state is
+        // still current, and that query must not start the same change again.
+        int rotation = pendingBlockRotation;
+        pendingBlockRotation = null;
+        BlockState rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING, facingOf(rotation));
+        if (state == rotated) {
+            return;
+        }
+        if (level.setBlock(getBlockPos(), rotated, Block.UPDATE_ALL)) {
             setChanged();
+        } else {
+            pendingBlockRotation = rotation;
         }
     }
 

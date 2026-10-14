@@ -29,9 +29,9 @@ Inserting into that headroom grows the run by a block and stores the item there.
 - the stack type is enabled in the server config,
 - the run is below the maximum height,
 - the target is inside build height, replaceable, and not obstructed by an entity,
-- and the position passes the world border and spawn protection checks.
+- and the position passes the world border and spawn protection checks, plus, on Fabric, the installed claim mods' placement queries.
 
-Automated growth is attributed to a loader-provided automation actor, which is never exempt from spawn protection. Forge additionally fires its block-place event, so claim mods using that hook can refuse growth. Fabric has no equivalent placement event for automation to trigger, so Fabric growth answers to the vanilla checks only — unlike Fabric player gestures and automated removal, which now fire Fabric API's own protection events (see [Server administration](server-admin.md)).
+Automated growth is attributed to the `[SomeStacks]` automation actor, which is never exempt from spawn protection. Forge additionally fires its block-place event, so claim mods using that hook can refuse growth. Fabric has no equivalent placement event, so growth asks Common Protection API, FTB Chunks, and Open Parties and Claims directly when they are installed, before the space is advertised (see [Server administration](server-admin.md)).
 
 The advertised range is deliberately "what is there plus one block" — not the full potential height, which would leave a caller re-deriving a mostly empty range every tick, and not only what exists, which would mean a full run never gets offered the insertion that grows it.
 

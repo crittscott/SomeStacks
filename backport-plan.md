@@ -1,6 +1,6 @@
 # Backport plan: bring 1.20.1 behavior in line with 1.21.4
 
-Source: `version-differences.md`. Every claim there was checked against both trees (`1.20.1/` and `../1.21.4/`). This file records the verification results, the owner's decisions, and the order of work. Phases 1–3 are done.
+Source: `version-differences.md`. Every claim there was checked against both trees (`1.20.1/` and `../1.21.4/`). This file records the verification results, the owner's decisions, and the order of work. All phases are done.
 
 All three versions will eventually ship as 0.8.3, but only after they are as equivalent as possible. 1.20.1 is already at 0.8.3. No earlier 1.20.1 version exists, so no saved-data or config migration is needed: formats change in place.
 
@@ -85,9 +85,13 @@ Each step ends with GameTests (javadoc gives in-game reproduction steps), lang c
 
 ### Phase 4: interaction model
 
+**Status: done.** Each stack block's `use` calls `handleExistingStack`; there is no shared stack-block base class. `GestureThrottle` became `RotationSoundThrottle`, which keeps only the rotation-sound limit. Gesture GameTests now click through vanilla's `ServerPlayerGameMode.useItemOn`, so the loader event and `Block.use` both run. The build and GameTests have not been run yet.
+
 15. **1.8 Gestures through the block.** Override `Block.use` (the 1.20.1 equivalent of `useItemOn`/`useWithoutItem`) in a shared stack-block base and call `handleExistingStack` with `ViewRays.through(player, hit.getLocation())`. The Forge `RightClickBlock` and Fabric `UseBlockCallback` handlers keep only the sneaking rotation and adjacent clicks. Remove `GestureThrottle` (D5), `withinReach`, and the extra loaded checks; vanilla's use-packet validation covers reach and loaded chunks. Keep `PlayerReach` for ray length. Re-check the client-side `ClientGestures` consumption against the new server path. Tests: existing gesture tests rerouted; hit-point targeting under a stale server view; D4 item-denial behavior.
 
 ### Phase 5: client tools and appearance
+
+**Status: done.** The command syntax lives in `ClientRenderCommands`; there is no separate syntax class, because help usage stays in lang keys (D6). `ConfigSyncPkt.snapshot` builds a new generation for each login or broadcast instead of caching one. `/ss gen` and `/ss deny` edits to `gen_mods` or `disable_mods` resync players, because a Forge TOML save that matches the running policy does not. The protocol is 4 on both loaders. Bar tints use the existing `ClientRenderPlatform.renderPasses` seam, so no loader code was added. `item.detail.4`, `reload.summary`, and `command.reloaded` no longer mention server overrides, unlike 1.21.4's text. The build and GameTests have not been run yet.
 
 16. **3.2 Remove server render profiles.** Delete `ServerOverridesLoader`, its fields in `ConfigSyncPkt`, and the server layer in `ItemRenderOverrides` (order: user > resource pack > measurement).
 17. **3.1 Client-side `/ss item` and `/ss write`.** Port `ClientRenderCommands`, `ClientRenderCommandSyntax`, and `ClientRenderToolState`. Register through Forge `RegisterClientCommandsEvent` and Fabric `ClientCommandRegistrationCallback`, with pass-through for server `/ss` forms. `ConfigSyncPkt` carries `gen_mods`/`disable_mods` in byte-bounded chunks. Delete `RenderOverridePkt`, `WriteOverridesPkt`, their handlers, and the server command branches. Bump the protocol version.
@@ -97,8 +101,12 @@ Each step ends with GameTests (javadoc gives in-game reproduction steps), lang c
 
 ### Phase 6: sounds
 
+**Status: done.** The sound suppliers are `CommonRegistry` fields assigned by each loader, the same way as the blocks. The build has not been run yet.
+
 21. **5.1 Registered sound events.** Register nine `SoundEvent`s (`somestacks:block.<type>.<action>`) through Forge `DeferredRegister` and Fabric `Registry.register`. Add `assets/somestacks/sounds.json` and the `subtitles.somestacks.*` keys. Delete `StackSoundData`, `FabricStackSoundData`, and `data/somestacks/somestacks_sounds/`. Callers use the `CommonRegistry` accessors.
 
 ### Phase 7: Fabric protection
+
+**Status: done.** CPA 1.0.0 (the same version as 1.21.4) is `modCompileOnly`; `-PwithCommonProtectionApi=true` adds it to the runtime and swaps `NoProtectionApiGameTests` for `ProtectionApiGameTests`. The build and GameTests have not been run yet.
 
 22. **4.2 / 4.3 Common Protection API alongside FTB/OPAC.** Add `EditAuthority.mayPlace` (Forge: true) and `WorldEdits.mayPlace`. Fabric `mayPlace` ANDs FTB Chunks, OPAC, and CPA. `place` calls it before `setBlock`, and `mayUseAdjacent` adds `CommonProtection.canInteractBlock`. Keep CPA types in a loaded-mod-gated class. `canGrow` calls `mayPlace`, so claimed headroom isn't advertised. Add CPA as `modCompileOnly` (version to confirm for 1.20.1) and to `suggests`. Tests: with and without CPA, following 1.21.4's gametest entrypoints.

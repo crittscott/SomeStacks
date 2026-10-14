@@ -1,177 +1,201 @@
 package com.github.crittscott.somestacks.network;
 
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import com.github.crittscott.somestacks.client.ClientRenderToolState;
 import com.github.crittscott.somestacks.client.StackState;
-import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
-import com.github.crittscott.somestacks.renderconfig.RenderMode;
-import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import io.netty.buffer.Unpooled;
-import java.util.HashMap;
+import io.netty.handler.codec.DecoderException;
+import net.minecraft.network.FriendlyByteBuf;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PacketCodecTest {
-    private Object previousHandler;
-    private Object previousOverrides;
-    private final Map<BlockType, Boolean> previousEnablement = new HashMap<>();
-    private final RecordingHandler handler = new RecordingHandler();
-
-    private static Field sinkField(String name) throws ReflectiveOperationException {
-        Field field = ClientRenderPacketSink.class.getDeclaredField(name);
-        field.setAccessible(true);
-        return field;
-    }
+    private List<String> previousGallery;
+    private Set<String> previousDenied;
+    private boolean[] previousFlags;
 
     @BeforeEach
-    void isolateClientState() throws ReflectiveOperationException {
-        previousHandler = sinkField("handler").get(null);
-        previousOverrides = sinkField("serverOverrides").get(null);
-        for (BlockType type : BlockType.values()) {
-            previousEnablement.put(type, StackState.isBlockTypeEnabled(type));
-        }
-        ClientRenderPacketSink.setHandler(handler);
-        handler.overrides.clear();
+    void isolateClientState() {
+        previousGallery = ClientRenderToolState.genMods();
+        previousDenied = ClientRenderToolState.disabledMods();
+        previousFlags = flags();
+        ClientRenderPacketSink.clear();
     }
 
     @AfterEach
-    void restoreClientState() throws ReflectiveOperationException {
-        sinkField("handler").set(null, previousHandler);
-        sinkField("serverOverrides").set(null, previousOverrides);
-        previousEnablement.forEach(StackState::setBlockEnabled);
+    void restoreClientState() {
+        ClientRenderPacketSink.clear();
+        ClientRenderToolState.replace(previousGallery, List.copyOf(previousDenied));
+        StackState.setBlockEnabled(BlockType.STORAGE_STACK, previousFlags[0]);
+        StackState.setBlockEnabled(BlockType.SINGLES_STACK, previousFlags[1]);
+        StackState.setBlockEnabled(BlockType.BAR_STACK, previousFlags[2]);
     }
 
+    /**
+     * Complete snapshots publish flags and both lists only at their final chunk. To reproduce
+     * in-game: configure disabled types and namespace lists, join, and inspect mode cycling and
+     * /ss write list. A large list exercises multiple packets; exact atomicity requires this test.
+     */
     @Test
-    void rejectedConfigCountsPreserveEnabledTypesAndRetainedOverrides() {
-        ResourceLocation id = new ResourceLocation("test", "retained");
-        Map<ResourceLocation, ItemRenderConfig> seed = Map.of(id,
-                new ItemRenderConfig(RenderMode.GUI, 1.0f, RenderOffset.ZERO));
-        ClientRenderPacketSink.apply(new ConfigSyncPkt(true, false, true, seed));
-        handler.overrides.clear();
-        for (int count : new int[]{-1, 65537}) {
-            ConfigSyncPkt packet = decode(buf -> {
-                buf.writeBoolean(false);
-                buf.writeBoolean(true);
-                buf.writeBoolean(false);
-                buf.writeInt(count);
-            }, ConfigSyncPkt::decode);
-            assertFalse(packet.isValid());
-            ClientRenderPacketSink.apply(packet);
-            assertTrue(StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK));
-            assertFalse(StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK));
-            assertTrue(StackState.isBlockTypeEnabled(BlockType.BAR_STACK));
-            assertTrue(handler.overrides.isEmpty());
+    void configSnapshotsRoundTripAndPublishAtomically() {
+        for (int size : new int[] {0, 1, 4096}) {
+            List<String> gallery = new ArrayList<>();
+            List<String> denied = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                gallery.add("gallery" + i + "a".repeat(240));
+                denied.add("denied" + i + "b".repeat(240));
+            }
+            boolean[] expectedFlags = {size == 4096, size != 4096, size == 0};
+            ServerConfig.Settings defaults = ServerConfig.Settings.defaults();
+            List<ConfigSyncPkt> packets = ConfigSyncPkt.snapshot(new ServerConfig.Settings(
+                    defaults.maxPileHeight(), expectedFlags[0], expectedFlags[1], expectedFlags[2],
+                    denied, defaults.disableItems(), defaults.renderGalleryPlacementsPerTick(),
+                    defaults.galleryEnabled(), defaults.galleryPermissionLevel(), gallery,
+                    defaults.genItems()));
+            assertTrue(size == 4096 ? packets.size() > 1 : packets.size() == 1, "Chunking");
+            List<String> beforeGallery = ClientRenderToolState.genMods();
+            Set<String> beforeDenied = ClientRenderToolState.disabledMods();
+            boolean[] beforeFlags = flags();
+            int bytes = 0;
+            for (int i = 0; i < packets.size(); i++) {
+                ConfigSyncPkt packet = packets.get(i);
+                assertEquals(i == 0, packet.first(), "First marker");
+                assertEquals(i == packets.size() - 1, packet.last(), "Last marker");
+                assertEquals(packets.get(0).generation(), packet.generation(), "Generation changed");
+                bytes += packet.budgetBytes();
+                byte[] wire = encode(packet, ConfigSyncPkt::encode);
+                assertTrue(wire.length <= ConfigSyncPkt.MAX_PACKET_BYTES, "Encoded chunk too large");
+                ConfigSyncPkt decoded = ConfigSyncPkt.decode(new FriendlyByteBuf(Unpooled.wrappedBuffer(wire)));
+                assertEquals(packet, decoded, "Chunk codec round trip");
+                ClientRenderPacketSink.apply(decoded);
+                if (!packet.last()) {
+                    assertEquals(beforeGallery, ClientRenderToolState.genMods(), "Gallery published early");
+                    assertEquals(beforeDenied, ClientRenderToolState.disabledMods(), "Deny list published early");
+                    assertArrayEquals(beforeFlags, flags(), "Flags published early");
+                }
+            }
+            assertTrue(packets.size() <= ConfigSyncPkt.MAX_GENERATION_CHUNKS, "Chunk budget");
+            assertTrue(bytes <= ConfigSyncPkt.MAX_GENERATION_BYTES, "Generation byte budget");
+            assertEquals(gallery, ClientRenderToolState.genMods(), "Published gallery list");
+            assertEquals(Set.copyOf(denied), ClientRenderToolState.disabledMods(), "Published deny set");
+            assertArrayEquals(expectedFlags, flags(), "Published flags");
         }
-        // Installation exposes retained state without loading a renderer or touching disk.
-        RecordingHandler replacement = new RecordingHandler();
-        ClientRenderPacketSink.setHandler(replacement);
-        assertEquals(List.of(seed), replacement.overrides);
     }
 
+    /** Missing, inconsistent, and superseded generations cannot publish partial settings. */
     @Test
-    void validEmptyConfigClearsOverridesAndUpdatesEnabledTypes() {
-        ClientRenderPacketSink.apply(new ConfigSyncPkt(true, true, true, Map.of(
-                new ResourceLocation("test", "seed"), new ItemRenderConfig(RenderMode.GUI, null, null))));
-        handler.overrides.clear();
-        ConfigSyncPkt packet = decode(buf -> {
-            buf.writeBoolean(false);
-            buf.writeBoolean(true);
-            buf.writeBoolean(false);
-            buf.writeInt(0);
-        }, ConfigSyncPkt::decode);
-        assertTrue(packet.isValid());
-        ClientRenderPacketSink.apply(packet);
-        assertEquals(List.of(Map.of()), handler.overrides);
-        assertFalse(StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK));
-        assertTrue(StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK));
-        assertFalse(StackState.isBlockTypeEnabled(BlockType.BAR_STACK));
-        RecordingHandler replacement = new RecordingHandler();
-        ClientRenderPacketSink.setHandler(replacement);
-        assertEquals(List.of(Map.of()), replacement.overrides);
-    }
-
-    @Test
-    void rejectedWriteCountsDoNotBecomeUserLayerWrites() {
-        for (int count : new int[]{-1, 4097}) {
-            WriteOverridesPkt packet = decode(buf -> buf.writeInt(count), WriteOverridesPkt::decode);
-            assertNull(packet.namespaces());
-            ClientRenderPacketSink.apply(packet);
-            assertTrue(handler.writes.isEmpty());
+    void configStagingChecksSequencesAndTotals() {
+        ClientRenderToolState.replace(List.of(), List.of());
+        setFlags(true, true, true);
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(1, false, true, 1, "tail")));
+        ClientRenderPacketSink.apply(chunk(2, true, false, 2, "old"));
+        assertEquals(List.of(), ClientRenderToolState.genMods(), "Missing last published");
+        ClientRenderPacketSink.apply(chunk(3, true, true, 1, "replacement"));
+        assertEquals(List.of("replacement"), ClientRenderToolState.genMods(), "New first did not replace staging");
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(2, false, true, 2, "old_tail")));
+        ClientRenderPacketSink.apply(chunk(4, true, false, 2, "first"));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(5, false, true, 2, "tail")));
+        for (ConfigSyncPkt changed : List.of(
+                new ConfigSyncPkt(6, false, true, false, true, true, 2, 0, List.of("tail"), List.of()),
+                new ConfigSyncPkt(6, false, true, true, false, true, 2, 0, List.of("tail"), List.of()),
+                new ConfigSyncPkt(6, false, true, true, true, false, 2, 0, List.of("tail"), List.of()),
+                chunk(6, false, true, 3, "tail"),
+                new ConfigSyncPkt(6, false, true, true, true, true, 2, 1, List.of("tail"), List.of()))) {
+            ClientRenderPacketSink.apply(chunk(6, true, false, 2, "first"));
+            assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(changed));
+            assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(6, false, true, 2, "tail")));
         }
-        WriteOverridesPkt empty = decode(buf -> buf.writeInt(0), WriteOverridesPkt::decode);
-        ClientRenderPacketSink.apply(empty);
-        assertEquals(List.of(List.of()), handler.writes);
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(7, true, true, 2, "only")));
+        ClientRenderPacketSink.apply(chunk(8, true, false, 1, "first"));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(8, false, true, 1, "extra")));
+        ClientRenderPacketSink.apply(new ConfigSyncPkt(9, true, false, true, true, true,
+                0, 2, List.of(), List.of("denied")));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(new ConfigSyncPkt(
+                9, false, true, true, true, true, 0, 2, List.of(), List.of("denied"))));
+        assertEquals(List.of("replacement"), ClientRenderToolState.genMods(), "Bad sequence replaced published state");
+        assertArrayEquals(new boolean[] {true, true, true}, flags(), "Bad sequence changed flags");
+        assertTrue(ClientRenderToolState.disabledMods().isEmpty(), "Bad sequence changed deny set");
+        ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"));
+        assertEquals(List.of("recovered"), ClientRenderToolState.genMods(), "Valid snapshot after rejection failed");
     }
 
+    /** Malicious chunk sequences clear staging without publishing an incomplete snapshot. */
     @Test
-    void configWireDecoderSanitizesNumericFieldsBeforeApplication() {
-        ResourceLocation id = new ResourceLocation("test", "numeric");
-        ConfigSyncPkt packet = decode(buf -> {
-            buf.writeBoolean(true);
-            buf.writeBoolean(true);
-            buf.writeBoolean(true);
-            buf.writeInt(1);
-            buf.writeResourceLocation(id);
-            buf.writeBoolean(true);
-            buf.writeUtf("gui");
-            buf.writeBoolean(true);
-            buf.writeFloat(Float.NaN);
-            buf.writeBoolean(true);
-            buf.writeFloat(0.0f);
-            buf.writeFloat(Float.POSITIVE_INFINITY);
-            buf.writeFloat(0.0f);
-        }, ConfigSyncPkt::decode);
-        assertTrue(packet.isValid());
-        ItemRenderConfig sanitized = new ItemRenderConfig(RenderMode.GUI, null, null);
-        assertEquals(sanitized, packet.renderOverrides().get(id));
-        ClientRenderPacketSink.apply(packet);
-        assertEquals(List.of(Map.of(id, sanitized)), handler.overrides);
+    void configStagingRejectsAndClearsInvalidGenerations() {
+        List<String> published = ClientRenderToolState.genMods();
+        ClientRenderPacketSink.apply(chunk(1, true, false, 10, "first"));
+        assertEquals(published, ClientRenderToolState.genMods(), "Incomplete snapshot published");
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(1, false, false, 10)));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(1, false, true, 10, "second")));
+        ClientRenderPacketSink.apply(chunk(2, true, false, 10, "first"));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(2, false, true, 10, "first")));
+        for (int i = 0; i < ConfigSyncPkt.MAX_GENERATION_CHUNKS; i++) {
+            ClientRenderPacketSink.apply(chunk(3, i == 0, false, 4096, "mod" + i));
+        }
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(3, false, false, 4096, "overflow")));
+        assertThrows(RuntimeException.class, () -> ClientRenderPacketSink.apply(chunk(3, false, true, 4096, "tail")));
+        assertEquals(published, ClientRenderToolState.genMods(), "Rejected snapshot published");
     }
 
-    private static <T> T decode(Consumer<FriendlyByteBuf> writer,
-                                Function<FriendlyByteBuf, T> decoder) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+    /** Invalid wire counts, generations, and namespace encodings fail during decoding. */
+    @Test
+    void configDecoderRejectsMalformedCountsAndNamespaces() {
+        for (int[] counts : new int[][] {{-1, 0, 0, 0}, {4097, 0, 0, 0},
+                {0, -1, 0, 0}, {0, 4097, 0, 0}, {1, 0, -1, 0}, {1, 0, 2, 0},
+                {0, 1, 0, -1}, {0, 1, 0, 2}}) {
+            assertDecodeFails(buf -> {
+                writeHeader(buf, 1, counts[0], counts[1]);
+                buf.writeVarInt(counts[2]);
+                buf.writeVarInt(counts[3]);
+            });
+        }
+        for (int generation : new int[] {0, -1}) {
+            assertDecodeFails(buf -> {
+                writeHeader(buf, generation, 0, 0);
+                buf.writeVarInt(0);
+                buf.writeVarInt(0);
+            });
+        }
+        for (String namespace : List.of("", "Uppercase", "bad namespace", "a".repeat(257))) {
+            assertDecodeFails(buf -> {
+                writeHeader(buf, 1, 1, 0);
+                buf.writeVarInt(1);
+                buf.writeUtf(namespace);
+                buf.writeVarInt(0);
+            });
+        }
+    }
+
+    /** An oversized server payload is rejected before decoding reads it. */
+    @Test
+    void configDecoderEnforcesPacketBudget() {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         try {
-            writer.accept(buffer);
-            return decoder.apply(buffer);
+            buf.writeZero(ConfigSyncPkt.MAX_PACKET_BYTES + 1);
+            assertThrows(DecoderException.class, () -> ConfigSyncPkt.decode(buf));
+            assertEquals(0, buf.readerIndex(), "Oversized packet was read before rejection");
         } finally {
-            buffer.release();
+            buf.release();
         }
-    }
-
-    private static final class RecordingHandler implements ClientRenderPacketSink.Handler {
-        final List<Map<ResourceLocation, ItemRenderConfig>> overrides = new ArrayList<>();
-        final List<List<String>> writes = new ArrayList<>();
-
-        @Override public void setServerOverrides(Map<ResourceLocation, ItemRenderConfig> value) {
-            overrides.add(Map.copyOf(value));
-        }
-
-        @Override public void setUserOverride(RenderOverridePkt packet) {
-            throw new AssertionError("Unexpected individual override edit");
-        }
-
-        @Override public void writeOverrides(List<String> namespaces) {
-            writes.add(List.copyOf(namespaces));
-        }
+        assertRoundTrip(new ConfigSyncPkt(1, true, true, true, false, true,
+                        2, 1, List.of("minecraft", "somestacks"), List.of("denied")),
+                ConfigSyncPkt::encode, ConfigSyncPkt::decode);
     }
 
     @Test
@@ -186,79 +210,51 @@ class PacketCodecTest {
     @Test
     void gestureStateRejectsInvalidModes() {
         for (int id : new int[] {StackMode.values().length, 255}) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-            try {
+            assertThrows(DecoderException.class, () -> decode(buf -> {
                 buf.writeByte(id);
                 buf.writeBoolean(true);
-                assertThrows(io.netty.handler.codec.DecoderException.class, () -> GestureStatePkt.decode(buf));
-            } finally {
-                buf.release();
-            }
+            }, GestureStatePkt::decode));
         }
     }
 
-    @Test
-    void configSyncRoundTripsOptionalFields() {
-        assertRoundTrip(
-                new ConfigSyncPkt(
-                        true,
-                        false,
-                        true,
-                        Map.of(new ResourceLocation("test", "item"),
-                                new ItemRenderConfig(
-                                        RenderMode.BLOCK,
-                                        2.5f,
-                                        new RenderOffset(0.1f, -0.2f, 0.3f)))),
-                ConfigSyncPkt::encode,
-                ConfigSyncPkt::decode);
-
-        assertRoundTrip(
-                new ConfigSyncPkt(
-                        false,
-                        true,
-                        false,
-                        Map.of(new ResourceLocation("test", "partial"),
-                                new ItemRenderConfig(null, null, null))),
-                ConfigSyncPkt::encode,
-                ConfigSyncPkt::decode);
+    private static ConfigSyncPkt chunk(int generation, boolean first, boolean last, int total,
+                                       String... namespaces) {
+        return new ConfigSyncPkt(generation, first, last, true, true, true,
+                total, 0, List.of(namespaces), List.of());
     }
 
-    @Test
-    void renderOverrideSetAndResetRoundTrip() {
-        ResourceLocation id = new ResourceLocation("test", "item");
-
-        assertRoundTrip(
-                RenderOverridePkt.set(id, "3d", 1.5f, new RenderOffset(0.0f, 0.25f, -0.5f)),
-                RenderOverridePkt::encode,
-                RenderOverridePkt::decode);
-        assertRoundTrip(
-                RenderOverridePkt.reset(id),
-                RenderOverridePkt::encode,
-                RenderOverridePkt::decode);
+    private static void writeHeader(FriendlyByteBuf buf, int generation, int gallery, int denied) {
+        buf.writeVarInt(generation);
+        for (int i = 0; i < 5; i++) buf.writeBoolean(true);
+        buf.writeVarInt(gallery);
+        buf.writeVarInt(denied);
     }
 
-    @Test
-    void writeOverrideRequestsRoundTrip() {
-        assertRoundTrip(
-                WriteOverridesPkt.userLayer(),
-                WriteOverridesPkt::encode,
-                WriteOverridesPkt::decode);
-        assertRoundTrip(
-                WriteOverridesPkt.dump(List.of("minecraft", "somestacks")),
-                WriteOverridesPkt::encode,
-                WriteOverridesPkt::decode);
+    private static void assertDecodeFails(Consumer<FriendlyByteBuf> writer) {
+        assertThrows(RuntimeException.class, () -> decode(writer, ConfigSyncPkt::decode));
     }
 
-    @Test
-    void configSyncOwnsAnImmutableOverrideSnapshot() {
-        ResourceLocation id = new ResourceLocation("test", "item");
-        ItemRenderConfig config = new ItemRenderConfig(RenderMode.GUI, 1.0f, RenderOffset.ZERO);
-        Map<ResourceLocation, ItemRenderConfig> authored = new HashMap<>();
-        authored.put(id, config);
-        ConfigSyncPkt packet = new ConfigSyncPkt(true, true, true, authored);
-        authored.clear();
-        assertEquals(Map.of(id, config), packet.renderOverrides());
-        assertThrows(UnsupportedOperationException.class, () -> packet.renderOverrides().clear());
+    private static boolean[] flags() {
+        return new boolean[] {StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK),
+                StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK),
+                StackState.isBlockTypeEnabled(BlockType.BAR_STACK)};
+    }
+
+    private static void setFlags(boolean storage, boolean singles, boolean bar) {
+        StackState.setBlockEnabled(BlockType.STORAGE_STACK, storage);
+        StackState.setBlockEnabled(BlockType.SINGLES_STACK, singles);
+        StackState.setBlockEnabled(BlockType.BAR_STACK, bar);
+    }
+
+    private static <T> T decode(Consumer<FriendlyByteBuf> writer,
+                                Function<FriendlyByteBuf, T> decoder) {
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            writer.accept(buffer);
+            return decoder.apply(buffer);
+        } finally {
+            buffer.release();
+        }
     }
 
     private static <T> void assertRoundTrip(

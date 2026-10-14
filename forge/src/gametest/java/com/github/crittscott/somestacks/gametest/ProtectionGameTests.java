@@ -7,7 +7,6 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
@@ -544,37 +543,47 @@ public final class ProtectionGameTests {
         }
     }
     /**
-     * Forge permission fixture: a RightClickBlock listener sets useItem to DENY while leaving block
-     * use permitted. A dirt deposit is refused, but plain empty-hand extraction returns the three
-     * stored stone.
+     * Forge permission fixture: a RightClickBlock listener at an existing Storage block first denies
+     * only item use, then only block use. Stack gestures are the block's own use, so with item use
+     * denied a dirt deposit and an extraction both succeed; with block use denied neither happens.
      *
      * <p>To check manually, use a protection rule or test listener that denies item use at the
-     * stack while allowing block use. V-deposit dirt, then release V and extract stored stone. Only
-     * extraction succeeds. A generic claim that denies both kinds of use does not reproduce this
-     * split.
+     * stack while allowing block use: V-deposit dirt, then release V and extract it; both work.
+     * Then deny block use instead: neither the deposit nor the extraction changes the stack.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void nativeClickHonorsSplitPermissions(GameTestHelper helper) {
+    public static void stackGesturesFollowBlockUsePermission(GameTestHelper helper) {
         var storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         storage.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 3));
         var player = FakePlayerFactory.getMinecraft(helper.getLevel());
-        Consumer<PlayerInteractEvent.RightClickBlock> denyItem = event -> {
-            if (event.getEntity() == player && event.getPos().equals(storage.getBlockPos())) event.setUseItem(Event.Result.DENY);
+        boolean[] denyBlock = {false};
+        Consumer<PlayerInteractEvent.RightClickBlock> deny = event -> {
+            if (event.getEntity() == player && event.getPos().equals(storage.getBlockPos())) {
+                if (denyBlock[0]) event.setUseBlock(Event.Result.DENY);
+                else event.setUseItem(Event.Result.DENY);
+            }
         };
-        MinecraftForge.EVENT_BUS.addListener(denyItem);
+        MinecraftForge.EVENT_BUS.addListener(deny);
         try (InteractionChecks.PlayerScope scope = new InteractionChecks.PlayerScope(player)) {
+            var hit = InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2);
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            var hit = InteractionChecks.aim(player, storage.getBlockPos(), 0.2, 0.2);
-            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, storage.getBlockPos(), hit);
-            checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT), "Denied item deposited");
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            useBlock(player, hit);
+            checkEquals(1, GameTestScaffold.count(storage.getItems(), Items.DIRT), "Item denial blocked deposit");
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
-            GestureThrottle.clear(player.getUUID());
-            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, storage.getBlockPos(), hit);
-            checkEquals(3, player.getMainHandItem().getCount(), "Item denial incorrectly blocked extraction");
+            useBlock(player, hit);
+            checkEquals(Items.STONE, player.getMainHandItem().getItem(), "Item denial blocked extraction");
+
+            denyBlock[0] = true;
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            useBlock(player, hit);
+            check(player.getMainHandItem().isEmpty(), "Block denial allowed extraction");
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            useBlock(player, hit);
+            checkEquals(1, GameTestScaffold.count(storage.getItems(), Items.DIRT), "Block denial allowed deposit");
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyItem);
+            MinecraftForge.EVENT_BUS.unregister(deny);
         }
         helper.succeed();
     }
@@ -707,10 +716,15 @@ public final class ProtectionGameTests {
             player.getAbilities().instabuild = creative;
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
-            ForgeHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, clicked,
-                    new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
+            useBlock(player, new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
             result = player.getMainHandItem().copy();
         }
         player.setItemInHand(InteractionHand.MAIN_HAND, result);
+    }
+
+    /** Runs vanilla's server block use, which posts Forge's event and then calls the block. */
+    private static void useBlock(ServerPlayer player, net.minecraft.world.phys.BlockHitResult hit) {
+        player.gameMode.useItemOn(player, player.serverLevel(),
+                player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
     }
 }

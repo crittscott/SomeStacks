@@ -1,9 +1,12 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -155,6 +158,9 @@ public class SinglesStackBlock extends Block implements EntityBlock, SimpleWater
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!level.isClientSide) {
+            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit, BlockType.SINGLES_STACK);
+        }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 

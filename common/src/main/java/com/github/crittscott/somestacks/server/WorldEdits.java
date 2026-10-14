@@ -46,6 +46,19 @@ public final class WorldEdits {
         return isProtected(automationActor(level), pos);
     }
 
+    /**
+     * Whether {@code player} may place a block at {@code pos}: vanilla's gate plus the loader's
+     * side-effect-free protection queries. Growth checks this before it promises space.
+     */
+    public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
+        return !isProtected(player, pos) && authority().mayPlace(player, player.serverLevel(), pos);
+    }
+
+    /** {@link #mayPlace(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
+    public static boolean mayPlace(ServerLevel level, BlockPos pos) {
+        return mayPlace(automationActor(level), pos);
+    }
+
     /** The actor automation-driven growth and removal are attributed to. */
     public static ServerPlayer automationActor(ServerLevel level) {
         return authority().automationActor(level);

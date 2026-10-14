@@ -14,11 +14,9 @@ import java.util.function.Function;
 public final class FabricNetworking {
     private FabricNetworking() {}
 
-    public static final ResourceLocation PROTOCOL = id("protocol_3");
+    public static final ResourceLocation PROTOCOL = id("protocol_4");
     public static final ResourceLocation GESTURE_STATE = id("gesture_state");
     public static final ResourceLocation CONFIG_SYNC = id("config_sync");
-    public static final ResourceLocation RENDER_OVERRIDE = id("render_override");
-    public static final ResourceLocation WRITE_OVERRIDES = id("write_overrides");
 
     public static void initServer() {
         registerServer(GESTURE_STATE, GestureStatePkt::decode, GestureStatePkt::handleServer);
@@ -36,18 +34,6 @@ public final class FabricNetworking {
         FriendlyByteBuf buf = PacketByteBufs.create();
         ConfigSyncPkt.encode(packet, buf);
         ServerPlayNetworking.send(player, CONFIG_SYNC, buf);
-    }
-
-    public static void sendRenderOverride(ServerPlayer player, RenderOverridePkt packet) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        RenderOverridePkt.encode(packet, buf);
-        ServerPlayNetworking.send(player, RENDER_OVERRIDE, buf);
-    }
-
-    public static void sendWriteOverrides(ServerPlayer player, WriteOverridesPkt packet) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        WriteOverridesPkt.encode(packet, buf);
-        ServerPlayNetworking.send(player, WRITE_OVERRIDES, buf);
     }
 
     private static <T> void registerServer(

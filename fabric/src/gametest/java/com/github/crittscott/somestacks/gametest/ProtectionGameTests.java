@@ -619,7 +619,9 @@ public final class ProtectionGameTests implements FabricGameTest {
             player.getAbilities().instabuild = creative;
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             var hit = InteractionChecks.aim(player, clicked, 0.5, 0.5);
-            UseBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
+            // Vanilla's server block use invokes Fabric's callback and then calls the block.
+            player.gameMode.useItemOn(player, player.serverLevel(), player.getMainHandItem(),
+                    InteractionHand.MAIN_HAND,
                     new net.minecraft.world.phys.BlockHitResult(hit.getLocation(), face, clicked, false));
             result = player.getMainHandItem().copy();
         }

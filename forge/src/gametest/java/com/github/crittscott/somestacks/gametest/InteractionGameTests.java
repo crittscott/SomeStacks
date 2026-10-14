@@ -7,11 +7,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import java.util.function.Function;
 import com.github.crittscott.somestacks.SomeStacks;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
-import net.minecraft.world.InteractionResult;
 
 /** Loader wrappers for the reproduction scenarios documented in InteractionChecks. */
 @GameTestHolder(SomeStacks.MODID)
@@ -27,22 +25,22 @@ public final class InteractionGameTests {
     }
 
     /**
-     * Loader entry point for {@link InteractionChecks#extractionUsesServerRay}; see that method for
+     * Loader entry point for {@link InteractionChecks#extractionFollowsHitPoint}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void extractionUsesServerRay(GameTestHelper helper) {
-        InteractionChecks.extractionUsesServerRay(helper, factory(helper), InteractionGameTests::click);
+    public static void extractionFollowsHitPoint(GameTestHelper helper) {
+        InteractionChecks.extractionFollowsHitPoint(helper, factory(helper), InteractionGameTests::click);
     }
 
     /**
-     * Loader entry point for {@link InteractionChecks#rotationUsesServerRayAndConsumesMiss}; see
+     * Loader entry point for {@link InteractionChecks#rotationTargetsAimedItemAndConsumesMiss}; see
      * that method for
      * the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void rotationUsesServerRayAndConsumesMiss(GameTestHelper helper) {
-        InteractionChecks.rotationUsesServerRayAndConsumesMiss(helper, factory(helper), InteractionGameTests::click);
+    public static void rotationTargetsAimedItemAndConsumesMiss(GameTestHelper helper) {
+        InteractionChecks.rotationTargetsAimedItemAndConsumesMiss(helper, factory(helper), InteractionGameTests::click);
     }
 
     /**
@@ -76,12 +74,12 @@ public final class InteractionGameTests {
     }
 
     /**
-     * Loader entry point for {@link InteractionChecks#permanenceAndSameTickPacing}; see that method for
+     * Loader entry point for {@link InteractionChecks#permanenceTogglesWhileSneaking}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
-    public static void permanenceAndSameTickPacing(GameTestHelper helper) {
-        InteractionChecks.permanenceAndSameTickPacing(helper, factory(helper), InteractionGameTests::click);
+    public static void permanenceTogglesWhileSneaking(GameTestHelper helper) {
+        InteractionChecks.permanenceTogglesWhileSneaking(helper, factory(helper), InteractionGameTests::click);
     }
 
     /**
@@ -150,9 +148,10 @@ public final class InteractionGameTests {
         ClientGestureChecks.gestureSyncSendsChangesAndResets(helper);
     }
 
+    /** Runs vanilla's server block use, which posts Forge's event and then calls the block. */
     private static boolean click(ServerPlayer player, InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit) {
-        var event = ForgeHooks.onRightClickBlock(player, hand, hit.getBlockPos(), hit);
-        return event.isCanceled() && event.getCancellationResult() == InteractionResult.SUCCESS;
+        return player.gameMode.useItemOn(
+                player, player.serverLevel(), player.getItemInHand(hand), hand, hit).consumesAction();
     }
 
     private static Function<ItemStack, ServerPlayer> factory(GameTestHelper helper) {

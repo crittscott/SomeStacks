@@ -23,22 +23,6 @@ final class ForgePacketHandlers {
         ctx.setPacketHandled(true);
     }
 
-    static void handleRenderOverride(
-            RenderOverridePkt msg, Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientRenderPacketSink.apply(msg)));
-        ctx.setPacketHandled(true);
-    }
-
-    static void handleWriteOverrides(
-            WriteOverridesPkt msg, Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientRenderPacketSink.apply(msg)));
-        ctx.setPacketHandled(true);
-    }
-
     private static void enqueueServer(
             Supplier<NetworkEvent.Context> context, Consumer<ServerPlayer> work) {
         NetworkEvent.Context ctx = context.get();

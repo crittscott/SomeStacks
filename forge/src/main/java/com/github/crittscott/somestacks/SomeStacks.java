@@ -2,17 +2,13 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.client.ClientSetup;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
-import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.ForgeCommandNetwork;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ModNetworking;
-import com.github.crittscott.somestacks.server.StackSoundData;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.PlayerReach;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -46,10 +42,8 @@ public class SomeStacks {
         ModRegistry.init(modBus);
         ForgeServerConfig.register(modBus);
         ModNetworking.init();
-        CommandNetwork.setHandler(new ForgeCommandNetwork());
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
-        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
@@ -66,10 +60,6 @@ public class SomeStacks {
     private void onServerStopped(ServerStoppedEvent event) {
         ForgeServerConfig.stop();
         ServerLifecycle.stopped();
-    }
-
-    private void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new StackSoundData());
     }
 
     private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {

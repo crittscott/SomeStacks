@@ -18,7 +18,7 @@ import java.util.Optional;
 public final class ModNetworking {
     private ModNetworking() {}
 
-    private static final String PROTOCOL = "3";
+    private static final String PROTOCOL = "4";
     public static SimpleChannel CHANNEL;
 
     public static void init() {
@@ -37,9 +37,5 @@ public final class ModNetworking {
                 GestureStatePkt::decode, ForgePacketHandlers::handleGestureState, toServer);
         CHANNEL.registerMessage(id++, ConfigSyncPkt.class, ConfigSyncPkt::encode,
                 ConfigSyncPkt::decode, ForgePacketHandlers::handleConfigSync, toClient);
-        CHANNEL.registerMessage(id++, RenderOverridePkt.class, RenderOverridePkt::encode,
-                RenderOverridePkt::decode, ForgePacketHandlers::handleRenderOverride, toClient);
-        CHANNEL.registerMessage(id++, WriteOverridesPkt.class, WriteOverridesPkt::encode,
-                WriteOverridesPkt::decode, ForgePacketHandlers::handleWriteOverrides, toClient);
     }
 }

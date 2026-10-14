@@ -4,9 +4,8 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Function;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.*;
 
-/** Shared regression checks driven through each loader's actual block-use callback. */
+/** Shared regression checks driven through vanilla's server block-use path on each loader. */
 public final class InteractionChecks {
     public static final BlockPos TARGET = new BlockPos(2, 1, 2);
     public static final InteractionHand HAND = InteractionHand.MAIN_HAND;
@@ -45,14 +44,12 @@ public final class InteractionChecks {
             checkEquals(4, count(storage.getItems(), Items.DIRT), "Deposit contents");
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
-            GestureThrottle.clear(player.getUUID());
             callback.click(player, HAND, aim(player, storage.getBlockPos(), 0.2, 0.2));
             checkEquals(4, player.getMainHandItem().getCount(), "Extraction count");
             BlockPos support = helper.absolutePos(TARGET.east(3));
             helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
             player.setItemInHand(HAND, new ItemStack(Items.DIRT, 2));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            GestureThrottle.clear(player.getUUID());
             aim(player, support, 0.5, 0.5);
             check(callback.click(player, HAND, new BlockHitResult(
                     Vec3.atCenterOf(support).add(0, 0.5, 0), Direction.UP, support, false)), "Placement consumed");
@@ -63,27 +60,32 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
-    /** To reproduce: plain-click the near of two Storage cells; stale client hit coordinates cannot select the cell behind it. */
-    public static void extractionUsesServerRay(GameTestHelper helper,
+    /**
+     * To reproduce: on a laggy connection, plain-click one Storage cell while turning toward
+     * another. The cell under the crosshair when the client clicked is extracted, not the one the
+     * server last saw the player facing.
+     */
+    public static void extractionFollowsHitPoint(GameTestHelper helper,
             Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
         var storage = placeStorage(helper, TARGET);
         storage.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 8));
-        storage.getItems().setStackInSlot(1, new ItemStack(Items.DIRT, 3));
+        storage.getItems().setStackInSlot(3, new ItemStack(Items.DIRT, 3));
         try (PlayerScope scope = new PlayerScope(factory.apply(ItemStack.EMPTY))) {
             var player = scope.player;
-            aim(player, storage.getBlockPos(), 0.2, 0.2);
-            // The hit location names another row; only the server view ray selects a rendered cell.
+            BlockPos pos = storage.getBlockPos();
+            // The server view still faces slot 0; the client's hit point lies on slot 3.
+            aim(player, pos, 0.2, 0.2);
             callback.click(player, HAND, new BlockHitResult(
-                    Vec3.atCenterOf(storage.getBlockPos()), Direction.WEST, storage.getBlockPos(), false));
-            checkEquals(Items.STONE, player.getMainHandItem().getItem(), "Nearest ray item");
-            checkEquals(8, player.getMainHandItem().getCount(), "Nearest ray count");
-            checkEquals(3, storage.getItems().getStackInSlot(1).getCount(), "Other cell changed");
+                    new Vec3(pos.getX(), pos.getY() + 0.2, pos.getZ() + 0.5), Direction.WEST, pos, false));
+            checkEquals(Items.DIRT, player.getMainHandItem().getItem(), "Hit-point item");
+            checkEquals(3, player.getMainHandItem().getCount(), "Hit-point count");
+            checkEquals(8, storage.getItems().getStackInSlot(0).getCount(), "Viewed cell changed");
         }
         helper.succeed();
     }
 
-    /** To reproduce: Shift-click two Singles items with a soul torch, then an empty row. Only the aimed occupied item rotates. */
-    public static void rotationUsesServerRayAndConsumesMiss(GameTestHelper helper,
+    /** To reproduce: Shift-click one of two Singles items with a soul torch, then an empty row. Only the aimed occupied item rotates. */
+    public static void rotationTargetsAimedItemAndConsumesMiss(GameTestHelper helper,
             Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
         var singles = placeSingles(helper, TARGET);
         singles.getItems().setStackInSlot(0, new ItemStack(Items.STICK));
@@ -91,12 +93,10 @@ public final class InteractionChecks {
         try (PlayerScope scope = new PlayerScope(factory.apply(new ItemStack(Items.SOUL_TORCH)))) {
             var player = scope.player;
             player.setShiftKeyDown(true);
-            aim(player, singles.getBlockPos(), 0.125, 0.125);
-            check(callback.click(player, HAND, new BlockHitResult(Vec3.atCenterOf(singles.getBlockPos()),
-                    Direction.WEST, singles.getBlockPos(), false)), "Rotation consumed");
+            check(callback.click(player, HAND, aim(player, singles.getBlockPos(), 0.125, 0.125)),
+                    "Rotation consumed");
             checkEquals(1, singles.getCubeRotation(0), "Aimed rotation");
             checkEquals(0, singles.getCubeRotation(1), "Other item rotation");
-            GestureThrottle.clear(player.getUUID());
             check(callback.click(player, HAND, aim(player, singles.getBlockPos(), 0.625, 0.625)), "Miss consumed");
             checkEquals(1, singles.getCubeRotation(0), "Miss rotated occupied cell");
             checkEquals(1, player.getMainHandItem().getCount(), "Torch spent");
@@ -118,7 +118,6 @@ public final class InteractionChecks {
                 callback.click(player, HAND, aim(player, blocks[i].getBlockPos(), i == 2 ? 0.0625 : 0.2, 0.125));
                 checkEquals(Items.DIRT, player.getMainHandItem().getItem(), "Wrong hand replaced");
                 player.setItemInHand(HAND, new ItemStack(item, new ItemStack(item).getMaxStackSize()));
-                GestureThrottle.clear(player.getUUID());
                 callback.click(player, HAND, aim(player, blocks[i].getBlockPos(), i == 2 ? 0.0625 : 0.2, 0.125));
                 checkEquals(new ItemStack(item).getMaxStackSize(), player.getMainHandItem().getCount(), "Full hand grew");
                 checkEquals(count, blocks[i].getItems().getStackInSlot(0).getCount(), "Stored contents changed");
@@ -144,31 +143,38 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
-    /** To reproduce: use an off-hand item, ordinary sneaking, and Shift with a redstone torch on Storage. Only the torch rotates it. */
+    /**
+     * To reproduce: hold dirt only in the off hand and modifier-click Storage; nothing is deposited.
+     * Shift-click it with a redstone torch: the block rotates and the torch is neither deposited
+     * nor spent. Shift-click it with dirt: the dirt is placed as an ordinary block, not deposited.
+     */
     public static void handsSneakingAndRotationPrecedence(GameTestHelper helper,
             Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
         var storage = placeStorage(helper, TARGET);
-        try (PlayerScope scope = new PlayerScope(factory.apply(new ItemStack(Items.REDSTONE_TORCH)))) {
+        try (PlayerScope scope = new PlayerScope(factory.apply(ItemStack.EMPTY))) {
             var player = scope.player;
             player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.DIRT));
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
-            player.setShiftKeyDown(true);
             var hit = aim(player, storage.getBlockPos(), 0.5, 0.5);
-            check(!callback.click(player, InteractionHand.OFF_HAND, hit), "Offhand gesture handled");
+            callback.click(player, HAND, hit);
+            checkEquals(0, count(storage.getItems(), Items.DIRT), "Off-hand item deposited");
+            checkEquals(1, player.getOffhandItem().getCount(), "Off-hand item spent");
+            player.setShiftKeyDown(true);
+            player.setItemInHand(HAND, new ItemStack(Items.REDSTONE_TORCH));
             check(callback.click(player, HAND, hit), "Torch gesture not handled");
             checkEquals(1, storage.getRotation(), "Block rotation");
             checkEquals(0, count(storage.getItems(), Items.REDSTONE_TORCH), "Torch deposited");
             checkEquals(1, player.getMainHandItem().getCount(), "Torch spent");
             player.setItemInHand(HAND, new ItemStack(Items.DIRT));
-            GestureThrottle.clear(player.getUUID());
-            check(!callback.click(player, HAND, hit), "Ordinary sneaking consumed");
+            callback.click(player, HAND, hit);
             checkEquals(0, count(storage.getItems(), Items.DIRT), "Sneaking deposited");
+            checkEquals(1, storage.getRotation(), "Sneaking rotated");
         }
         helper.succeed();
     }
 
-    /** To reproduce: select permanence, modifier-click Storage empty-handed while sneaking, and repeat in one tick. It toggles once. */
-    public static void permanenceAndSameTickPacing(GameTestHelper helper,
+    /** To reproduce: select permanence, sneak, and modifier-click Storage empty-handed twice. Each click toggles it. */
+    public static void permanenceTogglesWhileSneaking(GameTestHelper helper,
             Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
         var storage = placeStorage(helper, TARGET);
         try (PlayerScope scope = new PlayerScope(factory.apply(ItemStack.EMPTY))) {
@@ -176,10 +182,10 @@ public final class InteractionChecks {
             player.setShiftKeyDown(true);
             ServerGestureState.set(player, StackMode.TOGGLE_PERMANENT, true);
             var hit = aim(player, storage.getBlockPos(), 0.5, 0.5);
+            check(callback.click(player, HAND, hit), "Toggle not consumed");
+            check(storage.pile().isPermanent(), "First click did not toggle");
             callback.click(player, HAND, hit);
-            check(storage.pile().isPermanent(), "Empty hand did not toggle");
-            callback.click(player, HAND, hit);
-            check(storage.pile().isPermanent(), "Same-tick duplicate toggled");
+            check(!storage.pile().isPermanent(), "Second click did not toggle");
         }
         helper.succeed();
     }
@@ -216,7 +222,6 @@ public final class InteractionChecks {
             callback.click(player, HAND, new BlockHitResult(hit.getLocation(), Direction.EAST, support, false));
             check(helper.getLevel().getBlockState(destination).isAir(), "Invalid item left block");
             player.setItemInHand(HAND, new ItemStack(Items.STONE));
-            GestureThrottle.clear(player.getUUID());
             callback.click(player, HAND, new BlockHitResult(hit.getLocation(), Direction.EAST, support, false));
             check(helper.getLevel().getBlockState(destination).isAir(), "Unsupported first cell left block");
             checkEquals(1, player.getMainHandItem().getCount(), "Rejected deposit spent hand");
@@ -224,21 +229,15 @@ public final class InteractionChecks {
         helper.succeed();
     }
 
-    /** To reproduce: select another mode, disconnect, and reconnect. Logout clears mode/modifier state and gesture pacing. */
+    /** To reproduce: select another mode, disconnect, and reconnect. Logout clears mode/modifier state. */
     public static void stateAndLogout(GameTestHelper helper,
             Function<ItemStack, ServerPlayer> factory, LoaderClick callback) {
         try (PlayerScope scope = new PlayerScope(factory.apply(ItemStack.EMPTY))) {
             var player = scope.player;
             GestureStatePkt.handleServer(new GestureStatePkt(StackMode.BAR_STACK, true), player);
             checkEquals(new ServerGestureState.State(StackMode.BAR_STACK, true), ServerGestureState.get(player), "Synced state");
-            GestureThrottle.claimTick(player);
             ServerLifecycle.logout(player.getUUID());
             checkEquals(new ServerGestureState.State(StackMode.STORAGE_STACK, false), ServerGestureState.get(player), "Logout state");
-            check(GestureThrottle.claimTick(player), "Logout pacing");
-            BlockPos near = helper.absolutePos(TARGET);
-            aim(player, near, 0.5, 0.5);
-            check(StackInteractions.withinReach(player, near), "Near reach");
-            check(!StackInteractions.withinReach(player, near.east(20)), "Far reach");
         }
         helper.succeed();
     }
@@ -301,7 +300,7 @@ public final class InteractionChecks {
                                        GameEvent event, Runnable gesture) {
         var level = helper.getLevel();
         var before = level.getBlockState(pos);
-        GestureThrottle.clear(player.getUUID());
+        RotationSoundThrottle.clear(player.getUUID());
         try (var events = new WorldEditChecks.EventProbe(level, pos)) {
             gesture.run();
             events.expectOne(event, player, event == GameEvent.BLOCK_DESTROY ? before : level.getBlockState(pos));
@@ -332,7 +331,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.getAbilities().instabuild = false;
             ServerGestureState.clear(player.getUUID());
-            GestureThrottle.clear(player.getUUID());
+            RotationSoundThrottle.clear(player.getUUID());
         }
         @Override public void close() {
             player.setPos(position.x, position.y, position.z);
@@ -342,7 +341,7 @@ public final class InteractionChecks {
             player.setItemInHand(HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, offhand);
             ServerGestureState.clear(player.getUUID());
-            GestureThrottle.clear(player.getUUID());
+            RotationSoundThrottle.clear(player.getUUID());
         }
     }
 }

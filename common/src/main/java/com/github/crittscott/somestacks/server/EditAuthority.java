@@ -21,6 +21,14 @@ public interface EditAuthority {
     /** The actor automation-driven growth and removal are attributed to. */
     ServerPlayer automationActor(ServerLevel level);
 
+    /**
+     * Side-effect-free placement permission, where the loader offers protection queries. Growth
+     * consults it before promising space, and {@link #place} answers to it as well.
+     */
+    default boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+        return true;
+    }
+
     /** Places through loader-native protection, restoring denied state before publication. */
     boolean place(Player placer, ServerLevel level, BlockPos pos,
                   BlockState state, Direction placedAgainst);

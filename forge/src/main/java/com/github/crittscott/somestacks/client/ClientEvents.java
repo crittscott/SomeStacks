@@ -4,10 +4,13 @@ import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.network.ModNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -21,6 +24,25 @@ public final class ClientEvents {
 
     public static void init() {
         ClientGestures.setSender(ModNetworking.CHANNEL::sendToServer);
+    }
+
+    /**
+     * Registers the client-local render commands. Forge hands a command to the server when the
+     * client tree does not know it, so the server's own {@code ss} forms still reach it.
+     */
+    @SubscribeEvent
+    public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+        ClientRenderCommands.register(event.getDispatcher(), new ClientRenderCommands.Feedback<>() {
+            @Override
+            public void success(CommandSourceStack source, Component message) {
+                source.sendSuccess(() -> message, false);
+            }
+
+            @Override
+            public void failure(CommandSourceStack source, Component message) {
+                source.sendFailure(message);
+            }
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -85,6 +107,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientGestures.resetSync();
+        ClientRenderPacketSink.clear();
     }
 
     private static boolean isHittingBlock() {

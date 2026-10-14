@@ -42,8 +42,8 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The client's item render configuration, layered by authority. The first matching entry owns the
- * entire presentation: server-synced admin overrides, then the user's override file, then bundled
- * resource overrides. Items absent from every layer use measured profiles.
+ * entire presentation: the user's override file, then resource-pack overrides. Items absent from
+ * every layer use measured profiles.
  *
  * <p>A corpus file is named for the namespace whose items it covers, and covers no other.
  * The corpus is cross-mod compatibility data, most of which any one client cannot use, so a
@@ -58,8 +58,6 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     /** Bundled corpus, from client resource reload. */
     private static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
-    /** Admin overrides synced from the server. */
-    private static final Map<ResourceLocation, ItemRenderConfig> SERVER_OVERRIDES = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
@@ -121,18 +119,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     /**
-     * Replaces the entire server override layer with the supplied entries and invalidates resolved
-     * profiles. Copies map entries; does not save them to the local user file.
-     */
-    public static void setSyncedServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides) {
-        SERVER_OVERRIDES.clear();
-        SERVER_OVERRIDES.putAll(overrides);
-        clearResolvedProfiles();
-    }
-
-    /**
      * Loads the user file if needed, then replaces this item's in-memory user override and invalidates
-     * resolved profiles. Does not save to disk; server overrides still take precedence.
+     * resolved profiles. Does not save to disk.
      */
     public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
@@ -175,10 +163,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     private static RenderProfile resolveUncached(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        ItemRenderConfig entry = SERVER_OVERRIDES.get(itemId);
-        if (entry == null) {
-            entry = USER_OVERRIDES.get(itemId);
-        }
+        ItemRenderConfig entry = USER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = CONFIG_MAP.get(itemId);
         }
@@ -220,7 +205,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * under {@code generated_overrides}, and reports the result to the player. Entries are
      * complete. The generated directory is output only, not an active override layer, so dumping a
      * modpack does not freeze its current profiles into the user layer. Each file can be edited and
-     * copied into a resource pack's {@code item_render_overrides} or the server override directory.
+     * copied into a resource pack's {@code item_render_overrides}.
      *
      * <p>Every item a layer does not configure is measured here rather than at first sight of it,
      * so a dump of a large pack is the measurement pass for all of it. The results reach the

@@ -27,6 +27,7 @@
   },
   "suggests": {
     "ftbchunks": "*",
-    "openpartiesandclaims": "*"
+    "openpartiesandclaims": "*",
+    "common-protection-api": "*"
   }
 }

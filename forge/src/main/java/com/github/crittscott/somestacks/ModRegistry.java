@@ -6,6 +6,8 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -17,7 +19,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
- * The mod's registered blocks and block entity types, and the Forge registration glue behind them.
+ * The mod's registered blocks, block entity types, and sound events, and the Forge registration
+ * glue behind them.
  * Common code never registers anything itself; {@link CommonRegistry} is populated below so it can
  * still read back what got registered.
  *
@@ -35,6 +38,8 @@ public final class ModRegistry {
             DeferredRegister.create(ForgeRegistries.BLOCKS, SomeStacks.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SomeStacks.MODID);
+    public static final DeferredRegister<SoundEvent> SOUNDS =
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SomeStacks.MODID);
 
     public static final RegistryObject<Block> BAR_STACK_BLOCK = BLOCKS.register("bar_stack_block",
             () -> new BarStackBlock(BlockBehaviour.Properties.of()
@@ -77,6 +82,16 @@ public final class ModRegistry {
             BLOCK_ENTITIES.register("stack_be",
                     () -> BlockEntityType.Builder.of(StorageStackBE::new, STORAGE_STACK_BLOCK.get()).build(null));
 
+    public static final RegistryObject<SoundEvent> STORAGE_DEPOSIT_SOUND = sound("block.storage_stack.deposit");
+    public static final RegistryObject<SoundEvent> STORAGE_EXTRACT_SOUND = sound("block.storage_stack.extract");
+    public static final RegistryObject<SoundEvent> STORAGE_ROTATE_SOUND = sound("block.storage_stack.rotate");
+    public static final RegistryObject<SoundEvent> SINGLES_DEPOSIT_SOUND = sound("block.singles_stack.deposit");
+    public static final RegistryObject<SoundEvent> SINGLES_EXTRACT_SOUND = sound("block.singles_stack.extract");
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_SOUND = sound("block.singles_stack.rotate");
+    public static final RegistryObject<SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound("block.singles_stack.rotate_item");
+    public static final RegistryObject<SoundEvent> BAR_DEPOSIT_SOUND = sound("block.bar_stack.deposit");
+    public static final RegistryObject<SoundEvent> BAR_EXTRACT_SOUND = sound("block.bar_stack.extract");
+
     static {
         // Populated eagerly, not lazily: the method references are cheap and deferred by
         // RegistryObject::get itself, and setting them here keeps every common-side caller safe
@@ -87,10 +102,25 @@ public final class ModRegistry {
         CommonRegistry.STORAGE_STACK_BE = STORAGE_STACK_BE::get;
         CommonRegistry.SINGLES_STACK_BE = SINGLES_STACK_BE::get;
         CommonRegistry.BAR_STACK_BE = BAR_STACK_BE::get;
+        CommonRegistry.STORAGE_DEPOSIT_SOUND = STORAGE_DEPOSIT_SOUND::get;
+        CommonRegistry.STORAGE_EXTRACT_SOUND = STORAGE_EXTRACT_SOUND::get;
+        CommonRegistry.STORAGE_ROTATE_SOUND = STORAGE_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_DEPOSIT_SOUND = SINGLES_DEPOSIT_SOUND::get;
+        CommonRegistry.SINGLES_EXTRACT_SOUND = SINGLES_EXTRACT_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_SOUND = SINGLES_ROTATE_SOUND::get;
+        CommonRegistry.SINGLES_ROTATE_ITEM_SOUND = SINGLES_ROTATE_ITEM_SOUND::get;
+        CommonRegistry.BAR_DEPOSIT_SOUND = BAR_DEPOSIT_SOUND::get;
+        CommonRegistry.BAR_EXTRACT_SOUND = BAR_EXTRACT_SOUND::get;
     }
 
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        SOUNDS.register(modBus);
+    }
+
+    private static RegistryObject<SoundEvent> sound(String path) {
+        return SOUNDS.register(path,
+                () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(SomeStacks.MODID, path)));
     }
 }

@@ -9,7 +9,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 import net.minecraft.resources.ResourceLocation;
@@ -86,27 +85,30 @@ class BundledResourceTest {
         }
     }
 
+    /**
+     * Every registered stack sound has a {@code sounds.json} entry that plays something and names
+     * a subtitle the lang file defines. Rotation reaches Storage and Singles blocks and Singles
+     * items, and nothing on a Bar Stack, so the actions a block type carries are not the same for
+     * every type.
+     */
     @Test
-    void bundledSoundDataHasEveryStackAction() throws IOException {
-        Path path = RESOURCES.resolve(
-                Path.of("data", "somestacks", "somestacks_sounds", "default.json"));
-        JsonObject root = JsonParser.parseString(Files.readString(path)).getAsJsonObject();
+    void bundledSoundsCoverEveryStackActionWithSubtitles() throws IOException {
+        Path assets = RESOURCES.resolve(Path.of("assets", "somestacks"));
+        JsonObject sounds = JsonParser.parseString(
+                Files.readString(assets.resolve("sounds.json"))).getAsJsonObject();
+        JsonObject lang = JsonParser.parseString(
+                Files.readString(assets.resolve(Path.of("lang", "en_us.json")))).getAsJsonObject();
 
-        // Rotation reaches Storage and Singles blocks and Singles items, and nothing on a Bar
-        // Stack, so the actions a block type carries are not the same for every type.
-        Map<String, Set<String>> expected = Map.of(
-                "storage_stack_block", Set.of("deposit", "extract", "rotate"),
-                "singles_stack_block", Set.of("deposit", "extract", "rotate", "rotate_item"),
-                "bar_stack_block", Set.of("deposit", "extract"));
-
-        for (var stack : expected.entrySet()) {
-            assertTrue(root.has(stack.getKey()), stack.getKey());
-            JsonObject actions = root.getAsJsonObject(stack.getKey());
-            assertEquals(stack.getValue(), actions.keySet(), stack.getKey());
-            for (String action : stack.getValue()) {
-                assertFalse(actions.get(action).getAsString().isBlank(),
-                        stack.getKey() + "." + action);
-            }
+        Set<String> expected = Set.of(
+                "block.storage_stack.deposit", "block.storage_stack.extract", "block.storage_stack.rotate",
+                "block.singles_stack.deposit", "block.singles_stack.extract", "block.singles_stack.rotate",
+                "block.singles_stack.rotate_item",
+                "block.bar_stack.deposit", "block.bar_stack.extract");
+        assertEquals(expected, sounds.keySet());
+        for (String event : expected) {
+            JsonObject entry = sounds.getAsJsonObject(event);
+            assertTrue(entry.getAsJsonArray("sounds").size() > 0, event);
+            assertTrue(lang.has(entry.get("subtitle").getAsString()), event + " subtitle");
         }
     }
 

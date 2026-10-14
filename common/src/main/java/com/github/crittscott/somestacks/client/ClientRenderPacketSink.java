@@ -1,83 +1,116 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.network.RenderOverridePkt;
-import com.github.crittscott.somestacks.network.WriteOverridesPkt;
-import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.util.BlockType;
-import java.util.List;
-import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
 
-/**
- * Retains server configuration overrides and forwards render edits and writes to an installed handler.
- * Packet application runs on the client thread; loaders must dispatch decoded packets there.
- */
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+/** Stages config chunks and atomically publishes a complete server snapshot. */
 public final class ClientRenderPacketSink {
+    private static int generation = -1;
+    private static int chunks;
+    private static int bytes;
+    private static boolean enableStack;
+    private static boolean enableSingles;
+    private static boolean enableBar;
+    private static int expectedGenMods;
+    private static int expectedDisabledMods;
+    private static final Set<String> GEN_MODS = new LinkedHashSet<>();
+    private static final Set<String> DISABLED_MODS = new LinkedHashSet<>();
+
     private ClientRenderPacketSink() {}
 
-    public interface Handler {
-        /** Replaces the server-synced render overrides with the newly received set. */
-        void setServerOverrides(Map<ResourceLocation, ItemRenderConfig> overrides);
-
-        /** Applies or clears one item's local user override, per {@code packet}. */
-        void setUserOverride(RenderOverridePkt packet);
-
-        /**
-         * Writes the user override layer to disk if {@code namespaces} is empty, or dumps the
-         * resolved render profile of every item in the given namespaces to per-namespace files
-         * otherwise.
-         */
-        void writeOverrides(List<String> namespaces);
-    }
-
-    private static Handler handler;
-    private static Map<ResourceLocation, ItemRenderConfig> serverOverrides = Map.of();
-
     /**
-     * Installs the nonnull rendering handler and immediately gives it the latest retained server
-     * overrides, initially an empty map. Earlier individual-edit and write packets are not replayed.
-     */
-    public static void setHandler(Handler handler) {
-        ClientRenderPacketSink.handler = handler;
-        handler.setServerOverrides(serverOverrides);
-    }
-
-    /**
-     * Applies a valid configuration packet: updates enabled types immediately and retains an
-     * immutable copy of its server overrides. Forwards those overrides when a handler is installed;
-     * otherwise the next handler installation receives them. Invalid packets leave state unchanged.
+     * Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging;
+     * only a complete final chunk publishes flags and lists. Rejection clears staging and throws
+     * a runtime exception to the loader's receive handler.
      */
     public static void apply(ConfigSyncPkt packet) {
-        if (!packet.isValid()) {
-            return;
-        }
-        StackState.setBlockEnabled(BlockType.STORAGE_STACK, packet.enableStack());
-        StackState.setBlockEnabled(BlockType.SINGLES_STACK, packet.enableSingles());
-        StackState.setBlockEnabled(BlockType.BAR_STACK, packet.enableBar());
-        serverOverrides = Map.copyOf(packet.renderOverrides());
-        if (handler != null) {
-            handler.setServerOverrides(serverOverrides);
+        try {
+            stage(packet);
+        } catch (RuntimeException rejected) {
+            clear();
+            throw rejected;
         }
     }
 
-    /**
-     * Forwards an individual override edit to the installed handler. Without a handler the packet
-     * is discarded; it is not retained for installation.
-     */
-    public static void apply(RenderOverridePkt packet) {
-        if (handler != null) {
-            handler.setUserOverride(packet);
+    /** Discards incomplete data at disconnect or after rejection. */
+    public static void clear() {
+        generation = -1;
+        chunks = 0;
+        bytes = 0;
+        GEN_MODS.clear();
+        DISABLED_MODS.clear();
+    }
+
+    private static void stage(ConfigSyncPkt packet) {
+        if (packet.first()) {
+            begin(packet);
+        } else if (packet.generation() != generation) {
+            throw new IllegalStateException(
+                    "Config sync chunk without matching first chunk: " + packet.generation());
+        }
+
+        verifyMetadata(packet);
+        chunks++;
+        bytes += packet.budgetBytes();
+        if (chunks > ConfigSyncPkt.MAX_GENERATION_CHUNKS
+                || bytes > ConfigSyncPkt.MAX_GENERATION_BYTES
+                || (!packet.last() && packet.genMods().isEmpty() && packet.disabledMods().isEmpty())
+                || GEN_MODS.size() + packet.genMods().size() > expectedGenMods
+                || DISABLED_MODS.size() + packet.disabledMods().size() > expectedDisabledMods) {
+            throw new IllegalStateException("Config sync exceeded its receive budget");
+        }
+        addUnique(GEN_MODS, packet.genMods(), "gallery mod");
+        addUnique(DISABLED_MODS, packet.disabledMods(), "disabled mod");
+
+        if (packet.last()) {
+            finish();
         }
     }
 
-    /**
-     * Forwards a write request when a handler is installed and the namespace list is nonnull.
-     * Otherwise the request is discarded; it is not retained for installation.
-     */
-    public static void apply(WriteOverridesPkt packet) {
-        if (handler != null && packet.namespaces() != null) {
-            handler.writeOverrides(packet.namespaces());
+    private static void begin(ConfigSyncPkt packet) {
+        clear();
+        generation = packet.generation();
+        enableStack = packet.enableStack();
+        enableSingles = packet.enableSingles();
+        enableBar = packet.enableBar();
+        expectedGenMods = packet.totalGenMods();
+        expectedDisabledMods = packet.totalDisabledMods();
+    }
+
+    private static void verifyMetadata(ConfigSyncPkt packet) {
+        if (packet.enableStack() != enableStack
+                || packet.enableSingles() != enableSingles
+                || packet.enableBar() != enableBar
+                || packet.totalGenMods() != expectedGenMods
+                || packet.totalDisabledMods() != expectedDisabledMods) {
+            throw new IllegalStateException(
+                    "Config sync metadata changed within generation " + generation);
         }
+    }
+
+    private static void addUnique(Set<String> destination, List<String> additions, String label) {
+        for (String addition : additions) {
+            if (!destination.add(addition)) {
+                throw new IllegalStateException(
+                        "Duplicate synchronized " + label + " namespace: " + addition);
+            }
+        }
+    }
+
+    private static void finish() {
+        if (GEN_MODS.size() != expectedGenMods
+                || DISABLED_MODS.size() != expectedDisabledMods) {
+            throw new IllegalStateException("Config sync ended before reaching its declared totals");
+        }
+
+        StackState.setBlockEnabled(BlockType.STORAGE_STACK, enableStack);
+        StackState.setBlockEnabled(BlockType.SINGLES_STACK, enableSingles);
+        StackState.setBlockEnabled(BlockType.BAR_STACK, enableBar);
+        ClientRenderToolState.replace(List.copyOf(GEN_MODS), List.copyOf(DISABLED_MODS));
+        clear();
     }
 }

@@ -12,6 +12,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -50,6 +51,8 @@ public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
     public static final ResourceLocation STACK_CUBE_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube");
+    public static final ResourceLocation STACK_CUBE_ERROR_TEXTURE =
+            new ResourceLocation(SomeStacksCommon.MODID, "block/stack_cube_error");
 
     /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -111,6 +114,7 @@ public final class CubeRenderHelper {
     private static final RandomSource RANDOM = RandomSource.create();
 
     private static final BakedQuad[] NO_PLATES = new BakedQuad[0];
+    private static final BakedQuad[][] NO_ART = new BakedQuad[0][];
 
     /**
      * The quads of each render pass that survive flat projection. Identity keys match baked-model
@@ -125,6 +129,12 @@ public final class CubeRenderHelper {
      * compounds it.
      */
     private static final Set<Item> BLOCK_RENDER_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
+
+    /**
+     * Items whose model threw while its {@code 2d} art was gathered. Cached so the model is asked
+     * once per bake; these draw the error cube until the next resource reload.
+     */
+    private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
     /**
      * Draws {@code stack} inside the current cell, in whichever presentation
@@ -204,9 +214,44 @@ public final class CubeRenderHelper {
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
-        render2DItemCube(pose, buffers, stack, model, light, scale, offset);
+        BakedQuad[][] art = captureFlatArt(stack, level);
+        if (art == null) {
+            render2DItemCube(pose, buffers, stack, NO_ART, STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
+        } else {
+            render2DItemCube(pose, buffers, stack, art, STACK_CUBE_TEXTURE, light, scale, offset);
+        }
         pose.popPose();
+    }
+
+    /**
+     * The plates of each render pass {@code 2d} lays onto the cube, or null when the item's model
+     * has thrown. Everything is resolved before anything is drawn, so a model that throws partway
+     * leaves no buffer mid-quad.
+     *
+     * <p>Resolving the model and its passes stays per stack, so a stack's own state still chooses
+     * both: a charged crossbow draws charged, a coated weapon draws its coating. Only the step from
+     * a pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
+     */
+    @Nullable
+    private static BakedQuad[][] captureFlatArt(ItemStack stack, Level level) {
+        Item item = stack.getItem();
+        if (FLAT_CAPTURE_FAILURES.contains(item)) {
+            return null;
+        }
+        try {
+            BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, level, null, 0);
+            List<BakedModel> passes = ClientRenderPlatform.renderPasses(model, stack, ItemDisplayContext.FIXED);
+            BakedQuad[][] art = new BakedQuad[passes.size()][];
+            for (int i = 0; i < art.length; i++) {
+                art[i] = plates(passes.get(i));
+            }
+            return art;
+        } catch (RuntimeException e) {
+            FLAT_CAPTURE_FAILURES.add(item);
+            SomeStacksCommon.LOGGER.warn("Item model threw while gathering 2d art for {}; drawing the error cube instead",
+                    BuiltInRegistries.ITEM.getKey(item), e);
+            return null;
+        }
     }
 
     private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
@@ -254,8 +299,8 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
-    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedModel model, int light,
-                                         float scale, RenderOffset offset) {
+    private static void render2DItemCube(PoseStack pose, MultiBufferSource buffers, ItemStack stack, BakedQuad[][] art,
+                                         ResourceLocation background, int light, float scale, RenderOffset offset) {
         List<FaceTarget> faces = visibleFaces(pose, scale, offset);
         if (faces.isEmpty()) {
             return;
@@ -263,20 +308,18 @@ public final class CubeRenderHelper {
 
         TextureAtlasSprite backgroundSprite = Minecraft.getInstance()
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(STACK_CUBE_TEXTURE);
+                .apply(background);
         VertexConsumer solidVc = buffers.getBuffer(RenderType.solid());
         for (FaceTarget target : faces) {
             emitBackgroundFace(pose.last().pose(), solidVc, backgroundSprite, light, target);
         }
 
+        if (art.length == 0) {
+            return;
+        }
         VertexConsumer vc = buffers.getBuffer(RenderType.cutout());
-        // Resolving the model and its passes stays here, so a stack's own state still chooses both:
-        // a charged crossbow draws charged, a coated weapon draws its coating. Only the step from a
-        // pass to the quads worth drawing depends on nothing but the pass, and that one is cached.
-        List<BakedModel> passes = ClientRenderPlatform.renderPasses(
-                model, stack, ItemDisplayContext.FIXED);
-        for (int i = 0; i < passes.size(); i++) {
-            emitQuads(vc, stack, plates(passes.get(i)), light, faces);
+        for (BakedQuad[] plates : art) {
+            emitQuads(vc, stack, plates, light, faces);
         }
     }
 
@@ -320,6 +363,7 @@ public final class CubeRenderHelper {
     public static void onResourceReload() {
         PLATE_CACHE.clear();
         BLOCK_RENDER_FAILURES.clear();
+        FLAT_CAPTURE_FAILURES.clear();
     }
 
     /**

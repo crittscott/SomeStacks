@@ -23,7 +23,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Reload and packet/edit entry points must release profiles derived from previous state. */
+/** Reload and edit entry points must release profiles derived from previous state. */
 class RenderCacheInvalidationTest {
     @TempDir Path configDirectory;
     private Object previousBackend;
@@ -73,7 +73,7 @@ class RenderCacheInvalidationTest {
         previousUserFileLoaded = field(ItemRenderOverrides.class, "userFileLoaded").getBoolean(null);
         overrideStateInitialized = true;
         field(ItemRenderOverrides.class, "userFileLoaded").setBoolean(null, true);
-        for (String name : new String[]{"CONFIG_MAP", "SERVER_OVERRIDES", "USER_OVERRIDES", "RESOLVED_PROFILES"}) {
+        for (String name : new String[]{"CONFIG_MAP", "USER_OVERRIDES", "RESOLVED_PROFILES"}) {
             Map<Object, Object> contents = map(ItemRenderOverrides.class, name);
             previousMaps.put(name, new HashMap<>(contents));
             contents.clear();
@@ -107,12 +107,7 @@ class RenderCacheInvalidationTest {
     }
 
     @Test
-    void serverSyncAndUserEditsInvalidateProfilesAndKeepTheirLayers() throws ReflectiveOperationException {
-        seedResolvedProfile();
-        ItemRenderOverrides.setSyncedServerOverrides(Map.of(ID, CONFIG));
-        assertProfilesCleared();
-        assertEquals(CONFIG, map(ItemRenderOverrides.class, "SERVER_OVERRIDES").get(ID));
-
+    void userEditsInvalidateProfilesAndKeepTheirLayer() throws ReflectiveOperationException {
         seedResolvedProfile();
         ItemRenderOverrides.putUser(ID, CONFIG);
         assertProfilesCleared();
@@ -122,12 +117,6 @@ class RenderCacheInvalidationTest {
         ItemRenderOverrides.removeUser(ID);
         assertProfilesCleared();
         assertTrue(map(ItemRenderOverrides.class, "USER_OVERRIDES").isEmpty());
-        assertEquals(CONFIG, map(ItemRenderOverrides.class, "SERVER_OVERRIDES").get(ID));
-
-        seedResolvedProfile();
-        ItemRenderOverrides.setSyncedServerOverrides(Map.of());
-        assertProfilesCleared();
-        assertTrue(map(ItemRenderOverrides.class, "SERVER_OVERRIDES").isEmpty());
     }
 
     @Test

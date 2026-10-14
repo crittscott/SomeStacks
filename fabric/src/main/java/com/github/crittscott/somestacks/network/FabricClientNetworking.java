@@ -25,12 +25,11 @@ public final class FabricClientNetworking {
                 (client, handler, buf, responseSender) -> { });
         registerClient(FabricNetworking.CONFIG_SYNC, ConfigSyncPkt::decode,
                 ClientRenderPacketSink::apply);
-        registerClient(FabricNetworking.RENDER_OVERRIDE, RenderOverridePkt::decode,
-                ClientRenderPacketSink::apply);
-        registerClient(FabricNetworking.WRITE_OVERRIDES, WriteOverridesPkt::decode,
-                ClientRenderPacketSink::apply);
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientGestures.resetSync());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ClientGestures.resetSync();
+            ClientRenderPacketSink.clear();
+        });
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientGestures.resetSync();
             if (!ClientPlayNetworking.canSend(FabricNetworking.GESTURE_STATE)) {

@@ -25,9 +25,12 @@ import javax.annotation.Nullable;
  *
  * <p>Placement has no comparable vanilla click to consult: automated growth has no player gesture
  * for the mod's placement-protection hook (the native block-use callback) to fire, and Fabric
- * API has no generic "a block was placed" event the way Forge's block-place event is. FTB Chunks
- * and Open Parties and Claims are consulted directly instead, through {@link FtbChunksProtection}
- * and {@link OpacProtection}, when either is installed; other claim mods are not covered.
+ * API has no generic "a block was placed" event the way Forge's block-place event is. Placement
+ * instead queries each installed protection provider: Common Protection API through
+ * {@link CommonProtectionQueries}, which covers every claim mod that implements it, and FTB Chunks
+ * and Open Parties and Claims directly through {@link FtbChunksProtection} and
+ * {@link OpacProtection}. A deposit into a neighboring stack also asks Common Protection API
+ * whether the player may interact with the destination.
  */
 public final class FabricEditAuthority implements EditAuthority {
     @Override
@@ -36,16 +39,24 @@ public final class FabricEditAuthority implements EditAuthority {
     }
 
     @Override
+    public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
+        ServerPlayer actor = (ServerPlayer) placer;
+        return !(CommonProtectionQueries.isLoaded() && !CommonProtectionQueries.mayPlace(actor, level, pos))
+                && !(FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos))
+                && !(OpacProtection.isLoaded() && OpacProtection.prevents(level, actor, pos));
+    }
+
+    @Override
     public boolean place(Player placer, ServerLevel level, BlockPos pos,
                          BlockState state, Direction placedAgainst) {
-        ServerPlayer actor = (ServerPlayer) placer;
-        if ((FtbChunksProtection.isLoaded() && FtbChunksProtection.prevents(actor, pos))
-                || (OpacProtection.isLoaded() && OpacProtection.prevents(level, actor, pos))) return false;
-        return level.setBlock(pos, state, Block.UPDATE_ALL);
+        return mayPlace(placer, level, pos) && level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        if (CommonProtectionQueries.isLoaded() && !CommonProtectionQueries.mayInteract(player, pos)) {
+            return false;
+        }
         return UseBlockCallback.EVENT.invoker().interact(player, player.level(),
                 InteractionHand.MAIN_HAND, WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
     }

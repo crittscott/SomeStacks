@@ -4,7 +4,7 @@ import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.ServerLifecycle;
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.MinecraftServer;
@@ -20,7 +20,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
 public final class ServiceAndConfigChecks {
     private ServiceAndConfigChecks() {}
 
-    /** To reproduce in-game: reconnect and rotate a stack; a previous session's gesture/sound pacing must not block the new session. */
+    /** To reproduce in-game: reconnect and rotate a stack; a previous session's rotation-sound pacing must not silence the new session. */
     public static void installedServicesAndLogoutResetPacing(GameTestHelper helper, ServerPlayer player) {
         check(PlatformServices.configFolder() != null, "Missing loader config path");
         check(!PlatformServices.modVersion(SomeStacksCommon.MODID).equals("unknown"),
@@ -28,13 +28,10 @@ public final class ServiceAndConfigChecks {
         check(PlatformServices.editAuthority() != null, "Missing edit authority");
         ServerLifecycle.logout(player.getUUID());
         try {
-            check(GestureThrottle.claimTick(player), "Initial gesture refused");
-            check(!GestureThrottle.claimTick(player), "Repeated gesture accepted");
-            check(GestureThrottle.claimRotationSound(player), "Initial rotation sound refused");
-            check(!GestureThrottle.claimRotationSound(player), "Repeated sound accepted");
+            check(RotationSoundThrottle.claim(player), "Initial rotation sound refused");
+            check(!RotationSoundThrottle.claim(player), "Repeated sound accepted");
             ServerLifecycle.logout(player.getUUID());
-            check(GestureThrottle.claimTick(player), "Logout retained gesture pacing");
-            check(GestureThrottle.claimRotationSound(player), "Logout retained sound pacing");
+            check(RotationSoundThrottle.claim(player), "Logout retained sound pacing");
         } finally {
             ServerLifecycle.logout(player.getUUID());
         }

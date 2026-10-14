@@ -50,7 +50,7 @@ Deposits are rejected when the server has disabled the item's mod or exact item 
 
 ## Extracting
 
-Plain right-click targets the nearest rendered item on the view ray inside the clicked block.
+Plain right-click targets the nearest rendered item along the line from the eye through the point the client clicked, so lag does not shift the target.
 
 - Storage: as much of the targeted stack as the hand can hold.
 - Singles: one item.
@@ -91,7 +91,7 @@ The bottom layer rests on the world. Every bar above it must overlap a bar direc
 - **Missing mods:** a saved item whose mod is absent is kept aside, logged, and returns with the mod.
 - **Collision:** Storage is a full block. Singles and Bar collide on occupied cells or bars; their empty space does not suffocate or fog the camera, but mobs treat the whole block as unavailable for pathfinding.
 - **Empty dynamic blocks:** empty Singles and Bar blocks have no outline shape, but their full-block interaction shape makes them clickable and breakable.
-- **Sounds:** deposits, extraction, and rotations play server-selected sounds; data packs can replace them per type and action.
+- **Sounds:** each action plays a registered, subtitled `somestacks:block.<type>.<action>` event (wood sounds by default), replaceable in `sounds.json`.
 - **Vibrations:** placement, growth, and cleanup/cascade removal emit placement/destruction events; each successful deposit, extraction, rotation, or permanence toggle emits a block change from the player (only destruction if it removed the block). Denied edits emit none.
 
 ## Automation
@@ -108,7 +108,7 @@ Advertised storage includes every current position plus one block of headroom wh
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named; machines walking positions bottom to top build layer by layer.
 
-Storage extraction removes from the named slot then settles; Singles uses the same one-column gravity as player extraction; Bar moves the whole column's topmost bar into the hole, avoiding the item-dropping collapse caused by player extraction.
+Storage extraction removes from the named slot then settles; Singles uses player-style column gravity; Bar moves the column's topmost bar into the hole, avoiding player extraction's collapse.
 
 Reentrant automation during a structural mutation is refused; callers can retry. Fabric stages edits until the outer Transfer API commit, sharing contents/capacity across all sides and run members. Singles/Bar allow one structural extraction position per run per transaction; bulk callers retry.
 
@@ -144,44 +144,45 @@ Disabling types prevents placement/growth; existing blocks and extraction remain
 
 ## Commands
 
-`/ss` provides admin and render tools.
+`/ss` holds admin and render tools.
 
 | Command | Permission | Purpose |
 | --- | --- | --- |
 | `/ss help [command]` | Anyone | List or explain commands |
-| `/ss item <item> <mode> ...` / `reset` | Level 2, player | Change how one item appears on that client |
-| `/ss write changed` | Level 2, player | Save that client's changed profiles |
-| `/ss write <modid\|all\|list>` | Level 2, player | Generate complete profile files on that client |
+| `/ss item <item> <mode> ...` / `reset` | Anyone, client-local | Change how one item appears on your client |
+| `/ss write changed` | Anyone, client-local | Save your changed profiles |
+| `/ss write <modid\|all\|list>` | Anyone, client-local | Generate complete profile files; `list`/`all` use the server's synced lists |
 | `/ss gallery <modid\|all\|list\|items>` | Configured gallery permission, player; off by default | Build Storage render galleries |
 | `/ss ingotgallery <modid\|all\|list>` | Configured gallery permission, player; off by default | Build Bar render galleries |
 | `/ss gen ...` | Level 2 | Edit gallery namespace/item lists |
 | `/ss deny ...` | Level 2 | Edit disabled namespace/exact-item lists |
-| `/ss reload` | Level 2 | Reload world policy and server render overrides; resync players |
+| `/ss reload` | Level 2 | Reload world policy; resync players |
 
-Galleries build east over sandstone, with rows running north, across server ticks. Items appear in id order, without disabled items. They replace floor and stack positions without placement protection; defaults are disabled and permission level 3.
+Galleries build east over sandstone, rows running north, across server ticks, in id order without disabled items. They replace floor and stack positions without placement protection.
 
-Policy command edits save immediately. Forge TOML edits reload automatically and resync players; Fabric JSON edits apply on `/ss reload`.
+Policy command edits save immediately.
 
 ## Item appearance
 
 Storage/Singles modes: `2d` projects item art onto cube faces; `3d` uses the FIXED renderer; `gui` fits the inventory renderer; `block` draws a BlockItem state, falling back to `3d` when unsafe. Profiles also set scale and a three-component offset.
 
-Resolution order is server override, local override, resource-pack data, then automatic model measurement. Server overrides win over local preferences. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
+Resolution order is local override, resource-pack data (including a server resource pack), then automatic model measurement. Unconfigured items are measured and fitted to a cell; results cache at `config/somestacks/measured_cache.json`. Pack selection changes between sessions, owning-mod version changes, and resource reload invalidate relevant measurements.
 
 `/ss item` edits the local in-memory layer. `/ss write changed` saves explicit edits to `config/somestacks/item_overrides.json`. Namespace forms write complete files to output-only `config/somestacks/generated_overrides/`, never loaded automatically.
 
-Bar appearance is separate: resource packs map item ids to textures and optional tints under `assets/<namespace>/textures/bars/*.json`. Missing tints derive from the item's sprite and registered color. Bar mappings are client-only and not synchronized, so players with different packs can see different bars.
+An item whose model throws in `2d` shows a red "ERR" cube until resource reload, logged once.
+
+Bar appearance is separate: resource packs map item ids to textures and optional tints under `assets/<namespace>/textures/bars/*.json`. Missing tints derive from the sprite and tint of the first quad the item draws in inventory. Bar mappings are client-only, so players with different packs can see different bars.
 
 ## Extension points
 
-- Data packs: Bar admission through `somestacks:ingots`; action sounds through `data/<namespace>/somestacks_sounds/*.json`.
-- Resource packs: Storage/Singles profiles at `assets/<namespace>/item_render_overrides/*.json`; Bar mappings described above.
-- Server profiles: `config/somestacks/server_item_overrides/*.json`, synced on login or `/ss reload`.
+- Data packs: Bar admission through `somestacks:ingots`.
+- Resource packs: Storage/Singles profiles at `assets/<namespace>/item_render_overrides/*.json`; Bar mappings described above; action sounds through `assets/somestacks/sounds.json`. Servers share these through a server resource pack.
 
 ## Protection and validation
 
-Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup caused only by one player's extraction or permanence toggle acts as that player. Fabric growth also consults FTB Chunks and Open Parties and Claims directly when installed; other Fabric claim mods are not consulted for growth.
+Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup caused only by one player's extraction or permanence toggle acts as that player. Fabric placement and growth also consult Common Protection API, FTB Chunks, and Open Parties and Claims when installed, before space is offered to automation; adjacent deposits also ask Common Protection API.
 
-Fabric stack removal sends cancellation on veto or completion on success, with the original actor, state, and block entity.
+Fabric stack removal reports cancellation or completion with the original actor, state, and block entity.
 
-Block-use clicks use synchronized mode/modifier state. The server validates pacing, player status, loaded targets, reach, hand, items, adjacency, support, enablement, height, and protection; its view ray selects cells. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.
+Block-use clicks use synchronized mode/modifier state. Existing-stack gestures are block use, so a Forge rule denying only item use does not stop them. Vanilla checks reach and loaded chunks; the server validates player status, hand, items, adjacency, support, enablement, height, and protection. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.

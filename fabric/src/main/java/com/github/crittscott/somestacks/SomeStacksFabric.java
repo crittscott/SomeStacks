@@ -2,11 +2,8 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
 import com.github.crittscott.somestacks.network.FabricNetworking;
-import com.github.crittscott.somestacks.command.CommandNetwork;
-import com.github.crittscott.somestacks.command.FabricCommandNetwork;
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
-import com.github.crittscott.somestacks.server.FabricStackSoundData;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.api.ModInitializer;
@@ -14,10 +11,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 
 /** Fabric's common entry point and server lifecycle wiring. */
 public final class SomeStacksFabric implements ModInitializer {
@@ -29,14 +24,10 @@ public final class SomeStacksFabric implements ModInitializer {
         WorldEdits.setAuthority(PlatformServices.editAuthority());
         FabricNetworking.initServer();
         FabricStackInteractionEvents.init();
-        CommandNetwork.setHandler(new FabricCommandNetwork());
 
         CommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess, environment) -> SsCommand.register(dispatcher));
         ServerTickEvents.END_SERVER_TICK.register(server -> RenderGalleryGenerator.onServerTick());
-
-        ResourceManagerHelper.get(PackType.SERVER_DATA)
-                .registerReloadListener(new FabricStackSoundData());
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             ServerLifecycle.starting();

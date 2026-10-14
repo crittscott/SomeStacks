@@ -27,7 +27,6 @@ final class SsHelp {
     /** Who may run a subcommand, phrased for the player reading about it. */
     private enum Gate {
         OPERATOR("somestacks.command.help.gate.operator"),
-        OPERATOR_IN_GAME("somestacks.command.help.gate.operator_in_game"),
         SERVER_ADMIN_IN_GAME("somestacks.command.help.gate.server_admin_in_game"),
         ANYONE("somestacks.command.help.gate.anyone");
 
@@ -43,7 +42,7 @@ final class SsHelp {
      * forms, and the detail is what a player needs to know before running it.
      */
     private enum Topic {
-        ITEM("item", "somestacks.command.help.item.summary", Gate.OPERATOR_IN_GAME,
+        ITEM("item", "somestacks.command.help.item.summary", Gate.ANYONE,
                 List.of("somestacks.command.help.item.usage.1",
                         "somestacks.command.help.item.usage.2"),
                 List.of("somestacks.command.help.item.detail.1",
@@ -67,7 +66,7 @@ final class SsHelp {
                 List.of("somestacks.command.help.ingotgallery.detail.1",
                         "somestacks.command.help.ingotgallery.detail.2")),
 
-        WRITE("write", "somestacks.command.help.write.summary", Gate.OPERATOR_IN_GAME,
+        WRITE("write", "somestacks.command.help.write.summary", Gate.ANYONE,
                 List.of("somestacks.command.help.write.usage.1", "somestacks.command.help.write.usage.2", "somestacks.command.help.write.usage.3", "somestacks.command.help.write.usage.4"),
                 List.of("somestacks.command.help.write.detail.1",
                         "somestacks.command.help.write.detail.2",
@@ -76,8 +75,7 @@ final class SsHelp {
 
         RELOAD("reload", "somestacks.command.help.reload.summary", Gate.OPERATOR,
                 List.of("somestacks.command.help.reload.usage.1"),
-                List.of("somestacks.command.help.reload.detail.1",
-                        "somestacks.command.help.reload.detail.2")),
+                List.of("somestacks.command.help.reload.detail.1")),
 
         GEN("gen", "somestacks.command.help.gen.summary", Gate.OPERATOR,
                 List.of("somestacks.command.help.gen.usage.1", "somestacks.command.help.gen.usage.2", "somestacks.command.help.gen.usage.3",

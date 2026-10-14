@@ -10,13 +10,14 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
-/** Fabric registration for the shared blocks and block entities. */
+/** Fabric registration for the shared blocks, block entities, and sound events. */
 public final class FabricRegistry {
     private FabricRegistry() {}
 
@@ -57,6 +58,16 @@ public final class FabricRegistry {
             "stack_be",
             FabricBlockEntityTypeBuilder.create(StorageStackBE::new, STORAGE_STACK_BLOCK).build());
 
+    public static final SoundEvent STORAGE_DEPOSIT_SOUND = registerSound("block.storage_stack.deposit");
+    public static final SoundEvent STORAGE_EXTRACT_SOUND = registerSound("block.storage_stack.extract");
+    public static final SoundEvent STORAGE_ROTATE_SOUND = registerSound("block.storage_stack.rotate");
+    public static final SoundEvent SINGLES_DEPOSIT_SOUND = registerSound("block.singles_stack.deposit");
+    public static final SoundEvent SINGLES_EXTRACT_SOUND = registerSound("block.singles_stack.extract");
+    public static final SoundEvent SINGLES_ROTATE_SOUND = registerSound("block.singles_stack.rotate");
+    public static final SoundEvent SINGLES_ROTATE_ITEM_SOUND = registerSound("block.singles_stack.rotate_item");
+    public static final SoundEvent BAR_DEPOSIT_SOUND = registerSound("block.bar_stack.deposit");
+    public static final SoundEvent BAR_EXTRACT_SOUND = registerSound("block.bar_stack.extract");
+
     public static void init() {
         CommonRegistry.STORAGE_STACK_BLOCK = () -> STORAGE_STACK_BLOCK;
         CommonRegistry.SINGLES_STACK_BLOCK = () -> SINGLES_STACK_BLOCK;
@@ -64,6 +75,15 @@ public final class FabricRegistry {
         CommonRegistry.STORAGE_STACK_BE = () -> STORAGE_STACK_BE;
         CommonRegistry.SINGLES_STACK_BE = () -> SINGLES_STACK_BE;
         CommonRegistry.BAR_STACK_BE = () -> BAR_STACK_BE;
+        CommonRegistry.STORAGE_DEPOSIT_SOUND = () -> STORAGE_DEPOSIT_SOUND;
+        CommonRegistry.STORAGE_EXTRACT_SOUND = () -> STORAGE_EXTRACT_SOUND;
+        CommonRegistry.STORAGE_ROTATE_SOUND = () -> STORAGE_ROTATE_SOUND;
+        CommonRegistry.SINGLES_DEPOSIT_SOUND = () -> SINGLES_DEPOSIT_SOUND;
+        CommonRegistry.SINGLES_EXTRACT_SOUND = () -> SINGLES_EXTRACT_SOUND;
+        CommonRegistry.SINGLES_ROTATE_SOUND = () -> SINGLES_ROTATE_SOUND;
+        CommonRegistry.SINGLES_ROTATE_ITEM_SOUND = () -> SINGLES_ROTATE_ITEM_SOUND;
+        CommonRegistry.BAR_DEPOSIT_SOUND = () -> BAR_DEPOSIT_SOUND;
+        CommonRegistry.BAR_EXTRACT_SOUND = () -> BAR_EXTRACT_SOUND;
     }
 
     private static Block registerBlock(String path, Block block) {
@@ -72,6 +92,11 @@ public final class FabricRegistry {
 
     private static <T extends BlockEntityType<?>> T registerBlockEntity(String path, T type) {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id(path), type);
+    }
+
+    private static SoundEvent registerSound(String path) {
+        ResourceLocation id = id(path);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
     private static ResourceLocation id(String path) {

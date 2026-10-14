@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.server.GestureThrottle;
+import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,13 +25,13 @@ public final class ServerLifecycle {
     private ServerLifecycle() {}
 
     /**
-     * Clears queued galleries, gesture pacing, synchronized gesture state, and set-aside reports for
+     * Clears queued galleries, rotation-sound pacing, synchronized gesture state, and set-aside reports for
      * a new server session. The loader must separately initialize its world policy before players
      * log in.
      */
     public static synchronized void starting() {
         RenderGalleryGenerator.clear();
-        GestureThrottle.clearAll();
+        RotationSoundThrottle.clearAll();
         ServerGestureState.clearAll();
         reportedSavedItems.clear();
     }
@@ -42,7 +43,7 @@ public final class ServerLifecycle {
      */
     public static synchronized void stopped() {
         RenderGalleryGenerator.clear();
-        GestureThrottle.clearAll();
+        RotationSoundThrottle.clearAll();
         ServerGestureState.clearAll();
         reportedSavedItems.clear();
         ServerConfig.clear();
@@ -66,34 +67,31 @@ public final class ServerLifecycle {
         }
     }
 
-    /**
-     * Sends the current enable flags and freshly read server render overrides to this player.
-     * World policy must already be initialized; this does not reread policy files.
-     */
+    /** Sends the current policy snapshot to this player. World policy must already be initialized. */
     public static void login(ServerPlayer player) {
-        PlatformServices.sendConfig(player, configSync());
+        sendConfig(player, ConfigSyncPkt.snapshot(ServerConfig.settings()));
     }
 
     /**
-     * Removes this player's gesture pacing and synchronized mode/modifier state.
+     * Removes this player's rotation-sound pacing and synchronized mode/modifier state.
      */
     public static void logout(UUID playerId) {
-        GestureThrottle.clear(playerId);
+        RotationSoundThrottle.clear(playerId);
         ServerGestureState.clear(playerId);
     }
 
-    /** Reads render overrides once per broadcast; policy files are not reread. */
+    /** Sends one snapshot of the current policy to every player; policy files are not reread. */
     public static int syncAllPlayers(MinecraftServer server) {
-        ConfigSyncPkt packet = configSync();
+        List<ConfigSyncPkt> packets = ConfigSyncPkt.snapshot(ServerConfig.settings());
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            PlatformServices.sendConfig(player, packet);
+            sendConfig(player, packets);
         }
         return server.getPlayerList().getPlayerCount();
     }
 
-    private static ConfigSyncPkt configSync() {
-        ServerConfig.Settings settings = ServerConfig.settings();
-        return new ConfigSyncPkt(settings.enableStorageStackBlock(), settings.enableSinglesStackBlock(),
-                settings.enableBarStackBlock(), ServerOverridesLoader.load());
+    private static void sendConfig(ServerPlayer player, List<ConfigSyncPkt> packets) {
+        for (ConfigSyncPkt packet : packets) {
+            PlatformServices.sendConfig(player, packet);
+        }
     }
 }
