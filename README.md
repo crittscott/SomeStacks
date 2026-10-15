@@ -42,7 +42,7 @@ No items and no recipes. A stack exists because you put something in it, and it 
 
 Every stack block exposes loader-native item storage on every side (`IItemHandler` on Forge and NeoForge, Transfer API storage on Fabric), and a block in a vertical run exposes the entire run so a hopper under the bottom and a pipe halfway up address the same inventory.
 
-- Slots are positions, not a bag. A Singles or Bar slot names one cell and holds one item.
+- Slots are positions. A Singles or Bar slot names one cell and holds one item.
 - A run advertises one block of headroom above what it holds, so **inserting into the top grows the column by itself** (up to the configured height, and only where it would be allowed to build).
 - Automated extraction never leaves a mess: Singles shifts the column down, Bar backfills the hole from the top. Nothing gets dropped on the floor.
 - **Comparators** read the fill of the whole run from any block in it.
