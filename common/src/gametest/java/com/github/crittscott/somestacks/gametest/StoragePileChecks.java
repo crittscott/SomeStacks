@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -330,8 +332,9 @@ public final class StoragePileChecks {
         source.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 64));
         source.getItems().setStackInSlot(1, new ItemStack(Items.WOODEN_PICKAXE));
         StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
-        loaded.loadWithComponents(source.saveWithoutMetadata(helper.getLevel().registryAccess()),
-                helper.getLevel().registryAccess());
+        loaded.loadWithComponents(TagValueInput.create(
+                ProblemReporter.DISCARDING, helper.getLevel().registryAccess(),
+                source.saveWithoutMetadata(helper.getLevel().registryAccess())));
         checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
                 "Signal after loading saved contents");
         checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");

@@ -1,5 +1,9 @@
 package com.github.crittscott.somestacks.util;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -155,13 +159,46 @@ public class StackItemStorage implements SlotAccess {
         return copy;
     }
 
+    /** Uses the value output's registry context for item components, retaining the disk envelope. */
+    public static Codec<StackItemStorage> codec(int slots) {
+        return new Codec<>() {
+            @Override
+            public <T> DataResult<T> encode(StackItemStorage storage, DynamicOps<T> ops, T prefix) {
+                return CompoundTag.CODEC.encode(storage.serializeNBT(ops), ops, prefix);
+            }
+
+            @Override
+            public <T> DataResult<Pair<StackItemStorage, T>> decode(DynamicOps<T> ops, T input) {
+                return CompoundTag.CODEC.decode(ops, input).map(pair -> pair.mapFirst(tag -> {
+                    StackItemStorage storage = new StackItemStorage(slots);
+                    storage.deserializeNBT(ops, tag);
+                    return storage;
+                }));
+            }
+        };
+    }
+
     public CompoundTag serializeNBT(HolderLookup.Provider registries) {
+        return serializeNBT(RegistryOps.create(NbtOps.INSTANCE, registries));
+    }
+
+    private <T> CompoundTag serializeNBT(DynamicOps<T> ops) {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
-                CompoundTag itemTag = new CompoundTag();
+                // Never publish a partial inventory when a component cannot be encoded.
+                T encoded;
+                try {
+                    encoded = ItemStack.CODEC.encodeStart(ops, stacks[i]).getOrThrow();
+                } catch (RuntimeException failure) {
+                    throw new IllegalStateException("Cannot encode stored item in slot " + i, failure);
+                }
+                Tag raw = ops.convertTo(NbtOps.INSTANCE, encoded);
+                if (!(raw instanceof CompoundTag itemTag)) {
+                    throw new IllegalStateException("Item codec did not produce a compound for slot " + i);
+                }
                 itemTag.putInt(TAG_SLOT, i);
-                list.add(stacks[i].save(registries, itemTag));
+                list.add(itemTag);
             }
         }
         CompoundTag nbt = new CompoundTag();
@@ -179,15 +216,19 @@ public class StackItemStorage implements SlotAccess {
      * returned retention counts once it knows the world location.
      */
     public LoadResult deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
+        return deserializeNBT(RegistryOps.create(NbtOps.INSTANCE, registries), nbt);
+    }
+
+    private <T> LoadResult deserializeNBT(DynamicOps<T> ops, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
         setAside.clear();
-        readItems(registries, nbt.getListOrEmpty(TAG_ITEMS));
+        readItems(ops, nbt.getListOrEmpty(TAG_ITEMS));
         int newlySetAside = setAside.size();
-        readItems(registries, nbt.getListOrEmpty(TAG_SET_ASIDE));
+        readItems(ops, nbt.getListOrEmpty(TAG_SET_ASIDE));
         return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
     }
 
-    private void readItems(HolderLookup.Provider registries, ListTag list) {
+    private <T> void readItems(DynamicOps<T> ops, ListTag list) {
         for (Tag entry : list) {
             if (!(entry instanceof CompoundTag itemTag) || !(itemTag.get(TAG_SLOT) instanceof IntTag slotTag)) {
                 setAside.add(entry.copy());
@@ -195,7 +236,7 @@ public class StackItemStorage implements SlotAccess {
             }
             int slot = slotTag.intValue();
             Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
-                    ? ItemStack.parse(registries, itemTag)
+                    ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
                     : Optional.empty();
             if (parsed.isPresent() && !parsed.get().isEmpty()) {
                 stacks[slot] = parsed.get();

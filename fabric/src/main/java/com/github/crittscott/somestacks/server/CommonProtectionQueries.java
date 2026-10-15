@@ -16,6 +16,6 @@ final class CommonProtectionQueries implements FabricProtectionQueries {
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
         return CommonProtection.canInteractBlock(
-                player.serverLevel(), pos, player.getGameProfile(), player);
+                player.level(), pos, player.getGameProfile(), player);
     }
 }

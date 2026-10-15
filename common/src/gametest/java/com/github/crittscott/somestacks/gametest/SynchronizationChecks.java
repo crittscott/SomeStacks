@@ -15,6 +15,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -339,6 +341,11 @@ public final class SynchronizationChecks {
                     "Valid current-format update rejected");
             check(be.getItems().getStackInSlot(0).isEmpty(), "Old client slot survived replacement");
             checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Replacement client item");
+            var registries = helper.getLevel().registryAccess();
+            be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid));
+            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Chunk initialization item");
+            be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement));
+            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Later packet item");
         }
         helper.succeed();
     }
@@ -380,8 +387,11 @@ public final class SynchronizationChecks {
     private static void rejectedUpdate(GameTestHelper helper, StackBlockEntity be, CompoundTag tag) {
         CompoundTag before = be.getUpdateTag(helper.getLevel().registryAccess());
         check(!be.loadClientUpdate(tag, helper.getLevel().registryAccess()), "Malformed update accepted");
-        checkEquals(before, be.getUpdateTag(helper.getLevel().registryAccess()),
-                "Rejected update changed render state");
+        var registries = helper.getLevel().registryAccess();
+        be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+        checkEquals(before, be.getUpdateTag(registries), "Rejected chunk update changed render state");
+        be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+        checkEquals(before, be.getUpdateTag(registries), "Rejected block update changed render state");
         checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
         check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
         check(!be.getItems().serializeNBT(helper.getLevel().registryAccess()).contains("SetAside"),

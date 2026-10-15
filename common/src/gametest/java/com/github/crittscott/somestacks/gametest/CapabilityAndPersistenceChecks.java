@@ -22,6 +22,10 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -62,15 +66,17 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 public final class CapabilityAndPersistenceChecks {
     /** Data version written by Minecraft 1.21.4. */
     private static final int DATA_VERSION_1_21_4 = 4189;
+    private static final int DATA_VERSION_1_21_5 = 4325;
 
     private CapabilityAndPersistenceChecks() {}
 
     /**
-     * Storage disk data from the current format and 1.21.4 preserves items, data components,
+     * Storage disk data from the current format, 1.21.4, and 1.21.5 preserves items, data components,
      * block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
      * permanent, then save and restart the world. Verify the item and its components by extraction,
      * the layout by observation, and permanence by emptying the pile and checking that it remains.
+     * Also checks a literal 1.21.5 development-format fixture and failure without partial saves.
      */
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -90,10 +96,10 @@ public final class CapabilityAndPersistenceChecks {
         check(!saved.contains("Rotation"), "Storage saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
-            loaded.loadWithComponents(input, registries);
+            loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
 
             ItemStack restored = loaded.getItems().getStackInSlot(7);
             checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
@@ -103,14 +109,105 @@ public final class CapabilityAndPersistenceChecks {
             checkEquals(3, loaded.getRotation(), "Restored Storage rotation");
             check(loaded.isPermanent(), "Restored Storage permanence");
             CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+            checkEquals(SharedConstants.getCurrentVersion().dataVersion().version(),
                     persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
         }
+        checkDevelopmentBaseline(helper, loaded);
+        checkFailedItemEncoding(helper, loaded);
         helper.succeed();
     }
 
     /**
-     * Singles disk data from the current format and 1.21.4 preserves contents plus block-state
+     * Reproduces a 1.21.5 development save with custom data, a slotted attribute modifier, and a
+     * recoverable retry. In-game: deposit a custom-component stone in 1.21.5, make the pile
+     * permanent, save, then open the copied world in this version and extract it.
+     */
+    private static void checkDevelopmentBaseline(GameTestHelper helper, StorageStackBE loaded) {
+        var registries = helper.getLevel().registryAccess();
+        CompoundTag saved = new CompoundTag();
+        saved.putInt("DataVersion", DATA_VERSION_1_21_5);
+        saved.putBoolean("Permanent", true);
+        CompoundTag item = new CompoundTag();
+        item.putString("id", "minecraft:stone");
+        item.putInt("count", 5);
+        item.putInt("Slot", 4);
+        CompoundTag custom = new CompoundTag();
+        custom.putString("baseline", "1.21.5");
+        CompoundTag modifier = new CompoundTag();
+        modifier.putString("id", "somestacks:baseline");
+        modifier.putString("type", "minecraft:attack_damage");
+        modifier.putDouble("amount", 2.0);
+        modifier.putString("operation", "add_value");
+        modifier.putString("slot", "mainhand");
+        ListTag modifiers = new ListTag();
+        modifiers.add(modifier);
+        CompoundTag components = new CompoundTag();
+        components.put("minecraft:custom_data", custom);
+        components.put("minecraft:attribute_modifiers", modifiers);
+        item.put("components", components);
+        ListTag entries = new ListTag();
+        entries.add(item);
+        // A duplicate occupied slot must survive instead of overwriting the ordinary entry.
+        CompoundTag duplicate = item.copy();
+        duplicate.putInt("count", 7);
+        entries.add(duplicate);
+        ListTag retries = new ListTag();
+        CompoundTag retry = item.copy();
+        retry.putInt("Slot", 6);
+        retries.add(retry);
+        CompoundTag inventory = new CompoundTag();
+        inventory.put("Items", entries);
+        inventory.put("SetAside", retries);
+        saved.put("Items", inventory);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
+        ItemStack restored = loaded.getItems().getStackInSlot(4);
+        checkEquals(Items.STONE, restored.getItem(), "Development-baseline item");
+        checkEquals(5, restored.getCount(), "Development-baseline count");
+        checkEquals(CustomData.of(custom), restored.get(DataComponents.CUSTOM_DATA), "Baseline custom data");
+        check(restored.has(DataComponents.ATTRIBUTE_MODIFIERS), "Baseline attribute component lost");
+        checkEquals(5, loaded.getItems().getStackInSlot(6).getCount(), "Baseline retry did not recover");
+        check(loaded.isPermanent(), "Baseline permanence lost");
+        CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+        CompoundTag encodedItem = persisted.getCompound("Items").orElseThrow()
+                .getList("Items").orElseThrow().getCompound(0).orElseThrow();
+        ListTag encodedModifiers = encodedItem.getCompound("components").orElseThrow()
+                .getList("minecraft:attribute_modifiers").orElseThrow();
+        checkEquals(1, encodedModifiers.size(), "Baseline modifier count changed");
+        CompoundTag encodedModifier = encodedModifiers.getCompound(0).orElseThrow();
+        checkEquals("somestacks:baseline", encodedModifier.getString("id").orElseThrow(), "Baseline modifier identity");
+        checkEquals(2.0, encodedModifier.getDouble("amount").orElseThrow(), "Baseline modifier amount");
+        ListTag retained = persisted.getCompound("Items").orElseThrow().getList("SetAside").orElseThrow();
+        checkEquals(1, retained.size(), "Duplicate occupied baseline slot was not retained");
+        checkEquals(7, retained.getCompound(0).orElseThrow().getInt("count").orElseThrow(),
+                "Duplicate baseline count changed");
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, persisted));
+        checkEquals(10, GameTestScaffold.count(loaded.getItems(), Items.STONE), "Baseline reload lost or duplicated contents");
+    }
+
+    /** Invalid item counts are test-only: encoding must fail before returning a partial inventory. */
+    private static void checkFailedItemEncoding(GameTestHelper helper, StorageStackBE loaded) {
+        var registries = helper.getLevel().registryAccess();
+        ItemStack original = loaded.getItems().getStackInSlot(4).copy();
+        ItemStack invalid = original.copy();
+        invalid.setCount(Integer.MAX_VALUE);
+        loaded.getItems().setStackInSlot(4, invalid);
+        boolean failed = false;
+        try {
+            loaded.saveWithoutMetadata(registries);
+        } catch (IllegalStateException expected) {
+            failed = true;
+            check(expected.getMessage().contains(loaded.getBlockPos().toString()),
+                    "Encoding failure omitted the block location");
+        } finally {
+            loaded.getItems().setStackInSlot(4, original);
+        }
+        check(failed, "Failed item encoding returned a partial saved inventory");
+        checkEquals(original.getCount(), loaded.getItems().getStackInSlot(4).getCount(),
+                "Failed save consumed live contents");
+    }
+
+    /**
+     * Singles disk data from the current format, 1.21.4, and 1.21.5 preserves contents plus block-state
      * and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
      * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
@@ -127,24 +224,24 @@ public final class CapabilityAndPersistenceChecks {
         check(!saved.contains("Rotation"), "Singles saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
-            loaded.loadWithComponents(input, registries);
+            loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
 
             checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
                     "Restored Singles item");
             checkEquals(2, loaded.getRotation(), "Restored Singles block rotation");
             checkEquals(3, loaded.getCubeRotation(21), "Restored Singles item rotation");
             CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+            checkEquals(SharedConstants.getCurrentVersion().dataVersion().version(),
                     persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
         }
         helper.succeed();
     }
 
     /**
-     * Bar disk data from the current format and 1.21.4 preserves the item in each position. To reproduce in-game: deposit Bars,
+     * Bar disk data from the current format, 1.21.4, and 1.21.5 preserves the item in each position. To reproduce in-game: deposit Bars,
      * save and restart the world, and verify the same Bar positions
      * remain occupied.
      */
@@ -157,17 +254,17 @@ public final class CapabilityAndPersistenceChecks {
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
-            loaded.loadWithComponents(input, registries);
+            loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
 
             checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(),
                     "Restored Bar item");
             checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
                     "Restored Bar count");
             CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+            checkEquals(SharedConstants.getCurrentVersion().dataVersion().version(),
                     persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
         }
         helper.succeed();
@@ -214,9 +311,9 @@ public final class CapabilityAndPersistenceChecks {
                 "Storage update tag exposed permanence");
         copyFacing(helper, storage, storageClient);
         copyFacing(helper, singles, singlesClient);
-        storageClient.loadCustomOnly(storageTag, registries);
-        singlesClient.loadCustomOnly(singlesTag, registries);
-        barsClient.loadCustomOnly(barTag, registries);
+        storageClient.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, storageTag));
+        singlesClient.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, singlesTag));
+        barsClient.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, barTag));
 
         checkEquals(3, storageClient.getItems().getStackInSlot(4).getCount(),
                 "Storage client item count");
@@ -244,8 +341,8 @@ public final class CapabilityAndPersistenceChecks {
         unknown.putString("id", "examplemod:gone");
         unknown.putInt("count", 2);
         unknown.putInt("Slot", 4);
-        CompoundTag outsideRange = (CompoundTag) new ItemStack(Items.STONE, 5)
-                .save(registries, new CompoundTag());
+        CompoundTag outsideRange = (CompoundTag) ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, registries),
+                new ItemStack(Items.STONE, 5)).getOrThrow();
         outsideRange.putInt("Slot", StorageStackBE.SLOTS + 10);
         ListTag entries = new ListTag();
         entries.add(unknown.copy());
@@ -261,7 +358,7 @@ public final class CapabilityAndPersistenceChecks {
         saved.put("Items", storage);
         NbtUtils.addCurrentDataVersion(saved);
 
-        loaded.loadWithComponents(saved, registries);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         checkEquals(0, GameTestScaffold.occupied(loaded.getItems()),
                 "Unreadable entries reached live slots");
 
@@ -299,8 +396,8 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag inventory = storage.serializeNBT(registries);
         ListTag retries = new ListTag();
         for (int slot : new int[] {1, 0, StorageStackBE.SLOTS}) {
-            CompoundTag entry = (CompoundTag) new ItemStack(Items.DIAMOND, 2)
-                    .save(registries, new CompoundTag());
+            CompoundTag entry = (CompoundTag) ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, registries),
+                    new ItemStack(Items.DIAMOND, 2)).getOrThrow();
             entry.putInt("Slot", slot);
             retries.add(entry);
         }
@@ -310,7 +407,7 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag saved = new CompoundTag();
         saved.putInt("DataVersion", DATA_VERSION_1_21_4);
         saved.put("Items", inventory);
-        loaded.loadWithComponents(saved, registries);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
         checkEquals(Items.DIAMOND, loaded.getItems().getStackInSlot(1).getItem(), "Retry did not recover");
         checkEquals(2, loaded.getItems().getStackInSlot(1).getCount(), "Recovered count");
@@ -319,7 +416,7 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(2, remaining.size(), "Recovered retry remained set aside");
         checkEquals(retries.getCompound(1).orElseThrow(), remaining.getCompound(0).orElseThrow(), "Occupied retry changed");
         checkEquals(retries.getCompound(2).orElseThrow(), remaining.getCompound(1).orElseThrow(), "Out-of-range retry changed");
-        loaded.loadWithComponents(persisted, registries);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, persisted));
         checkEquals(2, GameTestScaffold.count(loaded.getItems(), Items.DIAMOND), "Reload duplicated recovered item");
         helper.succeed();
     }
@@ -354,7 +451,7 @@ public final class CapabilityAndPersistenceChecks {
 
         ChunkAccess chunk = helper.getLevel().getChunk(loaded.getBlockPos());
         chunk.tryMarkSaved();
-        loaded.loadCustomOnly(saved, registries);
+        loaded.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
 
         ItemStack restored = loaded.getItems().getStackInSlot(4);
         checkEquals(Items.STONE, restored.getItem(), "Upgraded Storage item");
@@ -365,6 +462,17 @@ public final class CapabilityAndPersistenceChecks {
         check(!loaded.saveWithoutMetadata(registries).contains("Rotation"),
                 "Migrated Storage rewrote legacy Rotation");
         check(chunk.isUnsaved(), "Upgrading saved contents did not mark the block for saving");
+
+        // Load without a level, as chunk deserialization may do before attachment.
+        BlockState unrotated = loaded.getBlockState().getBlock().defaultBlockState();
+        helper.getLevel().setBlock(loaded.getBlockPos(), unrotated, Block.UPDATE_ALL);
+        StorageStackBE detached = new StorageStackBE(loaded.getBlockPos(), unrotated);
+        detached.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
+        chunk.tryMarkSaved();
+        detached.setLevel(helper.getLevel());
+        check(chunk.isUnsaved(), "Deferred migration did not mark the chunk for saving on attachment");
+        checkEquals(5, detached.getItems().getStackInSlot(4).getCount(), "Deferred migration lost items");
+        checkEquals(3, detached.getRotation(), "Deferred migration lost block rotation");
         helper.succeed();
     }
 

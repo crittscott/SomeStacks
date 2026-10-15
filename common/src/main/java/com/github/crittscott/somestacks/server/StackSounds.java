@@ -19,7 +19,7 @@ public final class StackSounds {
             return;
         }
         float pitch = ROTATION_PITCH_BASE
-                + sp.serverLevel().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
-        sp.serverLevel().playSound(null, pos, sound, SoundSource.BLOCKS, VOLUME, pitch);
+                + sp.level().getRandom().nextFloat() * ROTATION_PITCH_SPREAD;
+        sp.level().playSound(null, pos, sound, SoundSource.BLOCKS, VOLUME, pitch);
     }
 }

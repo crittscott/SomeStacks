@@ -33,8 +33,4 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
         }
     }
 
-    @Override
-    public boolean shouldRenderOffScreen(SinglesStackBE be) {
-        return false;
-    }
 }

@@ -9,7 +9,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,6 +35,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private Integer pendingBlockRotation;
     @Nullable
     private StackItemStorage.LoadResult pendingLoadResult;
+    private boolean pendingMigrationSave;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -138,7 +144,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Loads subtype metadata and refreshes derived state after inventory replacement. Disk data is
      * already migrated; client data is already validated. Runs on either side without publication.
      */
-    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void loadStackData(ValueInput input) {
     }
 
     /** Checks type-specific update data before inventory or metadata is changed. */
@@ -150,7 +156,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Adds current subtype metadata after version and inventory serialization. Used for both disk
      * saves and update tags; remove private fields in stripServerOnlyUpdateData before transmission.
      */
-    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveStackData(ValueOutput output) {
     }
 
     /** Removes server-only state before a saved tag is sent as a client update. */
@@ -257,6 +263,10 @@ public abstract class StackBlockEntity extends BlockEntity {
     public void setLevel(Level level) {
         super.setLevel(level);
         applyPendingBlockRotation();
+        if (pendingMigrationSave && level instanceof ServerLevel) {
+            setChanged();
+            pendingMigrationSave = false;
+        }
         reportSavedItems();
     }
 
@@ -296,7 +306,9 @@ public abstract class StackBlockEntity extends BlockEntity {
         BlockState migrated = state.setValue(
                 StackBlock.HORIZONTAL_FACING,
                 QuarterTurns.toDirection(pendingBlockRotation));
-        if (state == migrated || level.setBlock(getBlockPos(), migrated, Block.UPDATE_ALL)) {
+        if (state == migrated || level.getBlockState(getBlockPos()) == migrated
+                || level.setBlock(getBlockPos(), migrated, Block.UPDATE_ALL)) {
+            setBlockState(migrated);
             pendingBlockRotation = null;
             setChanged();
         }
@@ -320,39 +332,49 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected final void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected final void loadAdditional(ValueInput input) {
+        CompoundTag tag = StackDataMigration.readTag(input);
+        HolderLookup.Provider registries = input.lookup();
         if (level != null && level.isClientSide) {
-            loadClientUpdate(tag, registries);
+            if (loadClientUpdate(tag, registries)) {
+                super.loadAdditional(input);
+            }
             return;
         }
-        super.loadAdditional(tag, registries);
+        super.loadAdditional(input);
         pendingLoadResult = null;
-        if (StackDataMigration.upgrade(tag, registries)) {
-            setChanged();
-        }
+        pendingMigrationSave = StackDataMigration.upgrade(tag, registries);
         Integer legacyBlockRotation = StackDataMigration.takeLegacyBlockRotation(tag);
         if (legacyBlockRotation != null) {
             pendingBlockRotation = legacyBlockRotation;
             applyPendingBlockRotation();
+            pendingMigrationSave = true;
+        }
+        if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
+            pendingMigrationSave = false;
         }
-        if (tag.get(TAG_ITEMS) instanceof CompoundTag inventory) {
-            pendingLoadResult = items.deserializeNBT(registries, inventory);
-            reportSavedItems();
-        }
-        loadStackData(tag, registries);
+        CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
+        pendingLoadResult = items.deserializeNBT(registries, inventory);
+        reportSavedItems();
+        loadStackData(input);
         refreshComparatorContribution();
     }
 
-    /** Forge/NeoForge chunk-update hook; Fabric updates reach the client branch of loadAdditional. */
-    public final void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-        loadClientUpdate(tag, registries);
+    /** Loader chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional. */
+    public final void handleUpdateTag(ValueInput input) {
+        loadClientUpdate(StackDataMigration.readTag(input), input.lookup());
+    }
+
+    /** Loader block-update hook, sharing the same staged validation as chunk initialization. */
+    public final void onDataPacket(Connection connection, ValueInput input) {
+        handleUpdateTag(input);
     }
 
     /** Rejects malformed wire data without migration, recovery retention, or logging. */
     public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
         if (!(tag.get("DataVersion") instanceof IntTag version)
-                || version.intValue() != SharedConstants.getCurrentVersion().getDataVersion().getVersion()
+                || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()
                 || !(tag.get(TAG_ITEMS) instanceof CompoundTag inventory)
                 || tag.contains(StackItemStorage.TAG_SET_ASIDE)
                 || tag.contains("Permanent") || tag.contains("Rotation")
@@ -361,17 +383,23 @@ public abstract class StackBlockEntity extends BlockEntity {
             return false;
         }
         pendingBlockRotation = null;
-        loadStackData(tag, registries);
+        loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         refreshComparatorContribution();
         return true;
     }
 
     @Override
-    protected final void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        StackDataMigration.stampVersion(tag);
-        tag.put(TAG_ITEMS, items.serializeNBT(registries));
-        saveStackData(tag, registries);
+    protected final void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("DataVersion", SharedConstants.getCurrentVersion().dataVersion().version());
+        try {
+            output.store(TAG_ITEMS, StackItemStorage.codec(items.getSlots()), items);
+        } catch (RuntimeException failure) {
+            String dimension = level == null ? "unattached" : level.dimension().location().toString();
+            throw new IllegalStateException("Cannot save Some Stacks inventory in " + dimension
+                    + " at " + getBlockPos(), failure);
+        }
+        saveStackData(output);
     }
 
     @Override
@@ -381,8 +409,8 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     @Override
     public final CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
+        CompoundTag tag = saveWithoutMetadata(registries);
+        tag.remove("Rotation");
         tag.getCompound(TAG_ITEMS).ifPresent(StackItemStorage::stripSetAside);
         stripServerOnlyUpdateData(tag);
         return tag;

@@ -33,8 +33,4 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
         }
     }
 
-    @Override
-    public boolean shouldRenderOffScreen(StorageStackBE be) {
-        return false;
-    }
 }

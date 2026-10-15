@@ -4,12 +4,13 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 
@@ -200,13 +201,13 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.getBoolean(TAG_PERMANENT).ifPresent(value -> permanent = value);
+    protected void loadStackData(ValueInput input) {
+        permanent = input.getBooleanOr(TAG_PERMANENT, false);
     }
 
     @Override
-    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putBoolean(TAG_PERMANENT, permanent);
+    protected void saveStackData(ValueOutput output) {
+        output.putBoolean(TAG_PERMANENT, permanent);
     }
 
     @Override

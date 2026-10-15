@@ -294,7 +294,7 @@ public final class StackInteractions {
             case BAR_STACK -> BarCubeIdx.shapeFor(depositIndex);
         };
         if (!WorldEdits.placeChecked(
-                player, player.serverLevel(), pos, state, face.getOpposite(), finalCollision)) {
+                player, player.level(), pos, state, face.getOpposite(), finalCollision)) {
             return;
         }
 
@@ -459,7 +459,7 @@ public final class StackInteractions {
     }
 
     private static void emitBlockChange(ServerPlayer player, BlockPos pos, BlockState state) {
-        player.serverLevel().gameEvent(
+        player.level().gameEvent(
                 GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
     }
 }

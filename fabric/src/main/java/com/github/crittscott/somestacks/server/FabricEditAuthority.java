@@ -34,7 +34,7 @@ public final class FabricEditAuthority implements EditAuthority {
             return false;
         }
         return UseBlockCallback.EVENT.invoker().interact(
-                player, player.serverLevel(), InteractionHand.MAIN_HAND,
+                player, player.level(), InteractionHand.MAIN_HAND,
                 WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
     }
 

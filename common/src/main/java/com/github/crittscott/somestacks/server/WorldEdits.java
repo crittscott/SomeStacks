@@ -27,7 +27,7 @@ public final class WorldEdits {
 
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
-        return !sp.serverLevel().mayInteract(sp, pos);
+        return !sp.level().mayInteract(sp, pos);
     }
 
     /** {@link #isProtected(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
@@ -38,7 +38,7 @@ public final class WorldEdits {
     /** Vanilla and loader query checks used before automation promises growth capacity. */
     public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
         return !isProtected(player, pos)
-                && PlatformServices.editAuthority().mayPlace(player, player.serverLevel(), pos);
+                && PlatformServices.editAuthority().mayPlace(player, player.level(), pos);
     }
 
     public static boolean mayPlace(ServerLevel level, BlockPos pos) {
@@ -64,7 +64,7 @@ public final class WorldEdits {
 
     /** Destination hit used by loader protection listeners for a neighboring deposit. */
     public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
-        var level = player.serverLevel();
+        var level = player.level();
         var ray = ViewRays.of(player);
         BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
                 .clip(ray.eye(), ray.end(), pos);

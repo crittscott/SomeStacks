@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 
@@ -30,6 +32,23 @@ public final class StackDataMigration {
     /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
     private static final int UNVERSIONED_DATA_VERSION = 3955;
     private static final String LEGACY_TAG_ROTATION = "Rotation";
+
+    // Read raw values so malformed inventory entries and wire field types remain observable.
+    private static final Codec<Tag> RAW_TAG = Codec.PASSTHROUGH.xmap(
+            dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
+            tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
+    private static final String[] PERSISTED_FIELDS = {
+            "DataVersion", "Items", "Rotation", "Permanent", "CubeRotations", "SetAside"
+    };
+
+    /** Copies only stack-owned fields at the value-I/O boundary, without typed-list filtering. */
+    static CompoundTag readTag(ValueInput input) {
+        CompoundTag tag = new CompoundTag();
+        for (String field : PERSISTED_FIELDS) {
+            input.read(field, RAW_TAG).ifPresent(value -> tag.put(field, value.copy()));
+        }
+        return tag;
+    }
 
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
@@ -64,7 +83,7 @@ public final class StackDataMigration {
      */
     static boolean upgrade(CompoundTag tag, HolderLookup.Provider registries) {
         int saved = NbtUtils.getDataVersion(tag, UNVERSIONED_DATA_VERSION);
-        int current = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
+        int current = SharedConstants.getCurrentVersion().dataVersion().version();
         if (saved >= current) {
             return false;
         }

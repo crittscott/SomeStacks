@@ -15,7 +15,7 @@ public final class RotationSoundThrottle {
 
     public static boolean claim(ServerPlayer player) {
         UUID id = player.getUUID();
-        long tick = player.serverLevel().getGameTime();
+        long tick = player.level().getGameTime();
         Long last = lastSoundTick.get(id);
         if (last != null && tick - last < SOUND_INTERVAL_TICKS) {
             return false;

@@ -151,8 +151,4 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
         vc.addVertex(m, x4,y4,z4).setColor(r,g,b,a).setUv(u0,v1).setOverlay(overlay).setLight(light).setNormal(last, nx,ny,nz);
     }
 
-    @Override
-    public boolean shouldRenderOffScreen(BarStackBE be) {
-        return false;
-    }
 }

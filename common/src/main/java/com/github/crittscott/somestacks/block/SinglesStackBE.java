@@ -6,13 +6,14 @@ import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -385,22 +386,24 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS).orElse(null);
+    protected void loadStackData(ValueInput input) {
+        int[] loaded = input.getIntArray(TAG_CUBE_ROTATIONS).orElse(null);
         if (loaded != null && loaded.length == SLOTS) {
             cubeRotations = loaded.clone();
             for (int i = 0; i < cubeRotations.length; i++) {
                 cubeRotations[i] = QuarterTurns.normalize(cubeRotations[i]);
             }
+        } else {
+            cubeRotations = new int[SLOTS];
         }
         cachedShape = null;
     }
 
     @Override
-    protected void saveStackData(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveStackData(ValueOutput output) {
         // IntArrayTag holds the array it is given, and an integrated server hands its update
         // packets to the client unserialized: both sides must get their own copy, or the client
         // renders the server's in-progress rotations against its own not-yet-updated items.
-        tag.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
+        output.putIntArray(TAG_CUBE_ROTATIONS, cubeRotations.clone());
     }
 }

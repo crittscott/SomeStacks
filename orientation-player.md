@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Some Stacks turns held items into visible storage: three blocks without block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; emptying it normally removes it.
 
-The build targets Minecraft 1.21.6; the source port, compilation, and runtime verification are pending. Client/server loader builds must match. Fabric requires Fabric API; Common Protection API is optional.
+The build targets Minecraft 1.21.6; source changes for persistence, server APIs, and rendering are implemented; later port stages, compilation, and runtime verification are pending. Client/server loader builds must match. Fabric requires Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
@@ -175,5 +175,5 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 ## Saved worlds
 
-A 1.21.1 world migrates its items and rotations on load; versioned 1.21.4 saves also upgrade their items. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
+A 1.21.1 world migrates its items and rotations on load; versioned 1.21.4 and 1.21.5 saves also upgrade their items. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
 
