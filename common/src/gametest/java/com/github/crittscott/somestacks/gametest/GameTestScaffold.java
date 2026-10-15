@@ -203,7 +203,7 @@ public final class GameTestScaffold {
         Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
         check(cow != null, "Could not create obstruction cow");
         check(cow.blocksBuilding, "Cow does not block building");
-        cow.moveTo(
+        cow.snapTo(
                 target.getX() + 0.5,
                 target.getY(),
                 target.getZ() + 0.5,

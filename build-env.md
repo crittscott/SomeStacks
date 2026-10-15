@@ -70,7 +70,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 | Subject | Declaration |
 | --- | --- |
-| Some Stacks artifact | `0.8.2` |
+| Some Stacks artifact | `0.8.3` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
 | Minecraft compatibility | exactly `1.21.5`; Forge and NeoForge syntax `[1.21.5]`, Fabric syntax `1.21.5` |
 | Forge compatibility | `[55.1.17,56)` |
