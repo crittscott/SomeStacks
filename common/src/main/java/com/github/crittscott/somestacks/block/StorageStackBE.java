@@ -201,7 +201,7 @@ public class StorageStackBE extends StackBlockEntity {
 
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(TAG_PERMANENT)) permanent = tag.getBoolean(TAG_PERMANENT);
+        tag.getBoolean(TAG_PERMANENT).ifPresent(value -> permanent = value);
     }
 
     @Override

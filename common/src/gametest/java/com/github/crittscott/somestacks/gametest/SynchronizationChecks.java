@@ -13,7 +13,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -280,36 +280,53 @@ public final class SynchronizationChecks {
             CompoundTag valid = be.getUpdateTag(helper.getLevel().registryAccess());
             CompoundTag oversized = valid.copy();
             ListTag tooMany = new ListTag();
-            CompoundTag item = valid.getCompound("Items").getList("Items", Tag.TAG_COMPOUND).getCompound(0);
+            CompoundTag item = valid.getCompound("Items").orElseThrow().getList("Items").orElseThrow().getCompound(0).orElseThrow();
             for (int i = 0; i <= be.getItems().getSlots(); i++) tooMany.add(item.copy());
-            oversized.getCompound("Items").put("Items", tooMany);
+            oversized.getCompound("Items").orElseThrow().put("Items", tooMany);
             rejectedUpdate(helper, be, oversized);
 
             CompoundTag duplicate = valid.copy();
-            duplicate.getCompound("Items").getList("Items", Tag.TAG_COMPOUND).add(item.copy());
+            duplicate.getCompound("Items").orElseThrow().getList("Items").orElseThrow().add(item.copy());
             rejectedUpdate(helper, be, duplicate);
             for (int slot : new int[] {-1, be.getItems().getSlots()}) {
                 CompoundTag outOfRange = valid.copy();
-                outOfRange.getCompound("Items").getList("Items", Tag.TAG_COMPOUND)
-                        .getCompound(0).putInt("Slot", slot);
+                outOfRange.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
+                        .getCompound(0).orElseThrow().putInt("Slot", slot);
                 rejectedUpdate(helper, be, outOfRange);
             }
             CompoundTag missingSlot = valid.copy();
-            missingSlot.getCompound("Items").getList("Items", Tag.TAG_COMPOUND).getCompound(0).remove("Slot");
+            missingSlot.getCompound("Items").orElseThrow().getList("Items").orElseThrow().getCompound(0).orElseThrow().remove("Slot");
             rejectedUpdate(helper, be, missingSlot);
+            CompoundTag wrongSlotType = valid.copy();
+            wrongSlotType.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
+                    .getCompound(0).orElseThrow().putByte("Slot", (byte) 0);
+            rejectedUpdate(helper, be, wrongSlotType);
+            CompoundTag mixedEntries = valid.copy();
+            mixedEntries.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
+                    .add(StringTag.valueOf("not an item"));
+            rejectedUpdate(helper, be, mixedEntries);
             CompoundTag invalidItem = valid.copy();
-            invalidItem.getCompound("Items").getList("Items", Tag.TAG_COMPOUND)
-                    .getCompound(0).putString("id", "somestacks:nonexistent_item");
+            invalidItem.getCompound("Items").orElseThrow().getList("Items").orElseThrow()
+                    .getCompound(0).orElseThrow().putString("id", "somestacks:nonexistent_item");
             rejectedUpdate(helper, be, invalidItem);
             CompoundTag setAside = valid.copy();
-            setAside.getCompound("Items").put(StackItemStorage.TAG_SET_ASIDE, new ListTag());
+            setAside.getCompound("Items").orElseThrow().put(StackItemStorage.TAG_SET_ASIDE, new ListTag());
             rejectedUpdate(helper, be, setAside);
             CompoundTag wrongType = valid.copy();
-            wrongType.getCompound("Items").putString("Items", "not a list");
+            wrongType.getCompound("Items").orElseThrow().putString("Items", "not a list");
             rejectedUpdate(helper, be, wrongType);
+            CompoundTag wrongInventoryType = valid.copy();
+            wrongInventoryType.putString("Items", "not a compound");
+            rejectedUpdate(helper, be, wrongInventoryType);
+            CompoundTag missingInventory = valid.copy();
+            missingInventory.remove("Items");
+            rejectedUpdate(helper, be, missingInventory);
             CompoundTag oldVersion = valid.copy();
             oldVersion.remove("DataVersion");
             rejectedUpdate(helper, be, oldVersion);
+            CompoundTag wrongVersionType = valid.copy();
+            wrongVersionType.putDouble("DataVersion", valid.getInt("DataVersion").orElseThrow());
+            rejectedUpdate(helper, be, wrongVersionType);
             CompoundTag serverOnly = valid.copy();
             serverOnly.putBoolean("Permanent", true);
             rejectedUpdate(helper, be, serverOnly);
@@ -334,6 +351,14 @@ public final class SynchronizationChecks {
         var replacement = new StackItemStorage(64);
         replacement.setStackInSlot(1, new ItemStack(Items.DIAMOND));
         CompoundTag changedItems = replacement.serializeNBT(helper.getLevel().registryAccess());
+        CompoundTag missingRotations = valid.copy();
+        missingRotations.put("Items", changedItems.copy());
+        missingRotations.remove("CubeRotations");
+        rejectedUpdate(helper, be, missingRotations);
+        CompoundTag wrongRotationType = valid.copy();
+        wrongRotationType.put("Items", changedItems.copy());
+        wrongRotationType.put("CubeRotations", new ListTag());
+        rejectedUpdate(helper, be, wrongRotationType);
         for (int[] rotations : new int[][] {new int[1], new int[65]}) {
             CompoundTag invalid = valid.copy();
             invalid.put("Items", changedItems.copy());
@@ -353,7 +378,10 @@ public final class SynchronizationChecks {
     }
 
     private static void rejectedUpdate(GameTestHelper helper, StackBlockEntity be, CompoundTag tag) {
+        CompoundTag before = be.getUpdateTag(helper.getLevel().registryAccess());
         check(!be.loadClientUpdate(tag, helper.getLevel().registryAccess()), "Malformed update accepted");
+        checkEquals(before, be.getUpdateTag(helper.getLevel().registryAccess()),
+                "Rejected update changed render state");
         checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
         check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
         check(!be.getItems().serializeNBT(helper.getLevel().registryAccess()).contains("SetAside"),

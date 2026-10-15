@@ -38,13 +38,24 @@ public class BarStackBE extends StackBlockEntity {
     private VoxelShape cachedShape = null;
 
     /**
-     * Set when a cascade is removing this block, so {@link BarStackBlock#onRemove} knows the
-     * column above is already being walked and does not start a second collapse of it.
+     * Set when a cascade removes this block, so its content-removal hook does not start a second
+     * walk of the column above.
      */
     private boolean removedByCascade = false;
 
     public BarStackBE(BlockPos pos, BlockState state) {
         super(CommonRegistry.barStackBe(), pos, state, SLOTS);
+    }
+
+    /** Collects this block and its unsupported column before the departing entity is detached. */
+    @Override
+    protected void dropContentsOnRemoval(ServerLevel serverLevel, BlockPos pos) {
+        BarDropBatch drops = new BarDropBatch();
+        drops.addAll(pos, items);
+        if (!removedByCascade) {
+            collapseAbove(serverLevel, pos, drops);
+        }
+        drops.spawn(serverLevel);
     }
 
     @Override
@@ -254,8 +265,8 @@ public class BarStackBE extends StackBlockEntity {
             // an empty seam holds nothing up either way, so the bars above still come down. Only
             // the block's going is protection's to decide.
             //
-            // The flag is raised first because the removal runs onRemove, which reads it to know
-            // the cascade is already walking its own way up, and lowered again if nothing went.
+            // The removal hook must know this walk owns the cascade. A veto leaves the block
+            // attached, so clear the flag when removal is refused.
             if (be.isEmpty()) {
                 be.removedByCascade = true;
                 boolean removed = actor == null
@@ -284,15 +295,11 @@ public class BarStackBE extends StackBlockEntity {
      * Propagates an empty support seam above a removed Bar block on the server. Unsupported bars
      * enter the supplied drop batch, and emptied blocks are removed through automation authority.
      */
-    static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
+    private static void collapseAbove(ServerLevel level, BlockPos removed, BarDropBatch drops) {
         if (level.getBlockEntity(removed.above()) instanceof BarStackBE above) {
             cascadeFrom(level, above, BarCubeIdx.emptySeam(),
                     BarCubeIdx.topLayerOccupancy(above.items), drops, null);
         }
-    }
-
-    boolean wasRemovedByCascade() {
-        return removedByCascade;
     }
 
     /**

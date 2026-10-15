@@ -66,39 +66,17 @@ public class BarStackBlock extends ShapedStackBlock {
         }
     }
 
+    /** Publishes surviving runs after the block entity has completed its removal cascade. */
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            boolean cascading = false;
-            BarDropBatch drops = new BarDropBatch();
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
+        if (level.getBlockState(pos).is(this)) return;
+        BarColumn.invalidateAround(level, pos);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
+        BarColumn.publishAround(level, pos);
 
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof BarStackBE barBe) {
-                cascading = barBe.wasRemovedByCascade();
-                drops.addAll(pos, barBe.getItems());
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
-            BarColumn.invalidateAround(level, pos);
-
-            // Removing a block removes the supporting seam beneath the column above. A cascade
-            // already walks upward itself, so only an external removal starts another collapse.
-            if (level instanceof ServerLevel serverLevel) {
-                if (!isMoving && !cascading) {
-                    BarStackBE.collapseAbove(serverLevel, pos, drops);
-                }
-                drops.spawn(serverLevel);
-            }
-
-            // Publish after collapse so surviving runs report their final contents.
-            BarColumn.publishAround(level, pos);
-
-            // Losing a block from the middle leaves two runs where there was one, and a publication
-            // an edit deferred is scheduled on the bottom of the run as it stood. The upper run has
-            // its own bottom now, which that tick will never reach, so both sides are scheduled
-            // again.
-            BarColumn.markDirtyAt(level, pos.below());
-            BarColumn.markDirtyAt(level, pos.above());
-        }
+        // Both surviving runs need publication; the upper run has a new base for its deferred tick.
+        BarColumn.markDirtyAt(level, pos.below());
+        BarColumn.markDirtyAt(level, pos.above());
     }
 
     /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */

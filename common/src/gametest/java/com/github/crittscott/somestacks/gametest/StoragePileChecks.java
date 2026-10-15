@@ -273,6 +273,8 @@ public final class StoragePileChecks {
         middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7), false);
         upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3), false);
 
+        GameTestScaffold.checkStateUpdatesPreserveContents(helper, middle);
+
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
         helper.runAfterDelay(3, () -> {

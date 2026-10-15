@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -89,24 +88,17 @@ public class SinglesStackBlock extends ShapedStackBlock {
         }
     }
 
+    /** Publishes both surviving columns after removal, without moving items across the gap. */
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof SinglesStackBE ssbe) {
-                ItemOps.dropAllItems(ssbe.getItems(), level, pos);
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
-            SinglesColumn.invalidateAround(level, pos);
-            SinglesColumn.publishAround(level, pos);
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
+        if (level.getBlockState(pos).is(this)) return;
+        SinglesColumn.invalidateAround(level, pos);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
+        SinglesColumn.publishAround(level, pos);
 
-            // Losing a block from the middle leaves two runs where there was one, and a publication
-            // an edit deferred is scheduled on the bottom of the run as it stood. The upper run has
-            // its own bottom now, which that tick will never reach, so both sides are scheduled
-            // again.
-            SinglesColumn.markDirtyAt(level, pos.below());
-            SinglesColumn.markDirtyAt(level, pos.above());
-        }
+        // Both surviving runs need publication; the upper run has a new base for its deferred tick.
+        SinglesColumn.markDirtyAt(level, pos.below());
+        SinglesColumn.markDirtyAt(level, pos.above());
     }
 
     /** Reports the whole column's fill, so a comparator reads the same value anywhere along it. */

@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
@@ -180,20 +181,23 @@ public class StackItemStorage implements SlotAccess {
     public LoadResult deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         Arrays.fill(stacks, ItemStack.EMPTY);
         setAside.clear();
-        readItems(registries, nbt.getList(TAG_ITEMS, Tag.TAG_COMPOUND));
+        readItems(registries, nbt.getListOrEmpty(TAG_ITEMS));
         int newlySetAside = setAside.size();
-        readItems(registries, nbt.getList(TAG_SET_ASIDE, Tag.TAG_COMPOUND));
+        readItems(registries, nbt.getListOrEmpty(TAG_SET_ASIDE));
         return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
     }
 
     private void readItems(HolderLookup.Provider registries, ListTag list) {
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag itemTag = list.getCompound(i);
-            int slot = itemTag.getInt(TAG_SLOT);
+        for (Tag entry : list) {
+            if (!(entry instanceof CompoundTag itemTag) || !(itemTag.get(TAG_SLOT) instanceof IntTag slotTag)) {
+                setAside.add(entry.copy());
+                continue;
+            }
+            int slot = slotTag.intValue();
             Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
                     ? ItemStack.parse(registries, itemTag)
                     : Optional.empty();
-            if (parsed.isPresent()) {
+            if (parsed.isPresent() && !parsed.get().isEmpty()) {
                 stacks[slot] = parsed.get();
             } else {
                 setAside.add(itemTag.copy());
@@ -204,8 +208,7 @@ public class StackItemStorage implements SlotAccess {
     /** Validates a current-format client snapshot before replacing any local contents. */
     public boolean deserializeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
         if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
-                || list.size() > stacks.length
-                || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
+                || list.size() > stacks.length) {
             return false;
         }
         ItemStack[] decoded = new ItemStack[stacks.length];
@@ -213,9 +216,9 @@ public class StackItemStorage implements SlotAccess {
         boolean[] used = new boolean[stacks.length];
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         for (int i = 0; i < list.size(); i++) {
-            CompoundTag entry = list.getCompound(i);
-            if (!entry.contains(TAG_SLOT, Tag.TAG_INT)) return false;
-            int slot = entry.getInt(TAG_SLOT);
+            if (!(list.get(i) instanceof CompoundTag entry)
+                    || !(entry.get(TAG_SLOT) instanceof IntTag slotTag)) return false;
+            int slot = slotTag.intValue();
             if (slot < 0 || slot >= stacks.length || used[slot]) return false;
             Optional<ItemStack> parsed = ItemStack.CODEC.parse(ops, entry).result();
             if (parsed.isEmpty() || parsed.get().isEmpty()) return false;

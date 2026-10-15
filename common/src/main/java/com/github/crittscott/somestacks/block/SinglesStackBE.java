@@ -8,7 +8,6 @@ import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -377,9 +376,8 @@ public class SinglesStackBE extends StackBlockEntity {
 
     @Override
     protected boolean isValidClientStackData(CompoundTag tag) {
-        if (!tag.contains(TAG_CUBE_ROTATIONS, Tag.TAG_INT_ARRAY)) return false;
-        int[] rotations = tag.getIntArray(TAG_CUBE_ROTATIONS);
-        if (rotations.length != SLOTS) return false;
+        int[] rotations = tag.getIntArray(TAG_CUBE_ROTATIONS).orElse(null);
+        if (rotations == null || rotations.length != SLOTS) return false;
         for (int rotation : rotations) {
             if (rotation < 0 || rotation >= QuarterTurns.COUNT) return false;
         }
@@ -388,13 +386,11 @@ public class SinglesStackBE extends StackBlockEntity {
 
     @Override
     protected void loadStackData(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.contains(TAG_CUBE_ROTATIONS)) {
-            int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS);
-            if (loaded.length == SLOTS) {
-                cubeRotations = loaded.clone();
-                for (int i = 0; i < cubeRotations.length; i++) {
-                    cubeRotations[i] = QuarterTurns.normalize(cubeRotations[i]);
-                }
+        int[] loaded = tag.getIntArray(TAG_CUBE_ROTATIONS).orElse(null);
+        if (loaded != null && loaded.length == SLOTS) {
+            cubeRotations = loaded.clone();
+            for (int i = 0; i < cubeRotations.length; i++) {
+                cubeRotations[i] = QuarterTurns.normalize(cubeRotations[i]);
             }
         }
         cachedShape = null;

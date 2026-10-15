@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -104,23 +103,15 @@ public class StorageStackBlock extends StackBlock {
         }
     }
 
+    /** Repairs the surviving piles after the departing entity has dropped its contents and been removed. */
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof StorageStackBE sbe) {
-                ItemOps.dropAllItems(sbe.getItems(), level, pos);
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
+        if (level.getBlockState(pos).is(this)) return;
+        StoragePile.invalidateAround(level, pos);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
 
-            // Before anything resolves a pile again: what the neighbors hold describes a run this
-            // block was part of.
-            StoragePile.invalidateAround(level, pos);
-
-            // Losing a block splits one pile into two, or shortens one. Settle both sides rather
-            // than leaving the remains unpacked until something else touches them.
-            StoragePile.markDirtyAt(level, pos.below());
-            StoragePile.markDirtyAt(level, pos.above());
-        }
+        // Removing a middle block creates two independent piles, each needing its own settle.
+        StoragePile.markDirtyAt(level, pos.below());
+        StoragePile.markDirtyAt(level, pos.above());
     }
 }

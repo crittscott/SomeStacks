@@ -299,6 +299,8 @@ public final class SinglesColumnChecks {
         middle.getItems().insertItem(0, new ItemStack(Items.DIRT), false);
         upper.getItems().insertItem(0, new ItemStack(Items.APPLE), false);
 
+        GameTestScaffold.checkStateUpdatesPreserveContents(helper, middle);
+
         helper.setBlock(ORIGIN.above(), Blocks.AIR);
 
         checkEquals(1, GameTestScaffold.droppedNear(

@@ -3,6 +3,8 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
@@ -10,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -50,6 +53,36 @@ public final class GameTestScaffold {
 
     public static BarStackBE placeBar(GameTestHelper helper, BlockPos relative) {
         return place(helper, relative, CommonRegistry.barStackBlock(), BarStackBE.class);
+    }
+
+    /**
+     * State-only changes preserve the entity and contents without drops. To reproduce in-game:
+     * rotate a filled Storage/Singles block, waterlog it, or change its stored light source; no
+     * contents should fall out and supported Bars above it must remain in place.
+     */
+    public static void checkStateUpdatesPreserveContents(GameTestHelper helper, StackBlockEntity entity) {
+        ServerLevel level = helper.getLevel();
+        BlockPos pos = entity.getBlockPos();
+        BlockState original = level.getBlockState(pos);
+        CompoundTag contents = entity.saveWithoutMetadata(level.registryAccess());
+        int dropsBefore = droppedInColumn(helper, pos, pos).stream()
+                .mapToInt(drop -> drop.getItem().getCount()).sum();
+        BlockState changed = original
+                .setValue(StackBlock.WATERLOGGED, !original.getValue(StackBlock.WATERLOGGED))
+                .setValue(StackBlock.LIGHT_LEVEL, (original.getValue(StackBlock.LIGHT_LEVEL) + 1) % 16);
+        if (changed.hasProperty(StackBlock.HORIZONTAL_FACING)) {
+            changed = changed.cycle(StackBlock.HORIZONTAL_FACING);
+        }
+        level.setBlock(pos, changed, Block.UPDATE_ALL);
+        check(level.getBlockEntity(pos) == entity, "State update replaced the block entity");
+        checkEquals(contents, entity.saveWithoutMetadata(level.registryAccess()),
+                "State update changed saved contents");
+        level.setBlock(pos, original, Block.UPDATE_ALL);
+        check(level.getBlockEntity(pos) == entity, "Restoring state replaced the block entity");
+        checkEquals(contents, entity.saveWithoutMetadata(level.registryAccess()),
+                "Restoring state changed saved contents");
+        checkEquals(dropsBefore, droppedInColumn(helper, pos, pos).stream()
+                .mapToInt(drop -> drop.getItem().getCount()).sum(), "State update dropped items");
     }
 
     public static <T extends BlockEntity> T place(

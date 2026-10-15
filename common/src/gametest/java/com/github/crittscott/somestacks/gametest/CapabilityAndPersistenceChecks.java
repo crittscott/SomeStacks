@@ -13,6 +13,7 @@ import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -21,7 +22,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -59,10 +60,14 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * storage view directly.
  */
 public final class CapabilityAndPersistenceChecks {
+    /** Data version written by Minecraft 1.21.4. */
+    private static final int DATA_VERSION_1_21_4 = 4189;
+
     private CapabilityAndPersistenceChecks() {}
 
     /**
-     * Storage disk data preserves items, data components, block-state rotation, and permanence. To
+     * Storage disk data from the current format and 1.21.4 preserves items, data components,
+     * block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
      * permanent, then save and restart the world. Verify the item and its components by extraction,
      * the layout by observation, and permanence by emptying the pile and checking that it remains.
@@ -84,20 +89,29 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag saved = source.saveWithoutMetadata(registries);
         check(!saved.contains("Rotation"), "Storage saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
-        loaded.loadWithComponents(saved, registries);
+        for (int version : new int[] {
+                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+            CompoundTag input = saved.copy();
+            input.putInt("DataVersion", version);
+            loaded.loadWithComponents(input, registries);
 
-        ItemStack restored = loaded.getItems().getStackInSlot(7);
-        checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
-        checkEquals(23, restored.getCount(), "Restored Storage count");
-        checkEquals(CustomData.of(identity), restored.get(DataComponents.CUSTOM_DATA),
-                "Restored Storage custom data");
-        checkEquals(3, loaded.getRotation(), "Restored Storage rotation");
-        check(loaded.isPermanent(), "Restored Storage permanence");
+            ItemStack restored = loaded.getItems().getStackInSlot(7);
+            checkEquals(Items.STONE, restored.getItem(), "Restored Storage item");
+            checkEquals(23, restored.getCount(), "Restored Storage count");
+            checkEquals(CustomData.of(identity), restored.get(DataComponents.CUSTOM_DATA),
+                    "Restored Storage custom data");
+            checkEquals(3, loaded.getRotation(), "Restored Storage rotation");
+            check(loaded.isPermanent(), "Restored Storage permanence");
+            CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+                    persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
+        }
         helper.succeed();
     }
 
     /**
-     * Singles disk data preserves contents plus block-state and per-item rotations. To reproduce
+     * Singles disk data from the current format and 1.21.4 preserves contents plus block-state
+     * and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
      * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
      */
@@ -112,17 +126,25 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag saved = source.saveWithoutMetadata(registries);
         check(!saved.contains("Rotation"), "Singles saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
-        loaded.loadWithComponents(saved, registries);
+        for (int version : new int[] {
+                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+            CompoundTag input = saved.copy();
+            input.putInt("DataVersion", version);
+            loaded.loadWithComponents(input, registries);
 
-        checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
-                "Restored Singles item");
-        checkEquals(2, loaded.getRotation(), "Restored Singles block rotation");
-        checkEquals(3, loaded.getCubeRotation(21), "Restored Singles item rotation");
+            checkEquals(Items.APPLE, loaded.getItems().getStackInSlot(21).getItem(),
+                    "Restored Singles item");
+            checkEquals(2, loaded.getRotation(), "Restored Singles block rotation");
+            checkEquals(3, loaded.getCubeRotation(21), "Restored Singles item rotation");
+            CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+                    persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
+        }
         helper.succeed();
     }
 
     /**
-     * Bar disk data preserves the item in each position. To reproduce in-game: deposit Bars,
+     * Bar disk data from the current format and 1.21.4 preserves the item in each position. To reproduce in-game: deposit Bars,
      * save and restart the world, and verify the same Bar positions
      * remain occupied.
      */
@@ -133,12 +155,21 @@ public final class CapabilityAndPersistenceChecks {
         Item barItem = firstBarItem();
         source.getItems().insertItem(37, new ItemStack(barItem), false);
 
-        loaded.loadWithComponents(source.saveWithoutMetadata(registries), registries);
+        CompoundTag saved = source.saveWithoutMetadata(registries);
+        for (int version : new int[] {
+                SharedConstants.getCurrentVersion().getDataVersion().getVersion(), DATA_VERSION_1_21_4}) {
+            CompoundTag input = saved.copy();
+            input.putInt("DataVersion", version);
+            loaded.loadWithComponents(input, registries);
 
-        checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(),
-                "Restored Bar item");
-        checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
-                "Restored Bar count");
+            checkEquals(barItem, loaded.getItems().getStackInSlot(37).getItem(),
+                    "Restored Bar item");
+            checkEquals(1, loaded.getItems().getStackInSlot(37).getCount(),
+                    "Restored Bar count");
+            CompoundTag persisted = loaded.saveWithoutMetadata(registries);
+            checkEquals(SharedConstants.getCurrentVersion().getDataVersion().getVersion(),
+                    persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
+        }
         helper.succeed();
     }
 
@@ -173,11 +204,11 @@ public final class CapabilityAndPersistenceChecks {
                 "Storage update tag carried block-state rotation");
         check(!singlesTag.contains("Rotation"),
                 "Singles update tag carried block-state rotation");
-        check(!storageTag.getCompound("Items").contains("SetAside"),
+        check(!storageTag.getCompound("Items").orElseThrow().contains("SetAside"),
                 "Storage update tag exposed set-aside data");
-        check(!singlesTag.getCompound("Items").contains("SetAside"),
+        check(!singlesTag.getCompound("Items").orElseThrow().contains("SetAside"),
                 "Singles update tag exposed set-aside data");
-        check(!barTag.getCompound("Items").contains("SetAside"),
+        check(!barTag.getCompound("Items").orElseThrow().contains("SetAside"),
                 "Bar update tag exposed set-aside data");
         check(!storageTag.contains("Permanent"),
                 "Storage update tag exposed permanence");
@@ -219,6 +250,11 @@ public final class CapabilityAndPersistenceChecks {
         ListTag entries = new ListTag();
         entries.add(unknown.copy());
         entries.add(outsideRange.copy());
+        CompoundTag missingSlot = outsideRange.copy();
+        missingSlot.remove("Slot");
+        entries.add(missingSlot.copy());
+        StringTag unexpected = StringTag.valueOf("unrecognized saved entry");
+        entries.add(unexpected);
         CompoundTag storage = new CompoundTag();
         storage.put("Items", entries);
         CompoundTag saved = new CompoundTag();
@@ -230,24 +266,27 @@ public final class CapabilityAndPersistenceChecks {
                 "Unreadable entries reached live slots");
 
         var probe = new StackItemStorage(StorageStackBE.SLOTS);
-        checkEquals(new StackItemStorage.LoadResult(2, 0), probe.deserializeNBT(registries, storage),
+        checkEquals(new StackItemStorage.LoadResult(4, 0), probe.deserializeNBT(registries, storage),
                 "New retention diagnostic counts");
-        checkEquals(new StackItemStorage.LoadResult(0, 2),
+        checkEquals(new StackItemStorage.LoadResult(0, 4),
                 probe.deserializeNBT(registries, probe.serializeNBT(registries)), "Persisted retry diagnostic counts");
 
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-        ListTag setAside = persisted.getCompound("Items")
-                .getList("SetAside", Tag.TAG_COMPOUND);
-        checkEquals(2, setAside.size(), "Persisted set-aside entry count");
-        checkEquals(unknown, setAside.getCompound(0), "Unknown item tag changed");
-        checkEquals(outsideRange, setAside.getCompound(1), "Out-of-range item tag changed");
-        check(!loaded.getUpdateTag(registries).getCompound("Items").contains("SetAside"),
+        ListTag setAside = persisted.getCompound("Items").orElseThrow()
+                .getList("SetAside").orElseThrow();
+        checkEquals(4, setAside.size(), "Persisted set-aside entry count");
+        checkEquals(unknown, setAside.getCompound(0).orElseThrow(), "Unknown item tag changed");
+        checkEquals(outsideRange, setAside.getCompound(1).orElseThrow(), "Out-of-range item tag changed");
+        checkEquals(missingSlot, setAside.get(2), "Missing-slot item tag changed");
+        checkEquals(unexpected, setAside.get(3), "Non-compound entry changed");
+        check(!loaded.getUpdateTag(registries).getCompound("Items").orElseThrow().contains("SetAside"),
                 "Client update tag exposed set-aside entries");
         helper.succeed();
     }
 
     /**
-     * Set-aside entries recover only into free valid slots and disappear from retained disk data.
+     * Set-aside entries in versioned 1.21.4 data recover only into free valid slots and disappear
+     * from retained disk data.
      * To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
      * with that item mod absent, then restore the mod and reopen the world. The item returns.
      * Occupied-slot and invalid-slot retention require inspecting the saved tag.
@@ -269,17 +308,17 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(new StackItemStorage.LoadResult(0, 2), storage.deserializeNBT(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
-        NbtUtils.addCurrentDataVersion(saved);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_4);
         saved.put("Items", inventory);
         loaded.loadWithComponents(saved, registries);
         checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
         checkEquals(Items.DIAMOND, loaded.getItems().getStackInSlot(1).getItem(), "Retry did not recover");
         checkEquals(2, loaded.getItems().getStackInSlot(1).getCount(), "Recovered count");
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
-        ListTag remaining = persisted.getCompound("Items").getList("SetAside", Tag.TAG_COMPOUND);
+        ListTag remaining = persisted.getCompound("Items").orElseThrow().getList("SetAside").orElseThrow();
         checkEquals(2, remaining.size(), "Recovered retry remained set aside");
-        checkEquals(retries.getCompound(1), remaining.getCompound(0), "Occupied retry changed");
-        checkEquals(retries.getCompound(2), remaining.getCompound(1), "Out-of-range retry changed");
+        checkEquals(retries.getCompound(1).orElseThrow(), remaining.getCompound(0).orElseThrow(), "Occupied retry changed");
+        checkEquals(retries.getCompound(2).orElseThrow(), remaining.getCompound(1).orElseThrow(), "Out-of-range retry changed");
         loaded.loadWithComponents(persisted, registries);
         checkEquals(2, GameTestScaffold.count(loaded.getItems(), Items.DIAMOND), "Reload duplicated recovered item");
         helper.succeed();

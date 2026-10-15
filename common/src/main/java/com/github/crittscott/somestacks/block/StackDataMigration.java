@@ -7,6 +7,7 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
@@ -67,10 +68,9 @@ public final class StackDataMigration {
         if (saved >= current) {
             return false;
         }
-        if (tag.contains(StackBlockEntity.TAG_ITEMS, Tag.TAG_COMPOUND)) {
-            CompoundTag storage = tag.getCompound(StackBlockEntity.TAG_ITEMS);
-            upgradeItemList(storage.getList(StackItemStorage.TAG_ITEMS, Tag.TAG_COMPOUND), registries, saved, current);
-            upgradeItemList(storage.getList(StackItemStorage.TAG_SET_ASIDE, Tag.TAG_COMPOUND), registries, saved, current);
+        if (tag.get(StackBlockEntity.TAG_ITEMS) instanceof CompoundTag storage) {
+            upgradeItemList(storage.getListOrEmpty(StackItemStorage.TAG_ITEMS), registries, saved, current);
+            upgradeItemList(storage.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE), registries, saved, current);
         }
         stampVersion(tag);
         recordUpgrade(saved, current);
@@ -79,10 +79,10 @@ public final class StackDataMigration {
 
     /** Removes and returns the previous release's block-entity layout rotation, if present. */
     static Integer takeLegacyBlockRotation(CompoundTag tag) {
-        if (!tag.contains(LEGACY_TAG_ROTATION, Tag.TAG_INT)) {
+        if (!(tag.get(LEGACY_TAG_ROTATION) instanceof IntTag rotationTag)) {
             return null;
         }
-        int rotation = QuarterTurns.normalize(tag.getInt(LEGACY_TAG_ROTATION));
+        int rotation = QuarterTurns.normalize(rotationTag.intValue());
         tag.remove(LEGACY_TAG_ROTATION);
         return rotation;
     }
@@ -99,12 +99,12 @@ public final class StackDataMigration {
     private static void upgradeItemList(ListTag list, HolderLookup.Provider registries, int from, int to) {
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         for (int i = 0; i < list.size(); i++) {
-            CompoundTag itemTag = list.getCompound(i);
-            int slot = itemTag.getInt(StackItemStorage.TAG_SLOT);
+            if (!(list.get(i) instanceof CompoundTag itemTag)) continue;
+            Tag slot = itemTag.get(StackItemStorage.TAG_SLOT);
             Dynamic<Tag> fixed = DataFixers.getDataFixer().update(
                     References.ITEM_STACK, new Dynamic<>(ops, itemTag), from, to);
             CompoundTag fixedTag = (CompoundTag) fixed.getValue();
-            fixedTag.putInt(StackItemStorage.TAG_SLOT, slot);
+            if (slot != null) fixedTag.put(StackItemStorage.TAG_SLOT, slot.copy());
             list.set(i, fixedTag);
         }
     }

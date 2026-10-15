@@ -202,20 +202,29 @@ public final class BarColumnChecks {
 
     /**
      * Breaking a full Bar column drops all contents without spawning one entity per Bar. To
-     * reproduce in-game: fill a Bar block with one ingot type and break it. Every ingot is returned
-     * in consolidated dropped stacks.
+     * reproduce in-game: fill three stacked Bar blocks with one ingot type and break the bottom
+     * block. Every ingot is returned once in consolidated dropped stacks.
      */
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
+        BarStackBE top = placeBar(helper, ORIGIN.above(2));
         Item barItem = firstBarItem();
         BlockPos lowerPos = lower.getBlockPos();
         BlockPos upperPos = upper.getBlockPos();
+        BlockPos topPos = top.getBlockPos();
 
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             seedSlot(lower.getItems(), slot, new ItemStack(barItem));
             seedSlot(upper.getItems(), slot, new ItemStack(barItem));
+            seedSlot(top.getItems(), slot, new ItemStack(barItem));
         }
+
+        GameTestScaffold.checkStateUpdatesPreserveContents(helper, lower);
+        checkEquals(64, GameTestScaffold.count(upper.getItems(), barItem),
+                "State update collapsed the middle Bar block");
+        checkEquals(64, GameTestScaffold.count(top.getItems(), barItem),
+                "State update collapsed the top Bar block");
 
         helper.getLevel().setBlock(lowerPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 
@@ -223,12 +232,14 @@ public final class BarColumnChecks {
                 "Broken lower Bar block remained");
         check(helper.getLevel().getBlockEntity(upperPos) == null,
                 "Collapsed upper Bar block remained");
+        check(helper.getLevel().getBlockEntity(topPos) == null,
+                "Collapsed top Bar block remained");
 
-        List<ItemEntity> drops = droppedInColumn(helper, lowerPos, upperPos).stream()
+        List<ItemEntity> drops = droppedInColumn(helper, lowerPos, topPos).stream()
                 .filter(entity -> entity.getItem().is(barItem))
                 .toList();
-        checkEquals(2, drops.size(), "Consolidated item-entity count");
-        checkEquals(128, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
+        checkEquals(3, drops.size(), "Consolidated item-entity count");
+        checkEquals(192, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
                 "Consolidated item count");
         check(drops.stream().allMatch(entity -> entity.getItem().getCount() == 64),
                 "A full block's bars were not packed into one full stack");
@@ -415,6 +426,6 @@ public final class BarColumnChecks {
 
     private static int testVariant(ItemEntity entity) {
         CustomData data = entity.getItem().get(DataComponents.CUSTOM_DATA);
-        return data == null ? -1 : data.copyTag().getInt("somestacks_test_variant");
+        return data == null ? -1 : data.copyTag().getIntOr("somestacks_test_variant", -1);
     }
 }

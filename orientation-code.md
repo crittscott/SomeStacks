@@ -4,15 +4,15 @@
 
 # Some Stacks — code orientation
 
-See `orientation-player.md` for behavior; `build-env.md` for the build.
+See `orientation-player.md` for behavior and `build-env.md` for build details.
 
 ## Project shape
 
-Java 21, Minecraft 1.21.5 build target; source port and runtime verification are pending; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.5 port in progress; package `com.github.crittscott.somestacks`, id `somestacks`.
 
-`common` folds into each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Gestures and automation adapters are loader-owned. `CommonRegistry` provides identifiers and lookups.
+`common` folds into each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Loaders own gestures and automation adapters. `CommonRegistry` provides identifiers and lookups.
 
-Three blocks and block entity types; no block items, menus, or recipes:
+Three blocks, no block items, menus, or recipes:
 
 `ShapedStackBlock` gives Singles and Bar occupied-content targeting, outline, and collision shapes, a full-block interaction shape, and an empty visual shape. Empty space lets targeting pass through to blocks behind; empty stacks have no outline.
 
@@ -51,15 +51,15 @@ Three blocks and block entity types; no block items, menus, or recipes:
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla and break callbacks; optional Common Protection API queries |
 
-Matching loader builds are required; Fabric checks markers both ways.
+Matching loader builds required; Fabric checks both ways.
 
 ## Runtime and movement model
 
-A maximal vertical run of one type is central. Block entities own local slots; server-only `StackRun` owns resolution, flat slots, headroom, publication and comparators. Concrete runs own movement. Resolution caches per tick and invalidates on structural edits.
+A maximal vertical run of one type is central. Block entities own local slots; server-only `StackRun` owns resolution, slots, headroom, publication and comparators. Concrete runs own movement. Structural edits invalidate per-tick resolution caches.
 
-Block entities do not tick. `StackBlockEntity` owns persistence and nested batching; mutations schedule one pass on the run's base for client updates, lighting, comparators, and Storage settlement. Every run block reports the same comparator signal, using local fill contributions refreshed on mutation and NBT load.
+Block entities do not tick. Mutations batch one base pass for client updates, light, comparators, and Storage settlement. Each block reports the run's comparator signal from local fill cached on mutation/load. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
 
-The three movement models are distinct:
+Movement models:
 
 - `StoragePile` is a flat inventory from the base up. Settlement groups exact identities, sorts distinct groups using precomputed fields, restores legal stack sizes, packs down, and removes unneeded top blocks unless permanent or protected.
 - `SinglesColumn` is positional. Extraction shifts one visual column down across rotation-aware seams, transports item rotation, preserves unrelated gaps, and does not collapse above a broken block.
@@ -67,7 +67,7 @@ The three movement models are distinct:
 
 `StackItemStorage` persists local inventory through block-entity NBT using Data Components and a `HolderLookup.Provider`. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-`StackDataMigration` upgrades saved items through DataFixerUpper; absent `DataVersion` means 1.21.1 (3955), and legacy `Rotation` becomes block state. Unreadable entries persist in `SetAside` and retry each load. `ServerConfigMigration` logs custom 1.21.1 `compatibility.ingots` entries at server start. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, unique valid slots and Singles rotations, and no server-only fields; rejection changes nothing. Permanence belongs to the base; block rotation is local; item rotation travels with Singles.
+`StackDataMigration` upgrades saved items through DataFixerUpper; absent `DataVersion` means 1.21.1 (3955), and legacy `Rotation` becomes block state. Unreadable entries, missing-slot entries, and non-compound list values persist in `SetAside` and retry each load. `ServerConfigMigration` logs custom 1.21.1 `compatibility.ingots` entries at server start. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, compound entries with unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing. Permanence belongs to the base; block rotation is local; item rotation travels with Singles.
 
 ## Admission, automation, and edits
 
@@ -85,7 +85,7 @@ The only play-phase server-to-client payload is a cached config snapshot. Decodi
 
 Non-sneaking existing-stack clicks run from `StackBlock.useItemOn`/`useWithoutItem`; loader server hooks handle sneaking torch rotation plus placement or deposit reached through a neighboring non-stack block. Both pass the actual vanilla `BlockHitResult` to `StackInteractions`, after vanilla has supplied target, reach pacing, and the ordinary interaction event. Common handling validates hand, spectator/protection state, item, support, enablement, height, obstruction, and authority. Placement plus first deposit is one transaction. Cell selection for deposit, extraction, and Singles item rotation is recomputed server-side by extending a ray through the vanilla hit location; no client cell index is accepted.
 
-The real event covers the clicked block. Forge/NeoForge consult a destination right-click event for neighbor deposits into Singles/Bar, honoring cancellation and block/item-use denial; a scoped guard prevents consultation from executing stack gestures. Fabric consults destination block-use callbacks and, when installed, Common Protection API for neighbor deposits. One authority per loader handles placement and destination permission. Client commands and server help share a server-safe Brigadier syntax tree; Fabric's client `ss` node hands unclaimed forms to the server.
+The real event covers the clicked block. Forge/NeoForge consult a destination right-click event for neighbor deposits into Singles/Bar, honoring cancellation and block/item-use denial; a scoped guard prevents consultation from executing stack gestures. Fabric consults destination block-use callbacks and, when installed, Common Protection API for neighbor deposits. One authority per loader handles placement and destination permission. Client/server commands share server-safe Brigadier syntax; Fabric forwards unclaimed client `ss` forms.
 
 ## Configuration and presentation
 
@@ -93,11 +93,11 @@ The real event covers the clicked block. Forge/NeoForge consult a destination ri
 
 Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
 
-Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Appearance is client resource data; galleries bypass placement protection.
+Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Appearance is client resource data; galleries bypass protection.
 
 ## GameTests
 
-Development-only `somestacks_gametest` is excluded from `build`. Shared checks live in `common/src/gametest`; native checks are loader-local. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; native checks are loader-local. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks.
 
-Fabric compiles against Common Protection API without loading it by default. Development runs with `-PwithCommonProtectionApi=true` include it and register provider-backed GameTests; ordinary runs register absence-specific checks instead.
+Fabric compiles against Common Protection API. `-PwithCommonProtectionApi=true` adds it to development runs with provider-backed GameTests; default runs use absence-specific checks.
 
