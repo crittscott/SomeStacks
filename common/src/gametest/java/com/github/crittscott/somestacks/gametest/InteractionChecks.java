@@ -12,10 +12,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -227,6 +231,34 @@ public final class InteractionChecks {
             checkEquals(1, player.getMainHandItem().getCount(), "Rejected deposit spent hand");
         }
         helper.succeed();
+    }
+
+    /**
+     * To reproduce: hold snowballs, hold the Stack Modifier, and right-click open air. The mode
+     * cycles and no snowball is thrown; release the modifier and right-click again to throw one.
+     */
+    public static void modifierAirUseLeavesItemUnused(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> factory) {
+        try (PlayerScope scope = new PlayerScope(factory.apply(new ItemStack(Items.SNOWBALL, 4)))) {
+            var player = scope.player;
+            Vec3 at = helper.absoluteVec(Vec3.atCenterOf(TARGET));
+            player.setPos(at.x, at.y, at.z);
+            var area = new AABB(player.blockPosition()).inflate(4);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+            check(!useItem(player).consumesAction(), "Modifier item use consumed");
+            checkEquals(4, player.getMainHandItem().getCount(), "Modifier item use spent item");
+            checkEquals(0, helper.getLevel().getEntitiesOfClass(Snowball.class, area).size(), "Modifier item use threw");
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            check(useItem(player).consumesAction(), "Plain item use refused");
+            checkEquals(3, player.getMainHandItem().getCount(), "Plain item use did not spend item");
+            helper.getLevel().getEntitiesOfClass(Snowball.class, area).forEach(Entity::discard);
+        }
+        helper.succeed();
+    }
+
+    /** Runs vanilla's server item use, which posts the loader's item-use event before the item acts. */
+    private static InteractionResult useItem(ServerPlayer player) {
+        return player.gameMode.useItem(player, player.serverLevel(), player.getItemInHand(HAND), HAND);
     }
 
     /** To reproduce: select another mode, disconnect, and reconnect. Logout clears mode/modifier state. */

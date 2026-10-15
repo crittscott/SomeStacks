@@ -94,7 +94,7 @@ Checked placement/removal emits `BLOCK_PLACE`/`BLOCK_DESTROY` only on success. R
 
 ## Player interaction and networking
 
-Existing-stack gestures run from each block's `use` (`handleExistingStack`): permanence, deposit or top-face placement, extraction. Sneaking torch rotation and clicks on other blocks run from the loader event, since vanilla skips `use` when sneaking with an item. `ClientGestures` sends changed mode/modifier state before block-use packets. Reconnect resets sync; logout/start/stop clear state and `RotationSoundThrottle`. Fabric's air-click mixin checks only the main hand.
+Existing-stack gestures run from each block's `use` (`handleExistingStack`): permanence, deposit or top-face placement, extraction. Sneaking torch rotation and clicks on other blocks run from the loader event, since vanilla skips `use` when sneaking with an item. `ClientGestures` sends changed mode/modifier state before block-use packets. Reconnect resets sync; logout/start/stop clear gesture and sound state. Fabric's air-click mixin checks only the main hand. Modifier air clicks return `CONSUME` (Fabric: early `stack_modifier` phase); the server refuses main-hand item use while the modifier is down.
 
 Vanilla checks reach and loaded chunks; `StackInteractions` validates hand, spectator, prerequisites, admission, support, and permissions, and traces cells along `ViewRays.through` (eye through the received hit point). First placement/deposit is atomic.
 
@@ -106,7 +106,7 @@ Client SUCCESS consumes use but still sends the packet. Stack blocks consume eve
 
 `ServerLifecycle` sends a fresh `ConfigSyncPkt.snapshot` on login/broadcast and clears sessions. Loaders install a policy reader and saver through `ServerConfig.start`. Forge's `SERVER` TOML reloads on the server thread and resyncs on any change; Fabric rereads JSON on `/ss reload`. List commands save through the loader, resyncing after `gen_mods`/`disable_mods` edits.
 
-Galleries default to disabled/permission 3, spread work across ticks, bypass placement protection, list items in id order without denied items, and clear on server start/stop.
+Galleries default off/permission 3, spread across ticks, bypass placement protection, list items in id order without denied items, and clear on server start/stop.
 
 Resources: `common/src/main/resources`. Extension points:
 
@@ -125,8 +125,8 @@ Flat models use 2-D; others 3-D. Forge measures all passes/custom vertices; cust
 
 Root `build` runs common and Fabric JUnit; Forge has none. `configureGameTests` combines shared/loader scenarios in test-only `somestacks_gametest`, generating structures from Base64.
 
-Shared checks cover batching, caches, bounds, movement, saves, set-aside recovery, client updates, structure rotation, fill/shapes, comparators, gestures via `gameMode.useItemOn`, hit-point targeting, Bar admission, policy, and reload. Forge adds TOML saves/reloads; Fabric adds Transfer commit/rollback and capacity. Protection checks cover adjacent denial, partial shapes, silent rejection, Forge block-vs-item denial and rollback/reentrancy, and Fabric removal vetoes/break context; `-PwithCommonProtectionApi=true` swaps `NoProtectionApiGameTests` for `ProtectionApiGameTests`.
+Shared checks cover batching, caches, movement, saves, set-aside recovery, client updates, structure rotation, comparators, gestures via `gameMode.useItemOn`/`useItem`, Bar admission, policy, and reload. Forge adds TOML saves/reloads; Fabric adds Transfer commit/rollback and capacity. Protection checks cover adjacent denial, partial shapes, silent rejection, Forge block-vs-item denial and rollback/reentrancy, and Fabric removal vetoes/break context; `-PwithCommonProtectionApi=true` swaps `NoProtectionApiGameTests` for `ProtectionApiGameTests`.
 
-`WorldEditChecks` covers game events, automation identity, cleanup water/actors. `PacketCodecTest` checks chunking, atomic publication, staging, and decoder bounds; `CommandRegistrationTest` both command trees; `BundledResourceTest` sounds/subtitles. `RenderGalleryChecks` checks command gates/deny edits, intercepting policy saves.
+`WorldEditChecks` covers game events, automation identity, and cleanup. JUnit covers packet chunking/staging/bounds, both command trees, and bundled sounds. `RenderGalleryChecks` checks command gates/deny edits, intercepting policy saves.
 
 `runGameTestServer` runs loader scenarios; Fabric uses `fabric/run-gametest`. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.

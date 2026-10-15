@@ -97,6 +97,15 @@ public final class InteractionGameTests implements FabricGameTest {
     }
 
     /**
+     * Loader entry point for {@link InteractionChecks#modifierAirUseLeavesItemUnused}; see that
+     * method for the scenario, manual check, and any internal-only assertions.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void modifierAirUseLeavesItemUnused(GameTestHelper helper) {
+        InteractionChecks.modifierAirUseLeavesItemUnused(helper, factory(helper));
+    }
+
+    /**
      * Loader entry point for {@link InteractionChecks#stateAndLogout}; see that method for
      * the scenario, manual check, and any internal-only assertions.
      */

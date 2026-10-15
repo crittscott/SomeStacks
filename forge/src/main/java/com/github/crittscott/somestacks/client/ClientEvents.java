@@ -71,6 +71,9 @@ public final class ClientEvents {
 
         if (ctx.shouldCancel()) {
             evt.setCanceled(true);
+            // CONSUME ends the client's hand loop without a swing; left at PASS the off hand's item
+            // would be used next. Forge still sends the use packet, which the server refuses.
+            evt.setCancellationResult(InteractionResult.CONSUME);
         }
     }
 

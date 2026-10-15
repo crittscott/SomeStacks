@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * Applies the gestures vanilla does not route to a stack block's own use method (sneaking torch
  * rotations and clicks on a neighboring block) after Forge's ordinary right-click protection
- * listeners.
+ * listeners, and keeps a Stack Modifier item use from reaching the held item.
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class StackInteractionEvents {
@@ -32,6 +32,17 @@ public final class StackInteractionEvents {
             event.setUseBlock(Event.Result.DENY);
             event.setUseItem(Event.Result.DENY);
             event.setCancellationResult(InteractionResult.SUCCESS);
+        }
+    }
+
+    /** Refuses the item use a Stack Modifier air click still sends, before other mods act on it. */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getLevel().isClientSide()
+                || !(event.getEntity() instanceof ServerPlayer player)) return;
+        if (StackInteractions.modifierClaimsItemUse(player, event.getHand())) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.FAIL);
         }
     }
 }

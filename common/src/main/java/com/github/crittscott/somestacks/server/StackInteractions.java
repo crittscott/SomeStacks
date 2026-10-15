@@ -53,6 +53,15 @@ public final class StackInteractions {
     }
 
     /**
+     * Whether the Stack Modifier claims a main-hand item use that reached the server. A modifier
+     * right-click at air cycles the placement mode on the client, which may still deliver the
+     * ordinary use-item packet; the held item must not then be used (thrown, eaten, drawn).
+     */
+    public static boolean modifierClaimsItemUse(ServerPlayer player, InteractionHand hand) {
+        return hand == InteractionHand.MAIN_HAND && ServerGestureState.get(player).modifierDown();
+    }
+
+    /**
      * Handles the sneaking torch gestures, which vanilla never routes to the block's use method.
      * Loader callbacks call this only after earlier listeners have allowed both block and item use.
      */

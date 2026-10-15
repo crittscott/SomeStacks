@@ -22,7 +22,9 @@ public final class FabricClientEvents {
         UseBlockCallback.EVENT.register(FabricStackInteractionEvents.STACK_GESTURES_PHASE,
                 FabricClientEvents::onUseBlock);
 
-        UseItemCallback.EVENT.register((player, level, hand) -> {
+        // Claimed ahead of the default phase: an earlier non-PASS listener would end the chain
+        // before the gesture is seen. CONSUME ends the client's hand loop without a swing.
+        UseItemCallback.EVENT.register(FabricStackInteractionEvents.STACK_MODIFIER_PHASE, (player, level, hand) -> {
             if (!level.isClientSide) {
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
             }
@@ -37,7 +39,7 @@ public final class FabricClientEvents {
             }
             ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
             return context.shouldCancel()
-                    ? InteractionResultHolder.fail(player.getItemInHand(hand))
+                    ? InteractionResultHolder.consume(player.getItemInHand(hand))
                     : InteractionResultHolder.pass(player.getItemInHand(hand));
         });
     }

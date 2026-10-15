@@ -36,7 +36,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Only the main hand acts; torches are not spent. Rotation displays its angle and can occur every tick; sound plays at most once every four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
+Only the main hand acts; torches are not spent. While `V` is held, the main-hand item is never used on air. Rotation displays its angle and can occur every tick; sound plays at most once every four ticks per player. Sneaking retains ordinary interaction except for torch gestures.
 
 ## Depositing and placing
 
@@ -85,7 +85,7 @@ The bottom layer rests on the world. Every bar above it must overlap a bar direc
 ## Shared block behavior
 
 - **Water:** all three are waterloggable; an emptied stack removed by cleanup leaves its water behind.
-- **Light:** each occupied cell holding a glowing `BlockItem` contributes a quarter of that block's default light level by integer division; contributions add, capped at 15. Item count within a Storage slot does not multiply its contribution.
+- **Light:** each occupied cell holding a glowing `BlockItem` contributes a quarter of that block's default light level by integer division; contributions add, capped at 15. Storage slot counts do not multiply it.
 - **Pistons:** all three block piston movement.
 - **Structures:** structure rotation and mirroring turn Storage and Singles layouts with the build; per-item Singles rotations are kept.
 - **Missing mods:** a saved item whose mod is absent is kept aside, logged, and returns with the mod.
@@ -140,7 +140,7 @@ World policy: Forge uses `<world>/serverconfig/somestacks-server.toml`, reloaded
 | `render_gallery.gen_mods` | empty | Namespaces used by `list` gallery/write forms |
 | `render_gallery.gen_items` | empty | Items used by `/ss gallery items` |
 
-Disabling types prevents placement/growth; existing blocks and extraction remain. Item/mod/tag changes never eject contents. Enable flags sync on login and policy changes; cycling skips disabled types.
+Disabled types keep existing blocks and extraction. Item/mod/tag changes never eject contents. Enable flags sync on login and policy changes; cycling skips disabled types.
 
 ## Commands
 
@@ -158,7 +158,7 @@ Disabling types prevents placement/growth; existing blocks and extraction remain
 | `/ss deny ...` | Level 2 | Edit disabled namespace/exact-item lists |
 | `/ss reload` | Level 2 | Reload world policy; resync players |
 
-Galleries build east over sandstone, rows running north, across server ticks, in id order without disabled items. They replace floor and stack positions without placement protection.
+Galleries build east over sandstone across server ticks, in id order without disabled items, replacing floor and stack positions without placement protection.
 
 Policy command edits save immediately.
 
