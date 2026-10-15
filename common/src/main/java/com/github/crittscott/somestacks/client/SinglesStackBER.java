@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Loader-neutral renderer for a Singles Stack's 64 stored items. Each occupied cell is placed at its
@@ -23,7 +24,7 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE> {
     }
 
     @Override
-    public void render(SinglesStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    public void render(SinglesStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay, Vec3 cameraPos) {
         if (be.getLevel() != null) {
             CubeRenderHelper.renderGridItems(
                     be.getItems(), SinglesStackBE.SLOTS, SinglesCubeIdx.GRID, be.getRotation(),

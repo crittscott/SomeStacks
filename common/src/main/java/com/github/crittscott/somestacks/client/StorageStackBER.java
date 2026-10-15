@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Loader-neutral renderer for a Storage Stack's 27 stored stacks. Each occupied slot is placed at its
@@ -23,7 +24,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
     }
 
     @Override
-    public void render(StorageStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    public void render(StorageStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay, Vec3 cameraPos) {
         if (be.getLevel() != null) {
             CubeRenderHelper.renderGridItems(
                     be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID, be.getRotation(),

@@ -49,7 +49,7 @@ import java.util.TreeMap;
  * mod versions and resource-pack list with the current client.
  */
 public final class AutoRenderProfiles {
-    static final int CACHE_FORMAT_VERSION = 2;
+    static final int CACHE_FORMAT_VERSION = 3;
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String FIELD_FORMAT = "format";
@@ -61,8 +61,7 @@ public final class AutoRenderProfiles {
     private static final float TARGET_FILL = 0.9f;
 
     /**
-     * Thinnest-to-longest axis ratio below which geometry is treated as a flat card, catching
-     * models that report gui3d but draw no real depth.
+     * Thinnest-to-longest axis ratio below which geometry is treated as a flat card.
      */
     private static final float FLAT_RATIO = 0.1f;
     private static final float MIN_EXTENT = 0.001f;
@@ -288,9 +287,8 @@ public final class AutoRenderProfiles {
             return RenderMode.THREE_D;
         }
 
-        boolean flatByModel = !result.gui3d();
         boolean flatByShape = minExtent / maxExtent < FLAT_RATIO;
-        return flatByModel || flatByShape ? RenderMode.TWO_D : RenderMode.THREE_D;
+        return flatByShape ? RenderMode.TWO_D : RenderMode.THREE_D;
     }
 
     /**

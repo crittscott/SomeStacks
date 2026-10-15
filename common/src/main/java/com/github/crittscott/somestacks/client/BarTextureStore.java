@@ -185,7 +185,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 return BarTextureData.WHITE;
             }
             ItemCapture.TintedQuad first = capture.quads().getFirst();
-            return ARGB.multiply(averageSpriteColor(first.quad().getSprite(), resourceManager),
+            return ARGB.multiply(averageSpriteColor(first.quad().sprite(), resourceManager),
                     ARGB.color(0xFF, ARGB.red(first.color()), ARGB.green(first.color()),
                             ARGB.blue(first.color())));
         } catch (Exception e) {

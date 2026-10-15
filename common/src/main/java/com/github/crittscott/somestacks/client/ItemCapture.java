@@ -51,7 +51,6 @@ public final class ItemCapture {
     private final MultiBufferSource buffers = type -> recorder;
     private final Vector3f scratch = new Vector3f();
 
-    private boolean gui3d;
     private boolean vertexGeometry;
     private boolean bounded;
     private boolean recordBounds;
@@ -91,11 +90,10 @@ public final class ItemCapture {
         }
 
         Minecraft.getInstance().getItemModelResolver()
-                .updateForTopItem(capture.renderState, drawn, context, false, level, null, 0);
+                .updateForTopItem(capture.renderState, drawn, context, level, null, 0);
         if (capture.renderState.isEmpty()) {
             return capture;
         }
-        capture.gui3d = capture.renderState.isGui3d();
         capture.renderState.render(pose, capture.buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         return capture;
     }
@@ -103,11 +101,6 @@ public final class ItemCapture {
     /** Whether the stack resolved to nothing to draw. */
     public boolean isEmpty() {
         return renderState.isEmpty();
-    }
-
-    /** The resolved model's own dimensionality signal. */
-    public boolean gui3d() {
-        return gui3d;
     }
 
     /** The baked quads drawn, in drawing order. */
@@ -128,7 +121,6 @@ public final class ItemCapture {
 
     private void reset() {
         quads.clear();
-        gui3d = true;
         vertexGeometry = false;
         bounded = false;
         minX = minY = minZ = Float.POSITIVE_INFINITY;
@@ -150,7 +142,7 @@ public final class ItemCapture {
         quads.add(new TintedQuad(quad, color(r, g, b, a)));
         if (!recordBounds) return;
         Matrix4f matrix = pose.pose();
-        int[] vertices = quad.getVertices();
+        int[] vertices = quad.vertices();
         for (int i = 0; i < 4; i++) {
             int base = i * BLOCK_VERTEX_STRIDE + BLOCK_POSITION_OFFSET;
             matrix.transformPosition(

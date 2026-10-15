@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
@@ -38,7 +39,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
     }
 
     @Override
-    public void render(BarStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    public void render(BarStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay, Vec3 cameraPos) {
         SlotAccess handler = be.getItems();
 
         if (be.getLevel() == null) return;

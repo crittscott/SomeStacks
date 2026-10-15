@@ -429,7 +429,7 @@ public final class CubeRenderHelper {
                                    List<FaceTarget> faces) {
         for (ItemCapture.TintedQuad tinted : quads) {
             BakedQuad quad = tinted.quad();
-            if (quad.getDirection().getAxis() != Direction.Axis.Z) {
+            if (quad.direction().getAxis() != Direction.Axis.Z) {
                 continue;
             }
             int color = tinted.color();
@@ -437,7 +437,7 @@ public final class CubeRenderHelper {
             int g = ARGB.green(color);
             int b = ARGB.blue(color);
 
-            int[] vertices = quad.getVertices();
+            int[] vertices = quad.vertices();
             for (FaceTarget target : faces) {
                 for (int i = 0; i < 4; i++) {
                     int base = i * ItemCapture.BLOCK_VERTEX_STRIDE;

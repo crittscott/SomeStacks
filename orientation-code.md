@@ -95,6 +95,8 @@ Extension points are the `somestacks:ingots` data-pack tag; registered `somestac
 
 Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Resources target pack format 55; galleries bypass protection.
 
+Automatic 2-D selection uses the measured thinnest-to-longest axis ratio when captured geometry supports flat projection. Measurement cache format is 3.
+
 ## GameTests
 
 `somestacks_gametest` is excluded from `build`. Shared checks live in `common/src/gametest`; wrappers are loader-local. Fabric uses its annotation/entrypoints, Forge its annotations, and NeoForge deferred functions plus test-instance JSON. Compilation/discovery pending. For `/ssclienttest`, aim at a stack and release Shift/modifier.

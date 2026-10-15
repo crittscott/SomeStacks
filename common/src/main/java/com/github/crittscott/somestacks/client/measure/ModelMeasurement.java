@@ -18,12 +18,11 @@ public final class ModelMeasurement {
     private ModelMeasurement() {}
 
     /**
-     * @param gui3d the resolved item model's own dimensionality signal
      * @param flatProjectionAvailable whether the shared 2-D renderer can draw the geometry that
      *                                produced these bounds
      */
     public record Result(
-            boolean gui3d, boolean flatProjectionAvailable,
+            boolean flatProjectionAvailable,
             @Nullable AABB bounds, @Nullable String failure) {}
 
     /** Measures as the {@code 3d} path draws: the FIXED display context. */
@@ -47,18 +46,18 @@ public final class ModelMeasurement {
             }
             ItemCapture capture = ItemCapture.capture(stack, context, null, pose);
             if (capture.isEmpty()) {
-                return new Result(true, false, null, "item resolves to no model");
+                return new Result(false, null, "item resolves to no model");
             }
             AABB bounds = capture.bounds();
             if (bounds == null) {
-                return new Result(capture.gui3d(), false, null, "item draws nothing");
+                return new Result(false, null, "item draws nothing");
             }
             // Only baked quads can be laid onto a cube face; anything drawn vertex by vertex
             // stays on the 3-D path.
             boolean flat = !capture.hasVertexGeometry() && !capture.quads().isEmpty();
-            return new Result(capture.gui3d(), flat, bounds, null);
+            return new Result(flat, bounds, null);
         } catch (Exception e) {
-            return new Result(true, false, null, "measurement threw: " + e);
+            return new Result(false, null, "measurement threw: " + e);
         }
     }
 }
