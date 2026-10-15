@@ -361,13 +361,24 @@ public abstract class StackBlockEntity extends BlockEntity {
         refreshComparatorContribution();
     }
 
-    /** Loader chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional. */
+    /** NeoForge chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional. */
     public final void handleUpdateTag(ValueInput input) {
         loadClientUpdate(StackDataMigration.readTag(input), input.lookup());
     }
 
-    /** Loader block-update hook, sharing the same staged validation as chunk initialization. */
+    /** Forge chunk-update hook, sharing the same staged validation as NeoForge. */
+    public final void handleUpdateTag(ValueInput input, HolderLookup.Provider registries) {
+        handleUpdateTag(input);
+    }
+
+    /** NeoForge block-update hook, sharing the same staged validation as chunk initialization. */
     public final void onDataPacket(Connection connection, ValueInput input) {
+        handleUpdateTag(input);
+    }
+
+    /** Forge block-update hook; the input already carries its registry context. */
+    public final void onDataPacket(
+            Connection connection, ValueInput input, HolderLookup.Provider registries) {
         handleUpdateTag(input);
     }
 

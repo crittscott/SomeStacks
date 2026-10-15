@@ -13,12 +13,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Result;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,10 +35,9 @@ public final class ForgeEditAuthority implements EditAuthority {
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
         var event = new PlayerInteractEvent.RightClickBlock(
                 player, InteractionHand.MAIN_HAND, pos, WorldEdits.adjacentHit(player, pos));
-        MinecraftForge.EVENT_BUS.post(event);
-        return !event.isCanceled()
-                && event.getUseBlock() != Event.Result.DENY
-                && event.getUseItem() != Event.Result.DENY;
+        return !PlayerInteractEvent.RightClickBlock.BUS.post(event)
+                && event.getUseBlock() != Result.DENY
+                && event.getUseItem() != Result.DENY;
     }
 
     private final Map<ResourceKey<Level>, ServerPlayer> actors = new HashMap<>();
@@ -135,7 +133,7 @@ public final class ForgeEditAuthority implements EditAuthority {
     public boolean vetoesRemoval(
             ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
             @Nullable BlockEntity blockEntity) {
-        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
-        return MinecraftForge.EVENT_BUS.post(evt);
+        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor, Result.DEFAULT);
+        return BlockEvent.BreakEvent.BUS.post(evt) || evt.getResult() == Result.DENY;
     }
 }

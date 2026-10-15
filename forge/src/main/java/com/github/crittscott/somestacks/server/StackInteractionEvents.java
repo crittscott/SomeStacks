@@ -4,9 +4,9 @@ import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.util.Result;
+import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** Applies Some Stacks gestures from Forge's actual server-side right-click event. */
@@ -14,25 +14,24 @@ import net.minecraftforge.fml.common.Mod;
 public final class StackInteractionEvents {
     private StackInteractionEvents() {}
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getLevel().isClientSide()
-                || event.isCanceled()) {
-            return;
+    @SubscribeEvent(priority = Priority.LOWEST)
+    public static boolean onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide()) {
+            return false;
         }
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
-        boolean blockAllowed = event.getUseBlock() != Event.Result.DENY;
-        boolean itemAllowed = event.getUseItem() != Event.Result.DENY;
+        boolean blockAllowed = event.getUseBlock() != Result.DENY;
+        boolean itemAllowed = event.getUseItem() != Result.DENY;
         boolean handled = StackInteractions.handleSneakingRotation(
                 player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed)
                 || StackInteractions.handleAdjacentClick(
                         player, event.getHand(), event.getHitVec(), blockAllowed, itemAllowed);
         if (handled) {
-            event.setCanceled(true);
-            event.setUseBlock(Event.Result.DENY);
-            event.setUseItem(Event.Result.DENY);
+            event.setUseBlock(Result.DENY);
+            event.setUseItem(Result.DENY);
             event.setCancellationResult(InteractionResult.SUCCESS);
         }
+        return handled;
     }
 }

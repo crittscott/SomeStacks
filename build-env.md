@@ -31,7 +31,7 @@ The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `
 
 `common` has no resource expansion. Each loader expands its own metadata (`fabric.mod.json`, `META-INF/mods.toml`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
-Fabric uses Loom's current Mixin remapping path without the legacy annotation processor. Forge and NeoForge use their loader-specific Loom setup.
+Fabric uses Loom's current Mixin remapping path without the legacy annotation processor. Forge and NeoForge use their loader-specific Loom setup. Forge includes `net.minecraftforge:eventbus-validator:7.0-beta.10` as the annotation processor for production and GameTests and enables `eventbus.api.strictRuntimeChecks` in its development runs for EventBus 7 registration checks.
 
 The common module declares Fabric Loader as compile-only to resolve Minecraft's environment annotations; it is not bundled or added as a runtime requirement for Forge or NeoForge.
 
@@ -43,7 +43,7 @@ On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX laun
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
-The build targets Minecraft 1.21.6. Gradle sync is reported successful. Source changes for persistence, server APIs, and rendering are implemented; later stages and pack metadata still need porting. Source compilation, GameTest execution, and runtime verification remain pending.
+The build targets Minecraft 1.21.6. Gradle sync was reported successful before stage 4's Forge validator/run-setting changes. Source implementation and review through stage 4 are complete; later stages and pack metadata still need porting. Source compilation, GameTest execution, and runtime verification remain pending.
 
 ## Exact build versions
 
@@ -62,6 +62,7 @@ The build targets Minecraft 1.21.6. Gradle sync is reported successful. Source c
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.128.2+1.21.6` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection-query API; development runtime only with `-PwithCommonProtectionApi=true` |
+| Forge EventBus validator | `net.minecraftforge:eventbus-validator:7.0-beta.10` | Annotation processor for Forge production and GameTest sources |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -85,6 +86,6 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 ## Resolution and version authorities
 
-`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties rather than restating dependency versions.
+`gradle.properties` is the authority for the Minecraft, mapping, loader, API, compatibility, integration, and mod versions. The root `build.gradle` pins the three external Gradle plugins and JSR 305, `forge/build.gradle` pins the EventBus validator, and `gradle/wrapper/gradle-wrapper.properties` pins Gradle itself. The loader scripts consume the root properties for the game and loader dependencies.
 
 Plugin resolution uses Fabric Maven, Architectury Maven, Forge Maven, and the Gradle Plugin Portal. Every module declares Parchment Maven; the Fabric module also declares Nucleoid Maven (for the Common Protection API), and the NeoForge module also declares NeoForge Maven; Loom supplies its standard Minecraft repositories. There is no Gradle version catalog, dependency-lock state, dependency-verification metadata, exact JDK distribution, or wrapper-distribution checksum in the repository. Consequently, the table above records every exact version deliberately declared by the build, but it is not a lock of every transitive artifact selected by Gradle and Loom.

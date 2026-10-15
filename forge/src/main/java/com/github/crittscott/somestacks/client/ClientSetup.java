@@ -7,9 +7,8 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.GameShuttingDownEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 
 /**
  * Client-side registration: the three block entity renderers, the key binding, and the resource
@@ -21,17 +20,17 @@ import net.minecraftforge.eventbus.api.IEventBus;
 public final class ClientSetup {
     private ClientSetup() {}
 
-    public static void init(IEventBus modBus) {
+    public static void init(BusGroup modBus) {
         ClientEvents.init();
-        modBus.addListener(ClientSetup::onRegisterRenderers);
-        modBus.addListener(ClientSetup::onRegisterKeys);
-        modBus.addListener(ClientSetup::onRegisterReloadListeners);
-        MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut evt) -> {
+        EntityRenderersEvent.RegisterRenderers.getBus(modBus).addListener(ClientSetup::onRegisterRenderers);
+        RegisterKeyMappingsEvent.getBus(modBus).addListener(ClientSetup::onRegisterKeys);
+        RegisterClientReloadListenersEvent.getBus(modBus).addListener(ClientSetup::onRegisterReloadListeners);
+        ClientPlayerNetworkEvent.LoggingOut.BUS.addListener(evt -> {
             ClientGestures.resetSync();
             ClientRenderPacketSink.clear();
             AutoRenderProfiles.saveCache();
         });
-        MinecraftForge.EVENT_BUS.addListener((GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
+        GameShuttingDownEvent.BUS.addListener(evt -> AutoRenderProfiles.saveCache());
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {

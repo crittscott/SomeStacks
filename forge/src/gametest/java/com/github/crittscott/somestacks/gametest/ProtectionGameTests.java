@@ -18,15 +18,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.common.util.Result;
+import net.minecraftforge.eventbus.api.listener.EventListener;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestNamespace;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -102,13 +103,9 @@ public final class ProtectionGameTests {
         base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1), false);
 
         BlockPos top = helper.absolutePos(topRelative);
-        Consumer<BlockEvent.BreakEvent> denyTop = event -> {
-            if (event.getPos().equals(top)) {
-                event.setCanceled(true);
-            }
-        };
+        Predicate<BlockEvent.BreakEvent> denyTop = event -> event.getPos().equals(top);
 
-        MinecraftForge.EVENT_BUS.addListener(denyTop);
+        var denyTopListener = BlockEvent.BreakEvent.BUS.addListener(denyTop);
         try {
             StoragePile pile = base.pile();
             check(pile != null, "Pile did not resolve");
@@ -116,7 +113,7 @@ public final class ProtectionGameTests {
             helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
             checkEquals(2, pile.height(), "The pile dropped a block it never removed");
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyTop);
+            BlockEvent.BreakEvent.BUS.removeListener(denyTopListener);
         }
 
         // With nothing refusing it, the same settle takes the block down.
@@ -144,11 +141,11 @@ public final class ProtectionGameTests {
             }
         };
 
-        MinecraftForge.EVENT_BUS.addListener(captureActor);
+        var captureListener = BlockEvent.BreakEvent.BUS.addListener(captureActor);
         try {
             check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(captureActor);
+            BlockEvent.BreakEvent.BUS.removeListener(captureListener);
         }
 
         check(observedActor.get() == player, "Cleanup break event did not carry the player");
@@ -173,7 +170,7 @@ public final class ProtectionGameTests {
             }
         };
 
-        MinecraftForge.EVENT_BUS.addListener(captureActor);
+        var captureListener = BlockEvent.BreakEvent.BUS.addListener(captureActor);
         try {
             check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
                     "Player extraction returned nothing");
@@ -181,7 +178,7 @@ public final class ProtectionGameTests {
             check(pile != null, "Pile did not resolve before settlement");
             pile.settle();
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(captureActor);
+            BlockEvent.BreakEvent.BUS.removeListener(captureListener);
         }
 
         check(observedActor.get() == player, "Deferred cleanup did not retain the player");
@@ -209,18 +206,19 @@ public final class ProtectionGameTests {
         BlockPos target = helper.absolutePos(ORIGIN);
         java.util.concurrent.atomic.AtomicInteger clicks = new java.util.concurrent.atomic.AtomicInteger();
         java.util.concurrent.atomic.AtomicInteger denial = new java.util.concurrent.atomic.AtomicInteger();
-        Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
-            if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return;
+        Predicate<PlayerInteractEvent.RightClickBlock> observe = event -> {
+            if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return false;
             clicks.incrementAndGet();
             check(WorldEdits.isConsultingAdjacent(), "Destination consultation lacks its gesture guard");
             switch (denial.get()) {
-                case 1 -> event.setCanceled(true);
-                case 2 -> event.setUseBlock(Event.Result.DENY);
-                case 3 -> event.setUseItem(Event.Result.DENY);
+                case 1 -> { return true; }
+                case 2 -> event.setUseBlock(Result.DENY);
+                case 3 -> event.setUseItem(Result.DENY);
                 default -> { }
             }
+            return false;
         };
-        MinecraftForge.EVENT_BUS.addListener(observe);
+        var observeListener = PlayerInteractEvent.RightClickBlock.BUS.addListener(observe);
         try {
             check(WorldEdits.mayUseAdjacent(player, target), "Allowed destination was refused");
             checkEquals(1, clicks.get(), "Destination consultation count");
@@ -234,7 +232,7 @@ public final class ProtectionGameTests {
             }
             check(!WorldEdits.isConsultingAdjacent(), "Destination consultation guard leaked");
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(observe);
+            PlayerInteractEvent.RightClickBlock.BUS.removeListener(observeListener);
         }
         helper.succeed();
     }
@@ -250,13 +248,12 @@ public final class ProtectionGameTests {
     @GameTest(structure = GameTestSupport.TEMPLATE, maxTicks = 30)
     public static void placementPublicationAnswersToVeto(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
-        Consumer<BlockEvent.EntityPlaceEvent> deny = event -> {
-            if (event.getPos().equals(pos)) event.setCanceled(true);
-        };
+        Predicate<BlockEvent.EntityPlaceEvent> deny = event -> event.getPos().equals(pos);
+        AtomicReference<EventListener> listener = new AtomicReference<>();
         ProtectionChecks.placementPublicationAnswersToVeto(helper,
                 GameTestSupport.playerFactory(helper),
-                () -> MinecraftForge.EVENT_BUS.addListener(deny),
-                () -> MinecraftForge.EVENT_BUS.unregister(deny));
+                () -> listener.set(BlockEvent.EntityPlaceEvent.BUS.addListener(deny)),
+                () -> BlockEvent.EntityPlaceEvent.BUS.removeListener(listener.get()));
     }
 
     /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
@@ -279,27 +276,24 @@ public final class ProtectionGameTests {
             if (event.getLevel() == level && event.getPos().equals(pos)) {
                 observed.accept(event.getPlayer());
                 if (!allowed.test(event.getPlayer())) {
-                    event.setCanceled(true);
+                    event.setResult(Result.DENY);
                 }
             }
         };
-        MinecraftForge.EVENT_BUS.addListener(listener);
-        return () -> MinecraftForge.EVENT_BUS.unregister(listener);
+        var registration = BlockEvent.BreakEvent.BUS.addListener(listener);
+        return () -> BlockEvent.BreakEvent.BUS.removeListener(registration);
     }
 
     /** See {@link ProtectionChecks#vetoedPlacementRestoresBlockEntity}. */
     @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
-        Consumer<BlockEvent.EntityPlaceEvent> listener = event -> {
-            if (event.getPos().equals(pos)) {
-                event.setCanceled(true);
-            }
-        };
+        Predicate<BlockEvent.EntityPlaceEvent> listener = event -> event.getPos().equals(pos);
+        AtomicReference<EventListener> registration = new AtomicReference<>();
         ProtectionChecks.vetoedPlacementRestoresBlockEntity(helper,
                 GameTestSupport.playerFactory(helper),
-                () -> MinecraftForge.EVENT_BUS.addListener(listener),
-                () -> MinecraftForge.EVENT_BUS.unregister(listener));
+                () -> registration.set(BlockEvent.EntityPlaceEvent.BUS.addListener(listener)),
+                () -> BlockEvent.EntityPlaceEvent.BUS.removeListener(registration.get()));
     }
 
     // Growth under protection

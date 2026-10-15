@@ -346,6 +346,10 @@ public final class SynchronizationChecks {
             checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Chunk initialization item");
             be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement));
             checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Later packet item");
+            be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid), registries);
+            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Forge chunk initialization item");
+            be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement), registries);
+            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Forge later packet item");
         }
         helper.succeed();
     }
@@ -392,6 +396,10 @@ public final class SynchronizationChecks {
         checkEquals(before, be.getUpdateTag(registries), "Rejected chunk update changed render state");
         be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         checkEquals(before, be.getUpdateTag(registries), "Rejected block update changed render state");
+        be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag), registries);
+        checkEquals(before, be.getUpdateTag(registries), "Rejected Forge chunk update changed render state");
+        be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag), registries);
+        checkEquals(before, be.getUpdateTag(registries), "Rejected Forge block update changed render state");
         checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
         check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
         check(!be.getItems().serializeNBT(helper.getLevel().registryAccess()).contains("SetAside"),

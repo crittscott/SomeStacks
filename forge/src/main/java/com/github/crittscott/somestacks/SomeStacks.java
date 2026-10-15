@@ -6,14 +6,14 @@ import com.github.crittscott.somestacks.network.ModNetworking;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -32,24 +32,24 @@ public class SomeStacks {
     private final ForgePlatformServices platform = new ForgePlatformServices();
 
     public SomeStacks(FMLJavaModLoadingContext context) {
-        IEventBus modBus = context.getModEventBus();
+        BusGroup modBus = context.getModBusGroup();
         PlatformServices.install(platform);
 
         ForgeServerConfig config = ForgeServerConfig.INSTANCE;
         context.registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, config.spec);
         ServerConfig.install(config);
-        modBus.addListener(config::onLoading);
-        modBus.addListener(config::onReloading);
+        ModConfigEvent.Loading.getBus(modBus).addListener(config::onLoading);
+        ModConfigEvent.Reloading.getBus(modBus).addListener(config::onReloading);
 
         ModRegistry.init(modBus);
         ModNetworking.init();
-        MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
-        MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
-        MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogout);
-        MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerTick);
-        MinecraftForge.EVENT_BUS.addListener(this::onLevelUnload);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
+        ServerAboutToStartEvent.BUS.addListener(this::onServerAboutToStart);
+        PlayerEvent.PlayerLoggedInEvent.BUS.addListener(this::onPlayerLogin);
+        PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(this::onPlayerLogout);
+        RegisterCommandsEvent.BUS.addListener(this::onRegisterCommands);
+        TickEvent.ServerTickEvent.Post.BUS.addListener(this::onServerTick);
+        LevelEvent.Unload.BUS.addListener(this::onLevelUnload);
+        ServerStoppedEvent.BUS.addListener(this::onServerStopped);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSetup.init(modBus));
 
         SomeStacksCommon.LOGGER.info(
@@ -84,9 +84,7 @@ public class SomeStacks {
         SomeStacksServer.registerCommands(event.getDispatcher(), event.getBuildContext());
     }
 
-    private void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            SomeStacksServer.onServerTickEnd();
-        }
+    private void onServerTick(TickEvent.ServerTickEvent.Post event) {
+        SomeStacksServer.onServerTickEnd();
     }
 }

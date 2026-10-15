@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -80,7 +80,7 @@ public final class ModRegistry {
         return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
     }
 
-    public static void init(IEventBus modBus) {
+    public static void init(BusGroup modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
         SOUNDS.register(modBus);

@@ -48,8 +48,7 @@ public final class InteractionGameTests {
                 helper, GameTestSupport.playerFactory(helper), (player, hit) -> {
                     var event = new PlayerInteractEvent.RightClickBlock(
                             player, InteractionChecks.HAND, hit.getBlockPos(), hit);
-                    StackInteractionEvents.onRightClickBlock(event);
-                    return event.isCanceled();
+                    return StackInteractionEvents.onRightClickBlock(event);
                 });
     }
 

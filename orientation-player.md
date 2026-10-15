@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Some Stacks turns held items into visible storage: three blocks without block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; emptying it normally removes it.
 
-The build targets Minecraft 1.21.6; source changes for persistence, server APIs, and rendering are implemented; later port stages, compilation, and runtime verification are pending. Client/server loader builds must match. Fabric requires Fabric API; Common Protection API is optional.
+The build targets Minecraft 1.21.6; source changes and review through stage 4 (persistence, server APIs, rendering, and loader integration) are implemented; pack metadata, later documentation, compilation, and runtime verification are pending. Client/server loader builds must match. Fabric requires Fabric API; Common Protection API is optional.
 
 ## The three stack types
 

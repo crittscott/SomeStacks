@@ -68,12 +68,17 @@ public final class NeoForgeEditAuthority implements EditAuthority {
             if (!placed || snapshots.isEmpty()
                     || EventHooks.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
                 level.restoringBlockSnapshots = true;
+                level.captureBlockSnapshots = true;
+                int rollbackStart = level.capturedBlockSnapshots.size();
                 try {
                     for (int i = snapshots.size() - 1; i >= 0; i--) {
                         BlockSnapshot snapshot = snapshots.get(i);
                         snapshot.restore(Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
                     }
                 } finally {
+                    level.captureBlockSnapshots = false;
+                    level.capturedBlockSnapshots.subList(
+                            rollbackStart, level.capturedBlockSnapshots.size()).clear();
                     level.restoringBlockSnapshots = false;
                 }
                 return false;

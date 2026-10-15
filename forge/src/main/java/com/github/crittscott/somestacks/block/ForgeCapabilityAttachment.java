@@ -3,14 +3,13 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 
@@ -33,13 +32,13 @@ public final class ForgeCapabilityAttachment {
     }
 
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent.BlockEntities event) {
         if (event.getObject() instanceof StackBlockEntity stack) {
             attach(event, () -> new RunItemHandler(stack));
         }
     }
 
-    private static void attach(AttachCapabilitiesEvent<BlockEntity> event, NonNullSupplier<IItemHandler> handler) {
+    private static void attach(AttachCapabilitiesEvent.BlockEntities event, NonNullSupplier<IItemHandler> handler) {
         LazyOptional<IItemHandler> lazy = LazyOptional.of(handler);
 
         event.addCapability(ITEM_HANDLER_ID, new ICapabilityProvider() {

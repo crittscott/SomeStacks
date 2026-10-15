@@ -8,12 +8,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.util.Result;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** Forge development-client registration for {@link ClientCallbackChecks#run}. */
-@Mod.EventBusSubscriber(modid = SomeStacksGameTests.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = SomeStacksGameTests.MOD_ID, value = Dist.CLIENT,
+        bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ClientCallbackGameTests {
     private ClientCallbackGameTests() {}
 
@@ -24,10 +25,10 @@ public final class ClientCallbackGameTests {
                 ClientCallbackChecks.run(KeyMappings.STACK_MODE_KEY.isDown(), (hand, hit) -> {
                     var click = new PlayerInteractEvent.RightClickBlock(
                             Minecraft.getInstance().player, hand, hit.getBlockPos(), hit);
-                    ClientEvents.onRightClick(click);
-                    return new ClientCallbackChecks.Result(click.isCanceled()
+                    boolean canceled = ClientEvents.onRightClick(click);
+                    return new ClientCallbackChecks.Result(canceled
                             && click.getCancellationResult() == InteractionResult.SUCCESS,
-                            click.getUseBlock() == Event.Result.DENY, click.getUseItem() == Event.Result.DENY);
+                            click.getUseBlock() == Result.DENY, click.getUseItem() == Result.DENY);
                 })));
     }
 }

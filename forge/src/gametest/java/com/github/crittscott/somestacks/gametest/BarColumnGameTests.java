@@ -8,7 +8,7 @@ import net.minecraftforge.gametest.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Result;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.gametest.GameTestNamespace;
 import net.minecraftforge.items.IItemHandler;
@@ -203,15 +203,15 @@ public final class BarColumnGameTests {
 
         Consumer<BlockEvent.BreakEvent> denyLower = event -> {
             if (event.getPos().equals(lowerPos)) {
-                event.setCanceled(true);
+                event.setResult(Result.DENY);
             }
         };
 
-        MinecraftForge.EVENT_BUS.addListener(denyLower);
+        var denyListener = BlockEvent.BreakEvent.BUS.addListener(denyLower);
         try {
             lower.extractAt(0);
         } finally {
-            MinecraftForge.EVENT_BUS.unregister(denyLower);
+            BlockEvent.BreakEvent.BUS.removeListener(denyListener);
         }
 
         helper.assertBlockPresent(ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN);

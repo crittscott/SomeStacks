@@ -311,7 +311,9 @@ public final class ProtectionChecks {
     /**
      * To reproduce in-game: deny stack placement over a modded replaceable container containing
      * items. The refused placement restores the container's contents. This stages the rollback
-     * directly with a chest so no test-only replaceable block registration is needed.
+     * directly with a chest so no test-only replaceable block registration is needed. A second
+     * rollback over an empty permanent Storage Stack must restore permanence without scheduling
+     * a new placement/settlement tick.
      */
     public static void vetoedPlacementRestoresBlockEntity(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
@@ -333,7 +335,28 @@ public final class ProtectionChecks {
         ChestBlockEntity restored = (ChestBlockEntity) level.getBlockEntity(pos);
         checkEquals(Items.DIAMOND, restored.getItem(0).getItem(), "Restored container item");
         checkEquals(3, restored.getItem(0).getCount(), "Restored container count");
-        helper.succeed();
+
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.pile().setPermanent(true);
+        helper.runAfterDelay(3, () -> {
+            Block storageBlock = CommonRegistry.storageStackBlock();
+            check(!level.getBlockTicks().hasScheduledTick(pos, storageBlock),
+                    "Initial permanent stack settlement is still pending");
+            installVeto.run();
+            try {
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
+                        CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN),
+                        "Vetoed stack replacement succeeded");
+            } finally {
+                removeVeto.run();
+            }
+            helper.assertBlockPresent(storageBlock, ORIGIN);
+            check(((StorageStackBE) level.getBlockEntity(pos)).isPermanent(),
+                    "Rollback lost stack permanence");
+            check(!level.getBlockTicks().hasScheduledTick(pos, storageBlock),
+                    "Rollback ran the restored stack's placement hook");
+            helper.succeed();
+        });
     }
 
     /**

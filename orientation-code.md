@@ -4,17 +4,17 @@
 
 # Some Stacks — code orientation
 
-Behavior: `orientation-player.md`; build: `build-env.md`.
+See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 21; Minecraft 1.21.6 target; stages 1�3 source changes implemented; later stages and verification pending; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.6; stages 1–4 implemented/reviewed; packs, final docs, and verification pending; package `com.github.crittscott.somestacks`, id `somestacks`.
 
-`common` folds into each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Loaders own gestures and automation adapters. `CommonRegistry` provides identifiers and lookups.
+`common` folds into each loader JAR. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own gesture/automation adapters. `CommonRegistry` supplies identifiers/lookups.
 
-Three blocks, no block items, menus, or recipes:
+Three blocks; no block items, menus, or recipes:
 
-`ShapedStackBlock` gives Singles/Bar content-shaped targeting, outlines and collision, full-block interaction, and empty visual shapes. Targeting passes through gaps; empty stacks have no outline.
+`ShapedStackBlock`: Singles/Bar use content-shaped targeting/outlines/collision, full-block interaction, and empty visual shapes. Rays pass through gaps; empty stacks have no outline.
 
 | Block | Block entity | Local storage |
 | --- | --- | --- |
@@ -51,7 +51,7 @@ Three blocks, no block items, menus, or recipes:
 | Automation | generic whole-run `IItemHandler` | generic whole-run `IItemHandler` | generic Transfer API `Storage<ItemVariant>` |
 | Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla and break callbacks; optional Common Protection API queries |
 
-Loader builds must match.
+Forge uses EventBus 7 typed buses, mod `BusGroup`, boolean cancellation, `Result` denial, and `AttachCapabilitiesEvent.BlockEntities`; development runs/compilation enable event validation.
 
 ## Runtime and movement model
 
@@ -95,11 +95,11 @@ Extension points are the `somestacks:ingots` data-pack tag; registered `somestac
 
 Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Resources target pack format 55; galleries bypass protection.
 
-Automatic 2-D selection uses the measured thinnest/longest axis ratio for projectable geometry. Measurement cache format: 3.
+Automatic 2-D selection: measured thinnest/longest axis ratio. Cache format: 3.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks live in `common/src/gametest`; wrappers are loader-local. Fabric uses its annotation/entrypoints, Forge its annotations, and NeoForge deferred functions plus test-instance JSON. Compilation/discovery pending. For `/ssclienttest`, aim at a stack and release Shift/modifier.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints, Forge annotations, or NeoForge deferred functions/test-instance JSON. Compilation/discovery pending. For `/ssclienttest`, aim at a stack; release Shift/modifier.
 
 `-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 
