@@ -6,9 +6,9 @@
 
 Current behavior; see `orientation-code.md` for structure.
 
-Some Stacks turns held items into visible storage: three blocks without block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; emptying it normally removes it.
+Three visible storage blocks; no block items, recipes, creative-tab entries, or screens. Depositing creates a stack; emptying it normally removes it.
 
-The build targets Minecraft 1.21.6; source changes and review through stage 4 (persistence, server APIs, rendering, and loader integration) are implemented; pack metadata, later documentation, compilation, and runtime verification are pending. Client/server loader builds must match. Fabric requires Fabric API; Common Protection API is optional.
+Minecraft 1.21.6; stages 1–6 implemented; compilation/runtime checks pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
@@ -18,7 +18,7 @@ The build targets Minecraft 1.21.6; source changes and review through stage 4 (p
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
 | **Bar Stack** | 64 items | Data-pack-defined ingots and bricks | Eight alternating layers of bars |
 
-A vertical same-type run shares one inventory. Default maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
+A vertical same-type run shares one inventory. Default height limit: 8 blocks (216 Storage slots, 512 Singles/Bar positions).
 
 ## Controls
 
@@ -164,7 +164,7 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 ## Extension points
 
 - Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
-- Resource pack: replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Resource pack (format 63; data packs use 80): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation

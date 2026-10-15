@@ -120,7 +120,13 @@ Completion criteria: each loader compiles and launches independently; ordinary a
 
 ## Stage 5: Pack metadata, resources, and GameTests
 
-Status: pending. Pack declarations and several test API calls still target the old baseline.
+Status: source/resource implementation and review complete; pack loading, GameTest compilation, discovery, and execution remain pending user-run verification. No Gradle task, build, GameTest, or game launch was run for this stage.
+
+Updated the common resource pack to format 63 and Forge/NeoForge test data packs to format 80. Fabric packages test data through its development mod and has no separate test pack declaration; its metadata inherits the target through the required production mod. Strict parsing checked all 373 source JSON/metadata files, with duplicate-key and non-finite-number rejection, including both expanded Fabric optional-protection entrypoint variants. No JSON content conversion was needed. These checks establish syntax, not successful game loading.
+
+Reviewed the shared persistence/synchronization checks and scaffolding: stage 1 already replaced removed item-save/version calls and supplied `TagValueInput` to `loadWithComponents`/`loadCustomOnly`; public `saveWithoutMetadata(HolderLookup.Provider)` remains the save entry point. Existing checks retain malformed types, duplicate slots, invalid rotations, server-only fields, set-aside retention/retry, current and previous formats, and the handcrafted 1.21.5 component fixture. Stage 4 already adjusted loader update-hook and rollback coverage. No additional Java migration or behavior change was identified in this stage.
+
+Reviewed development source-set/run wiring, Forge annotations, Fabric entrypoint classes in both protection configurations, and NeoForge deferred functions/test instances. All 123 NeoForge instance definitions refer one-to-one to registered functions and retain the shared structure, default environment, and positive timeouts. Fabric test entrypoint source references resolve in both configurations. Existing denial, state-only, removal, automation, comparator, lighting, and callback checks remain registered; no binary fixture was inspected or unpacked. Test sources remain separate from ordinary production compilation. Actual discovery and execution are still required.
 
 - Change `common/src/main/resources/pack.mcmeta` from resource-pack format 55 to 63.
 - Change Forge and NeoForge GameTest `pack.mcmeta` files from data-pack format 71 to 80. Review Fabric's packaged test resources and loader metadata for any additional target declarations.
@@ -134,6 +140,12 @@ Status: pending. Pack declarations and several test API calls still target the o
 Completion criteria: packs load without stale format declarations or JSON errors; all loader test source sets compile; tests are discovered and executed on each loader, including both Fabric protection configurations.
 
 ## Stage 6: Documentation and verification record
+
+Status: documentation implementation complete; verification record updated from available evidence. No new user-run compilation or runtime results were supplied during stages 5–6.
+
+Updated both orientation snapshots, build environment description, unreleased changelog, README/CurseForge branch status, server administration, and pack-author guidance for the 1.21.6 target and pack formats. Fixed orientation headers are preserved and content remains within the size limits. No active Gradle inputs changed in stages 5–6; their `build-env/` copies need no update. Generated Javadoc was not regenerated because that invokes Gradle.
+
+Verification record: Gradle sync was reported successful before stage 4’s Forge validator/run changes. Source/resource review and strict JSON/reference checks are complete. Production compilation, separate GameTest compilation for all loaders, GameTest execution (including both Fabric protection configurations), copied-world migration/save/reload, client/dedicated-server launches, networking, protection rollback, rendering, and resource reload remain pending. No failures from those unexecuted checkpoints can yet be reported; stages 1–5 retain their runtime completion criteria.
 
 - Update `orientation-code.md` and `orientation-player.md` as implementation changes alter their descriptions, preserving their fixed headers and size limits. Their current resource-format and pending-port statements must reflect the completed work.
 - Update `build-env.md` for any build or pack integration details changed during the port. Synchronize any changed active Gradle input with its matching `build-env/` copy.

@@ -1,5 +1,7 @@
 # Server administration
 
+This branch targets Minecraft 1.21.6; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test copies of the preceding released 1.21.1 world and any 1.21.5 development world before using this port. Custom data packs use format **80**; server resource packs use **63** (see [Pack authors](pack-authors.md)).
+
 ## The config file
 
 World policy is stored per world, so it travels with the world:

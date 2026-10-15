@@ -1,16 +1,19 @@
 # Changelog
 
-## Unreleased — Minecraft 1.21.5 port
+## Unreleased — Minecraft 1.21.6 port
 
-1.21.5 for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1). Compilation and runtime verification are pending.
+1.21.6 target for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1). Source implementation and review are complete; production/GameTest compilation, discovery, saved-world migration, and client/server runtime verification remain pending. Reported Gradle sync success does not establish these results.
 
 ### Platform
 
-- Forge **55.x** (accepts `[55.1.17,56)`), NeoForge **21.5.x** (accepts `[21.5.97,21.6)`).
-- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.128.2+1.21.5**. Common Protection API **1.0.0** is optional.
-- Mappings updated to Mojang official + Parchment **2025.06.15-1.21.5**.
+- Forge **56.x** (dev pin `56.0.9`, accepts `[56.0.9,57)`), NeoForge **21.6.x** (dev pin `21.6.20-beta`, accepts `[21.6.20-beta,21.7)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.128.2+1.21.6**. Common Protection API **1.0.0** is optional.
+- Mappings updated to Mojang official + Parchment **2025.06.29-1.21.6**.
 - Build toolchain: Architectury Loom **1.17.493**; Gradle **9.5.1** and Shadow **9.4.3** unchanged.
-- Resource packs target Minecraft 1.21.5 format **55**.
+- Resource packs target Minecraft 1.21.6 format **63**; GameTest data packs use format **80**. Repository JSON passes strict parsing, including both Fabric protection configurations.
+- Persistence uses value input/output and registry-aware item codecs; disk migration and staged client validation retain their existing entry points.
+- Forge integration uses EventBus 7 typed buses, cancellation results, and development event validation. NeoForge denied placements restore captured state without scheduling placement work.
+- Renderers inherit ordinary off-screen culling; existing item capture, render modes, and cache format remain in place pending visual checks.
 - Client and server must run the same loader build of the mod. Fabric checks this both ways when a player connects.
 
 ### Breaking — worlds, configs, and packs

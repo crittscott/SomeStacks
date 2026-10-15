@@ -2,6 +2,8 @@
 
 Some Stacks is extensible from data packs and resource packs. Nothing here requires a Java addon.
 
+For the Minecraft 1.21.6 target, set `pack.mcmeta` to resource-pack format **63** or data-pack format **80**, as appropriate. JSON must use strict syntax: no comments, trailing commas, or unquoted keys. The mod’s shipped JSON has passed syntax checks; in-game pack loading and rendering remain unverified.
+
 ## Quick map
 
 | What | Where | Side |
