@@ -14,18 +14,11 @@ import net.neoforged.neoforge.items.IItemHandler;
 import java.util.function.Function;
 
 /**
- * NeoForge-native scaffolding for the GameTests: the unprefixed template name, {@code IItemHandler}
+ * NeoForge-native scaffolding for the GameTests: {@code IItemHandler}
  * capability access through {@code Capabilities.ItemHandler.BLOCK}, and the level's fake player.
  * Everything loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
-    /**
-     * Bare structure path. NeoForge prepends the {@code @GameTestHolder} namespace, and every holder
-     * is {@code @PrefixGameTestTemplate(false)}, so this resolves to
-     * {@code data/somestacks/structure/somestacks_empty.nbt} with no class-name segment.
-     */
-    public static final String TEMPLATE = "somestacks_empty";
-
     private GameTestSupport() {}
 
     public static IItemHandler capability(BlockEntity blockEntity) {

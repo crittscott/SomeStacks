@@ -1,10 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.minecraft.gametest.framework.GameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,45 +25,45 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
  * between player extraction, which drops what it unsupports, and automated extraction, which
  * backfills from the top instead.
  */
-public final class BarColumnGameTests implements FabricGameTest {
+public final class BarColumnGameTests {
     /** See {@link BarColumnChecks#validityAndBottomGroundingAreEnforced}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
     /** See {@link BarColumnChecks#bricksAreBarItemsButBrickBlocksAreNot}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void bricksAreBarItemsButBrickBlocksAreNot(GameTestHelper helper) {
         BarColumnChecks.bricksAreBarItemsButBrickBlocksAreNot(helper);
     }
 
     /** See {@link BarColumnChecks#upperBarRequiresOverlappingSupport}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarColumnChecks.upperBarRequiresOverlappingSupport(helper);
     }
 
     /** See {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
     }
 
     /** See {@link BarColumnChecks#supportedNeighborSurvivesPlayerExtraction}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
     }
 
     /** See {@link BarColumnChecks#differentlyOrientedSeamUsesFootprintOverlap}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarColumnChecks.differentlyOrientedSeamUsesFootprintOverlap(helper);
     }
 
     /** See {@link BarColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedBar}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void depositTraceStopsAtLastEmptyBeforeOccupiedBar(GameTestHelper helper) {
         BarColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedBar(helper);
     }
@@ -73,7 +72,7 @@ public final class BarColumnGameTests implements FabricGameTest {
      * To reproduce in-game: fill a supported Bar column, let item automation extract a lower
      * position, and verify the top bar fills the hole without dropping an item.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void automationBackfillsWithoutDropping(GameTestHelper helper) {
         AutomationChecks.barAutomationBackfillsWithoutDropping(helper);
     }
@@ -82,7 +81,7 @@ public final class BarColumnGameTests implements FabricGameTest {
      * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
      * positions; unsupported positions refuse insertion while a supported empty position accepts it.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
         AutomationChecks.barInsertionAnswersForThePositionItIsGiven(helper);
     }
@@ -97,7 +96,7 @@ public final class BarColumnGameTests implements FabricGameTest {
      * longer accepted, then automate extraction below it. Backfill retains or drops that legacy
      * bar without deleting or changing it.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
         AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(helper);
     }
@@ -106,7 +105,7 @@ public final class BarColumnGameTests implements FabricGameTest {
      * No in-game reproduction applies: this verifies the Fabric transaction simulation contract; a
      * simulated Bar extraction reports the result without changing the stored bar.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageSimulationDoesNotMutateExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -123,43 +122,43 @@ public final class BarColumnGameTests implements FabricGameTest {
     }
 
     /** See {@link BarColumnChecks#breakingLowerBlockCollapsesDependentUpperBlock}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarColumnChecks.breakingLowerBlockCollapsesDependentUpperBlock(helper);
     }
 
     /** See {@link BarColumnChecks#breakingFullColumnConsolidatesDrops}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarColumnChecks.breakingFullColumnConsolidatesDrops(helper);
     }
 
     /** See {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
     }
 
     /** See {@link BarColumnChecks#collapseDoesNotMergeDifferentComponents}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
         BarColumnChecks.collapseDoesNotMergeDifferentComponents(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorFollowsAColumnLosingABlock}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
     }

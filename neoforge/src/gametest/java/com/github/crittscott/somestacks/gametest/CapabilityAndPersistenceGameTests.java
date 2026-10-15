@@ -1,18 +1,14 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.SomeStacksNeoForge;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.RunEdit;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -28,8 +24,6 @@ import static com.github.crittscott.somestacks.gametest.GameTestSupport.count;
  * a run advertising its reachable headroom, and each type's update tag round-tripping the contents
  * and presentation state it is responsible for.
  */
-@GameTestHolder(SomeStacksNeoForge.MODID)
-@PrefixGameTestTemplate(false)
 public final class CapabilityAndPersistenceGameTests {
     private CapabilityAndPersistenceGameTests() {}
 
@@ -37,7 +31,6 @@ public final class CapabilityAndPersistenceGameTests {
      * To reproduce in-game: connect sided item automation to each face of every stack type and
      * verify every face exposes the same inventory.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void itemCapabilityIsAvailableFromEverySide(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
@@ -64,7 +57,6 @@ public final class CapabilityAndPersistenceGameTests {
      * To reproduce in-game: connect item automation to a one-block stack below its height limit and
      * verify it can address one additional block of empty positions for growth.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singleBlockCapabilitiesAdvertiseConfiguredHeadroom(
             GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -87,64 +79,54 @@ public final class CapabilityAndPersistenceGameTests {
     }
 
     /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(
             GameTestHelper helper) {
         CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void singlesDiskSaveRoundTripsItemsAndBothRotations(
             GameTestHelper helper) {
         CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#barDiskSaveRoundTripsItems}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(
                 helper, GameTestSupport.playerFactory(helper));
     }
 
     /** No in-game reproduction applies: a reentrant NeoForge capability edit is refused. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void reentrantStructuralEditIsRefused(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         IItemHandler capability = GameTestSupport.capability(singles);
@@ -168,7 +150,6 @@ public final class CapabilityAndPersistenceGameTests {
      * No in-game reproduction applies: this verifies that simulated loader capability insertion and
      * extraction leave Storage, Singles, and Bar stacks unchanged.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void capabilitySimulationDoesNotMutateAnyStack(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         IItemHandler capability = GameTestSupport.capability(singles);
@@ -186,13 +167,11 @@ public final class CapabilityAndPersistenceGameTests {
         helper.succeed();
     }
     /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
         SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(helper);
     }
 
     /** See {@link SynchronizationChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }

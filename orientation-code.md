@@ -8,7 +8,7 @@ See `orientation-player.md` for behavior and `build-env.md` for build details.
 
 ## Project shape
 
-Java 21; Minecraft 1.21.5 port in progress; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.5, unverified port; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Loaders own gestures and automation adapters. `CommonRegistry` provides identifiers and lookups.
 
@@ -93,11 +93,11 @@ The real event covers the clicked block. Forge/NeoForge consult a destination ri
 
 Extension points are the `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute render profiles through ordinary server resource packs.
 
-Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Appearance is client resource data; galleries bypass protection.
+Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; 2-D projection captures quads only and shares immutable results by item, components, and count within each block render pass; a throwing capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Resources target pack format 55; galleries bypass protection.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; native checks are loader-local. In `runClientGameTests`, aim at a stack, release Shift/modifier, and run `/ssclienttest` to check callbacks.
+`somestacks_gametest` is excluded from `build`. Shared checks live in `common/src/gametest`; wrappers are loader-local. Fabric uses its annotation/entrypoints, Forge its annotations, and NeoForge deferred functions plus test-instance JSON. Compilation/discovery pending. For `/ssclienttest`, aim at a stack and release Shift/modifier.
 
 Fabric compiles against Common Protection API. `-PwithCommonProtectionApi=true` adds it to development runs with provider-backed GameTests; default runs use absence-specific checks.
 

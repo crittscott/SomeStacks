@@ -28,6 +28,7 @@ loom {
         clientGameTests {
             client()
             name 'Client Game Tests'
+            property 'neoforge.enableGameTest', 'true'
             source sourceSets.gametest
         }
         gameTestServer {
@@ -35,7 +36,7 @@ loom {
             environment 'gametestserver'
             forgeTemplate 'gameTestServer'
             name 'Game Test Server'
-            property 'neoforge.enabledGameTestNamespaces', mod_id
+            property 'neoforge.enableGameTest', 'true'
             source sourceSets.gametest
         }
     }

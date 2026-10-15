@@ -1,15 +1,16 @@
 # Changelog
 
-## Unreleased — Minecraft 1.21.4 port
+## Unreleased — Minecraft 1.21.5 port
 
-1.21.4 for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1).
+1.21.5 for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1). Compilation and runtime verification are pending.
 
 ### Platform
 
-- Forge **54.x** (accepts `[54.1.14,55)`), NeoForge **21.4.x** (accepts `[21.4.158,22)`).
-- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.119.4+1.21.4**. Common Protection API **1.0.0** is optional.
-- Mappings updated to Mojang official + Parchment **2025.03.23-1.21.4**.
+- Forge **55.x** (accepts `[55.1.17,56)`), NeoForge **21.5.x** (accepts `[21.5.97,21.6)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.128.2+1.21.5**. Common Protection API **1.0.0** is optional.
+- Mappings updated to Mojang official + Parchment **2025.06.15-1.21.5**.
 - Build toolchain: Architectury Loom **1.17.493**; Gradle **9.5.1** and Shadow **9.4.3** unchanged.
+- Resource packs target Minecraft 1.21.5 format **55**.
 - Client and server must run the same loader build of the mod. Fabric checks this both ways when a player connects.
 
 ### Breaking — worlds, configs, and packs

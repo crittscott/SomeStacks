@@ -19,8 +19,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -230,7 +230,7 @@ public final class ConfigurationChecks {
             checkEquals(ServerConfig.DEFAULT_DISABLE_ITEMS, ServerConfig.DISABLE_ITEMS.get(),
                     "Missing list did not fall back to its default");
         } catch (IOException e) {
-            throw new GameTestAssertException("Could not prepare server-config fixture: " + e);
+            throw helper.assertionException(Component.literal("Could not prepare server-config fixture: " + e));
         } finally {
             ServerConfig.install(original);
             ServerConfig.reload();
@@ -282,7 +282,7 @@ public final class ConfigurationChecks {
             checkEquals(2, storage.itemRun().extract(0, 64, false).getCount(),
                     "Stored denied contents were not extractable");
         } catch (IOException e) {
-            throw new GameTestAssertException("Could not prepare policy fixture: " + e);
+            throw helper.assertionException(Component.literal("Could not prepare policy fixture: " + e));
         } finally {
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
@@ -379,7 +379,7 @@ public final class ConfigurationChecks {
                 ServerGestureState.clear(invalidPlayer.getUUID());
             }
         } catch (IOException e) {
-            throw new GameTestAssertException("Could not prepare limit fixture: " + e);
+            throw helper.assertionException(Component.literal("Could not prepare limit fixture: " + e));
         } finally {
             restoreConfig(original, fixture);
         }
@@ -434,7 +434,7 @@ public final class ConfigurationChecks {
                     player.createCommandSourceStack().withPermission(4), "ss gallery all"),
                     "Disabled gallery command ran");
         } catch (IOException e) {
-            throw new GameTestAssertException("Could not prepare command fixture: " + e);
+            throw helper.assertionException(Component.literal("Could not prepare command fixture: " + e));
         } finally {
             restoreConfig(original, fixture);
         }

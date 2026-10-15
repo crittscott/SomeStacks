@@ -13,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -106,7 +107,7 @@ public final class GameTestScaffold {
                 return item;
             }
         }
-        throw new GameTestAssertException("No item is currently valid for Bar Stack tests");
+        throw new GameTestAssertException(Component.literal("No item is currently valid for Bar Stack tests"), 0);
     }
 
     public static int count(SlotAccess handler, Item item) {
@@ -233,14 +234,14 @@ public final class GameTestScaffold {
 
     public static void check(boolean condition, String message) {
         if (!condition) {
-            throw new GameTestAssertException(message);
+            throw new GameTestAssertException(Component.literal(message), 0);
         }
     }
 
     public static void checkEquals(Object expected, Object actual, String message) {
         if (!Objects.equals(expected, actual)) {
             throw new GameTestAssertException(
-                    message + ": expected " + expected + ", found " + actual);
+                    Component.literal(message + ": expected " + expected + ", found " + actual), 0);
         }
     }
 }

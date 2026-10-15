@@ -9,12 +9,11 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,7 +38,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * The rules that keep a gesture from writing where it should not: build height, entity obstruction,
  * destination consultation, actor-preserving cleanup, and growth checks in simulation and commit.
  */
-public final class ProtectionGameTests implements FabricGameTest {
+public final class ProtectionGameTests {
     static final Map<TestTarget, PlacementProbe> PLACEMENT_PROBES =
             new ConcurrentHashMap<>();
     private static final Map<TestTarget, RemovalProbe> REMOVAL_PROBES =
@@ -108,7 +107,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
     }
@@ -117,7 +116,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * No in-game reproduction applies: this verifies that Fabric backs the shared SomeStacks
      * automation identity with its FakePlayer implementation.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void automationUsesFabricFakePlayer(GameTestHelper helper) {
         check(WorldEdits.automationActor(helper.getLevel()) instanceof FakePlayer,
                 "Fabric automation actor was not a Fabric API FakePlayer");
@@ -156,7 +155,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
      * extract the last Single. Player-attributed cleanup removes the empty block.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -181,7 +180,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
      * extract the last Storage item. Deferred cleanup retains the player and removes the block.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -212,7 +211,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * [SomeStacks], leave one item in the bottom block, and trigger settlement. The protected empty
      * top block remains; after allowing [SomeStacks], the next settlement removes it.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -270,7 +269,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * [SomeStacks] permission to remove the lower block, and extract its bottom support. The empty
      * lower block remains, while the unsupported upper block comes down.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
         BarStackBE lower = GameTestScaffold.placeBar(helper, ORIGIN);
         BarStackBE upper = GameTestScaffold.placeBar(helper, ORIGIN.above());
@@ -303,35 +302,35 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
 
     /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(GameTestHelper helper) {
         ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#checkedPlacementRejectsAnObstructingEntity}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
         ProtectionChecks.placementIntoWaterKeepsTheWater(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
         ProtectionChecks.adjacentDepositsFillGroundedCells(helper, FabricGameTestSupport.playerFactory(helper));
         helper.succeed();
@@ -342,7 +341,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * Protection API. To reproduce in-game: deny block use at a stack with a protection mod,
      * then modifier-click its support through an empty cell. No item moves.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void adjacentDepositsHonorBlockUseCallbacks(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
         try {
@@ -372,14 +371,14 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
 
     /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
                 helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
     /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
                 helper, FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
@@ -404,7 +403,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -434,7 +433,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
@@ -465,7 +464,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
@@ -499,7 +498,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
         StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -525,7 +524,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: stand in the growth space above a full Singles column and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -551,7 +550,7 @@ public final class ProtectionGameTests implements FabricGameTest {
      * To reproduce in-game: stand in the growth space above a full Bar column and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
@@ -573,7 +572,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         helper.succeed();
     }
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
         InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
                 FabricGameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);

@@ -4,13 +4,13 @@ import com.github.crittscott.somestacks.ModRegistry;
 import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
+import net.minecraftforge.gametest.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.gametest.GameTestHolder;
+import net.minecraftforge.gametest.GameTestNamespace;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Consumer;
@@ -32,48 +32,48 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlo
  * between player extraction, which drops what it unsupports, and automated extraction, which
  * backfills from the top instead.
  */
-@GameTestHolder(SomeStacks.MODID)
+@GameTestNamespace(SomeStacks.MODID)
 public final class BarColumnGameTests {
-    private BarColumnGameTests() {}
+    public BarColumnGameTests() {}
 
     /** See {@link BarColumnChecks#validityAndBottomGroundingAreEnforced}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void validityAndBottomGroundingAreEnforced(GameTestHelper helper) {
         BarColumnChecks.validityAndBottomGroundingAreEnforced(helper);
     }
 
     /** See {@link BarColumnChecks#bricksAreBarItemsButBrickBlocksAreNot}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void bricksAreBarItemsButBrickBlocksAreNot(GameTestHelper helper) {
         BarColumnChecks.bricksAreBarItemsButBrickBlocksAreNot(helper);
     }
 
     /** See {@link BarColumnChecks#upperBarRequiresOverlappingSupport}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void upperBarRequiresOverlappingSupport(GameTestHelper helper) {
         BarColumnChecks.upperBarRequiresOverlappingSupport(helper);
     }
 
     /** See {@link BarColumnChecks#playerExtractionDropsUnsupportedBars}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void playerExtractionDropsUnsupportedBars(GameTestHelper helper) {
         BarColumnChecks.playerExtractionDropsUnsupportedBars(helper);
     }
 
     /** See {@link BarColumnChecks#supportedNeighborSurvivesPlayerExtraction}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void supportedNeighborSurvivesPlayerExtraction(GameTestHelper helper) {
         BarColumnChecks.supportedNeighborSurvivesPlayerExtraction(helper);
     }
 
     /** See {@link BarColumnChecks#differentlyOrientedSeamUsesFootprintOverlap}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void differentlyOrientedSeamUsesFootprintOverlap(GameTestHelper helper) {
         BarColumnChecks.differentlyOrientedSeamUsesFootprintOverlap(helper);
     }
 
     /** See {@link BarColumnChecks#depositTraceStopsAtLastEmptyBeforeOccupiedBar}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedBar(GameTestHelper helper) {
         BarColumnChecks.depositTraceStopsAtLastEmptyBeforeOccupiedBar(helper);
     }
@@ -82,7 +82,7 @@ public final class BarColumnGameTests {
      * To reproduce in-game: fill a supported Bar column, let item automation extract a lower
      * position, and verify the top bar fills the hole without dropping an item.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void automationBackfillsWithoutDropping(GameTestHelper helper) {
         AutomationChecks.barAutomationBackfillsWithoutDropping(helper);
     }
@@ -91,7 +91,7 @@ public final class BarColumnGameTests {
      * To reproduce in-game: attach item automation to a Bar Stack and target individual advertised
      * positions; unsupported positions refuse insertion while a supported empty position accepts it.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void capabilityInsertionAnswersForThePositionItIsGiven(GameTestHelper helper) {
         AutomationChecks.barInsertionAnswersForThePositionItIsGiven(helper);
     }
@@ -106,7 +106,7 @@ public final class BarColumnGameTests {
      * longer accepted, then automate extraction below it. Backfill retains or drops that legacy
      * bar without deleting or changing it.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void backfillKeepsABarItWouldNoLongerAccept(GameTestHelper helper) {
         AutomationChecks.barBackfillKeepsAStoredItemNoLongerAccepted(helper);
     }
@@ -115,7 +115,7 @@ public final class BarColumnGameTests {
      * No in-game reproduction applies: this verifies the loader capability simulation contract; a
      * simulated Bar extraction reports the result without changing the stored bar.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void capabilitySimulationDoesNotMutateExtraction(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
@@ -132,43 +132,43 @@ public final class BarColumnGameTests {
     }
 
     /** See {@link BarColumnChecks#breakingLowerBlockCollapsesDependentUpperBlock}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper helper) {
         BarColumnChecks.breakingLowerBlockCollapsesDependentUpperBlock(helper);
     }
 
     /** See {@link BarColumnChecks#breakingFullColumnConsolidatesDrops}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarColumnChecks.breakingFullColumnConsolidatesDrops(helper);
     }
 
     /** See {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void playerCascadeConsolidatesAcrossBlocks(GameTestHelper helper) {
         BarColumnChecks.playerCascadeConsolidatesAcrossBlocks(helper);
     }
 
     /** See {@link BarColumnChecks#collapseDoesNotMergeDifferentComponents}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void collapseDoesNotMergeDifferentComponents(GameTestHelper helper) {
         BarColumnChecks.collapseDoesNotMergeDifferentComponents(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorReservesZeroForAnEmptyColumn}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void comparatorReservesZeroForAnEmptyColumn(GameTestHelper helper) {
         BarColumnChecks.comparatorReservesZeroForAnEmptyColumn(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorReadsTheWholeColumnFromEveryBlock}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void comparatorReadsTheWholeColumnFromEveryBlock(GameTestHelper helper) {
         BarColumnChecks.comparatorReadsTheWholeColumnFromEveryBlock(helper);
     }
 
     /** See {@link BarColumnChecks#comparatorFollowsAColumnLosingABlock}. */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
     }
@@ -182,7 +182,7 @@ public final class BarColumnGameTests {
      * permission to remove the lower block, and extract its bottom support. The empty lower block
      * remains, while the unsupported upper block comes down.
      */
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());

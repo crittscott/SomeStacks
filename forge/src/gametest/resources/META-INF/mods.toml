@@ -13,4 +13,4 @@ modId="somestacks"
 mandatory=true
 versionRange="[${mod_version}]"
 ordering="AFTER"
-side="SERVER"
+side="BOTH"

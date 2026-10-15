@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -12,7 +11,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -29,12 +28,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSi
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
 /** Fabric-native transaction behavior exercised through the complete Transfer API storage. */
-public final class FabricTransferGameTests implements FabricGameTest {
+public final class FabricTransferGameTests {
     /**
      * No in-game reproduction applies: Fabric automation stages an insertion without publishing
      * it to the block entity, then publishes the complete edit when the transaction commits.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void stagedInsertionIsInvisibleUntilCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
@@ -54,7 +53,7 @@ public final class FabricTransferGameTests implements FabricGameTest {
      * No in-game reproduction applies: this verifies whole-storage Fabric transactions, including
      * nested rollback, commit all mutations together or leave the run unchanged.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void wholeStorageInsertExtractAndNestedRollbackAreAtomic(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
@@ -99,7 +98,7 @@ public final class FabricTransferGameTests implements FabricGameTest {
      * To reproduce in-game: connect Fabric Transfer API automation between a chest and a SomeStacks
      * run; moving an item removes it from the chest and inserts it into the run.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageUtilMovesItemsFromChestIntoRun(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         SlottedStorage<ItemVariant> destination = FabricGameTestSupport.storage(blockEntity);
@@ -130,7 +129,7 @@ public final class FabricTransferGameTests implements FabricGameTest {
      * No in-game reproduction applies: this verifies one Fabric transaction cannot stage structural
      * extraction from two run positions whose simultaneous gravity updates would conflict.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void transactionAllowsOnlyOneStructuralExtractionPosition(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int firstSlot = SinglesCubeIdx.indexFromColumn(0, 0);
@@ -156,7 +155,7 @@ public final class FabricTransferGameTests implements FabricGameTest {
      * No in-game reproduction applies: repeated sided lookups and different blocks in a run must
      * observe the same staged contents, including nested rollback and outer abort.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void repeatedLookupsShareOneRunLedger(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
         StorageStackBE top = placeStorage(helper, ORIGIN.above());

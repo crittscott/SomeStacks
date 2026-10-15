@@ -5,13 +5,12 @@ import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.RunEdit;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -30,12 +29,12 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * side, a run advertising its reachable headroom, and each type's update tag round-tripping the
  * contents and presentation state it is responsible for.
  */
-public final class StorageAndPersistenceGameTests implements FabricGameTest {
+public final class StorageAndPersistenceGameTests {
     /**
      * To reproduce in-game: connect sided item automation to each face of every stack type and
      * verify every face exposes the same inventory.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void itemStorageIsAvailableFromEverySide(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
@@ -65,7 +64,7 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
      * To reproduce in-game: connect item automation to a one-block stack below its height limit and
      * verify it can address one additional block of empty positions for growth.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singleBlockStorageAdvertisesConfiguredHeadroom(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
@@ -87,62 +86,62 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
     }
 
     /** See {@link CapabilityAndPersistenceChecks#storageDiskSaveRoundTripsItemsRotationAndPermanence}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#singlesDiskSaveRoundTripsItemsAndBothRotations}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#barDiskSaveRoundTripsItems}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void barDiskSaveRoundTripsItems(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#updateTagsCarryRenderStateAndOmitServerOnlyData}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unreadableSavedItemsAreKeptAsideOnDisk}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#setAsideItemsRecoverIntoFreeSlots}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void setAsideItemsRecoverIntoFreeSlots(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void structureRotationTransformsRotatableStackFacing(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#cachedShapesInvalidateWhenContentsChange}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void cachedShapesInvalidateWhenContentsChange(GameTestHelper helper) {
         CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
 
     /** No in-game reproduction applies: a reentrant Fabric storage edit is refused. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void reentrantStructuralEditIsRefused(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
@@ -166,7 +165,7 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
      * No in-game reproduction applies: this verifies that aborted Fabric transactions leave
      * Storage, Singles, and Bar stacks unchanged.
      */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void simulatedInsertionDoesNotMutateAnyStack(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
@@ -184,13 +183,13 @@ public final class StorageAndPersistenceGameTests implements FabricGameTest {
         helper.succeed();
     }
     /** See {@link SynchronizationChecks#clientInventoryUpdatesRejectMalformedDataAtomically}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper helper) {
         SynchronizationChecks.clientInventoryUpdatesRejectMalformedDataAtomically(helper);
     }
 
     /** See {@link SynchronizationChecks#clientSinglesUpdatesValidateRotationBeforeInventory}. */
-    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         SynchronizationChecks.clientSinglesUpdatesValidateRotationBeforeInventory(helper);
     }

@@ -24,10 +24,7 @@ import java.util.function.Function;
  * {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
-    /**
-     * Fully qualified so Forge does not dot-prefix it with the {@code @GameTestHolder} namespace;
-     * it resolves straight to {@code data/somestacks/structure/somestacks_empty.nbt}.
-     */
+    /** Shared structure resource; test-name prefixes do not affect structure identifiers. */
     public static final String TEMPLATE = "somestacks:somestacks_empty";
 
     private static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(

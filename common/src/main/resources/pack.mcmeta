@@ -3,7 +3,6 @@
     "description": {
       "text": "Some Stacks resources"
     },
-    "pack_format": 61,
-    "supported_formats": [46, 61]
+    "pack_format": 55
   }
 }
