@@ -43,6 +43,8 @@ On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX laun
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
+The build targets Minecraft 1.21.6. Gradle sync, source compilation, and runtime verification against this baseline remain pending; the mod source and pack metadata have not yet been ported to this target.
+
 ## Exact build versions
 
 | Component | Exact version or coordinate | Build role |
@@ -52,13 +54,13 @@ Each subproject has the Java plugin's standard production-source `javadoc` task.
 | Architectury Gradle plugin | `3.5.170` | Common/Fabric/Forge/NeoForge project organization |
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `21` | Compilation, Javadoc, and Java execution |
-| Minecraft | `1.21.5` | Compile and runtime target |
-| Mojang mappings | Official mappings for `1.21.5` | Base mapping layer; no separate mapping version is declared |
-| Parchment mappings | `org.parchmentmc.data:parchment-1.21.5:2025.06.15@zip` | Layer over the official mappings |
-| Forge | `net.minecraftforge:forge:1.21.5-55.1.17` | Exact Forge compile and development-run baseline |
-| NeoForge | `net.neoforged:neoforge:21.5.97` | Exact NeoForge compile and development-run baseline |
+| Minecraft | `1.21.6` | Compile and runtime target |
+| Mojang mappings | Official mappings for `1.21.6` | Base mapping layer; no separate mapping version is declared |
+| Parchment mappings | `org.parchmentmc.data:parchment-1.21.6:2025.06.29@zip` | Layer over the official mappings |
+| Forge | `net.minecraftforge:forge:1.21.6-56.0.9` | Exact Forge compile and development-run baseline |
+| NeoForge | `net.neoforged:neoforge:21.6.20-beta` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
-| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.128.2+1.21.5` | Fabric runtime and development API |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.128.2+1.21.6` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection-query API; development runtime only with `-PwithCommonProtectionApi=true` |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
@@ -72,14 +74,14 @@ These values do not select build tools, but they are versioned inputs consumed b
 | --- | --- |
 | Some Stacks artifact | `0.8.3` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
-| Minecraft compatibility | exactly `1.21.5`; Forge and NeoForge syntax `[1.21.5]`, Fabric syntax `1.21.5` |
-| Forge compatibility | `[55.1.17,56)` |
-| Forge JavaFML loader compatibility | `[55,56)` |
-| NeoForge compatibility | `[21.5.97,21.6)` |
+| Minecraft compatibility | exactly `1.21.6`; Forge and NeoForge syntax `[1.21.6]`, Fabric syntax `1.21.6` |
+| Forge compatibility | `[56.0.9,57)` |
+| Forge JavaFML loader compatibility | `[56,57)` |
+| NeoForge compatibility | `[21.6.20-beta,21.7)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.19.5` |
 | Common Protection API suggested version | `>=1.0.0`; compilation uses `1.0.0` |
-| Fabric API runtime declaration | `>=0.128.2+1.21.5`; compilation uses `0.128.2+1.21.5` |
+| Fabric API runtime declaration | `>=0.128.2+1.21.6`; compilation uses `0.128.2+1.21.6` |
 
 ## Resolution and version authorities
 
