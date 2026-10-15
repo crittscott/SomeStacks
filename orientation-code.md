@@ -8,7 +8,7 @@ See `orientation-player.md` for behavior; `build-env.md` for the build.
 
 ## Project shape
 
-Java 21, Minecraft 1.21.4; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21, Minecraft 1.21.5 build target; source port and runtime verification are pending; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into each loader JAR without loader imports. `PlatformServices.Backend` supplies paths, versions, networking and edit authority. Gestures and automation adapters are loader-owned. `CommonRegistry` provides identifiers and lookups.
 
