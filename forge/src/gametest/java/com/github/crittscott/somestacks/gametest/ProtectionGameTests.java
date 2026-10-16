@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
-import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StoragePile;
@@ -9,7 +8,6 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.gametest.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +20,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.common.util.Result;
 import net.minecraftforge.eventbus.api.listener.EventListener;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.gametest.GameTestNamespace;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,12 +37,10 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  * <p>These fire the Forge events themselves, so they cover the order a consult and the commit that
  * follows must agree on.
  */
-@GameTestNamespace(SomeStacks.MODID)
 public final class ProtectionGameTests {
     public ProtectionGameTests() {}
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
         ProtectionChecks.automationUsesSharedIdentity(helper);
     }
@@ -54,7 +49,6 @@ public final class ProtectionGameTests {
      * No in-game reproduction applies: a protection listener may message the Forge automation
      * actor even though it has no client connection, and that message must be discarded safely.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void automationActorDiscardsClientMessages(GameTestHelper helper) {
         ForgeEditAuthority authority = new ForgeEditAuthority();
         ServerPlayer actor = authority.automationActor(helper.getLevel());
@@ -65,7 +59,6 @@ public final class ProtectionGameTests {
     }
 
     /** See {@link ProtectionChecks#checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
             GameTestHelper helper) {
         ProtectionChecks.checkedPlacementPlacesInBoundsAndRejectsOutsideBuildHeight(
@@ -73,14 +66,12 @@ public final class ProtectionGameTests {
     }
 
     /** See {@link ProtectionChecks#checkedPlacementRejectsAnObstructingEntity}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void checkedPlacementRejectsAnObstructingEntity(GameTestHelper helper) {
         ProtectionChecks.checkedPlacementRejectsAnObstructingEntity(
                 helper, GameTestSupport.playerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#creativeDepositFillsTheStackWithoutSpendingTheHand}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
                 helper, GameTestSupport.playerFactory(helper));
@@ -95,7 +86,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
      * block, trigger settling, and verify the protected block remains.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         BlockPos topRelative = ORIGIN.above();
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -128,7 +118,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
      * extract the last Single. Player-attributed cleanup removes the empty block.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
@@ -157,7 +146,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
      * extract the last Storage item. Deferred cleanup retains the player and removes the block.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
@@ -189,7 +177,6 @@ public final class ProtectionGameTests {
     // Waterlogging
 
     /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void placementIntoWaterKeepsTheWater(GameTestHelper helper) {
         ProtectionChecks.placementIntoWaterKeepsTheWater(
                 helper, GameTestSupport.playerFactory(helper));
@@ -200,7 +187,6 @@ public final class ProtectionGameTests {
      * use denial. To reproduce in-game: hold the modifier and click the support beneath an empty
      * Singles cell; it fills when allowed and preserves the held item when a claim denies use.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void adjacentStackConsultsDestinationProtection(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
@@ -238,14 +224,12 @@ public final class ProtectionGameTests {
     }
 
     /** See {@link ProtectionChecks#adjacentDepositsFillGroundedCells}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void adjacentDepositsFillGroundedCells(GameTestHelper helper) {
         ProtectionChecks.adjacentDepositsFillGroundedCells(helper, GameTestSupport.playerFactory(helper));
         helper.succeed();
     }
 
     /** See {@link ProtectionChecks#placementPublicationAnswersToVeto}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE, maxTicks = 30)
     public static void placementPublicationAnswersToVeto(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         Predicate<BlockEvent.EntityPlaceEvent> deny = event -> event.getPos().equals(pos);
@@ -257,14 +241,12 @@ public final class ProtectionGameTests {
     }
 
     /** See {@link ProtectionChecks#playerBarExtractionUsesPlayerForCleanup}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void playerBarExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ProtectionChecks.playerBarExtractionUsesPlayerForCleanup(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
     /** See {@link ProtectionChecks#mixedStorageSettlementUsesAutomationForCleanup}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void mixedStorageSettlementUsesAutomationForCleanup(GameTestHelper helper) {
         ProtectionChecks.mixedStorageSettlementUsesAutomationForCleanup(
                 helper, GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
@@ -285,7 +267,6 @@ public final class ProtectionGameTests {
     }
 
     /** See {@link ProtectionChecks#vetoedPlacementRestoresBlockEntity}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void vetoedPlacementRestoresBlockEntity(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         Predicate<BlockEvent.EntityPlaceEvent> listener = event -> event.getPos().equals(pos);
@@ -308,7 +289,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
@@ -338,7 +318,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
@@ -369,7 +348,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
      * through item automation; it accepts nothing and creates no block.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
@@ -403,7 +381,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: stand in the growth space above a full Storage pile and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
@@ -429,7 +406,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: stand in the growth space above a full Singles column and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
@@ -455,7 +431,6 @@ public final class ProtectionGameTests {
      * To reproduce in-game: stand in the growth space above a full Bar column and insert through
      * item automation; it accepts nothing and does not grow into the entity.
      */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void barGrowthRejectsAnObstructingEntityInSimulationAndCommit(
             GameTestHelper helper) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
@@ -478,7 +453,6 @@ public final class ProtectionGameTests {
         helper.succeed();
     }
     /** See {@link InteractionChecks#deniedCleanupEmitsOnlyBlockChange}. */
-    @GameTest(structure = GameTestSupport.TEMPLATE)
     public static void deniedCleanupEmitsOnlyBlockChange(GameTestHelper helper) {
         InteractionChecks.deniedCleanupEmitsOnlyBlockChange(helper,
                 GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);

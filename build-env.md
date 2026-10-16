@@ -39,11 +39,11 @@ Each loader module compiles against common through the `common` configuration. F
 
 Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. That command checks a main/off-hand block-use callback while aimed at a stack with Shift and the Stack Modifier released. The same source set is wired into a `runGameTestServer` run: Forge and NeoForge use their native GameTest server launch templates and explicitly set their loader-specific `enableGameTest` property in both test runs; Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Fabric's GameTest metadata includes absence-specific checks by default and provider-backed checks when `-PwithCommonProtectionApi=true` is set. Fabric uses its own `GameTest` annotation on ordinary entrypoint objects; Forge uses its `GameTest` and `GameTestNamespace` annotations. NeoForge registers `Consumer<GameTestHelper>` functions through its native `DeferredRegister`, with checked-in `data/somestacks/test_instance` JSON files supplying each function's structure, environment, and timeout. The shared empty structure keeps its `somestacks:somestacks_empty` identifier and the tests use `minecraft:default`; the structure-generation helper needs no format change. The common resource pack declares format 63; the Forge and NeoForge test packs declare data-pack format 80. Fabric packages its test data through the development mod, with no separate test pack declaration. Source JSON (including both Fabric metadata variants) parses strictly, and all 123 NeoForge test-instance function references match the deferred registrations. Binary fixtures were not inspected. GameTest source compilation, discovery, and runtime behavior remain unverified until user-run builds and test launches.
 
-On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions.
+On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. Use Java 21 for the Gradle host JVM, including IntelliJ's Gradle JVM setting, and select the Gradle wrapper in IntelliJ. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions; that toolchain does not select the host JVM.
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
-The build targets Minecraft 1.21.6. Gradle sync was reported successful before stage 4's Forge validator/run-setting changes. Source implementation and review, pack metadata, and documentation through stage 6 are complete. Source compilation, GameTest execution, and runtime verification remain pending.
+The build targets Minecraft 1.21.8. The configuration-only `gradlew.bat help --console=plain` check succeeds under Java 21 across `common`, `fabric`, `forge`, and `neoforge`, and the user has confirmed IntelliJ Gradle sync succeeds. Common and loader production source/API reviews identified no required adaptations from 1.21.6 to 1.21.8. Production and GameTest sources remain the copied implementation, and pack metadata still uses the 1.21.6 formats. Source compilation, GameTest execution, and runtime verification remain pending.
 
 ## Exact build versions
 
@@ -54,13 +54,13 @@ The build targets Minecraft 1.21.6. Gradle sync was reported successful before s
 | Architectury Gradle plugin | `3.5.170` | Common/Fabric/Forge/NeoForge project organization |
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `21` | Compilation, Javadoc, and Java execution |
-| Minecraft | `1.21.6` | Compile and runtime target |
-| Mojang mappings | Official mappings for `1.21.6` | Base mapping layer; no separate mapping version is declared |
-| Parchment mappings | `org.parchmentmc.data:parchment-1.21.6:2025.06.29@zip` | Layer over the official mappings |
-| Forge | `net.minecraftforge:forge:1.21.6-56.0.9` | Exact Forge compile and development-run baseline |
-| NeoForge | `net.neoforged:neoforge:21.6.20-beta` | Exact NeoForge compile and development-run baseline |
+| Minecraft | `1.21.8` | Compile and runtime target |
+| Mojang mappings | Official mappings for `1.21.8` | Base mapping layer; no separate mapping version is declared |
+| Parchment mappings | `org.parchmentmc.data:parchment-1.21.8:2025.09.14@zip` | Layer over the official mappings |
+| Forge | `net.minecraftforge:forge:1.21.8-58.1.0` | Exact Forge compile and development-run baseline |
+| NeoForge | `net.neoforged:neoforge:21.8.57` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
-| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.128.2+1.21.6` | Fabric runtime and development API |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.136.1+1.21.8` | Fabric runtime and development API |
 | Common Protection API | `eu.pb4:common-protection-api:1.0.0` | Optional Fabric protection-query API; development runtime only with `-PwithCommonProtectionApi=true` |
 | Forge EventBus validator | `net.minecraftforge:eventbus-validator:7.0-beta.10` | Annotation processor for Forge production and GameTest sources |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
@@ -75,14 +75,14 @@ These values do not select build tools, but they are versioned inputs consumed b
 | --- | --- |
 | Some Stacks artifact | `0.8.3` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
-| Minecraft compatibility | exactly `1.21.6`; Forge and NeoForge syntax `[1.21.6]`, Fabric syntax `1.21.6` |
-| Forge compatibility | `[56.0.9,57)` |
-| Forge JavaFML loader compatibility | `[56,57)` |
-| NeoForge compatibility | `[21.6.20-beta,21.7)` |
+| Minecraft compatibility | exactly `1.21.8`; Forge and NeoForge syntax `[1.21.8]`, Fabric syntax `1.21.8` |
+| Forge compatibility | `[58.1.0,59)` |
+| Forge JavaFML loader compatibility | `[58,59)` |
+| NeoForge compatibility | `[21.8.57,21.9)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.19.5` |
 | Common Protection API suggested version | `>=1.0.0`; compilation uses `1.0.0` |
-| Fabric API runtime declaration | `>=0.128.2+1.21.6`; compilation uses `0.128.2+1.21.6` |
+| Fabric API runtime declaration | `>=0.136.1+1.21.8`; compilation uses `0.136.1+1.21.8` |
 
 ## Resolution and version authorities
 

@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 /**
  * The client's gesture entry point: the three right-click events feed
@@ -26,7 +26,7 @@ public final class ClientEvents {
     private ClientEvents() {}
 
     public static void init() {
-        ClientGestures.setSender(packet -> PacketDistributor.sendToServer(packet));
+        ClientGestures.setSender(packet -> ClientPacketDistributor.sendToServer(packet));
     }
 
     @SubscribeEvent
