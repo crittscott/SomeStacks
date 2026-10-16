@@ -9,6 +9,10 @@ import org.lwjgl.glfw.GLFW;
 public final class KeyMappings {
     private KeyMappings(){}
 
+    /** The mod's key-binding category, registered with vanilla when this class loads. */
+    public static final KeyMapping.Category CATEGORY =
+            KeyMapping.Category.register(ClientGestures.KEY_CATEGORY_ID);
+
     /**
      * The stack modifier, {@code V} by default and rebindable. Held rather than pressed: every
      * gesture asks whether it is down at the moment of the click.
@@ -18,6 +22,6 @@ public final class KeyMappings {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_V,
-            ClientGestures.KEY_CATEGORY_TRANSLATION_KEY
+            CATEGORY
     );
 }

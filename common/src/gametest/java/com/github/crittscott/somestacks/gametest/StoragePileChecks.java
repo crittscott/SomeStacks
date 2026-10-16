@@ -186,9 +186,9 @@ public final class StoragePileChecks {
 
         int expected = pile.comparatorSignal();
         int lowerSignal = lower.getBlockState().getAnalogOutputSignal(
-                helper.getLevel(), lower.getBlockPos());
+                helper.getLevel(), lower.getBlockPos(), Direction.NORTH);
         int upperSignal = upper.getBlockState().getAnalogOutputSignal(
-                helper.getLevel(), upper.getBlockPos());
+                helper.getLevel(), upper.getBlockPos(), Direction.NORTH);
 
         checkEquals(expected, lowerSignal, "Lower comparator signal");
         checkEquals(expected, upperSignal, "Upper comparator signal");

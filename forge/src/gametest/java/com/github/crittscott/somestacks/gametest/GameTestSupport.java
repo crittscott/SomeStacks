@@ -8,6 +8,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
@@ -71,11 +72,15 @@ public final class GameTestSupport {
         });
     }
 
-    /** A fake-player factory that resets the main hand for each shared check. */
+    /** A fake-player factory that gives the player Survival abilities and resets the main hand for each shared check. */
     public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = fakePlayer(level);
+            // Checks expect Survival spending, but the player starts in the server's default mode.
+            // Changing the mode broadcasts through a connection this player lacks, so only the
+            // abilities that decide spending are set.
+            GameType.SURVIVAL.updatePlayerAbilities(player.getAbilities());
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
             return player;
         };

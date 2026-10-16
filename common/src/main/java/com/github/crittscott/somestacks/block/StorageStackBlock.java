@@ -69,7 +69,7 @@ public class StorageStackBlock extends StackBlock {
 
     /** Reports the whole pile's fill, so a comparator reads the same value anywhere along it. */
     @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
         StoragePile pile = StoragePile.at(level, pos);
         if (pile == null) {
             return 0;
@@ -95,7 +95,7 @@ public class StorageStackBlock extends StackBlock {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!oldState.is(this)) {
             StoragePile.invalidateAround(level, pos);
-            if (!level.isClientSide
+            if (!level.isClientSide()
                     && level.getBlockEntity(pos) instanceof StorageStackBE placed) {
                 StoragePile.adoptNeighbourState(level, pos, placed);
                 StoragePile.markDirtyAt(level, pos);

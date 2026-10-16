@@ -69,8 +69,8 @@ public final class SomeStacksGameTests {
                 () -> CapabilityAndPersistenceGameTests::unreadableSavedItemsAreKeptAsideOnDisk);
         TEST_FUNCTIONS.register("capabilityandpersistencegametests/set_aside_items_recover_into_free_slots",
                 () -> CapabilityAndPersistenceGameTests::setAsideItemsRecoverIntoFreeSlots);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/unversioned_save_upgrades_items_on_load",
-                () -> CapabilityAndPersistenceGameTests::unversionedSaveUpgradesItemsOnLoad);
+        TEST_FUNCTIONS.register("capabilityandpersistencegametests/previous_release_save_upgrades_on_load",
+                () -> CapabilityAndPersistenceGameTests::previousReleaseSaveUpgradesOnLoad);
         TEST_FUNCTIONS.register("capabilityandpersistencegametests/structure_rotation_transforms_rotatable_stack_facing",
                 () -> CapabilityAndPersistenceGameTests::structureRotationTransformsRotatableStackFacing);
         TEST_FUNCTIONS.register("capabilityandpersistencegametests/cached_shapes_invalidate_when_contents_change",

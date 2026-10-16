@@ -43,6 +43,7 @@ public final class ClientSetup {
     }
 
     private static void onRegisterKeys(RegisterKeyMappingsEvent evt) {
+        evt.registerCategory(KeyMappings.CATEGORY);
         evt.register(KeyMappings.STACK_MODE_KEY);
     }
 

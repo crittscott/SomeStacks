@@ -4,9 +4,10 @@ import com.github.crittscott.somestacks.FabricRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 /** Fabric renderer, reload-listener, and measured-cache registration. */
 public final class FabricClientRendering {
@@ -20,10 +21,14 @@ public final class FabricClientRendering {
         BlockEntityRenderers.register(
                 FabricRegistry.BAR_STACK_BE, BarStackBER::new);
 
-        ResourceManagerHelper clientResources = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
-        clientResources.registerReloadListener(new FabricItemRenderOverrides());
-        clientResources.registerReloadListener(new FabricBarTextureStore());
-        clientResources.registerReloadListener(new FabricRenderCacheReloadListener());
+        ResourceLoader clientResources = ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        clientResources.registerReloader(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
+        clientResources.registerReloader(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
+        clientResources.registerReloader(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+                (ResourceManagerReloadListener) manager -> {
+                    AutoRenderProfiles.onResourceReload();
+                    CubeRenderHelper.onResourceReload();
+                });
 
         ClientPlayConnectionEvents.DISCONNECT.register(
                 (handler, client) -> AutoRenderProfiles.saveCache());

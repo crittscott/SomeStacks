@@ -9,6 +9,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -189,11 +190,14 @@ public final class GameTestScaffold {
         return helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds);
     }
 
-    /** The comparator output at {@code relative}, read the way a comparator against it reads. */
+    /**
+     * The comparator output at {@code relative}, read the way a comparator against it reads. Stack
+     * signals do not depend on the side a comparator reads from, so one side stands for all.
+     */
     public static int signalAt(GameTestHelper helper, BlockPos relative) {
         BlockPos absolute = helper.absolutePos(relative);
         BlockState state = helper.getLevel().getBlockState(absolute);
-        return state.getAnalogOutputSignal(helper.getLevel(), absolute);
+        return state.getAnalogOutputSignal(helper.getLevel(), absolute, Direction.NORTH);
     }
 
     /** Puts a living placement-blocking entity across the center of {@code relative}. */

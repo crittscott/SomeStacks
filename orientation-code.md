@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 21; Minecraft 1.21.9; Gradle sync confirmed; remaining port and verification pending; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.9; production builds confirmed on all loaders; GameTest and runtime verification pending; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
@@ -67,7 +67,7 @@ Movement models:
 
 Persistence uses `ValueInput`/`ValueOutput` and registry-aware `ItemStack.CODEC`. `StackDataMigration.readTag` preserves raw disk/wire types at the boundary. Encode failure aborts serialization with slot/location context. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-`StackDataMigration` upgrades saved items through DataFixerUpper; absent `DataVersion` means 1.21.1 (3955), and legacy `Rotation` becomes block state. Unreadable entries, missing-slot entries, and non-compound list values persist in `SetAside` and retry each load. `ServerConfigMigration` logs custom 1.21.1 `compatibility.ingots` entries at server start. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, compound entries with unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing. Loader update hooks and Fabric's client load branch share validation. Deferred migration marks dirty on attachment. Permanence belongs to the base; block rotation is local; Singles item rotation travels.
+`StackDataMigration` upgrades saved items from the preceding 1.21.8 release through DataFixerUpper; absent `DataVersion` reads as current. Unreadable entries, missing-slot entries, and non-compound list values persist in `SetAside` and retry each load. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, compound entries with unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing. Loader update hooks and Fabric's client load branch share validation. Deferred migration marks dirty on attachment. Permanence belongs to the base; block rotation is local; Singles item rotation travels.
 
 ## Admission, automation, and edits
 
@@ -93,13 +93,13 @@ Forge/NeoForge consult destination right-click events for neighbor deposits, hon
 
 Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
 
-BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads/tints; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. Resources use format 63; galleries bypass protection.
+BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads/tints; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 88; galleries bypass protection.
 
 2-D selection: thinnest/longest axis ratio. Cache: 4.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints, Forge annotations, or NeoForge deferred functions/test-instance JSON. Test data format: 80. JSON/references checked; compilation/discovery pending. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 88. Registrations, JSON, and wrappers cross-checked; compilation/discovery pending. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
 
 `-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 

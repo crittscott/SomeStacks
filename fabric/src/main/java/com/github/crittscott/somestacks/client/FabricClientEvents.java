@@ -22,7 +22,7 @@ public final class FabricClientEvents {
                 FabricClientEvents::onUseBlock);
 
         UseItemCallback.EVENT.register((player, level, hand) -> {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 return InteractionResult.PASS;
             }
 
@@ -40,7 +40,7 @@ public final class FabricClientEvents {
 
     /** Handles Fabric's client block-use callback; SUCCESS consumes local use while retaining the vanilla packet. */
     public static InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide) return InteractionResult.PASS;
+        if (!level.isClientSide()) return InteractionResult.PASS;
         InteractionContext context = InteractionContext.forBlockClick(
                 player, level, hand, hit.getBlockPos(), hit.getDirection(),
                 ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());

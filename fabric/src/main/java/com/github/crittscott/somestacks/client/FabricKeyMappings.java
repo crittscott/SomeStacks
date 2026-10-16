@@ -9,11 +9,14 @@ import org.lwjgl.glfw.GLFW;
 public final class FabricKeyMappings {
     private FabricKeyMappings() {}
 
+    private static final KeyMapping.Category CATEGORY =
+            KeyMapping.Category.register(ClientGestures.KEY_CATEGORY_ID);
+
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
             ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_V,
-            ClientGestures.KEY_CATEGORY_TRANSLATION_KEY);
+            CATEGORY);
 
     public static void init() {
         KeyBindingHelper.registerKeyBinding(STACK_MODE_KEY);

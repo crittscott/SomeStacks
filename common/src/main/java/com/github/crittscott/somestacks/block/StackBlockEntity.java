@@ -252,7 +252,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Marks local publication pending and coalesces a run tick; unattached/client entities do nothing. */
     protected final void schedulePublish() {
-        if (level == null || level.isClientSide) {
+        if (level == null || level.isClientSide()) {
             return;
         }
         publishPending = true;
@@ -293,9 +293,9 @@ public abstract class StackBlockEntity extends BlockEntity {
         pendingLoadResult = null;
     }
 
-    /** Applies a requested or migrated rotation once the block belongs to a server level. */
+    /** Applies a requested rotation once the block belongs to a server level. */
     private void applyPendingBlockRotation() {
-        if (pendingBlockRotation == null || level == null || level.isClientSide) {
+        if (pendingBlockRotation == null || level == null || level.isClientSide()) {
             return;
         }
         BlockState state = getBlockState();
@@ -335,7 +335,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected final void loadAdditional(ValueInput input) {
         CompoundTag tag = StackDataMigration.readTag(input);
         HolderLookup.Provider registries = input.lookup();
-        if (level != null && level.isClientSide) {
+        if (level != null && level.isClientSide()) {
             if (loadClientUpdate(tag, registries)) {
                 super.loadAdditional(input);
             }
@@ -344,12 +344,6 @@ public abstract class StackBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         pendingLoadResult = null;
         pendingMigrationSave = StackDataMigration.upgrade(tag, registries);
-        Integer legacyBlockRotation = StackDataMigration.takeLegacyBlockRotation(tag);
-        if (legacyBlockRotation != null) {
-            pendingBlockRotation = legacyBlockRotation;
-            applyPendingBlockRotation();
-            pendingMigrationSave = true;
-        }
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
@@ -388,7 +382,7 @@ public abstract class StackBlockEntity extends BlockEntity {
                 || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()
                 || !(tag.get(TAG_ITEMS) instanceof CompoundTag inventory)
                 || tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                || tag.contains("Permanent") || tag.contains("Rotation")
+                || tag.contains("Permanent")
                 || !isValidClientStackData(tag)
                 || !items.deserializeClientUpdate(registries, inventory)) {
             return false;
@@ -421,7 +415,6 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     public final CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = saveWithoutMetadata(registries);
-        tag.remove("Rotation");
         tag.getCompound(TAG_ITEMS).ifPresent(StackItemStorage::stripSetAside);
         stripServerOnlyUpdateData(tag);
         return tag;

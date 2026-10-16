@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -58,7 +59,7 @@ public final class GameTestSupport {
 
     /** Offers through the native transaction API; an uncommitted offer is rolled back on close. */
     public static int offer(ResourceHandler<ItemResource> handler, int slot, ItemStack stack, boolean commit) {
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             int accepted = handler.insert(slot, ItemResource.of(stack), stack.getCount(), transaction);
             if (commit) transaction.commit();
             return accepted;
@@ -74,11 +75,13 @@ public final class GameTestSupport {
         return FakePlayerFactory.getMinecraft(level);
     }
 
-    /** A fake-player factory that resets the main hand for each shared check. */
+    /** A fake-player factory that puts the player in Survival and resets the main hand for each shared check. */
     public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = fakePlayer(level);
+            // Checks expect Survival spending; the shared fake player keeps whatever mode it last had.
+            player.setGameMode(GameType.SURVIVAL);
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
             return player;
         };

@@ -39,7 +39,6 @@ public final class SomeStacksServer {
         runningServer = server;
         reportedSavedItems.clear();
         StackDataMigration.beginSession();
-        ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         ConfigSyncPkt.rebuildCurrent();
     }

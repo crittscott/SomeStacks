@@ -110,7 +110,7 @@ public final class BarColumnGameTests {
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
 
         ItemStack simulated;
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             ItemResource resource = capability.getResource(0);
             simulated = resource.toStack(capability.extract(0, resource, 64, transaction));
         }

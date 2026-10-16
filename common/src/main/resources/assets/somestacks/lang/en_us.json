@@ -2,7 +2,7 @@
   "block.somestacks.storage_stack_block": "Storage Stack",
   "block.somestacks.singles_stack_block": "Singles Stack",
   "block.somestacks.bar_stack_block": "Bar Stack",
-  "key.categories.somestacks": "Some Stacks",
+  "key.category.somestacks.main": "Some Stacks",
   "key.somestacks.stack_mode": "Stack Modifier (Hold)",
   "subtitles.somestacks.storage_stack.deposit": "Item placed in Storage Stack",
   "subtitles.somestacks.storage_stack.extract": "Item taken from Storage Stack",

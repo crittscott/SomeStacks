@@ -49,9 +49,9 @@ public final class ProtectionChecks {
      * cleanup. It reports [SomeStacks] with the shared profile identity.
      */
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
-        var actual = WorldEdits.automationActor(helper.getLevel()).getGameProfile();
-        checkEquals(AutomationActor.PROFILE.getId(), actual.getId(), "Automation UUID");
-        checkEquals(AutomationActor.PROFILE.getName(), actual.getName(), "Automation name");
+        var actual = WorldEdits.automationActor(helper.getLevel());
+        checkEquals(AutomationActor.ID, actual.getUUID(), "Automation UUID");
+        checkEquals(AutomationActor.NAME, actual.getScoreboardName(), "Automation name");
         helper.succeed();
     }
 
@@ -265,7 +265,7 @@ public final class ProtectionChecks {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
         Runnable unregister = observer.install(helper.getLevel(), bars.getBlockPos(), actor::set,
-                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+                candidate -> !candidate.getUUID().equals(AutomationActor.ID));
         try {
             check(!bars.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
         } finally {
@@ -289,7 +289,7 @@ public final class ProtectionChecks {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
         Runnable unregister = observer.install(helper.getLevel(), storage.getBlockPos(), actor::set,
-                candidate -> !candidate.getUUID().equals(AutomationActor.PROFILE.getId()));
+                candidate -> !candidate.getUUID().equals(AutomationActor.ID));
         try {
             checkEquals(1, storage.extractAt(0, 1, ItemStack.EMPTY, player).getCount(),
                     "Player extraction count");
@@ -301,7 +301,7 @@ public final class ProtectionChecks {
             unregister.run();
         }
         check(actor.get() != null, "Cleanup break event did not fire");
-        checkEquals(AutomationActor.PROFILE.getId(), actor.get().getUUID(), "Mixed cleanup actor");
+        checkEquals(AutomationActor.ID, actor.get().getUUID(), "Mixed cleanup actor");
         helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN);
         storage.pile().settle();
         helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);

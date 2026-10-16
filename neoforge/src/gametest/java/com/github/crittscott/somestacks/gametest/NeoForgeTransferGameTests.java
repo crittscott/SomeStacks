@@ -40,7 +40,7 @@ public final class NeoForgeTransferGameTests {
     public static void stagedInsertionIsInvisibleUntilCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = placeStorage(helper, ORIGIN);
         ResourceHandler<ItemResource> storage = GameTestSupport.capability(blockEntity);
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             checkEquals(4, storage.insert(
                     ItemResource.of(Items.STONE), 4, transaction), "Staged insertion");
             checkEquals(0, GameTestScaffold.count(blockEntity.getItems(), Items.STONE),
@@ -62,7 +62,7 @@ public final class NeoForgeTransferGameTests {
         ItemResource stone = ItemResource.of(Items.STONE);
         ItemResource dirt = ItemResource.of(Items.DIRT);
 
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             checkEquals(12, storage.insert(stone, 12, outer), "Staged stone insertion");
             try (Transaction nested = Transaction.open(outer)) {
                 checkEquals(3, storage.insert(dirt, 3, nested), "Nested dirt insertion");
@@ -74,7 +74,7 @@ public final class NeoForgeTransferGameTests {
         checkEquals(0, GameTestSupport.count(storage, Items.DIRT),
                 "Aborted outer transaction kept nested dirt");
 
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             checkEquals(12, storage.insert(stone, 12, outer), "Committed stone insertion");
             try (Transaction nested = Transaction.open(outer)) {
                 checkEquals(3, storage.insert(dirt, 3, nested), "Aborted nested insertion");
@@ -86,7 +86,7 @@ public final class NeoForgeTransferGameTests {
         checkEquals(0, GameTestSupport.count(storage, Items.DIRT),
                 "Aborted nested dirt count");
 
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             checkEquals(5, storage.extract(stone, 5, transaction),
                     "Whole-storage extraction");
             transaction.commit();
@@ -108,7 +108,7 @@ public final class NeoForgeTransferGameTests {
         singles.getItems().insertItem(secondSlot, new ItemStack(Items.PAPER), false);
         ResourceHandler<ItemResource> storage = GameTestSupport.capability(singles);
 
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             try (Transaction nested = Transaction.open(outer)) {
                 checkEquals(1, storage.extract(firstSlot, ItemResource.of(Items.STICK), 1, nested),
                         "Nested structural extraction");
@@ -118,13 +118,13 @@ public final class NeoForgeTransferGameTests {
             checkEquals(0, storage.insert(2, ItemResource.of(Items.STONE), 1, outer),
                     "Insertion followed structural extraction");
         }
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             checkEquals(1, storage.insert(2, ItemResource.of(Items.STONE), 1, transaction),
                     "Pending insertion");
             checkEquals(0, storage.extract(firstSlot, ItemResource.of(Items.STICK), 1, transaction),
                     "Extraction remapped another pending position");
         }
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             checkEquals(1, storage.extract(firstSlot,
                     ItemResource.of(Items.STICK), 1, transaction), "First extraction");
             checkEquals(0, storage.extract(secondSlot,
@@ -152,7 +152,7 @@ public final class NeoForgeTransferGameTests {
         ResourceHandler<ItemResource> above = GameTestSupport.capability(top);
         check(first == second, "Sided lookup did not retain the adapter");
         ItemResource stone = ItemResource.of(Items.STONE);
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             checkEquals(3, first.extract(0, stone, 3, outer), "First staged extraction");
             try (Transaction nested = Transaction.open(outer)) {
                 checkEquals(1, above.extract(0, stone, 3, nested), "Shared remainder");
@@ -160,14 +160,14 @@ public final class NeoForgeTransferGameTests {
             checkEquals(1, second.getAmountAsInt(0), "Nested rollback remainder");
         }
         checkEquals(4, first.getAmountAsInt(0), "Outer abort remainder");
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             checkEquals(3, first.extract(0, stone, 3, outer), "Committed first extraction");
             checkEquals(1, above.extract(0, stone, 3, outer), "Committed shared remainder");
             outer.commit();
         }
         checkEquals(0, first.getAmountAsInt(0), "Extraction committed twice");
         base.getItems().insertItem(0, new ItemStack(Items.STONE, 60), false);
-        try (Transaction outer = Transaction.openRoot()) {
+        try (Transaction outer = Transaction.open(null)) {
             checkEquals(3, second.insert(0, stone, 3, outer), "First insertion");
             checkEquals(1, above.insert(0, stone, 3, outer), "Shared remaining capacity");
             outer.commit();
@@ -193,7 +193,7 @@ public final class NeoForgeTransferGameTests {
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             int headroom = base.getItems().getSlots();
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
-            try (Transaction outer = Transaction.openRoot()) {
+            try (Transaction outer = Transaction.open(null)) {
                 try (Transaction nested = Transaction.open(outer)) {
                     checkEquals(1, handler.insert(headroom, resource, 1, nested), "Nested headroom offer");
                 }
@@ -205,7 +205,7 @@ public final class NeoForgeTransferGameTests {
             }
             check(helper.getLevel().getBlockState(above).is(Blocks.WATER), "Abort replaced water");
             check(helper.getLevel().getBlockEntity(above) == null, "Abort left a block entity");
-            try (Transaction outer = Transaction.openRoot()) {
+            try (Transaction outer = Transaction.open(null)) {
                 checkEquals(1, handler.insert(headroom, resource, 1, outer), "Committed headroom offer");
                 outer.commit();
             }
@@ -228,7 +228,7 @@ public final class NeoForgeTransferGameTests {
         for (StackBlockEntity base : bases) {
             ItemResource resource = ItemResource.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
-            try (Transaction transaction = Transaction.openRoot()) {
+            try (Transaction transaction = Transaction.open(null)) {
                 checkEquals(66, handler.insert(resource, 66, transaction), "Bottom-up insertion");
                 checkEquals(0, occupied(base.getItems()), "Staged support changed live contents");
                 transaction.commit();
@@ -258,13 +258,13 @@ public final class NeoForgeTransferGameTests {
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             ItemResource resource = handler.getResource(0);
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
-            try (Transaction transaction = Transaction.openRoot()) {
+            try (Transaction transaction = Transaction.open(null)) {
                 checkEquals(1, handler.extract(0, resource, 1, transaction), "Staged positional extraction");
                 checkEquals(0, handler.extract(0, resource, 1, transaction), "Position extracted twice");
                 checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Extraction changed live data");
             }
             checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Abort changed saved data");
-            try (Transaction transaction = Transaction.openRoot()) {
+            try (Transaction transaction = Transaction.open(null)) {
                 checkEquals(1, handler.extract(0, resource, 1, transaction), "Committed positional extraction");
                 transaction.commit();
             }
@@ -294,7 +294,7 @@ public final class NeoForgeTransferGameTests {
         NeoForge.EVENT_BUS.addListener(deny);
         try {
             for (boolean commit : new boolean[]{false, true}) {
-                try (Transaction transaction = Transaction.openRoot()) {
+                try (Transaction transaction = Transaction.open(null)) {
                     checkEquals(0, handler.insert(StorageStackBE.SLOTS, ItemResource.of(Items.STONE), 4, transaction),
                             "Vetoed placement accepted items");
                     if (commit) transaction.commit();
@@ -314,7 +314,7 @@ public final class NeoForgeTransferGameTests {
         StorageStackBE base = placeStorage(helper, ORIGIN);
         base.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
-        try (Transaction transaction = Transaction.openRoot()) {
+        try (Transaction transaction = Transaction.open(null)) {
             checkEquals(64, handler.extract(0, ItemResource.of(Items.STONE), 64, transaction), "Extract original");
             checkEquals(8, handler.insert(0, ItemResource.of(Items.DIRT), 8, transaction), "Insert replacement");
             transaction.commit();

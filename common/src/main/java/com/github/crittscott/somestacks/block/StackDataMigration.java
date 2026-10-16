@@ -1,14 +1,12 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
@@ -23,22 +21,18 @@ import net.minecraft.util.datafix.fixes.References;
  * entity reads any of it. Vanilla's chunk upgrade does not reach into block entity types it does
  * not know, so the item stacks these block entities hold are run through the DataFixerUpper here.
  *
- * <p>Every save carries a {@code DataVersion}. A tag without one was written by Some Stacks for
- * Minecraft 1.21.1, which did not record it. The immediately preceding release also stored an
- * outer block's {@code Rotation} in block-entity data; that field is consumed into block state on
- * load and is never written again.
+ * <p>Every save carries a {@code DataVersion}. The preceding release, Some Stacks for Minecraft
+ * 1.21.8, writes the current field layout, so only its saved items need upgrading. A tag without a
+ * {@code DataVersion} is read as current; any entry that then fails to decode is set aside by the
+ * inventory loader rather than discarded.
  */
 public final class StackDataMigration {
-    /** Data version of Minecraft 1.21.1, assumed for tags saved without one. */
-    private static final int UNVERSIONED_DATA_VERSION = 3955;
-    private static final String LEGACY_TAG_ROTATION = "Rotation";
-
     // Read raw values so malformed inventory entries and wire field types remain observable.
     private static final Codec<Tag> RAW_TAG = Codec.PASSTHROUGH.xmap(
             dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
             tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
     private static final String[] PERSISTED_FIELDS = {
-            "DataVersion", "Items", "Rotation", "Permanent", "CubeRotations", "SetAside"
+            "DataVersion", "Items", "Permanent", "CubeRotations", "SetAside"
     };
 
     /** Copies only stack-owned fields at the value-I/O boundary, without typed-list filtering. */
@@ -82,8 +76,8 @@ public final class StackDataMigration {
      * changed, so the caller can mark its block entity dirty and persist the upgraded form.
      */
     static boolean upgrade(CompoundTag tag, HolderLookup.Provider registries) {
-        int saved = NbtUtils.getDataVersion(tag, UNVERSIONED_DATA_VERSION);
         int current = SharedConstants.getCurrentVersion().dataVersion().version();
+        int saved = NbtUtils.getDataVersion(tag, current);
         if (saved >= current) {
             return false;
         }
@@ -94,16 +88,6 @@ public final class StackDataMigration {
         stampVersion(tag);
         recordUpgrade(saved, current);
         return true;
-    }
-
-    /** Removes and returns the previous release's block-entity layout rotation, if present. */
-    static Integer takeLegacyBlockRotation(CompoundTag tag) {
-        if (!(tag.get(LEGACY_TAG_ROTATION) instanceof IntTag rotationTag)) {
-            return null;
-        }
-        int rotation = QuarterTurns.normalize(rotationTag.intValue());
-        tag.remove(LEGACY_TAG_ROTATION);
-        return rotation;
     }
 
     private static synchronized void recordUpgrade(int from, int to) {

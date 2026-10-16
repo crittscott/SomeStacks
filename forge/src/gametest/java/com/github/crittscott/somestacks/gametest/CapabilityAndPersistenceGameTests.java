@@ -111,9 +111,9 @@ public final class CapabilityAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
-    public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
+    /** See {@link CapabilityAndPersistenceChecks#previousReleaseSaveUpgradesOnLoad}. */
+    public static void previousReleaseSaveUpgradesOnLoad(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */

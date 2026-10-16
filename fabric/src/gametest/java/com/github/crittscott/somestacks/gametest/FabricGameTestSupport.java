@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Function;
@@ -107,11 +108,13 @@ public final class FabricGameTestSupport {
         return total;
     }
 
-    /** A fake-player factory that resets the main hand for each shared check. */
+    /** A fake-player factory that puts the player in Survival and resets the main hand for each shared check. */
     public static Function<ItemStack, ServerPlayer> playerFactory(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = FakePlayer.get(level);
+            // Checks expect Survival spending; the shared fake player keeps whatever mode it last had.
+            player.setGameMode(GameType.SURVIVAL);
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
             return player;
         };

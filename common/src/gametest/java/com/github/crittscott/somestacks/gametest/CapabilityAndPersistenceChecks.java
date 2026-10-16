@@ -64,19 +64,18 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * storage view directly.
  */
 public final class CapabilityAndPersistenceChecks {
-    /** Data version written by Minecraft 1.21.4. */
-    private static final int DATA_VERSION_1_21_4 = 4189;
-    private static final int DATA_VERSION_1_21_5 = 4325;
+    /** Data version written by Minecraft 1.21.8, the target of the preceding Some Stacks release. */
+    private static final int DATA_VERSION_1_21_8 = 4440;
 
     private CapabilityAndPersistenceChecks() {}
 
     /**
-     * Storage disk data from the current format, 1.21.4, and 1.21.5 preserves items, data components,
+     * Storage disk data from the current format and the 1.21.8 release preserves items, data components,
      * block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
      * permanent, then save and restart the world. Verify the item and its components by extraction,
      * the layout by observation, and permanence by emptying the pile and checking that it remains.
-     * Also checks a literal 1.21.5 development-format fixture and failure without partial saves.
+     * Also checks a literal 1.21.8 release fixture and failure without partial saves.
      */
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -93,10 +92,9 @@ public final class CapabilityAndPersistenceChecks {
         pile.setPermanent(true);
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
-        check(!saved.contains("Rotation"), "Storage saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -112,27 +110,27 @@ public final class CapabilityAndPersistenceChecks {
             checkEquals(SharedConstants.getCurrentVersion().dataVersion().version(),
                     persisted.getInt("DataVersion").orElseThrow(), "Saved data version");
         }
-        checkDevelopmentBaseline(helper, loaded);
+        checkPreviousReleaseBaseline(helper, loaded);
         checkFailedItemEncoding(helper, loaded);
         helper.succeed();
     }
 
     /**
-     * Reproduces a 1.21.5 development save with custom data, a slotted attribute modifier, and a
-     * recoverable retry. In-game: deposit a custom-component stone in 1.21.5, make the pile
-     * permanent, save, then open the copied world in this version and extract it.
+     * Reproduces a 1.21.8 release save with custom data, a slotted attribute modifier, and a
+     * recoverable retry. In-game: deposit a custom-component stone with the 1.21.8 release, make the
+     * pile permanent, save, then open the copied world in this version and extract it.
      */
-    private static void checkDevelopmentBaseline(GameTestHelper helper, StorageStackBE loaded) {
+    private static void checkPreviousReleaseBaseline(GameTestHelper helper, StorageStackBE loaded) {
         var registries = helper.getLevel().registryAccess();
         CompoundTag saved = new CompoundTag();
-        saved.putInt("DataVersion", DATA_VERSION_1_21_5);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
         saved.putBoolean("Permanent", true);
         CompoundTag item = new CompoundTag();
         item.putString("id", "minecraft:stone");
         item.putInt("count", 5);
         item.putInt("Slot", 4);
         CompoundTag custom = new CompoundTag();
-        custom.putString("baseline", "1.21.5");
+        custom.putString("baseline", "1.21.8");
         CompoundTag modifier = new CompoundTag();
         modifier.putString("id", "somestacks:baseline");
         modifier.putString("type", "minecraft:attack_damage");
@@ -161,8 +159,8 @@ public final class CapabilityAndPersistenceChecks {
         saved.put("Items", inventory);
         loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         ItemStack restored = loaded.getItems().getStackInSlot(4);
-        checkEquals(Items.STONE, restored.getItem(), "Development-baseline item");
-        checkEquals(5, restored.getCount(), "Development-baseline count");
+        checkEquals(Items.STONE, restored.getItem(), "Release-baseline item");
+        checkEquals(5, restored.getCount(), "Release-baseline count");
         checkEquals(CustomData.of(custom), restored.get(DataComponents.CUSTOM_DATA), "Baseline custom data");
         check(restored.has(DataComponents.ATTRIBUTE_MODIFIERS), "Baseline attribute component lost");
         checkEquals(5, loaded.getItems().getStackInSlot(6).getCount(), "Baseline retry did not recover");
@@ -207,7 +205,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Singles disk data from the current format, 1.21.4, and 1.21.5 preserves contents plus block-state
+     * Singles disk data from the current format and the 1.21.8 release preserves contents plus block-state
      * and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
      * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
@@ -221,10 +219,9 @@ public final class CapabilityAndPersistenceChecks {
         source.setCubeRotation(21, 3);
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
-        check(!saved.contains("Rotation"), "Singles saved legacy block-entity rotation");
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -241,7 +238,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Bar disk data from the current format, 1.21.4, and 1.21.5 preserves the item in each position. To reproduce in-game: deposit Bars,
+     * Bar disk data from the current format and the 1.21.8 release preserves the item in each position. To reproduce in-game: deposit Bars,
      * save and restart the world, and verify the same Bar positions
      * remain occupied.
      */
@@ -254,7 +251,7 @@ public final class CapabilityAndPersistenceChecks {
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_4, DATA_VERSION_1_21_5}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -297,10 +294,6 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag storageTag = storage.getUpdateTag(registries);
         CompoundTag singlesTag = singles.getUpdateTag(registries);
         CompoundTag barTag = bars.getUpdateTag(registries);
-        check(!storageTag.contains("Rotation"),
-                "Storage update tag carried block-state rotation");
-        check(!singlesTag.contains("Rotation"),
-                "Singles update tag carried block-state rotation");
         check(!storageTag.getCompound("Items").orElseThrow().contains("SetAside"),
                 "Storage update tag exposed set-aside data");
         check(!singlesTag.getCompound("Items").orElseThrow().contains("SetAside"),
@@ -382,7 +375,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Set-aside entries in versioned 1.21.4 data recover only into free valid slots and disappear
+     * Set-aside entries in 1.21.8 release data recover only into free valid slots and disappear
      * from retained disk data.
      * To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
      * with that item mod absent, then restore the mod and reopen the world. The item returns.
@@ -405,7 +398,7 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(new StackItemStorage.LoadResult(0, 2), storage.deserializeNBT(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
-        saved.putInt("DataVersion", DATA_VERSION_1_21_4);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
         saved.put("Items", inventory);
         loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
@@ -422,32 +415,28 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * A Storage Stack saved by Some Stacks for Minecraft 1.21.1 keeps its contents in the current
-     * item format, and the block is marked for saving in that format. To reproduce in-game: in a
-     * 1.21.1 world, {@code /give @s stone[fire_resistant={}] 5}, deposit it into a Storage Stack,
-     * and quit; open the world with this version and extract the stone. It is still there, and is
-     * still fire resistant through the {@code damage_resistant} component that replaced
-     * {@code fire_resistant} in 1.21.2.
+     * A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence, and
+     * the block is marked for saving in the current data version, whether it loads in place or
+     * before chunk attachment. To reproduce in-game: with the 1.21.8 release, deposit stone into a
+     * Storage Stack, make the pile permanent, and quit; open the world with this version and
+     * extract the stone, then empty the pile. The stone is all there and the empty block remains.
      */
-    public static void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
+    public static void previousReleaseSaveUpgradesOnLoad(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
         StorageStackBE loaded = placeStorage(helper, ORIGIN);
 
-        CompoundTag components = new CompoundTag();
-        components.put("minecraft:fire_resistant", new CompoundTag());
         CompoundTag item = new CompoundTag();
         item.putString("id", "minecraft:stone");
         item.putInt("count", 5);
-        item.put("components", components);
         item.putInt("Slot", 4);
         ListTag list = new ListTag();
         list.add(item);
         CompoundTag storage = new CompoundTag();
         storage.put("Items", list);
         CompoundTag saved = new CompoundTag();
+        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
         saved.put("Items", storage);
-        saved.putInt("Rotation", 3);
-        saved.putBoolean("Permanent", false);
+        saved.putBoolean("Permanent", true);
 
         ChunkAccess chunk = helper.getLevel().getChunk(loaded.getBlockPos());
         chunk.tryMarkSaved();
@@ -456,23 +445,19 @@ public final class CapabilityAndPersistenceChecks {
         ItemStack restored = loaded.getItems().getStackInSlot(4);
         checkEquals(Items.STONE, restored.getItem(), "Upgraded Storage item");
         checkEquals(5, restored.getCount(), "Upgraded Storage count");
-        check(restored.has(DataComponents.DAMAGE_RESISTANT),
-                "The 1.21.1 fire_resistant component was not upgraded to damage_resistant");
-        checkEquals(3, loaded.getRotation(), "Migrated Storage block-state rotation");
-        check(!loaded.saveWithoutMetadata(registries).contains("Rotation"),
-                "Migrated Storage rewrote legacy Rotation");
+        check(loaded.isPermanent(), "Upgraded Storage permanence");
+        checkEquals(SharedConstants.getCurrentVersion().dataVersion().version(),
+                loaded.saveWithoutMetadata(registries).getInt("DataVersion").orElseThrow(),
+                "Upgraded Storage data version");
         check(chunk.isUnsaved(), "Upgrading saved contents did not mark the block for saving");
 
         // Load without a level, as chunk deserialization may do before attachment.
-        BlockState unrotated = loaded.getBlockState().getBlock().defaultBlockState();
-        helper.getLevel().setBlock(loaded.getBlockPos(), unrotated, Block.UPDATE_ALL);
-        StorageStackBE detached = new StorageStackBE(loaded.getBlockPos(), unrotated);
+        StorageStackBE detached = new StorageStackBE(loaded.getBlockPos(), loaded.getBlockState());
         detached.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         chunk.tryMarkSaved();
         detached.setLevel(helper.getLevel());
         check(chunk.isUnsaved(), "Deferred migration did not mark the chunk for saving on attachment");
         checkEquals(5, detached.getItems().getStackInSlot(4).getCount(), "Deferred migration lost items");
-        checkEquals(3, detached.getRotation(), "Deferred migration lost block rotation");
         helper.succeed();
     }
 

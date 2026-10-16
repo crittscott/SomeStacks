@@ -121,10 +121,10 @@ public final class StorageAndPersistenceGameTests {
         CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(helper);
     }
 
-    /** See {@link CapabilityAndPersistenceChecks#unversionedSaveUpgradesItemsOnLoad}. */
+    /** See {@link CapabilityAndPersistenceChecks#previousReleaseSaveUpgradesOnLoad}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
-    public void unversionedSaveUpgradesItemsOnLoad(GameTestHelper helper) {
-        CapabilityAndPersistenceChecks.unversionedSaveUpgradesItemsOnLoad(helper);
+    public void previousReleaseSaveUpgradesOnLoad(GameTestHelper helper) {
+        CapabilityAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(helper);
     }
 
     /** See {@link CapabilityAndPersistenceChecks#structureRotationTransformsRotatableStackFacing}. */

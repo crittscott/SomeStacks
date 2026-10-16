@@ -17,7 +17,7 @@ public final class FabricStackInteractionEvents {
     public static void init() {
         UseBlockCallback.EVENT.addPhaseOrdering(Event.DEFAULT_PHASE, STACK_GESTURES_PHASE);
         UseBlockCallback.EVENT.register(STACK_GESTURES_PHASE, (player, level, hand, hit) -> {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 return InteractionResult.PASS;
             }
             ServerPlayer serverPlayer = (ServerPlayer) player;

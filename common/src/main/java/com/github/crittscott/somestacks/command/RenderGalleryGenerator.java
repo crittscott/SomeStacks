@@ -214,7 +214,7 @@ public final class RenderGalleryGenerator {
                 if (skipped > 0) {
                     SomeStacksCommon.LOGGER.warn(
                             "Gallery for {} skipped {} of {} stack placement(s)",
-                            job.player.getGameProfile().getName(), skipped, job.expectedStacks);
+                            job.player.getScoreboardName(), skipped, job.expectedStacks);
                 }
                 job.onComplete.accept(new Result(job.placedStacks, job.expectedStacks, job.totalItems));
             }

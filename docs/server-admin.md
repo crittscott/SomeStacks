@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 1.21.6; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test copies of the preceding released 1.21.1 world and any 1.21.5 development world before using this port. Custom data packs use format **80**; server resource packs use **63** (see [Pack authors](pack-authors.md)).
+This branch targets Minecraft 1.21.9; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test a copy of a world from the preceding 1.21.8 release before using this port. Custom data packs use format **88**; server resource packs use **69** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
@@ -50,10 +50,6 @@ To change it, add a data pack to the world, e.g. `<world>/datapacks/my_ingots/`,
 - You cannot remove a single entry from the shipped list. To drop one, use `"replace": true` and list everything you want to keep.
 
 Run `/reload` to apply the change. Items already in a stack stay where they are; the tag only decides what new deposits a Bar or Singles Stack accepts. `/ss ingotgallery` shows what the current tag accepts.
-
-### Coming from 1.21.1
-
-1.21.1 kept an ingot list in `compatibility.ingots` of `<world>/serverconfig/somestacks-server.json`. That field is no longer read. On server start the mod logs a warning that names any entries in it other than the old defaults (`#forge:ingots*`, `#c:ingots*`, `#somestacks:ingots`, which the shipped tag already covers). Move those entries into a data pack as shown above, then delete the field to stop the warning. A `*` pattern such as `#forge:ingots*` cannot go into a tag; list the parent tag or the specific child tags instead.
 
 ## Permissions
 
