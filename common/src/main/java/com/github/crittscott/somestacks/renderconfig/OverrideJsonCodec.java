@@ -5,7 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -63,12 +63,12 @@ public final class OverrideJsonCodec {
     }
 
     /** Parses every valid item entry, logging and skipping malformed entries or fields. */
-    public static Map<ResourceLocation, ItemRenderConfig> parse(JsonObject root, String sourceName) {
-        Map<ResourceLocation, ItemRenderConfig> map = new TreeMap<>();
+    public static Map<Identifier, ItemRenderConfig> parse(JsonObject root, String sourceName) {
+        Map<Identifier, ItemRenderConfig> map = new TreeMap<>();
 
         for (Map.Entry<String, JsonElement> entry : root.entrySet()) {
             try {
-                ResourceLocation itemId = ResourceLocation.parse(entry.getKey());
+                Identifier itemId = Identifier.parse(entry.getKey());
                 ItemRenderConfig config = parseEntry(entry.getKey(), entry.getValue().getAsJsonObject());
                 if (config != null) {
                     map.put(itemId, config);
@@ -102,7 +102,7 @@ public final class OverrideJsonCodec {
     }
 
     /** Serializes entries sorted by item id for stable files. */
-    public static JsonObject toJson(Map<ResourceLocation, ItemRenderConfig> map) {
+    public static JsonObject toJson(Map<Identifier, ItemRenderConfig> map) {
         JsonObject root = new JsonObject();
         new TreeMap<>(map).forEach((itemId, config) -> root.add(itemId.toString(), entryToJson(config)));
         return root;

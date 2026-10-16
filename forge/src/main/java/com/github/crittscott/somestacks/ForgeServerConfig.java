@@ -64,7 +64,8 @@ public final class ForgeServerConfig implements ServerConfig.Backend {
                 .define("enabled", false);
         permission = builder
                 .comment("Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
-                .defineInRange("required_permission_level", net.minecraft.commands.Commands.LEVEL_ADMINS, 0, 4);
+                .defineInRange("required_permission_level", ServerConfig.DEFAULT_GALLERY_PERMISSION_LEVEL,
+                        0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
         placements = builder
                 .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
                 .defineInRange("placements_per_tick", ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK, 1, Integer.MAX_VALUE);

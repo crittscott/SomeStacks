@@ -1,15 +1,13 @@
 package com.github.crittscott.somestacks.client;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -29,15 +27,11 @@ import java.util.TreeMap;
  * geometry that cannot be projected as flat item art. Each result owns its captured state.
  */
 public final class ItemCapture {
-    static final int BLOCK_VERTEX_STRIDE =
-            DefaultVertexFormat.BLOCK.getVertexSize() / Integer.BYTES;
-    static final int BLOCK_POSITION_OFFSET =
-            DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.POSITION) / Integer.BYTES;
-    static final int BLOCK_UV_OFFSET =
-            DefaultVertexFormat.BLOCK.getOffset(VertexFormatElement.UV0) / Integer.BYTES;
-
-    /** A baked quad together with its resolved layer tint. Baked model geometry is immutable. */
-    public record TintedQuad(BakedQuad quad, int color) {}
+    /**
+     * A baked quad together with its resolved layer tint and the render type the item submitted it
+     * with, which binds the atlas holding the quad's sprite. Baked model geometry is immutable.
+     */
+    public record TintedQuad(BakedQuad quad, int color, RenderType renderType) {}
 
     private final ItemStackRenderState renderState = new ItemStackRenderState();
     private final List<TintedQuad> quads = new ArrayList<>();
@@ -114,11 +108,11 @@ public final class ItemCapture {
         bounded = true;
     }
 
-    private void acceptQuads(int[] tints, List<BakedQuad> submitted) {
+    private void acceptQuads(int[] tints, List<BakedQuad> submitted, RenderType renderType) {
         for (BakedQuad quad : submitted) {
             int index = quad.tintIndex();
             int tint = index >= 0 && index < tints.length ? tints[index] : -1;
-            quads.add(new TintedQuad(quad, tint));
+            quads.add(new TintedQuad(quad, tint, renderType));
         }
     }
 
@@ -133,7 +127,7 @@ public final class ItemCapture {
                 public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
                                        int overlay, int outline, int[] tints, List<BakedQuad> submitted,
                                        RenderType renderType, ItemStackRenderState.FoilType foil) {
-                    acceptQuads(tints, submitted);
+                    acceptQuads(tints, submitted, renderType);
                 }
             });
         }
@@ -142,7 +136,7 @@ public final class ItemCapture {
         public void submitItem(PoseStack pose, ItemDisplayContext context, int light, int overlay,
                                int outline, int[] tints, List<BakedQuad> submitted,
                                RenderType renderType, ItemStackRenderState.FoilType foil) {
-            acceptQuads(tints, submitted);
+            acceptQuads(tints, submitted, renderType);
         }
     }
 }

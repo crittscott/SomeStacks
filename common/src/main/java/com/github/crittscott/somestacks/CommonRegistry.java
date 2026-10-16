@@ -5,7 +5,7 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,21 +15,21 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public final class CommonRegistry {
     private CommonRegistry() {}
 
-    public static final ResourceLocation STORAGE_STACK_BLOCK = id("storage_stack_block");
-    public static final ResourceLocation SINGLES_STACK_BLOCK = id("singles_stack_block");
-    public static final ResourceLocation BAR_STACK_BLOCK = id("bar_stack_block");
-    public static final ResourceLocation STORAGE_STACK_BE = id("stack_be");
-    public static final ResourceLocation SINGLES_STACK_BE = id("singles_stack_be");
-    public static final ResourceLocation BAR_STACK_BE = id("bar_stack_be");
-    public static final ResourceLocation STORAGE_DEPOSIT_SOUND = id("block.storage_stack.deposit");
-    public static final ResourceLocation STORAGE_EXTRACT_SOUND = id("block.storage_stack.extract");
-    public static final ResourceLocation STORAGE_ROTATE_SOUND = id("block.storage_stack.rotate");
-    public static final ResourceLocation SINGLES_DEPOSIT_SOUND = id("block.singles_stack.deposit");
-    public static final ResourceLocation SINGLES_EXTRACT_SOUND = id("block.singles_stack.extract");
-    public static final ResourceLocation SINGLES_ROTATE_SOUND = id("block.singles_stack.rotate");
-    public static final ResourceLocation SINGLES_ROTATE_ITEM_SOUND = id("block.singles_stack.rotate_item");
-    public static final ResourceLocation BAR_DEPOSIT_SOUND = id("block.bar_stack.deposit");
-    public static final ResourceLocation BAR_EXTRACT_SOUND = id("block.bar_stack.extract");
+    public static final Identifier STORAGE_STACK_BLOCK = id("storage_stack_block");
+    public static final Identifier SINGLES_STACK_BLOCK = id("singles_stack_block");
+    public static final Identifier BAR_STACK_BLOCK = id("bar_stack_block");
+    public static final Identifier STORAGE_STACK_BE = id("stack_be");
+    public static final Identifier SINGLES_STACK_BE = id("singles_stack_be");
+    public static final Identifier BAR_STACK_BE = id("bar_stack_be");
+    public static final Identifier STORAGE_DEPOSIT_SOUND = id("block.storage_stack.deposit");
+    public static final Identifier STORAGE_EXTRACT_SOUND = id("block.storage_stack.extract");
+    public static final Identifier STORAGE_ROTATE_SOUND = id("block.storage_stack.rotate");
+    public static final Identifier SINGLES_DEPOSIT_SOUND = id("block.singles_stack.deposit");
+    public static final Identifier SINGLES_EXTRACT_SOUND = id("block.singles_stack.extract");
+    public static final Identifier SINGLES_ROTATE_SOUND = id("block.singles_stack.rotate");
+    public static final Identifier SINGLES_ROTATE_ITEM_SOUND = id("block.singles_stack.rotate_item");
+    public static final Identifier BAR_DEPOSIT_SOUND = id("block.bar_stack.deposit");
+    public static final Identifier BAR_EXTRACT_SOUND = id("block.bar_stack.extract");
 
     public static Block storageStackBlock() {
         return require(BuiltInRegistries.BLOCK, STORAGE_STACK_BLOCK);
@@ -91,11 +91,11 @@ public final class CommonRegistry {
         return require(BuiltInRegistries.SOUND_EVENT, BAR_EXTRACT_SOUND);
     }
 
-    private static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, path);
+    private static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, path);
     }
 
-    private static <T> T require(Registry<T> registry, ResourceLocation id) {
+    private static <T> T require(Registry<T> registry, Identifier id) {
         if (!registry.containsKey(id)) {
             throw new IllegalStateException("Some Stacks registry entry is missing: " + id);
         }
@@ -103,7 +103,7 @@ public final class CommonRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends BlockEntity> BlockEntityType<T> blockEntityType(ResourceLocation id) {
+    private static <T extends BlockEntity> BlockEntityType<T> blockEntityType(Identifier id) {
         return (BlockEntityType<T>) require(BuiltInRegistries.BLOCK_ENTITY_TYPE, id);
     }
 }

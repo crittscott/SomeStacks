@@ -1,8 +1,9 @@
 package com.github.crittscott.somestacks;
 
 import net.minecraft.commands.Commands;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.PermissionCheck;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,13 @@ public final class ServerConfig {
     public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
     public static final int MAX_PILE_HEIGHT = 64;
     public static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
+    /** Vanilla's command permission checks, indexed by {@code render_gallery.required_permission_level}. */
+    private static final List<PermissionCheck> PERMISSION_LEVELS = List.of(
+            Commands.LEVEL_ALL, Commands.LEVEL_MODERATORS, Commands.LEVEL_GAMEMASTERS,
+            Commands.LEVEL_ADMINS, Commands.LEVEL_OWNERS);
+    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = 3;
+    /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
+    public static final int GALLERY_PERMISSION_LEVEL_MAX = PERMISSION_LEVELS.size() - 1;
 
     /**
      * Items barred by default. Each crashes the client when its plain {@link
@@ -37,7 +45,7 @@ public final class ServerConfig {
     private static Backend backend;
     private static volatile Settings settings = defaults();
     private static volatile Set<String> disabledMods = Set.of();
-    private static volatile Set<ResourceLocation> disabledItems = Set.of();
+    private static volatile Set<Identifier> disabledItems = Set.of();
 
     public static void install(Backend implementation) { backend = implementation; }
     public static Backend backend() { return backend; }
@@ -84,7 +92,7 @@ public final class ServerConfig {
                 DEFAULT_DISABLE_ITEMS,
                 DEFAULT_GALLERY_PLACEMENTS_PER_TICK,
                 false,
-                Commands.LEVEL_ADMINS,
+                DEFAULT_GALLERY_PERMISSION_LEVEL,
                 List.of(),
                 List.of());
     }
@@ -120,6 +128,7 @@ public final class ServerConfig {
     public static int renderGalleryPlacementsPerTick() { return settings.renderGalleryPlacementsPerTick(); }
     public static boolean galleryEnabled() { return settings.galleryEnabled(); }
     public static int galleryRequiredPermissionLevel() { return settings.galleryPermissionLevel(); }
+    public static PermissionCheck galleryPermission() { return PERMISSION_LEVELS.get(settings.galleryPermissionLevel()); }
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
         for (String entry : DISABLE_MODS.get()) {
@@ -129,9 +138,9 @@ public final class ServerConfig {
             }
         }
 
-        Set<ResourceLocation> items = new HashSet<>();
+        Set<Identifier> items = new HashSet<>();
         for (String entry : DISABLE_ITEMS.get()) {
-            ResourceLocation itemId = ResourceLocation.tryParse(entry.trim().toLowerCase(Locale.ROOT));
+            Identifier itemId = Identifier.tryParse(entry.trim().toLowerCase(Locale.ROOT));
             if (itemId == null) {
                 SomeStacksCommon.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);
                 continue;
@@ -185,7 +194,7 @@ public final class ServerConfig {
     }
 
     /** Whether the item registered as {@code itemId} is barred from stacks. */
-    public static boolean isItemDisabled(ResourceLocation itemId) {
+    public static boolean isItemDisabled(Identifier itemId) {
         return disabledItems.contains(itemId);
     }
 

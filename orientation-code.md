@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 21; Minecraft 1.21.9; production builds confirmed on all loaders; GameTest and runtime verification pending; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.11 port in progress (Gradle syncs; compilation, GameTests, and runtime verification pending); package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
@@ -93,13 +93,13 @@ Forge/NeoForge consult destination right-click events for neighbor deposits, hon
 
 Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
 
-BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads/tints; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 88; galleries bypass protection.
+BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 94.1; galleries bypass protection.
 
 2-D selection: thinnest/longest axis ratio. Cache: 4.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 88. Registrations, JSON, and wrappers cross-checked; compilation/discovery pending. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 94.1. Registrations, JSON, and wrappers cross-checked; compilation/discovery pending. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
 
 `-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 

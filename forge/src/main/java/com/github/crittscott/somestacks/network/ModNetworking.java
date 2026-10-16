@@ -4,7 +4,7 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.network.Channel;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkProtocol;
@@ -30,7 +30,7 @@ public final class ModNetworking {
 
     public static void init() {
         CHANNEL = ChannelBuilder
-                .named(ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, "main"))
+                .named(Identifier.fromNamespaceAndPath(SomeStacks.MODID, "main"))
                 .networkProtocolVersion(SomeStacksCommon.PROTOCOL_VERSION)
                 .clientAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))
                 .serverAcceptedVersions(Channel.VersionTest.exact(SomeStacksCommon.PROTOCOL_VERSION))

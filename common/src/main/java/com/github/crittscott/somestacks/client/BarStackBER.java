@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.data.AtlasIds;
@@ -89,7 +89,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
             return;
         }
         int light = state.light;
-        collector.submitCustomGeometry(pose, RenderType.solid(), (snapshot, vc) -> {
+        collector.submitCustomGeometry(pose, RenderTypes.solidMovingBlock(), (snapshot, vc) -> {
             PoseStack barPose = new PoseStack();
             barPose.last().pose().set(snapshot.pose());
             barPose.last().normal().set(snapshot.normal());

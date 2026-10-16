@@ -12,7 +12,7 @@ import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -73,7 +73,7 @@ public final class ModRegistry {
             BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE.getPath(),
                     () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
-    private static DeferredHolder<SoundEvent, SoundEvent> sound(ResourceLocation id) {
+    private static DeferredHolder<SoundEvent, SoundEvent> sound(Identifier id) {
         return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
     }
 

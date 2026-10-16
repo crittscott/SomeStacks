@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.ARGB;
@@ -35,15 +35,15 @@ import java.util.Map;
  * <p>This is client resource data and is never synchronized, so two players may see the same bar
  * differently if their resource packs differ.
  */
-public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
-    public static final ResourceLocation RELOAD_LISTENER_ID =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
+public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifier, BarTextureStore.BarTextureData>> {
+    public static final Identifier RELOAD_LISTENER_ID =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
 
     private static final Gson GSON = new Gson();
-    private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
+    private static final Map<Identifier, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
-    private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
-    private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
+    private static final Map<Identifier, BarTextureData> unmappedTints = new HashMap<>();
+    private static final Identifier DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
     private static final int OPAQUE_PIXEL_ALPHA_THRESHOLD = 127;
@@ -55,16 +55,16 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
      * A bar's texture and tint. {@code autoTint} is separate from {@code color} because white is a
      * valid authored color meaning "no tint," not a sentinel requesting automatic tinting.
      */
-    public record BarTextureData(ResourceLocation texture, int color, boolean autoTint) {
+    public record BarTextureData(Identifier texture, int color, boolean autoTint) {
         public static final int WHITE = 0xFFFFFFFF;
 
         /** Creates a mapping whose tint will be derived from the sprite and tint the item draws with. */
-        public static BarTextureData auto(ResourceLocation texture) {
+        public static BarTextureData auto(Identifier texture) {
             return new BarTextureData(texture, WHITE, true);
         }
 
         /** Creates a mapping with its final authored or computed tint. */
-        public static BarTextureData tinted(ResourceLocation texture, int color) {
+        public static BarTextureData tinted(Identifier texture, int color) {
             return new BarTextureData(texture, color, false);
         }
 
@@ -86,14 +86,14 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     @Override
-    protected Map<ResourceLocation, BarTextureData> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-        Map<ResourceLocation, BarTextureData> configMap = new HashMap<>();
+    protected Map<Identifier, BarTextureData> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+        Map<Identifier, BarTextureData> configMap = new HashMap<>();
 
         var resources = resourceManager.listResources("textures/bars", loc -> loc.getPath().endsWith(".json"));
 
         // Read in file order so that two files mapping one item resolve the same way every reload.
         resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
-            ResourceLocation fileLocation = fileEntry.getKey();
+            Identifier fileLocation = fileEntry.getKey();
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(fileEntry.getValue().open(), StandardCharsets.UTF_8))) {
                 JsonObject root = GSON.fromJson(reader, JsonObject.class);
@@ -102,7 +102,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                     if (key.startsWith(COMMENT_PREFIX)) continue;
 
                     try {
-                        ResourceLocation itemLoc = ResourceLocation.parse(key);
+                        Identifier itemLoc = Identifier.parse(key);
                         BarTextureData data = parseEntry(root.get(key));
                         if (data == null) {
                             SomeStacksCommon.LOGGER.warn("Invalid format for '{}': expected string or object", key);
@@ -132,15 +132,15 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     @Nullable
     static BarTextureData parseEntry(JsonElement value) {
         if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
-            return BarTextureData.auto(ResourceLocation.parse(value.getAsString()));
+            return BarTextureData.auto(Identifier.parse(value.getAsString()));
         }
         if (!value.isJsonObject()) {
             return null;
         }
 
         JsonObject obj = value.getAsJsonObject();
-        ResourceLocation texture = obj.has(FIELD_TEXTURE)
-                ? ResourceLocation.parse(obj.get(FIELD_TEXTURE).getAsString())
+        Identifier texture = obj.has(FIELD_TEXTURE)
+                ? Identifier.parse(obj.get(FIELD_TEXTURE).getAsString())
                 : DEFAULT_TEXTURE;
         return obj.has(FIELD_TINT)
                 ? BarTextureData.tinted(texture, parseColor(obj.get(FIELD_TINT).getAsString()))
@@ -148,13 +148,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
         unmappedTints.clear();
         int autoTinted = 0;
 
-        for (Map.Entry<ResourceLocation, BarTextureData> entry : prepared.entrySet()) {
-            ResourceLocation itemLoc = entry.getKey();
+        for (Map.Entry<Identifier, BarTextureData> entry : prepared.entrySet()) {
+            Identifier itemLoc = entry.getKey();
             BarTextureData data = entry.getValue();
 
             if (data.autoTint()) {
@@ -170,7 +170,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
                 textureMap.size(), autoTinted);
     }
 
-    private static int calculateTintFromItemTexture(ResourceLocation itemLoc, ResourceManager resourceManager) {
+    private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
         try {
             if (!BuiltInRegistries.ITEM.containsKey(itemLoc)) {
                 return BarTextureData.WHITE;
@@ -197,12 +197,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
     /** The average color of {@code sprite}'s source texture, or white when there is none to read. */
     private static int averageSpriteColor(TextureAtlasSprite sprite, ResourceManager resourceManager) {
-        ResourceLocation spriteName = sprite.contents().name();
+        Identifier spriteName = sprite.contents().name();
         if (spriteName.equals(MissingTextureAtlasSprite.getLocation())) {
             return BarTextureData.WHITE;
         }
 
-        ResourceLocation texturePath = getTextureResourceLocation(spriteName);
+        Identifier texturePath = getTextureIdentifier(spriteName);
 
         NativeImage image = loadTextureImage(texturePath, resourceManager);
         if (image == null) {
@@ -216,13 +216,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
         }
     }
 
-    private static ResourceLocation getTextureResourceLocation(ResourceLocation spriteName) {
+    private static Identifier getTextureIdentifier(Identifier spriteName) {
         String namespace = spriteName.getNamespace();
         String path = spriteName.getPath();
-        return ResourceLocation.fromNamespaceAndPath(namespace, "textures/" + path + ".png");
+        return Identifier.fromNamespaceAndPath(namespace, "textures/" + path + ".png");
     }
 
-    private static NativeImage loadTextureImage(ResourceLocation texturePath, ResourceManager resourceManager) {
+    private static NativeImage loadTextureImage(Identifier texturePath, ResourceManager resourceManager) {
         try {
             var resource = resourceManager.getResource(texturePath);
             if (resource.isEmpty()) {
@@ -298,7 +298,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
 
-        ResourceLocation itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
 
         BarTextureData mapped = textureMap.get(itemLoc);
         if (mapped != null) return mapped;

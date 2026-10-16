@@ -15,13 +15,13 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
@@ -54,9 +54,6 @@ import java.util.stream.Collectors;
  * describes each gate. {@code ss help} is gated by nothing.
  */
 public final class SsCommand {
-    /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
-    private static final int GAME_MASTER_PERMISSION_LEVEL = Commands.LEVEL_GAMEMASTERS;
-
     static final String COMMAND_ROOT = ClientRenderCommandSyntax.ROOT;
     static final String COMMAND_ITEM = ClientRenderCommandSyntax.ITEM;
     static final String COMMAND_GALLERY = "gallery";
@@ -105,7 +102,7 @@ public final class SsCommand {
             String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
                 .requires(source -> isPlayer(source) && ServerConfig.galleryEnabled()
-                        && source.hasPermission(ServerConfig.galleryRequiredPermissionLevel()))
+                        && ServerConfig.galleryPermission().check(source.permissions()))
                 .then(Commands.literal("all")
                         .executes(ctx -> galleryAll(ctx, kind)))
                 .then(Commands.literal("list")
@@ -154,10 +151,10 @@ public final class SsCommand {
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, IdentifierArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
-                                                ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
+                                                IdentifierArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
@@ -194,10 +191,10 @@ public final class SsCommand {
                                         .executes(ctx -> addItemEntry(
                                                 ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
-                                .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
+                                .then(Commands.argument(ARG_ITEM, IdentifierArgument.id())
                                         .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
                                         .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
-                                                ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
+                                                IdentifierArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
@@ -206,8 +203,9 @@ public final class SsCommand {
         return source.isPlayer();
     }
 
+    /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */
     private static boolean isAdmin(CommandSourceStack source) {
-        return source.hasPermission(GAME_MASTER_PERMISSION_LEVEL);
+        return Commands.LEVEL_GAMEMASTERS.check(source.permissions());
     }
 
     private static CompletableFuture<Suggestions> suggestEntries(
@@ -361,7 +359,7 @@ public final class SsCommand {
      */
     @Nullable
     private static ItemSelection selectItems(CommandContext<CommandSourceStack> ctx) {
-        List<ResourceLocation> itemIds = new ArrayList<>();
+        List<Identifier> itemIds = new ArrayList<>();
         List<String> disabledItems = new ArrayList<>();
         List<String> unknownItems = new ArrayList<>();
         Set<String> seen = new HashSet<>();
@@ -372,7 +370,7 @@ public final class SsCommand {
                 continue;
             }
 
-            ResourceLocation itemId = ResourceLocation.tryParse(trimmed);
+            Identifier itemId = Identifier.tryParse(trimmed);
             if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
                 unknownItems.add(trimmed);
             } else if (ServerConfig.isModDisabled(itemId.getNamespace())
@@ -393,8 +391,8 @@ public final class SsCommand {
             return null;
         }
 
-        itemIds.sort(Comparator.comparing(ResourceLocation::getNamespace)
-                .thenComparing(ResourceLocation::getPath));
+        itemIds.sort(Comparator.comparing(Identifier::getNamespace)
+                .thenComparing(Identifier::getPath));
 
         return new ItemSelection(
                 itemIds.stream().map(BuiltInRegistries.ITEM::getValue).toList(),
@@ -511,13 +509,13 @@ public final class SsCommand {
     private static int addItemEntry(CommandContext<CommandSourceStack> ctx,
                                     ServerConfig.ListSetting list, String label)
             throws CommandSyntaxException {
-        ResourceLocation itemId = resourceItemId(ctx);
+        Identifier itemId = resourceItemId(ctx);
         return addEntry(ctx, list, label, itemId.toString());
     }
 
-    private static ResourceLocation resourceItemId(
+    private static Identifier resourceItemId(
             CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return ResourceArgument.getResource(ctx, ARG_ITEM, Registries.ITEM).key().location();
+        return ResourceArgument.getResource(ctx, ARG_ITEM, Registries.ITEM).key().identifier();
     }
 
     private static int addEntry(CommandContext<CommandSourceStack> ctx,

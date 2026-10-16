@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.SomeStacks;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -24,8 +24,8 @@ import javax.annotation.Nullable;
  */
 @Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {
-    private static final ResourceLocation ITEM_HANDLER_ID =
-            ResourceLocation.fromNamespaceAndPath(SomeStacks.MODID, "item_handler");
+    private static final Identifier ITEM_HANDLER_ID =
+            Identifier.fromNamespaceAndPath(SomeStacks.MODID, "item_handler");
 
     private ForgeCapabilityAttachment() {
     }

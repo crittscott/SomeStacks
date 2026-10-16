@@ -6,7 +6,7 @@ import eu.pb4.common.protection.api.ProtectionProvider;
 import net.minecraft.core.BlockPos;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB;
 /** Provider-backed checks loaded only in development runs with Common Protection API installed. */
 public final class ProtectionApiGameTests {
     static {
-        CommonProtection.register(ResourceLocation.fromNamespaceAndPath("somestacks", "test_protection"),
+        CommonProtection.register(Identifier.fromNamespaceAndPath("somestacks", "test_protection"),
                 new ProtectionProvider() {
                     @Override
                     public boolean isProtected(Level level, BlockPos pos) { return false; }

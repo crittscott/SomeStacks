@@ -37,6 +37,8 @@ Status: complete. The user confirmed IntelliJ Gradle sync succeeds. Forge's Even
 
 **Checkpoint:** `:common:compileJava` succeeds. Loader modules are still expected to fail.
 
+Status: edits complete, awaiting user compile. `ResourceLocation`/`ResourceLocationArgument`/`ResourceKey#location` renamed in all modules. Admin commands check `Commands.LEVEL_GAMEMASTERS` against `source.permissions()`; the gallery's 0-4 config level indexes vanilla's five `Commands.LEVEL_*` checks in `ServerConfig` (Forge/NeoForge config specs use its constants). The Storage/Singles background and Bar cuboids use `RenderTypes.solidMovingBlock()`; 2-D plates are submitted with the render type the item model used (item atlas), reading `BakedQuad#position`/`packedUV`. Packs declare `[94, 1]`. GameTests: `Cow` package move and `LevelBasedPermissionSet` sources. APIs were checked against the 1.21.11 primer and NeoForge's 1.21.11 branch.
+
 ## Stage 3 — Loader modules
 
 - Fabric: Fabric API 0.134 → 0.141 changes (rendering hooks, `ResourceLoader`, Transfer API, networking), air-click mixin target, fake-player factory.

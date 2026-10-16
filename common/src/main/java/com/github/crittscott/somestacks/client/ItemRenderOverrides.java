@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -51,18 +51,18 @@ import java.util.TreeMap;
  * file naming a namespace this client does not have is skipped without parsing or retention. A file
  * whose name is not a namespace therefore applies to nothing.
  */
-public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<ResourceLocation, ItemRenderConfig>> {
-    public static final ResourceLocation RELOAD_LISTENER_ID =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_render_overrides");
+public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Identifier, ItemRenderConfig>> {
+    public static final Identifier RELOAD_LISTENER_ID =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_render_overrides");
 
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
     private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
     /** Bundled resource overrides, from client resource reload. */
-    public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
+    public static final Map<Identifier, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
-    private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
+    private static final Map<Identifier, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static boolean userFileLoaded = false;
     private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
 
@@ -71,17 +71,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     @Override
-    protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-        Map<ResourceLocation, ItemRenderConfig> configMap = new HashMap<>();
+    protected Map<Identifier, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+        Map<Identifier, ItemRenderConfig> configMap = new HashMap<>();
 
         var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
         Set<String> present = presentNamespaces();
         int skipped = 0;
 
         // Read in file order so that two files covering one item resolve the same way every reload.
-        for (Map.Entry<ResourceLocation, Resource> fileEntry
+        for (Map.Entry<Identifier, Resource> fileEntry
                 : new TreeMap<>(resources).entrySet()) {
-            ResourceLocation fileLocation = fileEntry.getKey();
+            Identifier fileLocation = fileEntry.getKey();
             if (!present.contains(coveredNamespace(fileLocation))) {
                 skipped++;
                 continue;
@@ -101,7 +101,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     /** The namespace a bundled override file covers: its file name without the {@code .json}. */
-    private static String coveredNamespace(ResourceLocation fileLocation) {
+    private static String coveredNamespace(Identifier fileLocation) {
         String path = fileLocation.getPath();
         return path.substring(path.lastIndexOf('/') + 1, path.length() - ".json".length());
     }
@@ -112,28 +112,28 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      */
     private static Set<String> presentNamespaces() {
         Set<String> namespaces = new HashSet<>();
-        for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
+        for (Identifier itemId : BuiltInRegistries.ITEM.keySet()) {
             namespaces.add(itemId.getNamespace());
         }
         return namespaces;
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, ItemRenderConfig> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         CONFIG_MAP.clear();
         CONFIG_MAP.putAll(prepared);
         clearResolvedProfiles();
     }
 
     /** Changes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
-    public static void putUser(ResourceLocation itemId, ItemRenderConfig config) {
+    public static void putUser(Identifier itemId, ItemRenderConfig config) {
         ensureUserFileLoaded();
         USER_OVERRIDES.put(itemId, config);
         clearResolvedProfiles();
     }
 
     /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
-    public static void removeUser(ResourceLocation itemId) {
+    public static void removeUser(Identifier itemId) {
         ensureUserFileLoaded();
         USER_OVERRIDES.remove(itemId);
         clearResolvedProfiles();
@@ -158,7 +158,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     }
 
     private static RenderProfile resolveUncached(ItemStack stack) {
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         ItemRenderConfig entry = USER_OVERRIDES.get(itemId);
         if (entry == null) {
             entry = CONFIG_MAP.get(itemId);
@@ -208,11 +208,11 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
      * measured cache, which is saved once the dump is done rather than waiting for logout.
      */
     public static void handleDumpRequest(List<String> namespaces) {
-        Map<String, Map<ResourceLocation, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
+        Map<String, Map<Identifier, ItemRenderConfig>> byNamespace = new LinkedHashMap<>();
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
+            if (Identifier.tryBuild(namespace, "validation") == null) {
                 SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;
@@ -221,8 +221,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
 
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            ResourceLocation itemId = entry.getKey().location();
-            Map<ResourceLocation, ItemRenderConfig> namespaceEntries = byNamespace.get(itemId.getNamespace());
+            Identifier itemId = entry.getKey().identifier();
+            Map<Identifier, ItemRenderConfig> namespaceEntries = byNamespace.get(itemId.getNamespace());
             if (namespaceEntries == null) {
                 continue;
             }
@@ -246,7 +246,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
             return;
         }
 
-        for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
+        for (Map.Entry<String, Map<Identifier, ItemRenderConfig>> entry : byNamespace.entrySet()) {
             Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
             // Retain a path-containment check at the filesystem boundary as a final invariant.
             if (!file.startsWith(GENERATED_DIR)) {

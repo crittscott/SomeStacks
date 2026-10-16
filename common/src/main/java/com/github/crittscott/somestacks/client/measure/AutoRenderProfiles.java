@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,10 +123,10 @@ public final class AutoRenderProfiles {
             return;
         }
 
-        Map<ResourceLocation, ItemRenderConfig> entries = new TreeMap<>();
+        Map<Identifier, ItemRenderConfig> entries = new TreeMap<>();
         JsonObject versions = new JsonObject();
         for (Map.Entry<Item, RenderProfile> entry : CACHE.entrySet()) {
-            ResourceLocation id = BuiltInRegistries.ITEM.getKey(entry.getKey());
+            Identifier id = BuiltInRegistries.ITEM.getKey(entry.getKey());
             RenderProfile profile = entry.getValue();
             entries.put(id, new ItemRenderConfig(profile.mode(), profile.scale(), profile.offset()));
             if (!versions.has(id.getNamespace())) {
@@ -187,11 +187,11 @@ public final class AutoRenderProfiles {
                     : new JsonObject();
 
             JsonObject encodedEntries = root.getAsJsonObject(FIELD_ENTRIES);
-            Map<ResourceLocation, ItemRenderConfig> entries =
+            Map<Identifier, ItemRenderConfig> entries =
                     OverrideJsonCodec.parse(encodedEntries, cacheFile.toString());
             int skipped = encodedEntries.size() - entries.size();
-            for (Map.Entry<ResourceLocation, ItemRenderConfig> entry : entries.entrySet()) {
-                ResourceLocation id = entry.getKey();
+            for (Map.Entry<Identifier, ItemRenderConfig> entry : entries.entrySet()) {
+                Identifier id = entry.getKey();
                 ItemRenderConfig config = entry.getValue();
                 if (config.mode() == null || config.scale() == null || config.offset() == null) {
                     dirty = true;

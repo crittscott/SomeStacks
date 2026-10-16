@@ -13,7 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,13 +58,13 @@ public final class ClientRenderCommands {
             case WRITE_LIST -> dumpList(ctx, feedback);
             case WRITE_NAMESPACE -> dumpSingle(ctx, feedback);
         }, (ctx, builder) -> SharedSuggestionProvider.suggest(
-                BuiltInRegistries.ITEM.keySet().stream().map(ResourceLocation::toString), builder),
+                BuiltInRegistries.ITEM.keySet().stream().map(Identifier::toString), builder),
                 (ctx, builder) -> SharedSuggestionProvider.suggest(installedNamespaces(), builder));
     }
 
     private static <S> int setItem(
             CommandContext<S> ctx, Feedback<S> feedback, float scale, RenderOffset offset) {
-        ResourceLocation itemId = ctx.getArgument(ARG_ITEM, ResourceLocation.class);
+        Identifier itemId = ctx.getArgument(ARG_ITEM, Identifier.class);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
             feedback.failure(ctx.getSource(),
                     Component.translatable("somestacks.command.unknown_item", itemId));
@@ -88,7 +88,7 @@ public final class ClientRenderCommands {
     }
 
     private static <S> int resetItem(CommandContext<S> ctx, Feedback<S> feedback) {
-        ResourceLocation itemId = ctx.getArgument(ARG_ITEM, ResourceLocation.class);
+        Identifier itemId = ctx.getArgument(ARG_ITEM, Identifier.class);
         if (!BuiltInRegistries.ITEM.containsKey(itemId)) {
             feedback.failure(ctx.getSource(),
                     Component.translatable("somestacks.command.unknown_item", itemId));
@@ -196,7 +196,7 @@ public final class ClientRenderCommands {
 
     private static Set<String> installedNamespaces() {
         Set<String> namespaces = new TreeSet<>();
-        for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
+        for (Identifier itemId : BuiltInRegistries.ITEM.keySet()) {
             namespaces.add(itemId.getNamespace());
         }
         return namespaces;

@@ -3,14 +3,14 @@ package com.github.crittscott.somestacks.server;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 
 /** Applies Some Stacks gestures from Fabric's actual server-side block-use callback. */
 public final class FabricStackInteractionEvents {
-    public static final ResourceLocation STACK_GESTURES_PHASE =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "stack_gestures");
+    public static final Identifier STACK_GESTURES_PHASE =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "stack_gestures");
 
     private FabricStackInteractionEvents() {}
 

@@ -12,7 +12,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +28,7 @@ public final class SomeStacksServer {
     private static volatile MinecraftServer runningServer;
     private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
 
-    private record SavedItemLocation(ResourceLocation dimension, BlockPos pos) {}
+    private record SavedItemLocation(Identifier dimension, BlockPos pos) {}
 
     /**
      * Starts session accounting, loads world policy, then builds the login snapshot. Loader
@@ -57,7 +57,7 @@ public final class SomeStacksServer {
     public static synchronized void reportSavedItems(
             ServerLevel level, BlockPos pos, StackItemStorage.LoadResult result) {
         if (result.newlySetAside() == 0 && result.failedRetries() == 0) return;
-        SavedItemLocation location = new SavedItemLocation(level.dimension().location(), pos.immutable());
+        SavedItemLocation location = new SavedItemLocation(level.dimension().identifier(), pos.immutable());
         boolean firstReport = reportedSavedItems.add(location);
         if (result.newlySetAside() > 0 || firstReport) {
             SomeStacksCommon.LOGGER.warn(

@@ -75,7 +75,7 @@ public class BarStackBE extends StackBlockEntity {
     /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
     public static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> INGOTS =
             net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
-                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+                    net.minecraft.resources.Identifier.fromNamespaceAndPath("somestacks", "ingots"));
 
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {

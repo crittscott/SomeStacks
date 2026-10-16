@@ -4,7 +4,7 @@ import com.github.crittscott.somestacks.ServerConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -107,7 +107,7 @@ public final class ItemOps {
             return false;
         }
 
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return ServerConfig.isModDisabled(itemId.getNamespace());
     }
 
@@ -130,14 +130,14 @@ public final class ItemOps {
             return false;
         }
 
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return ServerConfig.isItemDisabled(itemId);
     }
 
     /** {@link #isItemDisabled} for a deposit path, telling the player when it refuses. */
     public static boolean checkDisabledItemAndNotify(ItemStack stack, Player player) {
         if (isItemDisabled(stack)) {
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+            Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
             player.displayClientMessage(
                     Component.translatable("somestacks.message.disabled_item", itemId.toString()),
                     true

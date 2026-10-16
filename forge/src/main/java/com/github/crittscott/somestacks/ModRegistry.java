@@ -9,7 +9,7 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -72,11 +72,11 @@ public final class ModRegistry {
             BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE.getPath(),
                     () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
-    private static ResourceKey<Block> blockKey(ResourceLocation id) {
+    private static ResourceKey<Block> blockKey(Identifier id) {
         return ResourceKey.create(Registries.BLOCK, id);
     }
 
-    private static RegistryObject<SoundEvent> sound(ResourceLocation id) {
+    private static RegistryObject<SoundEvent> sound(Identifier id) {
         return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
     }
 

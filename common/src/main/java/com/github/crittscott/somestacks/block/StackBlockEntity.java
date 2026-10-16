@@ -400,7 +400,7 @@ public abstract class StackBlockEntity extends BlockEntity {
         try {
             output.store(TAG_ITEMS, StackItemStorage.codec(items.getSlots()), items);
         } catch (RuntimeException failure) {
-            String dimension = level == null ? "unattached" : level.dimension().location().toString();
+            String dimension = level == null ? "unattached" : level.dimension().identifier().toString();
             throw new IllegalStateException("Cannot save Some Stacks inventory in " + dimension
                     + " at " + getBlockPos(), failure);
         }

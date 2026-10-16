@@ -10,8 +10,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -82,8 +82,8 @@ public final class ClientRenderCommandSyntax {
                                 .map(RenderMode::getId), builder))
                 .executes(commandFor.apply(Action.ITEM_DEFAULT))
                 .then(scale);
-        RequiredArgumentBuilder<S, ResourceLocation> item = RequiredArgumentBuilder
-                .<S, ResourceLocation>argument(ARG_ITEM, ResourceLocationArgument.id())
+        RequiredArgumentBuilder<S, Identifier> item = RequiredArgumentBuilder
+                .<S, Identifier>argument(ARG_ITEM, IdentifierArgument.id())
                 .suggests(itemSuggestions)
                 .then(LiteralArgumentBuilder.<S>literal("reset")
                         .executes(commandFor.apply(Action.RESET)))

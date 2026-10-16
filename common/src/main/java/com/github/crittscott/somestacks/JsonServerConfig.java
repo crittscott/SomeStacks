@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.commands.Commands;
 import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.IOException;
@@ -43,9 +42,6 @@ public final class JsonServerConfig implements ServerConfig.Backend {
 
     /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
     private static final int MAX_PILE_HEIGHT_LIMIT = ServerConfig.MAX_PILE_HEIGHT;
-
-    /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
-    private static final int GALLERY_PERMISSION_LEVEL_MAX = Commands.LEVEL_OWNERS;
 
     private Path configFile;
 
@@ -116,7 +112,7 @@ public final class JsonServerConfig implements ServerConfig.Backend {
                 gallery, KEY_GALLERY_ENABLED, fallback.galleryEnabled());
         int parsedPermissionLevel = clamp(
                 intOr(gallery, KEY_REQUIRED_PERMISSION_LEVEL, fallback.galleryPermissionLevel()),
-                0, GALLERY_PERMISSION_LEVEL_MAX);
+                0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
         List<String> parsedGenMods = stringListOr(gallery, KEY_GEN_MODS, fallback.genMods());
         List<String> parsedGenItems = stringListOr(gallery, KEY_GEN_ITEMS, fallback.genItems());
 

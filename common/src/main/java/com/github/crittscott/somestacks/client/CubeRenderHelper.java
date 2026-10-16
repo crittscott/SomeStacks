@@ -13,8 +13,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,7 +24,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -37,11 +39,13 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -61,12 +65,12 @@ import java.util.function.IntUnaryOperator;
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
 
-    public static final ResourceLocation STACK_CUBE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube");
+    public static final Identifier STACK_CUBE_TEXTURE = Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube");
     /** The {@code 2d} background drawn without art for an item whose model threw when captured. */
-    public static final ResourceLocation STACK_CUBE_ERROR_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube_error");
-    public static final ResourceLocation RENDER_CACHE_RELOAD_LISTENER_ID =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_caches");
+    public static final Identifier STACK_CUBE_ERROR_TEXTURE =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/stack_cube_error");
+    public static final Identifier RENDER_CACHE_RELOAD_LISTENER_ID =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "render_caches");
 
     /** {@link Direction#values()} clones its array on every call, and this is a per-item loop. */
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -133,8 +137,11 @@ public final class CubeRenderHelper {
     }
 
     private record PreparedItem(RenderProfile profile, @Nullable ItemStackRenderState item,
-                                @Nullable BlockState block, List<ItemCapture.TintedQuad> quads,
+                                @Nullable BlockState block, List<PlateBatch> plates,
                                 @Nullable TextureAtlasSprite background) {}
+
+    /** Flat-art quads sharing the render type, and so the atlas, their item submitted them with. */
+    private record PlateBatch(RenderType renderType, List<BakedQuad> quads, List<Integer> colors) {}
 
     private record CellRenderState(AABB bounds, int quarterTurns, PreparedItem item) {}
 
@@ -183,10 +190,10 @@ public final class CubeRenderHelper {
         }
         if (profile.mode() == RenderMode.TWO_D) {
             List<ItemCapture.TintedQuad> quads = captureFlatArt(stack, level);
-            ResourceLocation background = quads == null ? STACK_CUBE_ERROR_TEXTURE : STACK_CUBE_TEXTURE;
+            Identifier background = quads == null ? STACK_CUBE_ERROR_TEXTURE : STACK_CUBE_TEXTURE;
             TextureAtlasSprite sprite = Minecraft.getInstance()
                     .getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(background);
-            return new PreparedItem(profile, null, null, quads == null ? List.of() : quads, sprite);
+            return new PreparedItem(profile, null, null, quads == null ? List.of() : plateBatches(quads), sprite);
         }
         if (profile.mode() == RenderMode.BLOCK
                 && stack.getItem() instanceof BlockItem blockItem) {
@@ -301,15 +308,14 @@ public final class CubeRenderHelper {
             }
             Matrix4f cell = new Matrix4f(pose.last().pose());
             TextureAtlasSprite sprite = prepared.background();
-            collector.submitCustomGeometry(pose, RenderType.solid(), (snapshot, vc) -> {
+            collector.submitCustomGeometry(pose, RenderTypes.solidMovingBlock(), (snapshot, vc) -> {
                 for (FaceTarget target : faces) {
                     emitBackgroundFace(cell, vc, sprite, light, target);
                 }
             });
-            List<ItemCapture.TintedQuad> quads = prepared.quads();
-            if (!quads.isEmpty()) {
-                collector.submitCustomGeometry(pose, RenderType.cutout(),
-                        (snapshot, vc) -> emitPlates(vc, quads, light, faces));
+            for (PlateBatch batch : prepared.plates()) {
+                collector.submitCustomGeometry(pose, batch.renderType(),
+                        (snapshot, vc) -> emitPlates(vc, batch, light, faces));
             }
         } finally {
             localPose.popPose();
@@ -378,38 +384,47 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * Lays the item's plates onto each visible face. An item model lays its art on a front and a
-     * back plate and hangs a sliver off every span of the sprite's outline. The slivers stand
-     * perpendicular to the plates to give a held item its thickness; flattened onto a cell face they
-     * are edge-on and cover nothing, so only quads facing along Z are drawn. Both plates are kept
-     * and the render type's own back-face culling shows the outward one, exactly as it does for an
-     * item in the hand.
+     * Groups an item's plates by render type, keeping submission order. An item model lays its art
+     * on a front and a back plate and hangs a sliver off every span of the sprite's outline. The
+     * slivers stand perpendicular to the plates to give a held item its thickness; flattened onto a
+     * cell face they are edge-on and cover nothing, so only quads facing along Z are kept. Both
+     * plates are kept and the render type's own back-face culling shows the outward one, exactly as
+     * it does for an item in the hand.
      */
-    private static void emitPlates(VertexConsumer vc, List<ItemCapture.TintedQuad> quads, int light,
-                                   List<FaceTarget> faces) {
+    private static List<PlateBatch> plateBatches(List<ItemCapture.TintedQuad> quads) {
+        Map<RenderType, PlateBatch> batches = new LinkedHashMap<>();
         for (ItemCapture.TintedQuad tinted : quads) {
-            BakedQuad quad = tinted.quad();
-            if (quad.direction().getAxis() != Direction.Axis.Z) {
+            if (tinted.quad().direction().getAxis() != Direction.Axis.Z) {
                 continue;
             }
-            int color = tinted.color();
+            PlateBatch batch = batches.computeIfAbsent(tinted.renderType(),
+                    type -> new PlateBatch(type, new ArrayList<>(), new ArrayList<>()));
+            batch.quads().add(tinted.quad());
+            batch.colors().add(tinted.color());
+        }
+        List<PlateBatch> result = new ArrayList<>(batches.size());
+        for (PlateBatch batch : batches.values()) {
+            result.add(new PlateBatch(batch.renderType(), List.copyOf(batch.quads()),
+                    List.copyOf(batch.colors())));
+        }
+        return List.copyOf(result);
+    }
+
+    /** Lays one batch of the item's plates onto each visible face. */
+    private static void emitPlates(VertexConsumer vc, PlateBatch batch, int light, List<FaceTarget> faces) {
+        for (int q = 0; q < batch.quads().size(); q++) {
+            BakedQuad quad = batch.quads().get(q);
+            int color = batch.colors().get(q);
             int r = ARGB.red(color);
             int g = ARGB.green(color);
             int b = ARGB.blue(color);
 
-            int[] vertices = quad.vertices();
             for (FaceTarget target : faces) {
-                for (int i = 0; i < 4; i++) {
-                    int base = i * ItemCapture.BLOCK_VERTEX_STRIDE;
-                    int position = base + ItemCapture.BLOCK_POSITION_OFFSET;
-                    int uv = base + ItemCapture.BLOCK_UV_OFFSET;
-                    vertex(vc, target.art(),
-                            Float.intBitsToFloat(vertices[position]),
-                            Float.intBitsToFloat(vertices[position + 1]),
-                            Float.intBitsToFloat(vertices[position + 2]),
-                            Float.intBitsToFloat(vertices[uv]),
-                            Float.intBitsToFloat(vertices[uv + 1]),
-                            r, g, b, light, target);
+                for (int i = 0; i < BakedQuad.VERTEX_COUNT; i++) {
+                    Vector3fc position = quad.position(i);
+                    long uv = quad.packedUV(i);
+                    vertex(vc, target.art(), position.x(), position.y(), position.z(),
+                            UVPair.unpackU(uv), UVPair.unpackV(uv), r, g, b, light, target);
                 }
             }
         }

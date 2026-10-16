@@ -12,7 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -61,17 +61,17 @@ public final class FabricRegistry {
         // Calling this method initializes the class and registers its values.
     }
 
-    private static Block registerBlock(ResourceLocation id, Function<BlockBehaviour.Properties, Block> factory,
+    private static Block registerBlock(Identifier id, Function<BlockBehaviour.Properties, Block> factory,
                                        BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, id);
         return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
     }
 
-    private static <T extends BlockEntityType<?>> T registerBlockEntity(ResourceLocation id, T type) {
+    private static <T extends BlockEntityType<?>> T registerBlockEntity(Identifier id, T type) {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, type);
     }
 
-    private static SoundEvent registerSound(ResourceLocation id) {
+    private static SoundEvent registerSound(Identifier id) {
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id,
                 SoundEvent.createVariableRangeEvent(id));
     }

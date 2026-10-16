@@ -21,9 +21,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -71,17 +72,17 @@ public final class ConfigurationChecks {
                 }
                 """).getAsJsonObject();
 
-        Map<ResourceLocation, ItemRenderConfig> parsed =
+        Map<Identifier, ItemRenderConfig> parsed =
                 OverrideJsonCodec.parse(root, "GameTest fixture");
         checkEquals(2, parsed.size(), "Parsed override count");
 
-        ItemRenderConfig stone = parsed.get(ResourceLocation.parse("minecraft:stone"));
+        ItemRenderConfig stone = parsed.get(Identifier.parse("minecraft:stone"));
         check(stone != null, "Stone override was skipped");
         checkEquals(RenderMode.BLOCK, stone.mode(), "Stone mode");
         checkEquals(1.25f, stone.scale(), "Stone scale");
         checkOffsetEquals(new RenderOffset(-1.0f, 0.0f, 1.0f), stone.offset(), "Stone offset");
 
-        ItemRenderConfig dirt = parsed.get(ResourceLocation.parse("minecraft:dirt"));
+        ItemRenderConfig dirt = parsed.get(Identifier.parse("minecraft:dirt"));
         check(dirt != null, "Valid field in a partially malformed override was skipped");
         checkEquals(null, dirt.mode(), "Invalid mode survived parsing");
         checkEquals(2.0f, dirt.scale(), "Valid scale beside an invalid mode was lost");
@@ -89,11 +90,11 @@ public final class ConfigurationChecks {
         JsonObject serialized = OverrideJsonCodec.toJson(parsed);
         checkEquals(List.of("minecraft:dirt", "minecraft:stone"),
                 new ArrayList<>(serialized.keySet()), "Serialized item-id order");
-        Map<ResourceLocation, ItemRenderConfig> reparsed =
+        Map<Identifier, ItemRenderConfig> reparsed =
                 OverrideJsonCodec.parse(serialized, "GameTest round trip");
-        checkConfigEquals(stone, reparsed.get(ResourceLocation.parse("minecraft:stone")),
+        checkConfigEquals(stone, reparsed.get(Identifier.parse("minecraft:stone")),
                 "Stone round trip");
-        checkConfigEquals(dirt, reparsed.get(ResourceLocation.parse("minecraft:dirt")),
+        checkConfigEquals(dirt, reparsed.get(Identifier.parse("minecraft:dirt")),
                 "Dirt round trip");
         helper.succeed();
     }
@@ -136,13 +137,13 @@ public final class ConfigurationChecks {
                   }
                 }
                 """).getAsJsonObject();
-        Map<ResourceLocation, ItemRenderConfig> parsed =
+        Map<Identifier, ItemRenderConfig> parsed =
                 OverrideJsonCodec.parse(root, "GameTest bounds fixture");
         checkEquals(OverrideJsonCodec.MIN_SCALE,
-                parsed.get(ResourceLocation.parse("minecraft:stone")).scale(),
+                parsed.get(Identifier.parse("minecraft:stone")).scale(),
                 "Parsed minimum scale");
         checkEquals(OverrideJsonCodec.MAX_SCALE,
-                parsed.get(ResourceLocation.parse("minecraft:dirt")).scale(),
+                parsed.get(Identifier.parse("minecraft:dirt")).scale(),
                 "Parsed maximum scale");
 
         ItemRenderConfig sanitized = OverrideJsonCodec.sanitize(new ItemRenderConfig(
@@ -202,7 +203,7 @@ public final class ConfigurationChecks {
             check(ServerConfig.isModDisabled("MINECRAFT"),
                     "Disabled mod lookup was not case-insensitive");
             check(ServerConfig.isModDisabled("examplemod"), "Disabled mod was not baked");
-            check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:stone")),
+            check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Disabled item was not baked");
             Files.writeString(fixture, configJson(-9, 99, 7));
             new JsonServerConfig().load(fixture);
@@ -401,14 +402,14 @@ public final class ConfigurationChecks {
             Files.writeString(fixture, policyJson(8, true, true, true, List.of(), List.of()));
             new JsonServerConfig().load(fixture);
             var commands = server.getCommands();
-            var lowPermission = server.createCommandSourceStack().withPermission(0);
+            var lowPermission = server.createCommandSourceStack().withPermission(LevelBasedPermissionSet.ALL);
             checkEquals(0, execute(commands.getDispatcher(), lowPermission,
                     "ss deny item add minecraft:stone"),
                     "Permission-zero source ran an admin command");
             check(!ServerConfig.DISABLE_ITEMS.get().contains("minecraft:stone"),
                     "Rejected command changed policy");
 
-            var operator = server.createCommandSourceStack().withPermission(4);
+            var operator = server.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER);
             check(execute(commands.getDispatcher(), operator,
                     "ss deny item add minecraft:stone") > 0,
                     "Operator deny command failed");
@@ -426,12 +427,12 @@ public final class ConfigurationChecks {
             Files.writeString(fixture, policyJson(8, true, true, true,
                     List.of(), List.of("minecraft:dirt")));
             execute(commands.getDispatcher(), operator, "ss reload");
-            check(ServerConfig.isItemDisabled(ResourceLocation.parse("minecraft:dirt")),
+            check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:dirt")),
                     "Reload command did not apply the edited file");
 
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             checkEquals(0, execute(commands.getDispatcher(),
-                    player.createCommandSourceStack().withPermission(4), "ss gallery all"),
+                    player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER), "ss gallery all"),
                     "Disabled gallery command ran");
         } catch (IOException e) {
             throw helper.assertionException(Component.literal("Could not prepare command fixture: " + e));

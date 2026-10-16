@@ -5,7 +5,7 @@ import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
@@ -19,8 +19,8 @@ public final class ClientGestures {
 
     public static final String STACK_MODE_KEY_TRANSLATION_KEY =
             "key." + SomeStacksCommon.MODID + ".stack_mode";
-    public static final ResourceLocation KEY_CATEGORY_ID =
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "main");
+    public static final Identifier KEY_CATEGORY_ID =
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "main");
 
     private static StackMode stackMode = StackMode.STORAGE_STACK;
     private static StackMode lastSentMode;

@@ -6,7 +6,7 @@ import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public record ConfigSyncPkt(
         List<String> disabledMods) implements CustomPacketPayload {
 
     public static final Type<ConfigSyncPkt> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
             StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
 
@@ -99,7 +99,7 @@ public record ConfigSyncPkt(
             if (namespace.isEmpty() || !result.add(namespace)) {
                 continue;
             }
-            if (ResourceLocation.tryBuild(namespace, "validation") == null
+            if (Identifier.tryBuild(namespace, "validation") == null
                     || namespace.length() > MAX_NAMESPACE_LENGTH) {
                 result.remove(namespace);
                 SomeStacksCommon.LOGGER.warn(
@@ -222,7 +222,7 @@ public record ConfigSyncPkt(
     private static void validateNamespaces(List<String> namespaces) {
         for (String namespace : namespaces) {
             if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
-                    || ResourceLocation.tryBuild(namespace, "validation") == null) {
+                    || Identifier.tryBuild(namespace, "validation") == null) {
                 throw new DecoderException("Invalid synchronized namespace");
             }
         }
@@ -241,7 +241,7 @@ public record ConfigSyncPkt(
         List<String> namespaces = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             String namespace = buf.readUtf(MAX_NAMESPACE_LENGTH);
-            if (namespace.isEmpty() || ResourceLocation.tryBuild(namespace, "validation") == null) {
+            if (namespace.isEmpty() || Identifier.tryBuild(namespace, "validation") == null) {
                 throw new DecoderException("Invalid synchronized namespace: " + namespace);
             }
             namespaces.add(namespace);

@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 
@@ -17,7 +17,7 @@ public final class StackSort {
                 patch.isEmpty() ? null : patch.toString());
     }
 
-    public record SortKey(ResourceLocation itemId, int damage, String components)
+    public record SortKey(Identifier itemId, int damage, String components)
             implements Comparable<SortKey> {
         @Override
         public int compareTo(SortKey other) {
