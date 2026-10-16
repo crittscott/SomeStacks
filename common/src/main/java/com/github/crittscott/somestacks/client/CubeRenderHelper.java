@@ -330,11 +330,8 @@ public final class CubeRenderHelper {
         ItemRenderOverrides.clearResolvedProfiles();
     }
 
-    /**
-     * One cube face worth drawing, carrying the transform that lays a quad's art on it and the
-     * face's outward normal in the frame the vertices are written in.
-     */
-    private record FaceTarget(Direction face, Matrix4f art, float nx, float ny, float nz) {}
+    /** One cube face worth drawing, carrying the transform that lays a quad's art on it. */
+    private record FaceTarget(Direction face, Matrix4f art) {}
 
     /** Selects faces in block-local space and prepares their submission-space transforms. */
     private static List<FaceTarget> visibleFaces(PoseStack pose, PoseStack localPose, Vec3 cameraInBlock,
@@ -344,14 +341,12 @@ public final class CubeRenderHelper {
         centre.sub((float) cameraInBlock.x, (float) cameraInBlock.y, (float) cameraInBlock.z);
         List<FaceTarget> faces = new ArrayList<>(3);
         for (Direction face : DIRECTIONS) {
-            Vector3f normal = new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ());
-            Vector3f facing = localNormal.transform(new Vector3f(normal));
+            Vector3f facing = localNormal.transform(
+                    new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
             if (centre.dot(facing) >= 0.0f) {
                 continue;
             }
-            pose.last().normal().transform(normal).normalize();
-            faces.add(new FaceTarget(face, artMatrix(pose, face, scale, offset),
-                    normal.x(), normal.y(), normal.z()));
+            faces.add(new FaceTarget(face, artMatrix(pose, face, scale, offset)));
         }
         return List.copyOf(faces);
     }
@@ -424,7 +419,7 @@ public final class CubeRenderHelper {
                     Vector3fc position = quad.position(i);
                     long uv = quad.packedUV(i);
                     vertex(vc, target.art(), position.x(), position.y(), position.z(),
-                            UVPair.unpackU(uv), UVPair.unpackV(uv), r, g, b, light, target);
+                            UVPair.unpackU(uv), UVPair.unpackV(uv), r, g, b, light);
                 }
             }
         }
@@ -435,20 +430,21 @@ public final class CubeRenderHelper {
         float[] c = FACE_CORNERS[target.face().ordinal()];
         float u0 = sp.getU0(), v0 = sp.getV0(), u1 = sp.getU1(), v1 = sp.getV1();
 
-        vertex(vc, cell, c[0], c[1], c[2], u0, v1, 0xFF, 0xFF, 0xFF, light, target);
-        vertex(vc, cell, c[3], c[4], c[5], u1, v1, 0xFF, 0xFF, 0xFF, light, target);
-        vertex(vc, cell, c[6], c[7], c[8], u1, v0, 0xFF, 0xFF, 0xFF, light, target);
-        vertex(vc, cell, c[9], c[10], c[11], u0, v0, 0xFF, 0xFF, 0xFF, light, target);
+        vertex(vc, cell, c[0], c[1], c[2], u0, v1, 0xFF, 0xFF, 0xFF, light);
+        vertex(vc, cell, c[3], c[4], c[5], u1, v1, 0xFF, 0xFF, 0xFF, light);
+        vertex(vc, cell, c[6], c[7], c[8], u1, v0, 0xFF, 0xFF, 0xFF, light);
+        vertex(vc, cell, c[9], c[10], c[11], u0, v0, 0xFF, 0xFF, 0xFF, light);
     }
 
     /**
      * Writes one vertex. The position is transformed here rather than through
      * {@link VertexConsumer#addVertex(Matrix4f, float, float, float)}, which allocates a vector per
-     * call, and the normal is the cube face's rather than the source quad's, so lighting reads the
-     * surface the art lies on instead of the direction of an extruded sprite edge.
+     * call. Every vertex carries a straight-up normal: the plates draw with the item's own render
+     * type, whose shader shades by normal, and an upward normal lights every face fully, so all
+     * faces of a cube match each other and the unshaded background.
      */
     private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v,
-                               int r, int g, int b, int light, FaceTarget target) {
+                               int r, int g, int b, int light) {
         vc.addVertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
                         m.m01() * x + m.m11() * y + m.m21() * z + m.m31(),
                         m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
@@ -456,6 +452,6 @@ public final class CubeRenderHelper {
                 .setUv(u, v)
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(light)
-                .setNormal(target.nx(), target.ny(), target.nz());
+                .setNormal(0.0f, 1.0f, 0.0f);
     }
 }
