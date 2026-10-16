@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -74,7 +74,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
             }
             BarTextureStore.BarTextureData texture = BarTextureStore.getTexture(stack);
             TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(texture.texture());
+                    .getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(texture.texture());
             bars.add(new BarRenderData(BarCubeIdx.localBox(idx), idx / BarCubeIdx.LAYER_SIZE,
                     regions(sprite), texture));
         }

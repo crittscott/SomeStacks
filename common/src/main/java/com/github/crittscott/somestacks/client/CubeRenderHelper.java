@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -185,7 +185,7 @@ public final class CubeRenderHelper {
             List<ItemCapture.TintedQuad> quads = captureFlatArt(stack, level);
             ResourceLocation background = quads == null ? STACK_CUBE_ERROR_TEXTURE : STACK_CUBE_TEXTURE;
             TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(background);
+                    .getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(background);
             return new PreparedItem(profile, null, null, quads == null ? List.of() : quads, sprite);
         }
         if (profile.mode() == RenderMode.BLOCK
