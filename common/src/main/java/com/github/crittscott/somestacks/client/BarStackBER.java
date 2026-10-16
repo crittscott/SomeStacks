@@ -2,22 +2,27 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SlotAccess;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
@@ -27,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
  * <p>Bars go into the solid render type in one pass, and their vertices are wound per face so the
  * texture runs along each bar's long axis whichever way its layer lies.
  */
-public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
+public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.BarRenderState> {
     private static final java.util.Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
             new java.util.IdentityHashMap<>();
 
@@ -38,57 +43,82 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
     public BarStackBER(BlockEntityRendererProvider.Context ctx) {
     }
 
-    @Override
-    public void render(BarStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay, Vec3 cameraPos) {
-        SlotAccess handler = be.getItems();
-
-        if (be.getLevel() == null) return;
-
-        BlockPos bePos = be.getBlockPos();
-        int barLight = LevelRenderer.getLightColor(be.getLevel(), bePos);
-
-        VertexConsumer vc = buffers.getBuffer(RenderType.solid());
-
-        for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
-            ItemStack stack = handler.getStackInSlot(idx);
-            if (stack.isEmpty()) continue;
-
-            BarTextureStore.BarTextureData textureData = BarTextureStore.getTexture(stack);
-            TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-                    .apply(textureData.texture());
-
-            AABB bounds = BarCubeIdx.localBox(idx);
-
-            float sx = (float) bounds.minX;
-            float sy = (float) bounds.minY;
-            float sz = (float) bounds.minZ;
-            float width = (float) bounds.getXsize();
-            float height = (float) bounds.getYsize();
-            float depth = (float) bounds.getZsize();
-
-            pose.pushPose();
-            pose.translate(sx, sy, sz);
-            pose.scale(width, height, depth);
-
-            emitBar(pose, vc, sprite, barLight, idx / BarCubeIdx.LAYER_SIZE, textureData);
-
-            pose.popPose();
-        }
+    /** Prepared bars have resolved UVs and tints; submission never reads the level or inventory. */
+    public static final class BarRenderState extends BlockEntityRenderState {
+        private List<BarRenderData> bars = List.of();
+        private int light;
     }
 
-    private static void emitBar(PoseStack pose, VertexConsumer vc, TextureAtlasSprite sp, int light, int layer,
-                                BarTextureStore.BarTextureData textureData) {
-        int overlay = OverlayTexture.NO_OVERLAY;
-        UvRegion[] regions = SPRITE_REGIONS.computeIfAbsent(sp, sprite -> {
-            float u0 = sprite.getU0(), v0 = sprite.getV0();
-            float uRange = sprite.getU1() - u0, vRange = sprite.getV1() - v0;
+    private record BarRenderData(AABB bounds, int layer, UvRegion[] regions,
+                                 BarTextureStore.BarTextureData texture) {}
+
+    @Override
+    public BarRenderState createRenderState() {
+        return new BarRenderState();
+    }
+
+    @Override
+    public void extractRenderState(BarStackBE be, BarRenderState state, float partialTick, Vec3 cameraPos,
+                                   @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(be, state, partialTick, cameraPos, crumblingOverlay);
+        state.bars = List.of();
+        if (be.getLevel() == null) {
+            return;
+        }
+        state.light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos());
+        List<BarRenderData> bars = new ArrayList<>();
+        for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
+            ItemStack stack = be.getItems().getStackInSlot(idx);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            BarTextureStore.BarTextureData texture = BarTextureStore.getTexture(stack);
+            TextureAtlasSprite sprite = Minecraft.getInstance()
+                    .getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(texture.texture());
+            bars.add(new BarRenderData(BarCubeIdx.localBox(idx), idx / BarCubeIdx.LAYER_SIZE,
+                    regions(sprite), texture));
+        }
+        state.bars = List.copyOf(bars);
+    }
+
+    @Override
+    public void submit(BarRenderState state, PoseStack pose, SubmitNodeCollector collector,
+                       CameraRenderState camera) {
+        List<BarRenderData> bars = state.bars;
+        if (bars.isEmpty()) {
+            return;
+        }
+        int light = state.light;
+        collector.submitCustomGeometry(pose, RenderType.solid(), (snapshot, vc) -> {
+            PoseStack barPose = new PoseStack();
+            barPose.last().pose().set(snapshot.pose());
+            barPose.last().normal().set(snapshot.normal());
+            for (BarRenderData bar : bars) {
+                AABB bounds = bar.bounds();
+                barPose.pushPose();
+                barPose.translate(bounds.minX, bounds.minY, bounds.minZ);
+                barPose.scale((float) bounds.getXsize(), (float) bounds.getYsize(), (float) bounds.getZsize());
+                emitBar(barPose, vc, light, bar.layer(), bar.texture(), bar.regions());
+                barPose.popPose();
+            }
+        });
+    }
+
+    private static UvRegion[] regions(TextureAtlasSprite sprite) {
+        return SPRITE_REGIONS.computeIfAbsent(sprite, sp -> {
+            float u0 = sp.getU0(), v0 = sp.getV0();
+            float uRange = sp.getU1() - u0, vRange = sp.getV1() - v0;
             // Top/bottom, long side, and end cap on the sprite's 32-unit grid.
             return new UvRegion[]{
                     region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f),
                     region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f),
                     region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f)};
         });
+    }
+
+    private static void emitBar(PoseStack pose, VertexConsumer vc, int light, int layer,
+                                BarTextureStore.BarTextureData textureData, UvRegion[] regions) {
+        int overlay = OverlayTexture.NO_OVERLAY;
         UvRegion top = regions[0], longSide = regions[1], endCap = regions[2];
 
         // Even layers lay their bars along X (6x2x3), so the Z faces are the long sides and
@@ -112,9 +142,9 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
         quad(pose, vc, light, overlay, 0,0,0, 0,0,1, 0,1,1, 0,1,0, xFace.u0(),xFace.v1(),xFace.u1(),xFace.v0(), -1,0,0, r,g,b,a);
 
         if (rotated) {
-            // +Y face (top) - reordered vertices to rotate texture 90°
+            // +Y face (top) - reordered vertices to rotate texture 90 degrees
             quad(pose, vc, light, overlay, 0,1,0, 0,1,1, 1,1,1, 1,1,0, top.u0(),top.v0(),top.u1(),top.v1(), 0,1,0, r,g,b,a);
-            // -Y face (bottom) - reordered vertices to rotate texture 90°
+            // -Y face (bottom) - reordered vertices to rotate texture 90 degrees
             quad(pose, vc, light, overlay, 1,0,0, 1,0,1, 0,0,1, 0,0,0, top.u0(),top.v1(),top.u1(),top.v0(), 0,-1,0, r,g,b,a);
         } else {
             // +Y face (top)

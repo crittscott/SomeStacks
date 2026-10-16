@@ -1,70 +1,93 @@
-# Some Stacks: Minecraft 1.21.6 to 1.21.8 port
+# Some Stacks: Minecraft 1.21.8 to 1.21.9 port
 
-The repository contains the 1.21.6 implementation for Fabric, Forge, and NeoForge. The copied baseline's compilation and runtime checks remain pending. Treat dependency resolution, source compilation, and runtime verification as separate milestones. Follow `CLAUDE.md`; builds and test launches are performed by the user unless explicitly delegated.
+This repository is a copy of the 1.21.8 repository. References to 1.21.6 and earlier port work in the copied documents describe that repository's history. The task here is to port the copied implementation to 1.21.9 for Fabric, Forge, and NeoForge, as an intermediate step toward 1.21.11. Earlier milestones do not establish completion of any phase below.
 
-## 1. Get Gradle to sync for 1.21.8
+Follow `CLAUDE.md`. The user runs Gradle sync, builds, and tests unless explicitly delegated. Do not decompile, unarchive, or inspect prohibited cached game or Forge sources. Use published API documentation for signatures that cannot be established from this repository. Treat dependency resolution, source compilation, and runtime verification as separate milestones.
 
-- Update `gradle.properties`: Minecraft target and compatibility range, Forge and NeoForge dependencies and compatibility ranges, Fabric API, and the Parchment mapping coordinate.
-- Verify published artifacts before selecting exact dependency pins. Do not assume Parchment's version matches Minecraft's.
-- Initially retain Java 21 and the existing Gradle, Architectury Loom, Architectury plugin, and Shadow versions. Change tooling only where dependency resolution or sync requires it.
-- Check IntelliJ's Gradle JVM and wrapper selection. Resolve configuration errors, including GameTest run definitions and Forge's EventBus validator.
-- Keep the `build-env/` reference snapshot and `build-env.md` synchronized with active build changes.
+## 1. Get Gradle to sync for 1.21.9
 
-Completion criterion: IntelliJ successfully imports `common`, `fabric`, `forge`, and `neoforge` with the 1.21.8 dependencies and run configurations. Successful sync does not establish that source compilation succeeds.
+- Update `gradle.properties` with Minecraft 1.21.9, matching published Parchment mappings, Forge, NeoForge, and Fabric API coordinates, and corresponding runtime compatibility ranges. Verify published artifacts before selecting exact pins; do not assume Parchment's version matches Minecraft's.
+- Check Fabric Loader and optional Common Protection API dependencies against the selected baseline.
+- Retain Java 21 and initially retain the current Gradle wrapper, Architectury Loom, Architectury plugin, and Shadow versions. Change tooling only where target support or sync requires it.
+- Verify Architectury Loom support for the selected loaders, particularly NeoForge's revised FML startup system. Recommendations for ModDevGradle, NeoGradle, or Fabric Loom are not direct substitutions for this build.
+- Use the Gradle wrapper and Java 21 as IntelliJ's Gradle JVM. Resolve configuration and dependency errors across all four modules, including GameTest run definitions, common transforms, and Forge's EventBus validator.
+- Synchronize every changed build input into `build-env/` and update `build-env.md`.
 
-Status: complete. The user confirmed IntelliJ Gradle sync succeeds. Dependency pins and runtime ranges are updated, and the build snapshot and orientation documents are synchronized. `gradlew.bat help --console=plain` also succeeded under Java 21 for all four modules without changes to Gradle or its plugins. Published pins are Forge `1.21.8-58.1.0`, NeoForge `21.8.57`, Fabric API `0.136.1+1.21.8`, and Parchment `1.21.8:2025.09.14`. The shell's default `JAVA_HOME` points to Java 17; the configuration check used Java 21 only for that process, without changing machine settings. No production compilation or test launch was performed.
+Completion criterion: IntelliJ successfully reloads the complete Gradle project with `common`, `fabric`, `forge`, and `neoforge` present and targeting 1.21.9. A configuration-only `gradlew.bat help --console=plain` check is available for the user if useful. Successful sync does not establish successful source compilation.
 
-## 2. Port common production code
+Status: complete. The user confirmed IntelliJ Gradle sync succeeds for the 1.21.9 configuration. Pins are Forge `1.21.9-59.0.5`, NeoForge `21.9.16-beta`, Fabric API `0.134.1+1.21.9`, and Parchment `1.21.9:2025.10.05`. Java 21, Fabric Loader `0.19.5`, Common Protection API `1.0.0`, and the existing Gradle/plugins are retained. The build snapshot matches active inputs. Source compilation and runtime verification belong to later phases.
 
-- Address actual API differences in block hooks, block-entity persistence, networking, and rendering.
-- Inspect `ItemCapture`, `CubeRenderHelper`, and the three block-entity renderers closely because they interact directly with Minecraft's rendering internals.
-- Keep inventory and movement logic unchanged unless an API change requires otherwise.
+## 2. Port shared block entity rendering
 
-Completion criterion: common production code is adapted to the selected 1.21.8 APIs, with loader-specific differences kept in the loader modules.
+- Convert `StorageStackBER`, `SinglesStackBER`, and `BarStackBER` to render-state extraction and queued submission. Extract item render states, rotations, lighting, and geometry needed for drawing; submission should consume prepared state without reading live inventories or the level.
+- Port `CubeRenderHelper`, `ItemCapture`, model measurement, and Bar tint derivation together with the renderers. Their immediate rendering, intercepted vertex output, and baked-quad access require review beyond changing renderer signatures.
+- Adapt ordinary item and block submission first, then flat-art capture and projection, automatic measurement, and custom Bar geometry. Cover all four display modes: `2d`, `3d`, `gui`, and `block`.
+- Review camera-relative face selection, lighting, transforms, tinting, reload invalidation, and captured geometry lifetime. Deferred submissions must not retain mutable scratch data that another capture overwrites.
+- Keep rendering common where APIs are common; isolate differences only where a loader requires them. Remove obsolete rendering paths.
 
-Status: source/API review complete; no common production source changes are required by the reviewed Minecraft API differences. Compared Mojang's published plain-text [1.21.6 mappings](https://piston-data.mojang.com/v1/objects/848855615bc81e3db1c85e69b6afb150807a1261/client.txt) and [1.21.8 mappings](https://piston-data.mojang.com/v1/objects/bdeb624c3aefba11d9d40f34bc96176350b549b6/client.txt), covering 118 imported game classes and 316 mapping classes including nested types, then checked game-wide signature differences for indirectly referenced APIs. Reviewed block interaction, waterlogging, shape and removal hooks; value-based persistence and current-version item migration; payload codecs; item capture, quad projection, and all three block-entity renderers. The removed `ItemStackRenderState` model-identity members are unused; the added atlas method and music-disc item require no adaptation. Inventory, movement, serialization, and rendering code remain unchanged. This establishes no identified source adaptation is needed, not successful compilation or runtime behavior; those checks remain in phase 5. Loader-added block-entity update hooks remain subject to phase 3's loader API review. No game JARs or decompiled/remapped game or Forge sources were inspected, and no builds or tests were run.
+Completion criterion: the renderers and capture/measurement pipeline use the target APIs with extraction and submission responsibilities separated. Visual correctness remains subject to phase 6.
 
-## 3. Port loader adapters
+Reference: [NeoForge 1.21.9 rendering migration](https://neoforged.net/news/21.9release/).
 
-- Check registration, interaction cancellation, networking, reload listeners, and automation on each loader.
-- Check Forge's typed event buses, EventBus validator, and synthetic automation player.
-- Check Forge and NeoForge placement snapshots, publication, and denied-edit rollback.
-- Check Fabric's `startUseItem` mixin, Transfer API transactions, and optional Common Protection API integration.
+Status: implementation complete; compilation and visual verification pending. The three BERs now extract prepared state and submit native item/block features or captured custom geometry. Grid submission reads no live inventory or level; camera-relative visibility is computed in block-local space. Item capture records submitted quads/tints and uses vanilla model extents rather than intercepting an immediate draw. Capture results own their data, and matching grid contents share prepared presentation within one extraction. Bar textures/UVs/tints are resolved before submission. Measurement cache format is 4. Block mode uses native deferred block submission; the old synchronous per-cell draw-exception fallback is removed, while non-model block forms still use FIXED item presentation. `/ssclienttest` now covers capture isolation, special features, GUI extents, and grid submission after inventory mutation and state reuse. Published Fabric API Javadoc and NeoForge rendering documentation guided the port; no Gradle invocation, build, or test was run.
 
-Completion criterion: each loader's production adapters use the selected dependency APIs and retain the existing interaction, automation, and protection behavior.
+## 3. Replace NeoForge's automation adapter
 
-Status: source/API review complete; no loader adapter changes were required by the reviewed 1.21.8 APIs. Reviewed registration and lifecycle/config wiring, client/server interaction cancellation, networking, renderer/reload registration, automation views, placement snapshots, rollback, and removal protection. Forge already uses EventBus 7 typed buses, boolean cancellation, `Result`, and `AttachCapabilitiesEvent.BlockEntities`; its synthetic automation actor uses the unchanged Minecraft player API. Forge's update hooks take `ValueInput` plus registry context, while NeoForge's take `ValueInput` alone; the common block entity already supplies both signatures. Fabric's `startUseItem` mixin target is unchanged, and its published API supports the existing payload registrations, callback phases, fake-player factory, and Transfer API snapshot/commit methods. The optional Common Protection API remains pinned to the same version and isolated behind its presence check. NeoForge still supports the existing client-handler registrar overload, so its receiver bridge remains unchanged. Compilation, event discovery, dedicated-server class loading, transaction behavior, and protection/rollback behavior remain unverified until phase 5; no builds or tests were run.
+- Replace NeoForge's `IItemHandler` implementation and capability registration with `ResourceHandler<ItemResource>` and the corresponding capability for the selected baseline.
+- Implement native transaction staging and rollback for whole-run access, including insertion into headroom, growth, positional extraction, and deferred publication. Aborted transactions must not leave inventory or world edits behind.
+- Use the existing Fabric adapter's staging approach as a reference for shared run state, outer commit, rollback, and structural extraction restrictions. Keep loader-native transaction types in their own modules; share mechanics only where appropriate.
+- Keep Forge's adapter on Forge's own API. Update NeoForge capability tests to exercise its replacement API.
 
-Review references: [Fabric API 0.136.1+1.21.8 Javadoc](https://maven.fabricmc.net/docs/fabric-api-0.136.1+1.21.8/), [Forge 1.21.8 published API source](https://raw.githubusercontent.com/MinecraftForge/MinecraftForge/1.21.8/src/main/java/net/minecraftforge/common/extensions/IForgeBlockEntity.java), [NeoForge 1.21.8 block-entity extension](https://raw.githubusercontent.com/neoforged/NeoForge/1.21.8/src/main/java/net/neoforged/neoforge/common/extensions/IBlockEntityExtension.java), [NeoForge payload registrar](https://raw.githubusercontent.com/neoforged/NeoForge/1.21.8/src/main/java/net/neoforged/neoforge/network/registration/PayloadRegistrar.java), and [NeoForge 21.8.57 release notes](https://maven.neoforged.net/releases/net/neoforged/neoforge/21.8.57/neoforge-21.8.57-changelog.txt). Loader source references are the published 1.21.8 branches; source review does not substitute for compiling against the exact Maven artifacts. No game archives or decompiled/remapped game or Forge sources were inspected.
+Completion criterion: NeoForge exposes the target capability with correct commit/rollback behavior, whole-run visibility, growth, and protection checks. No obsolete NeoForge adapter remains.
 
-## 4. Update resources and saved-world verification
+Reference: [NeoForge transfer migration](https://neoforged.net/news/21.9-transfer-rework/).
 
-- Update resource-pack format from 63 to 64 and Forge/NeoForge GameTest data-pack format from 80 to 81, reflecting the [1.21.7 format changes](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-7).
-- Review production and GameTest metadata for the target Minecraft and loader versions.
-- Verify a 1.21.6 save loads and resaves correctly, preserving items, rotations, permanence, and set-aside entries. The existing migration code derives its target data version from the running game.
-- Add or adapt focused GameTests where needed to cover migration from the preceding release.
+## 4. Update loader and client integration
 
-Completion criterion: resources and metadata target 1.21.8, and saved-world migration preserves the preceding release's player data.
+- Replace string key categories in all three loaders with the target category representation and registration, updating language keys where needed.
+- Update `FMLEnvironment.dist` in `SomeStacksNeoForge` to its replacement accessor and review other affected FML integration.
+- Adapt Fabric resource-listener registration and ordering for render overrides, Bar textures, measurement, and cache invalidation.
+- Check input callbacks and Fabric's `startUseItem` mixin target against the target APIs.
+- Review registration, networking, config lifecycle, interaction cancellation, protection events, placement snapshots, accepted publication, and denied-edit rollback against the selected loader versions. Change what the target APIs require.
+- Verify optional Common Protection API integration remains isolated behind its presence check and uses the selected API correctly.
 
-## 5. Compile and verify runtime behavior
+Completion criterion: each loader's production integration uses its selected APIs, including client registration and dedicated-server-safe initialization.
 
-- Have the user compile production sources for all three loaders and address reported failures.
-- Compile GameTest sources separately; ordinary `build` excludes the GameTest support mods.
-- Run the loader GameTest suites, including Fabric with and without Common Protection API.
-- Verify dedicated-server startup, multiplayer synchronization, rendering and resource reloads, gestures, automation, and protection denial and rollback.
-- Distinguish inherited baseline failures from changes introduced by the port when diagnosing failures.
+References: [Fabric 1.21.9 porting notes](https://fabricmc.net/2025/09/23/1219.html) and [NeoForge 1.21.9 release notes](https://neoforged.net/news/21.9release/).
 
-Completion criterion: production and GameTest compilation succeed for all loaders, the test suites pass, and client/server smoke checks confirm the port's behavior.
+## 5. Review shared gameplay, persistence, and resources
 
-## 6. Finish documentation and packaging
+- Check block interaction, removal, waterlogging, collision and selection shapes, item serialization, and block-entity updates against 1.21.9. Adapt inventory and movement logic where required by the port.
+- Retain the existing `ValueInput`/`ValueOutput` and runtime `DataVersion` approach where supported. A target-version change alone does not justify a new saved-data format.
+- Support worlds from the immediately preceding released mod version through the dedicated migration layer. Preserve unreadable entries, item components, rotations, permanence, and set-aside data; write only the current format after migration.
+- Update resource and GameTest pack metadata from their checked-in formats to the target formats, verifying metadata schema changes. Review production and GameTest manifests and version expansion.
+- Convert repository resources in place if target formats require changes.
 
-- Update the orientation snapshots and release documentation to describe the verified 1.21.8 implementation. Update snapshots as their described implementation changes, respecting their fixed headers and size limits.
-- Verify each loader's packaged artifact, expanded metadata, and bundled common output.
+Completion criterion: gameplay and persistence use the target APIs, resource declarations target 1.21.9, and focused migration checks cover the preceding released mod version.
+
+## 6. Port GameTests and verify compilation and runtime behavior
+
+- Have the user compile production sources across all three loaders and address reported failures.
+- Adapt and compile GameTest source sets separately; ordinary `build` excludes the GameTest support mods. Check registration, discovery, test-instance JSON, and run configuration.
+- Have the user run loader GameTest suites, including Fabric both with and without Common Protection API.
+- Verify dedicated-server startup and multiplayer synchronization on each loader.
+- Exercise all four display modes, Bar geometry and tinting, automatic measurement, render-profile commands, reloads, gestures, and key rebinding.
+- Verify protected edits, atomic placement and first deposit, automation commit/rollback, growth, settlement, gravity, backfill, collapse, and denied-edit restoration.
+- Load and resave a world from the preceding released mod version; confirm saved contents and migration set-aside entries survive.
+- Distinguish inherited baseline failures from failures introduced by this port when diagnosing results.
+
+Completion criterion: production and GameTest compilation succeed for each loader, suites pass, and client/server smoke checks confirm the port's behavior.
+
+## 7. Finish documentation and packaging
+
+- Update orientation snapshots as implementation changes, preserving fixed headers and size limits. They describe the implementation rather than prescribing behavior.
+- Record verification only after the user's results establish it. Update release documentation for the completed 1.21.9 port.
+- Verify each loader's packaged artifact, expanded metadata, bundled common output, and absence of GameTest support mods from production packaging.
 - Regenerate committed Javadoc when the user runs the documentation task.
-- Confirm the final build inputs match `build-env/` and the version declarations in `build-env.md`.
+- Confirm active build inputs match `build-env/` and version declarations in `build-env.md`.
 
-Completion criterion: loader artifacts and repository documentation consistently describe the verified 1.21.8 port.
+Completion criterion: artifacts and repository documentation consistently describe the verified 1.21.9 implementation.
 
 ## Expected scope and uncertainties
 
-The code already uses the 1.21.6 serialization and rendering APIs, and [Minecraft 1.21.8's release notes](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-8) describe a graphics hotfix. A relatively small source port is expected. Exact dependency compatibility and the copied baseline's unverified compilation and runtime behavior remain uncertainties until sync, compilation, and testing establish them.
+The largest confirmed source changes are rendering and NeoForge's transfer API. Key categories, Fabric resource loading, and NeoForge FML access also have documented changes affecting this code. Exact dependency pins, Architectury Loom support for the selected loaders, remaining adaptations, and runtime correctness must be established during the corresponding phases. This plan does not assume that 1.21.11 APIs apply to 1.21.9.

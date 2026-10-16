@@ -10,9 +10,8 @@ import net.minecraft.world.phys.AABB;
 import javax.annotation.Nullable;
 
 /**
- * Measures the geometry an item actually draws, by capturing a vanilla draw of it: the item model
- * the stack resolves to, its display transform, the renderer's -0.5 origin shift, every layer, and
- * whatever a special model renderer emits.
+ * Measures the resolved item model through vanilla's declared extents, including the display
+ * transform and origin shift. Submitted features determine whether flat projection is available.
  */
 public final class ModelMeasurement {
     private ModelMeasurement() {}
@@ -50,11 +49,10 @@ public final class ModelMeasurement {
             }
             AABB bounds = capture.bounds();
             if (bounds == null) {
-                return new Result(false, null, "item draws nothing");
+                return new Result(false, null, "item supplies no model extents");
             }
-            // Only baked quads can be laid onto a cube face; anything drawn vertex by vertex
-            // stays on the 3-D path.
-            boolean flat = !capture.hasVertexGeometry() && !capture.quads().isEmpty();
+            // Only baked item quads can be laid onto a cube face; special features stay in 3-D.
+            boolean flat = !capture.hasSpecialGeometry() && !capture.quads().isEmpty();
             return new Result(flat, bounds, null);
         } catch (Exception e) {
             return new Result(false, null, "measurement threw: " + e);

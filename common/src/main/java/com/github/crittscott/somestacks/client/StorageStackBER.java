@@ -3,34 +3,38 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Loader-neutral renderer for a Storage Stack's 27 stored stacks. Each occupied slot is placed at its
- * cell's corner, rotated with the block's layout, and handed to {@link CubeRenderHelper}, which
- * applies the item's own render profile.
- *
- * <p>A slot's item count does not affect what is drawn; one stack is one item's worth of art.
- */
-public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
-    private final BlockRenderDispatcher blockRenderer;
+import javax.annotation.Nullable;
 
-    public StorageStackBER(BlockEntityRendererProvider.Context ctx) {
-        this.blockRenderer = ctx.getBlockRenderDispatcher();
+/** Extracts Storage layout rotation and item presentation before submitting the grid. */
+public class StorageStackBER implements BlockEntityRenderer<StorageStackBE, CubeRenderHelper.GridRenderState> {
+    public StorageStackBER(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
-    public void render(StorageStackBE be, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay, Vec3 cameraPos) {
-        if (be.getLevel() != null) {
-            CubeRenderHelper.renderGridItems(
-                    be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID, be.getRotation(),
-                    CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0,
-                    be.getLevel(), be.getBlockPos(), pose, buffers, blockRenderer);
-        }
+    public CubeRenderHelper.GridRenderState createRenderState() {
+        return new CubeRenderHelper.GridRenderState();
     }
 
+    @Override
+    public void extractRenderState(StorageStackBE be, CubeRenderHelper.GridRenderState state,
+                                   float partialTick, Vec3 cameraPos,
+                                   @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(be, state, partialTick, cameraPos, crumblingOverlay);
+        CubeRenderHelper.extractGridItems(be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID,
+                be.getRotation(), CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0,
+                be.getLevel(), be.getBlockPos(), cameraPos, state);
+    }
+
+    @Override
+    public void submit(CubeRenderHelper.GridRenderState state, PoseStack pose,
+                       SubmitNodeCollector collector, CameraRenderState camera) {
+        CubeRenderHelper.submitGridItems(state, pose, collector);
+    }
 }

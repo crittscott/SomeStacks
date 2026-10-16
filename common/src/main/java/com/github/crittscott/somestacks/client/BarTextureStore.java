@@ -179,12 +179,13 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
 
             // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint
             // must include both. The first quad drawn stands for the item.
-            ItemCapture capture = ItemCapture.capture(
+            ItemCapture capture = ItemCapture.captureQuads(
                     new ItemStack(item), ItemDisplayContext.GUI, null, new PoseStack());
-            if (capture.quads().isEmpty()) {
+            var quads = capture.quads();
+            if (quads.isEmpty()) {
                 return BarTextureData.WHITE;
             }
-            ItemCapture.TintedQuad first = capture.quads().getFirst();
+            ItemCapture.TintedQuad first = quads.getFirst();
             return ARGB.multiply(averageSpriteColor(first.quad().sprite(), resourceManager),
                     ARGB.color(0xFF, ARGB.red(first.color()), ARGB.green(first.color()),
                             ARGB.blue(first.color())));
