@@ -12,8 +12,8 @@ package com.github.crittscott.somestacks.block;
  *
  * <p>The inner call is refused instead: an insertion keeps its stack and an extraction yields
  * nothing, both standard failure results for automation. The run remains in the state the outer
- * call is building. Forge and NeoForge simulations remain available because they do not touch the
- * world; Fabric offers are refused because their transaction does not reveal whether it will commit.
+ * call is building. Forge simulations remain available because they do not touch the world; NeoForge and Fabric
+ * offers are refused because their transactions do not reveal whether they will commit.
  *
  * <p>One flag serves the whole server: every path through it is a world mutation and therefore runs
  * on the server thread.

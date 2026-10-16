@@ -18,7 +18,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -285,18 +286,18 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        IItemHandler capability = GameTestSupport.capability(storage);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         int headroom = StorageStackBE.SLOTS;
-        check(capability.insertItem(headroom, offered, true).isEmpty(),
+        checkEquals(4, GameTestSupport.offer(capability, headroom, offered, false),
                 "A full pile with free headroom did not credit growth");
 
         GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                    "Committed offer accepted count");
         });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
@@ -314,19 +315,19 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
         }
-        IItemHandler capability = GameTestSupport.capability(singles);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
 
         // A cell takes one item, so a credited growth leaves three of the four behind.
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(1, GameTestSupport.offer(capability, headroom, offered, false),
                 "A full column with free headroom did not credit growth");
 
         GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                    "Committed offer accepted count");
         });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
@@ -345,19 +346,19 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
         }
-        IItemHandler capability = GameTestSupport.capability(bars);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
 
         // A position takes one bar, so a credited growth leaves three of the four behind.
         int headroom = BarStackBE.SLOTS;
-        checkEquals(3, capability.insertItem(headroom, offered, true).getCount(),
+        checkEquals(1, GameTestSupport.offer(capability, headroom, offered, false),
                 "A full column with free headroom did not credit growth");
 
         GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
-            checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                    "Simulated remainder");
-            checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                    "Committed remainder");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                    "Committed offer accepted count");
         });
 
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
@@ -378,15 +379,15 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
-        IItemHandler capability = GameTestSupport.capability(storage);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = StorageStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                "Aborted offer accepted count");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                "Committed offer accepted count");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
                 CommonRegistry.storageStackBlock(), ORIGIN.above());
@@ -403,15 +404,15 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
             singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
         }
-        IItemHandler capability = GameTestSupport.capability(singles);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = SinglesStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                "Aborted offer accepted count");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                "Committed offer accepted count");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
                 CommonRegistry.singlesStackBlock(), ORIGIN.above());
@@ -429,15 +430,15 @@ public final class ProtectionGameTests {
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
             bars.getItems().insertItem(slot, new ItemStack(bar), false);
         }
-        IItemHandler capability = GameTestSupport.capability(bars);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
         GameTestScaffold.putCowIn(helper, ORIGIN.above());
 
         int headroom = BarStackBE.SLOTS;
-        checkEquals(4, capability.insertItem(headroom, offered, true).getCount(),
-                "Simulated remainder");
-        checkEquals(4, capability.insertItem(headroom, offered, false).getCount(),
-                "Committed remainder");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, false),
+                "Aborted offer accepted count");
+        checkEquals(0, GameTestSupport.offer(capability, headroom, offered, true),
+                "Committed offer accepted count");
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
                 CommonRegistry.barStackBlock(), ORIGIN.above());

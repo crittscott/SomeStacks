@@ -9,7 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -67,13 +68,13 @@ public final class CapabilityAndPersistenceGameTests {
         int singlesLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         int barLevels = ServerConfig.maxPileHeight() > 1 ? 2 : 1;
         checkEquals(StorageStackBE.SLOTS * storageLevels,
-                GameTestSupport.capability(storage).getSlots(),
+                GameTestSupport.capability(storage).size(),
                 "Storage advertised slots");
         checkEquals(SinglesStackBE.SLOTS * singlesLevels,
-                GameTestSupport.capability(singles).getSlots(),
+                GameTestSupport.capability(singles).size(),
                 "Singles advertised slots");
         checkEquals(BarStackBE.SLOTS * barLevels,
-                GameTestSupport.capability(bar).getSlots(),
+                GameTestSupport.capability(bar).size(),
                 "Bar advertised slots");
         helper.succeed();
     }
@@ -129,19 +130,19 @@ public final class CapabilityAndPersistenceGameTests {
     /** No in-game reproduction applies: a reentrant NeoForge capability edit is refused. */
     public static void reentrantStructuralEditIsRefused(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(singles);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STICK);
         boolean claimed = RunEdit.begin();
         try {
             check(claimed, "Structural edit guard was already claimed");
-            checkEquals(1, capability.insertItem(0, offered, false).getCount(),
+            checkEquals(0, GameTestSupport.offer(capability, 0, offered, true),
                     "Reentrant insertion accepted an item");
         } finally {
             if (claimed) {
                 RunEdit.end();
             }
         }
-        check(capability.insertItem(0, offered, false).isEmpty(),
+        checkEquals(1, GameTestSupport.offer(capability, 0, offered, true),
                 "Released guard still refused insertion");
         helper.succeed();
     }
@@ -152,17 +153,17 @@ public final class CapabilityAndPersistenceGameTests {
      */
     public static void capabilitySimulationDoesNotMutateAnyStack(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        IItemHandler capability = GameTestSupport.capability(singles);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.APPLE, 5);
 
         // Cell 0 is a bottom-layer cell of a column standing on the world, so it is grounded
         // outright and the simulation has something to accept.
-        ItemStack remainder = capability.insertItem(0, offered, true);
+        int accepted = GameTestSupport.offer(capability, 0, offered, false);
 
         checkEquals(5, offered.getCount(), "Simulation mutated its input");
         checkEquals(0, count(capability, Items.APPLE),
                 "Simulation mutated the column");
-        checkEquals(4, remainder.getCount(),
+        checkEquals(1, accepted,
                 "A cell takes one item, so one call should accept one");
         helper.succeed();
     }

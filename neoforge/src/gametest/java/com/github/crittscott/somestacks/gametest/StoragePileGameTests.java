@@ -4,7 +4,8 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -70,14 +71,14 @@ public final class StoragePileGameTests {
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
         lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
 
-        IItemHandler lowerCapability = GameTestSupport.capability(lower);
-        IItemHandler upperCapability = GameTestSupport.capability(upper);
+        ResourceHandler<ItemResource> lowerCapability = GameTestSupport.capability(lower);
+        ResourceHandler<ItemResource> upperCapability = GameTestSupport.capability(upper);
 
-        checkEquals(12, lowerCapability.getStackInSlot(0).getCount(),
+        checkEquals(12, lowerCapability.getAmountAsInt(0),
                 "Lower capability count");
-        checkEquals(12, upperCapability.getStackInSlot(0).getCount(),
+        checkEquals(12, upperCapability.getAmountAsInt(0),
                 "Upper capability count");
-        checkEquals(lowerCapability.getSlots(), upperCapability.getSlots(),
+        checkEquals(lowerCapability.size(), upperCapability.size(),
                 "Capability shape");
         helper.succeed();
     }

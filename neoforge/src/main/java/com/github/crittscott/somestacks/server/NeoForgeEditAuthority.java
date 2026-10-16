@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
@@ -41,7 +40,6 @@ public final class NeoForgeEditAuthority implements EditAuthority {
         return FakePlayerFactory.get(level, AutomationActor.PROFILE);
     }
 
-    private static final int UPDATE_RECURSION_LIMIT = 512;
     private boolean placing;
 
     @Override
@@ -51,45 +49,14 @@ public final class NeoForgeEditAuthority implements EditAuthority {
             return false;
         }
         placing = true;
-        int firstSnapshot = level.capturedBlockSnapshots.size();
         var snapshots = new ArrayList<BlockSnapshot>();
         try {
-            boolean placed;
-            level.captureBlockSnapshots = true;
-            try {
-                placed = level.setBlock(pos, state, Block.UPDATE_ALL);
-            } finally {
-                level.captureBlockSnapshots = false;
-                snapshots.addAll(level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()));
-                level.capturedBlockSnapshots.subList(
-                        firstSnapshot, level.capturedBlockSnapshots.size()).clear();
-            }
-            if (!placed || snapshots.isEmpty()
+            if (!NeoForgeGrowthPlacement.capture(level, pos, state, snapshots) || snapshots.isEmpty()
                     || EventHooks.onBlockPlace(placer, snapshots.get(0), placedAgainst)) {
-                level.restoringBlockSnapshots = true;
-                level.captureBlockSnapshots = true;
-                int rollbackStart = level.capturedBlockSnapshots.size();
-                try {
-                    for (int i = snapshots.size() - 1; i >= 0; i--) {
-                        BlockSnapshot snapshot = snapshots.get(i);
-                        snapshot.restore(Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
-                    }
-                } finally {
-                    level.captureBlockSnapshots = false;
-                    level.capturedBlockSnapshots.subList(
-                            rollbackStart, level.capturedBlockSnapshots.size()).clear();
-                    level.restoringBlockSnapshots = false;
-                }
+                NeoForgeGrowthPlacement.restore(level, snapshots);
                 return false;
             }
-            for (BlockSnapshot snapshot : snapshots) {
-                BlockState previous = snapshot.getState();
-                BlockState current = level.getBlockState(snapshot.getPos());
-                current.onPlace(level, snapshot.getPos(), previous, false);
-                level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
-                        previous, current, snapshot.getFlags(), UPDATE_RECURSION_LIMIT);
-            }
+            NeoForgeGrowthPlacement.publishSnapshots(level, snapshots);
             return true;
         } finally {
             placing = false;

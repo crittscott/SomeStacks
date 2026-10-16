@@ -8,7 +8,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.function.Consumer;
 
@@ -105,9 +107,13 @@ public final class BarColumnGameTests {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
         bars.depositAt(0, new ItemStack(barItem));
-        IItemHandler capability = GameTestSupport.capability(bars);
+        ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
 
-        ItemStack simulated = capability.extractItem(0, 64, true);
+        ItemStack simulated;
+        try (Transaction transaction = Transaction.openRoot()) {
+            ItemResource resource = capability.getResource(0);
+            simulated = resource.toStack(capability.extract(0, resource, 64, transaction));
+        }
 
         checkEquals(barItem, simulated.getItem(), "Simulated item");
         checkEquals(1, simulated.getCount(), "Simulated count");

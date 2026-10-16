@@ -6,9 +6,9 @@
 
 Current behavior; see `orientation-code.md` for structure.
 
-Three visible storage blocks; no block items, recipes, creative-tab entries, or screens. Depositing creates a stack; emptying it normally removes it.
+Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 1.21.9 build target; source copied from the 1.21.8 repository; Gradle sync confirmed; shared rendering ported; remaining source port, compilation, and runtime checks pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
+Minecraft 1.21.9 target; Gradle sync confirmed; rendering and NeoForge automation ported; remaining port and verification pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
@@ -24,7 +24,7 @@ A vertical same-type run shares one inventory. Default height limit: 8 blocks (2
 
 The Stack Modifier is held `V` by default, rebindable under **Options -> Controls -> Some Stacks**.
 
-Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The selected mode shows above the hotbar; server-disabled types are skipped. The mode determines new blocks; it never changes existing stacks.
+Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The mode shows above the hotbar and skips disabled types. It determines new blocks, leaving existing stacks unchanged.
 
 | Gesture | Result |
 | --- | --- |
@@ -38,13 +38,13 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks and also Common Protection API when installed.
 
-Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
+Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind.
+Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind.
 
-Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
+Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
 In creative mode, deposits do not reduce the held stack.
 
@@ -58,7 +58,7 @@ Plain right-click targets the nearest rendered item on the view ray inside the c
 - Singles: one item.
 - Bar: one bar, and any bars left unsupported above it collapse and drop.
 
-The main hand must be empty or hold matching items/components with room. A plain click on a stack is consumed even when extraction fails, so an unrelated held item is not used against the stack.
+The main hand must be empty or hold matching items/components with room. Plain clicks are consumed even when extraction fails, preventing use of unrelated held items.
 
 Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently. Removing a Bar Stack also removes the support seam beneath the Bars above it, so those collapse.
 
@@ -80,7 +80,7 @@ A redstone torch rotates a whole block; a soul torch rotates only the aimed item
 
 ### Bar
 
-64 server-approved ingots appear as cuboids in eight crossed layers of eight. Resource packs supply textures and tints; item models are not drawn.
+64 server-approved ingots appear as cuboids in eight crossed layers of eight. Resource packs supply textures/tints instead of item models.
 
 Every bar above the bottom layer must overlap a bar directly below, and support crosses a seam between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Bars do not rotate.
 
@@ -95,7 +95,7 @@ Every bar above the bottom layer must overlap a bar directly below, and support 
 
 ## Automation
 
-Every block exposes the whole run on all sides: `IItemHandler` on Forge/NeoForge, Transfer API on Fabric. Slots number from the bottom block up.
+Every block exposes the whole run on all sides: `IItemHandler` on Forge, transactional `ResourceHandler<ItemResource>` on NeoForge, and Transfer API on Fabric. Slots number from the bottom block up.
 
 | Type | One slot | Slot limit |
 | --- | --- | --- |
@@ -103,11 +103,11 @@ Every block exposes the whole run on all sides: `IItemHandler` on Forge/NeoForge
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. All three loaders present automation under the same `[SomeStacks]` identity so machine and claim policies can recognize it.
+Storage advertises current positions plus one block of headroom below the height limit; headroom insertion can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Automation uses `[SomeStacks]` for machine and claim policies.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks. Singles and Bar allow one structural extraction position per transaction.
+Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On NeoForge and Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks; aborts leave the inventory and world unchanged. Singles and Bar allow one structural extraction position per transaction. NeoForge also refuses other pending positions and further insertion during a structural extraction.
 
 ## Comparators
 

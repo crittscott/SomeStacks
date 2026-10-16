@@ -9,22 +9,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.function.Function;
 
 /**
- * NeoForge-native scaffolding for the GameTests: {@code IItemHandler}
- * capability access through {@code Capabilities.ItemHandler.BLOCK}, and the level's fake player.
+ * NeoForge-native scaffolding for the GameTests: {@code ResourceHandler}
+ * capability access through {@code Capabilities.Item.BLOCK}, and the level's fake player.
  * Everything loader-neutral lives in {@link GameTestScaffold}.
  */
 public final class GameTestSupport {
     private GameTestSupport() {}
 
-    public static IItemHandler capability(BlockEntity blockEntity) {
-        IItemHandler handler = handlerOn(blockEntity, null);
+    public static ResourceHandler<ItemResource> capability(BlockEntity blockEntity) {
+        ResourceHandler<ItemResource> handler = handlerOn(blockEntity, null);
         GameTestScaffold.check(handler != null,
-                "Missing item-handler capability at " + blockEntity.getBlockPos());
+                "Missing item-resource capability at " + blockEntity.getBlockPos());
         return handler;
     }
 
@@ -33,9 +35,9 @@ public final class GameTestSupport {
         return handlerOn(blockEntity, side) != null;
     }
 
-    private static IItemHandler handlerOn(BlockEntity blockEntity, Direction side) {
+    private static ResourceHandler<ItemResource> handlerOn(BlockEntity blockEntity, Direction side) {
         return ((ServerLevel) blockEntity.getLevel()).getCapability(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 blockEntity.getBlockPos(),
                 blockEntity.getBlockState(),
                 blockEntity,
@@ -43,15 +45,24 @@ public final class GameTestSupport {
     }
 
     /** {@link GameTestScaffold#count} for a real NeoForge capability, as {@link #capability} returns. */
-    public static int count(IItemHandler handler, Item item) {
+    public static int count(ResourceHandler<ItemResource> handler, Item item) {
         int total = 0;
-        for (int slot = 0; slot < handler.getSlots(); slot++) {
-            ItemStack stack = handler.getStackInSlot(slot);
+        for (int slot = 0; slot < handler.size(); slot++) {
+            ItemStack stack = handler.getResource(slot).toStack(handler.getAmountAsInt(slot));
             if (stack.is(item)) {
                 total += stack.getCount();
             }
         }
         return total;
+    }
+
+    /** Offers through the native transaction API; an uncommitted offer is rolled back on close. */
+    public static int offer(ResourceHandler<ItemResource> handler, int slot, ItemStack stack, boolean commit) {
+        try (Transaction transaction = Transaction.openRoot()) {
+            int accepted = handler.insert(slot, ItemResource.of(stack), stack.getCount(), transaction);
+            if (commit) transaction.commit();
+            return accepted;
+        }
     }
 
     /**

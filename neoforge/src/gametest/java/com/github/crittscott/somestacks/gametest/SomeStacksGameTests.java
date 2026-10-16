@@ -261,6 +261,24 @@ public final class SomeStacksGameTests {
                 () -> StoragePileGameTests::comparatorReservesZeroForAnEmptyPile);
         TEST_FUNCTIONS.register("storagepilegametests/comparator_contribution_loads_and_tracks_mutations",
                 () -> StoragePileGameTests::comparatorContributionLoadsAndTracksMutations);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/staged_insertion_is_invisible_until_commit",
+                () -> NeoForgeTransferGameTests::stagedInsertionIsInvisibleUntilCommit);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/whole_storage_insert_extract_and_nested_rollback_are_atomic",
+                () -> NeoForgeTransferGameTests::wholeStorageInsertExtractAndNestedRollbackAreAtomic);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/transaction_allows_only_one_structural_extraction_position",
+                () -> NeoForgeTransferGameTests::transactionAllowsOnlyOneStructuralExtractionPosition);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/repeated_lookups_share_one_run_ledger",
+                () -> NeoForgeTransferGameTests::repeatedLookupsShareOneRunLedger);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/headroom_rollback_restores_water_and_commit_grows_each_type",
+                () -> NeoForgeTransferGameTests::headroomRollbackRestoresWaterAndCommitGrowsEachType);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/staged_support_fills_cells_and_headroom_bottom_up",
+                () -> NeoForgeTransferGameTests::stagedSupportFillsCellsAndHeadroomBottomUp);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/positional_extraction_rolls_back_and_commits_movement",
+                () -> NeoForgeTransferGameTests::positionalExtractionRollsBackAndCommitsMovement);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/placement_veto_refuses_offer_before_commit",
+                () -> NeoForgeTransferGameTests::placementVetoRefusesOfferBeforeCommit);
+        TEST_FUNCTIONS.register("neoforgetransfergametests/storage_slot_replacement_uses_staged_capacity",
+                () -> NeoForgeTransferGameTests::storageSlotReplacementUsesStagedCapacity);
     }
 
     public SomeStacksGameTests(IEventBus modBus) {

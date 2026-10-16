@@ -42,6 +42,8 @@ Completion criterion: NeoForge exposes the target capability with correct commit
 
 Reference: [NeoForge transfer migration](https://neoforged.net/news/21.9-transfer-rework/).
 
+Status: implementation complete; compilation and runtime verification pending. NeoForge now exposes `Capabilities.Item.BLOCK` through `ResourceHandler<ItemResource>` with a native `SnapshotJournal` stored in a transient block-entity attachment. All run views share the base ledger; nested rollback restores staged contents and structural restrictions. Staged support permits bottom-up insertion across seams. Growth consults the placement event before accepting items, silently restores the tentative block, and installs/fills accepted growth before publication at root commit. Positional extraction uses common gravity/backfill at commit and excludes other pending positions or subsequent insertion. The obsolete NeoForge adapter is removed; Forge retains its own API. Existing capability/protection tests use the replacement API, and nine registered transaction GameTests cover visibility, nested rollback, shared lookups, waterlogged headroom rollback/growth, staged support, positional movement, placement vetoes, and slot replacement. Signatures were checked against published NeoForge 1.21.9 source and release metadata; no Gradle invocation, build, or GameTest run was performed.
+
 ## 4. Update loader and client integration
 
 - Replace string key categories in all three loaders with the target category representation and registration, updating language keys where needed.

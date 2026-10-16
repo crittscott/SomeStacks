@@ -7,6 +7,10 @@ import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -31,6 +35,12 @@ public final class ModRegistry {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, SomeStacksNeoForge.MODID);
     public static final DeferredRegister<SoundEvent> SOUNDS =
             DeferredRegister.create(Registries.SOUND_EVENT, SomeStacksNeoForge.MODID);
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
+            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, SomeStacksNeoForge.MODID);
+    /** Runtime-only journal: inventory persistence remains in the block entity. */
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<NeoForgeRunResourceHandler>> RUN_RESOURCES =
+            ATTACHMENTS.register("run_resources", () -> AttachmentType.builder(
+                    holder -> new NeoForgeRunResourceHandler((StackBlockEntity) holder)).build());
 
     public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.BAR_STACK_BLOCK.getPath(), BarStackBlock::new,
             StackBlock.barProperties());
@@ -70,6 +80,7 @@ public final class ModRegistry {
     public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
+        ATTACHMENTS.register(modBus);
         SOUNDS.register(modBus);
     }
 }
