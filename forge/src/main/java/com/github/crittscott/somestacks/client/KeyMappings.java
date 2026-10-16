@@ -13,6 +13,9 @@ public final class KeyMappings {
     public static final KeyMapping.Category CATEGORY =
             KeyMapping.Category.register(ClientGestures.KEY_CATEGORY_ID);
 
+    /** Position within the category; the category holds only the stack modifier. */
+    private static final int STACK_MODE_KEY_SORT_ORDER = 0;
+
     /**
      * The stack modifier, {@code V} by default and rebindable. Held rather than pressed: every
      * gesture asks whether it is down at the moment of the click.
@@ -20,8 +23,8 @@ public final class KeyMappings {
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
             ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
             KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
-            CATEGORY
+            InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_V),
+            CATEGORY,
+            STACK_MODE_KEY_SORT_ORDER
     );
 }

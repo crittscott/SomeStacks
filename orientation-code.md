@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 21; Minecraft 1.21.11 port in progress (Gradle syncs; compilation, GameTests, and runtime verification pending); package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 21; Minecraft 1.21.11 port in progress (builds and server GameTests pass on all loaders; data migration, client tests, and runtime verification pending); Forge pinned to 61.1.5, the last release Architectury Loom runs; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
@@ -99,7 +99,7 @@ BERs extract presentation before queued submission: Storage/Singles use `CubeGri
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 94.1. Registrations, JSON, and wrappers cross-checked; compilation/discovery pending. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 94.1. Server GameTests pass on all three loaders. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
 
 `-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 

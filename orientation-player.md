@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 1.21.11 target, port in progress; builds, GameTests, and in-game verification pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
+Minecraft 1.21.11 target, port in progress; builds and server GameTests pass, in-game verification pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
