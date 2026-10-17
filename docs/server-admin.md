@@ -1,6 +1,6 @@
 # Server administration
 
-This branch targets Minecraft 26.1.1 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 26.1) upgrade on first load; back them up first. Custom data packs use format **101.1**; server resource packs use **84** (see [Pack authors](pack-authors.md)).
+This branch targets Minecraft 26.2 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 26.1) upgrade on first load; back them up first. Custom data packs use format **107.1**; server resource packs use **88** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
