@@ -22,9 +22,9 @@ public final class FabricClientRendering {
                 FabricRegistry.BAR_STACK_BE, BarStackBER::new);
 
         ResourceLoader clientResources = ResourceLoader.get(PackType.CLIENT_RESOURCES);
-        clientResources.registerReloader(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
-        clientResources.registerReloader(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
-        clientResources.registerReloader(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
+        clientResources.registerReloadListener(ItemRenderOverrides.RELOAD_LISTENER_ID, new ItemRenderOverrides());
+        clientResources.registerReloadListener(BarTextureStore.RELOAD_LISTENER_ID, new BarTextureStore());
+        clientResources.registerReloadListener(CubeRenderHelper.RENDER_CACHE_RELOAD_LISTENER_ID,
                 (ResourceManagerReloadListener) manager -> {
                     AutoRenderProfiles.onResourceReload();
                     CubeRenderHelper.onResourceReload();

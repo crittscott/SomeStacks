@@ -17,8 +17,7 @@
       "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
-      "com.github.crittscott.somestacks.gametest.ProtectionGameTests",
-      "com.github.crittscott.somestacks.gametest.NoProtectionApiGameTests"
+      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"
     ],
     "client": [
       "com.github.crittscott.somestacks.gametest.ClientCallbackGameTests"

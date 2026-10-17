@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 1.21.11 target, port in progress; builds and server GameTests pass, in-game verification pending. Client/server builds must match. Fabric needs Fabric API; Common Protection API is optional.
+Minecraft 1.21.11 target, port in progress; builds and server GameTests pass, in-game verification pending. Client/server builds must match. Fabric needs Fabric API.
 
 ## The three stack types
 
@@ -36,7 +36,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks and also Common Protection API when installed.
+Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks.
 
 Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
 
@@ -163,13 +163,13 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 
 ## Extension points
 
-- Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
+- Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots` and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
 - Resource pack (format 84; data packs use 101.1): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge consult destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks and optional Common Protection API for neighbor deposits. Fabric consults that API for placement and automation growth when available; otherwise those edits use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge consult destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks for neighbor deposits; placement and automation growth use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
 The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 

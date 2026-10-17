@@ -2,10 +2,6 @@
   "replace": false,
   "values": [
     {
-      "id": "#forge:ingots",
-      "required": false
-    },
-    {
       "id": "#c:ingots",
       "required": false
     },

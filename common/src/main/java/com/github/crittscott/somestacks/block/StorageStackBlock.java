@@ -63,7 +63,7 @@ public class StorageStackBlock extends StackBlock {
     }
 
     @Override
-    public int getLightBlock(BlockState state) {
+    public int getLightDampening(BlockState state) {
         return 0;
     }
 

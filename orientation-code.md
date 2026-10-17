@@ -49,7 +49,7 @@ Three blocks; no block items, menus, or recipes:
 | Networking | versioned `SimpleChannel` | versioned payload registrar | payload registry plus a configuration-phase `ProtocolPkt` version marker |
 | Gestures | interaction/input events | interaction/input events | callbacks plus air-click mixin |
 | Automation | generic whole-run `IItemHandler` | whole-run `ResourceHandler<ItemResource>` | generic Transfer API `Storage<ItemVariant>` |
-| Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla and break callbacks; optional Common Protection API queries |
+| Edit protection | vanilla plus place/break events | vanilla plus place/break events | vanilla and break callbacks |
 
 Forge: validated EventBus 7 typed buses, `BusGroup`, boolean cancellation, `Result` denial, `AttachCapabilitiesEvent.BlockEntities`.
 
@@ -73,9 +73,9 @@ Persistence uses `ValueInput`/`ValueOutput` and registry-aware `ItemStack.CODEC`
 
 Storage takes nonempty items; Bar takes the reloadable `somestacks:ingots` tag; Singles takes allowed non-Bar items. `disable_mods` applies to gestures and automation, while `disable_items` applies only to player deposits; galleries skip both. Internal settlement, gravity, and backfill never reapply admission rules.
 
-Loader-native views adapt `StackRunItemAccess` and span the run plus one headroom block while growth is allowed. Storage slots use item limits; Singles and Bar hold one item. Forge uses `RunItemHandlerBase`; NeoForge/Fabric cache native transaction adapters per block entity and share the base ledger. Slot edits apply at root/outer commit. Both allow one structural extraction position; NeoForge also excludes other pending positions and later insertion. NeoForge checks staged support and prepares growth through native placement events, restores it silently, then installs/fills/publishes at commit. `RunEdit` refuses reentrant automation mutations.
+Loader-native views adapt `StackRunItemAccess` and span the run plus one headroom block while growth is allowed. Storage slots use item limits; Singles and Bar hold one item. NeoForge/Fabric cache native transaction adapters per block entity and share the base ledger. Slot edits apply at root/outer commit. Both allow one structural extraction position; NeoForge also excludes other pending positions and later insertion. NeoForge checks staged support and prepares growth through native placement events, restores it silently, then installs/fills/publishes at commit. `RunEdit` refuses reentrant automation mutations.
 
-`WorldEdits` checks build limits, replaceability, obstruction, border, spawn and loader authority. Automated edits use the `[SomeStacks]` identity. Player cleanup retains the player; deferred Storage settlement uses automation for automated or mixed causes. Forge caches a connection-safe actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge capture tentative placement in loader snapshots, fire native placement events before publishing, restore block-entity data on denial without neighbor updates, and publish accepted changes through the loader facility. Removal fires native break events. Fabric uses Common Protection API placement queries only when installed; without it, vanilla checks govern placement and growth. Removal fires the `PlayerBlockBreakEvents` lifecycle. Outer edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`; player content and rotation edits emit `BLOCK_CHANGE` while the stack survives.
+`WorldEdits` checks build limits, replaceability, obstruction, border, spawn and loader authority. Automated edits use the `[SomeStacks]` identity. Player cleanup retains the player; deferred Storage settlement uses automation for automated or mixed causes. Forge caches a connection-safe actor per dimension; NeoForge and Fabric use fake-player factories. Forge/NeoForge capture tentative placement in loader snapshots, fire native placement events before publishing, restore block-entity data on denial without neighbor updates, and publish accepted changes through the loader facility. Removal fires native break events. Fabric placement and growth use vanilla checks. Removal fires the `PlayerBlockBreakEvents` lifecycle. Outer edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`; player content and rotation edits emit `BLOCK_CHANGE` while the stack survives.
 
 ## Player interaction and networking
 
@@ -85,7 +85,7 @@ The only play-phase server-to-client payload is cached configuration. Decoding b
 
 `StackBlock.useItemOn`/`useWithoutItem` handle non-sneaking clicks; loader server hooks handle sneaking torch rotation and actions through neighboring non-stack blocks. Both pass vanilla's `BlockHitResult` to `StackInteractions` after ordinary interaction checks. Common handling checks hand, spectator/protection state, item, support, policy, height, obstruction, and authority. Placement plus first deposit is atomic. Deposit, extraction, and Singles item rotation select cells server-side along a ray through the vanilla hit; no client cell index is accepted.
 
-Forge/NeoForge consult destination right-click events for neighbor deposits, honoring cancellation and block/item-use denial; a guard prevents duplicate gestures. Fabric consults destination block-use callbacks and optional Common Protection API. One authority per loader handles placement and destination permission. Commands use Brigadier; Fabric forwards unclaimed client `ss` forms.
+Forge/NeoForge consult destination right-click events for neighbor deposits, honoring cancellation and block/item-use denial; a guard prevents duplicate gestures. Fabric consults destination block-use callbacks. One authority per loader handles placement and destination permission. Commands use Brigadier; Fabric forwards unclaimed client `ss` forms.
 
 ## Configuration and presentation
 
@@ -101,5 +101,4 @@ BERs extract presentation before queued submission: Storage/Singles use `CubeGri
 
 `somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 101.1. Server GameTests pass on all three loaders. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
 
-`-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 

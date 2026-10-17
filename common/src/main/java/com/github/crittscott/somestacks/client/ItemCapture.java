@@ -2,13 +2,12 @@ package com.github.crittscott.somestacks.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,10 +27,10 @@ import java.util.TreeMap;
  */
 public final class ItemCapture {
     /**
-     * A baked quad together with its resolved layer tint and the render type the item submitted it
-     * with, which binds the atlas holding the quad's sprite. Baked model geometry is immutable.
+     * A baked quad together with its resolved layer tint. The quad's item render type binds the atlas
+     * holding its sprite. Baked model geometry is immutable.
      */
-    public record TintedQuad(BakedQuad quad, int color, RenderType renderType) {}
+    public record TintedQuad(BakedQuad quad, int color) {}
 
     private final ItemStackRenderState renderState = new ItemStackRenderState();
     private final List<TintedQuad> quads = new ArrayList<>();
@@ -73,7 +72,7 @@ public final class ItemCapture {
             });
         }
         CaptureCollector collector = capture.new CaptureCollector();
-        capture.renderState.submit(pose, collector, LightTexture.FULL_BRIGHT,
+        capture.renderState.submit(pose, collector, LightCoordsUtil.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY, 0);
         capture.specialGeometry = collector.orders.values().stream()
                 .anyMatch(SubmitNodeCollection::wasUsed);
@@ -108,11 +107,11 @@ public final class ItemCapture {
         bounded = true;
     }
 
-    private void acceptQuads(int[] tints, List<BakedQuad> submitted, RenderType renderType) {
+    private void acceptQuads(int[] tints, List<BakedQuad> submitted) {
         for (BakedQuad quad : submitted) {
-            int index = quad.tintIndex();
+            int index = quad.materialInfo().tintIndex();
             int tint = index >= 0 && index < tints.length ? tints[index] : -1;
-            quads.add(new TintedQuad(quad, tint, renderType));
+            quads.add(new TintedQuad(quad, tint));
         }
     }
 
@@ -126,8 +125,8 @@ public final class ItemCapture {
                 @Override
                 public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
                                        int overlay, int outline, int[] tints, List<BakedQuad> submitted,
-                                       RenderType renderType, ItemStackRenderState.FoilType foil) {
-                    acceptQuads(tints, submitted, renderType);
+                                       ItemStackRenderState.FoilType foil) {
+                    acceptQuads(tints, submitted);
                 }
             });
         }
@@ -135,8 +134,8 @@ public final class ItemCapture {
         @Override
         public void submitItem(PoseStack pose, ItemDisplayContext context, int light, int overlay,
                                int outline, int[] tints, List<BakedQuad> submitted,
-                               RenderType renderType, ItemStackRenderState.FoilType foil) {
-            acceptQuads(tints, submitted, renderType);
+                               ItemStackRenderState.FoilType foil) {
+            acceptQuads(tints, submitted);
         }
     }
 }

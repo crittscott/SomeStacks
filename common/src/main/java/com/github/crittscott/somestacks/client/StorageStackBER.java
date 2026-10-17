@@ -4,17 +4,21 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.BlockModelResolver;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
 /** Extracts Storage layout rotation and item presentation before submitting the grid. */
 public class StorageStackBER implements BlockEntityRenderer<StorageStackBE, CubeRenderHelper.GridRenderState> {
+    private final BlockModelResolver blockModels;
+
     public StorageStackBER(BlockEntityRendererProvider.Context context) {
+        this.blockModels = context.blockModelResolver();
     }
 
     @Override
@@ -28,7 +32,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE, Cube
                                    @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTick, cameraPos, crumblingOverlay);
         CubeRenderHelper.extractGridItems(be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID,
-                be.getRotation(), CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0,
+                be.getRotation(), CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels,
                 be.getLevel(), be.getBlockPos(), cameraPos, state);
     }
 

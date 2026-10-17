@@ -8,6 +8,7 @@ import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.block.BlockModelResolver;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -58,12 +59,12 @@ public final class ClientCallbackChecks {
             GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             checkRendering(client, hit);
-            client.player.displayClientMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"), false);
+            client.player.sendSystemMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"));
             return 1;
         } catch (RuntimeException failure) {
             if (client.player != null) {
-                client.player.displayClientMessage(Component.translatable(
-                        "somestacks_gametest.message.client_callback_failed", failure.getMessage()), false);
+                client.player.sendSystemMessage(Component.translatable(
+                        "somestacks_gametest.message.client_callback_failed", failure.getMessage()));
             }
             return 0;
         }
@@ -91,8 +92,9 @@ public final class ClientCallbackChecks {
         StackItemStorage items = new StackItemStorage(1);
         items.setStackInSlot(0, stone);
         var state = new CubeRenderHelper.GridRenderState();
+        var blockModels = new BlockModelResolver(client.getModelManager());
         CubeRenderHelper.extractGridItems(items, 1, StorageCubeIdx.GRID, 0,
-                CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, client.level,
+                CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels, client.level,
                 hit.getBlockPos(), client.player.getEyePosition(), state);
         items.setStackInSlot(0, ItemStack.EMPTY);
         SubmitNodeStorage submitted = new SubmitNodeStorage();
@@ -100,7 +102,7 @@ public final class ClientCallbackChecks {
         GameTestScaffold.check(!submitted.getSubmitsPerOrder().isEmpty(),
                 "Prepared grid read the emptied inventory during submission");
         CubeRenderHelper.extractGridItems(items, 1, StorageCubeIdx.GRID, 0,
-                CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, client.level,
+                CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels, client.level,
                 hit.getBlockPos(), client.player.getEyePosition(), state);
         SubmitNodeStorage empty = new SubmitNodeStorage();
         CubeRenderHelper.submitGridItems(state, new PoseStack(), empty);

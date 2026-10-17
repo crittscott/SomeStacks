@@ -278,7 +278,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
     private static void report(Component message) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            player.displayClientMessage(message, false);
+            player.sendSystemMessage(message);
         }
     }
 

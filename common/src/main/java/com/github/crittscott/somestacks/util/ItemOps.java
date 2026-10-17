@@ -115,10 +115,8 @@ public final class ItemOps {
     public static boolean checkDisabledModAndNotify(ItemStack stack, Player player) {
         if (isItemFromDisabledMod(stack)) {
             String modId = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
-            player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_mod", modId),
-                    true
-            );
+            player.sendOverlayMessage(
+                    Component.translatable("somestacks.message.disabled_mod", modId));
             return true;
         }
         return false;
@@ -138,10 +136,8 @@ public final class ItemOps {
     public static boolean checkDisabledItemAndNotify(ItemStack stack, Player player) {
         if (isItemDisabled(stack)) {
             Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-            player.displayClientMessage(
-                    Component.translatable("somestacks.message.disabled_item", itemId.toString()),
-                    true
-            );
+            player.sendOverlayMessage(
+                    Component.translatable("somestacks.message.disabled_item", itemId.toString()));
             return true;
         }
         return false;

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -65,7 +65,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (be.getLevel() == null) {
             return;
         }
-        state.light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos());
+        state.light = LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos());
         List<BarRenderData> bars = new ArrayList<>();
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = be.getItems().getStackInSlot(idx);

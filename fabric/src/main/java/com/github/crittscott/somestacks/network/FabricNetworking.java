@@ -17,13 +17,13 @@ public final class FabricNetworking {
      * common initializer on the physical client and dedicated server before either side connects.
      */
     public static void registerPayloads() {
-        PayloadTypeRegistry.configurationC2S().register(
+        PayloadTypeRegistry.serverboundConfiguration().register(
                 ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
-        PayloadTypeRegistry.configurationS2C().register(
+        PayloadTypeRegistry.clientboundConfiguration().register(
                 ProtocolPkt.TYPE, ProtocolPkt.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(GestureStatePkt.TYPE, GestureStatePkt.STREAM_CODEC);
 
-        PayloadTypeRegistry.playS2C().register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC);
     }
 
     public static void initServer() {

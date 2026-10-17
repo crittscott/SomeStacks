@@ -52,8 +52,8 @@ public final class ClientGestures {
 
     public static void displayModeMessage(Player player) {
         Component modeComponent = Component.translatable(stackMode.getTranslationKey());
-        player.displayClientMessage(
-                Component.translatable("somestacks.message.storage_mode", modeComponent), true);
+        player.sendOverlayMessage(
+                Component.translatable("somestacks.message.storage_mode", modeComponent));
     }
 
     /** Sends only state that changed since the last interaction on this connection. */

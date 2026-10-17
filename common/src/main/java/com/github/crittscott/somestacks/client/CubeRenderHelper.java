@@ -11,15 +11,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.core.Direction;
@@ -137,7 +140,7 @@ public final class CubeRenderHelper {
     }
 
     private record PreparedItem(RenderProfile profile, @Nullable ItemStackRenderState item,
-                                @Nullable BlockState block, List<PlateBatch> plates,
+                                @Nullable BlockModelRenderState block, List<PlateBatch> plates,
                                 @Nullable TextureAtlasSprite background) {}
 
     /** Flat-art quads sharing the render type, and so the atlas, their item submitted them with. */
@@ -156,14 +159,14 @@ public final class CubeRenderHelper {
     /** Extracts inventories, profiles, item models, textures, and lighting before submission. */
     public static void extractGridItems(
             SlotAccess items, int slots, CubeGrid grid, int blockRotation,
-            float renderScale, IntUnaryOperator itemRotation,
+            float renderScale, IntUnaryOperator itemRotation, BlockModelResolver blockModels,
             @Nullable Level level, BlockPos blockPos, Vec3 cameraPos, GridRenderState state) {
         state.cells = List.of();
         if (level == null) {
             return;
         }
         state.scale = renderScale;
-        state.light = LevelRenderer.getLightColor(level, blockPos);
+        state.light = LevelRenderer.getLightCoords(level, blockPos);
         state.cameraInBlock = cameraPos.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         Map<CaptureKey, PreparedItem> prepared = new HashMap<>();
         List<CellRenderState> cells = new ArrayList<>();
@@ -173,7 +176,7 @@ public final class CubeRenderHelper {
                 continue;
             }
             PreparedItem item = prepared.computeIfAbsent(CaptureKey.of(stack),
-                    ignored -> prepareItem(stack.copy(), level));
+                    ignored -> prepareItem(stack.copy(), blockModels, level));
             if (item != null) {
                 cells.add(new CellRenderState(grid.localBox(index, blockRotation),
                         itemRotation.applyAsInt(index), item));
@@ -183,7 +186,7 @@ public final class CubeRenderHelper {
     }
 
     @Nullable
-    private static PreparedItem prepareItem(ItemStack stack, Level level) {
+    private static PreparedItem prepareItem(ItemStack stack, BlockModelResolver blockModels, Level level) {
         RenderProfile profile = ItemRenderOverrides.resolve(stack);
         if (profile == null) {
             return null;
@@ -199,7 +202,9 @@ public final class CubeRenderHelper {
                 && stack.getItem() instanceof BlockItem blockItem) {
             BlockState block = blockItem.getBlock().defaultBlockState();
             if (block.getRenderShape() == RenderShape.MODEL) {
-                return new PreparedItem(profile, null, block, List.of(), null);
+                BlockModelRenderState model = new BlockModelRenderState();
+                blockModels.update(model, block, BlockDisplayContext.create());
+                return new PreparedItem(profile, null, model, List.of(), null);
             }
         }
         ItemStackRenderState item = new ItemStackRenderState();
@@ -253,7 +258,7 @@ public final class CubeRenderHelper {
             if (prepared.block() != null) {
                 pose.mulPose(Axis.YP.rotationDegrees(180));
                 pose.translate(-0.5, -0.5, -0.5);
-                collector.submitBlock(pose, prepared.block(), light, OverlayTexture.NO_OVERLAY, 0);
+                prepared.block().submit(pose, collector, light, OverlayTexture.NO_OVERLAY, 0);
             } else if (prepared.item() != null) {
                 if (profile.mode() == RenderMode.GUI) {
                     applyGuiCounterRotation(pose);
@@ -392,7 +397,7 @@ public final class CubeRenderHelper {
             if (tinted.quad().direction().getAxis() != Direction.Axis.Z) {
                 continue;
             }
-            PlateBatch batch = batches.computeIfAbsent(tinted.renderType(),
+            PlateBatch batch = batches.computeIfAbsent(tinted.quad().materialInfo().itemRenderType(),
                     type -> new PlateBatch(type, new ArrayList<>(), new ArrayList<>()));
             batch.quads().add(tinted.quad());
             batch.colors().add(tinted.color());

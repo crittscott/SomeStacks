@@ -34,7 +34,7 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
 
-    /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
+    /** Per-slot max-stack-size cap advertised to automation. */
     private static final int DEFAULT_SLOT_LIMIT = 64;
 
     private final ItemStack[] stacks;

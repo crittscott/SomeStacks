@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.server;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,12 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-/** Fabric protection queries and native block-break lifecycle for player-attributed edits. */
+/**
+ * Fabric destination block-use callbacks and native block-break lifecycle for player-attributed
+ * edits. Placement relies on the vanilla checks {@link WorldEdits} performs.
+ */
 public final class FabricEditAuthority implements EditAuthority {
-    @Nullable
-    private final FabricProtectionQueries protectionQueries = FabricLoader.getInstance()
-            .isModLoaded("common-protection-api") ? new CommonProtectionQueries() : null;
-
     @Override
     public ServerPlayer automationActor(ServerLevel level) {
         return FakePlayer.get(level, AutomationActor.PROFILE);
@@ -30,9 +28,6 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        if (protectionQueries != null && !protectionQueries.mayUseAdjacent(player, pos)) {
-            return false;
-        }
         return UseBlockCallback.EVENT.invoker().interact(
                 player, player.level(), InteractionHand.MAIN_HAND,
                 WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
@@ -40,14 +35,13 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
-        return protectionQueries == null || protectionQueries.mayPlace(placer, level, pos);
+        return true;
     }
 
     @Override
     public boolean place(Player placer, ServerLevel level, BlockPos pos,
                          BlockState state, Direction placedAgainst) {
-        return mayPlace(placer, level, pos)
-                && level.setBlock(pos, state, Block.UPDATE_ALL);
+        return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override

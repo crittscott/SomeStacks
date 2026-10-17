@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 /** Keeps the Fabric adapter on its owning block entity, outside common code. */
-@Mixin(value = StackBlockEntity.class, remap = false)
+@Mixin(StackBlockEntity.class)
 public abstract class StackBlockEntityMixin implements FabricStorageOwner {
     @Unique
     private FabricRunItemStorage someStacksStorage;

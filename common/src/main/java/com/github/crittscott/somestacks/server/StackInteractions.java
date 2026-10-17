@@ -270,8 +270,8 @@ public final class StackInteractions {
             case BAR_STACK -> !BarColumn.columnHasRoomFor(level, pos);
         };
         if (columnFull) {
-            player.displayClientMessage(Component.translatable(
-                    "somestacks.message.maximum_height", ServerConfig.maxPileHeight()), true);
+            player.sendOverlayMessage(Component.translatable(
+                    "somestacks.message.maximum_height", ServerConfig.maxPileHeight()));
             return;
         }
 
@@ -409,8 +409,8 @@ public final class StackInteractions {
             return;
         }
         emitBlockChange(player, pos, player.level().getBlockState(pos));
-        player.displayClientMessage(Component.translatable(
-                "somestacks.message.rotation", QuarterTurns.degrees(rotation)), true);
+        player.sendOverlayMessage(Component.translatable(
+                "somestacks.message.rotation", QuarterTurns.degrees(rotation)));
     }
 
     private static void rotateItem(ServerPlayer player, BlockPos pos, ViewRay ray) {
@@ -425,8 +425,8 @@ public final class StackInteractions {
         singles.setCubeRotation(index, rotation);
         emitBlockChange(player, pos, player.level().getBlockState(pos));
         StackSounds.playRotation(player, pos, CommonRegistry.singlesRotateItemSound());
-        player.displayClientMessage(Component.translatable(
-                "somestacks.message.item_rotation", QuarterTurns.degrees(rotation)), true);
+        player.sendOverlayMessage(Component.translatable(
+                "somestacks.message.item_rotation", QuarterTurns.degrees(rotation)));
     }
 
     private static void togglePermanent(ServerPlayer player, BlockPos pos) {
@@ -437,11 +437,11 @@ public final class StackInteractions {
         boolean permanent = !pile.isPermanent();
         pile.setPermanent(permanent, player);
         emitBlockChange(player, pos, player.level().getBlockState(pos));
-        player.displayClientMessage(Component.translatable(
+        player.sendOverlayMessage(Component.translatable(
                 "somestacks.message.pile_state",
                 Component.translatable(permanent
                         ? "somestacks.state.permanent"
-                        : "somestacks.state.temporary")), true);
+                        : "somestacks.state.temporary")));
     }
 
     private static void returnToHand(ServerPlayer player, boolean creative, ItemStack handStack) {

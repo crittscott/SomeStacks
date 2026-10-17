@@ -5,10 +5,9 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * A numbered range of item slots, matching the Forge and NeoForge {@code IItemHandler} contract so
- * their capability views stay thin adapters. This is the internal storage primitive for block
- * entities, piles, and columns; only the Forge/NeoForge capability and Fabric Transfer API adapters
- * that expose it to automation are loader-specific.
+ * A numbered range of item slots. This is the internal storage primitive for block entities, piles,
+ * and columns; only the NeoForge resource-handler and Fabric Transfer API adapters that expose it to
+ * automation are loader-specific.
  */
 public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */

@@ -34,8 +34,8 @@ import java.util.Objects;
 /**
  * Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  * through {@link CommonRegistry}, seeding handlers directly, and the assertion helpers every test
- * reads through. Loader-native automation access stays in Forge's and NeoForge's
- * {@code GameTestSupport} and Fabric's {@code FabricGameTestSupport}.
+ * reads through. Loader-native automation access stays in NeoForge's {@code GameTestSupport} and
+ * Fabric's {@code FabricGameTestSupport}.
  *
  * <p>Seeding writes to a handler rather than going through a deposit, so a test can build a state
  * the ordinary rules would not produce and check what happens next.

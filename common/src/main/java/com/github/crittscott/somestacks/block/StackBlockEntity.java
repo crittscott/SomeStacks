@@ -360,19 +360,8 @@ public abstract class StackBlockEntity extends BlockEntity {
         loadClientUpdate(StackDataMigration.readTag(input), input.lookup());
     }
 
-    /** Forge chunk-update hook, sharing the same staged validation as NeoForge. */
-    public final void handleUpdateTag(ValueInput input, HolderLookup.Provider registries) {
-        handleUpdateTag(input);
-    }
-
     /** NeoForge block-update hook, sharing the same staged validation as chunk initialization. */
     public final void onDataPacket(Connection connection, ValueInput input) {
-        handleUpdateTag(input);
-    }
-
-    /** Forge block-update hook; the input already carries its registry context. */
-    public final void onDataPacket(
-            Connection connection, ValueInput input, HolderLookup.Provider registries) {
         handleUpdateTag(input);
     }
 
