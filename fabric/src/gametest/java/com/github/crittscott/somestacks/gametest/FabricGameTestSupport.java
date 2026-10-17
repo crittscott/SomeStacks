@@ -45,9 +45,8 @@ public final class FabricGameTestSupport {
     }
 
     /**
-     * Inserts {@code stack} into {@code slot}, mirroring Forge's
-     * {@code IItemHandler.insertItem(slot, stack, simulate)}: returns the remainder left over, and
-     * a {@code simulate} transaction is opened and never committed.
+     * Inserts {@code stack} into {@code slot} in one outer transaction: returns the remainder left
+     * over, and a {@code simulate} transaction is opened and never committed.
      */
     public static ItemStack insertAt(
             SlottedStorage<ItemVariant> storage, int slot, ItemStack stack, boolean simulate) {
@@ -65,8 +64,8 @@ public final class FabricGameTestSupport {
     }
 
     /**
-     * Extracts up to {@code amount} from {@code slot}, mirroring Forge's
-     * {@code IItemHandler.extractItem(slot, amount, simulate)}.
+     * Extracts up to {@code amount} from {@code slot} in one outer transaction, committed unless
+     * {@code simulate}.
      */
     public static ItemStack extractAt(
             SlottedStorage<ItemVariant> storage, int slot, int amount, boolean simulate) {

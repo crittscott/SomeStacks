@@ -39,7 +39,7 @@ On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX laun
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
-The build targets Minecraft 26.1 with Java 25. Source code is still written against 1.21.11 APIs; Gradle sync, compilation, and GameTests on 26.1 are pending.
+The build targets Minecraft 26.1 with Java 25 on Fabric and NeoForge.
 
 ## Exact build versions
 

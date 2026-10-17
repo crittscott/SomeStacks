@@ -21,8 +21,8 @@ import net.minecraft.util.datafix.fixes.References;
  * entity reads any of it. Vanilla's chunk upgrade does not reach into block entity types it does
  * not know, so the item stacks these block entities hold are run through the DataFixerUpper here.
  *
- * <p>Every save carries a {@code DataVersion}. The preceding release, Some Stacks for Minecraft
- * 1.21.8, writes the current field layout, so only its saved items need upgrading. A tag without a
+ * <p>Every save carries a {@code DataVersion}. The preceding release, Some Stacks 0.8.3 for Minecraft
+ * 1.21.11, writes the current field layout and block states, so only its saved items need upgrading. A tag without a
  * {@code DataVersion} is read as current; any entry that then fails to decode is set aside by the
  * inventory loader rather than discarded.
  */

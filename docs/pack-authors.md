@@ -2,7 +2,7 @@
 
 Some Stacks is extensible from data packs and resource packs. Nothing here requires a Java addon.
 
-For the Minecraft 1.21.6 target, set `pack.mcmeta` to resource-pack format **63** or data-pack format **80**, as appropriate. JSON must use strict syntax: no comments, trailing commas, or unquoted keys. The mod’s shipped JSON has passed syntax checks; in-game pack loading and rendering remain unverified.
+For the Minecraft 26.1 target, set `pack.mcmeta` to resource-pack format **84** or data-pack format **101.1**, as appropriate. JSON must use strict syntax: no comments, trailing commas, or unquoted keys.
 
 ## Quick map
 
@@ -17,7 +17,7 @@ A server that wants every player to see the same thing ships the client-side fil
 
 ## Bar-valid items (data pack)
 
-A Bar Stack holds exactly the items in the `somestacks:ingots` item tag. The shipped tag pulls in `#c:ingots`, `#forge:ingots`, and `#c:bricks` plus a list of vanilla and modded ingots and bricks, all optional. Extend it with `data/somestacks/tags/item/ingots.json` in your pack:
+A Bar Stack holds exactly the items in the `somestacks:ingots` item tag. The shipped tag pulls in `#c:ingots` and `#c:bricks` plus a list of vanilla and modded ingots and bricks, all optional. Extend it with `data/somestacks/tags/item/ingots.json` in your pack:
 
 ```json
 {

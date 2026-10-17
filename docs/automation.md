@@ -1,6 +1,6 @@
 # Automation
 
-Every stack block exposes loader-native storage on every side: Neoforge/Forge `IItemHandler` and Fabric Transfer API `Storage<ItemVariant>`. A block that is part of a vertical run exposes the **whole run**. A hopper under the bottom block and a pipe attached halfway up address the same inventory and see the same contents.
+Every stack block exposes loader-native storage on every side: NeoForge transactional `ResourceHandler<ItemResource>` and Fabric Transfer API `Storage<ItemVariant>`. A block that is part of a vertical run exposes the **whole run**. A hopper under the bottom block and a pipe attached halfway up address the same inventory and see the same contents.
 
 ## Slots are positions
 
@@ -16,7 +16,7 @@ Slots are numbered from the bottom block of the run upward: 27 per Storage block
 
 Because a slot names a *place*, Singles and Bar insertion **refuses** an empty position that nothing is holding up, rather than quietly putting the item somewhere else. A caller that walks the slot range from the bottom fills supported positions in order, which fills the structure layer by layer — each placement is standing by the time the next position is offered.
 
-Forge and NeoForge simulations use the structure's real current occupancy. Fabric stages changes inside the caller's Transfer API transaction and applies structural edits only when its outer transaction commits. Aborted Fabric transactions leave the world unchanged.
+Both loaders stage changes inside the caller's transaction and apply structural edits only when the outermost transaction commits. Every access to one run, from any side or block, sees the same staged contents. Aborted transactions leave the inventory and world unchanged.
 
 ## Growth
 
@@ -29,7 +29,7 @@ Inserting into that headroom grows the run by a block and stores the item there.
 - the target is inside build height, replaceable, and not obstructed by an entity,
 - and the position passes the world border and spawn protection checks.
 
-Automated growth uses the shared `[SomeStacks]` identity on every loader, so machine and claim policies can recognize it, and answers to vanilla protection checks. Forge and NeoForge fire native placement events before publishing block updates and restore captured snapshots on denial. On Fabric, when Common Protection API is installed, growth asks it for placement permission before changing the world, and a refused insertion keeps its items; claim mods veto growth by implementing that API's providers. Without it, Fabric growth answers to the vanilla checks only.
+Automated growth uses the shared `[SomeStacks]` identity on every loader, so machine and claim policies can recognize it, and answers to vanilla protection checks. NeoForge fires native placement events while staging growth, so a denial refuses the insertion before commit and the items stay with the caller. Fabric growth answers to the vanilla checks only.
 
 The advertised range is deliberately "what is there plus one block" — not the full potential height, which would leave a caller re-deriving a mostly empty range every tick, and not only what exists, which would mean a full run never gets offered the insertion that grows it.
 
@@ -43,7 +43,7 @@ Automated extraction leaves the structure standing and drops nothing:
 
 This is the one place automation and players differ: a player pulling a bar out lets everything above it fall.
 
-On Fabric, Singles and Bar accept one structural extraction position per Transfer API transaction. A pipe requesting more should commit and retry, as Transfer API callers normally do when draining one-item views.
+Singles and Bar accept one structural extraction position per transaction; NeoForge also refuses other pending positions and further insertion during it. A pipe requesting more should commit and retry, as callers normally do when draining one-item views.
 
 ## Comparators
 

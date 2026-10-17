@@ -1,16 +1,34 @@
 # Changelog
 
-## Unreleased — Minecraft 1.21.6 port
+## Unreleased — Minecraft 26.1 port
 
-1.21.6 target for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1). Source implementation and review are complete; production/GameTest compilation, discovery, saved-world migration, and client/server runtime verification remain pending. Reported Gradle sync success does not establish these results.
+Minecraft 26.1 for Fabric and NeoForge. Changes since 0.8.3 (1.21.11).
 
 ### Platform
 
-- Forge **56.x** (dev pin `56.0.9`, accepts `[56.0.9,57)`), NeoForge **21.6.x** (dev pin `21.6.20-beta`, accepts `[21.6.20-beta,21.7)`).
-- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.128.2+1.21.6**. Common Protection API **1.0.0** is optional.
-- Mappings updated to Mojang official + Parchment **2025.06.29-1.21.6**.
+- Minecraft **26.1**, Java **25**. Minecraft 26.1 is unobfuscated, so the build uses no mappings or Parchment.
+- NeoForge **26.1.0.x** (dev pin `26.1.0.19-beta`, accepts `[26.1.0.19-beta,26.1.1)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.145.1+26.1**.
+- Build toolchain: Architectury Loom no-remap **1.17.493**, Architectury plugin **3.5.170**, Gradle **9.5.1**, Shadow **9.4.3**.
+- Data packs use format **101.1**; resource packs use format **84**.
+
+### Breaking — loaders, worlds, and integrations
+
+- **Forge is no longer supported.** Use the NeoForge or Fabric build.
+- **Common Protection API integration removed** on Fabric; no 26.1 build exists. Fabric placement and automated growth use vanilla checks, and deposits into a neighboring stack consult Fabric block-use callbacks, which claim mods can veto.
+- **Worlds migrate from 0.8.3 (1.21.11) only.** Stored items run through vanilla's data fixers on first load. Worlds from earlier releases must be opened with 0.8.3 first.
+
+## 0.8.3 — Minecraft 1.21.11
+
+Minecraft 1.21.11 for Fabric, Forge, and NeoForge. Changes since 0.8.2 (1.21.1).
+
+### Platform
+
+- Forge **61.x** (dev pin `1.21.11-61.1.5`, accepts `[61.1.5,62)`), NeoForge **21.11.x** (dev pin `21.11.48`, accepts `[21.11.48,21.12)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.141.6+1.21.11**. Common Protection API **1.0.0** is optional.
+- Mappings updated to Mojang official + Parchment **2025.12.20-1.21.11**.
 - Build toolchain: Architectury Loom **1.17.493**; Gradle **9.5.1** and Shadow **9.4.3** unchanged.
-- Resource packs target Minecraft 1.21.6 format **63**; GameTest data packs use format **80**. Repository JSON passes strict parsing, including both Fabric protection configurations.
+- Packs declare format **94.1**.
 - Persistence uses value input/output and registry-aware item codecs; disk migration and staged client validation retain their existing entry points.
 - Forge integration uses EventBus 7 typed buses, cancellation results, and development event validation. NeoForge denied placements restore captured state without scheduling placement work.
 - Renderers inherit ordinary off-screen culling; existing item capture, render modes, and cache format remain in place pending visual checks.

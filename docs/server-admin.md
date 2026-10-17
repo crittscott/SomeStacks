@@ -1,12 +1,12 @@
 # Server administration
 
-This branch targets Minecraft 1.21.9; compilation, GameTests, copied-world migration, and client/server verification remain pending. Use matching client/server loader builds. Back up worlds and test a copy of a world from the preceding 1.21.8 release before using this port. Custom data packs use format **88**; server resource packs use **69** (see [Pack authors](pack-authors.md)).
+This branch targets Minecraft 26.1 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 1.21.11) upgrade on first load; back them up first. Custom data packs use format **101.1**; server resource packs use **84** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
 World policy is stored per world, so it travels with the world:
 
-- **Forge and NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SERVER config with a comment on every setting. The loader picks up file edits on its own.
+- **NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SERVER config with a comment on every setting. The loader picks up file edits on its own.
 - **Fabric:** `<world>/serverconfig/somestacks-server.json`, created with defaults on first start. After editing it, run `/ss reload`. A malformed field falls back to its default and is logged; the rest of the file still applies.
 
 `/ss deny` and `/ss gen` edits update the running values and save the file immediately.
@@ -31,7 +31,7 @@ Disabling a type, mod, or item bars *new* contents. Anything already stored can 
 
 What a Bar Stack holds is the item tag `somestacks:ingots`: ingots and bricks, despite the name. Singles Stacks take everything allowed that the tag does not, so widening one narrows the other by exactly as much. There is no config setting or command for it; it is ordinary data-pack data.
 
-The shipped tag includes `#c:ingots`, `#forge:ingots`, and `#c:bricks` (all optional, so a missing one is ignored) plus a hand-picked list of vanilla and modded ingots and brick items. Blocks made from bricks, such as `minecraft:bricks` or brick stairs, are not included. Bricks draw with a brick-shaped bar texture rather than the ingot one. Child tags such as `c:ingots/iron` count only when the parent tag includes them, which the loaders' conventional tags normally do.
+The shipped tag includes `#c:ingots` and `#c:bricks` (both optional, so a missing one is ignored) plus a hand-picked list of vanilla and modded ingots and brick items. Blocks made from bricks, such as `minecraft:bricks` or brick stairs, are not included. Bricks draw with a brick-shaped bar texture rather than the ingot one. Child tags such as `c:ingots/iron` count only when the parent tag includes them, which the loaders' conventional tags normally do.
 
 To change it, add a data pack to the world, e.g. `<world>/datapacks/my_ingots/`, containing `pack.mcmeta` and `data/somestacks/tags/item/ingots.json`:
 
@@ -84,7 +84,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Refreshes server policy and pushes the client-facing settings to every player. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on Forge and NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
+Refreshes server policy and pushes the client-facing settings to every player. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
 
 ### Render galleries
 
@@ -100,8 +100,8 @@ Item appearance is client resource data. To give players shared render profiles 
 
 ## Protection and claim mods
 
-On all three loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. Forge/NeoForge fire native placement events before publishing new blocks, restoring full snapshots on denial, and consult destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits, and queries Common Protection API for placement, growth, and neighbor deposits when it is installed; without it, vanilla checks govern placement and growth.
+On both loaders, structural edits answer to build limits, replaceability, obstruction, border, and spawn protection. Player gestures use the real vanilla interaction pipeline; the mod never invents additional right-click events. NeoForge fires native placement events before publishing new blocks, restoring full snapshots on denial, and consults destination interaction protection before a deposit reaches an adjacent Singles or Bar Stack. Fabric checks destination block-use callbacks for those deposits; vanilla checks govern placement and growth.
 
-Blocks the mod removes during cleanup fire native break hooks: Forge/NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
+Blocks the mod removes during cleanup fire native break hooks: NeoForge `BreakEvent`, or Fabric's `PlayerBlockBreakEvents` lifecycle. Player cleanup retains the player actor; automated or mixed deferred Storage edits use `[SomeStacks]`. A refused removal leaves the empty block standing. Extracting the final Single or Bar emits destruction only when cleanup succeeds; a surviving block emits change.
 
 The gesture payload carries placement mode and modifier state; actions use vanilla block-use packets and their actual hit results. The server validates the main hand, spectator state, held item, target, support, enablement, height, obstruction, and edit authority. Cell targeting is recomputed server-side along the reach ray through the hit point.

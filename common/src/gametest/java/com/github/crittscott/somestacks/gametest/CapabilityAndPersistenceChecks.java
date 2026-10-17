@@ -64,18 +64,18 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
  * storage view directly.
  */
 public final class CapabilityAndPersistenceChecks {
-    /** Data version written by Minecraft 1.21.8, the target of the preceding Some Stacks release. */
-    private static final int DATA_VERSION_1_21_8 = 4440;
+    /** Data version written by Minecraft 1.21.11, the target of the preceding Some Stacks release. */
+    private static final int DATA_VERSION_1_21_11 = 4671;
 
     private CapabilityAndPersistenceChecks() {}
 
     /**
-     * Storage disk data from the current format and the 1.21.8 release preserves items, data components,
+     * Storage disk data from the current format and the 1.21.11 release preserves items, data components,
      * block-state rotation, and permanence. To
      * reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
      * permanent, then save and restart the world. Verify the item and its components by extraction,
      * the layout by observation, and permanence by emptying the pile and checking that it remains.
-     * Also checks a literal 1.21.8 release fixture and failure without partial saves.
+     * Also checks a literal 1.21.11 release fixture and failure without partial saves.
      */
     public static void storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper helper) {
         HolderLookup.Provider registries = helper.getLevel().registryAccess();
@@ -94,7 +94,7 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag saved = source.saveWithoutMetadata(registries);
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_11}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -116,21 +116,21 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Reproduces a 1.21.8 release save with custom data, a slotted attribute modifier, and a
-     * recoverable retry. In-game: deposit a custom-component stone with the 1.21.8 release, make the
+     * Reproduces a 1.21.11 release save with custom data, a slotted attribute modifier, and a
+     * recoverable retry. In-game: deposit a custom-component stone with the 1.21.11 release, make the
      * pile permanent, save, then open the copied world in this version and extract it.
      */
     private static void checkPreviousReleaseBaseline(GameTestHelper helper, StorageStackBE loaded) {
         var registries = helper.getLevel().registryAccess();
         CompoundTag saved = new CompoundTag();
-        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_11);
         saved.putBoolean("Permanent", true);
         CompoundTag item = new CompoundTag();
         item.putString("id", "minecraft:stone");
         item.putInt("count", 5);
         item.putInt("Slot", 4);
         CompoundTag custom = new CompoundTag();
-        custom.putString("baseline", "1.21.8");
+        custom.putString("baseline", "1.21.11");
         CompoundTag modifier = new CompoundTag();
         modifier.putString("id", "somestacks:baseline");
         modifier.putString("type", "minecraft:attack_damage");
@@ -205,7 +205,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Singles disk data from the current format and the 1.21.8 release preserves contents plus block-state
+     * Singles disk data from the current format and the 1.21.11 release preserves contents plus block-state
      * and per-item rotations. To reproduce
      * in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
      * chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.
@@ -221,7 +221,7 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag saved = source.saveWithoutMetadata(registries);
         copyFacing(helper, source, loaded);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_11}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -238,7 +238,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Bar disk data from the current format and the 1.21.8 release preserves the item in each position. To reproduce in-game: deposit Bars,
+     * Bar disk data from the current format and the 1.21.11 release preserves the item in each position. To reproduce in-game: deposit Bars,
      * save and restart the world, and verify the same Bar positions
      * remain occupied.
      */
@@ -251,7 +251,7 @@ public final class CapabilityAndPersistenceChecks {
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
         for (int version : new int[] {
-                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_8}) {
+                SharedConstants.getCurrentVersion().dataVersion().version(), DATA_VERSION_1_21_11}) {
             CompoundTag input = saved.copy();
             input.putInt("DataVersion", version);
             loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, input));
@@ -375,7 +375,7 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * Set-aside entries in 1.21.8 release data recover only into free valid slots and disappear
+     * Set-aside entries in 1.21.11 release data recover only into free valid slots and disappear
      * from retained disk data.
      * To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
      * with that item mod absent, then restore the mod and reopen the world. The item returns.
@@ -398,7 +398,7 @@ public final class CapabilityAndPersistenceChecks {
         checkEquals(new StackItemStorage.LoadResult(0, 2), storage.deserializeNBT(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
-        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_11);
         saved.put("Items", inventory);
         loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
         checkEquals(Items.STONE, loaded.getItems().getStackInSlot(0).getItem(), "Occupied slot replaced");
@@ -415,9 +415,9 @@ public final class CapabilityAndPersistenceChecks {
     }
 
     /**
-     * A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence, and
+     * A Storage Stack saved by the Some Stacks 1.21.11 release keeps its contents and permanence, and
      * the block is marked for saving in the current data version, whether it loads in place or
-     * before chunk attachment. To reproduce in-game: with the 1.21.8 release, deposit stone into a
+     * before chunk attachment. To reproduce in-game: with the 1.21.11 release, deposit stone into a
      * Storage Stack, make the pile permanent, and quit; open the world with this version and
      * extract the stone, then empty the pile. The stone is all there and the empty block remains.
      */
@@ -434,7 +434,7 @@ public final class CapabilityAndPersistenceChecks {
         CompoundTag storage = new CompoundTag();
         storage.put("Items", list);
         CompoundTag saved = new CompoundTag();
-        saved.putInt("DataVersion", DATA_VERSION_1_21_8);
+        saved.putInt("DataVersion", DATA_VERSION_1_21_11);
         saved.put("Items", storage);
         saved.putBoolean("Permanent", true);
 
