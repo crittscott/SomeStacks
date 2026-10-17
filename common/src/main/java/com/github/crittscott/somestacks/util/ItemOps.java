@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -74,7 +75,7 @@ public final class ItemOps {
         }
 
         if (!taken.isEmpty()) {
-            player.drop(taken, false);
+            player.drop(taken, false, Prediction.SERVER_ONLY);
         }
     }
 

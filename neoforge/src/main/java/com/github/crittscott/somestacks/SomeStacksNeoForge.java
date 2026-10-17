@@ -29,7 +29,9 @@ public class SomeStacksNeoForge {
     public SomeStacksNeoForge(IEventBus modBus, net.neoforged.fml.ModContainer container) {
         PlatformServices.install(new NeoForgePlatformServices());
         NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
-        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, config.spec);
+        // Named explicitly: worlds from the preceding release keep their somestacks-server.toml.
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SYNCED, config.spec,
+                MODID + "-server.toml");
         ServerConfig.install(config);
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);

@@ -1,12 +1,12 @@
 # Server administration
 
-This branch targets Minecraft 26.2 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 26.1) upgrade on first load; back them up first. Custom data packs use format **107.1**; server resource packs use **88** (see [Pack authors](pack-authors.md)).
+This branch targets Minecraft 26.3 on Fabric and NeoForge. Use matching client/server loader builds. Worlds saved by the preceding 0.8.3 release (Minecraft 26.1) upgrade on first load; back them up first. Custom data packs use format **121.0**; server resource packs use **97.1** (see [Pack authors](pack-authors.md)).
 
 ## The config file
 
 World policy is stored per world, so it travels with the world:
 
-- **NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SERVER config with a comment on every setting. The loader picks up file edits on its own.
+- **NeoForge:** `<world>/serverconfig/somestacks-server.toml`, a loader-managed SYNCED config with a comment on every setting. The loader picks up file edits on its own.
 - **Fabric:** `<world>/serverconfig/somestacks-server.json`, created with defaults on first start. After editing it, run `/ss reload`. A malformed field falls back to its default and is logged; the rest of the file still applies.
 
 `/ss deny` and `/ss gen` edits update the running values and save the file immediately.

@@ -64,7 +64,7 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
         return BlockBehaviour.Properties.of()
                 .mapColor(mapColor)
                 .noOcclusion()
-                .pushReaction(PushReaction.BLOCK)
+                .pushReaction(PushReaction.IMMOVEABLE)
                 .strength(0.5F, 6.0F)
                 .lightLevel(state -> state.getValue(LIGHT_LEVEL));
     }

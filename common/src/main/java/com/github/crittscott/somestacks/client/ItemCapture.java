@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -74,9 +75,10 @@ public final class ItemCapture {
         CaptureCollector collector = capture.new CaptureCollector();
         capture.renderState.submit(pose, collector, LightCoordsUtil.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY, 0);
-        capture.specialGeometry = collector.orders.values().stream()
-                .flatMap(collection -> collection.allPhases().stream())
-                .anyMatch(phase -> !phase.isEmpty());
+        capture.specialGeometry = !collector.seeThrough().isEmpty()
+                || collector.orders.values().stream()
+                        .flatMap(collection -> collection.allPhases().stream())
+                        .anyMatch(phase -> !phase.isEmpty());
         return capture;
     }
 
@@ -108,8 +110,8 @@ public final class ItemCapture {
         bounded = true;
     }
 
-    private void acceptQuads(int[] tints, List<BakedQuad> submitted) {
-        for (BakedQuad quad : submitted) {
+    private void acceptQuads(int[] tints, ItemQuads submitted) {
+        for (BakedQuad quad : submitted.all()) {
             int index = quad.materialInfo().tintIndex();
             int tint = index >= 0 && index < tints.length ? tints[index] : -1;
             quads.add(new TintedQuad(quad, tint));
@@ -122,19 +124,21 @@ public final class ItemCapture {
 
         @Override
         public SubmitNodeCollection order(int order) {
-            return orders.computeIfAbsent(order, ignored -> new SubmitNodeCollection() {
-                @Override
-                public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
-                                       int overlay, int outline, int[] tints, List<BakedQuad> submitted,
-                                       ItemStackRenderState.FoilType foil) {
-                    acceptQuads(tints, submitted);
-                }
-            });
+            return orders.computeIfAbsent(order,
+                    ignored -> new SubmitNodeCollection(false, seeThrough()) {
+                        @Override
+                        public void submitItem(PoseStack pose, ItemDisplayContext context,
+                                               int light, int overlay, int outline, int[] tints,
+                                               ItemQuads submitted,
+                                               ItemStackRenderState.FoilType foil) {
+                            acceptQuads(tints, submitted);
+                        }
+                    });
         }
 
         @Override
         public void submitItem(PoseStack pose, ItemDisplayContext context, int light, int overlay,
-                               int outline, int[] tints, List<BakedQuad> submitted,
+                               int outline, int[] tints, ItemQuads submitted,
                                ItemStackRenderState.FoilType foil) {
             acceptQuads(tints, submitted);
         }

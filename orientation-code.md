@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 25; Minecraft 26.2 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 25; Minecraft 26.3 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
@@ -87,11 +87,11 @@ NeoForge consults destination right-click events for neighbor deposits, honoring
 
 ## Configuration and presentation
 
-`ServerConfig` publishes immutable policy. NeoForge uses a native SERVER config (`ModConfigSpec`); load/reload events apply policy and resync. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `<world>/serverconfig/somestacks-server.json` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads JSON, while NeoForge uses native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
+`ServerConfig` publishes immutable policy. NeoForge uses a native SYNCED config (`ModConfigSpec`); load/reload events apply policy and resync. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `<world>/serverconfig/somestacks-server.json` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads JSON, while NeoForge uses native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
 
 Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
 
-BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 107.1; galleries bypass protection.
+BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 121.0; galleries bypass protection.
 
 Automatic Bar tints resolve on first render after item models are ready; mapped items retain their authored textures, and resource reload clears computed tints. `/ssclienttest` checks resin's orange tint with default resources.
 
@@ -99,6 +99,6 @@ Automatic Bar tints resolve on first render after item models are ready; mapped 
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or NeoForge deferred functions with test-instance JSON. Test data format: 107.1. The empty structure fixture is upgraded by vanilla's structure data fixing on load. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or NeoForge deferred functions with test-instance JSON. Test data format: 121.0. The empty structure fixture is upgraded by vanilla's structure data fixing on load. NeoForge tests cover transactions, growth, support, movement, and vetoes. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
 
 

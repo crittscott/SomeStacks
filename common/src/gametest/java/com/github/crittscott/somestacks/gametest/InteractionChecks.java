@@ -383,15 +383,15 @@ public final class InteractionChecks {
      * Bar blocks remain in place and the piston cannot push them.
      */
     public static void everyStackTypeBlocksPistons(GameTestHelper helper) {
-        checkEquals(PushReaction.BLOCK,
+        checkEquals(PushReaction.IMMOVEABLE,
                 CommonRegistry.storageStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Storage piston reaction");
-        checkEquals(PushReaction.BLOCK,
+        checkEquals(PushReaction.IMMOVEABLE,
                 CommonRegistry.singlesStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Singles piston reaction");
-        checkEquals(PushReaction.BLOCK,
+        checkEquals(PushReaction.IMMOVEABLE,
                 CommonRegistry.barStackBlock().defaultBlockState()
                         .getPistonPushReaction(),
                 "Bar piston reaction");

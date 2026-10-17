@@ -236,7 +236,7 @@ public final class CubeRenderHelper {
         pose.scale(scale, scale, scale);
         if (cell.quarterTurns() != 0) {
             pose.translate(CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE, CELL_LOCAL_CENTRE);
-            pose.mulPose(Axis.YP.rotationDegrees(QuarterTurns.degrees(cell.quarterTurns())));
+            pose.rotateDegrees(Axis.YP, QuarterTurns.degrees(cell.quarterTurns()));
             pose.translate(-CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE);
         }
     }
@@ -256,7 +256,7 @@ public final class CubeRenderHelper {
             pose.translate(CELL_LOCAL_CENTRE / scale, CELL_LOCAL_CENTRE / scale, CELL_LOCAL_CENTRE / scale);
             pose.translate(offset.x() / scale, offset.y() / scale, offset.z() / scale);
             if (prepared.block() != null) {
-                pose.mulPose(Axis.YP.rotationDegrees(180));
+                pose.rotateDegrees(Axis.YP, 180);
                 pose.translate(-0.5, -0.5, -0.5);
                 prepared.block().submit(pose, collector, light, OverlayTexture.NO_OVERLAY, 0);
             } else if (prepared.item() != null) {
@@ -272,8 +272,8 @@ public final class CubeRenderHelper {
 
     /** Applies the counter-rotation shared by GUI submission and automatic GUI measurement. */
     public static void applyGuiCounterRotation(PoseStack pose) {
-        pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
-        pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
+        pose.rotateDegrees(Axis.YP, -45.0f);
+        pose.rotateDegrees(Axis.XP, -30.0f);
     }
 
     @Nullable
@@ -367,7 +367,7 @@ public final class CubeRenderHelper {
         Quaternionf rotation = FACE_ROTATIONS[face.ordinal()];
         if (rotation != null) {
             pose.translate(0.5f, 0.5f, 0.5f);
-            pose.mulPose(rotation);
+            pose.rotate(rotation);
             pose.translate(-0.5f, -0.5f, -0.5f);
         }
 

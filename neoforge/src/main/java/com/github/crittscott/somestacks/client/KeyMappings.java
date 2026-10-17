@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import org.lwjgl.glfw.GLFW;
 
 /** The mod's key bindings. */
 public final class KeyMappings {
@@ -20,8 +19,8 @@ public final class KeyMappings {
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
             ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
             KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
+            InputConstants.Type.KEYBOARD,
+            InputConstants.KEY_V,
             CATEGORY
     );
 }

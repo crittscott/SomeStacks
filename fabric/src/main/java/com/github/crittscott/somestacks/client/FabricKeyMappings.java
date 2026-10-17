@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 /** Fabric registration for the shared gesture modifier. */
 public final class FabricKeyMappings {
@@ -14,8 +13,8 @@ public final class FabricKeyMappings {
 
     public static final KeyMapping STACK_MODE_KEY = new KeyMapping(
             ClientGestures.STACK_MODE_KEY_TRANSLATION_KEY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
+            InputConstants.Type.KEYBOARD,
+            InputConstants.KEY_V,
             CATEGORY);
 
     public static void init() {

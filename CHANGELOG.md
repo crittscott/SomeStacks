@@ -1,15 +1,17 @@
 # Changelog
 
-## Unreleased — Minecraft 26.1.1 port
+## Unreleased — Minecraft 26.3 port
 
-Minecraft 26.1.1 for Fabric and NeoForge. Changes since 0.8.3 (26.1).
+Minecraft 26.3 for Fabric and NeoForge. Changes since 0.8.3 (26.1).
 
 ### Platform
 
-- Minecraft **26.1.1**, Java **25**.
-- NeoForge **26.1.1.x** (dev pin `26.1.1.15-beta`, accepts `[26.1.1.15-beta,26.1.2)`).
-- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.145.4+26.1.1**.
-- Build toolchain, data-pack format **101.1**, and resource-pack format **84** unchanged.
+- Minecraft **26.3**, Java **25**.
+- NeoForge **26.3.0.x** (dev pin `26.3.0.88`, accepts `[26.3.0.88,26.3.1)`).
+- Fabric Loader **≥ 0.20.0**, Fabric API **≥ 0.163.0+26.3**.
+- Data-pack format **121.0**; resource-pack format **97.1**.
+- NeoForge registers the server config as FancyModLoader's `SYNCED` type under the unchanged file name `somestacks-server.toml`, so existing per-world settings still apply.
+- The Stack Modifier default key remains `V` under 26.3's SDL input backend.
 
 ### Breaking — worlds
 
