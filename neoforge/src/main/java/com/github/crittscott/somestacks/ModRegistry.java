@@ -43,13 +43,13 @@ public final class ModRegistry {
                     holder -> new NeoForgeRunResourceHandler((StackBlockEntity) holder)).build());
 
     public static final DeferredBlock<BarStackBlock> BAR_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.BAR_STACK_BLOCK.getPath(), BarStackBlock::new,
-            StackBlock.barProperties());
+            StackBlock::barProperties);
 
     public static final DeferredBlock<SinglesStackBlock> SINGLES_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.SINGLES_STACK_BLOCK.getPath(), SinglesStackBlock::new,
-            StackBlock.singlesProperties());
+            StackBlock::singlesProperties);
 
     public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.STORAGE_STACK_BLOCK.getPath(), StorageStackBlock::new,
-            StackBlock.storageProperties());
+            StackBlock::storageProperties);
 
     public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
     public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND);

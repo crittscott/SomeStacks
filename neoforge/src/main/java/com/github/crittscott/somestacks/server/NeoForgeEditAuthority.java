@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.minecraft.util.TriState;
 
@@ -67,7 +67,7 @@ public final class NeoForgeEditAuthority implements EditAuthority {
     public boolean vetoesRemoval(
             ServerPlayer actor, ServerLevel level, BlockPos pos, BlockState state,
             @Nullable BlockEntity blockEntity) {
-        BlockEvent.BreakEvent evt = new BlockEvent.BreakEvent(level, pos, state, actor);
+        BreakBlockEvent evt = new BreakBlockEvent(level, pos, state, actor);
         return NeoForge.EVENT_BUS.post(evt).isCanceled();
     }
 }

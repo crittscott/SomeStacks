@@ -7,7 +7,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -184,7 +184,7 @@ public final class BarColumnGameTests {
         seedSlot(upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
                 new ItemStack(barItem));
 
-        Consumer<BlockEvent.BreakEvent> denyLower = event -> {
+        Consumer<BreakBlockEvent> denyLower = event -> {
             if (event.getPos().equals(lowerPos)) {
                 event.setCanceled(true);
             }
