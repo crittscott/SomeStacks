@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.client.BarTextureStore;
 import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,7 +36,9 @@ public final class ClientCallbackChecks {
      * submission; server GameTests cannot exercise these client-only boundaries. With default
      * resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
      * walk around every face, and reload resources. Models must remain fitted and correctly tinted,
-     * with special models staying on the 3-D path unless explicitly overridden.
+     * with special models staying on the 3-D path unless explicitly overridden. With default
+     * resources, deposit resin bricks into a Bar Stack: the bars must be orange on a fresh launch
+     * and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint.
      */
     public static int run(boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback) {
         Minecraft client = Minecraft.getInstance();
@@ -71,6 +74,11 @@ public final class ClientCallbackChecks {
     }
 
     private static void checkRendering(Minecraft client, BlockHitResult hit) {
+        var resin = BarTextureStore.getTexture(new ItemStack(Items.RESIN_BRICK));
+        GameTestScaffold.check(!resin.autoTint() && resin.red() > resin.green()
+                        && resin.green() > resin.blue(),
+                "Resin bar did not resolve an orange tint (requires default resources)");
+
         ItemStack stone = new ItemStack(Items.STONE);
         ItemCapture captured = ItemCapture.capture(stone, ItemDisplayContext.FIXED,
                 client.level, new PoseStack());

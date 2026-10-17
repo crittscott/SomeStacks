@@ -41,8 +41,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
 
     private static final Gson GSON = new Gson();
     private static final Map<Identifier, BarTextureData> textureMap = new HashMap<>();
-    /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
-    private static final Map<Identifier, BarTextureData> unmappedTints = new HashMap<>();
+    /** Auto-tints computed on first render, after item models are ready, and held until reload. */
+    private static final Map<Identifier, BarTextureData> resolvedTints = new HashMap<>();
     private static final Identifier DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
@@ -150,24 +150,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     @Override
     protected void apply(Map<Identifier, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
-        unmappedTints.clear();
-        int autoTinted = 0;
+        resolvedTints.clear();
+        textureMap.putAll(prepared);
 
-        for (Map.Entry<Identifier, BarTextureData> entry : prepared.entrySet()) {
-            Identifier itemLoc = entry.getKey();
-            BarTextureData data = entry.getValue();
-
-            if (data.autoTint()) {
-                data = BarTextureData.tinted(
-                        data.texture(), calculateTintFromItemTexture(itemLoc, resourceManager));
-                autoTinted++;
-            }
-
-            textureMap.put(itemLoc, data);
-        }
-
-        SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
-                textureMap.size(), autoTinted);
+        SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings", textureMap.size());
     }
 
     private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
@@ -292,8 +278,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     }
 
     /**
-     * Resolves an explicit bar mapping, or derives and caches a tint over the default texture for
-     * an unmapped item. Empty stacks use the fallback mapping.
+     * Resolves authored colors directly and derives automatic tints on first render, when item
+     * models are ready. Unmapped items use the default texture. Empty stacks use the fallback.
      */
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
@@ -301,10 +287,10 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
         Identifier itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
 
         BarTextureData mapped = textureMap.get(itemLoc);
-        if (mapped != null) return mapped;
+        if (mapped != null && !mapped.autoTint()) return mapped;
 
-        return unmappedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
-                DEFAULT_TEXTURE,
+        return resolvedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
+                mapped != null ? mapped.texture() : DEFAULT_TEXTURE,
                 calculateTintFromItemTexture(loc, Minecraft.getInstance().getResourceManager())));
     }
 }
