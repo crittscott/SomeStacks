@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 26.1.1 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
+Minecraft 26.1.2 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
 
 ## The three stack types
 

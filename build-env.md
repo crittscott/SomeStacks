@@ -25,7 +25,7 @@ The snapshot should contain only manually maintained files that define or launch
 
 ## Build shape
 
-The project is a Groovy-DSL Gradle build with `common`, `fabric`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom's no-remap plugin (`dev.architectury.loom-no-remap`) and the Architectury plugin to each subproject and establishes the shared Minecraft dependency and Java settings. Minecraft 26.1.1 is not obfuscated, so the build declares no mappings and performs no remapping; sources compile directly against Mojang's names. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric and NeoForge; each loader module bundles its transformed common output with Shadow, and the shadow JAR (no classifier) is the production artifact, while the plain `jar` task's output carries the `dev` classifier. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
+The project is a Groovy-DSL Gradle build with `common`, `fabric`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom's no-remap plugin (`dev.architectury.loom-no-remap`) and the Architectury plugin to each subproject and establishes the shared Minecraft dependency and Java settings. Minecraft 26.1.2 is not obfuscated, so the build declares no mappings and performs no remapping; sources compile directly against Mojang's names. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric and NeoForge; each loader module bundles its transformed common output with Shadow, and the shadow JAR (no classifier) is the production artifact, while the plain `jar` task's output carries the `dev` classifier. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
 
 `common` has no resource expansion. Each loader expands its own metadata (`fabric.mod.json`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
@@ -33,13 +33,13 @@ The common module declares Fabric Loader as compile-only to resolve Minecraft's 
 
 Each loader module compiles against common through the `common` configuration, which depends on the plain `:common` project. Fabric also places it on its runtime and development classpaths; NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules.
 
-Fabric and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. The same source set is wired into a `runGameTestServer` run: NeoForge uses its native GameTest server launch template and sets `neoforge.enableGameTest` in both test runs; Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Fabric uses its own `GameTest` annotation on ordinary entrypoint objects listed in its GameTest metadata. NeoForge registers `Consumer<GameTestHelper>` functions through its native `DeferredRegister` API, with checked-in `data/somestacks/test_instance` JSON files supplying each function's structure, environment, and timeout. The shared empty structure keeps its `somestacks:somestacks_empty` identifier and the tests use `minecraft:default`. The common pack, which carries both assets and data, and the NeoForge GameTest pack declare `min_format`/`max_format` `[101, 1]`, the 26.1.1 data-pack format 101.1; third-party resource packs for this target use format 84. Fabric packages its test data through the development mod, with no separate test pack declaration.
+Fabric and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. The same source set is wired into a `runGameTestServer` run: NeoForge uses its native GameTest server launch template and sets `neoforge.enableGameTest` in both test runs; Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Fabric uses its own `GameTest` annotation on ordinary entrypoint objects listed in its GameTest metadata. NeoForge registers `Consumer<GameTestHelper>` functions through its native `DeferredRegister` API, with checked-in `data/somestacks/test_instance` JSON files supplying each function's structure, environment, and timeout. The shared empty structure keeps its `somestacks:somestacks_empty` identifier and the tests use `minecraft:default`. The common pack, which carries both assets and data, and the NeoForge GameTest pack declare `min_format`/`max_format` `[101, 1]`, the 26.1.2 data-pack format 101.1; third-party resource packs for this target use format 84. Fabric packages its test data through the development mod, with no separate test pack declaration.
 
 On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. Use Java 25 for the Gradle host JVM, including IntelliJ's Gradle JVM setting, and select the Gradle wrapper in IntelliJ. The root build declares a Java 25 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions; that toolchain does not select the host JVM.
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
-The build targets Minecraft 26.1.1 with Java 25 on Fabric and NeoForge.
+The build targets Minecraft 26.1.2 with Java 25 on Fabric and NeoForge.
 
 ## Exact build versions
 
@@ -50,10 +50,10 @@ The build targets Minecraft 26.1.1 with Java 25 on Fabric and NeoForge.
 | Architectury Gradle plugin | `3.5.170` | Common/Fabric/NeoForge project organization |
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `25` | Compilation, Javadoc, and Java execution |
-| Minecraft | `com.mojang:minecraft:26.1.1` | Compile and runtime target; unobfuscated, no mappings |
-| NeoForge | `net.neoforged:neoforge:26.1.1.15-beta` | Exact NeoForge compile and development-run baseline |
+| Minecraft | `com.mojang:minecraft:26.1.2` | Compile and runtime target; unobfuscated, no mappings |
+| NeoForge | `net.neoforged:neoforge:26.1.2.122` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
-| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.145.4+26.1.1` | Fabric runtime and development API |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.155.3+26.1.2` | Fabric runtime and development API |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -68,11 +68,11 @@ These values do not select build tools, but they are versioned inputs consumed b
 | --- | --- |
 | Some Stacks artifact | `0.8.3` |
 | Fabric and NeoForge GameTest support mods | the Some Stacks artifact version |
-| Minecraft compatibility | exactly `26.1.1`; NeoForge syntax `[26.1.1]`, Fabric syntax `26.1.1` |
-| NeoForge compatibility | `[26.1.1.15-beta,26.1.2)` |
+| Minecraft compatibility | exactly `26.1.2`; NeoForge syntax `[26.1.2]`, Fabric syntax `26.1.2` |
+| NeoForge compatibility | `[26.1.2.122,26.1.3)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.19.5` |
-| Fabric API runtime declaration | `>=0.145.4+26.1.1`; compilation uses `0.145.4+26.1.1` |
+| Fabric API runtime declaration | `>=0.155.3+26.1.2`; compilation uses `0.155.3+26.1.2` |
 
 ## Resolution and version authorities
 

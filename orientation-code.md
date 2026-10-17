@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 25; Minecraft 26.1.1 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 25; Minecraft 26.1.2 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
