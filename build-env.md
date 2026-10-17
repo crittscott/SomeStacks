@@ -25,7 +25,7 @@ The snapshot should contain only manually maintained files that define or launch
 
 ## Build shape
 
-The project is a Groovy-DSL Gradle build with `common`, `fabric`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom's no-remap plugin (`dev.architectury.loom-no-remap`) and the Architectury plugin to each subproject and establishes the shared Minecraft dependency and Java settings. Minecraft 26.2 is not obfuscated, so the build declares no mappings and performs no remapping; sources compile directly against Mojang's names. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric and NeoForge; each loader module bundles its transformed common output with Shadow, and the shadow JAR (no classifier) is the production artifact, while the plain `jar` task's output carries the `dev` classifier. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
+The project is a Groovy-DSL Gradle build with `common`, `fabric`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom's no-remap plugin (`dev.architectury.loom-no-remap`) and the Architectury plugin to each subproject and establishes the shared Minecraft dependency and Java settings. Minecraft 26.3 is not obfuscated, so the build declares no mappings and performs no remapping; sources compile directly against Mojang's names. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric and NeoForge; each loader module bundles its transformed common output with Shadow, and the shadow JAR (no classifier) is the production artifact, while the plain `jar` task's output carries the `dev` classifier. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
 
 `common` has no resource expansion. Each loader expands its own metadata (`fabric.mod.json`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
@@ -39,7 +39,7 @@ On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX laun
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
-The build targets Minecraft 26.2 with Java 25 on Fabric and NeoForge.
+The build targets Minecraft 26.3 with Java 25 on Fabric and NeoForge.
 
 ## Exact build versions
 
@@ -50,10 +50,10 @@ The build targets Minecraft 26.2 with Java 25 on Fabric and NeoForge.
 | Architectury Gradle plugin | `3.5.170` | Common/Fabric/NeoForge project organization |
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `25` | Compilation, Javadoc, and Java execution |
-| Minecraft | `com.mojang:minecraft:26.2` | Compile and runtime target; unobfuscated, no mappings |
-| NeoForge | `net.neoforged:neoforge:26.2.0.93` | Exact NeoForge compile and development-run baseline |
+| Minecraft | `com.mojang:minecraft:26.3` | Compile and runtime target; unobfuscated, no mappings |
+| NeoForge | `net.neoforged:neoforge:26.3.0.88` | Exact NeoForge compile and development-run baseline |
 | Fabric Loader | `net.fabricmc:fabric-loader:0.20.0` | Fabric loader dependency |
-| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.161.0+26.2` | Fabric runtime and development API |
+| Fabric API | `net.fabricmc.fabric-api:fabric-api:0.163.0+26.3` | Fabric runtime and development API |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
 The Java setting is exact only at the language/toolchain-major level. The repository does not pin a JDK vendor, distribution, or patch release, and it does not pin the host JVM that runs Gradle. Gradle core plugins such as `base` and `java` use Gradle `9.5.1` and therefore have no separate declared version.
@@ -68,11 +68,11 @@ These values do not select build tools, but they are versioned inputs consumed b
 | --- | --- |
 | Some Stacks artifact | `0.8.3` |
 | Fabric and NeoForge GameTest support mods | the Some Stacks artifact version |
-| Minecraft compatibility | exactly `26.2`; NeoForge syntax `[26.2]`, Fabric syntax `26.2` |
-| NeoForge compatibility | `[26.2.0.93,26.2.1)` |
+| Minecraft compatibility | exactly `26.3`; NeoForge syntax `[26.3]`, Fabric syntax `26.3` |
+| NeoForge compatibility | `[26.3.0.88,26.3.1)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
 | Fabric Loader compatibility | `>=0.20.0` |
-| Fabric API runtime declaration | `>=0.161.0+26.2`; compilation uses `0.161.0+26.2` |
+| Fabric API runtime declaration | `>=0.163.0+26.3`; compilation uses `0.163.0+26.3` |
 
 ## Resolution and version authorities
 
