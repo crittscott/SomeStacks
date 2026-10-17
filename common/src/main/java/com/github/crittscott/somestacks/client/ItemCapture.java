@@ -75,7 +75,8 @@ public final class ItemCapture {
         capture.renderState.submit(pose, collector, LightCoordsUtil.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY, 0);
         capture.specialGeometry = collector.orders.values().stream()
-                .anyMatch(SubmitNodeCollection::wasUsed);
+                .flatMap(collection -> collection.allPhases().stream())
+                .anyMatch(phase -> !phase.isEmpty());
         return capture;
     }
 
@@ -121,7 +122,7 @@ public final class ItemCapture {
 
         @Override
         public SubmitNodeCollection order(int order) {
-            return orders.computeIfAbsent(order, ignored -> new SubmitNodeCollection(this) {
+            return orders.computeIfAbsent(order, ignored -> new SubmitNodeCollection() {
                 @Override
                 public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
                                        int overlay, int outline, int[] tints, List<BakedQuad> submitted,

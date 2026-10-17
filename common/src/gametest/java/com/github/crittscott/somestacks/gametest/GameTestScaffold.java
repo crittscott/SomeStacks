@@ -17,7 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.cow.Cow;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
@@ -204,7 +204,7 @@ public final class GameTestScaffold {
     public static void putCowIn(GameTestHelper helper, BlockPos relative) {
         ServerLevel level = helper.getLevel();
         BlockPos target = helper.absolutePos(relative);
-        Cow cow = EntityType.COW.create(level, EntitySpawnReason.COMMAND);
+        Cow cow = EntityTypes.COW.create(level, EntitySpawnReason.COMMAND);
         check(cow != null, "Could not create obstruction cow");
         check(cow.blocksBuilding, "Cow does not block building");
         cow.snapTo(

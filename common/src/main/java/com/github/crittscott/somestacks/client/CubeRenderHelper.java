@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -29,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -166,7 +166,7 @@ public final class CubeRenderHelper {
             return;
         }
         state.scale = renderScale;
-        state.light = LevelRenderer.getLightCoords(level, blockPos);
+        state.light = LightCoordsUtil.getLightCoords(level, blockPos);
         state.cameraInBlock = cameraPos.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         Map<CaptureKey, PreparedItem> prepared = new HashMap<>();
         List<CellRenderState> cells = new ArrayList<>();

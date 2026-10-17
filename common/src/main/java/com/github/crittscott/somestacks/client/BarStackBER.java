@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -65,7 +65,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (be.getLevel() == null) {
             return;
         }
-        state.light = LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos());
+        state.light = LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos());
         List<BarRenderData> bars = new ArrayList<>();
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = be.getItems().getStackInSlot(idx);

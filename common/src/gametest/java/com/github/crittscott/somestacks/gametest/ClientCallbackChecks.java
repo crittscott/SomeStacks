@@ -116,8 +116,6 @@ public final class ClientCallbackChecks {
         CubeRenderHelper.submitGridItems(state, new PoseStack(), empty);
         GameTestScaffold.check(empty.getSubmitsPerOrder().isEmpty(),
                 "Empty extraction retained cells from the previous frame");
-        submitted.clear();
-        empty.clear();
     }
 
 }
