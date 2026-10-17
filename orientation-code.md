@@ -93,6 +93,8 @@ Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` s
 
 BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Matching items share presentation per extraction. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 101.1; galleries bypass protection.
 
+Automatic Bar tints resolve on first render after item models are ready; mapped items retain their authored textures, and resource reload clears computed tints. `/ssclienttest` checks resin's orange tint with default resources.
+
 2-D selection: thinnest/longest axis ratio. Cache: 4.
 
 ## GameTests
