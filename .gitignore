@@ -21,4 +21,5 @@
 
 # other
 /review-*.md
-/code-review*
+code-review*
+!/code-review.md
