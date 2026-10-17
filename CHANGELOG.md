@@ -1,6 +1,21 @@
 # Changelog
 
-## Unreleased — Minecraft 26.1 port
+## Unreleased — Minecraft 26.1.1 port
+
+Minecraft 26.1.1 for Fabric and NeoForge. Changes since 0.8.3 (26.1).
+
+### Platform
+
+- Minecraft **26.1.1**, Java **25**.
+- NeoForge **26.1.1.x** (dev pin `26.1.1.15-beta`, accepts `[26.1.1.15-beta,26.1.2)`).
+- Fabric Loader **≥ 0.19.5**, Fabric API **≥ 0.145.4+26.1.1**.
+- Build toolchain, data-pack format **101.1**, and resource-pack format **84** unchanged.
+
+### Breaking — worlds
+
+- **Worlds migrate from 0.8.3 (26.1) only.** Stored items run through vanilla's data fixers on first load. Worlds from earlier releases must be opened with the 26.1 build first.
+
+## 0.8.3 — Minecraft 26.1
 
 Minecraft 26.1 for Fabric and NeoForge. Changes since 0.8.3 (1.21.11).
 

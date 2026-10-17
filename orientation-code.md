@@ -8,7 +8,7 @@ See `orientation-player.md` and `build-env.md`.
 
 ## Project shape
 
-Java 25; Minecraft 26.1 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
+Java 25; Minecraft 26.1.1 (unobfuscated, no mappings) on Fabric and NeoForge; builds, server GameTests, and `/ssclienttest` pass on both loaders; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
@@ -65,7 +65,7 @@ Movement models:
 
 Persistence uses `ValueInput`/`ValueOutput` and registry-aware `ItemStack.CODEC`. `StackDataMigration.readTag` preserves raw disk/wire types at the boundary. Encode failure aborts serialization with slot/location context. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-`StackDataMigration` upgrades saved items from the preceding 1.21.11 (0.8.3) release through DataFixerUpper; absent `DataVersion` reads as current. Unreadable entries, missing-slot entries, and non-compound list values persist in `SetAside` and retry each load. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, compound entries with unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing. Loader update hooks and Fabric's client load branch share validation. Deferred migration marks dirty on attachment. Permanence belongs to the base; block rotation is local; Singles item rotation travels.
+`StackDataMigration` upgrades saved items from the preceding 26.1 (0.8.3) release through DataFixerUpper; absent `DataVersion` reads as current. Unreadable entries, missing-slot entries, and non-compound list values persist in `SetAside` and retry each load. Warnings identify dimension and position; failed retries warn once per location per session. Client updates require current format, bounded inventory, compound entries with unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing. Loader update hooks and Fabric's client load branch share validation. Deferred migration marks dirty on attachment. Permanence belongs to the base; block rotation is local; Singles item rotation travels.
 
 ## Admission, automation, and edits
 

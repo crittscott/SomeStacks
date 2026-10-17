@@ -105,7 +105,7 @@ storage view directly.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Bar disk data from the current format and the 1.21.11 release preserves the item in each position.</div>
+<div class="block">Bar disk data from the current format and the 26.1 release preserves the item in each position.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
@@ -116,26 +116,26 @@ storage view directly.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A Storage Stack saved by the Some Stacks 1.21.11 release keeps its contents and permanence, and
+<div class="block">A Storage Stack saved by the Some Stacks 26.1 release keeps its contents and permanence, and
 the block is marked for saving in the current data version, whether it loads in place or
 before chunk attachment.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Set-aside entries in 1.21.11 release data recover only into free valid slots and disappear
+<div class="block">Set-aside entries in 26.1 release data recover only into free valid slots and disappear
 from retained disk data.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Singles disk data from the current format and the 1.21.11 release preserves contents plus block-state
+<div class="block">Singles disk data from the current format and the 26.1 release preserves contents plus block-state
 and per-item rotations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Storage disk data from the current format and the 1.21.11 release preserves items, data components,
+<div class="block">Storage disk data from the current format and the 26.1 release preserves items, data components,
 block-state rotation, and permanence.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
@@ -177,12 +177,12 @@ live slot.</div>
 <h3>storageDiskSaveRoundTripsItemsRotationAndPermanence</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageDiskSaveRoundTripsItemsRotationAndPermanence</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Storage disk data from the current format and the 1.21.11 release preserves items, data components,
+<div class="block">Storage disk data from the current format and the 26.1 release preserves items, data components,
 block-state rotation, and permanence. To
 reproduce in-game: deposit a component-bearing item, rotate the block, make the pile
 permanent, then save and restart the world. Verify the item and its components by extraction,
 the layout by observation, and permanence by emptying the pile and checking that it remains.
-Also checks a literal 1.21.11 release fixture and failure without partial saves.</div>
+Also checks a literal 26.1 release fixture and failure without partial saves.</div>
 </div>
 </section>
 </li>
@@ -191,7 +191,7 @@ Also checks a literal 1.21.11 release fixture and failure without partial saves.
 <h3>singlesDiskSaveRoundTripsItemsAndBothRotations</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesDiskSaveRoundTripsItemsAndBothRotations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Singles disk data from the current format and the 1.21.11 release preserves contents plus block-state
+<div class="block">Singles disk data from the current format and the 26.1 release preserves contents plus block-state
 and per-item rotations. To reproduce
 in-game: deposit an item, rotate its block and the item itself, then unload and revisit the
 chunk after it has saved and unloaded, or restart the world. Both orientations and the item remain unchanged.</div>
@@ -203,7 +203,7 @@ chunk after it has saved and unloaded, or restart the world. Both orientations a
 <h3>barDiskSaveRoundTripsItems</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barDiskSaveRoundTripsItems</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Bar disk data from the current format and the 1.21.11 release preserves the item in each position. To reproduce in-game: deposit Bars,
+<div class="block">Bar disk data from the current format and the 26.1 release preserves the item in each position. To reproduce in-game: deposit Bars,
 save and restart the world, and verify the same Bar positions
 remain occupied.</div>
 </div>
@@ -238,7 +238,7 @@ restore the mod. Its stored item returns instead of having been discarded.</div>
 <h3>setAsideItemsRecoverIntoFreeSlots</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAsideItemsRecoverIntoFreeSlots</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Set-aside entries in 1.21.11 release data recover only into free valid slots and disappear
+<div class="block">Set-aside entries in 26.1 release data recover only into free valid slots and disappear
 from retained disk data.
 To reproduce recovery in-game: save a stack holding a mod item, reopen and save the world
 with that item mod absent, then restore the mod and reopen the world. The item returns.
@@ -251,9 +251,9 @@ Occupied-slot and invalid-slot retention require inspecting the saved tag.</div>
 <h3>previousReleaseSaveUpgradesOnLoad</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">previousReleaseSaveUpgradesOnLoad</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">A Storage Stack saved by the Some Stacks 1.21.11 release keeps its contents and permanence, and
+<div class="block">A Storage Stack saved by the Some Stacks 26.1 release keeps its contents and permanence, and
 the block is marked for saving in the current data version, whether it loads in place or
-before chunk attachment. To reproduce in-game: with the 1.21.11 release, deposit stone into a
+before chunk attachment. To reproduce in-game: with the 26.1 release, deposit stone into a
 Storage Stack, make the pile permanent, and quit; open the world with this version and
 extract the stone, then empty the pile. The stone is all there and the empty block remains.</div>
 </div>

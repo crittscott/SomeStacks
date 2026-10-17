@@ -1,9 +1,9 @@
 ![Some Stacks](images/somestacks-splash.png)
-![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC target: 26.1](https://img.shields.io/badge/MC%20target-26.1-8a5a9b?style=for-the-badge)
+![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC target: 26.1.1](https://img.shields.io/badge/MC%20target-26.1.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
-This branch targets Minecraft **26.1** on Fabric and NeoForge.
+This branch targets Minecraft **26.1.1** on Fabric and NeoForge.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 

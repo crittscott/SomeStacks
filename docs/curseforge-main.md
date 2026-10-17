@@ -1,9 +1,9 @@
-![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/26.1/images/somestacks-splash.png)
-![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC target: 26.1](https://img.shields.io/badge/MC%20target-26.1-8a5a9b?style=for-the-badge)
+![Some Stacks](https://raw.githubusercontent.com/crittscott/SomeStacks/26.1.1/images/somestacks-splash.png)
+![Loaders: Fabric Neoforge Quilt](https://img.shields.io/badge/Loaders-Fabric%20Neoforge%20Quilt-5c7c8a?style=for-the-badge) ![MC target: 26.1.1](https://img.shields.io/badge/MC%20target-26.1.1-8a5a9b?style=for-the-badge)
 
 # Some Stacks
 
-This branch targets Minecraft **26.1** on Fabric and NeoForge.
+This branch targets Minecraft **26.1.1** on Fabric and NeoForge.
 
 **Storage you can see.** Why keep that gold hidden away in a chest? Can't remember which shulker box has all your granite? Put it all out where you can see it using Bar Stacks or Storage Stacks. Like the look of that Mekanism Digital Miner but can't fit it in your study? Place a small copy and rotate it as you like with a Singles Stack. Need just a little light? Add torches, for a light level of 3 each.
 
@@ -53,18 +53,18 @@ Every stack block exposes loader-native item storage on **every side** (transact
 
 Everything an admin would want to bound is bounded. Piles have a maximum height, stack types can be switched off, whole mods can be barred from storage, and single items can be barred from player deposits. Blocks that grow and remove themselves answer to build limits, obstruction, spawn protection, and the world border. NeoForge also fires its place and break events, so claim mods using those hooks can allow, deny, or record the edit. Fabric fires its break events and asks block-use callbacks before depositing into a neighboring stack.
 
-See **[Server administration](https://github.com/crittscott/SomeStacks/blob/26.1/docs/server-admin.md)** for the config file and the `/ss` command.
+See **[Server administration](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/server-admin.md)** for the config file and the `/ss` command.
 
 ## Documentation
 
-- **[Player guide](https://github.com/crittscott/SomeStacks/blob/26.1/docs/player-guide.md)** — every gesture, how each stack behaves, gravity and support rules
-- **[Automation](https://github.com/crittscott/SomeStacks/blob/26.1/docs/automation.md)** — item handlers, slot layout, comparators, growth
-- **[Server administration](https://github.com/crittscott/SomeStacks/blob/26.1/docs/server-admin.md)** — config settings and the full `/ss` command reference
-- **[Pack authors](https://github.com/crittscott/SomeStacks/blob/26.1/docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
+- **[Player guide](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/player-guide.md)** — every gesture, how each stack behaves, gravity and support rules
+- **[Automation](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/automation.md)** — item handlers, slot layout, comparators, growth
+- **[Server administration](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/server-admin.md)** — config settings and the full `/ss` command reference
+- **[Pack authors](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/pack-authors.md)** — data packs, resource packs, bar textures, and item render overrides
 
 ## Compatibility
 
-Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server through its server resource pack. See [Pack authors](https://github.com/crittscott/SomeStacks/blob/26.1/docs/pack-authors.md).
+Some Stacks stores any item from any mod, and it does not need to know anything about that mod to do it. Items whose models don't sit well inside a cell are measured automatically and can be corrected by hand, by a resource pack, or by the server through its server resource pack. See [Pack authors](https://github.com/crittscott/SomeStacks/blob/26.1.1/docs/pack-authors.md).
 
 ## Issues and suggestions
 
@@ -72,4 +72,4 @@ Please report bugs and ideas on the [issue tracker](https://github.com/crittscot
 
 ## License
 
-[GNU General Public License v3.0](https://github.com/crittscott/SomeStacks/blob/26.1/LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.
+[GNU General Public License v3.0](https://github.com/crittscott/SomeStacks/blob/26.1.1/LICENSE). You are free to use this mod in modpacks, public or private, and to redistribute and modify it — provided derivative works carry the same license and make their source available.

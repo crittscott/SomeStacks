@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 26.1 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
+Minecraft 26.1.1 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
 
 ## The three stack types
 
@@ -175,5 +175,5 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 ## Saved worlds
 
-A world saved by the preceding 1.21.11 (0.8.3) release upgrades its stored items on load; no older release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
+A world saved by the preceding 26.1 (0.8.3) release upgrades its stored items on load; no older release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
 
