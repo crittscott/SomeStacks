@@ -164,7 +164,7 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 ## Extension points
 
 - Data pack: edit `somestacks:ingots` to classify Bar items. The shipped tag includes optional `c:ingots`, `forge:ingots`, and `c:bricks` tags plus explicitly listed ingots and bricks; child tags are included only through normal tag composition.
-- Resource pack (format 75; data packs use 94.1): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
+- Resource pack (format 84; data packs use 101.1): replace registered `somestacks:block.*` action sounds through `sounds.json`; add Storage/Singles profiles via `assets/<namespace>/item_render_overrides/*.json`; add Bar textures and tints via `assets/<namespace>/textures/bars/*.json`.
 - Server: distribute Storage/Singles profiles and Bar mappings through a server resource pack.
 
 ## Protection and validation
