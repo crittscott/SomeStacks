@@ -1,5 +1,5 @@
 plugins {
-    id 'dev.architectury.loom' version '1.17.493' apply false
+    id 'dev.architectury.loom-no-remap' version '1.17.493' apply false
     id 'architectury-plugin' version '3.5.170'
     id 'com.gradleup.shadow' version '9.4.3' apply false
 }
@@ -75,7 +75,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'dev.architectury.loom-no-remap'
     apply plugin: 'architectury-plugin'
 
     base {
@@ -83,20 +83,8 @@ subprojects {
         archivesName = "$rootProject.archives_name-$project.name-$rootProject.minecraft_version"
     }
 
-    repositories {
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-
-    loom {
-        silentMojangMappingsLicense()
-    }
-
     dependencies {
-        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        mappings loom.layered {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-        }
+        minecraft "com.mojang:minecraft:$rootProject.minecraft_version"
 
         // common and every loader's source uses javax.annotation.Nullable. Neither Loom nor the
         // loader dependencies reliably provide it, so declare it for all modules here.
@@ -104,12 +92,10 @@ subprojects {
     }
 
     java {
-        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-        // if it is present.
         withSourcesJar()
 
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(25)
         }
     }
 }

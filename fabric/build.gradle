@@ -62,28 +62,12 @@ configurations {
     }
 }
 
-repositories {
-    maven { url = 'https://maven.nucleoid.xyz/' }
-}
-
-def withCommonProtectionApi = providers.gradleProperty('withCommonProtectionApi')
-        .map { it.toBoolean() }.getOrElse(false)
-
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    implementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+    implementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
 
-    modCompileOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
-        transitive = false
-    }
-    if (withCommonProtectionApi) {
-        modRuntimeOnly("eu.pb4:common-protection-api:$rootProject.common_protection_api_version") {
-            transitive = false
-        }
-    }
-
-    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    common(project(path: ':common')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }
 
@@ -92,7 +76,6 @@ tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = rootProject.sharedModProperties + [
             fabric_loader_version: fabric_loader_version,
             fabric_api_version: fabric_api_version,
-            common_protection_api_version: common_protection_api_version,
     ]
     inputs.properties replaceProperties
 
@@ -107,12 +90,6 @@ tasks.named('processGametestResources', ProcessResources).configure {
             mod_version          : mod_version,
             fabric_loader_version: fabric_loader_version,
             fabric_api_version   : fabric_api_version,
-            protection_api_gametest_entrypoint: withCommonProtectionApi
-                    ? ',\n      "com.github.crittscott.somestacks.gametest.ProtectionApiGameTests"'
-                    : '',
-            no_protection_api_gametest_entrypoint: withCommonProtectionApi
-                    ? ''
-                    : ',\n      "com.github.crittscott.somestacks.gametest.NoProtectionApiGameTests"',
     ]
     inputs.properties replaceProperties
 
@@ -121,11 +98,17 @@ tasks.named('processGametestResources', ProcessResources).configure {
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+// The plain jar holds only this module's classes; the shadow jar, which adds the transformed common
+// output, is the production artifact.
+jar {
+    archiveClassifier = 'dev'
 }
 
-remapJar {
-    inputFile.set shadowJar.archiveFile
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = null
+}
+
+tasks.named('assemble') {
+    dependsOn shadowJar
 }
