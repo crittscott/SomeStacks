@@ -31,17 +31,19 @@ The snapshot should contain only manually maintained files that define or launch
 
 ## Build shape
 
-The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom and the Architectury plugin to each subproject and establishes shared Minecraft mappings and Java settings. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric, Forge, and NeoForge; each loader module bundles its transformed common output with Shadow and then remaps the resulting production JAR. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
+The project is a Groovy-DSL Gradle build with `common`, `fabric`, `forge`, and `neoforge` subprojects; `settings.gradle` includes the loaders listed in `enabled_platforms`. The root build applies Architectury Loom and the Architectury plugin to each subproject and establishes shared Minecraft mappings and Java settings. The build declares no Maven publication; the modules expose no stable public API and nothing consumes them through Maven. `common` is transformed for Fabric, Forge, and NeoForge; each loader module bundles its transformed common output with Shadow and then remaps the resulting production JAR. Every module declares `withSourcesJar()`; each loader's `sourcesJar` also unpacks common's sources JAR, because the production JAR bundles common. Every artifact's base name carries the loader and Minecraft version, `somestacks-<loader>-<minecraft>`. Architectury is build-time only; no loader depends on Architectury API at runtime.
 
 `common` has no resource expansion. Each loader expands its own metadata (`fabric.mod.json`, `META-INF/mods.toml`, `META-INF/neoforge.mods.toml`) from the root `sharedModProperties` plus its loader-specific ranges, and expands its GameTest mod's metadata separately.
 
 Fabric uses Loom's current Mixin remapping path without the legacy annotation processor. Forge and NeoForge use their loader-specific Loom setup.
 
+The common module declares Fabric Loader as compile-only to resolve Minecraft's environment annotations; it is not bundled or added as a runtime requirement for Forge or NeoForge.
+
 Each loader module compiles against common through the `common` configuration. Fabric also places it on its runtime and development classpaths; Forge and NeoForge runs receive common only through their `loom.mods` source sets, because a second copy would split its packages across two modules. Fabric declares Common Protection API through non-transitive `modCompileOnly`; `-PwithCommonProtectionApi=true` adds it to development runtime through `modRuntimeOnly`. Fabric metadata suggests it without requiring or bundling it. When installed, placement and neighboring-stack interaction consult claim mods that implement its providers; without it, placement uses vanilla checks and neighboring-stack deposits require direct clicks.
 
 Fabric, Forge, and NeoForge each call the root `configureGameTests` helper, which creates a `gametest` source set over the shared scenarios in `common/src/gametest/java`, registers `generateGameTestStructures` to decode the checked-in `common/src/gametest/fixtures/somestacks_empty.nbt.b64` into the source set's generated resources, and registers `gametestJavadoc`. Each loader maps that source set to a separate `somestacks_gametest` development mod and provides `runClientGameTests` for the local `/ssclienttest` callback smoke command. That command checks a main/off-hand block-use callback while aimed at a stack with Shift and the Stack Modifier released. The same source set is wired into a `runGameTestServer` run: Forge and NeoForge enable the `somestacks` GameTest namespace, Fabric passes `-Dfabric-api.gametest` with a report file and clears its development GameTest world before each run. Fabric's GameTest metadata includes absence-specific checks by default and provider-backed checks when `-PwithCommonProtectionApi=true` is set.
 
-On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions.
+On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX launcher. The wrapper selects the Gradle distribution, while the launcher selects its host JVM from the machine's Java configuration. Use Java 21 for the Gradle host JVM, including IntelliJ's Gradle JVM setting, and select the Gradle wrapper in IntelliJ. The root build declares a Java 21 toolchain, which Gradle applies by convention to compilation, Javadoc, and Gradle-launched Java executions; that toolchain does not select the host JVM.
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
@@ -74,7 +76,7 @@ These values do not select build tools, but they are versioned inputs consumed b
 
 | Subject | Declaration |
 | --- | --- |
-| Some Stacks artifact | `0.8.2` |
+| Some Stacks artifact | `0.8.3` |
 | Fabric, Forge, and NeoForge GameTest support mods | the Some Stacks artifact version |
 | Minecraft compatibility | exactly `1.21.4`; Forge and NeoForge syntax `[1.21.4]`, Fabric syntax `1.21.4` |
 | Forge compatibility | `[54.1.14,55)` |
