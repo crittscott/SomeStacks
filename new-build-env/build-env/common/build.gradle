@@ -1,3 +1,0 @@
-architectury {
-    common rootProject.enabled_platforms.split(',')
-}
