@@ -1,10 +1,10 @@
 modLoader="javafml"
-loaderVersion="[47,48)"
-license="GNU GPLv3"
+loaderVersion="${forge_loader_version_range}"
+license="${mod_license}"
 
 [[mods]]
 modId="somestacks_gametest"
-version="1"
+version="${mod_version}"
 displayName="Some Stacks GameTests"
 description='''Development-only Forge GameTests for Some Stacks.'''
 

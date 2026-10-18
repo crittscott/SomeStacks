@@ -123,10 +123,10 @@ Flat models use 2-D; others 3-D. Forge measures all passes/custom vertices; cust
 
 ## Tests
 
-Root `build` runs common and Fabric JUnit; Forge has none. `configureGameTests` combines shared/loader scenarios in test-only `somestacks_gametest`, generating structures from Base64.
+`configureGameTests` combines shared/loader scenarios in test-only `somestacks_gametest`, generating structures from Base64.
 
 Shared checks cover batching, caches, movement, saves, set-aside recovery, client updates, structure rotation, comparators, gestures via `gameMode.useItemOn`/`useItem`, Bar admission, policy, and reload. Forge adds TOML saves/reloads; Fabric adds Transfer commit/rollback and capacity. Protection checks cover adjacent denial, partial shapes, silent rejection, Forge block-vs-item denial and rollback/reentrancy, and Fabric removal vetoes/break context; `-PwithCommonProtectionApi=true` swaps `NoProtectionApiGameTests` for `ProtectionApiGameTests`.
 
-`WorldEditChecks` covers game events, automation identity, and cleanup. JUnit covers packet chunking/staging/bounds, both command trees, and bundled sounds. `RenderGalleryChecks` checks command gates/deny edits, intercepting policy saves.
+`WorldEditChecks` covers game events, automation identity, and cleanup. `RenderGalleryChecks` checks command gates/deny edits, intercepting policy saves.
 
-`runGameTestServer` runs loader scenarios; Fabric uses `fabric/run-gametest`. `runClientGameTests` uses `run-client-gametest`; `/ssclienttest` checks local callback consumption.
+`runGameTestServer` runs loader scenarios; Fabric clears `fabric/run/world` first. `runClientGameTests` loads the test mod; `/ssclienttest` checks local callback consumption.

@@ -1,0 +1,23 @@
+{
+  "piles": {
+    "max_pile_height": 8
+  },
+  "stacks": {
+    "enable_storage_stack_block": true,
+    "enable_singles_stack_block": true,
+    "enable_bar_stack_block": true
+  },
+  "compatibility": {
+    "disable_mods": [],
+    "disable_items": [
+      "evilcraft:broom_part"
+    ]
+  },
+  "render_gallery": {
+    "placements_per_tick": 64,
+    "enabled": false,
+    "required_permission_level": 3,
+    "gen_mods": [],
+    "gen_items": []
+  }
+}

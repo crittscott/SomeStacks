@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "somestacks_gametest",
-  "version": "1",
+  "version": "${mod_version}",
   "name": "Some Stacks GameTests",
   "description": "Development-only Fabric GameTests for Some Stacks.",
   "environment": "*",
@@ -17,7 +17,7 @@
       "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
-      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"${protection_api_gametest_entrypoint}
+      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"${protection_api_gametest_entrypoint}${no_protection_api_gametest_entrypoint}
     ]
   },
   "depends": {

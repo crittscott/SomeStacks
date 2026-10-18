@@ -24,7 +24,6 @@ loom {
         clientGameTests {
             client()
             name 'Client Game Tests'
-            runDir 'run-client-gametest'
             source sourceSets.gametest
         }
         gameTestServer {
@@ -43,6 +42,8 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
+    // Runs receive common through loom.mods; adding it to the runtime classpath as well puts its
+    // packages in two modules, which the module system rejects.
     compileClasspath.extendsFrom common
 
     // Files in this configuration will be bundled into your mod using the Shadow plugin.
@@ -58,45 +59,46 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
-
-}
-
-tasks.named('processGametestResources', ProcessResources).configure {
-    var replaceProperties = [mod_version: mod_version]
-    inputs.properties replaceProperties
-
-    filesMatching('META-INF/mods.toml') {
-        expand replaceProperties + [project: project]
-    }
 }
 
 // Expands ${...} placeholders in mods.toml (this module's own resource).
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = rootProject.sharedModProperties + [
             minecraft_version_range: minecraft_version_range,
-            forge_version_range: forge_version_range, loader_version_range: loader_version_range,
+            forge_version_range: forge_version_range,
+            forge_loader_version_range: forge_loader_version_range,
     ]
     inputs.properties replaceProperties
 
     filesMatching('META-INF/mods.toml') {
-        expand replaceProperties + [project: project]
+        expand replaceProperties
+    }
+}
+
+// Expands ${...} placeholders in the gametest mods.toml (this module's own resource).
+tasks.named('processGametestResources', ProcessResources).configure {
+    var replaceProperties = [
+            mod_license               : mod_license,
+            mod_version               : mod_version,
+            forge_loader_version_range: forge_loader_version_range,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching('META-INF/mods.toml') {
+        expand replaceProperties
     }
 }
 
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
+}
 
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.version,
-                'Implementation-Vendor'   : mod_authors
-        ])
-    }
+// The production jar bundles common, so the sources jar carries common's sources as well.
+sourcesJar {
+    def commonSources = project(':common').tasks.named('sourcesJar')
+    dependsOn commonSources
+    from commonSources.flatMap { it.archiveFile }.map { zipTree(it) }
 }
 
 remapJar {

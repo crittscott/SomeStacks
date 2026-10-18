@@ -5,6 +5,11 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": ["${mod_authors}"],
+  "contact": {
+    "homepage": "${mod_homepage}",
+    "sources": "${mod_sources}",
+    "issues": "https://github.com/crittscott/SomeStacks/issues"
+  },
   "license": "${mod_license}",
   "icon": "assets/somestacks/icon.png",
   "environment": "*",
@@ -28,6 +33,6 @@
   "suggests": {
     "ftbchunks": "*",
     "openpartiesandclaims": "*",
-    "common-protection-api": "*"
+    "common-protection-api": ">=${common_protection_api_version}"
   }
 }

@@ -1,6 +1,7 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
+loaderVersion="${forge_loader_version_range}"
 license="${mod_license}"
+issueTrackerURL="https://github.com/crittscott/SomeStacks/issues"
 
 [[mods]]
 modId="${mod_id}"
@@ -8,6 +9,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
+displayURL="${mod_homepage}"
 logoFile="assets/somestacks/icon.png"
 
 [[dependencies.${mod_id}]]

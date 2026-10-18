@@ -25,8 +25,3 @@
 # other
 /review-*.md
 /othersource/
-
-# 1.20.1 layout
-**/run-gametest/
-**/run-client-gametest/
-/functional-gradle-files/
