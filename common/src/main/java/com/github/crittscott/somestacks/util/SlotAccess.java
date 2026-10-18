@@ -14,16 +14,21 @@ public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
     int getSlots();
 
-    /** The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. */
+    /**
+     * The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. The
+     * returned stack is the live stored object: callers must not modify it, and must copy it before
+     * keeping or editing it.
+     */
     @Nonnull
     ItemStack getStackInSlot(int slot);
 
     /**
      * Inserts as much of {@code stack} into {@code slot} as {@link #isItemValid} and
      * {@link #getSlotLimit} allow. Returns the remainder that was not accepted —
-     * {@link ItemStack#EMPTY} if all of it was — and never mutates {@code stack} itself. When
+     * {@link ItemStack#EMPTY} if all of it was — and never changes {@code stack}'s count. When
      * {@code simulate} is {@code true}, the slot is left unchanged and only the would-be
-     * remainder is computed.
+     * remainder is computed. A committed insertion may store {@code stack} itself, so the caller
+     * must give it up or pass a copy.
      */
     @Nonnull
     ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate);
@@ -31,7 +36,8 @@ public interface SlotAccess {
     /**
      * Removes up to {@code amount} items from {@code slot} and returns the stack that was
      * removed — {@link ItemStack#EMPTY} if the slot was empty. When {@code simulate} is
-     * {@code true}, the slot is left unchanged and only the would-be result is computed.
+     * {@code true}, the slot is left unchanged and only the would-be result is computed. The
+     * returned stack belongs to the caller.
      */
     @Nonnull
     ItemStack extractItem(int slot, int amount, boolean simulate);

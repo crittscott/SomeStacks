@@ -87,8 +87,6 @@ public final class SomeStacksGameTests {
                 () -> ConfigurationGameTests::overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes);
         TEST_FUNCTIONS.register("configurationgametests/override_json_uses_inclusive_bounds",
                 () -> ConfigurationGameTests::overrideJsonUsesInclusiveBounds);
-        TEST_FUNCTIONS.register("configurationgametests/server_config_loads_bounds_and_lists",
-                () -> ConfigurationGameTests::serverConfigLoadsBoundsAndLists);
         TEST_FUNCTIONS.register("configurationgametests/deny_policies_respect_player_automation_and_existing_contents",
                 () -> ConfigurationGameTests::denyPoliciesRespectPlayerAutomationAndExistingContents);
         TEST_FUNCTIONS.register("configurationgametests/disabled_types_and_height_limits_refuse_placement_and_growth_atomically",

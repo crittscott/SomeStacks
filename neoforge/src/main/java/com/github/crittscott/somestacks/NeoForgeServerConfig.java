@@ -2,14 +2,18 @@ package com.github.crittscott.somestacks;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.config.ModConfig;
+import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
+
+import java.nio.file.Path;
 import java.util.List;
 
 /** Loader-managed server configuration exposed as one immutable common policy snapshot. */
 public final class NeoForgeServerConfig implements ServerConfig.Backend {
     public static final NeoForgeServerConfig INSTANCE = new NeoForgeServerConfig();
-    private net.neoforged.fml.config.ModConfig loadedConfig;
-    public java.nio.file.Path path() { return loadedConfig.getFullPath(); }
+    private ModConfig loadedConfig;
+    public Path path() { return loadedConfig.getFullPath(); }
 
     public final ModConfigSpec spec;
     private final ModConfigSpec.IntValue maxHeight;
@@ -64,7 +68,7 @@ public final class NeoForgeServerConfig implements ServerConfig.Backend {
                 .define("enabled", false);
         permission = builder
                 .comment("Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
-                .defineInRange("required_permission_level", net.minecraft.commands.Commands.LEVEL_ADMINS, 0, 4);
+                .defineInRange("required_permission_level", Commands.LEVEL_ADMINS, 0, 4);
         placements = builder
                 .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
                 .defineInRange("placements_per_tick", ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK, 1, Integer.MAX_VALUE);

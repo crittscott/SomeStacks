@@ -32,10 +32,6 @@ public final class FabricNetworking {
         registerServer(GestureStatePkt.TYPE, GestureStatePkt::handleServer);
     }
 
-    public static void send(ServerPlayer player, CustomPacketPayload packet) {
-        ServerPlayNetworking.send(player, packet);
-    }
-
     private static <T extends CustomPacketPayload> void registerServer(
             CustomPacketPayload.Type<T> type, BiConsumer<T, ServerPlayer> handler) {
         ServerPlayNetworking.registerGlobalReceiver(type,

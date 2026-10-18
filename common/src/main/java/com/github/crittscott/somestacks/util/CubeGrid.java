@@ -86,11 +86,6 @@ public final class CubeGrid {
                 blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
-    public AABB worldBoxAtVisual(int x, int y, int z, BlockPos blockPos) {
-        return localBoxes[indexFromXYZ(x, y, z)].move(
-                blockPos.getX(), blockPos.getY(), blockPos.getZ());
-    }
-
     /** Returns the cached block-local bounds for one stored cell at the given layout rotation. */
     public AABB localBox(int storageIndex, int rotation) {
         return localBoxes[rotatedIndices[QuarterTurns.normalize(rotation)][storageIndex]];

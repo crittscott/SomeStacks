@@ -42,7 +42,7 @@ Only the main hand acts; off-hand items do not block cycling. Torches are not sp
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind.
+A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind; a successful one counts as placing a block for advancements.
 
 Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
@@ -107,7 +107,7 @@ The advertised storage includes every current position plus one block of headroo
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks. Singles and Bar allow one structural extraction position per transaction.
+Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and blocks, and insertion is judged against them: one transaction can fill a layer and then the layer above, or empty a Storage slot and refill it. Singles and Bar allow one structural extraction per transaction, which blocks insertion and needs no other staged change.
 
 ## Comparators
 
@@ -169,7 +169,7 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Forge/NeoForge consult destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks and optional Common Protection API for neighbor deposits. Fabric consults that API for placement and automation growth when available; otherwise those edits use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Fabric consults Common Protection API, when installed, for placement and automation growth. Player cleanup retains the player, mixed Storage cleanup uses automation. Forge/NeoForge publish accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
 The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 

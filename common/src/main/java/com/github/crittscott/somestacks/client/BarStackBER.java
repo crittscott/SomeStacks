@@ -19,6 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
  * entirely: every bar is the same cuboid, drawn with a texture and tint looked up per item in
@@ -28,8 +31,8 @@ import net.minecraft.world.phys.Vec3;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
-    private static final java.util.Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
-            new java.util.IdentityHashMap<>();
+    private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
+            new IdentityHashMap<>();
 
     static void onResourceReload() {
         SPRITE_REGIONS.clear();

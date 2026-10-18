@@ -74,9 +74,9 @@ public record ConfigSyncPkt(
     public static synchronized void rebuildCurrent() {
         nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
 
-        List<String> genMods = boundedNamespaces(ServerConfig.GEN_MODS.get(), "gallery mod");
+        List<String> genMods = boundedNamespaces(ServerConfig.ListSetting.GEN_MODS.get(), "gallery mod");
         List<String> disabledMods = boundedNamespaces(
-                ServerConfig.DISABLE_MODS.get(), "disabled mod");
+                ServerConfig.ListSetting.DISABLE_MODS.get(), "disabled mod");
 
         currentPackets = buildPackets(
                 nextGeneration,

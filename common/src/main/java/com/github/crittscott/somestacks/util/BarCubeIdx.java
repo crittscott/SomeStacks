@@ -6,6 +6,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Arrays;
+
 import javax.annotation.Nullable;
 
 /**
@@ -69,7 +71,27 @@ public final class BarCubeIdx {
     private static final AABB[] LOCAL_BOXES = new AABB[CELLS];
     private static final VoxelShape[] LOCAL_SHAPES = new VoxelShape[CELLS];
 
+    /**
+     * For each position, the positions in the layer beneath whose footprints overlap it. For the
+     * bottom layer these are top-layer positions of the Bar Stack below.
+     */
+    private static final int[][] SUPPORTERS = new int[CELLS][];
+
     static {
+        for (int index = 0; index < CELLS; index++) {
+            int[] xyz = xyzFromIndex(index);
+            AABB footprint = getBarFootprint(xyz[0], xyz[1], xyz[2]);
+            int belowLayerStart = xyz[1] == 0 ? TOP_LAYER_START : (xyz[1] - 1) * LAYER_SIZE;
+            int[] found = new int[LAYER_SIZE];
+            int count = 0;
+            for (int i = 0; i < LAYER_SIZE; i++) {
+                int[] belowXYZ = xyzFromIndex(belowLayerStart + i);
+                if (footprintsOverlap(footprint, getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]))) {
+                    found[count++] = belowLayerStart + i;
+                }
+            }
+            SUPPORTERS[index] = Arrays.copyOf(found, count);
+        }
         for (int index = 0; index < CELLS; index++) {
             int[] xyz = xyzFromIndex(index);
             double minX = startPixelX(xyz[0], xyz[1]);
@@ -112,7 +134,14 @@ public final class BarCubeIdx {
      * underneath. A null seam means there is no Bar Stack below, so the bottom layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, @Nullable boolean[] seamBelow) {
-        return isGroundedIn(occupancyOf(handler), index, seamBelow);
+        if (index < LAYER_SIZE) return seamBelow == null || seamSupports(index, seamBelow);
+
+        for (int supporter : SUPPORTERS[index]) {
+            if (!handler.getStackInSlot(supporter).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -120,54 +149,40 @@ public final class BarCubeIdx {
      * placement simulation use snapshots to evaluate a proposed state without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
-        int y = xyz[1];
+        if (index < LAYER_SIZE) return seamBelow == null || seamSupports(index, seamBelow);
 
-        if (y == 0) return seamBelow == null || seamSupports(index, seamBelow);
-
-        AABB thisFootprint = getBarFootprint(xyz[0], y, xyz[2]);
-
-        int belowLayerStart = (y - 1) * LAYER_SIZE;
-        for (int i = 0; i < LAYER_SIZE; i++) {
-            int belowIndex = belowLayerStart + i;
-            if (occupancy[belowIndex]) {
-                int[] belowXYZ = xyzFromIndex(belowIndex);
-                AABB belowFootprint = getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]);
-
-                if (footprintsOverlap(thisFootprint, belowFootprint)) {
-                    return true;
-                }
+        for (int supporter : SUPPORTERS[index]) {
+            if (occupancy[supporter]) {
+                return true;
             }
         }
-
         return false;
     }
 
     /**
-     * Whether the top layer beneath a block overlaps the footprint of {@code index}. Layer 7 runs
-     * north-south and layer 0 east-west, so the alternating pattern continues across a block
-     * boundary and uses the same footprint test as support within a block.
+     * Whether the top layer beneath a block overlaps the footprint of the bottom-layer position
+     * {@code index}. Layer 7 runs north-south and layer 0 east-west, so the alternating pattern
+     * continues across a block boundary and uses the same overlap table as support within a block.
      */
     public static boolean seamSupports(int index, boolean[] seamBelow) {
         if (seamBelow == null) {
             return false;
         }
-
-        int[] xyz = xyzFromIndex(index);
-        AABB thisFootprint = getBarFootprint(xyz[0], xyz[1], xyz[2]);
-
-        for (int i = 0; i < LAYER_SIZE; i++) {
-            if (!seamBelow[i]) continue;
-
-            int[] belowXYZ = xyzFromIndex(TOP_LAYER_START + i);
-            AABB belowFootprint = getBarFootprint(belowXYZ[0], belowXYZ[1], belowXYZ[2]);
-
-            if (footprintsOverlap(thisFootprint, belowFootprint)) {
+        for (int supporter : SUPPORTERS[index]) {
+            if (seamBelow[supporter - TOP_LAYER_START]) {
                 return true;
             }
         }
-
         return false;
+    }
+
+    /**
+     * The positions in the layer beneath {@code index} whose footprints overlap it; for the bottom
+     * layer, top-layer positions of the Bar Stack below. The returned array is shared and must not
+     * be modified.
+     */
+    public static int[] supportersOf(int index) {
+        return SUPPORTERS[index];
     }
 
     /** Returns the block-local collision shape of one bar slot. */

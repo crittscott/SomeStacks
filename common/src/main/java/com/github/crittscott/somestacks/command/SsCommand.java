@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * The server-side {@code ss} command: render gallery generation, server list editing, and
@@ -69,7 +68,6 @@ public final class SsCommand {
 
     private static final String ARG_ITEM = "item";
     private static final String ARG_MODID = "modid";
-    private static final String ARG_ENTRY = "entry";
 
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
@@ -137,29 +135,29 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_MODS, GEN_MODS_LABEL, false))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_MODS, GEN_MODS_LABEL, false))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(
                                                 ARG_ITEM,
                                                 ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.GEN_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.GEN_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.GEN_ITEMS, GEN_ITEMS_LABEL, true))));
     }
 
     /**
@@ -177,29 +175,29 @@ public final class SsCommand {
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 RenderGalleryGenerator.Kind.STORAGE.modIds(), builder))
-                                        .executes(ctx -> addEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .executes(ctx -> addEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_MODID, StringArgumentType.word())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_MODS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_MODS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL,
                                                 StringArgumentType.getString(ctx, ARG_MODID)))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_MODS, DISABLED_MODS_LABEL, true))))
                 .then(Commands.literal("item")
                         .then(Commands.literal("add")
                                 .then(Commands.argument(
                                                 ARG_ITEM,
                                                 ResourceArgument.resource(buildContext, Registries.ITEM))
                                         .executes(ctx -> addItemEntry(
-                                                ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
+                                                ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument(ARG_ITEM, ResourceLocationArgument.id())
-                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.DISABLE_ITEMS, builder))
-                                        .executes(ctx -> removeEntry(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
+                                        .suggests((ctx, builder) -> suggestEntries(ServerConfig.ListSetting.DISABLE_ITEMS, builder))
+                                        .executes(ctx -> removeEntry(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL,
                                                 ResourceLocationArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
-                                .executes(ctx -> listEntries(ctx, ServerConfig.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
+                                .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
 
     private static boolean isPlayer(CommandSourceStack source) {
@@ -213,26 +211,6 @@ public final class SsCommand {
     private static CompletableFuture<Suggestions> suggestEntries(
             ServerConfig.ListSetting list, SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggest(List.copyOf(list.get()), builder);
-    }
-
-    private static CompletableFuture<Suggestions> suggestItems(
-            CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
-        String remaining = builder.getRemaining();
-
-        if (!remaining.contains(":")) {
-            List<String> namespaces = RenderGalleryGenerator.Kind.STORAGE.modIds()
-                    .stream()
-                    .map(ns -> ns + ":")
-                    .collect(Collectors.toList());
-            return SharedSuggestionProvider.suggest(namespaces, builder);
-        }
-
-        String namespace = remaining.split(":")[0];
-        List<String> itemIds = RenderGalleryGenerator.Kind.STORAGE.itemsIn(namespace)
-                .stream()
-                .map(item -> String.valueOf(BuiltInRegistries.ITEM.getKey(item)))
-                .collect(Collectors.toList());
-        return SharedSuggestionProvider.suggest(itemIds, builder);
     }
 
     /** Entries omitted from one request, grouped by reason. */
@@ -321,7 +299,7 @@ public final class SsCommand {
         List<String> unusableMods = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_MODS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
             if (modId.isEmpty() || !seen.add(modId)) {
                 continue;
@@ -366,7 +344,7 @@ public final class SsCommand {
         List<String> unknownItems = new ArrayList<>();
         Set<String> seen = new HashSet<>();
 
-        for (String entry : ServerConfig.GEN_ITEMS.get()) {
+        for (String entry : ServerConfig.ListSetting.GEN_ITEMS.get()) {
             String trimmed = entry.trim().toLowerCase(Locale.ROOT);
             if (trimmed.isEmpty() || !seen.add(trimmed)) {
                 continue;
@@ -553,7 +531,7 @@ public final class SsCommand {
     /** Keeps client-local {@code ss write list} inputs current after their server lists change. */
     private static void syncClientToolState(CommandContext<CommandSourceStack> ctx,
                                             ServerConfig.ListSetting list) {
-        if (list != ServerConfig.GEN_MODS && list != ServerConfig.DISABLE_MODS) {
+        if (list != ServerConfig.ListSetting.GEN_MODS && list != ServerConfig.ListSetting.DISABLE_MODS) {
             return;
         }
         ConfigSyncPkt.rebuildCurrent();
