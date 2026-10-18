@@ -5,21 +5,23 @@
 *.iml
 /.idea/
 
-# VS Code
+# VS Code / Eclipse Java tooling
 /.vscode/
+**/bin/
+**/.eclipse/
 
 # Gradle
 **/build/
 **/.gradle/
 **/src/generated/resources/.cache/
+/.architectury-transformer/
 
 # Forge/Minecraft runtime
 **/run/
 **/run-data/
-/logs/
-/crash-reports/
+**/logs/
+**/crash-reports/
 
 # other
 /review-*.md
-/code-review*
-!/code-review.md
+/othersource/
