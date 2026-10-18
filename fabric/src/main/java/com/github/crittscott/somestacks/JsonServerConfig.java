@@ -14,7 +14,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** JSON persistence installed by Fabric and used by loader-neutral configuration fixtures. */
+/**
+ * Fabric's server-policy backend: a per-world {@code serverconfig/somestacks-server.json}, read at
+ * server start and by {@code /ss reload}, and rewritten by list-editing commands. Fields are
+ * validated independently, so a malformed field falls back to its default without discarding the
+ * rest of the file.
+ */
 public final class JsonServerConfig implements ServerConfig.Backend {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -44,6 +49,11 @@ public final class JsonServerConfig implements ServerConfig.Backend {
     private static final int MAX_PILE_HEIGHT_LIMIT = ServerConfig.MAX_PILE_HEIGHT;
 
     private Path configFile;
+
+    /** The file this backend last loaded, or null before the first load. */
+    public Path path() {
+        return configFile;
+    }
 
     public void load(Path file) {
         configFile = file;

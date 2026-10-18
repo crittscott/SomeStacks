@@ -1,15 +1,17 @@
 package com.github.crittscott.somestacks;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.minecraft.server.MinecraftServer;
+import java.nio.file.Path;
 import java.util.List;
 
 /** Loader-managed server configuration exposed as one immutable common policy snapshot. */
 public final class NeoForgeServerConfig implements ServerConfig.Backend {
     public static final NeoForgeServerConfig INSTANCE = new NeoForgeServerConfig();
-    private net.neoforged.fml.config.ModConfig loadedConfig;
-    public java.nio.file.Path path() { return loadedConfig.getFullPath(); }
+    private ModConfig loadedConfig;
+    public Path path() { return loadedConfig.getFullPath(); }
 
     public final ModConfigSpec spec;
     private final ModConfigSpec.IntValue maxHeight;

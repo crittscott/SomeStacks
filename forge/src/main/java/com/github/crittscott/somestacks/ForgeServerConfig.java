@@ -1,15 +1,17 @@
 package com.github.crittscott.somestacks;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraft.server.MinecraftServer;
+import java.nio.file.Path;
 import java.util.List;
 
 /** Loader-managed server configuration exposed as one immutable common policy snapshot. */
 public final class ForgeServerConfig implements ServerConfig.Backend {
     public static final ForgeServerConfig INSTANCE = new ForgeServerConfig();
-    private net.minecraftforge.fml.config.ModConfig loadedConfig;
-    public java.nio.file.Path path() { return loadedConfig.getFullPath(); }
+    private ModConfig loadedConfig;
+    public Path path() { return loadedConfig.getFullPath(); }
 
     public final ForgeConfigSpec spec;
     private final ForgeConfigSpec.IntValue maxHeight;

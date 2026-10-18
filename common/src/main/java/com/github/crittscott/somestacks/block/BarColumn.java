@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
 
@@ -99,8 +100,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
         StackRun.markDirtyAt(level, pos, BarColumn::at);
     }
 
-    /** The configured ceiling on column height, shared with Storage piles. */
-
     /**
      * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.
@@ -139,63 +138,53 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
-            return 0;
-        }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
-            return 0;
-        }
-        if (simulate) {
-            return 1;
+        int accepted = acceptsAt(flatSlot, stack, this::getSlot);
+        if (simulate || accepted == 0) {
+            return accepted;
         }
         if (flatSlot >= totalSlots() && !grow(flatSlot % BarStackBE.SLOTS)) {
             return 0;
         }
 
-        ItemStack one = stack.copy();
-        one.setCount(1);
         return handlerOf(flatSlot).insertItem(
-                flatSlot % BarStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
+                flatSlot % BarStackBE.SLOTS, stack.copyWithCount(1), false).isEmpty() ? 1 : 0;
     }
 
     /**
-     * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty and
-     * its footprint must overlap an occupied bar in the layer beneath it, which for a bottom layer
-     * means the seam with the Bar Stack below, and for the bottom block of all means the world.
+     * Whether {@code flatSlot} could take a bar if every position held what {@code contents}
+     * reports: the position must be empty and overlap an occupied bar in the layer beneath it, which
+     * for a bottom layer is the top layer of the Bar Stack below; the bottom block of all stands on
+     * the world.
      *
      * <p>A position in the block above the column is checked against the block growth would put
-     * there — empty and standing on the column's current top layer — and against the side-effect-free
-     * checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the
-     * commit would refuse.
+     * there and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation
+     * therefore cannot promise a position the commit would refuse.
      */
-    private boolean positionAccepts(int flatSlot) {
+    @Override
+    public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
+        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
+            return 0;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
+            return 0;
+        }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-
-        if (blockIndex < blocks.size()) {
-            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
-            if (occupancy[slot]) {
-                return false;
-            }
-            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
+        if (blockIndex >= blocks.size() && !canGrow(BarCubeIdx.shapeFor(slot))) {
+            return 0;
+        }
+        if (slot < BarCubeIdx.LAYER_SIZE && blockIndex == 0) {
+            return 1;
         }
 
-        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        return canGrow(finalCollision)
-                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
-    }
-
-    /**
-     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
-     * below, or null for the bottom block of the column, which stands on the world and is grounded
-     * outright.
-     */
-    @Nullable
-    private boolean[] seamUnder(int blockIndex) {
-        BlockPos pos = blockIndex < blocks.size()
-                ? blocks.get(blockIndex).getBlockPos()
-                : topPos().above();
-        return BarStackBE.supportSeamBeneath(level, pos);
+        // Layer-zero supporters are top-layer indexes of the block below.
+        int supportBlock = slot < BarCubeIdx.LAYER_SIZE ? blockIndex - 1 : blockIndex;
+        for (int supporter : BarCubeIdx.supportersOf(slot)) {
+            if (!contents.apply(supportBlock * BarStackBE.SLOTS + supporter).isEmpty()) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     /**
