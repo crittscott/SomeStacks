@@ -13,24 +13,30 @@ public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
     int getSlots();
 
-    /** The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. */
+    /**
+     * The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. This is
+     * the live stored stack, not a copy: changing it bypasses change notification, so callers must
+     * not modify it and must copy it before keeping or editing it.
+     */
     @Nonnull
     ItemStack getStackInSlot(int slot);
 
     /**
      * Inserts as much of {@code stack} into {@code slot} as {@link #isItemValid} and
      * {@link #getSlotLimit} allow. Returns the remainder that was not accepted —
-     * {@link ItemStack#EMPTY} if all of it was — and never mutates {@code stack} itself. When
-     * {@code simulate} is {@code true}, the slot is left unchanged and only the would-be
-     * remainder is computed.
+     * {@link ItemStack#EMPTY} if all of it was — and never mutates {@code stack} itself. A committed
+     * insertion may store {@code stack} itself in an empty slot, so the caller gives up that object
+     * and must not modify it afterward. When {@code simulate} is {@code true}, the slot is left
+     * unchanged and only the would-be remainder is computed.
      */
     @Nonnull
     ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate);
 
     /**
      * Removes up to {@code amount} items from {@code slot} and returns the stack that was
-     * removed — {@link ItemStack#EMPTY} if the slot was empty. When {@code simulate} is
-     * {@code true}, the slot is left unchanged and only the would-be result is computed.
+     * removed — {@link ItemStack#EMPTY} if the slot was empty. The result belongs to the caller.
+     * When {@code simulate} is {@code true}, the slot is left unchanged and only the would-be result
+     * is computed.
      */
     @Nonnull
     ItemStack extractItem(int slot, int amount, boolean simulate);

@@ -59,6 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#advertisedSlots()" tabindex="0">advertisedSlots()</a></li>
 <li><a href="#getSlot(int)" tabindex="0">getSlot(int)</a></li>
 <li><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" tabindex="0">insertAt(int, ItemStack, boolean)</a></li>
+<li><a href="#acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)" tabindex="0">acceptsAt(int, ItemStack, IntFunction)</a></li>
 <li><a href="#extract(int,int,boolean)" tabindex="0">extract(int, int, boolean)</a></li>
 <li><a href="#markDirty()" tabindex="0">markDirty()</a></li>
 </ol>
@@ -95,33 +96,41 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#advertisedSlots()" class="member-name-link">advertisedSlots</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)" class="member-name-link">acceptsAt</a><wbr>(int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;contents)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Returns how many items the named advertised position would accept if every run position
+held what <code>contents</code> reports for it, including support from the positions beneath.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#advertisedSlots()" class="member-name-link">advertisedSlots</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Positions visible to automation, numbered from the bottom block upward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Extracts up to <code>amount</code> from the named current position, or only reports the result
 when <code>simulate</code> is true.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSlot(int)" class="member-name-link">getSlot</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns how many items the named advertised position accepts.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Schedules the run's deferred publication or settlement pass.</div>
 </div>
 </div>
@@ -154,7 +163,9 @@ currently possible.</div>
 <h3>getSlot</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
+<div class="block">The current stack in a run position, or empty for headroom or an invalid position. The
+result is the live stored stack, not a copy: callers must not modify it, and must copy it
+before keeping or editing it.</div>
 </div>
 </section>
 </li>
@@ -166,7 +177,22 @@ currently possible.</div>
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
 <div class="block">Returns how many items the named advertised position accepts. When <code>simulate</code> is true,
-reports the same answer without changing the run or growing it.</div>
+reports the same answer without changing the run or growing it. A committed insertion may
+keep <code>stack</code> itself as the stored stack, so the caller must not modify it afterward.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)">
+<h3>acceptsAt</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">acceptsAt</span><wbr><span class="parameters">(int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;contents)</span></div>
+<div class="block">Returns how many items the named advertised position would accept if every run position
+held what <code>contents</code> reports for it, including support from the positions beneath.
+Loader transactions pass their staged view; growth checks still read the live world.
+<code>insertAt(slot, stack, true)</code> answers this for the run's own contents.</div>
 </div>
 </section>
 </li>

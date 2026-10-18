@@ -2,6 +2,5 @@ com.github.crittscott.somestacks
 com.github.crittscott.somestacks.block
 com.github.crittscott.somestacks.client
 com.github.crittscott.somestacks.fabric
-com.github.crittscott.somestacks.mixin
 com.github.crittscott.somestacks.network
 com.github.crittscott.somestacks.server

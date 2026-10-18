@@ -2,7 +2,6 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 
@@ -48,10 +47,6 @@ public final class SinglesCubeIdx {
         return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
     }
 
-    private static AABB getCubeBox(int visualX, int visualY, int visualZ, BlockPos blockPos) {
-        return GRID.worldBoxAtVisual(visualX, visualY, visualZ, blockPos);
-    }
-
     /**
      * Whether a cell has support. Cells above the bottom consult the cell beneath them in the same
      * storage column. The bottom layer consults {@code seamBelow}, the top-layer occupancy of the
@@ -70,8 +65,8 @@ public final class SinglesCubeIdx {
     }
 
     /**
-     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Column insertion
-     * uses this to validate a proposed placement without mutating inventory.
+     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots, so a proposed
+     * placement can be validated without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
         int y = xyzFromIndex(index)[1];
@@ -163,15 +158,6 @@ public final class SinglesCubeIdx {
     /** The slot holding the cell at {@code y} in a storage column. */
     public static int indexFromColumn(int storageColumn, int y) {
         return y * LAYER_SIZE + storageColumn;
-    }
-
-    /** Returns a snapshot of which slots in a block contain items. */
-    public static boolean[] occupancyOf(SlotAccess handler) {
-        boolean[] occupancy = new boolean[SinglesStackBE.SLOTS];
-        for (int i = 0; i < SinglesStackBE.SLOTS; i++) {
-            occupancy[i] = !handler.getStackInSlot(i).isEmpty();
-        }
-        return occupancy;
     }
 
     /**

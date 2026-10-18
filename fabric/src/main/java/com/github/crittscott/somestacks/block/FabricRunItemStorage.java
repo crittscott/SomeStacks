@@ -21,8 +21,10 @@ import java.util.Map;
 /**
  * Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
  * Slot changes are staged in the Fabric transaction and applied through the shared run mutations
- * only after its outer commit, so an aborted transaction never edits the world. Singles and Bar
- * accept one extraction position per transaction because each extraction remaps later positions.
+ * only after its outer commit, so an aborted transaction never edits the world. Insertion is judged
+ * against the staged contents. Singles and Bar accept one extraction position per transaction,
+ * without other pending positions or later insertion, because gravity and backfill remap the
+ * positions at commit.
  */
 public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunItemStorage.State>
         implements SlottedStorage<ItemVariant> {
@@ -102,7 +104,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         StackRunItemAccess access = blockEntity.itemRun();
         if (access instanceof StackRun<?> run) {
             StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
-            return ((FabricStorageOwner) base).someStacksStorage();
+            return FabricItemStorage.of(base);
         }
         return this;
     }
@@ -125,10 +127,22 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         return ItemStack.EMPTY;
     }
 
-    private boolean canInsert(int slot, ItemStack stack) {
-        if (blockEntity.isRemoved()) return false;
+    /** How much of {@code stack} the slot accepts given the contents this transaction has staged. */
+    private int acceptedAt(int slot, ItemStack stack) {
+        if (blockEntity.isRemoved()) return 0;
         StackRunItemAccess run = blockEntity.itemRun();
-        return run != null && run.insertAt(slot, stack, true) > 0;
+        return run != null ? run.acceptsAt(slot, stack, this::currentStack) : 0;
+    }
+
+    /** Whether any slot other than {@code slot} has a staged net change. */
+    private boolean otherSlotPending(int slot) {
+        for (Map.Entry<Integer, ItemStack> entry : staged.entrySet()) {
+            ItemStack original = originals.get(entry.getKey());
+            if (entry.getKey() != slot && !ItemStack.matches(entry.getValue(), original)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValid(ItemStack stack) {
@@ -150,19 +164,6 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         staged.put(slot, stack);
     }
 
-    private void commitInsert(int slot, ItemStack stack) {
-        StackRunItemAccess run = blockEntity.itemRun();
-        if (run != null) {
-            run.insertAt(slot, stack, false);
-        }
-    }
-
-    private void commitExtract(int slot, int amount) {
-        StackRunItemAccess run = blockEntity.itemRun();
-        if (run != null) {
-            run.extract(slot, amount, false);
-        }
-    }
 
     @Override
     protected State createSnapshot() {
@@ -178,45 +179,47 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     /**
      * Replays each touched slot's net difference through shared run mutations after the outer
-     * transaction commits. Insertion order matters for positional and structural mutations.
+     * transaction commits: removals first, so a freed Storage slot can take a replacement, then
+     * insertions from the bottom up, so staged supporting cells exist before the cells above them.
      */
     @Override
     protected void onFinalCommit() {
-        LinkedHashMap<Integer, ItemStack> committedOriginals = originals;
-        Map<Integer, ItemStack> committedStacks = staged;
+        LinkedHashMap<Integer, ItemStack> before = originals;
+        Map<Integer, ItemStack> after = staged;
         originals = new LinkedHashMap<>();
         staged = new HashMap<>();
         structuralExtractionSlot = -1;
 
-        if (!RunEdit.begin()) {
-            return;
-        }
+        if (!RunEdit.begin()) throw new IllegalStateException("Reentrant transfer commit");
         try {
-            for (Map.Entry<Integer, ItemStack> entry : committedOriginals.entrySet()) {
-                int slot = entry.getKey();
-                ItemStack original = entry.getValue();
-                ItemStack result = committedStacks.get(slot);
-                if (ItemStack.isSameItemSameComponents(original, result)) {
-                    int difference = result.getCount() - original.getCount();
-                    if (difference > 0) {
-                        ItemStack inserted = result.copy();
-                        inserted.setCount(difference);
-                        commitInsert(slot, inserted);
-                    } else if (difference < 0) {
-                        commitExtract(slot, -difference);
-                    }
-                } else {
-                    if (!original.isEmpty()) {
-                        commitExtract(slot, original.getCount());
-                    }
-                    if (!result.isEmpty()) {
-                        commitInsert(slot, result);
-                    }
+            for (Map.Entry<Integer, ItemStack> entry : before.entrySet()) {
+                ItemStack old = entry.getValue();
+                ItemStack result = after.get(entry.getKey());
+                int removed = ItemStack.isSameItemSameComponents(old, result)
+                        ? old.getCount() - result.getCount() : old.getCount();
+                if (removed > 0 && run().extract(entry.getKey(), removed, false).getCount() != removed) {
+                    throw new IllegalStateException("Committed extraction changed capacity at "
+                            + blockEntity.getBlockPos() + " slot " + entry.getKey());
+                }
+            }
+            for (int slot : before.keySet().stream().sorted().toList()) {
+                ItemStack old = before.get(slot);
+                ItemStack result = after.get(slot);
+                int added = ItemStack.isSameItemSameComponents(old, result)
+                        ? result.getCount() - old.getCount() : result.getCount();
+                if (added > 0 && run().insertAt(slot, result.copyWithCount(added), false) != added) {
+                    throw new IllegalStateException("Committed insertion changed capacity at "
+                            + blockEntity.getBlockPos() + " slot " + slot);
                 }
             }
         } finally {
             RunEdit.end();
         }
+    }
+
+    /** The run this ledger belongs to, resolved afresh because commits grow and shrink it. */
+    private StackRunItemAccess run() {
+        return blockEntity.itemRun();
     }
 
     private static LinkedHashMap<Integer, ItemStack> copyStacks(Map<Integer, ItemStack> source) {
@@ -247,8 +250,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
                         ? ledger.getSlot(slot).insert(resource, maxAmount, transaction) : 0;
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-            if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
-                    && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
+            if (maxAmount == 0 || RunEdit.isInProgress() || structuralExtractionSlot >= 0) {
                 return 0;
             }
 
@@ -258,13 +260,14 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
             }
 
             int amount = (int) Math.min(maxAmount, capacity(resource) - current.getCount());
+            if (amount <= 0 || !isValid(resource.toStack(amount))) {
+                return 0;
+            }
+            amount = Math.min(amount, acceptedAt(slot, resource.toStack(amount)));
             if (amount <= 0) {
                 return 0;
             }
             ItemStack offered = resource.toStack(amount);
-            if (!isValid(offered) || !canInsert(slot, offered)) {
-                return 0;
-            }
 
             ItemStack result = current.isEmpty() ? offered : current.copy();
             if (!current.isEmpty()) {
@@ -283,7 +286,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
             }
             StoragePreconditions.notBlankNotNegative(resource, maxAmount);
             if (maxAmount == 0 || RunEdit.isInProgress() || isStructural()
-                    && structuralExtractionSlot >= 0 && structuralExtractionSlot != slot) {
+                    && (structuralExtractionSlot >= 0 && structuralExtractionSlot != slot
+                    || otherSlotPending(slot))) {
                 return 0;
             }
 

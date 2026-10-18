@@ -46,7 +46,7 @@ Placement and first deposit are atomic: the item must be valid, the cell support
 
 Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
-In creative mode, deposits do not reduce the held stack.
+In creative mode, deposits do not reduce the held stack. Creating a stack counts as placing that block for `minecraft:placed_block` advancements.
 
 Deposits are rejected when the server has disabled the item's mod or exact item id; existing contents stay extractable. Items the selected type does not accept simply do nothing: Bar takes only items in the `somestacks:ingots` tag, Singles takes everything allowed that Bar does not.
 
@@ -107,7 +107,7 @@ Storage advertises current positions plus one block of headroom below the height
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On NeoForge and Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks; aborts leave the inventory and world unchanged. Singles and Bar allow one structural extraction position per transaction. NeoForge also refuses other pending positions and further insertion during a structural extraction.
+Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On NeoForge and Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks; aborts leave the inventory and world unchanged. Insertion sees earlier changes in the same transaction, so one transfer can fill supporting layers and then the layers above, or empty a Storage slot and refill it with another item. Singles and Bar allow one structural extraction position per transaction, refusing other pending positions and further insertion.
 
 ## Comparators
 
