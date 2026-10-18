@@ -1,4 +1,4 @@
-###### v15
+###### v17
 
 YOU ARE NOT TO DECOMPILE OR UNARCHIVE ANYTHING, EVER. NO EXCEPTIONS. YOU ARE NOT TO TREAT EVERY TASK AS OF WORLD-ENDING IMPORTANCE TO GET RIGHT. YOU ARE NOT TO SEARCH THE ENTIRE INTERNET IN AN ATTEMPT TO MAKE SURE YOU HAVE AN IRREFUTABLE PROOF THAT EVERY WORD OF YOUR AS YET UNWRITTEN ANSWER IS PERFECTLY CORRECT. DO NOT CHECK EVERY THING YOU DID MULTIPLE TIMES. DO IT AND MOVE ON.
 
@@ -8,7 +8,7 @@ Use American English, not British English. Be concise.
 # Scope of analysis and work
 Your domain of interest is the project at hand. Only if you cannot answer the question by looking here are you to look outside.
 
-Do not decompile Forge or Minecraft, and do not read, extract, or search any decompiled/remapped source for them either — this includes ForgeGradle/Loom-cached "sources" jars, *_mapped_* jars, javap/bytecode inspection, or anything under .gradle/caches/forge_gradle or similar. If you need to know a Forge/Fabric/Minecraft API signature, ask me or find it in that library's own published API docs/source (e.g. Fabric API's own sources are fine — Minecraft's and Forge's are not).
+Do not decompile Minecraft or the loaders (Forge, NeoForge), and do not read, extract, or search any decompiled/remapped source for them either — this includes Loom-cached "sources" jars, *_mapped_* jars, javap/bytecode inspection, or anything under .gradle/caches or similar. If you need to know a Minecraft or loader API signature, ask me or find it in that library's own published API docs/source (e.g. Fabric API's own sources are fine — Minecraft's, Forge's, and NeoForge's are not).
 
 You are a programmer; you write code. Do not build unless asked. Everything not explicitly a command to build is a discussion.
 
@@ -24,18 +24,19 @@ You are a programmer; you write code. Do not build unless asked. Everything not 
 - Work happens when something changes, not on a schedule. Prefer events and maintained lists over per-tick polling, broad area scans, and repeated sorting. Send network traffic only when state changes.
 - Nothing crosses a trust boundary unchecked. The server validates everything a client sends; the client validates everything a server sends. Trusting Minecraft and the loader does not extend to the other end of the connection.
 - Everything visible is deliberate. Player-facing text lives in the lang file; tunable numbers are named constants or config options; logs record milestones, not traffic, and debug logging does not stay in the code; every player-visible behavior has a gametest whose javadoc tells a person how to reproduce it in-game.
-- When assessing code for safety issues, do not worry that Minecraft or Forge itself may misbehave; it is not our job to protect against every conceivable error. Only known unreliable interfaces need to be protected against.
+- When assessing code for safety issues, do not worry that Minecraft or the loader itself may misbehave; it is not our job to protect against every conceivable error. Only known unreliable interfaces need to be protected against.
 - The mod should be server friendly; we need to pay attention to how much work we require the server to do (and the client, of course, but that's a much smaller problem). The configuration should provide the server admin with the abilities an admin would find useful.
 - Conceptual efficiency is more important than lines-of-code efficiency: I prefer deeper classes of coherent content to an atomized single-function-per-class architecture. Some duplication is better than yet one more small class.
 
 # Orientation files
 
-`orientation-player.md` and `orientation-code.md` are snapshots of the mod as it currently is, written so an agent can orient itself without reading the whole codebase. They are not specifications, requirements, goals, or a to-do list.
+`orientation-player.md`, `orientation-code.md`, and `orientation-build.md` are snapshots of the mod and its build as they currently are, written so an agent can orient itself without reading the whole codebase. They are not specifications, requirements, goals, or a to-do list.
 
-- The code is the truth. When a file disagrees with the code, the file is wrong. Fix the file, not the code, unless I say otherwise.
+- The code is the truth; for `orientation-build.md`, the active build files are the code. When a file disagrees with the code, the file is wrong. Fix the file, not the code, unless I say otherwise.
 - Never treat a described behavior as a requirement to preserve, or a listed limitation as work to do.
+- Describe only the current state: no history of how it got that way, no change logs, troubleshooting narratives, conversation, or plans.
 - After a change alters what a file describes, update that file in place to match the code.
-- Size limits: `orientation-player.md` ≤ 15,000 characters; `orientation-code.md` ≤ 12,000 characters. Trim when over the limit.
+- Size limits: `orientation-player.md` ≤ 15,000 characters; `orientation-code.md` ≤ 12,000 characters; `orientation-build.md` ≤ 15,000 characters. Trim when over the limit.
 - The fixed header at the top of each file is not content: do not edit it, and it does not count toward the size limit.
 
 # Markdown
@@ -44,9 +45,9 @@ You are a programmer; you write code. Do not build unless asked. Everything not 
 
 # Development and Verification
 
-- Do not compile, build, or run the project (no `gradlew`, no `runGameTestServer`, etc.) unless I explicitly ask. Your job is to read and write code. Verify your work by reading it and reasoning about it. Do not touch the ForgeGradle caches, kill processes, or otherwise rewire the dev environment.
+- Do not compile, build, or run the project (no `gradlew`, no `runGameTestServer`, etc.) unless I explicitly ask. Your job is to read and write code. Verify your work by reading it and reasoning about it. Do not touch the Loom caches, kill processes, or otherwise rewire the dev environment.
 - I run the builds and tests. If you believe a build or test run is warranted, say so and let me decide.
-- Do not decompile anything (Minecraft, Forge) without permission.
+- Do not decompile anything (Minecraft or the loaders) without permission.
 
 # Version Control and Commit Messages
 
