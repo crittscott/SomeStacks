@@ -4,7 +4,7 @@
 
 # Some Stacks — code orientation
 
-Subsystem ownership, persistent data, loader boundaries, and invariants the code currently maintains. `orientation-player.md` covers observable behavior; `build-env.md` covers the build.
+Subsystem ownership, persistent data, loader boundaries, and invariants the code currently maintains. `orientation-player.md` covers observable behavior; `orientation-build.md` covers the build.
 
 ## Project shape
 

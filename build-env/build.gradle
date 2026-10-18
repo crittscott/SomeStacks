@@ -139,3 +139,20 @@ tasks.register('generateDocs', Sync) {
         }
     }
 }
+
+// Copies every loader's already-built production jar into the jars directory shared by all version
+// checkouts, for installing into a local launcher. It builds nothing, skips jars that have not been
+// built, and leaves other versions' jars there alone.
+tasks.register('collectJars', Copy) {
+    group = 'build'
+    description = "Copies the loaders' already-built production jars into ../jars."
+
+    into rootProject.file('../jars')
+
+    enabled_platforms.split(',').each { platform ->
+        def loader = project(":$platform")
+        from(loader.layout.buildDirectory.dir('libs')) {
+            include "${loader.base.archivesName.get()}-${loader.version}.jar"
+        }
+    }
+}
