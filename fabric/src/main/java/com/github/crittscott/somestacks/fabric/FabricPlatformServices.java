@@ -2,8 +2,8 @@ package com.github.crittscott.somestacks.fabric;
 
 import com.github.crittscott.somestacks.PlatformServices;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.server.FabricEditAuthority;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -27,7 +27,7 @@ public final class FabricPlatformServices implements PlatformServices.Backend {
 
     @Override
     public void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
-        FabricNetworking.send(player, packet);
+        ServerPlayNetworking.send(player, packet);
     }
 
     @Override

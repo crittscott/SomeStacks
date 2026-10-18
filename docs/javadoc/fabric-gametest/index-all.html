@@ -49,7 +49,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsFillGroundedCells(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsFillGroundedCells(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
@@ -423,11 +423,11 @@ publishing an incomplete snapshot; an honest client cannot construct these seque
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Loader-neutral parsing and policy checks for the two JSON-backed configuration surfaces.</div>
+<div class="block">Loader-neutral render-override parsing and server-policy checks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Fabric delegates for loader-neutral JSON and server-policy checks.</div>
+<div class="block">Fabric JSON server-config checks and delegates for loader-neutral configuration checks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html#%3Cinit%3E()" class="member-name-link">ConfigurationGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></dt>
 <dd>&nbsp;</dd>
@@ -719,6 +719,10 @@ with room remaining.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#headroomRollbackRestoresWaterAndCommitGrowsEachType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">headroomRollbackRestoresWaterAndCommitGrowsEachType(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: pump into the headroom of each stack type in water.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#heldAt(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos,net.minecraft.world.item.Item)" class="member-name-link">heldAt(GameTestHelper, BlockPos, Item)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>
 <div class="block">Items of <code>item</code> still held by the stack block at <code>absolutePos</code>.</div>
@@ -789,6 +793,14 @@ merge moves and reports, empty-handler detection, and the per-slot light contrib
 <dd>
 <div class="block">To reproduce in-game: connect sided item automation to each face of every stack type and
 verify every face exposes the same inventory.</div>
+</dd>
+</dl>
+<h2 class="title" id="I:J">J</h2>
+<dl class="index">
+<dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html#jsonServerPolicyPersistsCommandLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">jsonServerPolicyPersistsCommandLists(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and inspect the
+world's <code>somestacks-server.json</code>.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
@@ -970,6 +982,11 @@ extract the last Storage item.</div>
 <dd>
 <div class="block">Returns the value of the <code>pos</code> record component.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#positionalExtractionRollsBackAndCommitsMovement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">positionalExtractionRollsBackAndCommitsMovement(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">No in-game reproduction applies: aborting extraction preserves Singles rotations and Bar
+positions; committing invokes the common gravity or backfill path exactly once.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">A Storage Stack saved by the Some Stacks 26.1 release keeps its contents and permanence, and
@@ -1098,16 +1115,13 @@ stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></dt>
 <dd>
-<div class="block">Server commands enforce permissions and save list edits immediately.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></dt>
-<dd>
-<div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-validates Fabric JSON fields independently.</div>
+<div class="block">Server commands enforce permissions and save list edits immediately through the loader's
+installed configuration.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.serverConfigLoadsBoundsAndLists(GameTestHelper)</code></a>.</div>
+<div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
+validates JSON fields independently.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>
@@ -1229,6 +1243,10 @@ rotation.</div>
 <div class="block">No in-game reproduction applies: Fabric automation stages an insertion without publishing
 it to the block entity, then publishes the complete edit when the transaction commits.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#stagedSupportFillsCellsAndHeadroomBottomUp(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">stagedSupportFillsCellsAndHeadroomBottomUp(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: fill Singles and Bar columns through automation.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html#standaloneBottomIsGroundedAndFloatingCellIsRejected(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">standaloneBottomIsGroundedAndFloatingCellIsRejected(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnChecks</a></dt>
 <dd>
 <div class="block">The bottom layer stands on the world, while an unsupported higher cell rejects a deposit.</div>
@@ -1322,6 +1340,10 @@ and settling consolidating, packing, and sorting.</div>
 <dd>
 <div class="block">No in-game reproduction applies: this verifies the Fabric transaction simulation contract; a
 simulated Bar extraction reports the result without changing the stored bar.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#storageSlotReplacementUsesStagedCapacity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageSlotReplacementUsesStagedCapacity(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">No in-game reproduction applies: one transaction can replace a Storage slot's identity.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#storageUtilMovesItemsFromChestIntoRun(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageUtilMovesItemsFromChestIntoRun(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
 <dd>
@@ -1450,7 +1472,7 @@ items.</div>
 nested rollback, commit all mutations together or leave the run unchanged.</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
 </div>
 </body>
 </html>

@@ -163,7 +163,9 @@ removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
+<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. This is
+the live stored stack, not a copy: changing it bypasses change notification, so callers must
+not modify it and must copy it before keeping or editing it.</div>
 </div>
 </section>
 </li>
@@ -178,9 +180,10 @@ removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
  boolean&nbsp;simulate)</span></div>
 <div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>isItemValid(int, ItemStack)</code></a> and
 <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted —
-<code>ItemStack.EMPTY</code> if all of it was — and never mutates <code>stack</code> itself. When
-<code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
-remainder is computed.</div>
+<code>ItemStack.EMPTY</code> if all of it was — and never mutates <code>stack</code> itself. A committed
+insertion may store <code>stack</code> itself in an empty slot, so the caller gives up that object
+and must not modify it afterward. When <code>simulate</code> is <code>true</code>, the slot is left
+unchanged and only the would-be remainder is computed.</div>
 </div>
 </section>
 </li>
@@ -193,8 +196,9 @@ remainder is computed.</div>
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
 <div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
-removed — <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
-<code>true</code>, the slot is left unchanged and only the would-be result is computed.</div>
+removed — <code>ItemStack.EMPTY</code> if the slot was empty. The result belongs to the caller.
+When <code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be result
+is computed.</div>
 </div>
 </section>
 </li>
