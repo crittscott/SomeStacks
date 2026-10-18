@@ -1,6 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -19,11 +21,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSingles;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeStorage;
 
@@ -151,6 +156,7 @@ public final class FabricTransferGameTests {
                 "Refused second position changed");
         helper.succeed();
     }
+
     /**
      * No in-game reproduction applies: repeated sided lookups and different blocks in a run must
      * observe the same staged contents, including nested rollback and outer abort.
@@ -190,4 +196,125 @@ public final class FabricTransferGameTests {
         helper.succeed();
     }
 
+    /**
+     * To reproduce in-game: pump into the headroom of each stack type in water. A successful
+     * transfer grows a waterlogged block; an aborted machine transfer leaves the water intact.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void headroomRollbackRestoresWaterAndCommitGrowsEachType(GameTestHelper helper) {
+        StackBlockEntity[] bases = {placeStorage(helper, ORIGIN),
+                placeSingles(helper, ORIGIN.east(3)), placeBar(helper, ORIGIN.east(6))};
+        for (StackBlockEntity base : bases) {
+            ItemVariant resource = ItemVariant.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
+            for (int slot = 0; slot < base.getItems().getSlots(); slot++) {
+                base.getItems().insertItem(slot, resource.toStack(base.automationSlotLimit()), false);
+            }
+            BlockPos above = base.getBlockPos().above();
+            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
+            SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
+            int headroom = base.getItems().getSlots();
+            var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
+            try (Transaction outer = Transaction.openOuter()) {
+                try (Transaction nested = Transaction.openNested(outer)) {
+                    checkEquals(1L, storage.getSlot(headroom).insert(resource, 1, nested), "Nested headroom offer");
+                }
+                checkEquals(0L, storage.getSlot(headroom).getAmount(), "Nested abort kept headroom items");
+                checkEquals(1L, storage.getSlot(headroom).insert(resource, 1, outer), "Outer headroom offer");
+                check(helper.getLevel().getBlockState(above).is(Blocks.WATER), "Offer placed a block");
+                checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()),
+                        "Offer mutated saved inventory");
+            }
+            check(helper.getLevel().getBlockState(above).is(Blocks.WATER), "Abort replaced water");
+            check(helper.getLevel().getBlockEntity(above) == null, "Abort left a block entity");
+            try (Transaction outer = Transaction.openOuter()) {
+                checkEquals(1L, storage.getSlot(headroom).insert(resource, 1, outer), "Committed headroom offer");
+                outer.commit();
+            }
+            StackBlockEntity grown = (StackBlockEntity) helper.getLevel().getBlockEntity(above);
+            check(grown != null, "Commit did not grow the run");
+            checkEquals(base.getBlockState().getBlock(), grown.getBlockState().getBlock(), "Grown type");
+            check(grown.getBlockState().getValue(BlockStateProperties.WATERLOGGED),
+                    "Growth did not retain water");
+            checkEquals(1, grown.getItems().getStackInSlot(0).getCount(), "Grown inventory");
+        }
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: fill Singles and Bar columns through automation. One transfer can fill
+     * supporting cells and then insert above them, including across the new block's seam.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void stagedSupportFillsCellsAndHeadroomBottomUp(GameTestHelper helper) {
+        StackBlockEntity[] bases = {placeSingles(helper, ORIGIN), placeBar(helper, ORIGIN.east(3))};
+        for (StackBlockEntity base : bases) {
+            ItemVariant resource = ItemVariant.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
+            SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
+            try (Transaction transaction = Transaction.openOuter()) {
+                checkEquals(66L, storage.insert(resource, 66, transaction), "Bottom-up insertion");
+                checkEquals(0, occupied(base.getItems()), "Staged support changed live contents");
+                transaction.commit();
+            }
+            checkEquals(64, occupied(base.getItems()), "Committed base occupancy");
+            StackBlockEntity grown = (StackBlockEntity) helper.getLevel().getBlockEntity(base.getBlockPos().above());
+            check(grown != null, "Bottom-up insertion did not grow");
+            checkEquals(2, occupied(grown.getItems()), "Committed headroom occupancy");
+        }
+        helper.succeed();
+    }
+
+    /**
+     * No in-game reproduction applies: aborting extraction preserves Singles rotations and Bar
+     * positions; committing invokes the common gravity or backfill path exactly once. Insertion is
+     * refused while a structural extraction is pending.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void positionalExtractionRollsBackAndCommitsMovement(GameTestHelper helper) {
+        SinglesStackBE singles = placeSingles(helper, ORIGIN);
+        int aboveSlot = SinglesCubeIdx.indexFromColumn(0, 1);
+        singles.getItems().insertItem(0, new ItemStack(Items.STICK), false);
+        singles.getItems().insertItem(aboveSlot, new ItemStack(Items.PAPER), false);
+        singles.setCubeRotation(aboveSlot, 2);
+        BarStackBE bars = placeBar(helper, ORIGIN.east(3));
+        ItemVariant bar = ItemVariant.of(firstBarItem());
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) bars.getItems().insertItem(slot, bar.toStack(), false);
+        for (StackBlockEntity base : new StackBlockEntity[]{singles, bars}) {
+            SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
+            ItemVariant resource = storage.getSlot(0).getResource();
+            var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
+            try (Transaction transaction = Transaction.openOuter()) {
+                checkEquals(1L, storage.getSlot(0).extract(resource, 1, transaction), "Staged positional extraction");
+                checkEquals(0L, storage.getSlot(0).extract(resource, 1, transaction), "Position extracted twice");
+                checkEquals(0L, storage.getSlot(0).insert(resource, 1, transaction),
+                        "Insertion followed structural extraction");
+                checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Extraction changed live data");
+            }
+            checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Abort changed saved data");
+            try (Transaction transaction = Transaction.openOuter()) {
+                checkEquals(1L, storage.getSlot(0).extract(resource, 1, transaction), "Committed positional extraction");
+                transaction.commit();
+            }
+        }
+        checkEquals(Items.PAPER, singles.getItems().getStackInSlot(0).getItem(), "Singles gravity");
+        checkEquals(2, singles.getCubeRotation(0), "Gravity lost item rotation");
+        checkEquals(63, occupied(bars.getItems()), "Bar extraction collapsed contents");
+        check(!bars.getItems().getStackInSlot(0).isEmpty(), "Bar extraction did not backfill");
+        helper.succeed();
+    }
+
+    /** No in-game reproduction applies: one transaction can replace a Storage slot's identity. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageSlotReplacementUsesStagedCapacity(GameTestHelper helper) {
+        StorageStackBE base = placeStorage(helper, ORIGIN);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(64L, storage.getSlot(0).extract(ItemVariant.of(Items.STONE), 64, transaction), "Extract original");
+            checkEquals(8L, storage.getSlot(0).insert(ItemVariant.of(Items.DIRT), 8, transaction), "Insert replacement");
+            transaction.commit();
+        }
+        checkEquals(Items.DIRT, base.getItems().getStackInSlot(0).getItem(), "Replacement identity");
+        checkEquals(8, base.getItems().getStackInSlot(0).getCount(), "Replacement amount");
+        helper.succeed();
+    }
 }

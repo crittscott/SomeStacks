@@ -163,7 +163,9 @@ removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
+<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. This is
+the live stored object: callers must not modify it, and must copy it before keeping or
+editing it.</div>
 </div>
 </section>
 </li>
@@ -180,7 +182,8 @@ removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted —
 <code>ItemStack.EMPTY</code> if all of it was — and never mutates <code>stack</code> itself. When
 <code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
-remainder is computed.</div>
+remainder is computed. A committed insertion may keep <code>stack</code> itself, so the caller
+must give it up or pass a copy.</div>
 </div>
 </section>
 </li>
@@ -194,7 +197,8 @@ remainder is computed.</div>
  boolean&nbsp;simulate)</span></div>
 <div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
 removed — <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
-<code>true</code>, the slot is left unchanged and only the would-be result is computed.</div>
+<code>true</code>, the slot is left unchanged and only the would-be result is computed. The
+returned stack belongs to the caller.</div>
 </div>
 </section>
 </li>

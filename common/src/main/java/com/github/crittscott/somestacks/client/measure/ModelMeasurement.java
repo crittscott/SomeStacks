@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.client.measure;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -55,6 +57,9 @@ public final class ModelMeasurement {
             boolean flat = !capture.hasSpecialGeometry() && !capture.quads().isEmpty();
             return new Result(flat, bounds, null);
         } catch (Exception e) {
+            // The caller caches the result until resource reload, so this logs once per item and context.
+            SomeStacksCommon.LOGGER.warn("Could not measure {} in the {} context; using the default 3-D profile",
+                    BuiltInRegistries.ITEM.getKey(stack.getItem()), context.getSerializedName(), e);
             return new Result(false, null, "measurement threw: " + e);
         }
     }

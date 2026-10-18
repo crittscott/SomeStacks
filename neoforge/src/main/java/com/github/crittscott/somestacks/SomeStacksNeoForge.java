@@ -7,7 +7,9 @@ import com.github.crittscott.somestacks.network.ModNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -26,10 +28,10 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class SomeStacksNeoForge {
     public static final String MODID = SomeStacksCommon.MODID;
 
-    public SomeStacksNeoForge(IEventBus modBus, net.neoforged.fml.ModContainer container) {
+    public SomeStacksNeoForge(IEventBus modBus, ModContainer container) {
         PlatformServices.install(new NeoForgePlatformServices());
         NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
-        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, config.spec);
+        container.registerConfig(ModConfig.Type.SERVER, config.spec);
         ServerConfig.install(config);
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);

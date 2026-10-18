@@ -58,7 +58,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(GameTestHelper)</a></li>
 <li><a href="#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">overrideJsonUsesInclusiveBounds(GameTestHelper)</a></li>
-<li><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">serverConfigLoadsBoundsAndLists(GameTestHelper)</a></li>
 <li><a href="#denyPoliciesRespectPlayerAutomationAndExistingContents(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">denyPoliciesRespectPlayerAutomationAndExistingContents(GameTestHelper)</a></li>
 <li><a href="#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(GameTestHelper)</a></li>
 <li><a href="#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper)</a></li>
@@ -81,7 +80,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ConfigurationGameTests</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">NeoForge delegates for loader-neutral JSON and server-policy checks.</div>
+<div class="block">NeoForge delegates for loader-neutral configuration checks, plus native TOML persistence.</div>
 </div>
 </section>
 <section class="summary">
@@ -133,11 +132,6 @@ loader-managed TOML, and reopen the world.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="ConfigurationChecks.html#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper, Function)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">See <a href="ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.serverConfigLoadsBoundsAndLists(GameTestHelper)</code></a>.</div>
-</div>
 </div>
 </div>
 </div>
@@ -170,15 +164,6 @@ loader-managed TOML, and reopen the world.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">overrideJsonUsesInclusiveBounds</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="ConfigurationChecks.html#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.overrideJsonUsesInclusiveBounds(GameTestHelper)</code></a>.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>serverConfigLoadsBoundsAndLists</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">serverConfigLoadsBoundsAndLists</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">See <a href="ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.serverConfigLoadsBoundsAndLists(GameTestHelper)</code></a>.</div>
 </div>
 </section>
 </li>

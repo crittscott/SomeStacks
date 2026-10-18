@@ -15,9 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
 
@@ -225,15 +227,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)) {
-            return 0;
-        }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots()) {
-            return 0;
-        }
-
-        if (simulate) {
-            return Math.min(stack.getCount(), roomAt(flatSlot, stack));
+        int accepted = acceptsAt(flatSlot, stack, this::getSlot);
+        if (simulate || accepted == 0) {
+            return accepted;
         }
 
         int moved;
@@ -261,24 +257,31 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     }
 
     /**
-     * How much of {@code stack} the one slot at {@code flatSlot} has room for. A slot in the block
-     * above the pile is empty, so it has room for a whole stack — but only where growth would
-     * actually be permitted, which {@link #canGrow} evaluates without side effects, so a simulation
-     * cannot promise a slot the commit would refuse.
+     * How much of {@code stack} the one slot at {@code flatSlot} has room for when the pile holds
+     * what {@code contents} reports. A slot in the block above the pile counts only where growth
+     * would actually be permitted, which {@link #canGrow} evaluates without side effects, so a
+     * simulation cannot promise a slot the commit would refuse.
      */
-    private int roomAt(int flatSlot, ItemStack stack) {
-        if (flatSlot >= totalSlots()) {
-            return canGrow(null) ? stack.getMaxStackSize() : 0;
-        }
-
-        ItemStack inSlot = getSlot(flatSlot);
-        if (inSlot.isEmpty()) {
-            return stack.getMaxStackSize();
-        }
-        if (!ItemStack.isSameItemSameComponents(inSlot, stack)) {
+    @Override
+    public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
+        if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)
+                || flatSlot < 0 || flatSlot >= advertisedSlots()) {
             return 0;
         }
-        return Math.max(0, inSlot.getMaxStackSize() - inSlot.getCount());
+        if (flatSlot >= totalSlots() && !canGrow(null)) {
+            return 0;
+        }
+
+        ItemStack inSlot = contents.apply(flatSlot);
+        int room;
+        if (inSlot.isEmpty()) {
+            room = stack.getMaxStackSize();
+        } else if (ItemStack.isSameItemSameComponents(inSlot, stack)) {
+            room = Math.max(0, inSlot.getMaxStackSize() - inSlot.getCount());
+        } else {
+            room = 0;
+        }
+        return Math.min(stack.getCount(), room);
     }
 
     /** Compatible partials first, then empty slots, both walked from the base upward. */
@@ -385,7 +388,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             }
         }
         List<SettlementGroup> ordered = new ArrayList<>(groups.values());
-        ordered.sort(java.util.Comparator.comparing(group -> group.sortKey));
+        ordered.sort(Comparator.comparing(group -> group.sortKey));
         List<ItemStack> packed = new ArrayList<>();
         for (SettlementGroup group : ordered) {
             int remaining = group.count;

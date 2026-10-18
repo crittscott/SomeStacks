@@ -22,7 +22,9 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
@@ -33,8 +35,8 @@ import java.util.List;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.BarRenderState> {
-    private static final java.util.Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
-            new java.util.IdentityHashMap<>();
+    private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
+            new IdentityHashMap<>();
 
     static void onResourceReload() {
         SPRITE_REGIONS.clear();

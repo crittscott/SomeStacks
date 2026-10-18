@@ -467,11 +467,11 @@ publishing an incomplete snapshot; an honest client cannot construct these seque
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Loader-neutral parsing and policy checks for the two JSON-backed configuration surfaces.</div>
+<div class="block">Loader-neutral render-override parsing and server-policy checks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">NeoForge delegates for loader-neutral JSON and server-policy checks.</div>
+<div class="block">NeoForge delegates for loader-neutral configuration checks, plus native TOML persistence.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html#consumed()" class="member-name-link">consumed()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></dt>
 <dd>
@@ -1126,16 +1126,8 @@ stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></dt>
 <dd>
-<div class="block">Server commands enforce permissions and save list edits immediately.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></dt>
-<dd>
-<div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-validates Fabric JSON fields independently.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></dt>
-<dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.serverConfigLoadsBoundsAndLists(GameTestHelper)</code></a>.</div>
+<div class="block">Server commands enforce permissions and save list edits immediately through whichever
+configuration backend the loader installed.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>

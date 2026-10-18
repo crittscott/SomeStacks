@@ -105,12 +105,12 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
                         Identifier itemLoc = Identifier.parse(key);
                         BarTextureData data = parseEntry(root.get(key));
                         if (data == null) {
-                            SomeStacksCommon.LOGGER.warn("Invalid format for '{}': expected string or object", key);
+                            SomeStacksCommon.LOGGER.warn("Invalid format for '{}' in {}: expected string or object", key, fileLocation);
                             continue;
                         }
                         configMap.put(itemLoc, data);
                     } catch (Exception e) {
-                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}': {}", key, e.getMessage());
+                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}' in {}: {}", key, fileLocation, e.getMessage());
                     }
                 }
             } catch (Exception e) {
@@ -158,9 +158,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
 
     private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
         try {
-            if (!BuiltInRegistries.ITEM.containsKey(itemLoc)) {
-                return BarTextureData.WHITE;
-            }
             Item item = BuiltInRegistries.ITEM.getValue(itemLoc);
 
             // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint
