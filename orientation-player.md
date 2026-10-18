@@ -42,7 +42,7 @@ Only the main hand acts; off-hand items allow cycling. Torches are retained. Rot
 
 ## Depositing and placing
 
-Creating a stack counts as placing a block for advancements. Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind.
+Creating a stack, or growing a Storage pile by depositing, counts as placing a block for advancements; automated growth does not. Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind.
 
 Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 

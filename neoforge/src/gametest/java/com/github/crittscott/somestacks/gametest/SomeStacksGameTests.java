@@ -157,6 +157,8 @@ public final class SomeStacksGameTests {
                 () -> ProtectionGameTests::checkedPlacementRejectsAnObstructingEntity);
         TEST_FUNCTIONS.register("protectiongametests/creative_deposit_fills_the_stack_without_spending_the_hand",
                 () -> ProtectionGameTests::creativeDepositFillsTheStackWithoutSpendingTheHand);
+        TEST_FUNCTIONS.register("protectiongametests/player_placement_and_growth_award_placed_block",
+                () -> ProtectionGameTests::playerPlacementAndGrowthAwardPlacedBlock);
         TEST_FUNCTIONS.register("protectiongametests/settle_keeps_an_empty_top_block_whose_removal_is_refused",
                 () -> ProtectionGameTests::settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused);
         TEST_FUNCTIONS.register("protectiongametests/player_extraction_uses_player_for_cleanup",

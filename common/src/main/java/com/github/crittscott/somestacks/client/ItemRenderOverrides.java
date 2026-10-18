@@ -132,6 +132,13 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
         clearResolvedProfiles();
     }
 
+    /** The user's own override for one item, or null when the user layer has none. */
+    @Nullable
+    public static ItemRenderConfig userOverride(Identifier itemId) {
+        ensureUserFileLoaded();
+        return USER_OVERRIDES.get(itemId);
+    }
+
     /** Removes one in-memory user override; {@link #handleWriteRequest()} persists the layer. */
     public static void removeUser(Identifier itemId) {
         ensureUserFileLoaded();

@@ -1,21 +1,44 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.github.crittscott.somestacks.client.BarStackBER;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemCapture;
+import com.github.crittscott.somestacks.client.ItemRenderOverrides;
+import com.github.crittscott.somestacks.client.RenderProfile;
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
+import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
+import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
 
 /** Development-client assertions for callback cancellation and prepared rendering. */
@@ -30,7 +53,8 @@ public final class ClientCallbackChecks {
      * stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
      * loader callback for main/off hand and checks consumption plus block/item suppression. It
      * does not send a vanilla use packet or extract contents. A translated success/failure message
-     * reports the assertions. It also checks item capture, model measurement, and prepared grid
+     * reports the assertions. It also checks item capture, model measurement, render-profile layer
+     * priority, the drawing work each forced render mode submits, and prepared grid and Bar
      * submission; server GameTests cannot exercise these client-only boundaries. With default
      * resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
      * walk around every face, and reload resources. Models must remain fitted and correctly tinted,
@@ -108,6 +132,166 @@ public final class ClientCallbackChecks {
                 "Empty extraction retained cells from the previous frame");
         submitted.clear();
         empty.clear();
+
+        checkProfileLayers(stone);
+        checkRenderModes(client, hit, stone);
+        checkBarRendering(client, hit);
     }
 
+    /**
+     * The user layer beats the resource-pack layer, which beats measurement; resetting a user entry
+     * returns to the pack, a partial entry measures only its mode, and a resource reload discards
+     * resolved profiles. Both layers are restored afterward; no override file is written.
+     */
+    private static void checkProfileLayers(ItemStack stone) {
+        Identifier id = BuiltInRegistries.ITEM.getKey(stone.getItem());
+        ItemRenderConfig priorPack = ItemRenderOverrides.CONFIG_MAP.get(id);
+        ItemRenderConfig priorUser = ItemRenderOverrides.userOverride(id);
+        ItemRenderConfig pack = new ItemRenderConfig(RenderMode.GUI, 0.5f, new RenderOffset(0.1f, 0.0f, 0.0f));
+        ItemRenderConfig user = new ItemRenderConfig(RenderMode.BLOCK, 0.75f, RenderOffset.ZERO);
+        try {
+            ItemRenderOverrides.CONFIG_MAP.remove(id);
+            ItemRenderOverrides.removeUser(id);
+            RenderProfile measured = AutoRenderProfiles.get(stone);
+            GameTestScaffold.checkEquals(measured, ItemRenderOverrides.resolve(stone),
+                    "An unconfigured item did not use its measured profile");
+
+            ItemRenderOverrides.CONFIG_MAP.put(id, pack);
+            CubeRenderHelper.onResourceReload();
+            GameTestScaffold.checkEquals(profileOf(pack), ItemRenderOverrides.resolve(stone),
+                    "A resource reload did not apply the resource-pack layer");
+
+            ItemRenderOverrides.putUser(id, user);
+            GameTestScaffold.checkEquals(profileOf(user), ItemRenderOverrides.resolve(stone),
+                    "The user layer did not take priority over the resource-pack layer");
+
+            ItemRenderOverrides.removeUser(id);
+            GameTestScaffold.checkEquals(profileOf(pack), ItemRenderOverrides.resolve(stone),
+                    "Resetting a user override did not return to the resource-pack layer");
+
+            ItemRenderOverrides.putUser(id, new ItemRenderConfig(null, 2.0f, null));
+            GameTestScaffold.checkEquals(new RenderProfile(measured.mode(), 2.0f, RenderOffset.ZERO),
+                    ItemRenderOverrides.resolve(stone),
+                    "A partial override did not measure only its mode");
+        } finally {
+            if (priorPack == null) {
+                ItemRenderOverrides.CONFIG_MAP.remove(id);
+            } else {
+                ItemRenderOverrides.CONFIG_MAP.put(id, priorPack);
+            }
+            // Either user-layer call also discards resolved profiles, covering the pack restore.
+            if (priorUser == null) {
+                ItemRenderOverrides.removeUser(id);
+            } else {
+                ItemRenderOverrides.putUser(id, priorUser);
+            }
+        }
+    }
+
+    private static RenderProfile profileOf(ItemRenderConfig config) {
+        return new RenderProfile(config.mode(), config.scale(), config.offset());
+    }
+
+    /**
+     * Each forced mode submits its own kind of drawing work: 2d its own projected geometry, 3d and
+     * gui the item model in the FIXED or GUI context, and block the block model.
+     */
+    private static void checkRenderModes(Minecraft client, BlockHitResult hit, ItemStack stone) {
+        Identifier id = BuiltInRegistries.ITEM.getKey(stone.getItem());
+        ItemRenderConfig priorUser = ItemRenderOverrides.userOverride(id);
+        try {
+            for (RenderMode mode : RenderMode.values()) {
+                ItemRenderOverrides.putUser(id, new ItemRenderConfig(mode, null, null));
+                StackItemStorage items = new StackItemStorage(1);
+                items.setStackInSlot(0, stone);
+                var state = new CubeRenderHelper.GridRenderState();
+                CubeRenderHelper.extractGridItems(items, 1, StorageCubeIdx.GRID, 0,
+                        CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, client.level,
+                        hit.getBlockPos(), client.player.getEyePosition(), state);
+                RecordingSubmits submits = new RecordingSubmits();
+                CubeRenderHelper.submitGridItems(state, new PoseStack(), submits);
+                switch (mode) {
+                    case TWO_D -> GameTestScaffold.check(submits.itemContexts.isEmpty()
+                                    && submits.blocks == 0 && submits.otherSubmitted(),
+                            "2d mode did not draw only its projected geometry");
+                    case THREE_D -> GameTestScaffold.check(
+                            submits.itemContexts.equals(Set.of(ItemDisplayContext.FIXED)) && submits.blocks == 0,
+                            "3d mode did not submit the FIXED item model alone");
+                    case GUI -> GameTestScaffold.check(
+                            submits.itemContexts.equals(Set.of(ItemDisplayContext.GUI)) && submits.blocks == 0,
+                            "gui mode did not submit the GUI item model alone");
+                    case BLOCK -> GameTestScaffold.check(
+                            submits.itemContexts.isEmpty() && submits.blocks > 0,
+                            "block mode did not submit the block model alone");
+                }
+            }
+        } finally {
+            if (priorUser == null) {
+                ItemRenderOverrides.removeUser(id);
+            } else {
+                ItemRenderOverrides.putUser(id, priorUser);
+            }
+        }
+    }
+
+    /**
+     * Bar submission uses only prepared state: emptying the inventory after extraction leaves that
+     * frame's bars drawn, and extracting the empty inventory draws nothing. The block entity is
+     * detached from the world, so the aimed block is unaffected.
+     */
+    private static void checkBarRendering(Minecraft client, BlockHitResult hit) {
+        BarStackBE bars = new BarStackBE(hit.getBlockPos(), CommonRegistry.barStackBlock().defaultBlockState());
+        bars.getItems().setStackInSlot(0, new ItemStack(Items.IRON_INGOT));
+        bars.getItems().setStackInSlot(BarCubeIdx.LAYER_SIZE, new ItemStack(Items.IRON_INGOT));
+        bars.setLevel(client.level);
+        BarStackBER renderer = new BarStackBER(null);
+        BarStackBER.BarRenderState state = renderer.createRenderState();
+        renderer.extractRenderState(bars, state, 0.0f, client.player.getEyePosition(), null);
+        bars.getItems().setStackInSlot(0, ItemStack.EMPTY);
+        bars.getItems().setStackInSlot(BarCubeIdx.LAYER_SIZE, ItemStack.EMPTY);
+
+        RecordingSubmits submitted = new RecordingSubmits();
+        renderer.submit(state, new PoseStack(), submitted, new CameraRenderState());
+        GameTestScaffold.check(submitted.otherSubmitted(),
+                "Prepared bars read the emptied inventory during submission");
+
+        renderer.extractRenderState(bars, state, 0.0f, client.player.getEyePosition(), null);
+        RecordingSubmits empty = new RecordingSubmits();
+        renderer.submit(state, new PoseStack(), empty, new CameraRenderState());
+        GameTestScaffold.check(!empty.otherSubmitted(),
+                "Empty bar extraction retained bars from the previous frame");
+    }
+
+    /**
+     * Records the display context of each item-model submission and counts block submissions;
+     * every other feature, such as custom geometry, reaches native storage and marks it used.
+     * Nothing is drawn.
+     */
+    private static final class RecordingSubmits extends SubmitNodeStorage {
+        private final Map<Integer, SubmitNodeCollection> orders = new TreeMap<>();
+        private final Set<ItemDisplayContext> itemContexts = EnumSet.noneOf(ItemDisplayContext.class);
+        private int blocks;
+
+        @Override
+        public SubmitNodeCollection order(int order) {
+            return orders.computeIfAbsent(order, ignored -> new SubmitNodeCollection(this) {
+                @Override
+                public void submitItem(PoseStack pose, ItemDisplayContext context, int light,
+                                       int overlay, int outline, int[] tints, List<BakedQuad> submitted,
+                                       RenderType renderType, ItemStackRenderState.FoilType foil) {
+                    itemContexts.add(context);
+                }
+
+                @Override
+                public void submitBlock(PoseStack pose, BlockState block, int light, int overlay,
+                                        int outline) {
+                    blocks++;
+                }
+            });
+        }
+
+        boolean otherSubmitted() {
+            return orders.values().stream().anyMatch(SubmitNodeCollection::wasUsed);
+        }
+    }
 }

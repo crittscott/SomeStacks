@@ -2,8 +2,6 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.VoxelShape;
-
 
 import javax.annotation.Nullable;
 
@@ -54,7 +52,7 @@ public final class SinglesCubeIdx {
      * layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
+        int[] xyz = GRID.xyzFromIndex(index);
         int y = xyz[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
@@ -69,7 +67,7 @@ public final class SinglesCubeIdx {
      * uses this to validate a proposed placement without mutating inventory.
      */
     public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = xyzFromIndex(index)[1];
+        int y = GRID.xyzFromIndex(index)[1];
 
         if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
 
@@ -84,18 +82,13 @@ public final class SinglesCubeIdx {
         return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
     }
 
-    /** Returns the block-local collision shape of one stored cell. */
-    public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
-        return GRID.localShape(storageIndex, blockRotation);
-    }
-
     /**
      * The storage column a visual column occupies under a block rotation, the inverse of
      * {@link #visualColumnFromStorage}. The four rotations form a cycle, so the inverse of
      * {@code r} is its normalized inverse.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = rotateXYZ(
+        int[] storage = GRID.rotateXYZ(
                 visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE,
                 QuarterTurns.inverse(blockRotation));
         return storage[2] * GRID_EDGE + storage[0];
@@ -146,7 +139,7 @@ public final class SinglesCubeIdx {
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
     public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
-        int[] visual = rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
+        int[] visual = GRID.rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
         return visual[2] * GRID_EDGE + visual[0];
     }
 
@@ -158,19 +151,6 @@ public final class SinglesCubeIdx {
     /** The slot holding the cell at {@code y} in a storage column. */
     public static int indexFromColumn(int storageColumn, int y) {
         return y * LAYER_SIZE + storageColumn;
-    }
-
-    /**
-     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
-     * turns counterclockwise seen from above, matching the direction of per-item rotation.
-     */
-    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
-        return GRID.rotateXYZ(x, y, z, rotation);
-    }
-
-    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
-    public static int[] xyzFromIndex(int idx) {
-        return GRID.xyzFromIndex(idx);
     }
 
 }

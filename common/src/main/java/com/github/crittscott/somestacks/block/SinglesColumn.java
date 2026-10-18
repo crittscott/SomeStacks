@@ -150,7 +150,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
-        if (blockIndex >= blocks.size() && !canGrow(SinglesCubeIdx.shapeFor(slot, 0))) {
+        if (blockIndex >= blocks.size() && !canGrow(SinglesCubeIdx.GRID.localShape(slot, 0))) {
             return 0;
         }
 
@@ -194,7 +194,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
     private boolean grow(int slot) {
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
+        VoxelShape finalCollision = SinglesCubeIdx.GRID.localShape(slot, 0);
         if (!canGrow(finalCollision)) {
             return false;
         }
@@ -242,6 +242,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return taken;
         }
 
-        return blocks.get(flatSlot / SinglesStackBE.SLOTS).extractAt(flatSlot % SinglesStackBE.SLOTS);
+        return blocks.get(flatSlot / SinglesStackBE.SLOTS).extractAt(flatSlot % SinglesStackBE.SLOTS, null);
     }
 }

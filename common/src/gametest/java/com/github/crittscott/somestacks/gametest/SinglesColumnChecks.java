@@ -112,7 +112,7 @@ public final class SinglesColumnChecks {
         singles.setCubeRotation(middle, 1);
         singles.setCubeRotation(top, 3);
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = singles.extractAt(bottom, null);
 
         checkEquals(Items.STICK, extracted.getItem(), "Extracted item");
         checkEquals(Items.PAPER, singles.getItems().getStackInSlot(bottom).getItem(),
@@ -151,7 +151,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(singles.getItems(), second, new ItemStack(legacy));
 
-        ItemStack extracted = singles.extractAt(bottom);
+        ItemStack extracted = singles.extractAt(bottom, null);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted = heldAt(helper, pos, legacy) + droppedNear(helper, pos, legacy);
@@ -179,7 +179,7 @@ public final class SinglesColumnChecks {
         lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
         seedSlot(upper.getItems(), bottom, new ItemStack(legacy));
 
-        ItemStack extracted = lower.extractAt(bottom);
+        ItemStack extracted = lower.extractAt(bottom, null);
 
         checkEquals(Items.APPLE, extracted.getItem(), "Extracted item");
         int accounted = heldAt(helper, lowerPos, legacy)
@@ -203,7 +203,7 @@ public final class SinglesColumnChecks {
         singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
         singles.getItems().insertItem(third, new ItemStack(Items.PAPER), false);
 
-        singles.extractAt(bottom);
+        singles.extractAt(bottom, null);
 
         check(singles.getItems().getStackInSlot(bottom).isEmpty(),
                 "Existing gap was compacted away");
@@ -234,7 +234,7 @@ public final class SinglesColumnChecks {
         upper.getItems().insertItem(upperBottom, new ItemStack(Items.PAPER), false);
         upper.setCubeRotation(upperBottom, 3);
 
-        lower.extractAt(lowerTop);
+        lower.extractAt(lowerTop, null);
 
         checkEquals(Items.PAPER, lower.getItems().getStackInSlot(lowerTop).getItem(),
                 "Item did not cross the visual block seam");

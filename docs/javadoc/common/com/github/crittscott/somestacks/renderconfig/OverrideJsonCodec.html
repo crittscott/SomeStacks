@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">OverrideJsonCodec</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Parses and serializes the item render override schema shared by bundled resources, the client
- override file, the measured cache, and the server override directory.
+<div class="block">Parses and serializes the item render override schema shared by resource-pack profiles, the
+ client override file, generated profile files, and the measured cache.
 
  <p>A document is a JSON object keyed by item id; each value contains optional <code>mode</code>,
  <code>scale</code>, and <code>offset</code> fields. Malformed entries and fields are logged and skipped.</div>
@@ -122,8 +122,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#MIN_SCALE" class="member-name-link">MIN_SCALE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
- measurement.</div>
+<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 </div>
 </div>
 </section>
@@ -166,7 +165,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">sanitize</a><wbr>(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
+<div class="block">Applies the file-format bounds to an override before it is serialized, dropping invalid
+ fields.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.gson.JsonObject</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toJson(java.util.Map)" class="member-name-link">toJson</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.resources.Identifier,<wbr><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&gt;&nbsp;map)</code></div>
@@ -194,8 +194,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="MIN_SCALE">
 <h3>MIN_SCALE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">MIN_SCALE</span></div>
-<div class="block">Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
- measurement.</div>
+<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -270,9 +269,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)">
 <h3>sanitize</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a></span>&nbsp;<span class="element-name">sanitize</span><wbr><span class="parameters">(<a href="ItemRenderConfig.html" title="class in com.github.crittscott.somestacks.renderconfig">ItemRenderConfig</a>&nbsp;config)</span></div>
-<div class="block">Applies the file-format bounds to an override, dropping invalid fields. Network overrides
- bypass <a href="#parse(com.google.gson.JsonObject,java.lang.String)"><code>parse(com.google.gson.JsonObject, java.lang.String)</code></a>, and serialization may receive measured data, so both use the same
- validation.</div>
+<div class="block">Applies the file-format bounds to an override before it is serialized, dropping invalid
+ fields. Authored and measured configurations do not pass through <a href="#parse(com.google.gson.JsonObject,java.lang.String)"><code>parse(com.google.gson.JsonObject, java.lang.String)</code></a>, so writing
+ applies the same validation reading does.</div>
 </section>
 </li>
 <li>

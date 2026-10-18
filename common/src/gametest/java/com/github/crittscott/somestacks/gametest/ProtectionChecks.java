@@ -12,9 +12,12 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -166,6 +169,72 @@ public final class ProtectionChecks {
         helper.succeed();
     }
 
+    /**
+     * Placing a stack and growing a Storage pile by hand count as placing a block for advancements;
+     * automated growth does not. To reproduce in-game: install a data pack with a
+     * {@code minecraft:placed_block} advancement for {@code somestacks:storage_stack_block}, then
+     * hold the modifier and place a Storage Stack. The advancement is awarded; revoke it, fill the
+     * pile and deposit once more, and growing the pile awards it again. A hopper feeding a full pile
+     * grows it without awarding anything.
+     */
+    public static void playerPlacementAndGrowthAwardPlacedBlock(
+            GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
+        ServerLevel level = helper.getLevel();
+        AdvancementHolder advancement = level.getServer().getAdvancements().get(
+                Identifier.fromNamespaceAndPath("somestacks_gametest", "placed_storage_stack"));
+        check(advancement != null, "The placed-block test advancement is not loaded");
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 64));
+        PlayerAdvancements advancements = player.getAdvancements();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        BlockPos support = target.below();
+
+        advancements.revoke(advancement, "placed");
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        try {
+            StackInteractions.handleAdjacentClick(
+                    player,
+                    InteractionHand.MAIN_HAND,
+                    new BlockHitResult(
+                            new Vec3(support.getX() + 0.5, support.getY() + 1.0,
+                                    support.getZ() + 0.5),
+                            Direction.UP,
+                            support,
+                            false),
+                    true,
+                    true);
+        } finally {
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
+        }
+        helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN);
+        check(advancements.getOrStartProgress(advancement).isDone(),
+                "Placing a stack did not trigger the placed-block criterion");
+
+        StorageStackBE base = (StorageStackBE) level.getBlockEntity(target);
+        fillStorage(base);
+        advancements.revoke(advancement, "placed");
+        base.deposit(new ItemStack(Items.DIRT), player);
+        helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN.above());
+        check(advancements.getOrStartProgress(advancement).isDone(),
+                "Player-driven growth did not trigger the placed-block criterion");
+
+        fillStorage((StorageStackBE) level.getBlockEntity(target.above()));
+        advancements.revoke(advancement, "placed");
+        base.deposit(new ItemStack(Items.DIRT), null);
+        helper.assertBlockPresent(CommonRegistry.storageStackBlock(), ORIGIN.above(2));
+        check(!advancements.getOrStartProgress(advancement).isDone(),
+                "Automated growth triggered the player's placed-block criterion");
+
+        advancements.revoke(advancement, "placed");
+        helper.succeed();
+    }
+
+    private static void fillStorage(StorageStackBE storage) {
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+        }
+    }
+
     /** Exercises neighboring and direct deposits under the loader's destination policy. */
     public static void checkAdjacentAndDirectDeposits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
@@ -224,7 +293,7 @@ public final class ProtectionChecks {
             try {
                 for (int slot = 1; slot <= 2; slot++) {
                     var box = (isSingles
-                            ? SinglesCubeIdx.shapeFor(slot, 0)
+                            ? SinglesCubeIdx.GRID.localShape(slot, 0)
                             : BarCubeIdx.shapeFor(slot)).bounds();
                     double x = target.getX() + (box.minX + box.maxX) / 2;
                     double z = target.getZ() + (box.minZ + box.maxZ) / 2;
@@ -337,7 +406,7 @@ public final class ProtectionChecks {
         checkEquals(3, restored.getItem(0).getCount(), "Restored container count");
 
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.pile().setPermanent(true);
+        storage.pile().setPermanent(true, null);
         helper.runAfterDelay(3, () -> {
             Block storageBlock = CommonRegistry.storageStackBlock();
             check(!level.getBlockTicks().hasScheduledTick(pos, storageBlock),

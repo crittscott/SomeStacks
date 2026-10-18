@@ -7,6 +7,9 @@ import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -15,6 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 
 /**
@@ -119,4 +126,30 @@ public final class FabricGameTestSupport {
             return player;
         };
     }
+
+    /**
+     * A factory for checks that observe advancement progress, which Fabric's {@link FakePlayer}
+     * does not record. The player is an ordinary unconnected {@link ServerPlayer} with Survival
+     * abilities; changing its mode would broadcast through the connection it lacks.
+     */
+    public static Function<ItemStack, ServerPlayer> advancementPlayerFactory(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        return mainHand -> {
+            ServerPlayer player = ADVANCEMENT_PLAYERS.computeIfAbsent(level, key -> new ServerPlayer(
+                    key.getServer(), key, ADVANCEMENT_PLAYER_PROFILE, ClientInformation.createDefault()) {
+                @Override
+                public void displayClientMessage(Component message, boolean actionBar) {
+                    // GameTest players have no network connection.
+                }
+            });
+            GameType.SURVIVAL.updatePlayerAbilities(player.getAbilities());
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            return player;
+        };
+    }
+
+    private static final GameProfile ADVANCEMENT_PLAYER_PROFILE = new GameProfile(
+            UUID.nameUUIDFromBytes("somestacks:gametest".getBytes(StandardCharsets.UTF_8)),
+            "[SomeStacksGameTest]");
+    private static final Map<ServerLevel, ServerPlayer> ADVANCEMENT_PLAYERS = new WeakHashMap<>();
 }

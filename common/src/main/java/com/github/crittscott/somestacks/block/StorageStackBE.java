@@ -151,12 +151,9 @@ public class StorageStackBE extends StackBlockEntity {
     /**
      * Takes from one of this block's own slots, the cell the player targeted, and schedules the
      * settle that packs the rest of the pile down over the gap.
+     *
+     * @param actor the player the deferred cleanup is attributed to, or null for automation
      */
-    public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand) {
-        return extractAt(index, maxCount, playerHand, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through deferred cleanup. */
     public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand,
                                @Nullable ServerPlayer actor) {
         if (index < 0 || index >= items.getSlots()) {

@@ -62,6 +62,12 @@ public final class ProtectionGameTests {
                 helper, GameTestSupport.playerFactory(helper));
     }
 
+    /** See {@link ProtectionChecks#playerPlacementAndGrowthAwardPlacedBlock}. */
+    public static void playerPlacementAndGrowthAwardPlacedBlock(GameTestHelper helper) {
+        ProtectionChecks.playerPlacementAndGrowthAwardPlacedBlock(
+                helper, GameTestSupport.advancementPlayerFactory(helper));
+    }
+
     // Mod-driven removal under protection
     //
     // An unattended settle has no player actor, so it uses the level's automation player exactly

@@ -128,7 +128,7 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, SinglesCubeIdx.shapeFor(i, blockRotation));
+                shape = Shapes.or(shape, SinglesCubeIdx.GRID.localShape(i, blockRotation));
             }
         }
 
@@ -181,17 +181,13 @@ public class SinglesStackBE extends StackBlockEntity {
      * items across block seams as needed so nothing is left unsupported.
      *
      * @param index the cell to empty, in {@code [0, SLOTS)}
+     * @param actor the player structural cleanup is attributed to, or null for automation
      * @return the extracted item, or empty when the cell held nothing
      */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through structural cleanup. */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         int column = SinglesCubeIdx.columnFromIndex(index);
-        int y = SinglesCubeIdx.xyzFromIndex(index)[1];
+        int y = SinglesCubeIdx.GRID.xyzFromIndex(index)[1];
 
         ItemStack extracted;
         beginBatch();

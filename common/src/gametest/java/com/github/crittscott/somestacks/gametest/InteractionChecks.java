@@ -295,7 +295,7 @@ public final class InteractionChecks {
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
-            storage.pile().setPermanent(false);
+            storage.pile().setPermanent(false, null);
             GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
                     click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");

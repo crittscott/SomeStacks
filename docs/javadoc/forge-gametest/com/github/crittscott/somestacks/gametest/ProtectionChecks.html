@@ -189,11 +189,18 @@ loadScripts(document, 'script');</script>
  Bar.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)" class="member-name-link">vetoedPlacementRestoresBlockEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerPlacementAndGrowthAwardPlacedBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">playerPlacementAndGrowthAwardPlacedBlock</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Placing a stack and growing a Storage pile by hand count as placing a block for advancements;
+ automated growth does not.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)" class="member-name-link">vetoedPlacementRestoresBlockEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;installVeto,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;removeVeto)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: deny stack placement over a modded replaceable container containing
  items.</div>
 </div>
@@ -261,6 +268,19 @@ loadScripts(document, 'script');</script>
 <div class="block">Placing a stack into water waterlogs it instead of removing the fluid. To reproduce in-game:
  hold the modifier and place a new stack into a water source. The block appears waterlogged and
  the water remains present.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerPlacementAndGrowthAwardPlacedBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
+<h3>playerPlacementAndGrowthAwardPlacedBlock</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerPlacementAndGrowthAwardPlacedBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
+<div class="block">Placing a stack and growing a Storage pile by hand count as placing a block for advancements;
+ automated growth does not. To reproduce in-game: install a data pack with a
+ <code>minecraft:placed_block</code> advancement for <code>somestacks:storage_stack_block</code>, then
+ hold the modifier and place a Storage Stack. The advancement is awarded; revoke it, fill the
+ pile and deposit once more, and growing the pile awards it again. A hopper feeding a full pile
+ grows it without awarding anything.</div>
 </section>
 </li>
 <li>

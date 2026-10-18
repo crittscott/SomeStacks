@@ -91,10 +91,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SlotAccess</span></div>
-<div class="block">A numbered range of item slots, matching the Forge and NeoForge <code>IItemHandler</code> contract so
- their capability views stay thin adapters. This is the internal storage primitive for block
- entities, piles, and columns; only the Forge/NeoForge capability and Fabric Transfer API adapters
- that expose it to automation are loader-specific.</div>
+<div class="block">A numbered range of item slots whose insert and extract conventions follow Forge's
+ <code>IItemHandler</code>, so the Forge capability view stays a thin adapter. This is the internal
+ storage primitive for block entities, piles, and columns; only the adapters that expose it to
+ automation are loader-specific: Forge's <code>IItemHandler</code>, NeoForge's transactional
+ <code>ResourceHandler&lt;ItemResource&gt;</code>, and Fabric's Transfer API.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">

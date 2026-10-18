@@ -336,8 +336,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#canDepositAt(int)" class="member-name-link">canDepositAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
- directly below, or null when this block stands on the world instead of on another Bar Stack.</div>
+<div class="block">Whether a bar could go into <code>index</code>: true only for an in-range, empty, supported
+ position.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#canDepositAt(int)" class="member-name-link">canDepositAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
@@ -856,31 +856,19 @@ loadScripts(document, 'script');</script>
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
  rest down over it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
-<dd>
-<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
-<dd>
-<div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
- items across block seams as needed so nothing is left unsupported.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack)" class="member-name-link">extractAt(int, int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, int, ItemStack, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>
 <div class="block">Takes from one of this block's own slots, the cell the player targeted, and schedules the
  settle that packs the rest of the pile down over the gap.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, int, ItemStack, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
-<dd>
-<div class="block">Player-facing extraction variant that preserves the actor through deferred cleanup.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">Player-facing extraction variant that preserves the actor through cascade cleanup.</div>
+<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
-<div class="block">Player-facing extraction variant that preserves the actor through structural cleanup.</div>
+<div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
+ items across block seams as needed so nothing is left unsupported.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#extractGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems(SlotAccess, int, CubeGrid, int, float, IntUnaryOperator, Level, BlockPos, Vec3, CubeRenderHelper.GridRenderState)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>
@@ -892,8 +880,6 @@ loadScripts(document, 'script');</script>
  reach ray.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/ExtractionRule.html#%3Cinit%3E()" class="member-name-link">ExtractionRule()</a> - Constructor for class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/ExtractionRule.html" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#extractItem(int,int,boolean)" class="member-name-link">extractItem(int, int, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#extractItem(int,int,boolean)" class="member-name-link">extractItem(int, int, boolean)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
@@ -1090,23 +1076,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The current stack in a run position, or empty for headroom or an invalid position.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#getSlots()" class="member-name-link">getSlots()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#getSlots()" class="member-name-link">getSlots()</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#getSlots()" class="member-name-link">getSlots()</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#getStackInSlot(int)" class="member-name-link">getStackInSlot(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#getStackInSlot(int)" class="member-name-link">getStackInSlot(int)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
@@ -1298,8 +1278,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Puts what it can of <code>stack</code> into the one slot at <code>flatSlot</code>, growing the pile when
  that slot lies in the block above it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="com/github/crittscott/somestacks/util/SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
@@ -1406,8 +1384,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Whether the server config bars this item's namespace.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid(int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid(int, ItemStack)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
@@ -1730,8 +1706,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_SCALE" class="member-name-link">MIN_SCALE</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
-<div class="block">Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
- measurement.</div>
+<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html#mirror(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.Mirror)" class="member-name-link">mirror(BlockState, Mirror)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></dt>
 <dd>&nbsp;</dd>
@@ -1916,8 +1891,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a> - Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
 <dd>
-<div class="block">Parses and serializes the item render override schema shared by bundled resources, the client
- override file, the measured cache, and the server override directory.</div>
+<div class="block">Parses and serializes the item render override schema shared by resource-pack profiles, the
+ client override file, generated profile files, and the measured cache.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
@@ -2183,10 +2158,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Rotates grid coordinates counterclockwise in quarter turns when viewed from above.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#rotateXYZ(int,int,int,int)" class="member-name-link">rotateXYZ(int, int, int, int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
-<dd>
-<div class="block">The visual position of a stored cell under a block rotation.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
 <div class="block">Limits repeated rotation sounds without limiting the rotations themselves.</div>
@@ -2195,18 +2166,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Holds off an automation edit that arrives while another one is still running.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
-<dd>
-<div class="block">Shared item-handler behavior over whichever complete run owns the attached stack block.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html#%3Cinit%3E(com.github.crittscott.somestacks.block.StackBlockEntity)" class="member-name-link">RunItemHandlerBase(StackBlockEntity)</a> - Constructor for class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandlerBase.html" title="class in com.github.crittscott.somestacks.block">RunItemHandlerBase</a></dt>
-<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">sanitize(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
-<div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
+<div class="block">Applies the file-format bounds to an override before it is serialized, dropping invalid
+ fields.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#save()" class="member-name-link">save()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -2293,13 +2259,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel(Level)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#setPermanent(boolean)" class="member-name-link">setPermanent(boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
-<dd>
-<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent(boolean, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
 <dd>
-<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
+<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>, or to
+ automation when it is null.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#setRotation(int)" class="member-name-link">setRotation(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
@@ -2339,10 +2302,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#shapeFor(int)" class="member-name-link">shapeFor(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BarCubeIdx.html" title="class in com.github.crittscott.somestacks.util">BarCubeIdx</a></dt>
 <dd>
 <div class="block">Returns the block-local collision shape of one bar slot.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#shapeFor(int,int)" class="member-name-link">shapeFor(int, int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
-<dd>
-<div class="block">Returns the block-local collision shape of one stored cell.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html#shouldCancel()" class="member-name-link">shouldCancel()</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></dt>
 <dd>&nbsp;</dd>
@@ -2408,8 +2367,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a> - Interface in <a href="com/github/crittscott/somestacks/util/package-summary.html">com.github.crittscott.somestacks.util</a></dt>
 <dd>
-<div class="block">A numbered range of item slots, matching the Forge and NeoForge <code>IItemHandler</code> contract so
- their capability views stay thin adapters.</div>
+<div class="block">A numbered range of item slots whose insert and extract conventions follow Forge's
+ <code>IItemHandler</code>, so the Forge capability view stays a thin adapter.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#SLOTS" class="member-name-link">SLOTS</a> - Static variable in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
@@ -2886,6 +2845,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#userOverride(net.minecraft.resources.Identifier)" class="member-name-link">userOverride(Identifier)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
+<dd>
+<div class="block">The user's own override for one item, or null when the user layer has none.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useWithoutItem(BlockState, Level, BlockPos, Player, BlockHitResult)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -3006,10 +2969,6 @@ the order they are declared.</div>
 <dt><a href="com/github/crittscott/somestacks/util/CubeGrid.html#xyzFromIndex(int)" class="member-name-link">xyzFromIndex(int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></dt>
 <dd>
 <div class="block">Converts a bottom-up slot index to its x, y, z coordinates.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#xyzFromIndex(int)" class="member-name-link">xyzFromIndex(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
-<dd>
-<div class="block">Converts a slot index to its cell coordinates, indexed from the bottom layer upward.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:Y">Y</h2>

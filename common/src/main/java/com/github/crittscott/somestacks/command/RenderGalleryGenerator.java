@@ -79,7 +79,7 @@ public final class RenderGalleryGenerator {
 
         /** Namespaces holding at least one item this kind can show. */
         public List<String> modIds() {
-            return List.copyOf(index().keySet());
+            return this == BAR ? barNamespaces() : List.copyOf(itemsByNamespace().keySet());
         }
 
         /**
@@ -87,13 +87,10 @@ public final class RenderGalleryGenerator {
          * disabled by id are left out, so a gallery never hands players an item barred from stacks.
          */
         public List<Item> itemsIn(String modId) {
-            return index().getOrDefault(modId, List.of()).stream()
+            return itemsByNamespace().getOrDefault(modId, List.of()).stream()
+                    .filter(item -> this != BAR || isBarItem(item))
                     .filter(item -> !ServerConfig.isItemDisabled(BuiltInRegistries.ITEM.getKey(item)))
                     .toList();
-        }
-
-        private Map<String, List<Item>> index() {
-            return this == BAR ? barItemsByNamespace() : itemsByNamespace();
         }
 
         /** Rows this kind's items occupy, one stack per row running north. */
@@ -114,14 +111,6 @@ public final class RenderGalleryGenerator {
      */
     private static Map<String, List<Item>> itemsByNamespace;
 
-    /**
-     * The ingot subset of {@link #itemsByNamespace}, holding only namespaces that have one.
-     * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
-     * registry grouping this one is rebuilt whenever Bar validity can have changed.
-     */
-
-    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
-
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 
@@ -140,14 +129,19 @@ public final class RenderGalleryGenerator {
         return itemsByNamespace;
     }
 
-    private static Map<String, List<Item>> barItemsByNamespace() {
-        Map<String, List<Item>> map = new TreeMap<>();
-        itemsByNamespace().forEach((namespace, items) -> {
-            List<Item> ingots = items.stream()
-                    .filter(item -> BarStackBE.isValidBarItem(new ItemStack(item))).toList();
-            if (!ingots.isEmpty()) map.put(namespace, ingots);
-        });
-        return map;
+    /**
+     * Namespaces holding at least one valid Bar item, in id order. Bar validity follows a reloadable
+     * tag, so this is computed per request rather than cached with the registry grouping.
+     */
+    private static List<String> barNamespaces() {
+        return itemsByNamespace().entrySet().stream()
+                .filter(entry -> entry.getValue().stream().anyMatch(RenderGalleryGenerator::isBarItem))
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
+    private static boolean isBarItem(Item item) {
+        return BarStackBE.isValidBarItem(new ItemStack(item));
     }
 
     /** Planned gallery size, known before placement begins. */

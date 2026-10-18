@@ -5,6 +5,7 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StackSort;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -117,12 +118,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return blocks.get(0).isPermanent();
     }
 
-    /** Changes permanence and attributes any resulting cleanup to automation. */
-    public void setPermanent(boolean permanent) {
-        setPermanent(permanent, null);
-    }
-
-    /** Changes permanence and attributes any resulting deferred cleanup to {@code actor}. */
+    /**
+     * Changes permanence and attributes any resulting deferred cleanup to {@code actor}, or to
+     * automation when it is null.
+     */
     public void setPermanent(boolean permanent, @Nullable ServerPlayer actor) {
         for (StorageStackBE sbe : blocks) {
             sbe.inheritPermanent(permanent);
@@ -190,7 +189,15 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
         try {
             moved = fillExisting(fromHand);
-            while (!fromHand.isEmpty() && grow(placer)) {
+            while (!fromHand.isEmpty()) {
+                // Captured before the deposit consumes the stack, as vanilla captures the placing item.
+                ItemStack placedWith = fromHand.copy();
+                if (!grow(placer)) {
+                    break;
+                }
+                if (placer != null) {
+                    CriteriaTriggers.PLACED_BLOCK.trigger(placer, topPos(), placedWith);
+                }
                 moved += fillExisting(fromHand);
             }
         } finally {

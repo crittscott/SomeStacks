@@ -189,19 +189,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether this pile's blocks survive being emptied.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent,
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
+<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>, or to
+ automation when it is null.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent,
- net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#settle()" class="member-name-link">settle</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#settle()" class="member-name-link">settle</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Consolidates and sorts the whole pile, writes it back from the base upward, propagates the
  base's permanent flag, removes empty blocks left at the top, and publishes all deferred
  changes.</div>
@@ -268,19 +264,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setPermanent(boolean)">
-<h3>setPermanent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPermanent</span><wbr><span class="parameters">(boolean&nbsp;permanent)</span></div>
-<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="setPermanent(boolean,net.minecraft.server.level.ServerPlayer)">
 <h3>setPermanent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPermanent</span><wbr><span class="parameters">(boolean&nbsp;permanent,
  @Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
-<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
+<div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>, or to
+ automation when it is null.</div>
 </section>
 </li>
 <li>

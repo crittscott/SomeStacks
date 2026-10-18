@@ -289,7 +289,7 @@ public final class ProtectionGameTests {
         TestTarget key = new TestTarget(helper.getLevel(), lower.getBlockPos());
         REMOVAL_PROBES.put(key, new RemovalProbe(false, new AtomicReference<>()));
         try {
-            lower.extractAt(0);
+            lower.extractAt(0, null);
         } finally {
             REMOVAL_PROBES.remove(key);
         }
@@ -320,6 +320,13 @@ public final class ProtectionGameTests {
     public void creativeDepositFillsTheStackWithoutSpendingTheHand(GameTestHelper helper) {
         ProtectionChecks.creativeDepositFillsTheStackWithoutSpendingTheHand(
                 helper, FabricGameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ProtectionChecks#playerPlacementAndGrowthAwardPlacedBlock}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void playerPlacementAndGrowthAwardPlacedBlock(GameTestHelper helper) {
+        ProtectionChecks.playerPlacementAndGrowthAwardPlacedBlock(
+                helper, FabricGameTestSupport.advancementPlayerFactory(helper));
     }
 
     /** See {@link ProtectionChecks#placementIntoWaterKeepsTheWater}. */

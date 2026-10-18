@@ -169,12 +169,8 @@ public class BarStackBE extends StackBlockEntity {
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
      *
      * @param index the position to empty, in {@code [0, SLOTS)}
+     * @param actor the player cascade cleanup is attributed to, or null for automation
      */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through cascade cleanup. */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
@@ -208,10 +204,9 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-     * directly below, or null when this block stands on the world instead of on another Bar Stack.
+     * Whether a bar could go into {@code index}: true only for an in-range, empty, supported
+     * position. It does not check whether the offered item is a valid bar.
      */
-    @Nullable
     public boolean canDepositAt(int index) {
         return index >= 0
                 && index < SLOTS

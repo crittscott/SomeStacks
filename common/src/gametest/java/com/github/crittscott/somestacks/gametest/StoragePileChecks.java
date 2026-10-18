@@ -133,7 +133,7 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
 
-        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY);
+        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
 
         helper.runAfterDelay(2, () -> {
@@ -164,7 +164,7 @@ public final class StoragePileChecks {
         StorageStackBE permanent = placeStorage(helper, permanentPos);
         StoragePile permanentPile = permanent.pile();
         check(permanentPile != null, "Permanent pile did not resolve");
-        permanentPile.setPermanent(true);
+        permanentPile.setPermanent(true, null);
         permanentPile.settle();
         check(helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
                         instanceof StorageStackBE,
@@ -214,7 +214,7 @@ public final class StoragePileChecks {
         }
         StoragePile originalPile = upper.pile();
         check(originalPile != null, "Original pile did not resolve");
-        originalPile.setPermanent(true);
+        originalPile.setPermanent(true, null);
 
         check(level.setBlock(
                         comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
