@@ -8,12 +8,20 @@ import javax.annotation.Nonnull;
  * A numbered range of item slots. This is the internal storage primitive for block entities, piles,
  * and columns; only the NeoForge resource-handler and Fabric Transfer API adapters that expose it to
  * automation are loader-specific.
+ *
+ * <p>Stacks are not defensively copied. {@link #getStackInSlot} returns the live stored object, a
+ * committed insertion may keep the caller's stack object, and an extraction result belongs to the
+ * caller.
  */
 public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
     int getSlots();
 
-    /** The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. */
+    /**
+     * The stack in {@code slot}, or {@link ItemStack#EMPTY} if the slot is empty; never null. This is
+     * the live stored object: callers must not modify it, and must copy it before keeping or editing
+     * it.
+     */
     @Nonnull
     ItemStack getStackInSlot(int slot);
 
@@ -22,7 +30,8 @@ public interface SlotAccess {
      * {@link #getSlotLimit} allow. Returns the remainder that was not accepted —
      * {@link ItemStack#EMPTY} if all of it was — and never mutates {@code stack} itself. When
      * {@code simulate} is {@code true}, the slot is left unchanged and only the would-be
-     * remainder is computed.
+     * remainder is computed. A committed insertion may store {@code stack} itself in the slot, so
+     * the caller gives it up or passes a copy.
      */
     @Nonnull
     ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate);
@@ -30,7 +39,8 @@ public interface SlotAccess {
     /**
      * Removes up to {@code amount} items from {@code slot} and returns the stack that was
      * removed — {@link ItemStack#EMPTY} if the slot was empty. When {@code simulate} is
-     * {@code true}, the slot is left unchanged and only the would-be result is computed.
+     * {@code true}, the slot is left unchanged and only the would-be result is computed. The
+     * returned stack belongs to the caller.
      */
     @Nonnull
     ItemStack extractItem(int slot, int amount, boolean simulate);

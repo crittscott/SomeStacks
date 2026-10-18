@@ -41,6 +41,7 @@ public final class SomeStacksServer {
         StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
         ConfigSyncPkt.rebuildCurrent();
+        logPolicy("Loaded");
     }
 
     /** Releases the stopped server and clears session diagnostics after world activity ends. */
@@ -79,8 +80,19 @@ public final class SomeStacksServer {
                 if (previous.equals(ServerConfig.settings())) return;
                 ConfigSyncPkt.rebuildCurrent();
                 ConfigSyncNetwork.syncAllPlayers(server);
+                logPolicy("Reloaded");
             });
         }
+    }
+
+    /** Records which stack types the policy now in effect enables and its maximum run height. */
+    private static void logPolicy(String action) {
+        SomeStacksCommon.LOGGER.info("{} server policy: Storage {}, Singles {}, Bar {}; maximum run height {}",
+                action,
+                ServerConfig.enableStorageStackBlock() ? "enabled" : "disabled",
+                ServerConfig.enableSinglesStackBlock() ? "enabled" : "disabled",
+                ServerConfig.enableBarStackBlock() ? "enabled" : "disabled",
+                ServerConfig.maxPileHeight());
     }
 
     /** Sends the startup/reload snapshot on the server thread after play networking is ready. */

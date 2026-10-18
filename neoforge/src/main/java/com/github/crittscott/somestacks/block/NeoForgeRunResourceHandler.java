@@ -1,17 +1,11 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ModRegistry;
-import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.NeoForgeGrowthPlacement;
-import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -25,8 +19,9 @@ import java.util.Map;
 /**
  * Whole-run NeoForge transfer view. Only the ledger changes during a transaction; nested aborts
  * restore it and the root commit applies net slot changes through the common movement rules.
- * Positional runs permit one structural extraction position, without other pending positions,
- * because gravity and backfill remap the slots at commit.
+ * Insertion checks the staged contents, so one transaction can build on its own pending changes.
+ * Positional runs permit one structural extraction position, without other pending positions or
+ * later insertion, because gravity and backfill remap the slots at commit.
  */
 public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRunResourceHandler.State>
         implements ResourceHandler<ItemResource> {
@@ -104,17 +99,14 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         ItemStack current = current(index);
         if (!current.isEmpty() && !resource.matches(current)) return 0;
         int inserted = Math.min(amount, getCapacityAsInt(index, resource) - current.getCount());
-        if (inserted <= 0 || structural() && !supported(index)) return 0;
+        if (inserted <= 0) return 0;
 
         StackRun<?> run = run();
-        int existingSlots = run.totalSlots();
-        if (index >= existingSlots) {
+        inserted = Math.min(inserted, run.acceptsAt(index, resource.toStack(inserted), this::current));
+        if (inserted <= 0) return 0;
+        if (index >= run.totalSlots()) {
             ServerLevel level = (ServerLevel) blockEntity.getLevel();
             BlockPos pos = run.basePos().above(run.height());
-            VoxelShape shape = shape(index % slotsPerBlock(), 0);
-            if (!enabled() || run.height() >= ServerConfig.maxPileHeight()
-                    || level.isOutsideBuildHeight(pos) || !level.getBlockState(pos).canBeReplaced()
-                    || !WorldEdits.mayPlace(level, pos) || !WorldEdits.isUnobstructed(level, pos, shape)) return 0;
             if (growth == null) {
                 if (!RunEdit.begin()) return 0;
                 NeoForgeGrowthPlacement prepared;
@@ -174,49 +166,6 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         updateSnapshots(transaction);
         originals.computeIfAbsent(slot, ignored -> run().getSlot(slot).copy());
         staged.put(slot, result);
-    }
-
-    private int slotsPerBlock() {
-        return blockEntity.getItems().getSlots();
-    }
-
-    private boolean enabled() {
-        if (blockEntity instanceof StorageStackBE) return ServerConfig.enableStorageStackBlock();
-        if (blockEntity instanceof SinglesStackBE) return ServerConfig.enableSinglesStackBlock();
-        return ServerConfig.enableBarStackBlock();
-    }
-
-    private VoxelShape shape(int slot, int rotation) {
-        if (blockEntity instanceof SinglesStackBE) return SinglesCubeIdx.shapeFor(slot, rotation);
-        if (blockEntity instanceof BarStackBE) return BarCubeIdx.shapeFor(slot);
-        return Shapes.block();
-    }
-
-    /** Support reads the staged occupancy, including staged cells across a rotated seam. */
-    private boolean supported(int index) {
-        int width = slotsPerBlock();
-        int block = index / width;
-        int slot = index % width;
-        boolean[] occupancy = new boolean[width];
-        for (int i = 0; i < width; i++) occupancy[i] = !current(block * width + i).isEmpty();
-        boolean[] seam = null;
-        if (block > 0) {
-            int layer = blockEntity instanceof SinglesStackBE ? SinglesCubeIdx.LAYER_SIZE : BarCubeIdx.LAYER_SIZE;
-            seam = new boolean[layer];
-            for (int i = 0; i < layer; i++) {
-                int visual = blockEntity instanceof SinglesStackBE
-                        ? SinglesCubeIdx.visualColumnFromStorage(i, rotation(block - 1)) : i;
-                seam[visual] = !current(block * width - layer + i).isEmpty();
-            }
-        }
-        return blockEntity instanceof SinglesStackBE
-                ? SinglesCubeIdx.isGroundedIn(occupancy, slot, rotation(block), seam)
-                : BarCubeIdx.isGroundedIn(occupancy, slot, seam);
-    }
-
-    private int rotation(int block) {
-        var be = blockEntity.getLevel().getBlockEntity(run().basePos().above(block));
-        return be instanceof SinglesStackBE singles ? singles.getRotation() : 0;
     }
 
     @Override

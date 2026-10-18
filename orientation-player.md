@@ -44,7 +44,7 @@ Only the main hand acts; off-hand items allow cycling. Torches are retained. Rot
 
 Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind.
 
-Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
+Creating a stack fires the vanilla placed-block advancement trigger; automated growth does not. Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
 In creative mode, deposits do not reduce the held stack.
 
@@ -107,7 +107,7 @@ Storage advertises current positions plus one block of headroom below the height
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On NeoForge and Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks; aborts leave the inventory and world unchanged. Singles and Bar allow one structural extraction position per transaction. NeoForge also refuses other pending positions and further insertion during a structural extraction.
+Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. All accesses to one run share staged contents until the transaction commits, including different sides and blocks; aborts leave the inventory and world unchanged. Insertion sees the transaction's own pending changes, so one transfer can fill a layer and then the one above, or empty a Storage slot and refill it with another item. Singles and Bar allow one structural extraction position per transaction, refused while other positions are pending, and no insertion after it.
 
 ## Comparators
 

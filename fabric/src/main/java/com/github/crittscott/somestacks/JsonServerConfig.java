@@ -14,7 +14,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** JSON persistence installed by Fabric and used by loader-neutral configuration fixtures. */
+/**
+ * Fabric's server-policy persistence: per-world JSON at
+ * {@code <world>/serverconfig/somestacks-server.json}, reread by {@code /ss reload}. Malformed
+ * fields fall back to their defaults independently.
+ */
 public final class JsonServerConfig implements ServerConfig.Backend {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

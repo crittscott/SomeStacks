@@ -18,6 +18,7 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -297,6 +298,8 @@ public final class StackInteractions {
                 player, player.level(), pos, state, face.getOpposite(), finalCollision)) {
             return;
         }
+        // The deposit consumes the hand stack; the advancement trigger sees what the block was placed with.
+        ItemStack placedWith = handStack.copy();
 
         switch (type) {
             case STORAGE_STACK -> {
@@ -319,6 +322,7 @@ public final class StackInteractions {
             }
         }
         returnToHand(player, creative, handStack);
+        CriteriaTriggers.PLACED_BLOCK.trigger(player, pos, placedWith);
     }
 
     private static boolean firstDepositWouldSucceed(BlockType type, Level level, BlockPos pos,

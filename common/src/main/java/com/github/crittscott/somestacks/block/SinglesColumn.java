@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
 
@@ -118,64 +119,58 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
-            return 0;
-        }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot)) {
-            return 0;
-        }
-        if (simulate) {
-            return 1;
+        int accepted = acceptsAt(flatSlot, stack, this::getSlot);
+        if (simulate || accepted == 0) {
+            return accepted;
         }
         if (flatSlot >= totalSlots() && !grow(flatSlot % SinglesStackBE.SLOTS)) {
             return 0;
         }
 
-        ItemStack one = stack.copy();
-        one.setCount(1);
         return handlerOf(flatSlot).insertItem(
-                flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
+                flatSlot % SinglesStackBE.SLOTS, stack.copyWithCount(1), false).isEmpty() ? 1 : 0;
     }
 
     /**
-     * Whether {@code flatSlot} could take an item as the column stands: the cell must be empty and
-     * the cell beneath it occupied, which for a bottom layer means the seam with the Singles Stack
-     * below, and for the bottom block of all means the world.
+     * Whether {@code flatSlot} could take an item if the column held what {@code contents} reports:
+     * the cell must be empty and the cell beneath it occupied. The bottom layer of a higher block
+     * rests on the top layer of the block below, matched through both blocks' rotations by visual
+     * column; the bottom layer of the column's lowest block stands on the world.
      *
-     * <p>A cell in the block above the column is checked against the block growth would put there —
-     * empty, unrotated as a player's own placement is, standing on the column's current top layer —
-     * and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore
-     * cannot promise a cell the commit would refuse.
+     * <p>A cell in the block above the column belongs to the block growth would put there, which
+     * is unrotated as a player's own placement is, and also needs the side-effect-free checks in
+     * {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a cell the commit would
+     * refuse.
      */
-    private boolean cellAccepts(int flatSlot) {
+    @Override
+    public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
+        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)
+                || flatSlot < 0 || flatSlot >= advertisedSlots()
+                || !contents.apply(flatSlot).isEmpty()) {
+            return 0;
+        }
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
-
-        if (blockIndex < blocks.size()) {
-            SinglesStackBE be = blocks.get(blockIndex);
-            boolean[] occupancy = SinglesCubeIdx.occupancyOf(be.getItems());
-            if (occupancy[slot]) {
-                return false;
-            }
-            return SinglesCubeIdx.isGroundedIn(occupancy, slot, be.getRotation(), seamUnder(blockIndex));
+        if (blockIndex >= blocks.size() && !canGrow(SinglesCubeIdx.shapeFor(slot, 0))) {
+            return 0;
         }
 
-        VoxelShape finalCollision = SinglesCubeIdx.shapeFor(slot, 0);
-        return canGrow(finalCollision) && SinglesCubeIdx.isGroundedIn(
-                new boolean[SinglesStackBE.SLOTS], slot, 0, seamUnder(blockIndex));
+        if (slot >= SinglesCubeIdx.LAYER_SIZE) {
+            return contents.apply(flatSlot - SinglesCubeIdx.LAYER_SIZE).isEmpty() ? 0 : 1;
+        }
+        if (blockIndex == 0) {
+            return 1;
+        }
+        int visual = SinglesCubeIdx.visualColumnFromStorage(slot, rotationOf(blockIndex));
+        int below = SinglesCubeIdx.storageColumnFromVisual(visual, rotationOf(blockIndex - 1));
+        int supporter = (blockIndex - 1) * SinglesStackBE.SLOTS
+                + SinglesCubeIdx.indexFromColumn(below, SinglesCubeIdx.TOP_LAYER_Y);
+        return contents.apply(supporter).isEmpty() ? 0 : 1;
     }
 
-    /**
-     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
-     * below, read in visual columns because two stacked blocks may carry different rotations, or
-     * null for the bottom block of the column, which stands on the world and is grounded outright.
-     */
-    @Nullable
-    private boolean[] seamUnder(int blockIndex) {
-        BlockPos pos = blockIndex < blocks.size()
-                ? blocks.get(blockIndex).getBlockPos()
-                : topPos().above();
-        return SinglesStackBE.supportSeamBeneath(level, pos);
+    /** The block rotation at {@code blockIndex}; the headroom block growth would add is unrotated. */
+    private int rotationOf(int blockIndex) {
+        return blockIndex < blocks.size() ? blocks.get(blockIndex).getRotation() : 0;
     }
 
     /**

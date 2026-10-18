@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" tabindex="0">at(Level, BlockPos)</a></li>
 <li><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" tabindex="0">columnHasRoomFor(Level, BlockPos)</a></li>
 <li><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" tabindex="0">insertAt(int, ItemStack, boolean)</a></li>
+<li><a href="#acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)" tabindex="0">acceptsAt(int, ItemStack, IntFunction)</a></li>
 <li><a href="#extract(int,int,boolean)" tabindex="0">extract(int, int, boolean)</a></li>
 </ol>
 </li>
@@ -122,34 +123,42 @@ current tick, and placement or removal invalidates every affected cache immediat
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)" class="member-name-link">acceptsAt</a><wbr>(int&nbsp;flatSlot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;contents)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether <code>flatSlot</code> could take an item if the column held what <code>contents</code> reports:
+the cell must be empty and the cell beneath it occupied.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#at(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">at</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves the column containing <code>pos</code>, or <code>null</code> when that position holds no
 Singles Stack.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a Singles Stack may be created at <code>pos</code>: the contiguous column it would form,
 counting the runs both below and above it, must fit the configured maximum.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extract(int,int,boolean)" class="member-name-link">extract</a><wbr>(int&nbsp;flatSlot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Takes the item at <code>flatSlot</code> through the block's own removal, so automation and the
 player leave the column in the same state: the cells above the hole shift down one layer in
 that column, drawing from the Singles Stacks above and removing any block the walk empties.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAt(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt</a><wbr>(int&nbsp;flatSlot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Places one item at <code>flatSlot</code>, growing the column when that cell lies in the block above
 it.</div>
 </div>
@@ -220,6 +229,25 @@ by the time the walk arrives there.</div>
 <dt>Returns:</dt>
 <dd>how many items were, or would be, taken from <code>stack</code></dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="acceptsAt(int,net.minecraft.world.item.ItemStack,java.util.function.IntFunction)">
+<h3>acceptsAt</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">acceptsAt</span><wbr><span class="parameters">(int&nbsp;flatSlot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntFunction.html" title="class or interface in java.util.function" class="external-link">IntFunction</a>&lt;net.minecraft.world.item.ItemStack&gt;&nbsp;contents)</span></div>
+<div class="block">Whether <code>flatSlot</code> could take an item if the column held what <code>contents</code> reports:
+the cell must be empty and the cell beneath it occupied. The bottom layer of a higher block
+rests on the top layer of the block below, matched through both blocks' rotations by visual
+column; the bottom layer of the column's lowest block stands on the world.
+
+<p>A cell in the block above the column belongs to the block growth would put there, which
+is unrotated as a player's own placement is, and also needs the side-effect-free checks in
+<code>canGrow(VoxelShape)</code>. A simulation therefore cannot promise a cell the commit would
+refuse.</div>
 </div>
 </section>
 </li>

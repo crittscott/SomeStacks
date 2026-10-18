@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Function;
 
 /** Immutable server policy, command edits, and normalized admission lookups. */
 public final class ServerConfig {
@@ -98,29 +99,39 @@ public final class ServerConfig {
     }
 
     /** A command-editable policy list. */
-    public static final class ListSetting {
-        private final String name;
-        private final java.util.function.Function<Settings, List<String>> getter;
-        private ListSetting(String name, java.util.function.Function<Settings, List<String>> getter) {
-            this.name = name;
+    public enum ListSetting {
+        DISABLE_MODS(Settings::disableMods),
+        DISABLE_ITEMS(Settings::disableItems),
+        GEN_MODS(Settings::genMods),
+        GEN_ITEMS(Settings::genItems);
+
+        private final Function<Settings, List<String>> getter;
+
+        ListSetting(Function<Settings, List<String>> getter) {
             this.getter = getter;
         }
+
         public List<String> get() { return getter.apply(settings); }
+
         private void set(List<String> value) {
-            apply(new Settings(settings.maxPileHeight(), settings.enableStorageStackBlock(),
-                    settings.enableSinglesStackBlock(), settings.enableBarStackBlock(),
-                    name.equals("disable_mods") ? value : settings.disableMods(),
-                    name.equals("disable_items") ? value : settings.disableItems(),
-                    settings.renderGalleryPlacementsPerTick(), settings.galleryEnabled(),
-                    settings.galleryPermissionLevel(),
-                    name.equals("gen_mods") ? value : settings.genMods(),
-                    name.equals("gen_items") ? value : settings.genItems()));
+            Settings current = settings;
+            List<String> disableMods = current.disableMods();
+            List<String> disableItems = current.disableItems();
+            List<String> genMods = current.genMods();
+            List<String> genItems = current.genItems();
+            switch (this) {
+                case DISABLE_MODS -> disableMods = value;
+                case DISABLE_ITEMS -> disableItems = value;
+                case GEN_MODS -> genMods = value;
+                case GEN_ITEMS -> genItems = value;
+            }
+            apply(new Settings(current.maxPileHeight(), current.enableStorageStackBlock(),
+                    current.enableSinglesStackBlock(), current.enableBarStackBlock(),
+                    disableMods, disableItems,
+                    current.renderGalleryPlacementsPerTick(), current.galleryEnabled(),
+                    current.galleryPermissionLevel(), genMods, genItems));
         }
     }
-    public static final ListSetting DISABLE_MODS = new ListSetting("disable_mods", Settings::disableMods);
-    public static final ListSetting DISABLE_ITEMS = new ListSetting("disable_items", Settings::disableItems);
-    public static final ListSetting GEN_MODS = new ListSetting("gen_mods", Settings::genMods);
-    public static final ListSetting GEN_ITEMS = new ListSetting("gen_items", Settings::genItems);
     public static int maxPileHeight() { return settings.maxPileHeight(); }
     public static boolean enableStorageStackBlock() { return settings.enableStorageStackBlock(); }
     public static boolean enableSinglesStackBlock() { return settings.enableSinglesStackBlock(); }
@@ -131,7 +142,7 @@ public final class ServerConfig {
     public static PermissionCheck galleryPermission() { return PERMISSION_LEVELS.get(settings.galleryPermissionLevel()); }
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
-        for (String entry : DISABLE_MODS.get()) {
+        for (String entry : ListSetting.DISABLE_MODS.get()) {
             String modId = entry.trim().toLowerCase(Locale.ROOT);
             if (!modId.isEmpty()) {
                 mods.add(modId);
@@ -139,7 +150,7 @@ public final class ServerConfig {
         }
 
         Set<Identifier> items = new HashSet<>();
-        for (String entry : DISABLE_ITEMS.get()) {
+        for (String entry : ListSetting.DISABLE_ITEMS.get()) {
             Identifier itemId = Identifier.tryParse(entry.trim().toLowerCase(Locale.ROOT));
             if (itemId == null) {
                 SomeStacksCommon.LOGGER.warn("Ignoring malformed item id \"{}\" in disable_items", entry);

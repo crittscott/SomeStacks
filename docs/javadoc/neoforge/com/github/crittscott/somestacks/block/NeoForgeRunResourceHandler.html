@@ -99,8 +99,9 @@ loadScripts(document, 'script');</script>
 implements net.neoforged.neoforge.transfer.ResourceHandler&lt;net.neoforged.neoforge.transfer.item.ItemResource&gt;</span></div>
 <div class="block">Whole-run NeoForge transfer view. Only the ledger changes during a transaction; nested aborts
 restore it and the root commit applies net slot changes through the common movement rules.
-Positional runs permit one structural extraction position, without other pending positions,
-because gravity and backfill remap the slots at commit.</div>
+Insertion checks the staged contents, so one transaction can build on its own pending changes.
+Positional runs permit one structural extraction position, without other pending positions or
+later insertion, because gravity and backfill remap the slots at commit.</div>
 </div>
 </section>
 <section class="summary">

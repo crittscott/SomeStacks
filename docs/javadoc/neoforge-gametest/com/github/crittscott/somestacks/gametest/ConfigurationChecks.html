@@ -58,7 +58,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes(GameTestHelper)</a></li>
 <li><a href="#overrideJsonUsesInclusiveBounds(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">overrideJsonUsesInclusiveBounds(GameTestHelper)</a></li>
-<li><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">serverConfigLoadsBoundsAndLists(GameTestHelper)</a></li>
 <li><a href="#denyPoliciesRespectPlayerAutomationAndExistingContents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">denyPoliciesRespectPlayerAutomationAndExistingContents(GameTestHelper, Function)</a></li>
 <li><a href="#disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">disabledTypesAndHeightLimitsRefusePlacementAndGrowthAtomically(GameTestHelper, Function)</a></li>
 <li><a href="#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" tabindex="0">serverCommandsEnforcePermissionsAndPersistEdits(GameTestHelper, Function)</a></li>
@@ -80,7 +79,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ConfigurationChecks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loader-neutral parsing and policy checks for the two JSON-backed configuration surfaces.</div>
+<div class="block">Loader-neutral render-override parsing and in-memory server-policy checks.</div>
 </div>
 </section>
 <section class="summary">
@@ -130,13 +129,8 @@ fields are skipped independently.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#serverCommandsEnforcePermissionsAndPersistEdits(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">serverCommandsEnforcePermissionsAndPersistEdits</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Server commands enforce permissions and save list edits immediately.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">serverConfigLoadsBoundsAndLists</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-validates Fabric JSON fields independently.</div>
+<div class="block">Server commands enforce permissions and save list edits through the installed backend
+immediately.</div>
 </div>
 </div>
 </div>
@@ -178,19 +172,6 @@ boundary.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="serverConfigLoadsBoundsAndLists(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>serverConfigLoadsBoundsAndLists</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">serverConfigLoadsBoundsAndLists</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
-validates Fabric JSON fields independently. To reproduce in-game on Fabric: edit the world's
-<code>somestacks-server.json</code>, run <code>/ss reload</code>, and verify the height limits, enabled
-stack modes, denied deposits, gallery pacing, and Bar/Singles admission follow each valid
-field while malformed fields revert independently to defaults.</div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="denyPoliciesRespectPlayerAutomationAndExistingContents(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)">
 <h3>denyPoliciesRespectPlayerAutomationAndExistingContents</h3>
 <div class="horizontal-scroll">
@@ -222,9 +203,10 @@ player growth, and automation growth. No second block appears and every held ite
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">serverCommandsEnforcePermissionsAndPersistEdits</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;&nbsp;playerFactory)</span></div>
-<div class="block">Server commands enforce permissions and save list edits immediately. To reproduce in-game:
-try the administrative list commands without permission, then as an operator, and inspect
-<code>somestacks-server.json</code>. Only the operator edits succeed and they are already on disk.</div>
+<div class="block">Server commands enforce permissions and save list edits through the installed backend
+immediately. To reproduce in-game: try the administrative list commands without permission,
+then as an operator, and run <code>/ss reload</code>. Only the operator edits succeed, and they
+survive the reload because they were already saved.</div>
 </div>
 </section>
 </li>
