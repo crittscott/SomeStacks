@@ -1,4 +1,8 @@
-# Some Stacks Build Environment
+<!-- FIXED HEADER: not content. Do not edit, trim, or count toward the size limit. -->
+> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md § Orientation files.
+<!-- END FIXED HEADER -->
+
+# Some Stacks — build orientation
 
 This document is an orientation to the repository's build environment: its entry points, module layout, version authorities, dependency baselines, and packaging flow. It describes the setup as it exists. It is not build history, a troubleshooting log, release documentation, or a conversation.
 
@@ -39,6 +43,8 @@ On Windows, `gradlew.bat` is the normal entry point; `gradlew` is the POSIX laun
 
 Each subproject has the Java plugin's standard production-source `javadoc` task. The root `generateDocs` task derives its loader list from `enabled_platforms`, depends on every module's `javadoc` and each loader's `gametestJavadoc`, and synchronizes their HTML output into the committed `docs/javadoc/<module>/` and `docs/javadoc/<loader>-gametest/` trees; separate sections are required because loader modules contain classes with overlapping fully qualified names. Generated documentation is intentionally excluded from `build-env/`. The build does not produce Javadoc JARs.
 
+The root `collectJars` task copies each enabled loader's already-built production jar (`<archivesName>-<version>.jar` in its `build/libs`, not the dev or sources jars) into `../jars`, the directory shared by all version checkouts, for installing into a local launcher. It builds nothing and skips jars that have not been built; it overwrites same-named jars and leaves other versions' jars alone.
+
 The build targets Minecraft 26.3 with Java 25 on Fabric and NeoForge.
 
 ## Exact build versions
@@ -51,8 +57,8 @@ The build targets Minecraft 26.3 with Java 25 on Fabric and NeoForge.
 | GradleUp Shadow plugin | `9.4.3` | Bundles transformed common output into loader JARs |
 | Java toolchain level | `25` | Compilation, Javadoc, and Java execution |
 | Minecraft | `com.mojang:minecraft:26.3` | Compile and runtime target; unobfuscated, no mappings |
-| NeoForge | `net.neoforged:neoforge:26.3.0.88` | Exact NeoForge compile and development-run baseline |
-| Fabric Loader | `net.fabricmc:fabric-loader:0.20.0` | Fabric loader dependency |
+| NeoForge | `net.neoforged:neoforge:26.3.0.76` | Exact NeoForge compile and development-run baseline |
+| Fabric Loader | `net.fabricmc:fabric-loader:0.19.5` | Fabric loader dependency |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api:0.163.0+26.3` | Fabric runtime and development API |
 | JSR 305 annotations | `com.google.code.findbugs:jsr305:3.0.2` | Compile-only nullability annotations, declared once for every module |
 
@@ -69,9 +75,9 @@ These values do not select build tools, but they are versioned inputs consumed b
 | Some Stacks artifact | `0.8.3` |
 | Fabric and NeoForge GameTest support mods | the Some Stacks artifact version |
 | Minecraft compatibility | exactly `26.3`; NeoForge syntax `[26.3]`, Fabric syntax `26.3` |
-| NeoForge compatibility | `[26.3.0.88,26.3.1)` |
+| NeoForge compatibility | `[26.3.0.76,26.3.1)` |
 | NeoForge JavaFML loader compatibility | `[1,)` |
-| Fabric Loader compatibility | `>=0.20.0` |
+| Fabric Loader compatibility | `>=0.19.5` |
 | Fabric API runtime declaration | `>=0.163.0+26.3`; compilation uses `0.163.0+26.3` |
 
 ## Resolution and version authorities
