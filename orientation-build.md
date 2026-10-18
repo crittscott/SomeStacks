@@ -1,4 +1,8 @@
-# Some Stacks Build Environment
+<!-- FIXED HEADER: not content. Do not edit, trim, or count toward the size limit. -->
+> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md § Orientation files.
+<!-- END FIXED HEADER -->
+
+# Some Stacks — build orientation
 
 This records the toolchain and dependency versions used by this repository, based on the active
 Gradle configuration, this machine's installed JDKs and Gradle cache, and the current IntelliJ
@@ -101,6 +105,8 @@ built-in pack is accepted as Minecraft 1.21.1 resource content (34) and data con
 
 The `*-dev-shadow.jar` and `*-sources.jar` files in those directories are development artifacts,
 not release JARs. Common's transformed JARs are intermediate inputs to the loader builds.
+
+The root `collectJars` task copies each enabled loader's already-built production jar (`<archivesName>-<version>.jar` in its `build/libs`, not the dev, dev-shadow, or sources jars) into `../jars`, the directory shared by all version checkouts, for installing into a local launcher. It builds nothing and skips jars that have not been built; it overwrites same-named jars and leaves other versions' jars alone.
 
 ## Current IntelliJ run configurations
 
