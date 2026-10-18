@@ -4,7 +4,7 @@
 
 # Some Stacks — code orientation
 
-See `orientation-player.md` for behavior; `build-env.md` for the build.
+See `orientation-player.md` for behavior; `orientation-build.md` for the build.
 
 ## Project shape
 

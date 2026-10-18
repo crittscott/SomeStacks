@@ -1,40 +1,32 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
-out
+# IntelliJ
+/out/
 *.ipr
 *.iws
 *.iml
-.idea
+/.idea/
 
-# gradle
-**/build
-**/.gradle
+# VS Code / Eclipse Java tooling
+/.vscode/
+**/bin/
+**/.eclipse/
+
+# Gradle
+**/build/
+**/.gradle/
+**/src/generated/resources/.cache/
 /.architectury-transformer/
 
-# other
-eclipse
-run/
-run-gametest/
-run-client-gametest/
-run-data/
-other/
-logs/
-
-# Files from Forge MDK
-forge*changelog.txt
-
-
-# work files
-/code-review*
-!/code-review.md
+# Forge/Minecraft runtime
+**/run/
+**/run-data/
+**/logs/
+**/crash-reports/
 
 # other
-/functional-gradle-files/
+/review-*.md
 /othersource/
+
+# 1.20.1 layout
+**/run-gametest/
+**/run-client-gametest/
+/functional-gradle-files/
