@@ -13,12 +13,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
 /**
  * Fabric destination block-use callbacks and native block-break lifecycle for player-attributed
- * edits. Placement relies on the vanilla checks {@link WorldEdits} performs.
+ * edits. Placement relies on the vanilla checks {@link WorldEdits} performs; automated growth also
+ * consults the block-use callbacks.
  */
 public final class FabricEditAuthority implements EditAuthority {
     @Override
@@ -41,6 +44,15 @@ public final class FabricEditAuthority implements EditAuthority {
     @Override
     public boolean place(Player placer, ServerLevel level, BlockPos pos,
                          BlockState state, Direction placedAgainst) {
+        // A player's own click already ran the block-use callbacks; automation has no click, so its
+        // growth consults them for the automation actor before changing the world.
+        if (placer == automationActor(level) && !WorldEdits.consulting(() ->
+                UseBlockCallback.EVENT.invoker().interact(
+                        (ServerPlayer) placer, level, InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(pos), placedAgainst, pos, false))
+                        == InteractionResult.PASS)) {
+            return false;
+        }
         return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
