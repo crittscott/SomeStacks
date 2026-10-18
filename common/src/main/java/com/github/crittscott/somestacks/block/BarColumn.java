@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
 
@@ -139,14 +140,9 @@ public final class BarColumn extends StackRun<BarStackBE> {
      */
     @Override
     public int insertAt(int flatSlot, ItemStack stack, boolean simulate) {
-        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
-            return 0;
-        }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
-            return 0;
-        }
-        if (simulate) {
-            return 1;
+        int accepted = acceptsAt(flatSlot, stack, this::getSlot);
+        if (simulate || accepted == 0) {
+            return accepted;
         }
         if (flatSlot >= totalSlots() && !grow(flatSlot % BarStackBE.SLOTS)) {
             return 0;
@@ -159,43 +155,39 @@ public final class BarColumn extends StackRun<BarStackBE> {
     }
 
     /**
-     * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty and
-     * its footprint must overlap an occupied bar in the layer beneath it, which for a bottom layer
-     * means the seam with the Bar Stack below, and for the bottom block of all means the world.
+     * One bar if {@code flatSlot} is an empty position whose footprint overlaps an occupied bar in
+     * the layer beneath it, reading positions through {@code contents}; otherwise none. A bottom
+     * layer rests on the top layer of the block below, and the bottom block of all on the world.
      *
      * <p>A position in the block above the column is checked against the block growth would put
-     * there — empty and standing on the column's current top layer — and against the side-effect-free
-     * checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the
-     * commit would refuse.
+     * there — standing on the column's top layer — and against the side-effect-free checks in
+     * {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the commit
+     * would refuse.
      */
-    private boolean positionAccepts(int flatSlot) {
+    @Override
+    public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
+        if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
+            return 0;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
+            return 0;
+        }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-
-        if (blockIndex < blocks.size()) {
-            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
-            if (occupancy[slot]) {
-                return false;
-            }
-            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
+        if (blockIndex >= blocks.size() && !canGrow(BarCubeIdx.shapeFor(slot))) {
+            return 0;
         }
-
-        VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
-        return canGrow(finalCollision)
-                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
-    }
-
-    /**
-     * The support the block at {@code blockIndex} rests on: the top-layer occupancy of the block
-     * below, or null for the bottom block of the column, which stands on the world and is grounded
-     * outright.
-     */
-    @Nullable
-    private boolean[] seamUnder(int blockIndex) {
-        BlockPos pos = blockIndex < blocks.size()
-                ? blocks.get(blockIndex).getBlockPos()
-                : topPos().above();
-        return BarStackBE.supportSeamBeneath(level, pos);
+        boolean bottomLayer = slot < BarCubeIdx.LAYER_SIZE;
+        if (bottomLayer && blockIndex == 0) {
+            return 1;
+        }
+        int supportBlockStart = (bottomLayer ? blockIndex - 1 : blockIndex) * BarStackBE.SLOTS;
+        for (int supporter : BarCubeIdx.supportersOf(slot)) {
+            if (!contents.apply(supportBlockStart + supporter).isEmpty()) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     /**

@@ -173,8 +173,8 @@ differently if their resource packs differ.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTexture(net.minecraft.world.item.ItemStack)" class="member-name-link">getTexture</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves an explicit bar mapping, or derives and caches a tint over the default texture for
-an unmapped item.</div>
+<div class="block">Resolves authored colors directly and derives automatic tints on first render, when item
+models are ready.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;net.minecraft.resources.Identifier, <a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prepare(net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">prepare</a><wbr>(net.minecraft.server.packs.resources.ResourceManager&nbsp;resourceManager,
@@ -267,8 +267,8 @@ an unmapped item.</div>
 <h3>getTexture</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></span>&nbsp;<span class="element-name">getTexture</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Resolves an explicit bar mapping, or derives and caches a tint over the default texture for
-an unmapped item. Empty stacks use the fallback mapping.</div>
+<div class="block">Resolves authored colors directly and derives automatic tints on first render, when item
+models are ready. Unmapped items use the default texture. Empty stacks use the fallback.</div>
 </div>
 </section>
 </li>

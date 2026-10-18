@@ -32,15 +32,15 @@ public final class CommonRegistry {
     public static final Identifier BAR_EXTRACT_SOUND = id("block.bar_stack.extract");
 
     public static Block storageStackBlock() {
-        return require(BuiltInRegistries.BLOCK, STORAGE_STACK_BLOCK);
+        return lookup(BuiltInRegistries.BLOCK, STORAGE_STACK_BLOCK);
     }
 
     public static Block singlesStackBlock() {
-        return require(BuiltInRegistries.BLOCK, SINGLES_STACK_BLOCK);
+        return lookup(BuiltInRegistries.BLOCK, SINGLES_STACK_BLOCK);
     }
 
     public static Block barStackBlock() {
-        return require(BuiltInRegistries.BLOCK, BAR_STACK_BLOCK);
+        return lookup(BuiltInRegistries.BLOCK, BAR_STACK_BLOCK);
     }
 
     public static BlockEntityType<StorageStackBE> storageStackBe() {
@@ -56,54 +56,51 @@ public final class CommonRegistry {
     }
 
     public static SoundEvent storageDepositSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, STORAGE_DEPOSIT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_DEPOSIT_SOUND);
     }
 
     public static SoundEvent storageExtractSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, STORAGE_EXTRACT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_EXTRACT_SOUND);
     }
 
     public static SoundEvent storageRotateSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, STORAGE_ROTATE_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, STORAGE_ROTATE_SOUND);
     }
 
     public static SoundEvent singlesDepositSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, SINGLES_DEPOSIT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_DEPOSIT_SOUND);
     }
 
     public static SoundEvent singlesExtractSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, SINGLES_EXTRACT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_EXTRACT_SOUND);
     }
 
     public static SoundEvent singlesRotateSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_SOUND);
     }
 
     public static SoundEvent singlesRotateItemSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_ITEM_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, SINGLES_ROTATE_ITEM_SOUND);
     }
 
     public static SoundEvent barDepositSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, BAR_DEPOSIT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, BAR_DEPOSIT_SOUND);
     }
 
     public static SoundEvent barExtractSound() {
-        return require(BuiltInRegistries.SOUND_EVENT, BAR_EXTRACT_SOUND);
+        return lookup(BuiltInRegistries.SOUND_EVENT, BAR_EXTRACT_SOUND);
     }
 
     private static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, path);
     }
 
-    private static <T> T require(Registry<T> registry, Identifier id) {
-        if (!registry.containsKey(id)) {
-            throw new IllegalStateException("Some Stacks registry entry is missing: " + id);
-        }
+    private static <T> T lookup(Registry<T> registry, Identifier id) {
         return registry.getValue(id);
     }
 
     @SuppressWarnings("unchecked")
     private static <T extends BlockEntity> BlockEntityType<T> blockEntityType(Identifier id) {
-        return (BlockEntityType<T>) require(BuiltInRegistries.BLOCK_ENTITY_TYPE, id);
+        return (BlockEntityType<T>) lookup(BuiltInRegistries.BLOCK_ENTITY_TYPE, id);
     }
 }

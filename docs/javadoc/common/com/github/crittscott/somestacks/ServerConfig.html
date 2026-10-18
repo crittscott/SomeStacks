@@ -64,10 +64,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#DEFAULT_GALLERY_PERMISSION_LEVEL" tabindex="0">DEFAULT_GALLERY_PERMISSION_LEVEL</a></li>
 <li><a href="#GALLERY_PERMISSION_LEVEL_MAX" tabindex="0">GALLERY_PERMISSION_LEVEL_MAX</a></li>
 <li><a href="#DEFAULT_DISABLE_ITEMS" tabindex="0">DEFAULT_DISABLE_ITEMS</a></li>
-<li><a href="#DISABLE_MODS" tabindex="0">DISABLE_MODS</a></li>
-<li><a href="#DISABLE_ITEMS" tabindex="0">DISABLE_ITEMS</a></li>
-<li><a href="#GEN_MODS" tabindex="0">GEN_MODS</a></li>
-<li><a href="#GEN_ITEMS" tabindex="0">GEN_ITEMS</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -129,8 +125,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Persistence and lifecycle supplied by the selected loader.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ServerConfig.ListSetting.html" class="type-name-link" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A command-editable policy list.</div>
 </div>
@@ -163,23 +159,11 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#DEFAULT_MAX_PILE_HEIGHT" class="member-name-link">DEFAULT_MAX_PILE_HEIGHT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second even-row-color"><code><a href="#DISABLE_ITEMS" class="member-name-link">DISABLE_ITEMS</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#DISABLE_MODS" class="member-name-link">DISABLE_MODS</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#GALLERY_PERMISSION_LEVEL_MAX" class="member-name-link">GALLERY_PERMISSION_LEVEL_MAX</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Upper bound accepted for <code>render_gallery.required_permission_level</code>, vanilla's top op level.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#GEN_ITEMS" class="member-name-link">GEN_ITEMS</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></code></div>
-<div class="col-second even-row-color"><code><a href="#GEN_MODS" class="member-name-link">GEN_MODS</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#MAX_PILE_HEIGHT" class="member-name-link">MAX_PILE_HEIGHT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -198,7 +182,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#addListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">addListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#addListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">addListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.</div>
@@ -256,7 +240,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes an entry from one of the server's text lists, re-bakes the lookup sets, and saves.</div>
@@ -371,38 +355,6 @@ drops or hands it to the player:
   <li><code>evilcraft:broom_part</code> (EvilCraft 1.2.62): its model throws
       <code>UnsupportedOperationException</code>.</li>
 </ul></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="DISABLE_MODS">
-<h3>DISABLE_MODS</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">DISABLE_MODS</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="DISABLE_ITEMS">
-<h3>DISABLE_ITEMS</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">DISABLE_ITEMS</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="GEN_MODS">
-<h3>GEN_MODS</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">GEN_MODS</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="GEN_ITEMS">
-<h3>GEN_ITEMS</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></span>&nbsp;<span class="element-name">GEN_ITEMS</span></div>
 </div>
 </section>
 </li>
@@ -554,7 +506,7 @@ drops or hands it to the player:
 <section class="detail" id="addListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)">
 <h3>addListEntry</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addListEntry</span><wbr><span class="parameters">(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addListEntry</span><wbr><span class="parameters">(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</span></div>
 <div class="block">Adds an entry to one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 <dl class="notes">
@@ -568,7 +520,7 @@ drops or hands it to the player:
 <section class="detail" id="removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)">
 <h3>removeListEntry</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeListEntry</span><wbr><span class="parameters">(<a href="ServerConfig.ListSetting.html" title="class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeListEntry</span><wbr><span class="parameters">(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</span></div>
 <div class="block">Removes an entry from one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 <dl class="notes">

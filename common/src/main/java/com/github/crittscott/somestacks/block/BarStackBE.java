@@ -1,12 +1,17 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,9 +78,9 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
-    public static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> INGOTS =
-            net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
-                    net.minecraft.resources.Identifier.fromNamespaceAndPath("somestacks", "ingots"));
+    public static final TagKey<Item> INGOTS =
+            TagKey.create(Registries.ITEM,
+                    Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "ingots"));
 
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {

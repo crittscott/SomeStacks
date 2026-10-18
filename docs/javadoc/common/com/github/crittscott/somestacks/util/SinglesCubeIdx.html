@@ -80,7 +80,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#visualColumnFromStorage(int,int)" tabindex="0">visualColumnFromStorage(int, int)</a></li>
 <li><a href="#columnFromIndex(int)" tabindex="0">columnFromIndex(int)</a></li>
 <li><a href="#indexFromColumn(int,int)" tabindex="0">indexFromColumn(int, int)</a></li>
-<li><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" tabindex="0">occupancyOf(SlotAccess)</a></li>
 <li><a href="#rotateXYZ(int,int,int,int)" tabindex="0">rotateXYZ(int, int, int, int)</a></li>
 <li><a href="#xyzFromIndex(int)" tabindex="0">xyzFromIndex(int)</a></li>
 </ol>
@@ -194,80 +193,76 @@ differently.</div>
  int&nbsp;blockRotation,
  boolean[]&nbsp;seamBelow)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,int,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, int, boolean[])</code></a> to an occupancy snapshot rather than live slots.</div>
+<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,int,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, int, boolean[])</code></a> to an occupancy snapshot rather than live slots, so a proposed
+placement can be validated without mutating inventory.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a snapshot of which slots in a block contain items.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotateXYZ(int,int,int,int)" class="member-name-link">rotateXYZ</a><wbr>(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rotateXYZ(int,int,int,int)" class="member-name-link">rotateXYZ</a><wbr>(int&nbsp;x,
  int&nbsp;y,
  int&nbsp;z,
  int&nbsp;rotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The visual position of a stored cell under a block rotation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
  int&nbsp;blockRotation,
  boolean[]&nbsp;seamBelow)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the top layer beneath a block occupies the visual column containing <code>index</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int,int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;storageIndex,
- int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the block-local collision shape of one stored cell.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageColumnFromVisual(int,int)" class="member-name-link">storageColumnFromVisual</a><wbr>(int&nbsp;visualColumn,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int,int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;storageIndex,
  int&nbsp;blockRotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the block-local collision shape of one stored cell.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageColumnFromVisual(int,int)" class="member-name-link">storageColumnFromVisual</a><wbr>(int&nbsp;visualColumn,
+ int&nbsp;blockRotation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The storage column a visual column occupies under a block rotation, the inverse of
 <a href="#visualColumnFromStorage(int,int)"><code>visualColumnFromStorage(int, int)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess,int)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess,int)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
  int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns top-layer occupancy in visual columns, the coordinate system shared across a block
 boundary even when adjacent blocks have different rotations.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the deposit target for a Singles Stack that does not yet exist and therefore has no
 occupied slots.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess,int)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess,int)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler,
  int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
 occupied one, or the farthest intersected slot if the ray meets no occupied item.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.SinglesStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.SinglesStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="../block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a>&nbsp;be)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the nearest occupied cell intersected by the view ray, or <code>-1</code> on a miss.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#visualColumnFromStorage(int,int)" class="member-name-link">visualColumnFromStorage</a><wbr>(int&nbsp;storageColumn,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#visualColumnFromStorage(int,int)" class="member-name-link">visualColumnFromStorage</a><wbr>(int&nbsp;storageColumn,
  int&nbsp;blockRotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The visual column a storage column occupies under a block rotation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a slot index to its cell coordinates, indexed from the bottom layer upward.</div>
 </div>
 </div>
@@ -384,8 +379,8 @@ layer is grounded.</div>
  int&nbsp;index,
  int&nbsp;blockRotation,
  boolean[]&nbsp;seamBelow)</span></div>
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,int,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, int, boolean[])</code></a> to an occupancy snapshot rather than live slots. Column insertion
-uses this to validate a proposed placement without mutating inventory.</div>
+<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,int,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, int, boolean[])</code></a> to an occupancy snapshot rather than live slots, so a proposed
+placement can be validated without mutating inventory.</div>
 </div>
 </section>
 </li>
@@ -498,15 +493,6 @@ but never y, so columns always map to columns and only their horizontal identity
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">indexFromColumn</span><wbr><span class="parameters">(int&nbsp;storageColumn,
  int&nbsp;y)</span></div>
 <div class="block">The slot holding the cell at <code>y</code> in a storage column.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)">
-<h3>occupancyOf</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">occupancyOf</span><wbr><span class="parameters">(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</span></div>
-<div class="block">Returns a snapshot of which slots in a block contain items.</div>
 </div>
 </section>
 </li>

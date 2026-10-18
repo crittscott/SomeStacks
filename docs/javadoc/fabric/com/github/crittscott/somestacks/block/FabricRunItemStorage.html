@@ -96,8 +96,10 @@ loadScripts(document, 'script');</script>
 implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</span></div>
 <div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
 Slot changes are staged in the Fabric transaction and applied through the shared run mutations
-only after its outer commit, so an aborted transaction never edits the world. Singles and Bar
-accept one extraction position per transaction because each extraction remaps later positions.</div>
+only after its outer commit, so an aborted transaction never edits the world. Insertion is judged
+against the staged contents. Singles and Bar accept one extraction position per transaction,
+without other pending positions or later insertion, because gravity and backfill remap the
+positions at commit.</div>
 </div>
 </section>
 <section class="summary">
@@ -152,7 +154,8 @@ accept one extraction position per transaction because each extraction remaps la
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onFinalCommit()" class="member-name-link">onFinalCommit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replays each touched slot's net difference through shared run mutations after the outer
-transaction commits.</div>
+transaction commits: removals first, so a freed Storage slot can take a replacement, then
+insertions from the bottom up, so staged supporting cells exist before the cells above them.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readSnapshot(com.github.crittscott.somestacks.block.FabricRunItemStorage.State)" class="member-name-link">readSnapshot</a><wbr>(com.github.crittscott.somestacks.block.FabricRunItemStorage.State&nbsp;snapshot)</code></div>
@@ -298,7 +301,8 @@ transaction commits.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onFinalCommit</span>()</div>
 <div class="block">Replays each touched slot's net difference through shared run mutations after the outer
-transaction commits. Insertion order matters for positional and structural mutations.</div>
+transaction commits: removals first, so a freed Storage slot can take a replacement, then
+insertions from the bottom up, so staged supporting cells exist before the cells above them.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code>onFinalCommit</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;</code></dd>

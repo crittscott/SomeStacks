@@ -3,7 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 
-/** NeoForge delegates for loader-neutral JSON and server-policy checks. */
+/** NeoForge native server-config check and delegates for loader-neutral configuration checks. */
 public final class ConfigurationGameTests {
     private ConfigurationGameTests() {}
 
@@ -17,11 +17,6 @@ public final class ConfigurationGameTests {
     public static void overrideJsonUsesInclusiveBounds(
             GameTestHelper helper) {
         ConfigurationChecks.overrideJsonUsesInclusiveBounds(helper);
-    }
-
-    /** See {@link ConfigurationChecks#serverConfigLoadsBoundsAndLists}. */
-    public static void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
-        ConfigurationChecks.serverConfigLoadsBoundsAndLists(helper);
     }
 
     /** See {@link ConfigurationChecks#denyPoliciesRespectPlayerAutomationAndExistingContents}. */
@@ -62,7 +57,7 @@ public final class ConfigurationGameTests {
             com.github.crittscott.somestacks.ServerConfig.install(config);
             com.github.crittscott.somestacks.ServerConfig.apply(original);
             com.github.crittscott.somestacks.ServerConfig.addListEntry(
-                    com.github.crittscott.somestacks.ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
+                    com.github.crittscott.somestacks.ServerConfig.ListSetting.DISABLE_ITEMS, "minecraft:diamond");
             GameTestScaffold.check(config.reload().disableItems().contains("minecraft:diamond"),
                     "Command edit did not reach native config values");
             GameTestScaffold.check(java.nio.file.Files.readString(config.path()).contains("minecraft:diamond"),

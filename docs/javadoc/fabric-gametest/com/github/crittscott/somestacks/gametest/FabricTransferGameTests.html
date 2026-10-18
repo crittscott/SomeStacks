@@ -67,6 +67,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#storageUtilMovesItemsFromChestIntoRun(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageUtilMovesItemsFromChestIntoRun(GameTestHelper)</a></li>
 <li><a href="#transactionAllowsOnlyOneStructuralExtractionPosition(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">transactionAllowsOnlyOneStructuralExtractionPosition(GameTestHelper)</a></li>
 <li><a href="#repeatedLookupsShareOneRunLedger(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">repeatedLookupsShareOneRunLedger(GameTestHelper)</a></li>
+<li><a href="#headroomRollbackRestoresWaterAndCommitGrowsEachType(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">headroomRollbackRestoresWaterAndCommitGrowsEachType(GameTestHelper)</a></li>
+<li><a href="#stagedSupportFillsCellsAndHeadroomBottomUp(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">stagedSupportFillsCellsAndHeadroomBottomUp(GameTestHelper)</a></li>
+<li><a href="#positionalExtractionRollsBackAndCommitsMovement(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">positionalExtractionRollsBackAndCommitsMovement(GameTestHelper)</a></li>
+<li><a href="#storageSlotReplacementUsesStagedCapacity(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageSlotReplacementUsesStagedCapacity(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -114,6 +118,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#headroomRollbackRestoresWaterAndCommitGrowsEachType(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">headroomRollbackRestoresWaterAndCommitGrowsEachType</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce in-game: pump into the headroom of each stack type in water.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#positionalExtractionRollsBackAndCommitsMovement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">positionalExtractionRollsBackAndCommitsMovement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">No in-game reproduction applies: aborting extraction preserves Singles rotations and Bar
+positions; committing invokes the common gravity or backfill path exactly once.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#repeatedLookupsShareOneRunLedger(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">repeatedLookupsShareOneRunLedger</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: repeated sided lookups and different blocks in a run must
@@ -124,6 +139,16 @@ observe the same staged contents, including nested rollback and outer abort.</di
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">No in-game reproduction applies: Fabric automation stages an insertion without publishing
 it to the block entity, then publishes the complete edit when the transaction commits.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stagedSupportFillsCellsAndHeadroomBottomUp(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">stagedSupportFillsCellsAndHeadroomBottomUp</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce in-game: fill Singles and Bar columns through automation.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageSlotReplacementUsesStagedCapacity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageSlotReplacementUsesStagedCapacity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">No in-game reproduction applies: one transaction can replace a Storage slot's identity.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storageUtilMovesItemsFromChestIntoRun(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageUtilMovesItemsFromChestIntoRun</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -233,6 +258,53 @@ extraction from two run positions whose simultaneous gravity updates would confl
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">repeatedLookupsShareOneRunLedger</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">No in-game reproduction applies: repeated sided lookups and different blocks in a run must
 observe the same staged contents, including nested rollback and outer abort.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="headroomRollbackRestoresWaterAndCommitGrowsEachType(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>headroomRollbackRestoresWaterAndCommitGrowsEachType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
+          maxTicks=100)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">headroomRollbackRestoresWaterAndCommitGrowsEachType</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: pump into the headroom of each stack type in water. A successful
+transfer grows a waterlogged block; an aborted machine transfer leaves the water intact.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stagedSupportFillsCellsAndHeadroomBottomUp(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>stagedSupportFillsCellsAndHeadroomBottomUp</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
+          maxTicks=100)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stagedSupportFillsCellsAndHeadroomBottomUp</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: fill Singles and Bar columns through automation. One transfer can fill
+supporting cells and then insert above them, including across the new block's seam.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="positionalExtractionRollsBackAndCommitsMovement(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>positionalExtractionRollsBackAndCommitsMovement</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
+          maxTicks=100)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">positionalExtractionRollsBackAndCommitsMovement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">No in-game reproduction applies: aborting extraction preserves Singles rotations and Bar
+positions; committing invokes the common gravity or backfill path exactly once.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageSlotReplacementUsesStagedCapacity(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storageSlotReplacementUsesStagedCapacity</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
+          maxTicks=100)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageSlotReplacementUsesStagedCapacity</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">No in-game reproduction applies: one transaction can replace a Storage slot's identity.</div>
 </div>
 </section>
 </li>
