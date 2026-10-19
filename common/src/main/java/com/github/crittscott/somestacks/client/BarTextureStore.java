@@ -172,9 +172,6 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
 
     private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
         try {
-            if (!BuiltInRegistries.ITEM.containsKey(itemLoc)) {
-                return BarTextureData.WHITE;
-            }
             Item item = BuiltInRegistries.ITEM.getValue(itemLoc);
 
             // Rendering multiplies a quad's sprite by its layer's tint, so the derived bar tint

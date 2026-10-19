@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.client.BarStackBER;
+import com.github.crittscott.somestacks.client.ClientRenderCommands;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
@@ -14,9 +15,14 @@ import com.github.crittscott.somestacks.client.RenderProfile;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
+import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -34,6 +40,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +145,7 @@ public final class ClientCallbackChecks {
         empty.clear();
 
         checkProfileLayers(stone);
+        checkProfileCommands();
         checkRenderModes(client, hit, stone);
         checkBarRendering(client, hit);
     }
@@ -186,6 +198,71 @@ public final class ClientCallbackChecks {
                 ItemRenderOverrides.putUser(id, priorUser);
             }
         }
+    }
+
+    /**
+     * Runs the real {@code /ss item} and {@code /ss write changed} commands against scratch layers
+     * and a temporary directory, so the player's own override file is never read or written.
+     * To reproduce in-game: {@code /ss item minecraft:stone 2d 1.5 0.25 0.5} changes how Stone
+     * renders; {@code /ss write changed} saves it to {@code item_overrides.json}; {@code /ss item
+     * minecraft:stone reset} followed by another write removes the entry and Stone is measured
+     * again.
+     */
+    private static void checkProfileCommands() {
+        var stoneId = BuiltInRegistries.ITEM.getKey(Items.STONE);
+        ItemStack stone = new ItemStack(Items.STONE);
+        CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
+        List<Component> feedback = new ArrayList<>();
+        ClientRenderCommands.register(dispatcher, new ClientRenderCommands.Feedback<>() {
+            @Override public void success(Object source, Component message) { feedback.add(message); }
+            @Override public void failure(Object source, Component message) {
+                throw new IllegalStateException("Command failed: " + message.getString());
+            }
+        });
+
+        Path directory = null;
+        try {
+            directory = Files.createTempDirectory("somestacks-overrides");
+            try (ItemRenderOverrides.Sandbox sandbox = new ItemRenderOverrides.Sandbox(directory)) {
+                RenderProfile measured = ItemRenderOverrides.resolve(stone);
+
+                dispatcher.execute("ss item minecraft:stone 2d 1.5 0.25 0.5", new Object());
+                RenderProfile edited = ItemRenderOverrides.resolve(stone);
+                GameTestScaffold.check(edited.mode() == RenderMode.TWO_D && edited.scale() == 1.5f
+                                && edited.offset().equals(new RenderOffset(0.25f, 0.5f, 0.0f)),
+                        "The item command did not override the measured profile");
+
+                dispatcher.execute("ss write changed", new Object());
+                GameTestScaffold.checkEquals(Set.of(stoneId), readUserFile(sandbox.userFile()).keySet(),
+                        "The user file held more than the explicit user settings");
+                sandbox.reloadUserFile();
+                GameTestScaffold.checkEquals(edited, ItemRenderOverrides.resolve(stone),
+                        "The saved user override did not survive a reload");
+
+                dispatcher.execute("ss item minecraft:stone reset", new Object());
+                GameTestScaffold.checkEquals(measured, ItemRenderOverrides.resolve(stone),
+                        "Reset left the user override active");
+                dispatcher.execute("ss write changed", new Object());
+                GameTestScaffold.check(readUserFile(sandbox.userFile()).isEmpty(),
+                        "Reset left its entry in the user file");
+            }
+        } catch (IOException | CommandSyntaxException e) {
+            throw new IllegalStateException("Profile command check failed: " + e.getMessage(), e);
+        } finally {
+            if (directory != null) {
+                try (var files = Files.walk(directory)) {
+                    files.sorted(Comparator.reverseOrder()).forEach(path -> path.toFile().delete());
+                } catch (IOException ignored) {
+                    // The scratch directory is in the system temp area.
+                }
+            }
+        }
+        GameTestScaffold.checkEquals(2, feedback.size(), "The item commands should each report once");
+    }
+
+    private static Map<?, ItemRenderConfig> readUserFile(Path file) throws IOException {
+        JsonObject json = new Gson().fromJson(Files.readString(file), JsonObject.class);
+        return OverrideJsonCodec.parse(json, file.toString());
     }
 
     private static RenderProfile profileOf(ItemRenderConfig config) {
