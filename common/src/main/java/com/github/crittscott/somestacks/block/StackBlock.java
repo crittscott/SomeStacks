@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,11 +24,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.phys.BlockHitResult;
 
 /** Block-state and interaction plumbing shared by all three stack blocks. */
@@ -103,7 +104,7 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
         if (!level.isClientSide) {
             StackInteractions.handleExistingStack(
                     (ServerPlayer) player, InteractionHand.MAIN_HAND, hit,
-                    com.github.crittscott.somestacks.util.BlockType.of(state.getBlock()));
+                    BlockType.of(state.getBlock()));
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
@@ -113,7 +114,7 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
                                        Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide) {
             StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit,
-                    com.github.crittscott.somestacks.util.BlockType.of(state.getBlock()));
+                    BlockType.of(state.getBlock()));
         }
         return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }

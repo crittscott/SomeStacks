@@ -1,15 +1,19 @@
 package com.github.crittscott.somestacks;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+
+import java.nio.file.Path;
 import java.util.List;
 
 /** Loader-managed server configuration exposed as one immutable common policy snapshot. */
 public final class ForgeServerConfig implements ServerConfig.Backend {
     public static final ForgeServerConfig INSTANCE = new ForgeServerConfig();
-    private net.minecraftforge.fml.config.ModConfig loadedConfig;
-    public java.nio.file.Path path() { return loadedConfig.getFullPath(); }
+    private ModConfig loadedConfig;
+    public Path path() { return loadedConfig.getFullPath(); }
 
     public final ForgeConfigSpec spec;
     private final ForgeConfigSpec.IntValue maxHeight;
@@ -64,7 +68,7 @@ public final class ForgeServerConfig implements ServerConfig.Backend {
                 .define("enabled", false);
         permission = builder
                 .comment("Permission level needed to run the gallery commands (0 = everyone, 4 = owner).")
-                .defineInRange("required_permission_level", net.minecraft.commands.Commands.LEVEL_ADMINS, 0, 4);
+                .defineInRange("required_permission_level", Commands.LEVEL_ADMINS, 0, 4);
         placements = builder
                 .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
                 .defineInRange("placements_per_tick", ServerConfig.DEFAULT_GALLERY_PLACEMENTS_PER_TICK, 1, Integer.MAX_VALUE);

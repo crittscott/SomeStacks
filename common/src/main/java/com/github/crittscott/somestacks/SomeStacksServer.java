@@ -17,9 +17,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.UUID;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /** Loader-neutral server lifecycle operations called by each loader's native event adapters. */
 public final class SomeStacksServer {
@@ -42,6 +42,10 @@ public final class SomeStacksServer {
         ServerConfigMigration.reportLegacyIngots(server);
         ServerConfig.loadFor(server);
         ConfigSyncPkt.rebuildCurrent();
+        SomeStacksCommon.LOGGER.info(
+                "Server policy and login snapshot ready: Storage={}, Singles={}, Bar={}, maximum height={}",
+                ServerConfig.enableStorageStackBlock(), ServerConfig.enableSinglesStackBlock(),
+                ServerConfig.enableBarStackBlock(), ServerConfig.maxPileHeight());
     }
 
     /** Releases the stopped server and clears session diagnostics after world activity ends. */

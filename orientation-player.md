@@ -4,11 +4,11 @@
 
 # Some Stacks — player-facing behavior
 
-Current behavior; see `orientation-code.md` for structure.
+Code structure: `orientation-code.md`.
 
-Some Stacks turns held items into visible storage. It adds three blocks, with no block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; removing its last contents normally removes it.
+Some Stacks turns held items into visible storage: three blocks without block items, recipes, creative-tab entries, or storage screens. Depositing creates a stack; emptying it normally removes it.
 
-Requires Minecraft 1.21.4 and matching client/server loader builds. Fabric requires Fabric API; Common Protection API is optional.
+Requires Minecraft 1.21.4 and matching client/server builds. Fabric requires Fabric API; Common Protection API is optional.
 
 ## The three stack types
 
@@ -18,13 +18,13 @@ Requires Minecraft 1.21.4 and matching client/server loader builds. Fabric requi
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
 | **Bar Stack** | 64 items | Data-pack-defined ingots and bricks | Eight alternating layers of bars |
 
-A vertical run of one stack type is a single pile or column with one shared inventory. Default maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
+A vertical run of one type is a pile or column with one shared inventory. Default maximum height is 8 blocks (216 Storage slots, 512 Singles or Bar positions).
 
 ## Controls
 
-The Stack Modifier is held `V` by default, rebindable under **Options -> Controls -> Some Stacks**.
+The Stack Modifier defaults to held `V`, rebindable under **Options -> Controls -> Some Stacks**.
 
-Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The selected mode shows above the hotbar; server-disabled types are skipped. The mode sets what a new block becomes; it never changes an existing stack.
+Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Toggle Permanent. The mode shows above the hotbar; disabled types are skipped. The mode sets what a new block becomes; it never changes an existing stack.
 
 | Gesture | Result |
 | --- | --- |
@@ -38,11 +38,11 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks and also Common Protection API when installed.
 
-Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound is limited to once every 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
+Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound is limited to once every 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind.
+A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind. Successful player creation fires the placed-block advancement criterion with the original held stack; pile growth does not.
 
 Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
@@ -52,7 +52,7 @@ Deposits are rejected when the server has disabled the item's mod or exact item 
 
 ## Extracting
 
-Plain right-click targets the nearest rendered item on the view ray inside the clicked block.
+Plain right-click targets the nearest rendered item along the view ray in the clicked block.
 
 - Storage: as much of the targeted stack as the hand can hold.
 - Singles: one item.
@@ -175,5 +175,5 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 ## Saved worlds
 
-A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
+A 1.21.1 world migrates its items and rotations on load. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Server start logs unread 1.21.1 `compatibility.ingots` entries for moving into `somestacks:ingots`.
 

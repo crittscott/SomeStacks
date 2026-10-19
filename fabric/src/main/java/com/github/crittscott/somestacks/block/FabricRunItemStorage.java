@@ -10,12 +10,11 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -102,7 +101,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         StackRunItemAccess access = blockEntity.itemRun();
         if (access instanceof StackRun<?> run) {
             StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
-            return ((FabricStorageOwner) base).someStacksStorage();
+            return FabricItemStorage.of(base);
         }
         return this;
     }

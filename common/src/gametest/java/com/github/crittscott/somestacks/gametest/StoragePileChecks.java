@@ -131,7 +131,7 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
         storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
 
-        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY);
+        ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
 
         helper.runAfterDelay(2, () -> {

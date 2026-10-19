@@ -155,7 +155,8 @@ loadScripts(document, 'script');</script>
  stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
  loader callback for main/off hand and checks consumption plus block/item suppression. It
  does not send a vanilla use packet or extract contents. A translated success/failure message
- reports the assertions; server GameTests cannot exercise this client-only boundary.</div>
+ reports the assertions; server GameTests cannot exercise this client-only boundary. Also
+ checks render-profile precedence and invalidation through <a href="RenderProfileChecks.html#run()"><code>RenderProfileChecks.run()</code></a>.</div>
 </section>
 </li>
 </ul>

@@ -15,6 +15,12 @@ public final class CubeGrid {
     private final VoxelShape[] localShapes;
     private final int[][] rotatedIndices;
 
+    /**
+     * Creates an {@code edge}-cell grid along each axis. Cell width and axis starts are model
+     * pixels (16 per block); the same {@code edge} starts are used on all three axes.
+     * Callers supply valid cell dimensions and coordinates.
+     * @throws IllegalArgumentException when edge is nonpositive or starts has a different length
+     */
     public CubeGrid(int edge, double cellPixels, int... starts) {
         if (edge < 1 || starts.length != edge) {
             throw new IllegalArgumentException("A cube grid needs one start for each axis cell");
@@ -83,11 +89,6 @@ public final class CubeGrid {
 
     public AABB worldBox(int storageIndex, int rotation, BlockPos blockPos) {
         return localBox(storageIndex, rotation).move(
-                blockPos.getX(), blockPos.getY(), blockPos.getZ());
-    }
-
-    public AABB worldBoxAtVisual(int x, int y, int z, BlockPos blockPos) {
-        return localBoxes[indexFromXYZ(x, y, z)].move(
                 blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 

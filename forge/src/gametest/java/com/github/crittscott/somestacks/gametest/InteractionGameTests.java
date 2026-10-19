@@ -4,8 +4,8 @@ import com.github.crittscott.somestacks.SomeStacks;
 import com.github.crittscott.somestacks.server.StackInteractionEvents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.gametest.GameTestHolder;
 
 
 /**
@@ -14,6 +14,12 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 @GameTestHolder(SomeStacks.MODID)
 public final class InteractionGameTests {
     private InteractionGameTests() {}
+
+    /** See {@link InteractionChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
 
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(template = GameTestSupport.TEMPLATE)

@@ -100,8 +100,8 @@ loadScripts(document, 'script');</script>
  of a small background cube, which is what makes a wall of stored items readable at a distance.
 
  <p>Work is done when something changes. Each distinct stack's profile, item model, and
- <code>2d</code> plates are prepared once and shared by every grid showing it until profiles or
- resources change, so a model that changes with time, such as a compass, shows its state from
+ <code>2d</code> plates are shared by every grid showing it while retained in a bounded cache, until profiles or
+ resources change or the entry is evicted, so a model that changes with time, such as a compass, shows its state from
  when it was prepared.</div>
 </section>
 <section class="summary">
@@ -170,8 +170,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Clears failure state tied to models being replaced by a resource reload; clearing the
- resolved profiles also discards every prepared stack.</div>
+<div class="block">Immediately discards prepared models and failure state tied to the replaced resources.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.MultiBufferSource,net.minecraft.client.renderer.block.BlockRenderDispatcher)" class="member-name-link">renderGridItems</a><wbr>(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
@@ -323,8 +322,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onResourceReload()">
 <h3>onResourceReload</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onResourceReload</span>()</div>
-<div class="block">Clears failure state tied to models being replaced by a resource reload; clearing the
- resolved profiles also discards every prepared stack.</div>
+<div class="block">Immediately discards prepared models and failure state tied to the replaced resources.</div>
 </section>
 </li>
 </ul>

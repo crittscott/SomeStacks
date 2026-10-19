@@ -17,15 +17,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -193,8 +195,8 @@ public final class ProtectionGameTests {
     public static void adjacentStackConsultsDestinationProtection(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
-        java.util.concurrent.atomic.AtomicInteger clicks = new java.util.concurrent.atomic.AtomicInteger();
-        java.util.concurrent.atomic.AtomicInteger denial = new java.util.concurrent.atomic.AtomicInteger();
+        AtomicInteger clicks = new AtomicInteger();
+        AtomicInteger denial = new AtomicInteger();
         Consumer<PlayerInteractEvent.RightClickBlock> observe = event -> {
             if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return;
             clicks.incrementAndGet();
@@ -260,7 +262,7 @@ public final class ProtectionGameTests {
     }
 
     private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
-            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+            Consumer<Player> observed, Predicate<Player> allowed) {
         Consumer<BlockEvent.BreakEvent> listener = event -> {
             if (event.getLevel() == level && event.getPos().equals(pos)) {
                 observed.accept(event.getPlayer());

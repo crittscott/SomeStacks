@@ -2,9 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 
 import javax.annotation.Nullable;
 
@@ -21,7 +19,9 @@ import javax.annotation.Nullable;
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 
-    public static final CubeGrid GRID = new CubeGrid(4, 4.0, 0, 4, 8, 12);
+    /** Cell width in model pixels, shared by targeting and rendering. */
+    public static final double CELL_PIXELS = 4.0;
+    public static final CubeGrid GRID = new CubeGrid(4, CELL_PIXELS, 0, 4, 8, 12);
 
     /** Cells along one axis of the grid. */
     public static final int GRID_EDGE = GRID.edge();
@@ -46,10 +46,6 @@ public final class SinglesCubeIdx {
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
         return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
-    }
-
-    private static AABB getCubeBox(int visualX, int visualY, int visualZ, BlockPos blockPos) {
-        return GRID.worldBoxAtVisual(visualX, visualY, visualZ, blockPos);
     }
 
     /**

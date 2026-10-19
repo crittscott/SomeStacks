@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * </ul>
  *
  * <p>Both preserve density: a column whose bars occupy a contiguous run of positions still does
- * afterwards. The player's own extraction is deliberately not this — it drops whatever the removed
+ * afterwards. The player's own extraction is deliberately not this â€” it drops whatever the removed
  * bar was holding up.
  *
  * <p>An instance describes the run bounds at resolution time. Block entities cache it for the
@@ -98,8 +98,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
     static void markDirtyAt(Level level, BlockPos pos) {
         StackRun.markDirtyAt(level, pos, BarColumn::at);
     }
-
-    /** The configured ceiling on column height, shared with Storage piles. */
 
     /**
      * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
@@ -164,7 +162,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * means the seam with the Bar Stack below, and for the bottom block of all means the world.
      *
      * <p>A position in the block above the column is checked against the block growth would put
-     * there — empty and standing on the column's current top layer — and against the side-effect-free
+     * there â€” empty and standing on the column's current top layer â€” and against the side-effect-free
      * checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the
      * commit would refuse.
      */
@@ -173,16 +171,17 @@ public final class BarColumn extends StackRun<BarStackBE> {
         int slot = flatSlot % BarStackBE.SLOTS;
 
         if (blockIndex < blocks.size()) {
-            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
-            if (occupancy[slot]) {
+            var items = blocks.get(blockIndex).getItems();
+            if (!items.getStackInSlot(slot).isEmpty()) {
                 return false;
             }
-            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
+            return BarCubeIdx.isGrounded(slot, items,
+                    slot < BarCubeIdx.LAYER_SIZE ? seamUnder(blockIndex) : null);
         }
 
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
         return canGrow(finalCollision)
-                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
+                && BarCubeIdx.freshBlockSupports(slot, seamUnder(blockIndex));
     }
 
     /**

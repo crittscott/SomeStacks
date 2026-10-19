@@ -106,7 +106,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.block.StackBlockEntity)" class="member-name-link">RunItemHandlerBase</a><wbr>(<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&nbsp;blockEntity)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a view whose run is resolved from this block entity on each access.</div>
+</div>
 </div>
 </section>
 </li>
@@ -125,25 +127,39 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int,boolean)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extracts from a bottom-up run position, returning the removed contents; simulation changes
+ nothing.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Per-position capacity before the offered item's own stack limit, independent of slot occupancy.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Bottom-up run positions, including one prospective block while growth is advertised.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns read-only live contents, or local contents without a run; headroom and invalid positions are empty.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inserts at one bottom-up run position, leaving the offered stack unchanged and returning its
+ remainder.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Admission only: ignores position, capacity, support, enablement for growth, and edit authority.</div>
+</div>
 </div>
 </div>
 </div>
@@ -165,6 +181,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.block.StackBlockEntity)">
 <h3>RunItemHandlerBase</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">RunItemHandlerBase</span><wbr><span class="parameters">(<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&nbsp;blockEntity)</span></div>
+<div class="block">Creates a view whose run is resolved from this block entity on each access.</div>
 </section>
 </li>
 </ul>
@@ -179,6 +196,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getSlots()">
 <h3>getSlots</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlots</span>()</div>
+<div class="block">Bottom-up run positions, including one prospective block while growth is advertised.
+ Without a server run, returns only this block's local slot count.</div>
 </section>
 </li>
 <li>
@@ -186,6 +205,7 @@ loadScripts(document, 'script');</script>
 <h3>getStackInSlot</h3>
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
+<div class="block">Returns read-only live contents, or local contents without a run; headroom and invalid positions are empty.</div>
 </section>
 </li>
 <li>
@@ -196,6 +216,9 @@ loadScripts(document, 'script');</script>
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
+<div class="block">Inserts at one bottom-up run position, leaving the offered stack unchanged and returning its
+ remainder. Simulation changes nothing and cannot promise acceptance by later event hooks.
+ Unavailable runs and reentrant committed edits return the complete offer.</div>
 </section>
 </li>
 <li>
@@ -205,12 +228,16 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractItem</span><wbr><span class="parameters">(int&nbsp;slot,
  int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
+<div class="block">Extracts from a bottom-up run position, returning the removed contents; simulation changes
+ nothing. Unavailable runs and reentrant committed edits return empty. Structural movement
+ follows the concrete run's extraction rules.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getSlotLimit(int)">
 <h3>getSlotLimit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlotLimit</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
+<div class="block">Per-position capacity before the offered item's own stack limit, independent of slot occupancy.</div>
 </section>
 </li>
 <li>
@@ -219,6 +246,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Admission only: ignores position, capacity, support, enablement for growth, and edit authority.</div>
 </section>
 </li>
 </ul>

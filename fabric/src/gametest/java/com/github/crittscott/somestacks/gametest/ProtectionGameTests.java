@@ -26,10 +26,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -290,7 +293,7 @@ public final class ProtectionGameTests implements FabricGameTest {
         TestTarget key = new TestTarget(helper.getLevel(), lower.getBlockPos());
         REMOVAL_PROBES.put(key, new RemovalProbe(false, new AtomicReference<>()));
         try {
-            lower.extractAt(0);
+            lower.extractAt(0, null);
         } finally {
             REMOVAL_PROBES.remove(key);
         }
@@ -346,7 +349,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     public void adjacentDepositsHonorBlockUseCallbacks(GameTestHelper helper) {
         TestTarget key = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN));
         try {
-            for (InteractionResult result : java.util.List.of(InteractionResult.FAIL, InteractionResult.SUCCESS)) {
+            for (InteractionResult result : List.of(InteractionResult.FAIL, InteractionResult.SUCCESS)) {
                 ADJACENT_USE_RESULTS.put(key, result);
                 helper.getLevel().removeBlock(key.pos(), false);
                 ProtectionChecks.checkAdjacentAndDirectDeposits(
@@ -365,7 +368,7 @@ public final class ProtectionGameTests implements FabricGameTest {
             InteractionResult result, AtomicBoolean invoked, AtomicBoolean sawAir,
             AtomicReference<Player> actor, AtomicBoolean syntheticClick) {}
 
-    private record RemovalProbe(java.util.function.Predicate<Player> allowed, java.util.function.Consumer<Player> actor) {
+    private record RemovalProbe(Predicate<Player> allowed, Consumer<Player> actor) {
         RemovalProbe(boolean allowed, AtomicReference<Player> actor) {
             this(player -> allowed, actor::set);
         }
@@ -386,7 +389,7 @@ public final class ProtectionGameTests implements FabricGameTest {
     }
 
     private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
-            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+            Consumer<Player> observed, Predicate<Player> allowed) {
         TestTarget key = new TestTarget(level, pos);
         REMOVAL_PROBES.put(key, new RemovalProbe(allowed, observed));
         return () -> REMOVAL_PROBES.remove(key);

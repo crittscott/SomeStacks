@@ -1,10 +1,16 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.NeoForgeServerConfig;
+import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksNeoForge;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 /** NeoForge delegates for loader-neutral JSON and server-policy checks. */
 @GameTestHolder(SomeStacksNeoForge.MODID)
@@ -66,26 +72,26 @@ public final class ConfigurationGameTests {
      */
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void nativeServerPolicyPersistsCommandLists(GameTestHelper helper) {
-        com.github.crittscott.somestacks.NeoForgeServerConfig config =
-                com.github.crittscott.somestacks.NeoForgeServerConfig.INSTANCE;
-        com.github.crittscott.somestacks.ServerConfig.Settings original = config.reload();
-        com.github.crittscott.somestacks.ServerConfig.Backend previous =
-                com.github.crittscott.somestacks.ServerConfig.backend();
+        NeoForgeServerConfig config =
+                NeoForgeServerConfig.INSTANCE;
+        ServerConfig.Settings original = config.reload();
+        ServerConfig.Backend previous =
+                ServerConfig.backend();
         try {
-            com.github.crittscott.somestacks.ServerConfig.install(config);
-            com.github.crittscott.somestacks.ServerConfig.apply(original);
-            com.github.crittscott.somestacks.ServerConfig.addListEntry(
-                    com.github.crittscott.somestacks.ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
+            ServerConfig.install(config);
+            ServerConfig.apply(original);
+            ServerConfig.addListEntry(
+                    ServerConfig.DISABLE_ITEMS, "minecraft:diamond");
             GameTestScaffold.check(config.reload().disableItems().contains("minecraft:diamond"),
                     "Command edit did not reach native config values");
-            GameTestScaffold.check(java.nio.file.Files.readString(config.path()).contains("minecraft:diamond"),
+            GameTestScaffold.check(Files.readString(config.path()).contains("minecraft:diamond"),
                     "Command edit did not reach the loader-managed TOML");
-        } catch (java.io.IOException e) {
-            throw new net.minecraft.gametest.framework.GameTestAssertException("Could not read native config: " + e);
+        } catch (IOException e) {
+            throw new GameTestAssertException("Could not read native config: " + e);
         } finally {
             config.save(original);
-            com.github.crittscott.somestacks.ServerConfig.install(previous);
-            com.github.crittscott.somestacks.ServerConfig.reload();
+            ServerConfig.install(previous);
+            ServerConfig.reload();
         }
         helper.succeed();
     }

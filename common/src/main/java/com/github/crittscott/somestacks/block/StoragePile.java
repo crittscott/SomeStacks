@@ -14,12 +14,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
@@ -81,8 +82,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
     static void markDirtyAt(Level level, BlockPos pos) {
         StackRun.markDirtyAt(level, pos, StoragePile::at);
     }
-
-    /** The configured ceiling on pile height. Server-side only. */
 
     /**
      * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
@@ -385,11 +384,11 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             }
         }
         List<SettlementGroup> ordered = new ArrayList<>(groups.values());
-        ordered.sort(java.util.Comparator.comparing(group -> group.sortKey));
+        ordered.sort(Comparator.comparing(group -> group.sortKey));
         List<ItemStack> packed = new ArrayList<>();
         for (SettlementGroup group : ordered) {
             int remaining = group.count;
-            int limit = Math.max(1, group.model.getMaxStackSize());
+            int limit = group.model.getMaxStackSize();
             while (remaining > 0) {
                 ItemStack piece = group.model.copy();
                 piece.setCount(Math.min(remaining, limit));

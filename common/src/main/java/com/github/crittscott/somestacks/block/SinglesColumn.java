@@ -14,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.
@@ -89,8 +89,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         StackRun.markDirtyAt(level, pos, SinglesColumn::at);
     }
 
-    /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
-
     /**
      * Whether a Singles Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.
@@ -142,8 +140,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * the cell beneath it occupied, which for a bottom layer means the seam with the Singles Stack
      * below, and for the bottom block of all means the world.
      *
-     * <p>A cell in the block above the column is checked against the block growth would put there —
-     * empty, unrotated as a player's own placement is, standing on the column's current top layer —
+     * <p>A cell in the block above the column is checked against the block growth would put there â€”
+     * empty, unrotated as a player's own placement is, standing on the column's current top layer â€”
      * and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore
      * cannot promise a cell the commit would refuse.
      */

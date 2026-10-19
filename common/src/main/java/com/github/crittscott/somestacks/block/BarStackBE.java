@@ -6,19 +6,23 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.ItemOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Objects;
-
-import javax.annotation.Nullable;
 
 /**
  * One Bar Stack: 64 bars laid in eight alternating layers of eight.
@@ -62,11 +66,12 @@ public class BarStackBE extends StackBlockEntity {
         cachedShape = null;
     }
 
-    /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
-    public static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> INGOTS =
-            net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
-                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
+    /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
+    public static final TagKey<Item> INGOTS =
+            TagKey.create(Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("somestacks", "ingots"));
 
+    /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -155,12 +160,8 @@ public class BarStackBE extends StackBlockEntity {
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
      *
      * @param index the position to empty, in {@code [0, SLOTS)}
+     * @param actor the player responsible for cleanup, or null for automation
      */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through cascade cleanup. */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
@@ -193,17 +194,14 @@ public class BarStackBE extends StackBlockEntity {
         items.setStackInSlot(index, bar);
     }
 
-    /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-     * directly below, or null when this block stands on the world instead of on another Bar Stack.
-     */
-    @Nullable
+    /** Whether this local position is valid, empty, and supported by the layer or seam below. */
     public boolean canDepositAt(int index) {
         return index >= 0
                 && index < SLOTS
                 && items.getStackInSlot(index).isEmpty()
                 && BarCubeIdx.isGrounded(
-                        index, items, supportSeamBeneath(level, getBlockPos()));
+                        index, items, index < BarCubeIdx.LAYER_SIZE
+                                ? supportSeamBeneath(level, getBlockPos()) : null);
     }
 
     /** Whether an empty Bar block at {@code pos} supports its first bar. */
@@ -213,7 +211,10 @@ public class BarStackBE extends StackBlockEntity {
                 && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
     }
 
-    /** The overlap occupancy supporting the bottom layer at {@code pos}. */
+    /**
+     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath it.
+     * A null seam grounds a bottom-layer deposit directly on the world.
+     */
     @Nullable
     public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
         if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {

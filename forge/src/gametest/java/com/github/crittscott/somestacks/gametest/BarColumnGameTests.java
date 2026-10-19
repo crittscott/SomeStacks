@@ -209,7 +209,7 @@ public final class BarColumnGameTests {
 
         MinecraftForge.EVENT_BUS.addListener(denyLower);
         try {
-            lower.extractAt(0);
+            lower.extractAt(0, null);
         } finally {
             MinecraftForge.EVENT_BUS.unregister(denyLower);
         }

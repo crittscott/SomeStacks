@@ -4,9 +4,9 @@ import com.github.crittscott.somestacks.SomeStacksNeoForge;
 import com.github.crittscott.somestacks.server.StackInteractionEvents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 
 /**
@@ -16,6 +16,12 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @PrefixGameTestTemplate(false)
 public final class InteractionGameTests {
     private InteractionGameTests() {}
+
+    /** See {@link InteractionChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
 
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(template = GameTestSupport.TEMPLATE)

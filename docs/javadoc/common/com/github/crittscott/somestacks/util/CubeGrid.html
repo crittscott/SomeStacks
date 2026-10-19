@@ -106,7 +106,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,double,int...)" class="member-name-link">CubeGrid</a><wbr>(int&nbsp;edge,
  double&nbsp;cellPixels,
  int...&nbsp;starts)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates an <code>edge</code>-cell grid along each axis.</div>
+</div>
 </div>
 </section>
 </li>
@@ -153,15 +155,9 @@ loadScripts(document, 'script');</script>
  int&nbsp;rotation,
  net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.AABB</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldBoxAtVisual(int,int,int,net.minecraft.core.BlockPos)" class="member-name-link">worldBoxAtVisual</a><wbr>(int&nbsp;x,
- int&nbsp;y,
- int&nbsp;z,
- net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts a bottom-up slot index to its x, y, z coordinates.</div>
 </div>
 </div>
@@ -187,6 +183,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CubeGrid</span><wbr><span class="parameters">(int&nbsp;edge,
  double&nbsp;cellPixels,
  int...&nbsp;starts)</span></div>
+<div class="block">Creates an <code>edge</code>-cell grid along each axis. Cell width and axis starts are model
+ pixels (16 per block); the same <code>edge</code> starts are used on all three axes.
+ Callers supply valid cell dimensions and coordinates.</div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - when edge is nonpositive or starts has a different length</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -237,15 +240,6 @@ loadScripts(document, 'script');</script>
 <h3>worldBox</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.AABB</span>&nbsp;<span class="element-name">worldBox</span><wbr><span class="parameters">(int&nbsp;storageIndex,
  int&nbsp;rotation,
- net.minecraft.core.BlockPos&nbsp;blockPos)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="worldBoxAtVisual(int,int,int,net.minecraft.core.BlockPos)">
-<h3>worldBoxAtVisual</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.AABB</span>&nbsp;<span class="element-name">worldBoxAtVisual</span><wbr><span class="parameters">(int&nbsp;x,
- int&nbsp;y,
- int&nbsp;z,
  net.minecraft.core.BlockPos&nbsp;blockPos)</span></div>
 </section>
 </li>

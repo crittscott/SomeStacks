@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
@@ -26,6 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * The server-side {@code ss} command: render gallery generation, server list editing, and
@@ -69,7 +69,6 @@ public final class SsCommand {
 
     private static final String ARG_ITEM = "item";
     private static final String ARG_MODID = "modid";
-    private static final String ARG_ENTRY = "entry";
 
     private static final String DISABLED_MODS_LABEL = "somestacks.command.label.disabled_mods";
     private static final String DISABLED_ITEMS_LABEL = "somestacks.command.label.disabled_items";
@@ -213,26 +212,6 @@ public final class SsCommand {
     private static CompletableFuture<Suggestions> suggestEntries(
             ServerConfig.ListSetting list, SuggestionsBuilder builder) {
         return SharedSuggestionProvider.suggest(List.copyOf(list.get()), builder);
-    }
-
-    private static CompletableFuture<Suggestions> suggestItems(
-            CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
-        String remaining = builder.getRemaining();
-
-        if (!remaining.contains(":")) {
-            List<String> namespaces = RenderGalleryGenerator.Kind.STORAGE.modIds()
-                    .stream()
-                    .map(ns -> ns + ":")
-                    .collect(Collectors.toList());
-            return SharedSuggestionProvider.suggest(namespaces, builder);
-        }
-
-        String namespace = remaining.split(":")[0];
-        List<String> itemIds = RenderGalleryGenerator.Kind.STORAGE.itemsIn(namespace)
-                .stream()
-                .map(item -> String.valueOf(BuiltInRegistries.ITEM.getKey(item)))
-                .collect(Collectors.toList());
-        return SharedSuggestionProvider.suggest(itemIds, builder);
     }
 
     /** Entries omitted from one request, grouped by reason. */

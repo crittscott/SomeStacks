@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
+import net.minecraft.advancements.CriteriaTriggers;
+
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarColumn;
@@ -288,6 +290,7 @@ public final class StackInteractions {
         }
 
         BlockState state = StackPlacement.stateFor(type.getBlock(), level, pos);
+        ItemStack originalHeldStack = held.copy();
         VoxelShape finalCollision = switch (type) {
             case STORAGE_STACK -> state.getCollisionShape(level, pos, CollisionContext.empty());
             case SINGLES_STACK -> SinglesCubeIdx.shapeFor(depositIndex, 0);
@@ -319,6 +322,7 @@ public final class StackInteractions {
             }
         }
         returnToHand(player, creative, handStack);
+        CriteriaTriggers.PLACED_BLOCK.trigger(player, pos, originalHeldStack);
     }
 
     private static boolean firstDepositWouldSucceed(BlockType type, Level level, BlockPos pos,

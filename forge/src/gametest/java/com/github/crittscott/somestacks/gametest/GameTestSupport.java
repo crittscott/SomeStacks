@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -79,7 +80,7 @@ public final class GameTestSupport {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = fakePlayer(level);
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
         };
     }

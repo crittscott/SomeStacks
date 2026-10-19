@@ -9,8 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.BlockHitResult;
@@ -22,6 +22,12 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class InteractionGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
+
+    /** See {@link InteractionChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(template = TEMPLATE)
+    public void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
 
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(template = TEMPLATE)

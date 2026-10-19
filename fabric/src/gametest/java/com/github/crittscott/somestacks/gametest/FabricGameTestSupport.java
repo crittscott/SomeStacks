@@ -7,9 +7,10 @@ import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -112,7 +113,7 @@ public final class FabricGameTestSupport {
         ServerLevel level = helper.getLevel();
         return mainHand -> {
             ServerPlayer player = FakePlayer.get(level);
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
         };
     }
