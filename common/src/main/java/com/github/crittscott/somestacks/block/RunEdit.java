@@ -3,22 +3,16 @@ package com.github.crittscott.somestacks.block;
 /**
  * Holds off an automation edit that arrives while another one is still running.
  *
- * <p>A run's item handler is not only a bag: an insertion can place a block on top of the run and an
- * extraction can take blocks off it. Those world edits notify neighbors, and a neighbor woken in
- * the middle of the call can reach straight back into the same run's handler — while a batch is
- * open, while the run's block list is being appended to, and while a block whose capability the
- * outer caller is holding is being invalidated. No ordinary inventory does this, so no caller is
- * written to survive it.
- *
- * <p>The inner call is refused instead: an insertion keeps its stack and an extraction yields
- * nothing, both standard failure results for automation. The run remains in the state the outer
- * call is building. NeoForge and Fabric offers are refused because their transactions do not reveal
- * whether they will commit.
- *
- * <p>One flag serves the whole server: every path through it is a world mutation and therefore runs
- * on the server thread.
+ * <p>One flag serves the whole server and is touched only on the server thread. Callers pair a
+ * successful {@link #begin()} with {@link #end()} in a {@code finally}. An edit that arrives while
+ * another is running is refused with the ordinary failure result for automation: an insertion
+ * keeps its stack and an extraction yields nothing.
  */
 public final class RunEdit {
+    // A run's world edits notify neighbors, and a woken neighbor can reach back into the same run's
+    // handler mid-call: while a batch is open, while the block list is being appended to, or while
+    // a held capability is being invalidated. The inner call is refused so the run stays in the
+    // state the outer call is building.
     private static boolean inProgress;
 
     private RunEdit() {
