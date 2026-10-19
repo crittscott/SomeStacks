@@ -57,8 +57,8 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     private static final Gson GSON = new GsonBuilder().create();
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path USER_FILE = PlatformServices.modConfigFolder().resolve("item_overrides.json");
-    private static final Path GENERATED_DIR = PlatformServices.modConfigFolder().resolve("generated_overrides");
+    private static Path userFile = PlatformServices.modConfigFolder().resolve("item_overrides.json");
+    private static Path generatedDir = PlatformServices.modConfigFolder().resolve("generated_overrides");
     /** Bundled resource overrides, from client resource reload. */
     public static final Map<ResourceLocation, ItemRenderConfig> CONFIG_MAP = new HashMap<>();
     /** The user's own overrides: {@code ss item} changes plus the loaded user file. */
@@ -68,6 +68,52 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
     static void clearResolvedProfiles() {
         RESOLVED_PROFILES.clear();
+    }
+
+    /**
+     * Runs the override layers against a scratch directory with empty layers, so a check can edit,
+     * write, and reload them without touching the player's files. Closing restores the previous
+     * files and layer contents.
+     */
+    public static final class Sandbox implements AutoCloseable {
+        private final Path savedUserFile = userFile;
+        private final Path savedGeneratedDir = generatedDir;
+        private final boolean savedLoaded = userFileLoaded;
+        private final Map<ResourceLocation, ItemRenderConfig> savedUser = new HashMap<>(USER_OVERRIDES);
+        private final Map<ResourceLocation, ItemRenderConfig> savedBundled = new HashMap<>(CONFIG_MAP);
+
+        public Sandbox(Path directory) {
+            userFile = directory.resolve("item_overrides.json");
+            generatedDir = directory.resolve("generated_overrides");
+            userFileLoaded = false;
+            USER_OVERRIDES.clear();
+            CONFIG_MAP.clear();
+            clearResolvedProfiles();
+        }
+
+        /** The user file the sandboxed layer reads and writes. */
+        public Path userFile() {
+            return userFile;
+        }
+
+        /** Discards the in-memory user layer so the next use reads the user file afresh. */
+        public void reloadUserFile() {
+            USER_OVERRIDES.clear();
+            userFileLoaded = false;
+            clearResolvedProfiles();
+        }
+
+        @Override
+        public void close() {
+            userFile = savedUserFile;
+            generatedDir = savedGeneratedDir;
+            userFileLoaded = savedLoaded;
+            USER_OVERRIDES.clear();
+            USER_OVERRIDES.putAll(savedUser);
+            CONFIG_MAP.clear();
+            CONFIG_MAP.putAll(savedBundled);
+            clearResolvedProfiles();
+        }
     }
 
     @Override
@@ -183,14 +229,14 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
 
         Component message;
         try {
-            Files.createDirectories(USER_FILE.getParent());
-            Files.writeString(USER_FILE, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
+            Files.createDirectories(userFile.getParent());
+            Files.writeString(userFile, PRETTY_GSON.toJson(OverrideJsonCodec.toJson(USER_OVERRIDES)));
             message = Component.translatable("somestacks.command.write.success",
-                    USER_OVERRIDES.size(), USER_FILE.toString());
+                    USER_OVERRIDES.size(), userFile.toString());
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.error("Failed to write {}", USER_FILE, e);
+            SomeStacksCommon.LOGGER.error("Failed to write {}", userFile, e);
             message = Component.translatable("somestacks.command.write.failure",
-                    USER_FILE.toString(), e.getMessage());
+                    userFile.toString(), e.getMessage());
         }
 
         report(message);
@@ -238,19 +284,19 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         int itemCount = 0;
         List<String> failed = new ArrayList<>();
         try {
-            Files.createDirectories(GENERATED_DIR);
+            Files.createDirectories(generatedDir);
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.error("Failed to create {}", GENERATED_DIR, e);
+            SomeStacksCommon.LOGGER.error("Failed to create {}", generatedDir, e);
             report(Component.translatable("somestacks.command.dump.create_failure",
-                    GENERATED_DIR.toString(), e.getMessage()));
+                    generatedDir.toString(), e.getMessage()));
             return;
         }
 
         for (Map.Entry<String, Map<ResourceLocation, ItemRenderConfig>> entry : byNamespace.entrySet()) {
-            Path file = GENERATED_DIR.resolve(entry.getKey() + ".json").normalize();
+            Path file = generatedDir.resolve(entry.getKey() + ".json").normalize();
             // Retain a path-containment check at the filesystem boundary as a final invariant.
-            if (!file.startsWith(GENERATED_DIR)) {
-                SomeStacksCommon.LOGGER.error("Refusing to write dump outside {}: {}", GENERATED_DIR, file);
+            if (!file.startsWith(generatedDir)) {
+                SomeStacksCommon.LOGGER.error("Refusing to write dump outside {}: {}", generatedDir, file);
                 failed.add(entry.getKey());
                 continue;
             }
@@ -264,7 +310,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
 
         MutableComponent message = Component.translatable("somestacks.command.dump.success",
-                itemCount, byNamespace.size() - failed.size(), GENERATED_DIR.toString());
+                itemCount, byNamespace.size() - failed.size(), generatedDir.toString());
         if (!failed.isEmpty()) {
             message.append(Component.translatable("somestacks.command.dump.failed",
                     failed.size(), ComponentUtils.formatList(failed, Component::literal)));
@@ -288,16 +334,16 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         }
         userFileLoaded = true;
 
-        if (!Files.exists(USER_FILE)) {
+        if (!Files.exists(userFile)) {
             return;
         }
         try {
-            JsonObject json = GSON.fromJson(Files.readString(USER_FILE), JsonObject.class);
+            JsonObject json = GSON.fromJson(Files.readString(userFile), JsonObject.class);
             if (json != null) {
-                USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, USER_FILE.toString()));
+                USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, userFile.toString()));
             }
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.error("Failed to read {}", USER_FILE, e);
+            SomeStacksCommon.LOGGER.error("Failed to read {}", userFile, e);
         }
     }
 }

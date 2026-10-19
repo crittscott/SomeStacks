@@ -211,16 +211,10 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * Puts what it can of {@code stack} into the one slot at {@code flatSlot}, growing the pile when
      * that slot lies in the block above it.
      *
-     * <p>A pile is genuinely a bag, so unlike the two structures its automated insertion is an
-     * ordinary positional one: the slot named takes what a slot takes, and the settle scheduled
-     * behind it packs the pile down from the base on the next tick. Filling from the base is
-     * therefore still what a pile ends up doing, just a tick later than a player's own deposit does
-     * it. Answering for the slot given rather than for the pile is what makes the handler's slot
-     * range mean something: a caller that walks the range and sums what each slot accepts gets the
-     * pile's real capacity; reporting whole-pile capacity at every slot would multiply it.
-     *
-     * <p>An automated insertion carries no player, so growth is checked against the loader-provided
-     * automation actor that would place the block.
+     * <p>Insertion is positional: the slot named takes what a slot takes, and the settle scheduled
+     * behind it packs the pile down from the base on the next tick. Growth requires the slot to
+     * lie in the block above the pile and is checked against the automation actor, since
+     * automated insertion carries no player.
      *
      * @param simulate when true, nothing is stored and the pile does not grow
      * @return how many items were, or would be, taken from {@code stack}
