@@ -568,11 +568,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
-<div class="block">Draws one stored item inside one cell according to its render profile.</div>
+<div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.GridCache.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
+<dd>
+<div class="block">A block entity's prepared cells.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.GridRenderState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
-<div class="block">A grid snapshot whose cells contain only prepared presentation data.</div>
+<div class="block">One frame's prepared grid; submission never reads the level or inventory.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#currentMode()" class="member-name-link">currentMode()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>&nbsp;</dd>
@@ -872,9 +876,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
  items across block seams as needed so nothing is left unsupported.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#extractGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems(SlotAccess, int, CubeGrid, int, float, IntUnaryOperator, Level, BlockPos, Vec3, CubeRenderHelper.GridRenderState)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
+<dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#extractGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridCache,com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems(CubeRenderHelper.GridCache, SlotAccess, int, CubeGrid, int, float, IntUnaryOperator, Level, BlockPos, Vec3, CubeRenderHelper.GridRenderState)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>
-<div class="block">Extracts inventories, profiles, item models, textures, and lighting before submission.</div>
+<div class="block">Prepares one frame of a grid.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/ExtractionRule.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.interaction">ExtractionRule</a> - Class in <a href="com/github/crittscott/somestacks/client/interaction/package-summary.html">com.github.crittscott.somestacks.client.interaction</a></dt>
 <dd>
@@ -1872,7 +1876,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#onResourceReload()" class="member-name-link">onResourceReload()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>
-<div class="block">Clears model-dependent failure state and sprite/profile caches on resource reload.</div>
+<div class="block">Clears model-dependent art and failure state and sprite/profile caches on resource reload.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html#onResourceReload()" class="member-name-link">onResourceReload()</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html" title="class in com.github.crittscott.somestacks.client.measure">AutoRenderProfiles</a></dt>
 <dd>
@@ -2059,6 +2063,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#RENDER_CACHE_RELOAD_LISTENER_ID" class="member-name-link">RENDER_CACHE_RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#renderCache()" class="member-name-link">renderCache()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
+<dd>
+<div class="block">The client renderer's prepared presentation, or null when there is none or it was discarded.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.html" class="type-name-link" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator</a> - Class in <a href="com/github/crittscott/somestacks/command/package-summary.html">com.github.crittscott.somestacks.command</a></dt>
 <dd>
 <div class="block">Generates galleries of stacks filled with given groups of items, for reviewing render settings in
@@ -2277,6 +2285,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>, or to
  automation when it is null.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#setRenderCache(java.lang.Object)" class="member-name-link">setRenderCache(Object)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#setRotation(int)" class="member-name-link">setRotation(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
 <div class="block">Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately

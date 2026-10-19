@@ -91,13 +91,19 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CubeRenderHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Draws one stored item inside one cell according to its render profile. The Storage
- and Singles renderers position a cell and delegate here; everything about how the item itself is
- presented lives in this class.
+<div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles. The
+ Storage and Singles renderers supply the grid geometry and delegate here; everything about how
+ an item itself is presented lives in this class.
 
  <p>The <code>3d</code>, <code>gui</code>, and <code>block</code> modes hand off to Minecraft's own renderers.
  The <code>2d</code> mode is the one implemented here: flat item art projected onto the visible faces
- of a small background cube, which is what makes a wall of stored items readable at a distance.</div>
+ of a small background cube, which is what makes a wall of stored items readable at a distance.
+
+ <p>Work is done when something changes. A block entity's cells, profiles, resolved models, and
+ cell transforms are kept in a <a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client"><code>CubeRenderHelper.GridCache</code></a> until its contents, layout rotation, or profiles
+ change; a frame only selects visible faces and submits. <code>2d</code> art is captured once per
+ distinct stack and shared by every block showing it. All <code>2d</code> cells of a block go out in
+ one submission per render type.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -111,9 +117,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="CubeRenderHelper.GridRenderState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a></code></div>
+<div class="col-second even-row-color"><code><a href="CubeRenderHelper.GridCache.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">A grid snapshot whose cells contain only prepared presentation data.</div>
+<div class="block">A block entity's prepared cells.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="CubeRenderHelper.GridRenderState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">One frame's prepared grid; submission never reads the level or inventory.</div>
 </div>
 </div>
 </section>
@@ -179,8 +190,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Applies the counter-rotation shared by GUI submission and automatic GUI measurement.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems</a><wbr>(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridCache,com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)" class="member-name-link">extractGridItems</a><wbr>(<a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a>&nbsp;previous,
+ <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
  int&nbsp;slots,
  <a href="../util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a>&nbsp;grid,
  int&nbsp;blockRotation,
@@ -191,12 +203,12 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.phys.Vec3&nbsp;cameraPos,
  <a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Extracts inventories, profiles, item models, textures, and lighting before submission.</div>
+<div class="block">Prepares one frame of a grid.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onResourceReload()" class="member-name-link">onResourceReload</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Clears model-dependent failure state and sprite/profile caches on resource reload.</div>
+<div class="block">Clears model-dependent art and failure state and sprite/profile caches on resource reload.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#submitGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.SubmitNodeCollector)" class="member-name-link">submitGridItems</a><wbr>(<a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a>&nbsp;state,
@@ -313,9 +325,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="extractGridItems(com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)">
+<section class="detail" id="extractGridItems(com.github.crittscott.somestacks.client.CubeRenderHelper.GridCache,com.github.crittscott.somestacks.util.SlotAccess,int,com.github.crittscott.somestacks.util.CubeGrid,int,float,java.util.function.IntUnaryOperator,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.phys.Vec3,com.github.crittscott.somestacks.client.CubeRenderHelper.GridRenderState)">
 <h3>extractGridItems</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractGridItems</span><wbr><span class="parameters">(<a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a></span>&nbsp;<span class="element-name">extractGridItems</span><wbr><span class="parameters">(@Nullable
+ <a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a>&nbsp;previous,
+ <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;items,
  int&nbsp;slots,
  <a href="../util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a>&nbsp;grid,
  int&nbsp;blockRotation,
@@ -326,7 +341,12 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;blockPos,
  net.minecraft.world.phys.Vec3&nbsp;cameraPos,
  <a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a>&nbsp;state)</span></div>
-<div class="block">Extracts inventories, profiles, item models, textures, and lighting before submission.</div>
+<div class="block">Prepares one frame of a grid. <code>previous</code> is what this call returned last time for the
+ same block entity, or null; it is reused while still current.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the grid cache to hand back on the next frame.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -349,7 +369,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onResourceReload()">
 <h3>onResourceReload</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onResourceReload</span>()</div>
-<div class="block">Clears model-dependent failure state and sprite/profile caches on resource reload.</div>
+<div class="block">Clears model-dependent art and failure state and sprite/profile caches on resource reload.</div>
 </section>
 </li>
 </ul>

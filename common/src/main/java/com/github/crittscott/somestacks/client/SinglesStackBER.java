@@ -27,9 +27,11 @@ public class SinglesStackBER implements BlockEntityRenderer<SinglesStackBE, Cube
                                    float partialTick, Vec3 cameraPos,
                                    @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTick, cameraPos, crumblingOverlay);
-        CubeRenderHelper.extractGridItems(be.getItems(), SinglesStackBE.SLOTS, SinglesCubeIdx.GRID,
+        be.setRenderCache(CubeRenderHelper.extractGridItems(
+                be.renderCache() instanceof CubeRenderHelper.GridCache cache ? cache : null,
+                be.getItems(), SinglesStackBE.SLOTS, SinglesCubeIdx.GRID,
                 be.getRotation(), CubeRenderHelper.CELL_RENDER_SCALE, be::getCubeRotation,
-                be.getLevel(), be.getBlockPos(), cameraPos, state);
+                be.getLevel(), be.getBlockPos(), cameraPos, state));
     }
 
     @Override

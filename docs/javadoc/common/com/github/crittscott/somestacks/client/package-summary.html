@@ -129,47 +129,51 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Draws one stored item inside one cell according to its render profile.</div>
+<div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridCache</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A grid snapshot whose cells contain only prepared presentation data.</div>
+<div class="block">A block entity's prepared cells.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemCapture.html" title="class in com.github.crittscott.somestacks.client">ItemCapture</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">One frame's prepared grid; submission never reads the level or inventory.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemCapture.html" title="class in com.github.crittscott.somestacks.client">ItemCapture</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Resolves an item through vanilla's model pipeline, visits its declared extents, and records its
  submitted baked quads and layer tints without drawing.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab4"><a href="ItemCapture.TintedQuad.html" title="class in com.github.crittscott.somestacks.client">ItemCapture.TintedQuad</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ItemCapture.TintedQuad.html" title="class in com.github.crittscott.somestacks.client">ItemCapture.TintedQuad</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
 <div class="block">A baked quad together with its resolved layer tint and the render type the item submitted it
  with, which binds the atlas holding the quad's sprite.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The client's item render configuration, layered by authority.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Runs the override layers against a scratch directory with empty layers, so a check can edit,
  write, and reload them without touching the player's files.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="RenderProfile.html" title="class in com.github.crittscott.somestacks.client">RenderProfile</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
 <div class="block">A complete, ready-to-render presentation for one item: the output of resolving the
  override layers, or of measuring the item's model when no layer configures it.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesStackBER.html" title="class in com.github.crittscott.somestacks.client">SinglesStackBER</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SinglesStackBER.html" title="class in com.github.crittscott.somestacks.client">SinglesStackBER</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Extracts Singles layout and per-item rotations and item presentation before submitting the grid.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The loader-neutral client copy of which stack types the server has enabled, delivered by the configuration
  sync.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StorageStackBER.html" title="class in com.github.crittscott.somestacks.client">StorageStackBER</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StorageStackBER.html" title="class in com.github.crittscott.somestacks.client">StorageStackBER</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Extracts Storage layout rotation and item presentation before submitting the grid.</div>
 </div>
 </div>
