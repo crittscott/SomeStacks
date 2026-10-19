@@ -23,9 +23,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -43,8 +45,16 @@ public final class ProtectionGameTests {
     private static final Map<TestTarget, InteractionResult> ADJACENT_USE_RESULTS =
             new ConcurrentHashMap<>();
 
+    private static final Set<TestTarget> GROWTH_REFUSALS = ConcurrentHashMap.newKeySet();
+
     static {
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (GROWTH_REFUSALS.contains(new TestTarget(level, hit.getBlockPos()))) {
+                check(player == WorldEdits.automationActor((ServerLevel) level),
+                        "Growth consulted the callbacks for someone other than the automation actor");
+                check(WorldEdits.isConsultingAdjacent(), "Growth callback lacks its gesture guard");
+                return InteractionResult.FAIL;
+            }
             InteractionResult result = ADJACENT_USE_RESULTS.get(new TestTarget(level, hit.getBlockPos()));
             if (result != null) {
                 check(WorldEdits.isConsultingAdjacent(), "Destination callback lacks its gesture guard");
@@ -409,6 +419,66 @@ public final class ProtectionGameTests {
         checkEquals(4, offered.getCount(), "Input stack must not be mutated");
         helper.assertBlockNotPresent(
                 CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
+     * Storage pile, insert through item automation; nothing is accepted and no block is created.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageGrowthAnswersToBlockUseCallbacks(GameTestHelper helper) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+        }
+        checkRefusedGrowth(helper, FabricGameTestSupport.storage(storage), StorageStackBE.SLOTS,
+                new ItemStack(Items.STONE, 4), CommonRegistry.storageStackBlock());
+    }
+
+    /**
+     * To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
+     * Singles column, insert through item automation; nothing is accepted and no block is created.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void singlesGrowthAnswersToBlockUseCallbacks(GameTestHelper helper) {
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
+        }
+        checkRefusedGrowth(helper, FabricGameTestSupport.storage(singles), SinglesStackBE.SLOTS,
+                new ItemStack(Items.STONE, 4), CommonRegistry.singlesStackBlock());
+    }
+
+    /**
+     * To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
+     * Bar column, insert through item automation; nothing is accepted and no block is created.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void barGrowthAnswersToBlockUseCallbacks(GameTestHelper helper) {
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            bars.getItems().insertItem(slot, new ItemStack(bar), false);
+        }
+        checkRefusedGrowth(helper, FabricGameTestSupport.storage(bars), BarStackBE.SLOTS,
+                new ItemStack(bar, 4), CommonRegistry.barStackBlock());
+    }
+
+    /** Offers {@code offered} to the headroom slot while a callback refuses automation's block use. */
+    private static void checkRefusedGrowth(GameTestHelper helper, SlottedStorage<ItemVariant> storage,
+                                           int headroom, ItemStack offered, Block stackBlock) {
+        TestTarget above = new TestTarget(helper.getLevel(), helper.absolutePos(ORIGIN.above()));
+        GROWTH_REFUSALS.add(above);
+        try {
+            checkEquals(4, FabricGameTestSupport.insertAt(storage, headroom, offered, false).getCount(),
+                    "Committed remainder");
+        } finally {
+            GROWTH_REFUSALS.remove(above);
+        }
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        check(!WorldEdits.isConsultingAdjacent(), "Growth consultation guard leaked");
+        helper.assertBlockNotPresent(stackBlock, ORIGIN.above());
         helper.succeed();
     }
 
