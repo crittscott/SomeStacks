@@ -15,6 +15,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
  * entity obstruction, actor propagation, and the actual block edit. Automation identity and
@@ -47,12 +49,21 @@ public final class WorldEdits {
 
     /** Consults destination protection without allowing the consultation to execute gestures. */
     public static boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
-        if (isConsultingAdjacent() || isProtected(player, pos)) {
+        return !isProtected(player, pos)
+                && consulting(() -> PlatformServices.editAuthority().mayUseAdjacent(player, pos));
+    }
+
+    /**
+     * Runs a protection consultation that fires loader events, refusing it when one is already
+     * running so a listener cannot re-enter a stack gesture through it.
+     */
+    public static boolean consulting(BooleanSupplier consultation) {
+        if (isConsultingAdjacent()) {
             return false;
         }
         consultingAdjacent.set(true);
         try {
-            return PlatformServices.editAuthority().mayUseAdjacent(player, pos);
+            return consultation.getAsBoolean();
         } finally {
             consultingAdjacent.remove();
         }
