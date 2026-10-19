@@ -38,21 +38,18 @@ public final class FabricEditAuthority implements EditAuthority {
 
     @Override
     public boolean mayPlace(Player placer, ServerLevel level, BlockPos pos) {
-        return true;
+        // A player's own click already ran the block-use callbacks; automation has no click, so its
+        // growth consults them here, where a refusal reaches simulation and commit alike.
+        return placer != automationActor(level) || WorldEdits.consulting(() ->
+                UseBlockCallback.EVENT.invoker().interact(
+                        (ServerPlayer) placer, level, InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(pos), Direction.DOWN, pos, false))
+                        == InteractionResult.PASS);
     }
 
     @Override
     public boolean place(Player placer, ServerLevel level, BlockPos pos,
                          BlockState state, Direction placedAgainst) {
-        // A player's own click already ran the block-use callbacks; automation has no click, so its
-        // growth consults them for the automation actor before changing the world.
-        if (placer == automationActor(level) && !WorldEdits.consulting(() ->
-                UseBlockCallback.EVENT.invoker().interact(
-                        (ServerPlayer) placer, level, InteractionHand.MAIN_HAND,
-                        new BlockHitResult(Vec3.atCenterOf(pos), placedAgainst, pos, false))
-                        == InteractionResult.PASS)) {
-            return false;
-        }
         return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
