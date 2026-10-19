@@ -95,6 +95,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#handleUpdateTag(net.minecraft.world.level.storage.ValueInput)" tabindex="0">handleUpdateTag(ValueInput)</a></li>
 <li><a href="#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput)" tabindex="0">onDataPacket(Connection, ValueInput)</a></li>
 <li><a href="#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" tabindex="0">loadClientUpdate(CompoundTag, HolderLookup.Provider)</a></li>
+<li><a href="#renderCache()" tabindex="0">renderCache()</a></li>
+<li><a href="#setRenderCache(java.lang.Object)" tabindex="0">setRenderCache(Object)</a></li>
 <li><a href="#saveAdditional(net.minecraft.world.level.storage.ValueOutput)" tabindex="0">saveAdditional(ValueOutput)</a></li>
 <li><a href="#getUpdatePacket()" tabindex="0">getUpdatePacket()</a></li>
 <li><a href="#getUpdateTag(net.minecraft.core.HolderLookup.Provider)" tabindex="0">getUpdateTag(HolderLookup.Provider)</a></li>
@@ -291,31 +293,39 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Drops contents while this entity is still available; the block repairs neighboring runs afterward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#renderCache()" class="member-name-link">renderCache</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The client renderer's prepared presentation, or null when there is none or it was discarded.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Resolves the current server-side run without consulting the per-tick cache.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.world.level.storage.ValueOutput&nbsp;output)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.world.level.storage.ValueOutput&nbsp;output)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.world.level.storage.ValueOutput&nbsp;output)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveStackData(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveStackData</a><wbr>(net.minecraft.world.level.storage.ValueOutput&nbsp;output)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds current subtype metadata after version and inventory serialization.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#schedulePublish()" class="member-name-link">schedulePublish</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#schedulePublish()" class="member-name-link">schedulePublish</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBlockRotation(int)" class="member-name-link">setBlockRotation</a><wbr>(int&nbsp;rotation)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBlockRotation(int)" class="member-name-link">setBlockRotation</a><wbr>(int&nbsp;rotation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Changes the outer block's facing; the block-state update performs client synchronization.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRenderCache(java.lang.Object)" class="member-name-link">setRenderCache</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;cache)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripServerOnlyUpdateData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
@@ -637,6 +647,25 @@ saves and update tags; remove private fields in stripServerOnlyUpdateData before
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">loadClientUpdate</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag,
  net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
 <div class="block">Rejects malformed wire data without migration, recovery retention, or logging.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="renderCache()">
+<h3>renderCache</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">renderCache</span>()</div>
+<div class="block">The client renderer's prepared presentation, or null when there is none or it was discarded.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRenderCache(java.lang.Object)">
+<h3>setRenderCache</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRenderCache</span><wbr><span class="parameters">(@Nullable
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;cache)</span></div>
 </div>
 </section>
 </li>
