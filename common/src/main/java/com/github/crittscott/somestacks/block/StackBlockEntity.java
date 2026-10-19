@@ -43,6 +43,12 @@ public abstract class StackBlockEntity extends BlockEntity {
     private double comparatorContribution;
     private StackRunItemAccess cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
+    /**
+     * The client renderer's prepared presentation of this block's contents. Opaque here so common
+     * code never loads client classes; a client update discards it.
+     */
+    @Nullable
+    private Object renderCache;
 
     /** Creates fixed local storage whose mutations refresh fill, notify the subtype, and batch publication. */
     protected StackBlockEntity(
@@ -379,7 +385,18 @@ public abstract class StackBlockEntity extends BlockEntity {
         pendingBlockRotation = null;
         loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         refreshComparatorContribution();
+        renderCache = null;
         return true;
+    }
+
+    /** The client renderer's prepared presentation, or null when there is none or it was discarded. */
+    @Nullable
+    public final Object renderCache() {
+        return renderCache;
+    }
+
+    public final void setRenderCache(@Nullable Object cache) {
+        renderCache = cache;
     }
 
     @Override

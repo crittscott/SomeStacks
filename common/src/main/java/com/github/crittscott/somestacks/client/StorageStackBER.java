@@ -31,9 +31,11 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE, Cube
                                    float partialTick, Vec3 cameraPos,
                                    @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
         BlockEntityRenderer.super.extractRenderState(be, state, partialTick, cameraPos, crumblingOverlay);
-        CubeRenderHelper.extractGridItems(be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID,
+        be.setRenderCache(CubeRenderHelper.extractGridItems(
+                be.renderCache() instanceof CubeRenderHelper.GridCache cache ? cache : null,
+                be.getItems(), StorageStackBE.SLOTS, StorageCubeIdx.GRID,
                 be.getRotation(), CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels,
-                be.getLevel(), be.getBlockPos(), cameraPos, state);
+                be.getLevel(), be.getBlockPos(), cameraPos, state));
     }
 
     @Override

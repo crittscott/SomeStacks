@@ -194,7 +194,7 @@ public final class ClientCallbackChecks {
         items.setStackInSlot(0, stone);
         var state = new CubeRenderHelper.GridRenderState();
         var blockModels = new BlockModelResolver(client.getModelManager());
-        CubeRenderHelper.extractGridItems(items, 1, StorageCubeIdx.GRID, 0,
+        CubeRenderHelper.extractGridItems(null, items, 1, StorageCubeIdx.GRID, 0,
                 CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels, client.level,
                 hit.getBlockPos(), client.player.getEyePosition(), state);
         items.setStackInSlot(0, ItemStack.EMPTY);
@@ -202,7 +202,7 @@ public final class ClientCallbackChecks {
         CubeRenderHelper.submitGridItems(state, new PoseStack(), submitted);
         GameTestScaffold.check(!submitted.getSubmitsPerOrder().isEmpty(),
                 "Prepared grid read the emptied inventory during submission");
-        CubeRenderHelper.extractGridItems(items, 1, StorageCubeIdx.GRID, 0,
+        CubeRenderHelper.extractGridItems(null, items, 1, StorageCubeIdx.GRID, 0,
                 CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, index -> 0, blockModels, client.level,
                 hit.getBlockPos(), client.player.getEyePosition(), state);
         SubmitNodeStorage empty = new SubmitNodeStorage();
