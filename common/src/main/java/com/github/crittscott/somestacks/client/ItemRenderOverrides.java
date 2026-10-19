@@ -65,9 +65,17 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     private static final Map<ResourceLocation, ItemRenderConfig> USER_OVERRIDES = new HashMap<>();
     private static boolean userFileLoaded = false;
     private static final Map<Item, RenderProfile> RESOLVED_PROFILES = new HashMap<>();
+    /** Counts discards of the resolved profiles, so prepared presentation can tell it is stale. */
+    private static int generation;
 
     static void clearResolvedProfiles() {
         RESOLVED_PROFILES.clear();
+        generation++;
+    }
+
+    /** Changes whenever any item's resolved profile may have changed, including on resource reload. */
+    static int generation() {
+        return generation;
     }
 
     /**

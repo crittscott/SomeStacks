@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -54,6 +56,11 @@ import java.util.function.IntUnaryOperator;
  * <p>The {@code 3d}, {@code gui}, and {@code block} modes hand off to Minecraft's own renderers.
  * The {@code 2d} mode is the one implemented here: flat item art projected onto the visible faces
  * of a small background cube, which is what makes a wall of stored items readable at a distance.
+ *
+ * <p>Work is done when something changes. Each distinct stack's profile, item model, and
+ * {@code 2d} plates are prepared once and shared by every grid showing it until profiles or
+ * resources change, so a model that changes with time, such as a compass, shows its state from
+ * when it was prepared.
  */
 public final class CubeRenderHelper {
     private CubeRenderHelper() {}
@@ -128,7 +135,6 @@ public final class CubeRenderHelper {
             Level level, BlockPos blockPos, PoseStack pose, MultiBufferSource buffers,
             BlockRenderDispatcher blockRenderer) {
         int cubeLight = LevelRenderer.getLightColor(level, blockPos);
-        Map<CaptureKey, List<ItemCapture.TintedQuad>> captures = new HashMap<>();
         for (int index = 0; index < slots; index++) {
             ItemStack stack = items.getStackInSlot(index);
             if (stack.isEmpty()) {
@@ -148,7 +154,7 @@ public final class CubeRenderHelper {
                 pose.translate(-CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE, -CELL_LOCAL_CENTRE);
             }
 
-            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level, captures);
+            renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, level);
             pose.popPose();
         }
     }
@@ -176,67 +182,86 @@ public final class CubeRenderHelper {
         }
     }
 
+    /**
+     * One distinct stack's presentation. A {@code 2d} item carries its plates, or null when its
+     * model threw and it draws the error cube; any other mode carries its resolved item model in
+     * the GUI or FIXED context, which {@code block} also falls back to.
+     */
+    private record PreparedItem(RenderProfile profile, @Nullable List<ItemCapture.TintedQuad> plates,
+                                @Nullable ItemStackRenderState item) {}
+
+    /** Prepared stacks for every grid, valid for {@link #preparedGeneration} of the profiles. */
+    private static final Map<CaptureKey, PreparedItem> PREPARED = new HashMap<>();
+    private static int preparedGeneration = -1;
+
     private static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers,
-            int light, BlockRenderDispatcher blockRenderer, Level level,
-            Map<CaptureKey, List<ItemCapture.TintedQuad>> captures) {
-        RenderProfile profile = ItemRenderOverrides.resolve(stack);
-        if (profile == null) {
+            int light, BlockRenderDispatcher blockRenderer, Level level) {
+        PreparedItem prepared = prepared(stack, level);
+        if (prepared == null) {
             return;
         }
+        RenderProfile profile = prepared.profile();
         float scale = profile.scale();
         RenderOffset offset = profile.offset();
 
         switch (profile.mode()) {
-            case TWO_D -> render2DItem(stack, pose, buffers, light, level, scale, offset, captures);
-            case THREE_D -> render3DItem(stack, pose, buffers, light, level, scale, offset);
-            case BLOCK -> renderBlockItem(stack, pose, buffers, light, blockRenderer, level, scale, offset);
-            case GUI -> renderGuiItem(stack, pose, buffers, light, level, scale, offset);
+            case TWO_D -> render2DItem(prepared.plates(), pose, buffers, light, scale, offset);
+            case THREE_D -> renderModel(prepared.item(), pose, buffers, light, scale, offset, false);
+            case BLOCK -> renderBlockItem(stack, prepared.item(), pose, buffers, light, blockRenderer, scale, offset);
+            case GUI -> renderModel(prepared.item(), pose, buffers, light, scale, offset, true);
         }
     }
 
-    private static void render3DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float finalScale, RenderOffset offset) {
-        pose.pushPose();
-        pose.scale(finalScale, finalScale, finalScale);
-        pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
-                CELL_LOCAL_CENTRE / finalScale);
-        pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
-
-        pose.popPose();
+    /**
+     * The stack's shared presentation, prepared the first time any grid shows it since the
+     * profiles or resources last changed; null for a stack with no profile.
+     */
+    @Nullable
+    private static PreparedItem prepared(ItemStack stack, Level level) {
+        int generation = ItemRenderOverrides.generation();
+        if (generation != preparedGeneration) {
+            PREPARED.clear();
+            preparedGeneration = generation;
+        }
+        CaptureKey key = CaptureKey.of(stack);
+        PreparedItem prepared = PREPARED.get(key);
+        if (prepared == null) {
+            prepared = prepareItem(stack.copy(), level);
+            if (prepared != null) {
+                PREPARED.put(key, prepared);
+            }
+        }
+        return prepared;
     }
 
-    private static void renderGuiItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                      float finalScale, RenderOffset offset) {
+    @Nullable
+    private static PreparedItem prepareItem(ItemStack stack, Level level) {
+        RenderProfile profile = ItemRenderOverrides.resolve(stack);
+        if (profile == null) {
+            return null;
+        }
+        if (profile.mode() == RenderMode.TWO_D) {
+            return new PreparedItem(profile, captureFlatArt(stack, level), null);
+        }
+        ItemStackRenderState item = new ItemStackRenderState();
+        ItemDisplayContext context = profile.mode() == RenderMode.GUI
+                ? ItemDisplayContext.GUI : ItemDisplayContext.FIXED;
+        Minecraft.getInstance().getItemModelResolver().updateForTopItem(item, stack, context, level, null, 0);
+        return new PreparedItem(profile, null, item);
+    }
+
+    /** Draws a resolved {@code 3d} or {@code gui} item model centered in the cell. */
+    private static void renderModel(ItemStackRenderState item, PoseStack pose, MultiBufferSource buffers,
+                                    int light, float finalScale, RenderOffset offset, boolean gui) {
         pose.pushPose();
         pose.scale(finalScale, finalScale, finalScale);
         pose.translate(CELL_LOCAL_CENTRE / finalScale, CELL_LOCAL_CENTRE / finalScale,
                 CELL_LOCAL_CENTRE / finalScale);
         pose.translate(offset.x() / finalScale, offset.y() / finalScale, offset.z() / finalScale);
-
-        applyGuiCounterRotation(pose);
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                stack,
-                ItemDisplayContext.GUI,
-                light,
-                OverlayTexture.NO_OVERLAY,
-                pose,
-                buffers,
-                level,
-                0
-        );
-
+        if (gui) {
+            applyGuiCounterRotation(pose);
+        }
+        item.render(pose, buffers, light, OverlayTexture.NO_OVERLAY);
         pose.popPose();
     }
 
@@ -246,16 +271,13 @@ public final class CubeRenderHelper {
         pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
     }
 
-    private static void render2DItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light, Level level,
-                                     float scale, RenderOffset offset,
-                                     Map<CaptureKey, List<ItemCapture.TintedQuad>> captures) {
+    private static void render2DItem(@Nullable List<ItemCapture.TintedQuad> quads, PoseStack pose,
+                                     MultiBufferSource buffers, int light, float scale, RenderOffset offset) {
         pose.pushPose();
         pose.scale(CELL_LOCAL_SIZE, CELL_LOCAL_SIZE, CELL_LOCAL_SIZE);
         pose.translate(0.5f, 0.5f, 0.5f);
         pose.scale(CUBE_INSET, CUBE_INSET, CUBE_INSET);
         pose.translate(-0.5f, -0.5f, -0.5f);
-        List<ItemCapture.TintedQuad> quads = captures.computeIfAbsent(CaptureKey.of(stack),
-                ignored -> captureFlatArt(stack, level));
         if (quads == null) {
             render2DItemCube(pose, buffers, List.of(), STACK_CUBE_ERROR_TEXTURE, light, scale, offset);
         } else {
@@ -265,8 +287,14 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * The baked quads {@code 2d} lays onto the cube, or null when the item's model has thrown. The
+     * The plates {@code 2d} lays onto the cube, or null when the item's model has thrown. The
      * capture records without drawing, so a model that throws partway leaves no buffer mid-quad.
+     *
+     * <p>An item model lays its art on a front and a back plate and hangs a sliver off every span
+     * of the sprite's outline. The slivers stand perpendicular to the plates to give a held item its
+     * thickness; flattened onto a cell face they are edge-on and cover nothing, so only quads facing
+     * along Z are kept. Both plates are kept and the render type's own back-face culling shows the
+     * outward one, exactly as it does for an item in the hand.
      */
     @Nullable
     private static List<ItemCapture.TintedQuad> captureFlatArt(ItemStack stack, Level level) {
@@ -275,8 +303,14 @@ public final class CubeRenderHelper {
             return null;
         }
         try {
-            return List.copyOf(ItemCapture.captureQuads(
-                    stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads());
+            List<ItemCapture.TintedQuad> plates = new ArrayList<>();
+            for (ItemCapture.TintedQuad tinted : ItemCapture.captureQuads(
+                    stack, ItemDisplayContext.FIXED, level, SCRATCH_POSE).quads()) {
+                if (tinted.quad().direction().getAxis() == Direction.Axis.Z) {
+                    plates.add(tinted);
+                }
+            }
+            return List.copyOf(plates);
         } catch (RuntimeException e) {
             FLAT_CAPTURE_FAILURES.add(item);
             SomeStacksCommon.LOGGER.warn("Item model threw while capturing 2d art for {}; drawing the error cube instead",
@@ -285,8 +319,8 @@ public final class CubeRenderHelper {
         }
     }
 
-    private static void renderBlockItem(ItemStack stack, PoseStack pose, MultiBufferSource buffers, int light,
-                                        BlockRenderDispatcher blockRenderer, Level level,
+    private static void renderBlockItem(ItemStack stack, ItemStackRenderState item, PoseStack pose,
+                                        MultiBufferSource buffers, int light, BlockRenderDispatcher blockRenderer,
                                         float finalScale, RenderOffset offset) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             // Block mode has no meaningful rendering path for a non-BlockItem.
@@ -301,7 +335,7 @@ public final class CubeRenderHelper {
         // with the real stack under FIXED, and cannot leave the pose stack unbalanced.
         if (blockState.getRenderShape() != RenderShape.MODEL
                 || BLOCK_RENDER_FAILURES.contains(stack.getItem())) {
-            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
+            renderModel(item, pose, buffers, light, finalScale, offset, false);
             return;
         }
 
@@ -323,7 +357,7 @@ public final class CubeRenderHelper {
                 SomeStacksCommon.LOGGER.warn("Block rendering threw for {}; drawing it as 3d instead",
                         BuiltInRegistries.ITEM.getKey(stack.getItem()), e);
             }
-            render3DItem(stack, pose, buffers, light, level, finalScale, offset);
+            renderModel(item, pose, buffers, light, finalScale, offset, false);
             return;
         }
 
@@ -352,7 +386,10 @@ public final class CubeRenderHelper {
         emitPlates(vc, quads, light, faces);
     }
 
-    /** Clears failure state tied to models being replaced by a resource reload. */
+    /**
+     * Clears failure state tied to models being replaced by a resource reload; clearing the
+     * resolved profiles also discards every prepared stack.
+     */
     public static void onResourceReload() {
         BLOCK_RENDER_FAILURES.clear();
         FLAT_CAPTURE_FAILURES.clear();
@@ -417,21 +454,11 @@ public final class CubeRenderHelper {
         return art;
     }
 
-    /**
-     * Lays the item's plates onto each visible face. An item model lays its art on a front and a
-     * back plate and hangs a sliver off every span of the sprite's outline. The slivers stand
-     * perpendicular to the plates to give a held item its thickness; flattened onto a cell face they
-     * are edge-on and cover nothing, so only quads facing along Z are drawn. Both plates are kept
-     * and the render type's own back-face culling shows the outward one, exactly as it does for an
-     * item in the hand.
-     */
+    /** Lays the item's plates onto each visible face. */
     private static void emitPlates(VertexConsumer vc, List<ItemCapture.TintedQuad> quads, int light,
                                    List<FaceTarget> faces) {
         for (ItemCapture.TintedQuad tinted : quads) {
             BakedQuad quad = tinted.quad();
-            if (quad.direction().getAxis() != Direction.Axis.Z) {
-                continue;
-            }
             int color = tinted.color();
             int r = ARGB.red(color);
             int g = ARGB.green(color);
