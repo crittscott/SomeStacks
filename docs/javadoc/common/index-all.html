@@ -430,6 +430,8 @@ cube becomes eight pixels.</div>
 <dd>
 <div class="block">Passive server lists used only when the local player invokes a render-authoring command.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#close()" class="member-name-link">close()</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#codec(int)" class="member-name-link">codec(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
 <div class="block">Uses the value output's registry context for item components, retaining the disk envelope.</div>
@@ -542,6 +544,11 @@ counting the runs both below and above it, must fit the configured maximum.</div
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#%3Cinit%3E(int,boolean,boolean,boolean,boolean,boolean,int,int,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt(int, boolean, boolean, boolean, boolean, boolean, int, int, List, List)</a> - Constructor for record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>ConfigSyncPkt</code> record class.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#consulting(java.util.function.BooleanSupplier)" class="member-name-link">consulting(BooleanSupplier)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
+<dd>
+<div class="block">Runs a protection consultation that fires loader events, refusing it when one is already
+running so a listener cannot re-enter a stack gesture through it.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/QuarterTurns.html#COUNT" class="member-name-link">COUNT</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></dt>
 <dd>&nbsp;</dd>
@@ -1513,6 +1520,11 @@ the player, how a broken block sheds its contents, and how stored items add up t
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#%3Cinit%3E()" class="member-name-link">ItemRenderOverrides()</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
+<dd>
+<div class="block">Runs the override layers against a scratch directory with empty layers, so a check can edit,
+write, and reload them without touching the player's files.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#itemRun()" class="member-name-link">itemRun()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
 <div class="block">The current server-side run, or <code>null</code> on the client or during removal.</div>
@@ -2027,6 +2039,10 @@ or changed.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#reloadUserFile()" class="member-name-link">reloadUserFile()</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>
+<dd>
+<div class="block">Discards the in-memory user layer so the next use reads the user file afresh.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#removeChecked(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">removeChecked(ServerLevel, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>
 <div class="block">Removes a stack block the mod itself decided to take down, answering to the same protection
@@ -2168,6 +2184,8 @@ layout alone.</div>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#%3Cinit%3E(java.nio.file.Path)" class="member-name-link">Sandbox(Path)</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">sanitize(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
@@ -2850,6 +2868,10 @@ occupied one, or the farthest intersected slot if the ray meets no occupied item
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#userFile()" class="member-name-link">userFile()</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>
+<dd>
+<div class="block">The user file the sandboxed layer reads and writes.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">useWithoutItem(BlockState, Level, BlockPos, Player, BlockHitResult)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
 </dl>
