@@ -2,12 +2,14 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.util.ItemOps;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -29,7 +31,7 @@ public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
     public static final int SLOTS = StorageCubeIdx.CELLS;
 
-    private static final String TAG_PERMANENT = "Permanent";
+    public static final String TAG_PERMANENT = "Permanent";
 
     private boolean permanent = false;
     @Nullable
@@ -84,7 +86,10 @@ public class StorageStackBE extends StackBlockEntity {
 
     /** Sets the outer block's rendered layout rotation modulo four. */
     public void setRotation(int rotation) {
-        setBlockRotation(rotation);
+        if (level instanceof ServerLevel) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(StackBlock.HORIZONTAL_FACING,
+                    QuarterTurns.toDirection(rotation)), Block.UPDATE_ALL);
+        }
     }
 
     /** Whether this block survives being emptied. The pile's base block is authoritative. */
@@ -100,11 +105,10 @@ public class StorageStackBE extends StackBlockEntity {
         }
     }
 
-    /** Gives a block that has just joined a pile the pile's presentation and mode. */
-    void adoptPileState(boolean permanent, int rotation) {
+    /** Gives a block that has just joined a pile the pile's permanence mode. */
+    void adoptPileState(boolean permanent) {
         this.permanent = permanent;
         setChanged();
-        setBlockRotation(rotation);
     }
 
     /**

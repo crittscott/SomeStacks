@@ -11,28 +11,27 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /** Local storage, persistence, synchronization, lighting, and batching shared by every stack. */
 public abstract class StackBlockEntity extends BlockEntity {
-    static final String TAG_ITEMS = "Items";
+    public static final String TAG_ITEMS = StackItemStorage.TAG_ITEMS;
+    public static final String TAG_DATA_VERSION = "DataVersion";
 
     protected final StackItemStorage items;
-    @Nullable
-    private Integer pendingBlockRotation;
     @Nullable
     private StackItemStorage.LoadResult pendingLoadResult;
     private boolean pendingMigrationSave;
@@ -104,6 +103,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         cachedRun = resolveRun(serverLevel);
         cachedRunTick = now;
         return cachedRun;
+    }
+
+    /** Shares one resolved run with all current members for this server tick. */
+    final void cacheRun(StackRunItemAccess run, long tick) {
+        cachedRun = run;
+        cachedRunTick = tick;
     }
 
     /** Drops the cached run so a structural edit is visible again within the current tick. */
@@ -194,17 +199,10 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** The outer block's layout rotation, expressed in the grid's quarter-turn coordinates. */
     protected final int blockRotation() {
-        applyPendingBlockRotation();
         BlockState state = getBlockState();
         return state.hasProperty(StackBlock.HORIZONTAL_FACING)
                 ? QuarterTurns.fromDirection(state.getValue(StackBlock.HORIZONTAL_FACING))
                 : 0;
-    }
-
-    /** Changes the outer block's facing; the block-state update performs client synchronization. */
-    protected final void setBlockRotation(int rotation) {
-        pendingBlockRotation = QuarterTurns.normalize(rotation);
-        applyPendingBlockRotation();
     }
 
     /** Per-position automation capacity before the offered item's own stack limit. */
@@ -281,7 +279,6 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        applyPendingBlockRotation();
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
@@ -310,27 +307,6 @@ public abstract class StackBlockEntity extends BlockEntity {
             SomeStacksServer.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
         }
         pendingLoadResult = null;
-    }
-
-    /** Applies a requested rotation once the block belongs to a server level. */
-    private void applyPendingBlockRotation() {
-        if (pendingBlockRotation == null || level == null || level.isClientSide()) {
-            return;
-        }
-        BlockState state = getBlockState();
-        if (!state.hasProperty(StackBlock.HORIZONTAL_FACING)) {
-            pendingBlockRotation = null;
-            return;
-        }
-        BlockState migrated = state.setValue(
-                StackBlock.HORIZONTAL_FACING,
-                QuarterTurns.toDirection(pendingBlockRotation));
-        if (state == migrated || level.getBlockState(getBlockPos()) == migrated
-                || level.setBlock(getBlockPos(), migrated, Block.UPDATE_ALL)) {
-            setBlockState(migrated);
-            pendingBlockRotation = null;
-            setChanged();
-        }
     }
 
     /** Publishes pending contents and light on the owning server level; returns whether it did work. */
@@ -386,16 +362,15 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Rejects malformed wire data without migration, recovery retention, or logging. */
     public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
-        if (!(tag.get("DataVersion") instanceof IntTag version)
+        if (!(tag.get(TAG_DATA_VERSION) instanceof IntTag version)
                 || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()
                 || !(tag.get(TAG_ITEMS) instanceof CompoundTag inventory)
                 || tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                || tag.contains("Permanent")
+                || tag.contains(StorageStackBE.TAG_PERMANENT)
                 || !isValidClientStackData(tag)
                 || !items.deserializeClientUpdate(registries, inventory)) {
             return false;
         }
-        pendingBlockRotation = null;
         loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         refreshComparatorContribution();
         renderCache = null;
@@ -415,7 +390,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     protected final void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("DataVersion", SharedConstants.getCurrentVersion().dataVersion().version());
+        output.putInt(TAG_DATA_VERSION, SharedConstants.getCurrentVersion().dataVersion().version());
         try {
             output.store(TAG_ITEMS, StackItemStorage.codec(items.getSlots()), items);
         } catch (RuntimeException failure) {

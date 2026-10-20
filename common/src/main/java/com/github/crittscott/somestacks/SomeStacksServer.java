@@ -17,9 +17,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.UUID;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /** Loader-neutral server lifecycle operations called by each loader's native event adapters. */
 public final class SomeStacksServer {
@@ -84,15 +84,33 @@ public final class SomeStacksServer {
     public static void onPolicyReloaded() {
         MinecraftServer server = runningServer;
         if (server != null) {
-            server.execute(() -> {
-                ServerConfig.Settings previous = ServerConfig.settings();
-                ServerConfig.reload();
-                if (previous.equals(ServerConfig.settings())) return;
-                ConfigSyncPkt.rebuildCurrent();
-                ConfigSyncNetwork.syncAllPlayers(server);
-                logPolicy("Reloaded");
-            });
+            server.execute(() -> reloadPolicy(server));
         }
+    }
+
+    /** Reloads on the server thread, refreshing command visibility and only changed policy. */
+    public static int reloadPolicy(MinecraftServer server) {
+        ServerConfig.Settings previous = ServerConfig.settings();
+        ServerConfig.reload();
+        ServerConfig.Settings current = ServerConfig.settings();
+        if (previous.equals(current)) return 0;
+        if (previous.galleryEnabled() != current.galleryEnabled()
+                || previous.galleryPermissionLevel() != current.galleryPermissionLevel()) {
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                server.getCommands().sendCommands(player);
+            }
+        }
+        int synced = 0;
+        if (previous.enableStorageStackBlock() != current.enableStorageStackBlock()
+                || previous.enableSinglesStackBlock() != current.enableSinglesStackBlock()
+                || previous.enableBarStackBlock() != current.enableBarStackBlock()
+                || !previous.genMods().equals(current.genMods())
+                || !previous.disableMods().equals(current.disableMods())) {
+            ConfigSyncPkt.rebuildCurrent();
+            synced = ConfigSyncNetwork.syncAllPlayers(server);
+        }
+        logPolicy("Applied changed");
+        return synced;
     }
 
     /** Sends the startup/reload snapshot on the server thread after play networking is ready. */

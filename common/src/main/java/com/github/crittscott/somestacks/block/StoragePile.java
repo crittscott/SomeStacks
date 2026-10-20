@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.IntFunction;
-
 import javax.annotation.Nullable;
 
 /**
@@ -108,18 +107,13 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             neighbour = above;
         }
         if (neighbour != null) {
-            placed.adoptPileState(neighbour.isPermanent(), neighbour.getRotation());
+            placed.adoptPileState(neighbour.isPermanent());
         }
     }
 
     /** Whether this pile's blocks survive being emptied. The base block's flag is authoritative. */
     public boolean isPermanent() {
         return blocks.get(0).isPermanent();
-    }
-
-    /** Changes permanence and attributes any resulting cleanup to automation. */
-    public void setPermanent(boolean permanent) {
-        setPermanent(permanent, null);
     }
 
     /** Changes permanence and attributes any resulting deferred cleanup to {@code actor}. */
@@ -321,15 +315,8 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * automation actor, which is never exempt.
      */
     private boolean canGrow(@Nullable ServerPlayer placer) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableStorageStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(editor(level, placer), above)
-                && WorldEdits.isUnobstructed(level, above, Shapes.block());
+        return canGrowBlock(ServerConfig.enableStorageStackBlock(), placer)
+                && WorldEdits.isUnobstructed(level, topPos().above(), Shapes.block());
     }
 
     /** The player a growth is attributed to: the depositing player, or the automation actor. */

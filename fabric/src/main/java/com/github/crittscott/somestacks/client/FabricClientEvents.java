@@ -6,8 +6,8 @@ import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -27,7 +27,9 @@ public final class FabricClientEvents {
             }
 
             InteractionContext context = InteractionContext.forAirClick(
-                    player, level, hand, ClientGestures.currentMode(),
+                    player,
+                    hand,
+                    ClientGestures.currentMode(),
                     FabricKeyMappings.STACK_MODE_KEY.isDown(),
                     ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
             ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
@@ -42,8 +44,11 @@ public final class FabricClientEvents {
     public static InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide()) return InteractionResult.PASS;
         InteractionContext context = InteractionContext.forBlockClick(
-                player, level, hand, hit.getBlockPos(), hit.getDirection(),
-                ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());
+                player,
+                hand,
+                level.getBlockState(hit.getBlockPos()).getBlock(),
+                ClientGestures.currentMode(),
+                FabricKeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(context);
         return context.shouldCancel() ? InteractionResult.SUCCESS : InteractionResult.PASS;

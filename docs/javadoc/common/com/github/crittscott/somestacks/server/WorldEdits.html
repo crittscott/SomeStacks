@@ -57,7 +57,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">isProtected(ServerPlayer, BlockPos)</a></li>
-<li><a href="#isProtected(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">isProtected(ServerLevel, BlockPos)</a></li>
 <li><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">mayPlace(ServerPlayer, BlockPos)</a></li>
 <li><a href="#mayPlace(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">mayPlace(ServerLevel, BlockPos)</a></li>
 <li><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">mayUseAdjacent(ServerPlayer, BlockPos)</a></li>
@@ -66,7 +65,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#adjacentHit(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" tabindex="0">adjacentHit(ServerPlayer, BlockPos)</a></li>
 <li><a href="#automationActor(net.minecraft.server.level.ServerLevel)" tabindex="0">automationActor(ServerLevel)</a></li>
 <li><a href="#isUnobstructed(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.VoxelShape)" tabindex="0">isUnobstructed(ServerLevel, BlockPos, VoxelShape)</a></li>
-<li><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" tabindex="0">placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction)</a></li>
 <li><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)" tabindex="0">placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)</a></li>
 <li><a href="#removeChecked(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">removeChecked(ServerLevel, BlockPos)</a></li>
 <li><a href="#removeChecked(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" tabindex="0">removeChecked(ServerPlayer, ServerLevel, BlockPos)</a></li>
@@ -126,49 +124,33 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isConsultingAdjacent()" class="member-name-link">isConsultingAdjacent</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block"><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>isProtected(ServerPlayer, BlockPos)</code></a> for automation, using the loader's actor.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">isProtected</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Vanilla's own gate on a block interaction: world border and spawn protection.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUnobstructed(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">isUnobstructed</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUnobstructed(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">isUnobstructed</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;localShape)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Vanilla and loader query checks used before automation promises growth capacity.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Consults destination protection without allowing the consultation to execute gestures.</div>
+<div class="block">Vanilla and loader query checks used before automation promises growth capacity.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)" class="member-name-link">placeChecked</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.core.Direction&nbsp;placedAgainst)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayUseAdjacent(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)" class="member-name-link">mayUseAdjacent</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block"><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)"><code>placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)</code></a> using
-<code>state</code>'s own collision shape.</div>
+<div class="block">Consults destination protection without allowing the consultation to execute gestures.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)" class="member-name-link">placeChecked</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;placer,
@@ -219,16 +201,6 @@ protection, loader-native removal events, and the emitted game event.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProtected</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;sp,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">Vanilla's own gate on a block interaction: world border and spawn protection.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isProtected(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
-<h3>isProtected</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isProtected</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block"><a href="#isProtected(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos)"><code>isProtected(ServerPlayer, BlockPos)</code></a> for automation, using the loader's actor.</div>
 </div>
 </section>
 </li>
@@ -306,22 +278,6 @@ running so a listener cannot re-enter a stack gesture through it.</div>
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.phys.shapes.VoxelShape&nbsp;localShape)</span></div>
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction)">
-<h3>placeChecked</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeChecked</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;placer,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.core.Direction&nbsp;placedAgainst)</span></div>
-<div class="block"><a href="#placeChecked(net.minecraft.world.entity.player.Player,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.Direction,net.minecraft.world.phys.shapes.VoxelShape)"><code>placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)</code></a> using
-<code>state</code>'s own collision shape. Block-entity stacks can start empty and acquire their
-real shape only with their first deposit, so callers that place one use the full overload
-with the completed shape instead.</div>
 </div>
 </section>
 </li>

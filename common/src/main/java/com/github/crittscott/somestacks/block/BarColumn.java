@@ -16,7 +16,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.function.IntFunction;
-
 import javax.annotation.Nullable;
 
 /**
@@ -170,20 +169,23 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-        if (blockIndex >= blocks.size() && !canGrow(BarCubeIdx.shapeFor(slot))) {
-            return 0;
-        }
+        if (!stagedBarSupported(flatSlot, blockIndex, slot, contents)) return 0;
+        return blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot)) ? 1 : 0;
+    }
+
+    private boolean stagedBarSupported(int flatSlot, int blockIndex, int slot,
+                                       IntFunction<ItemStack> contents) {
         if (flatSlot < BarCubeIdx.LAYER_SIZE) {
-            return 1;
+            return true;
         }
 
         int supporterBlock = slot < BarCubeIdx.LAYER_SIZE ? blockIndex - 1 : blockIndex;
         for (int supporter : BarCubeIdx.supportersOf(slot)) {
             if (!contents.apply(supporterBlock * BarStackBE.SLOTS + supporter).isEmpty()) {
-                return 1;
+                return true;
             }
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -194,15 +196,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableBarStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return canGrowBlock(ServerConfig.enableBarStackBlock(), null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

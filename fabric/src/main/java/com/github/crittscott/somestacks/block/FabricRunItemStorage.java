@@ -12,9 +12,9 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,6 +64,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     @Override
     public Iterator<StorageView<ItemVariant>> iterator() {
+        FabricRunItemStorage base = ledger();
+        if (base != this) return base.iterator();
         int slotCount = getSlotCount();
         return new Iterator<>() {
             private int slot;
@@ -83,11 +85,18 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-        return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
+        FabricRunItemStorage base = ledger();
+        if (base != this) return base.insert(resource, maxAmount, transaction);
+        if (!(blockEntity.itemRun() instanceof StackRun<?> run)) return 0;
+        try (var query = run.growthQuery()) {
+            return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
+        }
     }
 
     @Override
     public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+        FabricRunItemStorage base = ledger();
+        if (base != this) return base.extract(resource, maxAmount, transaction);
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
         long extracted = 0;
         int slotCount = getSlotCount();
@@ -102,8 +111,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         if (blockEntity.isRemoved()) return this;
         StackRunItemAccess access = blockEntity.itemRun();
         if (access instanceof StackRun<?> run) {
-            StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
-            return FabricItemStorage.of(base);
+            StackBlockEntity base = run.baseBlockEntity();
+            return base == blockEntity ? this : FabricItemStorage.of(base);
         }
         return this;
     }

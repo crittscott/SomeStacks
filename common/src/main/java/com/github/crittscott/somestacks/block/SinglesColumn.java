@@ -16,7 +16,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.function.IntFunction;
-
 import javax.annotation.Nullable;
 
 /**
@@ -150,22 +149,25 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
-        if (blockIndex >= blocks.size() && !canGrow(SinglesCubeIdx.shapeFor(slot, 0))) {
-            return 0;
-        }
 
+        if (!stagedCellSupported(flatSlot, blockIndex, slot, contents)) return 0;
+        return blockIndex < blocks.size() || canGrow(SinglesCubeIdx.shapeFor(slot, 0)) ? 1 : 0;
+    }
+
+    private boolean stagedCellSupported(int flatSlot, int blockIndex, int slot,
+                                        IntFunction<ItemStack> contents) {
         if (slot >= SinglesCubeIdx.LAYER_SIZE) {
-            return contents.apply(flatSlot - SinglesCubeIdx.LAYER_SIZE).isEmpty() ? 0 : 1;
+            return !contents.apply(flatSlot - SinglesCubeIdx.LAYER_SIZE).isEmpty();
         }
         if (blockIndex == 0) {
-            return 1;
+            return true;
         }
         int visual = SinglesCubeIdx.visualColumnFromStorage(
                 SinglesCubeIdx.columnFromIndex(slot), rotationOf(blockIndex));
         int below = SinglesCubeIdx.storageColumnFromVisual(visual, rotationOf(blockIndex - 1));
         int supporter = (blockIndex - 1) * SinglesStackBE.SLOTS
                 + SinglesCubeIdx.indexFromColumn(below, SinglesCubeIdx.TOP_LAYER_Y);
-        return contents.apply(supporter).isEmpty() ? 0 : 1;
+        return !contents.apply(supporter).isEmpty();
     }
 
     /** The block rotation at {@code blockIndex}; the headroom block growth would add is unrotated. */
@@ -181,15 +183,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableSinglesStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return canGrowBlock(ServerConfig.enableSinglesStackBlock(), null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

@@ -5,26 +5,25 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.data.AtlasIds;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Loader-neutral renderer for a Bar Stack's 64 bars. It ignores the stored item's model
@@ -38,7 +37,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
             new IdentityHashMap<>();
 
+    private static int resourceGeneration;
+
     static void onResourceReload() {
+        resourceGeneration++;
         SPRITE_REGIONS.clear();
     }
 
@@ -48,11 +50,12 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     /** Prepared bars have resolved UVs and tints; submission never reads the level or inventory. */
     public static final class BarRenderState extends BlockEntityRenderState {
         private List<BarRenderData> bars = List.of();
-        private int light;
     }
 
     private record BarRenderData(AABB bounds, int layer, UvRegion[] regions,
                                  BarTextureStore.BarTextureData texture) {}
+
+    private record BarCache(int generation, List<BarRenderData> bars) {}
 
     @Override
     public BarRenderState createRenderState() {
@@ -67,7 +70,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (be.getLevel() == null) {
             return;
         }
-        state.light = LevelRenderer.getLightCoords(be.getLevel(), be.getBlockPos());
+        if (be.renderCache() instanceof BarCache cache && cache.generation() == resourceGeneration) {
+            state.bars = cache.bars();
+            return;
+        }
         List<BarRenderData> bars = new ArrayList<>();
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = be.getItems().getStackInSlot(idx);
@@ -81,6 +87,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
                     regions(sprite), texture));
         }
         state.bars = List.copyOf(bars);
+        be.setRenderCache(new BarCache(resourceGeneration, state.bars));
     }
 
     @Override
@@ -90,7 +97,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (bars.isEmpty()) {
             return;
         }
-        int light = state.light;
+        int light = state.lightCoords;
         collector.submitCustomGeometry(pose, RenderTypes.solidMovingBlock(), (snapshot, vc) -> {
             PoseStack barPose = new PoseStack();
             barPose.last().pose().set(snapshot.pose());
