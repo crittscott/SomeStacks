@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.server.RotationSoundThrottle;
@@ -16,21 +17,18 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.gameevent.GameEventListener;
-import net.minecraft.world.level.gameevent.PositionSource;
-import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -38,6 +36,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SculkSensorBlock;
 import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -111,7 +113,8 @@ public final class InteractionChecks {
     /**
      * Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
      * hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
-     * off-hand item is not deposited.
+     * off-hand item is not deposited. Unhandled modified empty-hand clicks and occupied permanence
+     * clicks retain ordinary use; plain empty extraction attempts still consume the click.
      */
     public static void interactionReadsOnlyTheMainHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -127,7 +130,28 @@ public final class InteractionChecks {
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
+            StackBlock block = (StackBlock) storage.getBlockState().getBlock();
+            var state = storage.getBlockState();
+            var pos = storage.getBlockPos();
+            var hit = hit(player, pos, 0.5, 0.5, 0.5);
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getOffhandItem(), state, helper.getLevel(), pos,
+                            player, InteractionHand.OFF_HAND, hit), "Off-hand native use was consumed");
+            checkEquals(InteractionResult.PASS,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Unhandled modified empty-hand use was consumed");
+            ServerGestureState.set(player, StackMode.TOGGLE_PERMANENT, true);
+            player.setItemInHand(HAND, new ItemStack(Items.APPLE));
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getMainHandItem(), state, helper.getLevel(), pos,
+                            player, HAND, hit), "Occupied permanence gesture was consumed");
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            checkEquals(InteractionResult.CONSUME,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Empty extraction attempt passed through");
         } finally {
+            player.setItemInHand(HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
         }
@@ -305,7 +329,7 @@ public final class InteractionChecks {
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
-            storage.pile().setPermanent(false);
+            storage.pile().setPermanent(false, null);
             GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
                     click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");

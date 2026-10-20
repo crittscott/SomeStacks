@@ -1,34 +1,37 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.util.BlockType;
-import com.github.crittscott.somestacks.util.StackItemStorage;
-import com.github.crittscott.somestacks.util.StorageCubeIdx;
-import com.github.crittscott.somestacks.client.CubeRenderHelper;
+import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.client.BarStackBER;
 import com.github.crittscott.somestacks.client.BarTextureStore;
 import com.github.crittscott.somestacks.client.ClientRenderCommands;
+import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderProfile;
+import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
+import com.github.crittscott.somestacks.util.BlockType;
+import com.github.crittscott.somestacks.util.StackItemStorage;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
-import com.github.crittscott.somestacks.client.measure.ModelMeasurement;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.io.IOException;
@@ -60,7 +63,8 @@ public final class ClientCallbackChecks {
      * walk around every face, and reload resources. Models must remain fitted and correctly tinted,
      * with special models staying on the 3-D path unless explicitly overridden. With default
      * resources, deposit resin bricks into a Bar Stack: the bars must be orange on a fresh launch
-     * and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint.
+     * and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint,
+     * Bar presentation reuse, and invalidation on resource reload and inventory updates.
      */
     public static int run(boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback) {
         Minecraft client = Minecraft.getInstance();
@@ -86,6 +90,7 @@ public final class ClientCallbackChecks {
             checkRendering(client, hit);
             checkProfileLifecycle();
             RenderProfileChecks.run();
+            checkBarPresentationCache(client, hit);
             client.player.sendSystemMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"));
             return 1;
         } catch (RuntimeException failure) {
@@ -95,6 +100,28 @@ public final class ClientCallbackChecks {
             }
             return 0;
         }
+    }
+
+    private static void checkBarPresentationCache(Minecraft client, BlockHitResult hit) {
+        BarStackBE bars = new BarStackBE(hit.getBlockPos(), CommonRegistry.barStackBlock().defaultBlockState());
+        bars.getItems().setStackInSlot(0, new ItemStack(Items.RESIN_BRICK));
+        bars.setLevel(client.level);
+        var renderer = new BarStackBER(null);
+        var state = renderer.createRenderState();
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        Object first = bars.renderCache();
+        GameTestScaffold.check(first != null, "Bar presentation was not cached");
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(first == bars.renderCache(), "Bar presentation rebuilt without changes");
+        CubeRenderHelper.onResourceReload();
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(first != bars.renderCache(), "Bar presentation survived resource invalidation");
+        var update = bars.getUpdateTag(client.level.registryAccess());
+        GameTestScaffold.check(bars.loadClientUpdate(update, client.level.registryAccess()),
+                "Valid Bar update was rejected");
+        GameTestScaffold.check(bars.renderCache() == null, "Bar presentation survived an inventory update");
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(bars.renderCache() != null, "Bar presentation did not rebuild after update");
     }
 
     /**

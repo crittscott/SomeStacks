@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.LevelReader&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A stack block's default state, waterlogged when it is going into water.</div>
+<div class="block">A stack block's initial state, with waterlogging and neighboring Storage facing resolved.</div>
 </div>
 </div>
 </div>
@@ -121,7 +121,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.state.BlockState</span>&nbsp;<span class="element-name">stateFor</span><wbr><span class="parameters">(net.minecraft.world.level.block.Block&nbsp;block,
  net.minecraft.world.level.LevelReader&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">A stack block's default state, waterlogged when it is going into water.
+<div class="block">A stack block's initial state, with waterlogging and neighboring Storage facing resolved.
 
 <p>Vanilla reads the fluid at the target through <code>getStateForPlacement</code>, which runs off
 a <code>BlockPlaceContext</code> the mod never builds: every stack block reaches the world through

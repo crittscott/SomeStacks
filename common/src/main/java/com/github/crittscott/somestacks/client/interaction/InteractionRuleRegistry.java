@@ -8,9 +8,8 @@ import javax.annotation.Nullable;
  *
  * <p>Order is the precedence rule: the first match wins and the walk stops. The block list starts
  * with the empty-handed permanence toggle, then runs through the item gestures from the most
- * specific to the least: the torch gestures precede deposit, deposit into the clicked stack
- * precedes deposit into its neighbor, generic placement catches the modified clicks none of those
- * claimed, and unmodified extraction sits last.
+ * specific to the least: torch gestures precede generic modified-item cancellation, and
+ * unmodified extraction sits last. Deposit and placement targeting stay server-side.
  */
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}
@@ -27,8 +26,6 @@ public final class InteractionRuleRegistry {
             new TogglePermanentRule(),
             new RotateBlockWithRedstoneTorchRule(),
             new RotateItemWithSoulTorchRule(),
-            new DepositIntoClickedStackRule(),
-            new DepositIntoAdjacentStackRule(),
             new PlaceAdjacentGenericRule(),
             new ExtractionRule()
     );

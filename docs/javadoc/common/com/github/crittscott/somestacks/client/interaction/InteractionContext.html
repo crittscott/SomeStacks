@@ -56,8 +56,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)" tabindex="0">forAirClick(Player, Level, InteractionHand, StackMode, boolean, boolean)</a></li>
-<li><a href="#forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,net.minecraft.core.BlockPos,net.minecraft.core.Direction,com.github.crittscott.somestacks.util.StackMode,boolean)" tabindex="0">forBlockClick(Player, Level, InteractionHand, BlockPos, Direction, StackMode, boolean)</a></li>
+<li><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)" tabindex="0">forAirClick(Player, InteractionHand, StackMode, boolean, boolean)</a></li>
+<li><a href="#forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.level.block.Block,com.github.crittscott.somestacks.util.StackMode,boolean)" tabindex="0">forBlockClick(Player, InteractionHand, Block, StackMode, boolean)</a></li>
 <li><a href="#isShift()" tabindex="0">isShift()</a></li>
 <li><a href="#isVDown()" tabindex="0">isVDown()</a></li>
 <li><a href="#hasItemInHand()" tabindex="0">hasItemInHand()</a></li>
@@ -67,13 +67,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#isStorageStack()" tabindex="0">isStorageStack()</a></li>
 <li><a href="#isRotatableStack()" tabindex="0">isRotatableStack()</a></li>
 <li><a href="#isSinglesStack()" tabindex="0">isSinglesStack()</a></li>
-<li><a href="#isSinglesOrBarStack(net.minecraft.world.level.block.Block)" tabindex="0">isSinglesOrBarStack(Block)</a></li>
 <li><a href="#canPlaceOrDeposit()" tabindex="0">canPlaceOrDeposit()</a></li>
 <li><a href="#getCurrentMode()" tabindex="0">getCurrentMode()</a></li>
-<li><a href="#getClickedPos()" tabindex="0">getClickedPos()</a></li>
-<li><a href="#getFace()" tabindex="0">getFace()</a></li>
 <li><a href="#getPlayer()" tabindex="0">getPlayer()</a></li>
-<li><a href="#getLevel()" tabindex="0">getLevel()</a></li>
 <li><a href="#cancelEvent()" tabindex="0">cancelEvent()</a></li>
 <li><a href="#shouldCancel()" tabindex="0">shouldCancel()</a></li>
 </ol>
@@ -95,7 +91,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
 were held, and the placement mode in force. A context built from an empty-hand or held-item click
-has no clicked position, block, or face, so block-specific queries return false.
+has no clicked block, so block-specific queries return false.
 
 <p>The context also carries the rules' one output, <a href="#cancelEvent()"><code>cancelEvent()</code></a>, which the event
 handler reads back after the walk to decide whether the click is taken from vanilla.</div>
@@ -123,8 +119,7 @@ handler reads back after the walk to decide whether the click is taken from vani
 <div class="block">Whether the placement and deposit rules may claim this click.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)" class="member-name-link">forAirClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.level.Level&nbsp;level,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)" class="member-name-link">forAirClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown,
@@ -133,55 +128,41 @@ handler reads back after the walk to decide whether the click is taken from vani
 <div class="block">Builds an air/item event context with the loader's explicit crosshair classification.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,net.minecraft.core.BlockPos,net.minecraft.core.Direction,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">forBlockClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.level.Level&nbsp;level,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.level.block.Block,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">forBlockClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
  net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;face,
+ net.minecraft.world.level.block.Block&nbsp;clickedBlock,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Builds a block context from the clicked position and face; its hit classification is always block.</div>
+<div class="block">Builds a block context from the clicked block type; targeting stays server-side.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.core.BlockPos</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getClickedPos()" class="member-name-link">getClickedPos</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentMode()" class="member-name-link">getCurrentMode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentMode()" class="member-name-link">getCurrentMode</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.core.Direction</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFace()" class="member-name-link">getFace</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.Level</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevel()" class="member-name-link">getLevel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.entity.player.Player</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasItemInHand()" class="member-name-link">hasItemInHand</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.entity.player.Player</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAnyStackBlock()" class="member-name-link">isAnyStackBlock</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasItemInHand()" class="member-name-link">hasItemInHand</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isHittingBlock()" class="member-name-link">isHittingBlock</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAnyStackBlock()" class="member-name-link">isAnyStackBlock</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isHittingBlock()" class="member-name-link">isHittingBlock</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Whether the player's crosshair is on a block.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMainHand()" class="member-name-link">isMainHand</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRotatableStack()" class="member-name-link">isRotatableStack</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMainHand()" class="member-name-link">isMainHand</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRotatableStack()" class="member-name-link">isRotatableStack</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The stacks that rotate as a whole block; a Bar Stack's bars are fixed to their layer.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isShift()" class="member-name-link">isShift</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSinglesOrBarStack(net.minecraft.world.level.block.Block)" class="member-name-link">isSinglesOrBarStack</a><wbr>(net.minecraft.world.level.block.Block&nbsp;block)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isShift()" class="member-name-link">isShift</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSinglesStack()" class="member-name-link">isSinglesStack</a>()</code></div>
@@ -213,11 +194,10 @@ handler reads back after the walk to decide whether the click is taken from vani
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)">
+<section class="detail" id="forAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.StackMode,boolean,boolean)">
 <h3>forAirClick</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></span>&nbsp;<span class="element-name">forAirClick</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.world.InteractionHand&nbsp;hand,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown,
@@ -227,17 +207,15 @@ handler reads back after the walk to decide whether the click is taken from vani
 </section>
 </li>
 <li>
-<section class="detail" id="forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.world.InteractionHand,net.minecraft.core.BlockPos,net.minecraft.core.Direction,com.github.crittscott.somestacks.util.StackMode,boolean)">
+<section class="detail" id="forBlockClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.level.block.Block,com.github.crittscott.somestacks.util.StackMode,boolean)">
 <h3>forBlockClick</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="InteractionContext.html" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a></span>&nbsp;<span class="element-name">forBlockClick</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
- net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.world.InteractionHand&nbsp;hand,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;face,
+ net.minecraft.world.level.block.Block&nbsp;clickedBlock,
  <a href="../../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;currentMode,
  boolean&nbsp;modeKeyDown)</span></div>
-<div class="block">Builds a block context from the clicked position and face; its hit classification is always block.</div>
+<div class="block">Builds a block context from the clicked block type; targeting stays server-side.</div>
 </div>
 </section>
 </li>
@@ -317,14 +295,6 @@ the placement mode, from one that merely missed the block-click event.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="isSinglesOrBarStack(net.minecraft.world.level.block.Block)">
-<h3>isSinglesOrBarStack</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSinglesOrBarStack</span><wbr><span class="parameters">(net.minecraft.world.level.block.Block&nbsp;block)</span></div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="canPlaceOrDeposit()">
 <h3>canPlaceOrDeposit</h3>
 <div class="horizontal-scroll">
@@ -343,34 +313,10 @@ Permanent mode is reserved for the toggle gesture, which would otherwise be shad
 </section>
 </li>
 <li>
-<section class="detail" id="getClickedPos()">
-<h3>getClickedPos</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.core.BlockPos</span>&nbsp;<span class="element-name">getClickedPos</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getFace()">
-<h3>getFace</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.core.Direction</span>&nbsp;<span class="element-name">getFace</span>()</div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getPlayer()">
 <h3>getPlayer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.entity.player.Player</span>&nbsp;<span class="element-name">getPlayer</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getLevel()">
-<h3>getLevel</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.Level</span>&nbsp;<span class="element-name">getLevel</span>()</div>
 </div>
 </section>
 </li>

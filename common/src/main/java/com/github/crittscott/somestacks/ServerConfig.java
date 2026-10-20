@@ -4,6 +4,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.permissions.PermissionCheck;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -154,7 +155,6 @@ public final class ServerConfig {
     public static boolean enableBarStackBlock() { return settings.enableBarStackBlock(); }
     public static int renderGalleryPlacementsPerTick() { return settings.renderGalleryPlacementsPerTick(); }
     public static boolean galleryEnabled() { return settings.galleryEnabled(); }
-    public static int galleryRequiredPermissionLevel() { return settings.galleryPermissionLevel(); }
     public static PermissionCheck galleryPermission() { return PERMISSION_LEVELS.get(settings.galleryPermissionLevel()); }
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();

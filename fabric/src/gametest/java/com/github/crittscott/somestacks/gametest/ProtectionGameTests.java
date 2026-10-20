@@ -9,11 +9,11 @@ import com.github.crittscott.somestacks.server.WorldEdits;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -285,8 +285,7 @@ public final class ProtectionGameTests {
         ServerPlayer player = FakePlayer.get(helper.getLevel());
         check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
-        check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
-                        Blocks.STONE.defaultBlockState(), Direction.DOWN),
+        check(WorldEdits.placeChecked(player, helper.getLevel(), pos, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
         helper.getLevel().removeBlock(pos, false);

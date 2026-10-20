@@ -2,23 +2,23 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
+import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.block.StackBlockEntity;
-import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Set;
 
@@ -51,15 +51,17 @@ public final class ModRegistry {
     public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.STORAGE_STACK_BLOCK.getPath(), StorageStackBlock::new,
             StackBlock::storageProperties);
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND = sound(CommonRegistry.STORAGE_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND = sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND = sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND = sound(CommonRegistry.SINGLES_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND = sound(CommonRegistry.BAR_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND = sound(CommonRegistry.BAR_EXTRACT_SOUND);
+    static {
+        sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
+        sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
+        sound(CommonRegistry.STORAGE_ROTATE_SOUND);
+        sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
+        sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
+        sound(CommonRegistry.SINGLES_ROTATE_SOUND);
+        sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
+        sound(CommonRegistry.BAR_DEPOSIT_SOUND);
+        sound(CommonRegistry.BAR_EXTRACT_SOUND);
+    }
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE.getPath(),

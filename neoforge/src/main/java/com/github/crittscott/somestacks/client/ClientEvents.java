@@ -2,18 +2,18 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.client.Minecraft;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.minecraft.util.TriState;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /**
  * The client's gesture entry point: the three right-click events feed
@@ -51,8 +51,10 @@ public final class ClientEvents {
         // RightClickEmpty is a pure notification on NeoForge: there is no vanilla action behind an
         // empty-hand air click to suppress, so the rules run but nothing is canceled.
         InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                evt.getEntity(),
+                evt.getHand(),
+                ClientGestures.currentMode(),
+                KeyMappings.STACK_MODE_KEY.isDown(),
                 ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processEmptyHandRules(ctx);
@@ -64,8 +66,10 @@ public final class ClientEvents {
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
+                evt.getEntity(),
+                evt.getHand(),
+                ClientGestures.currentMode(),
+                KeyMappings.STACK_MODE_KEY.isDown(),
                 ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processItemRules(ctx);
@@ -87,8 +91,11 @@ public final class ClientEvents {
         if (evt.getFace() == null) return;
 
         InteractionContext ctx = InteractionContext.forBlockClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
-                ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
+                evt.getEntity(),
+                evt.getHand(),
+                evt.getLevel().getBlockState(evt.getPos()).getBlock(),
+                ClientGestures.currentMode(),
+                KeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);
 

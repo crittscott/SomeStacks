@@ -11,14 +11,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Objects;
-
 import javax.annotation.Nullable;
 
 /**
@@ -36,7 +37,7 @@ public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = SinglesCubeIdx.CELLS;
 
-    private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
+    public static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
     private int cachedShapeRotation = -1;
@@ -96,12 +97,14 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Invalidates the local shape and requests {@link #setBlockRotation(int)} modulo four. The outer
-     * block-state update applies immediately on a server level, including during an inventory batch.
+     * Invalidates the local shape and changes the native facing on a server level.
      */
     public void setRotation(int rotation) {
         cachedShape = null;
-        setBlockRotation(rotation);
+        if (level instanceof ServerLevel) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(StackBlock.HORIZONTAL_FACING,
+                    QuarterTurns.toDirection(rotation)), Block.UPDATE_ALL);
+        }
     }
 
     /** The rendered rotation of the item at {@code index}, which must be in {@code [0, SLOTS)}. */
@@ -129,11 +132,11 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, SinglesCubeIdx.shapeFor(i, blockRotation));
+                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.shapeFor(i, blockRotation), BooleanOp.OR);
             }
         }
 
-        return shape;
+        return shape.optimize();
     }
 
     /**
@@ -211,9 +214,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
-     * directly below, or null when this block stands on the world instead of on another Singles
-     * Stack.
+     * Whether the index names an empty cell supported in its visual column, including across
+     * the rotation-aware seam with the Singles block below.
      */
     public boolean canDepositAt(int index) {
         return index >= 0

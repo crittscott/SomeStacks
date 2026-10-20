@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
+import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StorageStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -12,7 +14,7 @@ public final class StackPlacement {
     private StackPlacement() {}
 
     /**
-     * A stack block's default state, waterlogged when it is going into water.
+     * A stack block's initial state, with waterlogging and neighboring Storage facing resolved.
      *
      * <p>Vanilla reads the fluid at the target through {@code getStateForPlacement}, which runs off
      * a {@code BlockPlaceContext} the mod never builds: every stack block reaches the world through
@@ -22,6 +24,15 @@ public final class StackPlacement {
      */
     public static BlockState stateFor(Block block, LevelReader level, BlockPos pos) {
         boolean inWater = level.getFluidState(pos).getType() == Fluids.WATER;
-        return block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, inWater);
+        BlockState state = block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, inWater);
+        if (block instanceof StackBlock stack && stack.type() == BlockType.STORAGE_STACK) {
+            StorageStackBE neighbour = level.getBlockEntity(pos.below()) instanceof StorageStackBE below
+                    ? below : level.getBlockEntity(pos.above()) instanceof StorageStackBE above ? above : null;
+            if (neighbour != null) {
+                state = state.setValue(StackBlock.HORIZONTAL_FACING,
+                        neighbour.getBlockState().getValue(StackBlock.HORIZONTAL_FACING));
+            }
+        }
+        return state;
     }
 }

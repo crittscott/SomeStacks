@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.BooleanSupplier;
@@ -23,18 +22,15 @@ import java.util.function.BooleanSupplier;
  * loader-native claim/logging hooks are delegated to {@link EditAuthority}.
  */
 public final class WorldEdits {
-    private static final ThreadLocal<Boolean> consultingAdjacent = ThreadLocal.withInitial(() -> false);
+    // Consultation suppresses recursive gesture dispatch. The loader's placing guard protects
+    // snapshot capture; RunEdit separately protects transaction commits and structural mutation.
+    private static boolean consultingAdjacent;
     private WorldEdits() {
     }
 
     /** Vanilla's own gate on a block interaction: world border and spawn protection. */
     public static boolean isProtected(ServerPlayer sp, BlockPos pos) {
         return !sp.level().mayInteract(sp, pos);
-    }
-
-    /** {@link #isProtected(ServerPlayer, BlockPos)} for automation, using the loader's actor. */
-    public static boolean isProtected(ServerLevel level, BlockPos pos) {
-        return isProtected(automationActor(level), pos);
     }
 
     /** Vanilla and loader query checks used before automation promises growth capacity. */
@@ -61,16 +57,16 @@ public final class WorldEdits {
         if (isConsultingAdjacent()) {
             return false;
         }
-        consultingAdjacent.set(true);
+        consultingAdjacent = true;
         try {
             return consultation.getAsBoolean();
         } finally {
-            consultingAdjacent.remove();
+            consultingAdjacent = false;
         }
     }
 
     public static boolean isConsultingAdjacent() {
-        return consultingAdjacent.get();
+        return consultingAdjacent;
     }
 
     /** Destination hit used by loader protection listeners for a neighboring deposit. */
@@ -93,18 +89,6 @@ public final class WorldEdits {
         return localShape.isEmpty()
                 || level.isUnobstructed(
                         null, localShape.move(pos.getX(), pos.getY(), pos.getZ()));
-    }
-
-    /**
-     * {@link #placeChecked(Player, ServerLevel, BlockPos, BlockState, Direction, VoxelShape)} using
-     * {@code state}'s own collision shape. Block-entity stacks can start empty and acquire their
-     * real shape only with their first deposit, so callers that place one use the full overload
-     * with the completed shape instead.
-     */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
-                                       BlockState state, Direction placedAgainst) {
-        VoxelShape collision = state.getCollisionShape(level, pos, CollisionContext.empty());
-        return placeChecked(placer, level, pos, state, placedAgainst, collision);
     }
 
     /**
