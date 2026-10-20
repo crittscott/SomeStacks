@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -76,7 +76,7 @@ public final class StoragePileGameTests {
     public void storageFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12));
 
         SlottedStorage<ItemVariant> lowerStorage = FabricGameTestSupport.storage(lower);
         SlottedStorage<ItemVariant> upperStorage = FabricGameTestSupport.storage(upper);

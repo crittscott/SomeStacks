@@ -74,14 +74,15 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSlots()" tabindex="0">getSlots()</a></li>
 <li><a href="#getStackInSlot(int)" tabindex="0">getStackInSlot(int)</a></li>
 <li><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" tabindex="0">setStackInSlot(int, ItemStack)</a></li>
-<li><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" tabindex="0">insertItem(int, ItemStack, boolean)</a></li>
-<li><a href="#extractItem(int,int,boolean)" tabindex="0">extractItem(int, int, boolean)</a></li>
+<li><a href="#insertItem(int,net.minecraft.world.item.ItemStack)" tabindex="0">insertItem(int, ItemStack)</a></li>
+<li><a href="#extractItem(int,int)" tabindex="0">extractItem(int, int)</a></li>
 <li><a href="#getSlotLimit(int)" tabindex="0">getSlotLimit(int)</a></li>
 <li><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" tabindex="0">isItemValid(int, ItemStack)</a></li>
 <li><a href="#onContentsChanged(int)" tabindex="0">onContentsChanged(int)</a></li>
 <li><a href="#codec(int)" tabindex="0">codec(int)</a></li>
-<li><a href="#serializeNBT(net.minecraft.core.HolderLookup.Provider)" tabindex="0">serializeNBT(HolderLookup.Provider)</a></li>
-<li><a href="#deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">deserializeNBT(HolderLookup.Provider, CompoundTag)</a></li>
+<li><a href="#save(net.minecraft.core.HolderLookup.Provider)" tabindex="0">save(HolderLookup.Provider)</a></li>
+<li><a href="#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">load(HolderLookup.Provider, CompoundTag)</a></li>
+<li><a href="#isValidClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">isValidClientUpdate(HolderLookup.Provider, CompoundTag)</a></li>
 <li><a href="#deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" tabindex="0">deserializeClientUpdate(HolderLookup.Provider, CompoundTag)</a></li>
 <li><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" tabindex="0">stripSetAside(CompoundTag)</a></li>
 </ol>
@@ -107,7 +108,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span></div>
 <div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation. It gives both loaders the
-item-handler insert/extract semantics and NBT shape
+immediate local mutations and NBT shape
 (<code>{Items:[{Slot, ...stack}], SetAside:[...]}</code>) used by the block entities.
 
 <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
@@ -191,68 +192,66 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">deserializeClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">deserializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
- net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int,boolean)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
- int&nbsp;amount,
- boolean&nbsp;simulate)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
-removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
+<div class="block">Validates and replaces a complete current-format client inventory atomically.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
+ int&nbsp;amount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
+<div class="block">Removes up to the requested amount immediately; the returned stack belongs to the caller.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
- net.minecraft.world.item.ItemStack&nbsp;stack,
- boolean&nbsp;simulate)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, ItemStack)</code></a> and
-<a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow.</div>
+<div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
+<div class="block">Inserts immediately and returns the unaccepted remainder, without modifying the offered stack.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onContentsChanged(int)" class="member-name-link">onContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks a current-format wire inventory without mutating live slots or retained entries.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onContentsChanged(int)" class="member-name-link">onContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called after a slot's contents change, including a direct <a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)"><code>setStackInSlot(int, ItemStack)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serializeNBT(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">serializeNBT</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#save(net.minecraft.core.HolderLookup.Provider)" class="member-name-link">save</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" class="member-name-link">setStackInSlot</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
 </div>
 </div>
@@ -366,8 +365,8 @@ removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">getStackInSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#getStackInSlot(int)">SlotAccess</a></code></span></div>
 <div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. This is
-the live stored object: callers must not modify it, and must copy it before keeping or
-editing it.</div>
+the live stored stack, not a copy: changing it bypasses change notification, so callers must
+not modify it and must copy it before keeping or editing it.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="SlotAccess.html#getStackInSlot(int)">getStackInSlot</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
@@ -389,45 +388,26 @@ Internal relocation and settlement use this only for already-stored contents. Th
 </section>
 </li>
 <li>
-<section class="detail" id="insertItem(int,net.minecraft.world.item.ItemStack,boolean)">
+<section class="detail" id="insertItem(int,net.minecraft.world.item.ItemStack)">
 <h3>insertItem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">insertItem</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
- net.minecraft.world.item.ItemStack&nbsp;stack,
- boolean&nbsp;simulate)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)">SlotAccess</a></code></span></div>
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, ItemStack)</code></a> and
-<a href="SlotAccess.html#getSlotLimit(int)"><code>SlotAccess.getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted —
-<code>ItemStack.EMPTY</code> if all of it was — and never mutates <code>stack</code> itself. When
-<code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
-remainder is computed. A committed insertion may keep <code>stack</code> itself, so the caller
-must give it up or pass a copy.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)">insertItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+ net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Inserts immediately and returns the unaccepted remainder, without modifying the offered stack.
+An empty slot may keep the offered object itself; callers give it up or pass a copy.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="extractItem(int,int,boolean)">
+<section class="detail" id="extractItem(int,int)">
 <h3>extractItem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractItem</span><wbr><span class="parameters">(int&nbsp;slot,
- int&nbsp;amount,
- boolean&nbsp;simulate)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#extractItem(int,int,boolean)">SlotAccess</a></code></span></div>
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
-removed — <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
-<code>true</code>, the slot is left unchanged and only the would-be result is computed. The
-returned stack belongs to the caller.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#extractItem(int,int,boolean)">extractItem</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+ int&nbsp;amount)</span></div>
+<div class="block">Removes up to the requested amount immediately; the returned stack belongs to the caller.</div>
 </div>
 </section>
 </li>
@@ -435,13 +415,7 @@ returned stack belongs to the caller.</div>
 <section class="detail" id="getSlotLimit(int)">
 <h3>getSlotLimit</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlotLimit</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#getSlotLimit(int)">SlotAccess</a></code></span></div>
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#getSlotLimit(int)">getSlotLimit</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSlotLimit</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
 </div>
 </section>
 </li>
@@ -449,15 +423,9 @@ returned stack belongs to the caller.</div>
 <section class="detail" id="isItemValid(int,net.minecraft.world.item.ItemStack)">
 <h3>isItemValid</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)">SlotAccess</a></code></span></div>
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)">isItemValid</a></code>&nbsp;in interface&nbsp;<code><a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></dd>
-</dl>
 </div>
 </section>
 </li>
@@ -480,18 +448,18 @@ returned stack belongs to the caller.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="serializeNBT(net.minecraft.core.HolderLookup.Provider)">
-<h3>serializeNBT</h3>
+<section class="detail" id="save(net.minecraft.core.HolderLookup.Provider)">
+<h3>save</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">serializeNBT</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">save</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="deserializeNBT(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
-<h3>deserializeNBT</h3>
+<section class="detail" id="load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
+<h3>load</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">deserializeNBT</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
 already be in the running game's format. Ordinary entries take precedence over retries;
@@ -501,12 +469,22 @@ returned retention counts once it knows the world location.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="isValidClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
+<h3>isValidClientUpdate</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+ net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
+<div class="block">Checks a current-format wire inventory without mutating live slots or retained entries.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
 <h3>deserializeClientUpdate</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">deserializeClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
-<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
+<div class="block">Validates and replaces a complete current-format client inventory atomically.</div>
 </div>
 </section>
 </li>

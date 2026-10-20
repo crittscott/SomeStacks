@@ -83,7 +83,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#generation()" tabindex="0">generation()</a></li>
 <li><a href="#first()" tabindex="0">first()</a></li>
 <li><a href="#last()" tabindex="0">last()</a></li>
-<li><a href="#enableStack()" tabindex="0">enableStack()</a></li>
+<li><a href="#enableStorage()" tabindex="0">enableStorage()</a></li>
 <li><a href="#enableSingles()" tabindex="0">enableSingles()</a></li>
 <li><a href="#enableBar()" tabindex="0">enableBar()</a></li>
 <li><a href="#totalGenMods()" tabindex="0">totalGenMods()</a></li>
@@ -111,7 +111,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ConfigSyncPkt</span>(int&nbsp;generation, boolean&nbsp;first, boolean&nbsp;last, boolean&nbsp;enableStack, boolean&nbsp;enableSingles, boolean&nbsp;enableBar, int&nbsp;totalGenMods, int&nbsp;totalDisabledMods, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;genMods, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;disabledMods)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">ConfigSyncPkt</span>(int&nbsp;generation, boolean&nbsp;first, boolean&nbsp;last, boolean&nbsp;enableStorage, boolean&nbsp;enableSingles, boolean&nbsp;enableBar, int&nbsp;totalGenMods, int&nbsp;totalDisabledMods, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;genMods, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;disabledMods)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a>
 implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</span></div>
 <div class="block">One byte-bounded chunk of the server settings synchronized to clients.</div>
@@ -166,7 +166,7 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,boolean,boolean,boolean,boolean,boolean,int,int,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt</a><wbr>(int&nbsp;generation,
  boolean&nbsp;first,
  boolean&nbsp;last,
- boolean&nbsp;enableStack,
+ boolean&nbsp;enableStorage,
  boolean&nbsp;enableSingles,
  boolean&nbsp;enableBar,
  int&nbsp;totalGenMods,
@@ -216,9 +216,9 @@ implements net.minecraft.network.protocol.common.custom.CustomPacketPayload</spa
 <div class="block">Returns the value of the <code>enableSingles</code> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enableStack()" class="member-name-link">enableStack</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enableStorage()" class="member-name-link">enableStorage</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>enableStack</code> record component.</div>
+<div class="block">Returns the value of the <code>enableStorage</code> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
@@ -370,7 +370,7 @@ or changed.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConfigSyncPkt</span><wbr><span class="parameters">(int&nbsp;generation,
  boolean&nbsp;first,
  boolean&nbsp;last,
- boolean&nbsp;enableStack,
+ boolean&nbsp;enableStorage,
  boolean&nbsp;enableSingles,
  boolean&nbsp;enableBar,
  int&nbsp;totalGenMods,
@@ -383,7 +383,7 @@ or changed.</div>
 <dd><code>generation</code> - the value for the <code>generation</code> record component</dd>
 <dd><code>first</code> - the value for the <code>first</code> record component</dd>
 <dd><code>last</code> - the value for the <code>last</code> record component</dd>
-<dd><code>enableStack</code> - the value for the <code>enableStack</code> record component</dd>
+<dd><code>enableStorage</code> - the value for the <code>enableStorage</code> record component</dd>
 <dd><code>enableSingles</code> - the value for the <code>enableSingles</code> record component</dd>
 <dd><code>enableBar</code> - the value for the <code>enableBar</code> record component</dd>
 <dd><code>totalGenMods</code> - the value for the <code>totalGenMods</code> record component</dd>
@@ -529,14 +529,14 @@ or changed. Call before sending login or reload synchronization; this does not s
 </section>
 </li>
 <li>
-<section class="detail" id="enableStack()">
-<h3>enableStack</h3>
+<section class="detail" id="enableStorage()">
+<h3>enableStorage</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableStack</span>()</div>
-<div class="block">Returns the value of the <code>enableStack</code> record component.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableStorage</span>()</div>
+<div class="block">Returns the value of the <code>enableStorage</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>enableStack</code> record component</dd>
+<dd>the value of the <code>enableStorage</code> record component</dd>
 </dl>
 </div>
 </section>

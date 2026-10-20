@@ -19,7 +19,7 @@ public record ConfigSyncPkt(
         int generation,
         boolean first,
         boolean last,
-        boolean enableStack,
+        boolean enableStorage,
         boolean enableSingles,
         boolean enableBar,
         int totalGenMods,
@@ -118,7 +118,7 @@ public record ConfigSyncPkt(
 
     private static List<ConfigSyncPkt> buildPackets(
             int generation,
-            boolean enableStack,
+            boolean enableStorage,
             boolean enableSingles,
             boolean enableBar,
             List<String> genMods,
@@ -155,7 +155,7 @@ public record ConfigSyncPkt(
                     generation,
                     i == 0,
                     i == chunks.size() - 1,
-                    enableStack,
+                    enableStorage,
                     enableSingles,
                     enableBar,
                     genMods.size(),
@@ -170,7 +170,7 @@ public record ConfigSyncPkt(
         buf.writeVarInt(packet.generation);
         buf.writeBoolean(packet.first);
         buf.writeBoolean(packet.last);
-        buf.writeBoolean(packet.enableStack);
+        buf.writeBoolean(packet.enableStorage);
         buf.writeBoolean(packet.enableSingles);
         buf.writeBoolean(packet.enableBar);
         buf.writeVarInt(packet.totalGenMods);
@@ -190,7 +190,7 @@ public record ConfigSyncPkt(
         }
         boolean first = buf.readBoolean();
         boolean last = buf.readBoolean();
-        boolean enableStack = buf.readBoolean();
+        boolean enableStorage = buf.readBoolean();
         boolean enableSingles = buf.readBoolean();
         boolean enableBar = buf.readBoolean();
         int totalGenMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "gallery mod total");
@@ -201,7 +201,7 @@ public record ConfigSyncPkt(
         List<String> disabledMods = readNamespaces(
                 buf, totalDisabledMods, "disabled mod chunk");
         return new ConfigSyncPkt(
-                generation, first, last, enableStack, enableSingles, enableBar,
+                generation, first, last, enableStorage, enableSingles, enableBar,
                 totalGenMods, totalDisabledMods,
                 genMods, disabledMods);
     }

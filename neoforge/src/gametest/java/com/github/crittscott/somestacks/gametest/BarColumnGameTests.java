@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -197,7 +197,7 @@ public final class BarColumnGameTests {
             NeoForge.EVENT_BUS.unregister(denyLower);
         }
 
-        helper.assertBlockPresent(ModRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
+        helper.assertBlockPresent(NeoForgeRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
         check(lower.isEmpty(), "The kept block held on to its bars");
         check(helper.getLevel().getBlockEntity(upperPos) == null,
                 "The block above a kept block was not brought down");

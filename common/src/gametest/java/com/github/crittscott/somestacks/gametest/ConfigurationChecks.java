@@ -216,7 +216,7 @@ public final class ConfigurationChecks {
 
             StorageStackBE storage = GameTestScaffold.placeStorage(helper, GameTestScaffold.ORIGIN);
             for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-                storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+                storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
             }
             checkEquals(StorageStackBE.SLOTS, storage.itemRun().advertisedSlots(),
                     "Height-capped run advertised headroom");
@@ -261,7 +261,7 @@ public final class ConfigurationChecks {
             BarStackBE bars = GameTestScaffold.placeBar(
                     helper, GameTestScaffold.ORIGIN.east(7));
             for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-                bars.getItems().insertItem(slot, new ItemStack(barItem), false);
+                bars.getItems().insertItem(slot, new ItemStack(barItem));
             }
             checkEquals(0, bars.itemRun().insertAt(
                     BarStackBE.SLOTS, new ItemStack(barItem), false),

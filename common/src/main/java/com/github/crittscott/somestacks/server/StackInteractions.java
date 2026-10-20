@@ -167,7 +167,7 @@ public final class StackInteractions {
             ServerPlayer player, BlockPos pos, BlockType type, ViewRay ray, ItemStack held) {
         if (held.is(Items.REDSTONE_TORCH)
                 && (type == BlockType.STORAGE_STACK || type == BlockType.SINGLES_STACK)) {
-            rotateBlock(player, pos, type);
+            rotateBlock(player, pos);
             return true;
         }
         if (held.is(Items.SOUL_TORCH) && type == BlockType.SINGLES_STACK) {
@@ -208,9 +208,8 @@ public final class StackInteractions {
             return;
         }
 
-        BlockType type = BlockType.of(level.getBlockState(pos).getBlock());
-        if (type == BlockType.STORAGE_STACK
-                && level.getBlockEntity(pos) instanceof StorageStackBE storage) {
+        var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof StorageStackBE storage) {
             int deposited = storage.deposit(handStack, player);
             returnToHand(player, creative, handStack);
             if (deposited > 0) {
@@ -220,12 +219,10 @@ public final class StackInteractions {
             return;
         }
 
-        if (type == BlockType.SINGLES_STACK
-                && level.getBlockEntity(pos) instanceof SinglesStackBE singles) {
+        if (blockEntity instanceof SinglesStackBE singles) {
             int index = SinglesCubeIdx.traceAllPositions(
                     ray, pos, singles.getItems(), singles.getRotation());
-            if (index >= 0 && singles.getItems().getStackInSlot(index).isEmpty()
-                    && singles.depositAt(index, handStack)) {
+            if (singles.depositAt(index, handStack)) {
                 returnToHand(player, creative, handStack);
                 StackSounds.play(level, pos, CommonRegistry.singlesDepositSound());
                 emitBlockChange(player, pos, level.getBlockState(pos));
@@ -233,11 +230,9 @@ public final class StackInteractions {
             return;
         }
 
-        if (type == BlockType.BAR_STACK
-                && level.getBlockEntity(pos) instanceof BarStackBE bars) {
+        if (blockEntity instanceof BarStackBE bars) {
             int index = BarCubeIdx.traceAllPositions(ray, pos, bars.getItems());
-            if (index >= 0 && bars.getItems().getStackInSlot(index).isEmpty()
-                    && bars.depositAt(index, handStack)) {
+            if (bars.depositAt(index, handStack)) {
                 returnToHand(player, creative, handStack);
                 StackSounds.play(level, pos, CommonRegistry.barDepositSound());
                 emitBlockChange(player, pos, level.getBlockState(pos));
@@ -342,7 +337,7 @@ public final class StackInteractions {
                     ? Integer.MAX_VALUE
                     : handStack.getMaxStackSize() - handStack.getCount();
             ItemStack taken = storage.extractAt(
-                    index, maxCanTake, handStack.isEmpty() ? ItemStack.EMPTY : handStack, player);
+                    index, maxCanTake, handStack, player);
             if (!taken.isEmpty()) {
                 finishExtraction(player, pos, originalStack, taken, CommonRegistry.storageExtractSound());
             }
@@ -388,15 +383,14 @@ public final class StackInteractions {
         emitSurvivingBlockChange(player, pos, original);
     }
 
-    private static void rotateBlock(ServerPlayer player, BlockPos pos, BlockType type) {
+    private static void rotateBlock(ServerPlayer player, BlockPos pos) {
+        var blockEntity = player.level().getBlockEntity(pos);
         int rotation;
-        if (type == BlockType.SINGLES_STACK
-                && player.level().getBlockEntity(pos) instanceof SinglesStackBE singles) {
+        if (blockEntity instanceof SinglesStackBE singles) {
             rotation = QuarterTurns.next(singles.getRotation());
             singles.setRotation(rotation);
             StackSounds.playRotation(player, pos, CommonRegistry.singlesRotateSound());
-        } else if (type == BlockType.STORAGE_STACK
-                && player.level().getBlockEntity(pos) instanceof StorageStackBE storage) {
+        } else if (blockEntity instanceof StorageStackBE storage) {
             rotation = QuarterTurns.next(storage.getRotation());
             storage.setRotation(rotation);
             StackSounds.playRotation(player, pos, CommonRegistry.storageRotateSound());
