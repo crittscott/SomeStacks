@@ -1,10 +1,9 @@
 package com.github.crittscott.somestacks;
 
-import net.minecraft.server.MinecraftServer;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.minecraft.server.MinecraftServer;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -28,13 +27,13 @@ public final class NeoForgeServerConfig implements ServerConfig.Backend {
     private final ModConfigSpec.ConfigValue<List<? extends String>> genItems;
 
     private NeoForgeServerConfig() {
-        ServerConfig.Settings defaults = ServerConfig.defaults();
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+        ServerConfig.Settings defaults = ServerConfig.defaults();
 
         builder.comment("Stack piles: vertical runs of one stack type that share one inventory.").push(ServerConfig.SECTION_PILES);
         maxHeight = builder
                 .comment("Tallest a run of one stack type may grow, in blocks. Player deposits and automation stop growing a run at this height.")
-                .defineInRange(ServerConfig.KEY_MAX_PILE_HEIGHT, defaults.maxPileHeight(), 1, ServerConfig.MAX_PILE_HEIGHT);
+                .defineInRange(ServerConfig.KEY_MAX_PILE_HEIGHT, defaults.maxPileHeight(), ServerConfig.MIN_PILE_HEIGHT, ServerConfig.MAX_PILE_HEIGHT);
         builder.pop();
 
         builder.comment("Which stack types players and automation may create.",
@@ -72,7 +71,7 @@ public final class NeoForgeServerConfig implements ServerConfig.Backend {
                         0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
         placements = builder
                 .comment("Stacks a gallery places per server tick; lower values spread the work over more ticks.")
-                .defineInRange(ServerConfig.KEY_PLACEMENTS_PER_TICK, defaults.renderGalleryPlacementsPerTick(), 1, Integer.MAX_VALUE);
+                .defineInRange(ServerConfig.KEY_PLACEMENTS_PER_TICK, defaults.renderGalleryPlacementsPerTick(), ServerConfig.MIN_GALLERY_PLACEMENTS_PER_TICK, Integer.MAX_VALUE);
         genMods = builder
                 .comment("Mod ids the gallery 'list' form builds, one column per mod. Edit in game with /ss gen.")
                 .defineListAllowEmpty(ServerConfig.KEY_GEN_MODS, defaults.genMods(), () -> "", value -> value instanceof String);
@@ -85,19 +84,17 @@ public final class NeoForgeServerConfig implements ServerConfig.Backend {
     }
 
     public void onLoading(ModConfigEvent.Loading event) {
-        onConfigChanged(event);
+        onConfigChanged(event.getConfig());
     }
 
     public void onReloading(ModConfigEvent.Reloading event) {
-        onConfigChanged(event);
+        onConfigChanged(event.getConfig());
     }
 
-    private void onConfigChanged(ModConfigEvent event) {
-        if (event.getConfig().getSpec() == spec) {
-            loadedConfig = event.getConfig();
-            if (ServerConfig.backend() != this) return;
-            SomeStacksServer.onPolicyReloaded();
-        }
+    private void onConfigChanged(ModConfig config) {
+        if (config.getSpec() != spec) return;
+        loadedConfig = config;
+        if (ServerConfig.backend() == this) SomeStacksServer.onPolicyReloaded();
     }
 
     @Override

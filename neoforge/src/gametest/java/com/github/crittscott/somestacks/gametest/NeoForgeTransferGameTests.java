@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -190,7 +191,7 @@ public final class NeoForgeTransferGameTests {
                 base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
-            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), 3);
+            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             int headroom = base.getItems().getSlots();
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());

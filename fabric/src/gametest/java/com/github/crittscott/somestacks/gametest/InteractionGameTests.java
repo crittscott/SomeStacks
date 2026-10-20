@@ -141,28 +141,10 @@ public final class InteractionGameTests {
         InteractionChecks.extractionEventsFollowBlockSurvival(helper, FabricGameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
-    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
-    public void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
-        SynchronizationChecks.configDecoderEnforcesPacketBudget(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingRejectsAndClearsInvalidGenerations}. */
-    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
-    public void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
-        SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
-    }
-
     /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
         SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingChecksSequencesAndTotals}. */
-    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
-    public void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
-        SynchronizationChecks.configStagingChecksSequencesAndTotals(helper);
     }
 
     /** See {@link SynchronizationChecks#configDecoderRejectsMalformedCountsAndNamespaces}. */

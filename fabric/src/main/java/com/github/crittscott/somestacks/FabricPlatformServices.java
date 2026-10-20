@@ -25,8 +25,9 @@ public final class FabricPlatformServices implements PlatformServices.Backend {
     }
 
     @Override
-    public void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
+    public boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
         ServerPlayNetworking.send(player, packet);
+        return true;
     }
 
     @Override

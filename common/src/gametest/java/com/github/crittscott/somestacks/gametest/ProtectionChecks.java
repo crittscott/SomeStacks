@@ -2,6 +2,8 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -20,6 +22,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,11 +73,11 @@ public final class ProtectionChecks {
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(valid.getX(), level.getMinY() - 1, valid.getZ());
 
-        check(WorldEdits.placeChecked(player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+        check(WorldEdits.placeChecked(player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Valid checked placement was rejected");
         check(level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+        check(!WorldEdits.placeChecked(player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -90,7 +94,7 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+        check(!WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Entity-obstructed checked placement was accepted");
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
@@ -324,7 +328,7 @@ public final class ProtectionChecks {
         chest.setItem(0, new ItemStack(Items.DIAMOND, 3));
         installVeto.run();
         try {
-            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                     "Vetoed placement succeeded");
         } finally {
             removeVeto.run();
@@ -342,7 +346,7 @@ public final class ProtectionChecks {
                     "Initial permanent stack settlement is still pending");
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                         "Vetoed stack replacement succeeded");
             } finally {
                 removeVeto.run();
@@ -371,7 +375,7 @@ public final class ProtectionChecks {
         helper.runAfterDelay(6, () -> {
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                         "Vetoed placement succeeded");
             } finally {
                 removeVeto.run();
@@ -379,7 +383,7 @@ public final class ProtectionChecks {
             helper.runAfterDelay(3, () -> {
                 check(!level.getBlockState(observer).getValue(ObserverBlock.POWERED),
                         "Denied placement pulsed its observer");
-                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                         "Accepted placement failed");
                 ((StorageStackBE) level.getBlockEntity(target)).getItems()
                         .insertItem(0, new ItemStack(Items.STONE));
@@ -394,5 +398,217 @@ public final class ProtectionChecks {
 
     private static BlockHitResult centerHit(BlockPos pos) {
         return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
+    }
+
+    /** Native per-slot offer returning the accepted count; commit=false rolls back. */
+    @FunctionalInterface
+    public interface OfferAt {
+        int insert(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit);
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Single. Player-attributed cleanup removes the empty block.
+     */
+    public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory, RemovalObserver observer) {
+        ServerLevel level = helper.getLevel();
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE));
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Runnable unregister = observer.install(level, target, observedActor::set, candidate -> candidate == player);
+        try {
+            check(!singles.extractAt(0, player).isEmpty(), "Player extraction returned nothing");
+        } finally {
+            unregister.run();
+        }
+
+        check(observedActor.get() == player, "Cleanup break event did not carry the player");
+        helper.assertBlockNotPresent(CommonRegistry.singlesStackBlock(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
+     * extract the last Storage item. Deferred cleanup retains the player and removes the block.
+     */
+    public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory, RemovalObserver observer) {
+        ServerLevel level = helper.getLevel();
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE));
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        BlockPos target = helper.absolutePos(ORIGIN);
+        AtomicReference<Player> observedActor = new AtomicReference<>();
+        Runnable unregister = observer.install(level, target, observedActor::set, candidate -> candidate == player);
+        try {
+            check(!storage.extractAt(0, 64, ItemStack.EMPTY, player).isEmpty(),
+                    "Player extraction returned nothing");
+            StoragePile pile = storage.pile();
+            check(pile != null, "Pile did not resolve before settlement");
+            pile.settle();
+        } finally {
+            unregister.run();
+        }
+
+        check(observedActor.get() == player, "Deferred cleanup did not retain the player");
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), ORIGIN);
+        helper.succeed();
+    }
+
+    /**
+     * A refused cleanup leaves the empty top Storage block in both the world and the resolved run.
+     * To reproduce in-game: protect the top block of a two-block temporary Storage pile from
+     * [SomeStacks], leave one item in the bottom block, and trigger settlement. The protected empty
+     * top block remains; after allowing [SomeStacks], the next settlement removes it.
+     */
+    public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper, RemovalObserver observer) {
+        BlockPos topRelative = ORIGIN.above();
+        StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
+        GameTestScaffold.placeStorage(helper, topRelative);
+        base.getItems().insertItem(0, new ItemStack(Items.DIRT));
+
+        ServerLevel level = helper.getLevel();
+        Runnable unregister = observer.install(level, helper.absolutePos(topRelative), actor -> {}, actor -> false);
+        try {
+            StoragePile pile = base.pile();
+            check(pile != null, "Pile did not resolve");
+            pile.settle();
+            helper.assertBlockPresent(CommonRegistry.storageStackBlock(), topRelative);
+            checkEquals(2, pile.height(), "The pile dropped a block it never removed");
+        } finally {
+            unregister.run();
+        }
+
+        StoragePile pile = base.pile();
+        check(pile != null, "Pile did not resolve after the refusal");
+        pile.settle();
+        helper.assertBlockNotPresent(CommonRegistry.storageStackBlock(), topRelative);
+        helper.succeed();
+    }
+
+    /**
+     * A refused removal keeps an emptied Bar block without preventing the unsupported block above
+     * from collapsing. To reproduce in-game: build a supported two-block Bar column, deny
+     * [SomeStacks] permission to remove the lower block, and extract its bottom support. The empty
+     * lower block remains, while the unsupported upper block comes down.
+     */
+    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper, RemovalObserver observer) {
+        BarStackBE lower = GameTestScaffold.placeBar(helper, ORIGIN);
+        BarStackBE upper = GameTestScaffold.placeBar(helper, ORIGIN.above());
+        Item barItem = GameTestScaffold.firstBarItem();
+        BlockPos upperPos = upper.getBlockPos();
+
+        int slot = 0;
+        GameTestScaffold.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        for (int layer = 1; layer < 8; layer++) {
+            slot = BarColumnChecks.firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
+            GameTestScaffold.seedSlot(lower.getItems(), slot, new ItemStack(barItem));
+        }
+        GameTestScaffold.seedSlot(
+                upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
+                new ItemStack(barItem));
+
+        Runnable unregister = observer.install(helper.getLevel(), lower.getBlockPos(), actor -> {}, actor -> false);
+        try {
+            lower.extractAt(0, null);
+        } finally {
+            unregister.run();
+        }
+
+        helper.assertBlockPresent(CommonRegistry.barStackBlock(), ORIGIN);
+        check(lower.isEmpty(), "The kept block held on to its bars");
+        check(helper.getLevel().getBlockEntity(upperPos) == null,
+                "The block above a kept block was not brought down");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
+    public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper, OfferAt offer) {
+        StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
+        }
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+
+        int headroom = StorageStackBE.SLOTS;
+        checkEquals(4, offer.insert(storage, headroom, offered, false),
+                "A full pile with free headroom did not credit growth");
+
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
+            checkEquals(0, offer.insert(storage, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, offer.insert(storage, headroom, offered, true),
+                    "Committed offer accepted count");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                CommonRegistry.storageStackBlock(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
+    public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper, OfferAt offer) {
+        SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
+        }
+        ItemStack offered = new ItemStack(Items.STONE, 4);
+
+        // A cell takes one item, so a credited growth leaves three of the four behind.
+        int headroom = SinglesStackBE.SLOTS;
+        checkEquals(1, offer.insert(singles, headroom, offered, false),
+                "A full column with free headroom did not credit growth");
+
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
+            checkEquals(0, offer.insert(singles, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, offer.insert(singles, headroom, offered, true),
+                    "Committed offer accepted count");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                CommonRegistry.singlesStackBlock(), ORIGIN.above());
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
+     * through item automation; it accepts nothing and creates no block.
+     */
+    public static void barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper, OfferAt offer) {
+        BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
+        Item bar = GameTestScaffold.firstBarItem();
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+            bars.getItems().insertItem(slot, new ItemStack(bar, 1));
+        }
+        ItemStack offered = new ItemStack(bar, 4);
+
+        // A position takes one bar, so a credited growth leaves three of the four behind.
+        int headroom = BarStackBE.SLOTS;
+        checkEquals(1, offer.insert(bars, headroom, offered, false),
+                "A full column with free headroom did not credit growth");
+
+        GameTestScaffold.outsideWorldBorder(helper, ORIGIN.above(), () -> {
+            checkEquals(0, offer.insert(bars, headroom, offered, false),
+                    "Aborted offer accepted count");
+            checkEquals(0, offer.insert(bars, headroom, offered, true),
+                    "Committed offer accepted count");
+        });
+
+        checkEquals(4, offered.getCount(), "Input stack must not be mutated");
+        helper.assertBlockNotPresent(
+                CommonRegistry.barStackBlock(), ORIGIN.above());
+        helper.succeed();
     }
 }

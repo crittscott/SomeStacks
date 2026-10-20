@@ -66,7 +66,7 @@ Breaking or replacing any stack block drops that block's local contents; no stac
 
 ### Storage
 
-27 stacks shown as a 3 x 3 x 3 grid; the art does not change with count. A contiguous pile is one inventory: deposits merge into compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Each scheduled settlement merges exact identities, restores stack sizes, sorts, packs down, and removes empty top blocks.
+27 stacks shown as a 3 x 3 x 3 grid; the art does not change with count. A contiguous pile is one inventory: deposits merge into compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Each scheduled settlement merges exact identities, restores stack sizes (at most 64 per slot), sorts, packs down, and removes empty top blocks.
 
 Storage is the only type with a permanence mode. A permanent pile keeps empty blocks; a temporary pile trims empty blocks from the top and vanishes when emptied. The setting belongs to the whole pile. A redstone torch rotates one block's 3 x 3 x 3 layout, not the pile.
 

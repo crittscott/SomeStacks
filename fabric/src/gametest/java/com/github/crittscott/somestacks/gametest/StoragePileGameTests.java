@@ -119,4 +119,15 @@ public final class StoragePileGameTests {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
     }
 
+    /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
+        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(helper, FabricGameTestSupport::offerAt);
+    }
+
+    /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
+    }
 }

@@ -3,11 +3,14 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -347,6 +350,79 @@ public final class StoragePileChecks {
         checkEquals(1, loaded.pile().comparatorSignal(), "Signal after extraction");
         loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
         checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
+     * automation, then let it settle. Every slot holds at most 64 and a fully filled pile gives
+     * comparator strength 15. An item with a smaller maximum still uses that smaller capacity.
+     */
+    public static void storageCapAppliesToPlayersAutomationAndSettlement(
+            GameTestHelper helper, ProtectionChecks.OfferAt offer) {
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        StoragePile pile = storage.pile();
+        pile.setPermanent(true, null);
+        ItemStack large = new ItemStack(Items.STONE, 99);
+        large.set(DataComponents.MAX_STACK_SIZE, 99);
+        checkEquals(64, pile.insertAt(0, large, true), "Run simulation capacity");
+        check(storage.getItems().getStackInSlot(0).isEmpty(), "Run simulation mutated contents");
+        checkEquals(64, pile.insertAt(0, large, false), "Run commit capacity");
+        checkEquals(64, offer.insert(storage, 1, large, false), "Native simulation capacity");
+        check(storage.getItems().getStackInSlot(1).isEmpty(), "Native abort changed contents");
+        checkEquals(64, offer.insert(storage, 1, large, true), "Native commit capacity");
+        ItemStack hand = large.copy();
+        checkEquals(99, storage.deposit(hand, null), "Player deposit count");
+        pile.settle();
+        checkEquals(227, GameTestScaffold.count(storage.getItems(), Items.STONE), "Settlement lost items");
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            check(storage.getItems().getStackInSlot(slot).getCount() <= StackItemStorage.STORAGE_SLOT_LIMIT,
+                    "Settlement exceeded Storage capacity");
+            storage.getItems().setStackInSlot(slot, large.copyWithCount(64));
+        }
+        checkEquals(15, pile.comparatorSignal(), "Capped pile did not report full");
+        checkEquals(0, offer.insert(storage, 0, large, false), "Native offer overfilled a full slot");
+        storage.getItems().setStackInSlot(0, new ItemStack(Items.ENDER_PEARL, 16));
+        checkEquals(15, pile.comparatorSignal(), "Smaller item limit did not count as full");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: load a preceding-release Storage block containing stacks above 64.
+     * Spare cubes take the excess. When every cube is occupied, excess remains saved in SetAside
+     * and returns after freeing its original cube and loading the block again.
+     */
+    public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        StorageStackBE source = placeStorage(helper, ORIGIN);
+        ItemStack large = new ItemStack(Items.STONE, 99);
+        large.set(DataComponents.MAX_STACK_SIZE, 99);
+        source.getItems().setStackInSlot(0, large.copy());
+        var sparseTag = source.saveWithoutMetadata(registries);
+        StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, sparseTag));
+        checkEquals(64, loaded.getItems().getStackInSlot(0).getCount(), "Loaded primary capacity");
+        checkEquals(99, GameTestScaffold.count(loaded.getItems(), Items.STONE), "Sparse migration lost items");
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) source.getItems().setStackInSlot(slot, large.copy());
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries,
+                source.saveWithoutMetadata(registries)));
+        checkEquals(StorageStackBE.SLOTS * 64, GameTestScaffold.count(loaded.getItems(), Items.STONE),
+                "Dense migration did not cap occupied slots");
+        CompoundTag saved = loaded.saveWithoutMetadata(registries);
+        var inventory = saved.getCompound(StackItemStorage.TAG_ITEMS).orElseThrow();
+        var retained = inventory.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE);
+        int retainedCount = 0;
+        for (int i = 0; i < retained.size(); i++) {
+            retainedCount += ItemStack.CODEC.parse(RegistryOps.create(
+                    NbtOps.INSTANCE, registries), retained.get(i)).getOrThrow().getCount();
+        }
+        checkEquals(StorageStackBE.SLOTS * 35, retainedCount, "Dense migration lost overflow");
+        loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
+        saved = loaded.saveWithoutMetadata(registries);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
+        checkEquals(35, loaded.getItems().getStackInSlot(0).getCount(), "Retained overflow did not retry");
+        checkEquals(StorageStackBE.SLOTS - 1, loaded.getItems().save(registries)
+                .getListOrEmpty(StackItemStorage.TAG_SET_ASIDE).size(), "Retry removed wrong retained entries");
         helper.succeed();
     }
 }
