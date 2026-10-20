@@ -30,7 +30,6 @@ public final class FabricClientNetworking {
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientGestures.resetSync();
-            ConfigSyncReceiver.clear();
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ClientGestures.resetSync();

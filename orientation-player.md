@@ -1,10 +1,10 @@
 <!-- FIXED HEADER: not content. Do not edit, trim, or count toward the size limit. -->
-> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md § Orientation files.
+> **Orientation snapshot, not a specification.** Describes the code as it currently is; the code wins on any disagreement. See CLAUDE.md Â§ Orientation files.
 <!-- END FIXED HEADER -->
 
-# Some Stacks — player-facing behavior
+# Some Stacks â€” player-facing behavior
 
-Current behavior; see `orientation-code.md` for structure.
+See `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
@@ -66,7 +66,7 @@ Breaking or replacing any stack block drops that block's local contents; no stac
 
 ### Storage
 
-27 stacks shown as a 3 x 3 x 3 grid; the art does not change with count. A contiguous pile is one inventory: deposits merge into compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Each scheduled settlement merges exact identities, restores stack sizes, sorts, packs down, and removes empty top blocks.
+27 stacks, each capped at the smaller of 64 and the item's own maximum, shown as a 3 x 3 x 3 grid; the art does not change with count. A contiguous pile is one inventory: deposits merge into compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Each scheduled settlement merges exact identities, restores stack sizes, sorts, packs down, and removes empty top blocks.
 
 Storage is the only type with a permanence mode. A permanent pile keeps empty blocks; a temporary pile trims empty blocks from the top and vanishes when emptied. The setting belongs to the whole pile. A redstone torch rotates one block's 3 x 3 x 3 layout, not the pile.
 
@@ -99,7 +99,7 @@ Every block exposes the whole run on all sides: transactional `ResourceHandler<I
 
 | Type | One slot | Slot limit |
 | --- | --- | --- |
-| Storage | one inventory slot | 64 advertised; the item's own max still applies |
+| Storage | one inventory slot | The smaller of 64 and the item's own maximum |
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
@@ -121,7 +121,7 @@ Storage counts each slot as a fraction of its legal stack size; Singles and Bar 
 
 ## Server configuration
 
-NeoForge uses loader-managed `somestacks-server.toml`, with per-world overrides under `<world>/serverconfig/`; file edits are picked up by the native config lifecycle. Fabric uses per-world JSON at `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`.
+NeoForge uses loader-managed synchronized `somestacks-server.toml`, with per-world overrides in the loader's world config directory; file edits are picked up by the native config lifecycle. Fabric uses per-world JSON at `<world>/serverconfig/somestacks-server.json`, reread by `/ss reload`.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
@@ -134,7 +134,7 @@ NeoForge uses loader-managed `somestacks-server.toml`, with per-world overrides 
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and skip disabled types when cycling. Data-pack tags refresh on reload.
+Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and skip disabled types when cycling. NeoForge uses its native config sync; Fabric sends one bounded snapshot. Local authoring lists use up to 256 unique namespaces of at most 256 characters per list; omissions warn, and full server admission policy still applies. Data-pack tags refresh on reload.
 
 ## Commands
 
@@ -149,7 +149,7 @@ Disabling types, items, mods, or ingot categories preserves existing contents. C
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
 | `/ss reload` | level 2 | Refresh policy and synchronize changed client settings; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Gallery enablement and permission reloads refresh connected players’ command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Gallery enablement and permission reloads refresh connected playersâ€™ command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 
@@ -157,7 +157,7 @@ Storage and Singles show items in four modes: `2d` (flat art), `3d` (the FIXED r
 
 Resolution order is local override, resource-pack data, then automatic measurement. A server can distribute profiles through its server resource pack; local overrides keep priority. Measured results cache at `config/somestacks/measured_cache.json` and are invalidated by pack, mod-version, or reload changes.
 
-`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, which is output only. Servers cannot invoke them or request client writes.
+`/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, output only; servers cannot request writes.
 
 Resource packs map Bar item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
 
@@ -169,11 +169,11 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. NeoForge consults destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks for neighbor deposits; placement and automation growth use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla use, loader results, build limits, obstruction, border and spawn protection. Neighbor deposits consult destination interaction protection on both loaders. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restores denied snapshots silently. Both loaders fire native break hooks. Surviving player edits emit block change; removing the final Single/Bar emits only destruction there.
 
-The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
+The gesture payload carries mode/modifier state. The server validates actions against vanilla hits, permissions, items, support, policy, height, and obstruction, then selects cells itself.
 
 ## Saved worlds
 
-A world saved by the preceding 26.1 (0.8.3) release upgrades its stored items on load; no older release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
+A world saved by the preceding 26.1 (0.8.3) release upgrades its stored items on load. Storage stacks above the local cap split into free cubes; excess stays saved in `SetAside` and retries its original cube on later loads. Only that release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
 

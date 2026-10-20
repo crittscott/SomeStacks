@@ -104,24 +104,9 @@ public final class InteractionGameTests {
         InteractionChecks.extractionEventsFollowBlockSurvival(helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
-    public static void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
-        SynchronizationChecks.configDecoderEnforcesPacketBudget(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingRejectsAndClearsInvalidGenerations}. */
-    public static void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
-        SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
-    }
-
     /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
         SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingChecksSequencesAndTotals}. */
-    public static void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
-        SynchronizationChecks.configStagingChecksSequencesAndTotals(helper);
     }
 
     /** See {@link SynchronizationChecks#configDecoderRejectsMalformedCountsAndNamespaces}. */

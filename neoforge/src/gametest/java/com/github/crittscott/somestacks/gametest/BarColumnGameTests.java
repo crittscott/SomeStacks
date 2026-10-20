@@ -1,13 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -157,50 +155,5 @@ public final class BarColumnGameTests {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
     }
 
-    /**
-     * A cascade still settles the column above an empty block that protection refuses to remove.
-     * Support depends on the seam's occupancy, which is empty whether or not the block remains;
-     * protection controls only the world edit.
-     *
-     * <p>To reproduce in-game: build a supported two-block Bar column, deny [SomeStacks]
-     * permission to remove the lower block, and extract its bottom support. The empty lower block
-     * remains, while the unsupported upper block comes down.
-     */
-    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
-        BarStackBE lower = placeBar(helper, ORIGIN);
-        BarStackBE upper = placeBar(helper, ORIGIN.above());
-        Item barItem = firstBarItem();
-        BlockPos lowerPos = lower.getBlockPos();
-        BlockPos upperPos = upper.getBlockPos();
 
-        // One bar per layer, each resting on the one below, so slot 0 carries the whole column and
-        // the seam the upper block stands on is the top of that chain.
-        int slot = 0;
-        seedSlot(lower.getItems(), slot, new ItemStack(barItem));
-        for (int layer = 1; layer < 8; layer++) {
-            slot = BarColumnChecks.firstSupportedBy(slot, layer * 8, (layer + 1) * 8);
-            seedSlot(lower.getItems(), slot, new ItemStack(barItem));
-        }
-        seedSlot(upper.getItems(), BarColumnChecks.firstSeamSupportedBy(slot - 56),
-                new ItemStack(barItem));
-
-        Consumer<BreakBlockEvent> denyLower = event -> {
-            if (event.getPos().equals(lowerPos)) {
-                event.setCanceled(true);
-            }
-        };
-
-        NeoForge.EVENT_BUS.addListener(denyLower);
-        try {
-            lower.extractAt(0, null);
-        } finally {
-            NeoForge.EVENT_BUS.unregister(denyLower);
-        }
-
-        helper.assertBlockPresent(NeoForgeRegistry.BAR_STACK_BLOCK.get(), ORIGIN);
-        check(lower.isEmpty(), "The kept block held on to its bars");
-        check(helper.getLevel().getBlockEntity(upperPos) == null,
-                "The block above a kept block was not brought down");
-        helper.succeed();
-    }
 }

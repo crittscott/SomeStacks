@@ -40,6 +40,8 @@ public final class ServerConfig {
     public static final String KEY_GEN_MODS = "gen_mods";
     public static final String KEY_GEN_ITEMS = "gen_items";
 
+    public static final int MIN_PILE_HEIGHT = 1;
+    public static final int MIN_GALLERY_PLACEMENTS_PER_TICK = 1;
     public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
     public static final int MAX_PILE_HEIGHT = 64;
     public static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
@@ -47,7 +49,7 @@ public final class ServerConfig {
     private static final List<PermissionCheck> PERMISSION_LEVELS = List.of(
             Commands.LEVEL_ALL, Commands.LEVEL_MODERATORS, Commands.LEVEL_GAMEMASTERS,
             Commands.LEVEL_ADMINS, Commands.LEVEL_OWNERS);
-    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = 3;
+    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = PERMISSION_LEVELS.indexOf(Commands.LEVEL_ADMINS);
     /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
     public static final int GALLERY_PERMISSION_LEVEL_MAX = PERMISSION_LEVELS.size() - 1;
 
@@ -166,10 +168,15 @@ public final class ServerConfig {
     public static int renderGalleryPlacementsPerTick() { return settings.renderGalleryPlacementsPerTick(); }
     public static boolean galleryEnabled() { return settings.galleryEnabled(); }
     public static PermissionCheck galleryPermission() { return PERMISSION_LEVELS.get(settings.galleryPermissionLevel()); }
+    /** Canonical spelling for configured item namespaces. */
+    public static String normalizeNamespace(String namespace) {
+        return namespace.trim().toLowerCase(Locale.ROOT);
+    }
+
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
         for (String entry : ListSetting.DISABLE_MODS.get()) {
-            String modId = entry.trim().toLowerCase(Locale.ROOT);
+            String modId = normalizeNamespace(entry);
             if (!modId.isEmpty()) {
                 mods.add(modId);
             }

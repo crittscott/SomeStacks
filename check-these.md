@@ -256,7 +256,7 @@ The three original reports contributed 23 numbered findings. Their complete find
 > - **Confidence:** Certain
 > - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackBlockEntity.java:435-446, common/src/main/java/com/github/crittscott/somestacks/block/StackRun.java:160-174, 302-313
 > - **In plain English:** When a tall stack's comparator signal changes, every block in it is told. Each block then walks the whole stack separately to find out what it belongs to.
-> - **Consequence:** For a run of height N, one signal change costs about N² block-entity lookups. That is 64 at the default height of 8, and about 4,000 at the configurable maximum of 64. Admins who raise the height limit pay for it on every comparator change.
+> - **Consequence:** For a run of height N, one signal change costs about NÂ² block-entity lookups. That is 64 at the default height of 8, and about 4,000 at the configurable maximum of 64. Admins who raise the height limit pay for it on every comparator change.
 > - **Action:** In `resolveRun`, after building the block list, store the same `StackRun` instance in every member's `cachedRun`/`cachedRunTick`. One walk then serves the whole run for that tick.
 > - **Technical detail:** `publishComparatorSignal` calls `updateNeighbourForOutputSignal` for each block, comparators call `getAnalogOutputSignal`, and that calls `X.at(level, pos)`, which calls that block's own `itemRun()`. That block's cache is empty, so it calls `resolveBlocks`, which walks down and then up the run.
 
@@ -311,7 +311,7 @@ The three original reports contributed 23 numbered findings. Their complete find
 > - **In plain English:** Which way a stack faces is ordinary block data, like a furnace's facing. Here, turning it is routed through the block's storage object, which remembers a "rotation to apply later" and writes it into the world the next time anyone even asks which way the block faces.
 > - **Consequence:** Reading the rotation (`getRotation()`, which the renderer and ray tracing call) can change the world on the server, so a read can trigger block updates, neighbor notifications, and a save. The maintainer has to reason about when a pending rotation lands. An expert expects a rotate to be one `setBlock` call.
 > - **Action:** Delete `pendingBlockRotation`, `setBlockRotation`, and `applyPendingBlockRotation`. Make `blockRotation()` a pure read of `HORIZONTAL_FACING`. In `StackInteractions.rotateBlock`, call `level.setBlock(pos, state.setValue(StackBlock.HORIZONTAL_FACING, next), Block.UPDATE_ALL)`. For a block joining a pile, compute the pile's facing before placement and pass it into the placed state (`StackPlacement.stateFor`) instead of adopting it afterward. Keep the `getRotation`/`setRotation` pair on the base class only, instead of identical copies on Storage and Singles.
-> - **Technical detail:** `blockRotation()` calls `applyPendingBlockRotation()`, which may call `level.setBlock(..., UPDATE_ALL)` and `setChanged()`. `setLevel` and `loadClientUpdate` also manage the pending field. `StoragePile.adoptNeighbourState` → `adoptPileState` → `setBlockRotation` runs from `onPlace`, so the placement immediately causes a second `setBlock` with full updates.
+> - **Technical detail:** `blockRotation()` calls `applyPendingBlockRotation()`, which may call `level.setBlock(..., UPDATE_ALL)` and `setChanged()`. `setLevel` and `loadClientUpdate` also manage the pending field. `StoragePile.adoptNeighbourState` â†’ `adoptPileState` â†’ `setBlockRotation` runs from `onPlace`, so the placement immediately causes a second `setBlock` with full updates.
 
 #### EW-05: `/ss reload` and native reloads leave clients' command lists stale
 
@@ -345,7 +345,7 @@ The three original reports contributed 23 numbered findings. Their complete find
 > - **In plain English:** Vanilla chests save their items as a list called `Items`. Stacks save a box called `Items` that holds another list also called `Items`. Tools and mods that know how to read a chest's contents can't read a stack's.
 > - **Consequence:** `/data get block` output, NBT editors, and inventory-inspecting mods (tooltips, look-at overlays, schematic and structure tools) that read the vanilla `Items` list find a compound and show nothing. The maintainer also carries a custom `Codec` wrapper, a raw pass-through codec in `readTag`, and two different ways of stamping `DataVersion`.
 > - **Action:** Save the live items as a top-level `Items` list of `ItemStackWithSlot` through `output.list("Items", ItemStackWithSlot.CODEC)`, with `SetAside` as a sibling top-level list. Read the same way, keeping the raw set-aside retry. Add a migration-layer conversion for the released nested form (per CLAUDE.md, migration from the preceding release only). Use one `DataVersion` writer (`NbtUtils.addCurrentDataVersion` or `output.putInt`), not both.
-> - **Technical detail:** `saveAdditional` stores `StackItemStorage.codec(slots)`, which encodes `serializeNBT` → `{Items:[{Slot:int,...}], SetAside:[...]}` under the key `Items`. Vanilla `ItemStackWithSlot` uses a byte `Slot`. `StackDataMigration.stampVersion` uses `NbtUtils.addCurrentDataVersion`, while `saveAdditional` writes `DataVersion` with `putInt`.
+> - **Technical detail:** `saveAdditional` stores `StackItemStorage.codec(slots)`, which encodes `serializeNBT` â†’ `{Items:[{Slot:int,...}], SetAside:[...]}` under the key `Items`. Vanilla `ItemStackWithSlot` uses a byte `Slot`. `StackDataMigration.stampVersion` uses `NbtUtils.addCurrentDataVersion`, while `saveAdditional` writes `DataVersion` with `putInt`.
 
 #### EW-08: Fabric block entity types use the deprecated Fabric builder
 
@@ -442,7 +442,7 @@ All paths below are relative to the target version project's root. Use the fixed
 
 Except where a loader is named, implementation paths in the table start beneath `common/src/main/java/com/github/crittscott/somestacks/`. Shared check classes start beneath `common/src/gametest/java/com/github/crittscott/somestacks/gametest/`; loader checks use that loader's `src/gametest` tree. Update each target's affected orientation and player/admin documentation, keeping the orientation size limits and fixed headers intact.
 
-## Batch 2: guarding, legacy, and loader divergence — implementation
+## Batch 2: guarding, legacy, and loader divergence â€” implementation
 
 Status: the surviving changes are implemented in `26.3`; qualified exclusions remain unchanged as recorded below. Source inspection checked changed call arities, project-owned imports, mixin registration, and renamed test-instance references. No builds, GameTests, client checks, or Git operations were run. Batch 1's successful builds and GameTests do not validate Batch 2.
 
@@ -530,7 +530,7 @@ All 15 numbered findings from the three reports are copied below. Summaries refe
 > - **Confidence:** Likely
 > - **Where:** common/src/main/java/com/github/crittscott/somestacks/util/StackItemStorage.java:181-191; common/src/main/java/com/github/crittscott/somestacks/block/StackBlockEntity.java:406-411
 > - **In plain English:** When saving a stack's items, the code is ready for two failures. One is an item that can't be written, and it reports that twice, in two different places. The other is the game's item writer producing something other than a record, which it never does.
-> - **Consequence:** A save failure produces a doubly wrapped exception (`IllegalStateException` → `IllegalStateException` → cause), which is noisier for the maintainer reading a crash report. The `instanceof CompoundTag` branch is dead code that implies `ItemStack.CODEC` might emit a non-map.
+> - **Consequence:** A save failure produces a doubly wrapped exception (`IllegalStateException` â†’ `IllegalStateException` â†’ cause), which is noisier for the maintainer reading a crash report. The `instanceof CompoundTag` branch is dead code that implies `ItemStack.CODEC` might emit a non-map.
 > - **Action:** Add the slot and location context in one place. `StackBlockEntity.saveAdditional` knows the position, so it can include the slot if `serializeNBT` passes it in the exception message. Replace the `instanceof` check with a plain `(CompoundTag)` cast.
 > - **Technical detail:** `ItemStack.CODEC` is a map codec over a record, so `ops.convertTo(NbtOps.INSTANCE, encoded)` always yields a `CompoundTag` for a non-empty stack, and empty stacks are skipped before encoding.
 
@@ -703,7 +703,7 @@ All 15 numbered findings from the three reports are copied below. Summaries refe
 > - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackBlockEntity.java:341-372; common/src/gametest/java/com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.java:307-309; common/src/gametest/java/com/github/crittscott/somestacks/gametest/SynchronizationChecks.java:345-347, 391-393
 > - **In plain English:** When the server tells a client what is in a stack, the two loaders take different routes into the same checking code. The shared tests use NeoForge's route even when they run on Fabric, so Fabric's real route is never tested.
 > - **Consequence:** On Fabric, updates arrive through `loadAdditional`'s client branch, which also calls `super.loadAdditional`. On NeoForge, the `handleUpdateTag`/`onDataPacket` overrides skip `super.loadAdditional`, so anything the base class loads (components, attachments) is handled differently on each loader. The overrides have no `@Override` because common code cannot see NeoForge. If NeoForge renames or re-signatures either hook, nothing fails to compile and the override silently stops applying. The shared sync tests would still pass because they call the methods directly. A maintainer who breaks Fabric's client branch also gets no failing test, because the tests never go through it.
-> - **Action:** Delete `handleUpdateTag` and `onDataPacket` from `StackBlockEntity`. NeoForge's default `IBlockEntityExtension` hooks load through `loadWithComponents` → `loadAdditional`, which reaches the same client branch Fabric uses, so both loaders share one path. Change the shared checks to call `loadClientUpdate` (the shared validation) in place of the two hooks.
+> - **Action:** Delete `handleUpdateTag` and `onDataPacket` from `StackBlockEntity`. NeoForge's default `IBlockEntityExtension` hooks load through `loadWithComponents` â†’ `loadAdditional`, which reaches the same client branch Fabric uses, so both loaders share one path. Change the shared checks to call `loadClientUpdate` (the shared validation) in place of the two hooks.
 > - **Technical detail:** The javadoc at line 364 says it directly: "NeoForge chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional." The client branch at lines 344-349 already does `loadClientUpdate` and then `super.loadAdditional(input)` on success. The NeoForge hooks call only `loadClientUpdate`. Confidence is Likely, not Certain, only because I have not checked NeoForge's default hook bodies here.
 
 #### LD-03: Server-config defaults and key names are defined separately in each loader's backend
@@ -790,3 +790,413 @@ Published API evidence: [NeoForge event cancellation contract](https://docs.neof
 - Client validation: shared `ClientCallbackChecks.checkClientUpdateIngress`, with a `ClientUpdate` callback supplied by each loader's `ClientCallbackGameTests`. Fabric invokes native `loadWithComponents`; NeoForge invokes `IBlockEntityExtension.handleUpdateTag/onDataPacket` on registered client-attached entities. These are entry-point checks on scratch entities, not fabricated network traffic. The fixtures carry changed native `components` alongside invalid stack data, and compare complete saved state and render-cache identity after rejection.
 - Naming: use `ConfigSyncReceiver`, `NeoForgeRegistry`, `NeoForgeNetworking`, `NeoForgeClientEvents`, `NeoForgeClientSetup`, `NeoForgeKeyMappings`, `NeoForgeStackInteractionEvents`, and root-package `FabricPlatformServices`/`NeoForgePlatformServices`. Test checks/wrappers are `AutomationAndPersistenceChecks`/`AutomationAndPersistenceGameTests`; NeoForge resources are under `test_instance/automationandpersistencegametests`.
 - First run builds and server GameTests for both loaders. Then run `/ssclienttest` on each development client while aiming at a stack with Shift and the modifier released. Confirm ordinary login/chunk loading and later inventory updates still display correctly, and repeat client checks after resource reload. Report these results separately from Batch 1.
+
+## Batch 3: logging, magic numbers, multiloader organization, and networking
+
+Status: implemented in `26.3` after verification of all 20 numbered findings. The earlier conversational count of 21 was incorrect; the reports contain 3 logging, 7 magic-number, 5 multiloader, and 5 networking findings. No other version directory was changed. The user explicitly authorized execution of the verified plan; this batch supersedes prior scope restrictions against redesigning config transport and extracting transfer bookkeeping. Native journals remain separate. Unrelated qualified exclusions in batches 1 and 2 still apply.
+
+Validation: source reading and reasoning only. No Gradle, builds, GameTests, client runs, Git, or GitHub commands were executed. Mechanical source inspection found balanced delimiters/no duplicate imports and matched all 131 NeoForge registrations to methods and JSON instances. This does not establish compilation or runtime success. Batch 1 results do not validate this batch. Code/player orientations and pack-author UV documentation are updated; orientation-build and build inputs are unchanged.
+
+IDs use LOG (logging), MN (magic numbers), ML (multiloader organization), and NW (networking) plus the original number. Earlier IDs remain authoritative for overlaps. Every original finding is copied below, including qualified/rejected recommendations. Stale filenames/lines and summary references to absent findings are not additional tasks.
+
+### Logging
+
+#### LOG-02: Client discards rejected block-entity updates without any log line
+
+**Status:** Implemented with corrected ingress coverage.
+
+**Verification:** Native preflight can reject before loadClientUpdate, so logging only in the final loader would miss failures.
+
+**Implementation result:** StackBlockEntity reports the first rejected update per connection with dimension, position, block, and metadata/inventory reason. Both preflight and final loading report without mutating rejected state. Disconnect resets one flag; no position set is retained.
+
+**Original issue text (verbatim):**
+
+> ### 2. Client discards rejected block-entity updates without any log line
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackBlockEntity.java:374-390 (and its callers at 344-348 and 365-372)
+> - **In plain English:** If the client receives a stack's contents from the server in a form it refuses, it quietly ignores them. The stack then keeps showing whatever it showed before (or nothing), and the player's log gives no hint why.
+> - **Consequence:** A player or modpack maintainer seeing stacks that look empty or frozen on one client has no log evidence to report, and the maintainer cannot tell a rejected update from a rendering bug. This is exactly the "is the mod working?" question the log should answer.
+> - **Action:** When `loadClientUpdate` returns false, log one `warn` per client session (a static flag reset on disconnect, or a set of positions like `SomeStacksServer.reportSavedItems` uses) naming the position and which check failed (data version mismatch, missing inventory, server-only field present, invalid stack data, or bad inventory). Update the javadoc that currently promises "without ... logging".
+> - **Technical detail:** `loadClientUpdate` folds seven conditions into one `if` and returns `false`; both the vanilla/Fabric branch of `loadAdditional` and the NeoForge `handleUpdateTag`/`onDataPacket` hooks drop the result silently. The javadoc states the silence is deliberate ("Rejects malformed wire data without migration, recovery retention, or logging"), but under the project's own rule that the client validates what the server sends, a validation failure is a milestone worth one log line. Rate-limiting keeps a misbehaving server from flooding the log, which is presumably why logging was removed.
+
+#### LOG-04: Startup policy line omits the setting that bypasses protection
+
+**Status:** Implemented.
+
+**Verification:** Startup/reload logs omitted gallery access and deny-list counts.
+
+**Implementation result:** logPolicy includes gallery enablement/permission and disable_mods/disable_items counts. Startup and the shared changed-policy publication path, including list edits, call it.
+
+**Original issue text (verbatim):**
+
+> ### 4. Startup policy line omits the setting that bypasses protection
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/SomeStacksServer.java:88-95
+> - **In plain English:** The startup log lists which stack types are enabled and the height limit, but not whether the render-gallery commands are enabled, and those commands place blocks while ignoring claim and spawn protection.
+> - **Consequence:** A server admin auditing why blocks appeared inside a protected area cannot confirm from the log whether galleries were enabled at the time; the deny lists (which explain "why can't I deposit X") are also invisible.
+> - **Action:** Extend `logPolicy` to include `galleryEnabled()` with its permission level, and the sizes of `disable_mods` and `disable_items`.
+> - **Technical detail:** `logPolicy` formats only `enableStorageStackBlock`, `enableSinglesStackBlock`, `enableBarStackBlock`, and `maxPileHeight`. `ServerConfig.Settings` already carries `galleryEnabled`, `galleryPermissionLevel`, `disableMods`, and `disableItems`.
+
+#### LOG-05: File I/O failures are logged at inconsistent levels, some without the exception
+
+**Status:** Implemented surviving diagnostics; blanket severity changes rejected.
+
+**Verification:** Fallback failures often retained only e.getMessage. Explicit failed user writes already notified the player and reasonably used error severity.
+
+**Implementation result:** Recoverable resource/config/cache failures now pass the throwable to warn. User override fallback reads use warn. Explicit failed write/dump commands retain error and translated player feedback. Bar tint fallback no longer repeats the throwable message.
+
+**Original issue text (verbatim):**
+
+> ### 5. File I/O failures are logged at inconsistent levels, some without the exception
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/ItemRenderOverrides.java:148, 245, 297, 315, 354; common/src/main/java/com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.java:111, 149, 220; common/src/main/java/com/github/crittscott/somestacks/client/BarTextureStore.java:119, 178; fabric/src/main/java/com/github/crittscott/somestacks/JsonServerConfig.java:61-63, 168
+> - **In plain English:** When the mod cannot read or write one of its files, some failures are logged as errors with full details and others as warnings with only a one-line reason, with no pattern behind which is which.
+> - **Consequence:** Someone filtering the log for errors misses failed config and cache writes, and for the warnings that keep only `e.getMessage()`, a maintainer gets messages like "null" or a bare path with no stack trace to diagnose an `IOException` or a Gson parse error.
+> - **Action:** Use one convention: `warn` for recoverable file problems (the mod falls back and keeps running), always passing the exception as the last argument so SLF4J prints it; reserve `error` for nothing in this set or for failures the player is also told about. In `BarTextureStore:178`, drop the redundant `e.getMessage()` placeholder since the throwable is already passed.
+> - **Technical detail:** `ItemRenderOverrides` uses `LOGGER.error(..., e)` for user-file read/write and dump failures; `AutoRenderProfiles`, `JsonServerConfig.save`, `JsonServerConfig.load`, `ItemRenderOverrides.prepare`, and `BarTextureStore.prepare` use `LOGGER.warn("...: {}", ..., e.getMessage())`, which loses the stack and prints "null" for exceptions without a message (e.g. Gson returning a non-object root yields `NullPointerException`/`IllegalStateException` text that can be empty).
+
+### Magic numbers and names
+
+#### MN-01: Storage slot limit is a hardcoded 64 that the rest of the Storage code ignores
+
+**Status:** Implemented the user-selected 64 cap and lossless migration.
+
+**Verification:** Player deposits already passed through local insertion capped at 64, contrary to the report. Settlement bypassed the cap, prediction overstated room, and comparators used the larger item maximum.
+
+**Implementation result:** StackItemStorage names STORAGE_SLOT_LIMIT once and supplies storageSlotLimit. Prediction, filling, settlement, local/native adapters, and comparator accounting use the smaller of 64 and the item maximum. StackDataMigration splits saved over-cap entries into free local slots, then legal SetAside pieces retaining original-slot retry. Raw inventory replacement waits until all encoding succeeds; failures keep slot context. Changed loads are marked dirty. Capped inventories avoid a second item-codec pass. Settlement preserves/publishes contents when packing cannot fit. Two shared scenarios cover native/player limits, simulation/commit, smaller item maxima, comparator fullness, sparse/dense migration, overflow preservation, saving, and retry.
+
+**Original issue text (verbatim):**
+
+> ### 1. Storage slot limit is a hardcoded 64 that the rest of the Storage code ignores
+> - **User comment:** Use 64 as the limit.
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackBlockEntity.java:120-121; common/src/main/java/com/github/crittscott/somestacks/util/StackItemStorage.java:38, 141-142; versus common/src/main/java/com/github/crittscott/somestacks/block/StoragePile.java:274, 276, 292, 300, 391
+> - **In plain English:** Minecraft lets an item stack up to 99 when a data pack or mod sets it that way. The Storage Stack has two different rules: hoppers and pipes can fill a slot only up to 64, while a player's deposit and the automatic tidy-up pack the same slot to 99.
+> - **Consequence:** On a server with 99-stackable items, a player sees automation stop filling a slot at 64 while their own deposit fills it to 99, and the comparator never shows full for a slot capped at 64. Today this needs a data pack or mod, so most players will not notice. But a maintainer who changes either number will not know the other one exists.
+> - **Action:** Choose one limit and give it one home. If Storage should match vanilla containers, return vanilla's `Item.ABSOLUTE_MAX_STACK_SIZE` from `StackBlockEntity.localSlotLimit()` (the value vanilla's `Container.getMaxStackSize()` uses) and remove `StackItemStorage.DEFAULT_SLOT_LIMIT`, so the base storage defers to the block entity's override. If 64 is intended, name it once and make `StoragePile`'s deposit and settlement paths apply `min(limit, stack.getMaxStackSize())` as well.
+> - **Technical detail:** `StackItemStorage.insertItem` limits to `min(getSlotLimit(slot), stack.getMaxStackSize())`, and the block-entity storage overrides `getSlotLimit` to return `localSlotLimit()`, which is 64. The Fabric `FabricRunItemStorage:153` and NeoForge `NeoForgeRunResourceHandler:84` views use `automationSlotLimit()`, so they also cap at 64. `StoragePile.fillExisting`, `room...` and settlement (`limit = Math.max(1, group.model.getMaxStackSize())`) use only the item's own maximum. `StackItemStorage.DEFAULT_SLOT_LIMIT = 64` is a second, unrelated 64 for the same idea.
+
+#### MN-06: Namespaces are validated by building a fake identifier, and normalized in several places
+
+**Status:** Implemented.
+
+**Verification:** Dummy validation identifiers and duplicated namespace normalization remained.
+
+**Implementation result:** Identifier.isValidNamespace plus explicit nonempty checks replaces dummy identifiers. ServerConfig.normalizeNamespace is shared by deny lookup baking and snapshot construction; item identifiers retain their own parsing path.
+
+**Original issue text (verbatim):**
+
+> ### 6. Namespaces are validated by building a fake identifier, and normalized in several places
+> - **Severity:** Low
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/network/ConfigSyncPkt.java:99-102, 225, 244; common/src/main/java/com/github/crittscott/somestacks/client/ItemRenderOverrides.java:269; common/src/main/java/com/github/crittscott/somestacks/ServerConfig.java:145
+> - **In plain English:** To check whether a mod id is well formed, the code builds a throwaway name, `<mod>:validation`, and sees whether that fails. The trim-and-lowercase cleanup is also copied in more than one place.
+> - **Consequence:** The magic `"validation"` string looks meaningful to a reader and isn't. If one copy of the cleanup changes, the server and the sync packet disagree about which mods are disabled.
+> - **Action:** Replace `Identifier.tryBuild(namespace, "validation") == null` with vanilla's `Identifier.isValidNamespace(namespace)`. Add one `ServerConfig.normalizeNamespace(String)` and call it from `bakeServerLists` and `ConfigSyncPkt.boundedNamespaces`.
+> - **Technical detail:** The same `entry.trim().toLowerCase(Locale.ROOT)` appears at `ServerConfig.bakeServerLists` and `ConfigSyncPkt.boundedNamespaces:98`. The dummy-path validation appears four times.
+
+#### MN-07: Config key names, bounds, and defaults are restated per loader
+
+**Status:** Completed remaining constants; most duplication was already resolved.
+
+**Verification:** LD-03 had already shared keys/defaults, and Fabric already used Mth.clamp. Minimum bounds and a bare permission default remained.
+
+**Implementation result:** Both backends use common MIN_PILE_HEIGHT and MIN_GALLERY_PLACEMENTS_PER_TICK. DEFAULT_GALLERY_PERMISSION_LEVEL derives from PERMISSION_LEVELS and Commands.LEVEL_ADMINS. Existing filenames, keys, ranges, defaults, and per-field fallback remain.
+
+**Original issue text (verbatim):**
+
+> ### 7. Config key names, bounds, and defaults are restated per loader
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** fabric/src/main/java/com/github/crittscott/somestacks/JsonServerConfig.java:24-42, 90-92, 109-110, 237-239; neoforge/src/main/java/com/github/crittscott/somestacks/NeoForgeServerConfig.java:32-79; common/src/main/java/com/github/crittscott/somestacks/ServerConfig.java:31
+> - **In plain English:** Both loaders save the same settings under the same names, but each loader types those names and limits separately. One of the defaults is a bare "3".
+> - **Consequence:** A server admin who moves a world between Fabric and NeoForge expects the same setting names. If someone renames a key or changes a minimum in one loader only, the two config files silently diverge. The `3` also says nothing about which permission level it means.
+> - **Action:** Move the section and key names and the minimum constants (`MIN_PILE_HEIGHT = 1`, `MIN_GALLERY_PLACEMENTS_PER_TICK = 1`) into `ServerConfig`, and use them in both backends. Express `DEFAULT_GALLERY_PERMISSION_LEVEL` as `PERMISSION_LEVELS.indexOf(Commands.LEVEL_ADMINS)`. Replace `JsonServerConfig.clamp` with `Mth.clamp`.
+> - **Technical detail:** `"max_pile_height"`, `"enable_storage_stack_block"`, `"disable_items"`, `"required_permission_level"`, and the others are constants in `JsonServerConfig` and literals in `NeoForgeServerConfig`. The lower bound `1` appears as a literal in `defineInRange(..., 1, ...)` and `clamp(..., 1, ...)` / `Math.max(1, ...)`.
+
+#### MN-09: Cell boxes are computed twice, once with a hand-written divide by 16
+
+**Status:** Implemented.
+
+**Verification:** Both geometry classes separately constructed shapes and boxes.
+
+**Implementation result:** CubeGrid and BarCubeIdx build Block.box once and derive the AABB through shape.bounds. Parallel divide-by-16 construction is removed without changing geometry or indexing.
+
+**Original issue text (verbatim):**
+
+> ### 9. Cell boxes are computed twice, once with a hand-written divide by 16
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/util/CubeGrid.java:37-46; common/src/main/java/com/github/crittscott/somestacks/util/BarCubeIdx.java:83-86
+> - **In plain English:** Each item cell's box is built twice from the same pixel numbers: once by Minecraft's helper and once by hand.
+> - **Consequence:** The two copies can drift if one is edited. Hit testing then uses a different box than collision and outlines do, and players notice clicks landing on the wrong cell.
+> - **Action:** Build only the `VoxelShape` with `Block.box(...)`, and derive the `AABB` from it with `shape.bounds()`. Delete the `/ 16.0` arithmetic.
+> - **Technical detail:** `localBoxes[index] = new AABB(starts[x] / 16.0, ...)` sits next to `localShapes[index] = Block.box(starts[x], ...)`. The same pattern appears in `BarCubeIdx`'s static initializer.
+
+#### MN-10: Comparator strength uses a hand-written copy of vanilla's formula
+
+**Status:** Implemented named bound; float-helper substitution rejected.
+
+**Verification:** The existing double-based comparator formula was correct; no present behavioral defect was established.
+
+**Implementation result:** StackRun names MAX_COMPARATOR_SIGNAL and derives its multiplier from that bound. Existing double precision and threshold behavior remain.
+
+**Original issue text (verbatim):**
+
+> ### 10. Comparator strength uses a hand-written copy of vanilla's formula
+> - **Severity:** Low
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackRun.java:172-176
+> - **In plain English:** The redstone strength a comparator reads from a stack is worked out with numbers copied from Minecraft's own container rule, instead of calling that rule.
+> - **Consequence:** If vanilla's comparator mapping changes, stacks stop matching chests, and players building sorters notice. A reader also has to check by hand that `14.0` plus `1` means "0 to 15".
+> - **Action:** Return `Mth.lerpDiscrete((float) fill, 0, 15)`, the helper vanilla's `AbstractContainerMenu.getRedstoneSignalFromContainer` uses, or at least write the maximum as a named redstone constant.
+> - **Technical detail:** `return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;` copies `lerpDiscrete`'s body. The run-wide fill fraction is the correct input; only the mapping is duplicated.
+
+#### MN-11: Unnamed numbers remain in the renderers and grid
+
+**Status:** Implemented.
+
+**Verification:** UV rectangles/grid, GUI angles, rotation-array length, and automation seed remained literal.
+
+**Implementation result:** BarStackBER names its grid/rectangles and docs/pack-authors.md gives their endpoint layout. GUI angle constants name the API degree units. CubeGrid uses QuarterTurns.COUNT. The automation seed uses MODID while preserving its bytes and UUID.
+
+**Original issue text (verbatim):**
+
+> ### 11. Unnamed numbers remain in the renderers and grid
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/BarStackBER.java:115-117, 162-169; common/src/main/java/com/github/crittscott/somestacks/client/CubeRenderHelper.java:436, 448-451; common/src/main/java/com/github/crittscott/somestacks/util/CubeGrid.java:28; common/src/main/java/com/github/crittscott/somestacks/server/AutomationActor.java:12
+> - **In plain English:** A few drawing and setup numbers have no names: where on the bar texture each face comes from, the tilt used for flat inventory-style icons, and how many rotations a grid has.
+> - **Consequence:** A resource-pack author who wants to draw a new bar texture has to find the face layout (24x12, 24x8, 12x8 on a 32-unit grid) inside Java code. A maintainer changing the rotation count has to find a stray `4` that `QuarterTurns.COUNT` already covers.
+> - **Action:** Name the bar UV rectangles and the `32` grid as constants on `BarStackBER`, and document the layout next to the bar texture format. Name the GUI counter-rotation angles. Use `QuarterTurns.COUNT` in `new int[4][cells]`. Build the automation UUID seed from `SomeStacksCommon.MODID` rather than the literal `"somestacks:automation"`.
+> - **Technical detail:** `region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f)` and its siblings, plus `gridU0 / 32f`. `pose.rotateDegrees(Axis.YP, -45.0f); pose.rotateDegrees(Axis.XP, -30.0f);`. `this.rotatedIndices = new int[4][cells];`.
+
+#### MN-12: GameTests use fully qualified class names and a bare block-update flag
+
+**Status:** Implemented remaining cleanup; most cited names were already fixed.
+
+**Verification:** Inline Shapes references and bare update flags remained, including additional locations.
+
+**Implementation result:** Imported Shapes in protection checks and replaced remaining setBlock flag 3 with Block.UPDATE_ALL in interaction, gesture, gallery, and NeoForge transfer tests. Removed imports made unused by consolidation. No tests were added solely for naming changes.
+
+**Original issue text (verbatim):**
+
+> ### 12. GameTests use fully qualified class names and a bare block-update flag
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/gametest/java/com/github/crittscott/somestacks/gametest/ClientCallbackChecks.java:81, 83; ConfigurationChecks.java:179, 349, 354, 367; InteractionChecks.java:116, 211, 367, 549; ProtectionChecks.java:116, 193; ClientGestureChecks.java:63; fabric/src/gametest/java/com/github/crittscott/somestacks/gametest/FabricGameTestSupport.java:117; fabric/src/gametest/java/com/github/crittscott/somestacks/gametest/ProtectionGameTests.java:297, 318; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/ConfigurationGameTests.java:51-70; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/GameTestSupport.java:85; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/NeoForgeTransferGameTests.java:192, 215; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/ProtectionGameTests.java:183-184, 246
+> - **In plain English:** Some test code spells out full package paths inline instead of naming its imports at the top of the file, and three tests pass a bare "3" where Minecraft has a named flag.
+> - **Consequence:** A maintainer reading or updating these tests wades through long package paths. When a class moves, an IDE import fix won't catch the inline paths, so the tests break with more edits than needed.
+> - **Action:** Add the imports (`ItemStack`, `BlockType`, `SinglesStackBE`, `CommandDispatcher`, `Blocks`, `InteractionHand`, `BlockStateProperties`, `Predicate`, `Consumer`, `AtomicInteger`, `Files`, `NeoForgeServerConfig`, `ServerConfig`) and use the short names. Replace `setBlock(..., 3)` with `Block.UPDATE_ALL`, as production code already does.
+> - **Technical detail:** `neoforge/.../ConfigurationGameTests.java` names `com.github.crittscott.somestacks.ServerConfig` eight times in twenty lines. Production code (`common/src/main`, `fabric/src/main`, `neoforge/src/main`) has no inline qualified names outside Javadoc.
+
+### Multiloader organization
+
+#### ML-01: The automation "pending changes" bookkeeping is written twice, once per loader
+
+**Status:** Implemented shared bookkeeping; native journals remain separate.
+
+**Verification:** Adapters duplicated originals/staged maps, extraction restrictions, snapshots, copying, and replay; unresolved-run counts differed.
+
+**Implementation result:** RunTransferLedger owns staging, structural restrictions, snapshots/restore, growth detection, and removal-first/bottom-up replay. Its supplier resolves the run afresh for each mutation. Fabric retains SnapshotParticipant/SingleSlotStorage; NeoForge retains SnapshotJournal/ResourceHandler and growth preparation/install/publication. Both use the base native adapter and expose zero slots for unresolved/removed runs. RunEdit guards, native rollback, authority, and actor attribution remain.
+
+**Original issue text (verbatim):**
+
+> ### 1. The automation "pending changes" bookkeeping is written twice, once per loader
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** fabric/src/main/java/com/github/crittscott/somestacks/block/FabricRunItemStorage.java:34-38, 47, 102-110, 138-146, 161-165, 186-218, 225-236; neoforge/src/main/java/com/github/crittscott/somestacks/block/NeoForgeRunResourceHandler.java:28-30, 42-47, 50-53, 150-153, 164-168, 184-225, 227-235
+> - **In plain English:** When a hopper or pipe moves items in or out of a stack, the mod records the planned changes first and applies them only when the move is confirmed. That record-keeping is the same on both loaders, but it was written out separately for each one.
+> - **Consequence:** Any fix to how staged changes are judged or replayed (removals first, then insertions bottom-up, one structural extraction per transaction) has to be made twice, and the copies already differ. With no resolved run, Fabric reports the block's local slot count (`getSlotCount` falls back to `getItems().getSlots()`), while NeoForge reports 0. NeoForge checks admission before capacity; Fabric checks capacity first. The "other slot pending" test is spelled two different ways. Maintainers who fix a bug in one loader's automation will ship it unfixed on the other, and only that loader's transfer GameTests will show it.
+> - **Action:** Create one common class in `common/.../block` (for example `RunTransferLedger`). It holds `originals`, `staged`, and `structuralExtractionSlot`, plus `current(slot, run)`, `stage(slot, stack)`, `mayStageStructuralExtraction(slot)`, a snapshot record with `snapshot()`/`restore(snapshot)`, and `replay(StackRunItemAccess run, BlockPos where)` for the commit loop. Each loader adapter keeps its native type (`SnapshotParticipant`/`SingleSlotStorage` on Fabric, `SnapshotJournal`/`ResourceHandler` on NeoForge). Its `createSnapshot`/`readSnapshot`/`revertToSnapshot`/`onFinalCommit`/`onRootCommit` simply delegate to the ledger, and NeoForge's growth-placement preparation stays NeoForge-only. Pick one behavior for the unresolved-run slot count and use it on both loaders.
+> - **Technical detail:** The two `onFinalCommit`/`onRootCommit` bodies are line-for-line the same apart from NeoForge's `placement.install()/publish()` wrapper. Both include the two `IllegalStateException` messages, the `RunEdit.begin()/end()` bracket, and the `LinkedHashMap` copy helper. The base-block ledger lookup (`ledger()` resolving `run.basePos()` and fetching the attachment) is also duplicated. Only the attachment accessor differs (`FabricItemStorage.of` vs `getData(ModRegistry.RUN_RESOURCES)`). This is not a Herculean extraction, because both native journals have the same snapshot/revert/commit shape.
+
+#### ML-02: Older protection GameTests copy the whole scenario into each loader instead of using the existing removal hook
+
+**Status:** Implemented.
+
+**Verification:** Four cleanup and three protection-growth scenarios were duplicated; the refused Bar removal test lived in different classes.
+
+**Implementation result:** Moved seven bodies into ProtectionChecks with RemovalObserver, playerFactory where needed, and OfferAt. Both support classes expose accepted counts and true-for-commit; Fabric converts its remainder/simulation convention. Loader wrappers delegate. NeoForge Bar refusal registration and JSON moved to protectiongametests together. Player cleanup observers allow the responsible player while rejecting other actors.
+
+**Original issue text (verbatim):**
+
+> ### 2. Older protection GameTests copy the whole scenario into each loader instead of using the existing removal hook
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** fabric/src/gametest/java/com/github/crittscott/somestacks/gametest/ProtectionGameTests.java:97, 122, 153, 186, 337, 367, 398; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/ProtectionGameTests.java:75, 111, 139, 285, 314, 344; neoforge/src/gametest/java/com/github/crittscott/somestacks/gametest/BarColumnGameTests.java:169
+> - **In plain English:** Several tests check that claim protection is respected when a stack cleans itself up or grows. Each test is written out in full twice, once per loader, even though only the "deny this block" line differs.
+> - **Consequence:** The copies have already drifted. `settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused` has different in-game reproduction javadoc on each loader, and `refusedRemovalStillLetsTheBarsAboveComeDown` lives in `ProtectionGameTests` on Fabric but in `BarColumnGameTests` on NeoForge. A maintainer who changes a scenario has to find and edit both copies, and if they miss one, the loaders silently test different behavior.
+> - **Action:** Move `playerExtractionUsesPlayerForCleanup`, `playerStorageSettlementUsesPlayerForCleanup`, `settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused`, and `refusedRemovalStillLetsTheBarsAboveComeDown` into `ProtectionChecks`. Make them take the same `observeRemoval` hook and `playerFactory` that `playerBarExtractionUsesPlayerForCleanup`, `mixedStorageSettlementUsesAutomationForCleanup`, and `deniedCleanupEmitsOnlyBlockChange` already take. Keep each loader method as a one-line wrapper in the same class on both loaders. For the three `*GrowthAnswersToProtectionInSimulationAndCommit` tests, add a small "offer at slot" function parameter, wrapping `FabricGameTestSupport.insertAt` and `GameTestSupport.offer`, and move their bodies to common too.
+> - **Technical detail:** Both loaders already define `observeRemoval(ServerLevel, BlockPos, Consumer<Player>, Predicate<Player>)` returning a `Runnable` unregister. The Fabric copies install `REMOVAL_PROBES` directly, and the NeoForge copies register ad-hoc `Consumer<BreakBlockEvent>` listeners. Everything else in those bodies is identical.
+
+#### ML-03: Fabric's config backend writes into the common policy itself, so policy is applied twice
+
+**Status:** Already resolved; no duplicate fix.
+
+**Verification:** JsonServerConfig already returned settings without installing/applying them; fixtures applied explicitly and NeoForge events already shared a handler.
+
+**Implementation result:** Retained EW-09 and LD-03 ownership. No backend self-installation or duplicate Fabric application was reintroduced.
+
+**Original issue text (verbatim):**
+
+> ### 3. Fabric's config backend writes into the common policy itself, so policy is applied twice
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** fabric/src/main/java/com/github/crittscott/somestacks/JsonServerConfig.java:48-73, 76-86; common/src/main/java/com/github/crittscott/somestacks/ServerConfig.java:58-63; neoforge/src/main/java/com/github/crittscott/somestacks/NeoForgeServerConfig.java:85-99
+> - **In plain English:** On Fabric, loading the settings file both returns the settings and pushes them into the shared settings store. The shared code then pushes them a second time.
+> - **Consequence:** On Fabric, every server start and every `/ss reload` processes the deny lists twice. As a result, each malformed `disable_items` entry logs its "Ignoring malformed item id" warning twice, which a server admin sees as duplicated log noise. The two loader backends also follow different contracts: one returns settings, the other also mutates global state and reinstalls itself. That makes the `ServerConfig.Backend` interface misleading for whoever touches it next.
+> - **Action:** Make `JsonServerConfig` a pure backend. `load(Path)` parses and returns `Settings` and writes the default file through `save(settings)`. It must never call `ServerConfig.install` or `ServerConfig.apply`. `loadFor`/`reload` return that result. Update the Fabric `ConfigurationGameTests` to install and apply explicitly, as the NeoForge config test already does. On NeoForge, replace the identical `onLoading`/`onReloading` bodies with one private handler both listeners call.
+> - **Technical detail:** `ServerConfig.loadFor(server)` calls `apply(backend.loadFor(server))`. `JsonServerConfig.loadFor` calls `load()`, which runs `ServerConfig.install(this)` and `ServerConfig.apply(settings)` and then returns `ServerConfig.settings()`, which gets applied again. `bakeServerLists()` (which logs) therefore runs twice per load. The self-install appears to exist only so the Fabric tests' `new JsonServerConfig().load(fixture)` takes effect.
+
+#### ML-05: Loader networking is plugged into common code in three different ways
+
+**Status:** Resolved receiver issue; extra sender abstraction rejected.
+
+**Verification:** NeoForge still installed a static receiver. ClientGestures.setSender already supplied a small useful injection seam.
+
+**Implementation result:** NW-01/NW-03 remove the NeoForge clientbound payload and receiver hook. Kept ClientGestures.setSender and its tests. PlatformServices.sendConfig reports explicit payload delivery; NeoForge reports native ownership without sending a custom payload. No single-function client platform class was added.
+
+**Original issue text (verbatim):**
+
+> ### 5. Loader networking is plugged into common code in three different ways
+> - **Severity:** Low
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/PlatformServices.java:16; common/src/main/java/com/github/crittscott/somestacks/client/ClientGestures.java:28-36; neoforge/src/main/java/com/github/crittscott/somestacks/network/ModNetworking.java:27-32, 49-52; neoforge/src/main/java/com/github/crittscott/somestacks/client/ClientSetup.java:24; fabric/src/main/java/com/github/crittscott/somestacks/network/FabricClientNetworking.java:19
+> - **In plain English:** The mod sends two kinds of messages between server and client, and each direction is wired to the loader in its own home-made way.
+> - **Consequence:** Someone adding a third packet has no single pattern to follow, and the NeoForge client receiver depends on a static field that throws if `ClientSetup` forgot to fill it.
+> - **Action:** Use the platform backend for server-to-client sends (as now) and add a client-side `sendToServer(CustomPacketPayload)` to a client platform hook instead of `ClientGestures.setSender`. Tests can still substitute it. On NeoForge, register the clientbound payload without a handler in `ModNetworking` and attach `ClientRenderPacketSink::apply` from client code through `RegisterClientPayloadHandlersEvent`, then delete `setClientReceiver`.
+> - **Technical detail:** Server to client goes through `PlatformServices.Backend.sendConfig`. Client to server goes through the mutable static `ClientGestures.sender`. NeoForge client receipt goes through the mutable static `ModNetworking.clientReceiver`, while Fabric registers the receiver directly in client init. I am fairly but not fully sure `RegisterClientPayloadHandlersEvent` exists in this NeoForge version.
+
+#### ML-08: Leftovers from the dropped Forge module
+
+**Status:** Implemented remaining launch cleanup.
+
+**Verification:** Two Forge launch entries targeted an absent module; the storage javadoc was already corrected.
+
+**Implementation result:** Removed those two entries, leaving valid empty launch configurations. Did not invent Fabric/NeoForge launch paths or rewrite the already-correct both-loaders javadoc.
+
+**Original issue text (verbatim):**
+
+> ### 8. Leftovers from the dropped Forge module
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** .vscode/launch.json:7-47; common/src/main/java/com/github/crittscott/somestacks/util/StackItemStorage.java:21
+> - **In plain English:** Some project files still refer to a Forge version of the mod that this branch no longer has.
+> - **Consequence:** The "forge - Client" and "forge - Server" launch configurations point at a `forge` module that does not exist and fail when chosen. The javadoc claim that the storage serves "all three loaders" misleads readers about which loaders the code supports.
+> - **Action:** Remove the forge entries from `.vscode/launch.json` (add fabric/neoforge entries if wanted), and change the javadoc to "both loaders".
+> - **Technical detail:** `settings.gradle` includes only `common` plus `enabled_platforms`, and the source tree has only `fabric` and `neoforge`.
+
+### Networking
+
+#### NW-01: NeoForge sends the server settings to every player twice
+
+**Status:** Implemented native NeoForge synchronization.
+
+**Verification:** SYNCED config and a second custom packet coexisted. Published 26.3.x ConfigSync confirms login and live Reloading-event delivery; ModConfigSpec.save documents firing reloading.
+
+**Implementation result:** NeoForgeClientSetup observes matching Loading/Reloading events, captures a bounded snapshot, and publishes on the client thread, covering remote and integrated-server events. Removed custom clientbound registration, static receiver, PacketDistributor send, and NeoForge login callback. Common publication stays shared. Dedicated/integrated runtime verification remains pending.
+
+**Original issue text (verbatim):**
+
+> ### 1. NeoForge sends the server settings to every player twice
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** neoforge/src/main/java/com/github/crittscott/somestacks/SomeStacksNeoForge.java:35; neoforge/src/main/java/com/github/crittscott/somestacks/NeoForgeServerConfig.java:85-99; neoforge/src/main/java/com/github/crittscott/somestacks/network/ModNetworking.java:41; neoforge/src/main/java/com/github/crittscott/somestacks/neoforge/NeoForgePlatformServices.java:29-32; common/src/main/java/com/github/crittscott/somestacks/SomeStacksServer.java:101-104
+> - **In plain English:** On NeoForge, the game's mod loader already copies this mod's server settings file to each player when they join. The mod then sends its own separate copy of some of those same settings right after.
+> - **Consequence:** Every NeoForge login (and every config change) carries the settings twice, and there are two independent paths that can disagree about what the client believes. A maintainer changing what the client needs must remember that the native synced copy is received and ignored (the client-side `ModConfigEvent` lands in `SomeStacksServer.onPolicyReloaded`, which does nothing without a running server) while the custom copy is the one that counts.
+> - **Action:** Pick one. Either keep `ModConfig.Type.SYNCED` and have the NeoForge client populate `StackState`/`ClientRenderToolState` from the synced spec in a client-side `ModConfigEvent.Loading`/`Reloading` listener, deleting the `ConfigSyncPkt` registration and send path on NeoForge; or, if the native sync is not wanted, register the config as the non-synced type and keep the custom packet. The first is the expected NeoForge way.
+> - **Technical detail:** `container.registerConfig(ModConfig.Type.SYNCED, config.spec, ...)` makes NeoForge transmit the whole TOML (including `disable_items`, `gen_items`, gallery settings that the client never uses) during configuration. `onLoading`/`onReloading` fire on the remote client too, but only call `SomeStacksServer.onPolicyReloaded()`, which returns immediately because `runningServer` is null there. Independently, `PlayerLoggedInEvent` â†’ `ConfigSyncNetwork.syncPlayer` sends `ConfigSyncPkt`. The client state that matters (`StackState`, `ClientRenderToolState`) is fed only from the custom packet.
+
+#### NW-02: The settings packet uses a home-grown chunking protocol far bigger than its data
+
+**Status:** Implemented one bounded snapshot; no old wire reader.
+
+**Verification:** The chunk/generation/cache/staging machinery remained.
+
+**Implementation result:** ConfigSyncPkt is a five-field immutable record with a composite codec, constructor validation, and 256 unique ASCII namespaces of up to 256 characters per list (about 130 KiB total). Kept namespace length semantics rather than assuming all namespaces are loader mod IDs limited to 64. Normalization deduplicates and warns about invalid/excess entries without changing full server admission. SomeStacksServer owns one snapshot. ConfigSyncReceiver publishes directly; Fabric transmits it and NeoForge derives it natively. Deleted generations, chunks, staging, budget arithmetic, and payload caches. Replaced three obsolete chunk/budget scenarios and registrations/JSON with snapshot/normalization/size/count/name/duplicate coverage. Shared protocol version is 6.
+
+**Original issue text (verbatim):**
+
+> ### 2. The settings packet uses a home-grown chunking protocol far bigger than its data
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/network/ConfigSyncPkt.java:18-284 (entire class, notably 35-48, 74-168, 184-273); common/src/main/java/com/github/crittscott/somestacks/client/ClientRenderPacketSink.java:1-116 (entire class); common/src/main/java/com/github/crittscott/somestacks/network/ConfigSyncNetwork.java:17-22; common/src/gametest/java/com/github/crittscott/somestacks/gametest/SynchronizationChecks.java (chunk/staging tests)
+> - **In plain English:** The mod tells each player three on/off switches and two short lists of mod names. To do that it splits the message into numbered pieces, tracks "generations," and reassembles them on the player's side with a dozen consistency checks, as if it were sending a large file.
+> - **Consequence:** About 400 lines of transport, staging and budget arithmetic plus a dedicated test suite exist for data that is normally under a kilobyte. Every change to what the client needs (adding one flag) has to thread through chunk metadata, per-chunk consistency checks, totals, and the receive budget, and the failure modes (mismatched generation, empty middle chunk, total underflow) are ones vanilla networking never has. An expert reading it would assume the mod sends something huge.
+> - **Action:** Replace it with one record payload sent whole: `StreamCodec.composite(ByteBufCodecs.BOOL, ..., ByteBufCodecs.BOOL, ..., ByteBufCodecs.stringUtf8(MAX_NAMESPACE_LENGTH).apply(ByteBufCodecs.list(MAX_NAMESPACES)), ..., same, ..., ConfigSyncPkt::new)`. Choose limits so the worst case fits comfortably in vanilla's custom-payload limit (mod ids are at most 64 characters on both loaders, so e.g. 1,024 namespaces per list is about 130 KB), validate namespaces once in the compact constructor, and have the client handler publish directly. Delete `generation`, `first`/`last`, the totals, `budgetBytes`, `Chunk`, `MAX_GENERATION_*`, the staging in `ClientRenderPacketSink`, and the static `currentPackets`/`nextGeneration` cache that lives inside the payload record (build the packet at send time or cache a single instance in `SomeStacksServer`).
+> - **Technical detail:** The maximum declared data is 2 Ã— 4,096 namespaces Ã— 258 bytes â‰ˆ 2.1 MB, which is what forces chunking; that bound is self-imposed (`MAX_TOTAL_NAMESPACES = 4_096`, `MAX_NAMESPACE_LENGTH = 256`). Namespace validity is checked three times (server `boundedNamespaces`, `readNamespaces` during decode, and the compact constructor's `validateNamespaces`). The decode-side `readableBytes() > MAX_PACKET_BYTES` check duplicates the loaders' own payload size enforcement. Ordering and atomicity, which the generation/staging machinery protects, are already guaranteed by a single in-order connection when the data travels in one packet.
+
+#### NW-03: NeoForge client packet handler is wired through a hand-rolled static hook
+
+**Status:** Resolved by removing the payload and hook.
+
+**Verification:** The static receiver existed, but normal construction installed it before play; a real early-delivery crash was not established.
+
+**Implementation result:** NW-01 removes this clientbound payload, so no RegisterClientPayloadHandlersEvent replacement is needed. NeoForgeNetworking registers only the serverbound gesture; no replacement static hook or fallback remains.
+
+**Original issue text (verbatim):**
+
+> ### 3. NeoForge client packet handler is wired through a hand-rolled static hook
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** neoforge/src/main/java/com/github/crittscott/somestacks/network/ModNetworking.java:27-32, 41, 49-52; neoforge/src/main/java/com/github/crittscott/somestacks/client/ClientSetup.java:24
+> - **In plain English:** To keep the dedicated server from touching client-only code, the mod invented its own "install the client receiver later" switch instead of using the loader's built-in way of registering client-side packet handlers.
+> - **Consequence:** If anything delivers the packet before `ClientSetup` runs, or in an environment where it does not run, the handler throws `NullPointerException` ("Client packet receiver has not been installed") instead of failing at registration. A maintainer adding a second client-bound packet has to extend this custom mechanism rather than follow the documented one.
+> - **Action:** Register the payload on the common side with `registrar.playToClient(ConfigSyncPkt.TYPE, ConfigSyncPkt.STREAM_CODEC)` (no handler) and attach the handler in a client-only `RegisterClientPayloadHandlersEvent` listener (`event.register(ConfigSyncPkt.TYPE, (payload, ctx) -> ClientRenderPacketSink.apply(payload))`), then delete `clientReceiver`, `setClientReceiver`, and `toClient`. The code already uses `ClientPacketDistributor`, which ships in the same NeoForge versions as that event.
+> - **Technical detail:** `ModNetworking.toClient` dereferences a static `Consumer<ConfigSyncPkt>` set from `ClientSetup.init`. The NeoForge facility exists precisely to separate client handlers from common registration without a side-channel static.
+
+#### NW-04: When and whether to resend settings is decided in three places, inconsistently
+
+**Status:** Completed shared publication.
+
+**Verification:** EW-05 already unified native/command reload and client-field comparisons; list edits still used syncClientToolState.
+
+**Implementation result:** SomeStacksServer.publishPolicy compares last published policy, refreshes gallery command trees, compares normalized snapshots, and logs changes. ReloadPolicy and persisted list commands use it. Native save/reload reentry sees the same publication state and avoids a second explicit broadcast. Deleted syncClientToolState. The reload command returns successful command status and translated policy-refresh feedback instead of claiming override reloads or a misleading custom-packet player count on NeoForge.
+
+**Original issue text (verbatim):**
+
+> ### 4. When and whether to resend settings is decided in three places, inconsistently
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/SomeStacksServer.java:74-86; common/src/main/java/com/github/crittscott/somestacks/command/SsCommand.java:473-480, 529-537
+> - **In plain English:** Reloading settings from the config file only re-sends them to players if something changed, but the `/ss reload` command always re-sends them, and editing a list with `/ss deny` or `/ss gen` has its own third rule.
+> - **Consequence:** `/ss reload` broadcasts to every player even when nothing changed, and the file-reload path resends when a setting the client never receives (for example gallery placements per tick or maximum pile height) changes. A maintainer adding a client-visible setting must find and update all three call sites, and the "only send when state changes" rule is already broken in one of them.
+> - **Action:** Give the decision one home: a single method (for example in `SomeStacksServer`) that applies new settings, compares only the client-visible snapshot (three enable flags plus `gen_mods` and `disable_mods`) with the previous one, and broadcasts only if it differs. Have it also log the applied policy (`logPolicy`), since today `/ss reload` changes policy without any log line while the native reload path logs. Call it from `onPolicyReloaded`, `SsCommand.reload`, and the list-edit path, and delete `syncClientToolState`.
+> - **Technical detail:** `onPolicyReloaded` compares the full `ServerConfig.Settings` record; `SsCommand.reload` calls `ServerConfig.reload()` then `rebuildCurrent()` + `syncAllPlayers()` unconditionally; `syncClientToolState` resends after any edit to `GEN_MODS` or `DISABLE_MODS`. On NeoForge, a list edit also saves the TOML, which triggers the native reload event and the first path.
+
+#### NW-05: The gesture packet codec is hand-written instead of composed from vanilla codecs
+
+**Status:** Implemented optional codec cleanup.
+
+**Verification:** The handwritten decoder already rejected invalid ordinals; this was not a trust-boundary bug.
+
+**Implementation result:** StackMode owns a ByteBufCodecs.idMapper codec with explicit negative/out-of-range rejection. GestureStatePkt composes it with BOOL. The existing malformed-packet test now covers all mode/modifier round trips and negative, first out-of-range, and maximum-int IDs. Protocol 6 covers the representation change; no clamping fallback is used.
+
+**Original issue text (verbatim):**
+
+> ### 5. The gesture packet codec is hand-written instead of composed from vanilla codecs
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/network/GestureStatePkt.java:18-29
+> - **In plain English:** The small message that tells the server which placement mode the player picked is packed and unpacked by custom code rather than with the standard building blocks the game provides for this.
+> - **Consequence:** Minor today, but it is the template a maintainer will copy for the next packet, and it hand-rolls enum bounds checking that the vanilla codecs already do.
+> - **Action:** Give `StackMode` its own `STREAM_CODEC` built with `ByteBufCodecs.idMapper(...)` over `ByIdMap.continuous(StackMode::ordinal, StackMode.values(), ...)`, keeping an explicit out-of-range rejection in the id function if no throwing `OutOfBoundsStrategy` is available in this version, and define the payload codec as `StreamCodec.composite(StackMode.STREAM_CODEC, GestureStatePkt::mode, ByteBufCodecs.BOOL, GestureStatePkt::modifierDown, GestureStatePkt::new)`.
+> - **Technical detail:** The current lambda writes `ordinal()` as a byte and checks `id >= values().length` on read; `ByteBufCodecs.idMapper` with `ByIdMap` is the vanilla idiom for enum fields in stream codecs.
+
+### Batch 3 implementation and runtime validation handoff
+
+- Storage: inspect `StackItemStorage.STORAGE_SLOT_LIMIT/storageSlotLimit`, `StackBlockEntity` loading/fill accounting, `StoragePile`, and `StackDataMigration.normalizeStorageInventory`. Splitting preserves SetAside and original-slot retries without world growth or protection bypass. Run both new StoragePileChecks scenarios on both loaders alongside sorting, persistence, and comparator suites.
+- Transfers: inspect `block/RunTransferLedger` and both native adapters. Run complete native transfer/protection suites, especially nested rollback, staged support, replacement, cross-block shared staging, isolated structural extraction, reentrancy, and NeoForge placement preparation/veto/publication. Replay must resolve the current run after structural edits.
+- Protection: seven bodies now live in ProtectionChecks. OfferAt returns accepted count and uses true for commit; Fabric's lower-level helper instead returns remainder and uses true for simulation. Preserve native observer unregistering. NeoForge Bar refusal now belongs to protectiongametests, including its function/JSON identifiers.
+- Policy/networking: inspect SomeStacksServer.publishPolicy, SsCommand, snapshot/receiver/network classes, Fabric registration, and NeoForgeClientSetup config listeners. Run configuration/synchronization suites. On real dedicated and integrated clients, verify login policy, disabled-mode cycling, authoring lists, live file edits, list commands, unchanged reloads, and gallery access/command suggestions. Fabric sends only changed normalized snapshots; NeoForge owns native TOML synchronization, including native delivery of server-only values. NeoForge `/ss reload` still reads loader-published values; native file watching owns disk refresh.
+- Client ingress: run `/ssclienttest` on both clients. Valid initial/subsequent updates must replace inventory/components; rejected updates must remain atomic. Verify one contextual warning per connection, quiet repeats, and a reset after reconnecting. Server GameTests alone do not exercise the client mixin or native entity overrides.
+- Bounds/protocol: each client list allows 256 unique namespaces of up to 256 ASCII characters. Invalid/excess entries warn and are omitted only from client policy; full server admission remains active. Maximum valid Fabric payload is about 130 KiB. Both loaders use protocol 6. Check each other 26.* target's codecs, native config type/lifecycle, and protocol authority before porting; do not blindly copy API names or protocol numbers.
+- Presentation/cleanup: inspect shape-derived boxes, named UV rectangles against docs/pack-authors.md, GUI angles, QuarterTurns.COUNT, and unchanged UUID seed bytes. Use existing geometry/render checks. No new tests were added solely for constants, imports, logging format, or launch entries.
+- Exclusions: retain ClientGestures sender injection, native transaction classes, explicit failed user-write error severity, and the double comparator mapping. Review open questions about vanilla-server connectivity, full block-update contents, storage primitive naming, quarter-turn representation, migration totals, and protocol-mismatch logging did not authorize extra changes.
+
+Published evidence: [NeoForge 26.3.x ConfigSync](https://raw.githubusercontent.com/neoforged/NeoForge/26.3.x/src/main/java/net/neoforged/neoforge/network/ConfigSync.java) confirms login and live reload synchronization and skips memory connections; [NeoForge 26.3.x ModConfigSpec](https://raw.githubusercontent.com/neoforged/NeoForge/26.3.x/src/main/java/net/neoforged/neoforge/common/ModConfigSpec.java) documents save-triggered reloading. These are published sources, not decompiled/cache sources. Runtime verification against the pinned dependency remains necessary.

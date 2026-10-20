@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.server.NeoForgeEditAuthority;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.nio.file.Path;
 
@@ -26,8 +25,9 @@ public final class NeoForgePlatformServices implements PlatformServices.Backend 
     }
 
     @Override
-    public void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
-        PacketDistributor.sendToPlayer(player, packet);
+    public boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
+        // SYNCED config loading and reload events already deliver policy through NeoForge.
+        return false;
     }
 
     @Override

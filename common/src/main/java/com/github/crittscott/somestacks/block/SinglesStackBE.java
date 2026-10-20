@@ -361,7 +361,6 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
 
-
     /**
      * An empty cell carries no orientation, so the next item deposited into it cannot inherit
      * the previous occupant's rotation.

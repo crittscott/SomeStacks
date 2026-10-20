@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.minecraft.world.level.block.Block;
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
@@ -51,7 +52,7 @@ public final class ClientGestureChecks {
         var singles = placeSingles(helper, ORIGIN.east(3));
         var bars = placeBar(helper, ORIGIN.east(6));
         BlockPos ordinary = helper.absolutePos(ORIGIN.south(3));
-        helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         BlockPos[] targets = {storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary};
         List<Click> cases = new ArrayList<>();
         for (int target = 0; target < 4; target++) {

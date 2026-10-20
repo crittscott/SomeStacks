@@ -73,6 +73,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#KEY_REQUIRED_PERMISSION_LEVEL" tabindex="0">KEY_REQUIRED_PERMISSION_LEVEL</a></li>
 <li><a href="#KEY_GEN_MODS" tabindex="0">KEY_GEN_MODS</a></li>
 <li><a href="#KEY_GEN_ITEMS" tabindex="0">KEY_GEN_ITEMS</a></li>
+<li><a href="#MIN_PILE_HEIGHT" tabindex="0">MIN_PILE_HEIGHT</a></li>
+<li><a href="#MIN_GALLERY_PLACEMENTS_PER_TICK" tabindex="0">MIN_GALLERY_PLACEMENTS_PER_TICK</a></li>
 <li><a href="#DEFAULT_MAX_PILE_HEIGHT" tabindex="0">DEFAULT_MAX_PILE_HEIGHT</a></li>
 <li><a href="#MAX_PILE_HEIGHT" tabindex="0">MAX_PILE_HEIGHT</a></li>
 <li><a href="#DEFAULT_GALLERY_PLACEMENTS_PER_TICK" tabindex="0">DEFAULT_GALLERY_PLACEMENTS_PER_TICK</a></li>
@@ -98,6 +100,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#renderGalleryPlacementsPerTick()" tabindex="0">renderGalleryPlacementsPerTick()</a></li>
 <li><a href="#galleryEnabled()" tabindex="0">galleryEnabled()</a></li>
 <li><a href="#galleryPermission()" tabindex="0">galleryPermission()</a></li>
+<li><a href="#normalizeNamespace(java.lang.String)" tabindex="0">normalizeNamespace(String)</a></li>
 <li><a href="#bakeServerLists()" tabindex="0">bakeServerLists()</a></li>
 <li><a href="#addListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" tabindex="0">addListEntry(ServerConfig.ListSetting, String)</a></li>
 <li><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" tabindex="0">removeListEntry(ServerConfig.ListSetting, String)</a></li>
@@ -216,6 +219,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#MAX_PILE_HEIGHT" class="member-name-link">MAX_PILE_HEIGHT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#MIN_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">MIN_GALLERY_PLACEMENTS_PER_TICK</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#MIN_PILE_HEIGHT" class="member-name-link">MIN_PILE_HEIGHT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#SECTION_COMPATIBILITY" class="member-name-link">SECTION_COMPATIBILITY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -302,28 +311,33 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxPileHeight()" class="member-name-link">maxPileHeight</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#normalizeNamespace(java.lang.String)" class="member-name-link">normalizeNamespace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Canonical spelling for configured item namespaces.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Refreshes policy through the installed backend without saving or synchronizing clients.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entry)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes an entry from one of the server's text lists, re-bakes the lookup sets, and saves.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGalleryPlacementsPerTick()" class="member-name-link">renderGalleryPlacementsPerTick</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#renderGalleryPlacementsPerTick()" class="member-name-link">renderGalleryPlacementsPerTick</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Persists policy through the installed backend; false means persistence failed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Current immutable in-memory policy.</div>
 </div>
 </div>
@@ -584,6 +598,38 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="MIN_PILE_HEIGHT">
+<h3>MIN_PILE_HEIGHT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_PILE_HEIGHT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_PILE_HEIGHT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="MIN_GALLERY_PLACEMENTS_PER_TICK">
+<h3>MIN_GALLERY_PLACEMENTS_PER_TICK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">MIN_GALLERY_PLACEMENTS_PER_TICK</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.MIN_GALLERY_PLACEMENTS_PER_TICK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DEFAULT_MAX_PILE_HEIGHT">
 <h3>DEFAULT_MAX_PILE_HEIGHT</h3>
 <div class="horizontal-scroll">
@@ -636,14 +682,6 @@ loadScripts(document, 'script');</script>
 <h3>DEFAULT_GALLERY_PERMISSION_LEVEL</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_GALLERY_PERMISSION_LEVEL</span></div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../constant-values.html#com.github.crittscott.somestacks.ServerConfig.DEFAULT_GALLERY_PERMISSION_LEVEL">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
 </div>
 </section>
 </li>
@@ -802,6 +840,15 @@ drops or hands it to the player:
 <h3>galleryPermission</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.server.permissions.PermissionCheck</span>&nbsp;<span class="element-name">galleryPermission</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="normalizeNamespace(java.lang.String)">
+<h3>normalizeNamespace</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">normalizeNamespace</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;namespace)</span></div>
+<div class="block">Canonical spelling for configured item namespaces.</div>
 </div>
 </section>
 </li>

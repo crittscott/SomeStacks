@@ -13,6 +13,7 @@ import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -70,11 +71,21 @@ public final class InteractionChecks {
      */
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         ByteBuf buffer = Unpooled.buffer();
-        buffer.writeByte(StackMode.values().length);
-        buffer.writeBoolean(false);
         try {
-            check(decodeGestureFails(buffer),
-                    "Invalid stack-mode ordinal reached the state handler");
+            for (StackMode mode : StackMode.values()) {
+                for (boolean modifier : new boolean[] {false, true}) {
+                    buffer.clear();
+                    var packet = new GestureStatePkt(mode, modifier);
+                    GestureStatePkt.STREAM_CODEC.encode(buffer, packet);
+                    checkEquals(packet, GestureStatePkt.STREAM_CODEC.decode(buffer), "Valid gesture round trip");
+                }
+            }
+            for (int id : new int[] {-1, StackMode.values().length, Integer.MAX_VALUE}) {
+                buffer.clear();
+                ByteBufCodecs.VAR_INT.encode(buffer, id);
+                buffer.writeBoolean(false);
+                check(decodeGestureFails(buffer), "Invalid stack-mode ordinal reached the state handler");
+            }
         } finally {
             buffer.release();
         }
@@ -242,7 +253,7 @@ public final class InteractionChecks {
                 + StorageCubeIdx.GRID_EDGE + 1;
         extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3));
         BlockPos support = helper.absolutePos(TARGET.east(6));
-        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 4));
 
         try {

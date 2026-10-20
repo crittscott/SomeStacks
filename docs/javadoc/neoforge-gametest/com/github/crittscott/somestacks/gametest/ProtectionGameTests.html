@@ -77,6 +77,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper)</a></li>
 <li><a href="#barGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper)</a></li>
 <li><a href="#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">deniedCleanupEmitsOnlyBlockChange(GameTestHelper)</a></li>
+<li><a href="#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -133,8 +134,7 @@ use denial.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
+<div class="block">See <a href="ProtectionChecks.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#barGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
@@ -185,48 +185,48 @@ item automation; it accepts nothing and does not grow into the entity.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionUsesPlayerForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-extract the last Single.</div>
+<div class="block">See <a href="ProtectionChecks.html#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerExtractionUsesPlayerForCleanup(GameTestHelper, Function, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerStorageSettlementUsesPlayerForCleanup</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-extract the last Storage item.</div>
+<div class="block">See <a href="ProtectionChecks.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerStorageSettlementUsesPlayerForCleanup(GameTestHelper, Function, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">refusedRemovalStillLetsTheBarsAboveComeDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
-block, trigger settling, and verify the protected block remains.</div>
+<div class="block">See <a href="ProtectionChecks.html#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
+<div class="block">See <a href="ProtectionChecks.html#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ProtectionChecks.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: stand in the growth space above a full Singles column and insert through
 item automation; it accepts nothing and does not grow into the entity.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="ProtectionChecks.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthRejectsAnObstructingEntityInSimulationAndCommit</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: stand in the growth space above a full Storage pile and insert through
 item automation; it accepts nothing and does not grow into the entity.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vetoedPlacementRestoresBlockEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">vetoedPlacementRestoresBlockEntity</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="ProtectionChecks.html#vetoedPlacementRestoresBlockEntity(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)"><code>ProtectionChecks.vetoedPlacementRestoresBlockEntity(GameTestHelper, Function, Runnable, Runnable)</code></a>.</div>
 </div>
 </div>
@@ -287,8 +287,7 @@ item automation; it accepts nothing and does not grow into the entity.</div>
 <h3>settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: have a claim deny SomeStacks permission to remove an empty top Storage
-block, trigger settling, and verify the protected block remains.</div>
+<div class="block">See <a href="ProtectionChecks.html#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -297,8 +296,7 @@ block, trigger settling, and verify the protected block remains.</div>
 <h3>playerExtractionUsesPlayerForCleanup</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerExtractionUsesPlayerForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-extract the last Single. Player-attributed cleanup removes the empty block.</div>
+<div class="block">See <a href="ProtectionChecks.html#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerExtractionUsesPlayerForCleanup(GameTestHelper, Function, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -307,8 +305,7 @@ extract the last Single. Player-attributed cleanup removes the empty block.</div
 <h3>playerStorageSettlementUsesPlayerForCleanup</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerStorageSettlementUsesPlayerForCleanup</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
-extract the last Storage item. Deferred cleanup retains the player and removes the block.</div>
+<div class="block">See <a href="ProtectionChecks.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerStorageSettlementUsesPlayerForCleanup(GameTestHelper, Function, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -382,8 +379,7 @@ Singles cell; it fills when allowed and preserves the held item when a claim den
 <h3>storageGrowthAnswersToProtectionInSimulationAndCommit</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
+<div class="block">See <a href="ProtectionChecks.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -392,8 +388,7 @@ through item automation; it accepts nothing and creates no block.</div>
 <h3>singlesGrowthAnswersToProtectionInSimulationAndCommit</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">singlesGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
+<div class="block">See <a href="ProtectionChecks.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -402,8 +397,7 @@ through item automation; it accepts nothing and creates no block.</div>
 <h3>barGrowthAnswersToProtectionInSimulationAndCommit</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">barGrowthAnswersToProtectionInSimulationAndCommit</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
-through item automation; it accepts nothing and creates no block.</div>
+<div class="block">See <a href="ProtectionChecks.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -443,6 +437,15 @@ item automation; it accepts nothing and does not grow into the entity.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">deniedCleanupEmitsOnlyBlockChange</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="InteractionChecks.html#deniedCleanupEmitsOnlyBlockChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>InteractionChecks.deniedCleanupEmitsOnlyBlockChange(GameTestHelper, Function, ProtectionChecks.RemovalObserver)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>refusedRemovalStillLetsTheBarsAboveComeDown</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refusedRemovalStillLetsTheBarsAboveComeDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="ProtectionChecks.html#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper, ProtectionChecks.RemovalObserver)</code></a>.</div>
 </div>
 </section>
 </li>

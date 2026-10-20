@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +31,11 @@ public final class GameTestSupport {
         GameTestScaffold.check(handler != null,
                 "Missing item-resource capability at " + blockEntity.getBlockPos());
         return handler;
+    }
+
+    /** Shared scenario adapter: accepted count, with an explicit commit flag. */
+    public static int offerAt(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
+        return offer(capability(blockEntity), slot, stack, commit);
     }
 
     /** Whether the whole-run item handler is exposed on {@code side}; {@code null} is the sideless query. */

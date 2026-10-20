@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" tabindex="0">reportSavedItems(ServerLevel, BlockPos, StackItemStorage.LoadResult)</a></li>
 <li><a href="#onPolicyReloaded()" tabindex="0">onPolicyReloaded()</a></li>
 <li><a href="#reloadPolicy(net.minecraft.server.MinecraftServer)" tabindex="0">reloadPolicy(MinecraftServer)</a></li>
+<li><a href="#publishPolicy(net.minecraft.server.MinecraftServer)" tabindex="0">publishPolicy(MinecraftServer)</a></li>
 <li><a href="#onPlayerJoined(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerJoined(ServerPlayer)</a></li>
 <li><a href="#onPlayerLeft(java.util.UUID)" tabindex="0">onPlayerLeft(UUID)</a></li>
 <li><a href="#onServerTickEnd()" tabindex="0">onServerTickEnd()</a></li>
@@ -128,22 +129,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Advances queued gallery work once at the end of each server tick.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCommands(com.mojang.brigadier.CommandDispatcher,net.minecraft.commands.CommandBuildContext)" class="member-name-link">registerCommands</a><wbr>(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
- net.minecraft.commands.CommandBuildContext&nbsp;buildContext)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishPolicy(net.minecraft.server.MinecraftServer)" class="member-name-link">publishPolicy</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Publishes policy changes from file reloads and persisted command edits exactly once.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerCommands(com.mojang.brigadier.CommandDispatcher,net.minecraft.commands.CommandBuildContext)" class="member-name-link">registerCommands</a><wbr>(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
+ net.minecraft.commands.CommandBuildContext&nbsp;buildContext)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers server commands with the loader's dispatcher and current registry context.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadPolicy(net.minecraft.server.MinecraftServer)" class="member-name-link">reloadPolicy</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reloadPolicy(net.minecraft.server.MinecraftServer)" class="member-name-link">reloadPolicy</a><wbr>(net.minecraft.server.MinecraftServer&nbsp;server)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Refreshes policy on the server thread and synchronizes only changed policy.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a>&nbsp;result)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
 per dimension and block position per server session.</div>
 </div>
@@ -212,6 +218,15 @@ Changed policy rebuilds the cached snapshot before synchronizing connected playe
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">reloadPolicy</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
 <div class="block">Refreshes policy on the server thread and synchronizes only changed policy.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="publishPolicy(net.minecraft.server.MinecraftServer)">
+<h3>publishPolicy</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">publishPolicy</span><wbr><span class="parameters">(net.minecraft.server.MinecraftServer&nbsp;server)</span></div>
+<div class="block">Publishes policy changes from file reloads and persisted command edits exactly once.</div>
 </div>
 </section>
 </li>

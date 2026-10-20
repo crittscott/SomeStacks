@@ -213,10 +213,12 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return blocks.isEmpty() ? 0.0 : sum / totalSlots();
     }
 
+    private static final int MAX_COMPARATOR_SIGNAL = 15;
+
     /** Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1. */
     public final int comparatorSignal() {
         double fill = fillLevel();
-        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
+        return fill > 0.0 ? Mth.floor(fill * (MAX_COMPARATOR_SIGNAL - 1)) + 1 : 0;
     }
 
     /** Notifies every block's comparator neighbors only when the base's last published signal changes. */

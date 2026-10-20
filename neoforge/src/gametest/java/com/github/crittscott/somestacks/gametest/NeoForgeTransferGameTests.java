@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.minecraft.world.level.block.Block;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
@@ -190,7 +191,7 @@ public final class NeoForgeTransferGameTests {
                 base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
-            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), 3);
+            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             int headroom = base.getItems().getSlots();
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());

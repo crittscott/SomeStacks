@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#TAG_SLOT" tabindex="0">TAG_SLOT</a></li>
 <li><a href="#TAG_ITEMS" tabindex="0">TAG_ITEMS</a></li>
 <li><a href="#TAG_SET_ASIDE" tabindex="0">TAG_SET_ASIDE</a></li>
+<li><a href="#STORAGE_SLOT_LIMIT" tabindex="0">STORAGE_SLOT_LIMIT</a></li>
 </ol>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -71,6 +72,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#storageSlotLimit(net.minecraft.world.item.ItemStack)" tabindex="0">storageSlotLimit(ItemStack)</a></li>
 <li><a href="#getSlots()" tabindex="0">getSlots()</a></li>
 <li><a href="#getStackInSlot(int)" tabindex="0">getStackInSlot(int)</a></li>
 <li><a href="#setStackInSlot(int,net.minecraft.world.item.ItemStack)" tabindex="0">setStackInSlot(int, ItemStack)</a></li>
@@ -147,15 +149,20 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#STORAGE_SLOT_LIMIT" class="member-name-link">STORAGE_SLOT_LIMIT</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Per-slot max-stack-size cap advertised to automation.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#TAG_SET_ASIDE" class="member-name-link">TAG_SET_ASIDE</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#TAG_SLOT" class="member-name-link">TAG_SLOT</a></code></div>
+<div class="col-second even-row-color"><code><a href="#TAG_SET_ASIDE" class="member-name-link">TAG_SET_ASIDE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_SLOT" class="member-name-link">TAG_SLOT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -253,9 +260,14 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageSlotLimit(net.minecraft.world.item.ItemStack)" class="member-name-link">storageSlotLimit</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Storage capacity after applying the item's own maximum.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
 </div>
 </div>
@@ -323,6 +335,23 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 </div>
 </section>
 </li>
+<li>
+<section class="detail" id="STORAGE_SLOT_LIMIT">
+<h3>STORAGE_SLOT_LIMIT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">STORAGE_SLOT_LIMIT</span></div>
+<div class="block">Per-slot max-stack-size cap advertised to automation.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.util.StackItemStorage.STORAGE_SLOT_LIMIT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -347,6 +376,15 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="storageSlotLimit(net.minecraft.world.item.ItemStack)">
+<h3>storageSlotLimit</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">storageSlotLimit</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Storage capacity after applying the item's own maximum.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getSlots()">
 <h3>getSlots</h3>

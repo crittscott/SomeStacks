@@ -8,6 +8,10 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.world.item.ItemStack;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -31,6 +35,7 @@ public final class StackDataMigration {
     private static final Codec<Tag> RAW_TAG = Codec.PASSTHROUGH.xmap(
             dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
             tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
+    private static final String ITEM_COUNT_FIELD = "count";
     private static final String[] PERSISTED_FIELDS = {
             StackBlockEntity.TAG_DATA_VERSION, StackBlockEntity.TAG_ITEMS, StorageStackBE.TAG_PERMANENT,
             SinglesStackBE.TAG_CUBE_ROTATIONS, StackItemStorage.TAG_SET_ASIDE
@@ -43,6 +48,97 @@ public final class StackDataMigration {
             input.read(field, RAW_TAG).ifPresent(value -> tag.put(field, value.copy()));
         }
         return tag;
+    }
+
+    /**
+     * Splits the preceding release's over-cap Storage entries before normal inventory loading.
+     * Occupied slots keep priority. Overflow uses free local slots, then the existing SetAside
+     * envelope with its original slot for retry; no world edits or item admission are involved.
+     */
+    static boolean normalizeStorageInventory(CompoundTag inventory, HolderLookup.Provider registries) {
+        ListTag original = inventory.getListOrEmpty(StackItemStorage.TAG_ITEMS);
+        ListTag retries = inventory.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE);
+        boolean overCap = false;
+        for (ListTag list : List.of(original, retries)) {
+            for (Tag entry : list) {
+                if (entry instanceof CompoundTag item
+                        && item.getInt(ITEM_COUNT_FIELD).orElse(1) > StackItemStorage.STORAGE_SLOT_LIMIT) {
+                    overCap = true;
+                    break;
+                }
+            }
+        }
+        if (!overCap) return false;
+        boolean[] occupied = new boolean[StorageStackBE.SLOTS];
+        for (Tag entry : original) {
+            if (entry instanceof CompoundTag item && item.get(StackItemStorage.TAG_SLOT) instanceof IntTag slot
+                    && slot.intValue() >= 0 && slot.intValue() < occupied.length) occupied[slot.intValue()] = true;
+        }
+        RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
+        ListTag items = new ListTag();
+        ListTag retained = new ListTag();
+        List<Tag> extraItems = new ArrayList<>();
+        boolean changed = false;
+        for (int source = 0; source < 2; source++) {
+            for (Tag entry : source == 0 ? original : retries) {
+                ListTag destination = source == 0 ? items : retained;
+                if (!(entry instanceof CompoundTag item)
+                        || !(item.get(StackItemStorage.TAG_SLOT) instanceof IntTag slotTag)
+                        || slotTag.intValue() < 0 || slotTag.intValue() >= occupied.length) {
+                    destination.add(entry.copy());
+                    continue;
+                }
+                var parsed = ItemStack.CODEC.parse(ops, item).result();
+                if (parsed.isEmpty() || parsed.get().isEmpty()
+                        || parsed.get().getCount() <= StackItemStorage.storageSlotLimit(parsed.get())) {
+                    destination.add(entry.copy());
+                    continue;
+                }
+                ItemStack stack = parsed.get();
+                int limit = StackItemStorage.storageSlotLimit(stack);
+                int remaining = stack.getCount();
+                occupied[slotTag.intValue()] = true;
+                boolean first = true;
+                while (remaining > 0) {
+                    int count = Math.min(remaining, limit);
+                    Tag encoded;
+                    try {
+                        encoded = ItemStack.CODEC.encodeStart(ops, stack.copyWithCount(count)).getOrThrow();
+                    } catch (RuntimeException failure) {
+                        throw new IllegalStateException("Cannot normalize saved Storage slot " + slotTag.intValue(), failure);
+                    }
+                    if (!(encoded instanceof CompoundTag piece)) {
+                        throw new IllegalStateException("Storage item codec did not produce a compound for slot " + slotTag.intValue());
+                    }
+                    int slot = slotTag.intValue();
+                    if (first) {
+                        piece.putInt(StackItemStorage.TAG_SLOT, slot);
+                        destination.add(piece);
+                        first = false;
+                    } else {
+                        int free = 0;
+                        while (free < occupied.length && occupied[free]) free++;
+                        if (free < occupied.length) {
+                            occupied[free] = true;
+                            piece.putInt(StackItemStorage.TAG_SLOT, free);
+                            extraItems.add(piece);
+                        } else {
+                            piece.putInt(StackItemStorage.TAG_SLOT, slot);
+                            retained.add(piece);
+                        }
+                    }
+                    remaining -= count;
+                }
+                changed = true;
+            }
+        }
+        if (changed) {
+            extraItems.forEach(items::add);
+            inventory.put(StackItemStorage.TAG_ITEMS, items);
+            if (retained.isEmpty()) inventory.remove(StackItemStorage.TAG_SET_ASIDE);
+            else inventory.put(StackItemStorage.TAG_SET_ASIDE, retained);
+        }
+        return changed;
     }
 
     private static long sessionUpgradeCount;

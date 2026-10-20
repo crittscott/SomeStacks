@@ -174,7 +174,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Client-side registration: the three block entity renderers, the key binding, the resource reload
 listeners behind render overrides, bar textures, and measured profiles, and the delivery target
-for the server-to-client configuration payload.</div>
+for the native synchronized configuration.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
@@ -202,7 +202,7 @@ and break events.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/NeoForgeNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">NeoForgeNetworking</a> - Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
 <dd>
-<div class="block">The mod's payloads and their handler registration.</div>
+<div class="block">Registers the shared gesture payload; NeoForge synchronizes policy through its config lifecycle.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/NeoForgePlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks">NeoForgePlatformServices</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
@@ -307,10 +307,6 @@ them.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/NeoForgePlatformServices.html#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig(ServerPlayer, ConfigSyncPkt)</a> - Method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/NeoForgePlatformServices.html" title="class in com.github.crittscott.somestacks">NeoForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/NeoForgeNetworking.html#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver(Consumer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/NeoForgeNetworking.html" title="class in com.github.crittscott.somestacks.network">NeoForgeNetworking</a></dt>
-<dd>
-<div class="block">Installed once by <code>NeoForgeClientSetup</code> on the physical client.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.Singles.html#%3Cinit%3E(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">Singles(BlockPos, BlockState)</a> - Constructor for class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.Singles.html" title="class in com.github.crittscott.somestacks.block">NeoForgeStackBlockEntities.Singles</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/NeoForgeRegistry.html#SINGLES_STACK_BE" class="member-name-link">SINGLES_STACK_BE</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/NeoForgeRegistry.html" title="class in com.github.crittscott.somestacks">NeoForgeRegistry</a></dt>
@@ -322,8 +318,8 @@ them.</div>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksNeoForge</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
 <div class="block">NeoForge entry point: registers the blocks and block entities, the network payloads, the
-loader-native item-handler capability, and the listeners behind server config loading, login
-sync, and commands.</div>
+loader-native item-handler capability, and the listeners behind server config loading, native
+config sync, and commands.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html#%3Cinit%3E(net.neoforged.bus.api.IEventBus,net.neoforged.fml.ModContainer)" class="member-name-link">SomeStacksNeoForge(IEventBus, ModContainer)</a> - Constructor for class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html" title="class in com.github.crittscott.somestacks">SomeStacksNeoForge</a></dt>
 <dd>&nbsp;</dd>

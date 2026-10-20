@@ -15,6 +15,10 @@ public final class SomeStacksGameTests {
             DeferredRegister.create(BuiltInRegistries.TEST_FUNCTION, "somestacks");
 
     static {
+        TEST_FUNCTIONS.register("storagepilegametests/storage_disk_migration_preserves_over_cap_contents",
+                () -> StoragePileGameTests::storageDiskMigrationPreservesOverCapContents);
+        TEST_FUNCTIONS.register("storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",
+                () -> StoragePileGameTests::storageCapAppliesToPlayersAutomationAndSettlement);
         TEST_FUNCTIONS.register("barcolumngametests/validity_and_bottom_grounding_are_enforced",
                 () -> BarColumnGameTests::validityAndBottomGroundingAreEnforced);
         TEST_FUNCTIONS.register("barcolumngametests/bricks_are_bar_items_but_brick_blocks_are_not",
@@ -51,8 +55,8 @@ public final class SomeStacksGameTests {
                 () -> BarColumnGameTests::comparatorReadsTheWholeColumnFromEveryBlock);
         TEST_FUNCTIONS.register("barcolumngametests/comparator_follows_a_column_losing_a_block",
                 () -> BarColumnGameTests::comparatorFollowsAColumnLosingABlock);
-        TEST_FUNCTIONS.register("barcolumngametests/refused_removal_still_lets_the_bars_above_come_down",
-                () -> BarColumnGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
+        TEST_FUNCTIONS.register("protectiongametests/refused_removal_still_lets_the_bars_above_come_down",
+                () -> ProtectionGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
         TEST_FUNCTIONS.register("automationandpersistencegametests/item_capability_is_available_from_every_side",
                 () -> AutomationAndPersistenceGameTests::itemCapabilityIsAvailableFromEverySide);
         TEST_FUNCTIONS.register("automationandpersistencegametests/single_block_capabilities_advertise_configured_headroom",
@@ -127,14 +131,8 @@ public final class SomeStacksGameTests {
                 () -> InteractionGameTests::everyStackTypeBlocksPistons);
         TEST_FUNCTIONS.register("interactiongametests/extraction_events_follow_block_survival",
                 () -> InteractionGameTests::extractionEventsFollowBlockSurvival);
-        TEST_FUNCTIONS.register("interactiongametests/config_decoder_enforces_packet_budget",
-                () -> InteractionGameTests::configDecoderEnforcesPacketBudget);
-        TEST_FUNCTIONS.register("interactiongametests/config_staging_rejects_and_clears_invalid_generations",
-                () -> InteractionGameTests::configStagingRejectsAndClearsInvalidGenerations);
         TEST_FUNCTIONS.register("interactiongametests/config_snapshots_round_trip_and_publish_atomically",
                 () -> InteractionGameTests::configSnapshotsRoundTripAndPublishAtomically);
-        TEST_FUNCTIONS.register("interactiongametests/config_staging_checks_sequences_and_totals",
-                () -> InteractionGameTests::configStagingChecksSequencesAndTotals);
         TEST_FUNCTIONS.register("interactiongametests/config_decoder_rejects_malformed_counts_and_namespaces",
                 () -> InteractionGameTests::configDecoderRejectsMalformedCountsAndNamespaces);
         TEST_FUNCTIONS.register("interactiongametests/block_rules_respect_precedence_and_hands",

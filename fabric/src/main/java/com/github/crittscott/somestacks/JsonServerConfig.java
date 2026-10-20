@@ -43,8 +43,8 @@ public final class JsonServerConfig implements ServerConfig.Backend {
                 SomeStacksCommon.LOGGER.info("Loaded server config from {}", displayPath(file));
             } catch (Exception e) {
                 SomeStacksCommon.LOGGER.warn(
-                        "Failed to read {}: {}. Using defaults; the next successful save by /ss deny, /ss gen will replace it",
-                        displayPath(file), e.getMessage());
+                        "Failed to read {}. Using defaults; the next successful save by /ss deny, /ss gen will replace it",
+                        displayPath(file), e);
             }
         }
 
@@ -69,7 +69,7 @@ public final class JsonServerConfig implements ServerConfig.Backend {
         JsonObject piles = obj(root, ServerConfig.SECTION_PILES);
         int parsedMaxPileHeight = Mth.clamp(
                 intOr(piles, ServerConfig.KEY_MAX_PILE_HEIGHT, fallback.maxPileHeight()),
-                1, ServerConfig.MAX_PILE_HEIGHT);
+                ServerConfig.MIN_PILE_HEIGHT, ServerConfig.MAX_PILE_HEIGHT);
 
         JsonObject stacks = obj(root, ServerConfig.SECTION_STACKS);
         boolean parsedStorageEnabled = boolOr(
@@ -87,7 +87,7 @@ public final class JsonServerConfig implements ServerConfig.Backend {
 
         JsonObject gallery = obj(root, ServerConfig.SECTION_RENDER_GALLERY);
         int parsedPlacementsPerTick = Math.max(
-                1, intOr(gallery, ServerConfig.KEY_PLACEMENTS_PER_TICK, fallback.renderGalleryPlacementsPerTick()));
+                ServerConfig.MIN_GALLERY_PLACEMENTS_PER_TICK, intOr(gallery, ServerConfig.KEY_PLACEMENTS_PER_TICK, fallback.renderGalleryPlacementsPerTick()));
         boolean parsedGalleryEnabled = boolOr(
                 gallery, ServerConfig.KEY_GALLERY_ENABLED, fallback.galleryEnabled());
         int parsedPermissionLevel = Mth.clamp(
@@ -145,7 +145,7 @@ public final class JsonServerConfig implements ServerConfig.Backend {
             Files.writeString(configFile, GSON.toJson(root));
             return true;
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", configFile, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to write {}", configFile, e);
             return false;
         }
     }

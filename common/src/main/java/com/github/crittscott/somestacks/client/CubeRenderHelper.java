@@ -457,10 +457,13 @@ public final class CubeRenderHelper {
         }
     }
 
+    private static final float GUI_Y_COUNTER_ROTATION_DEGREES = -45.0f;
+    private static final float GUI_X_COUNTER_ROTATION_DEGREES = -30.0f;
+
     /** Applies the counter-rotation shared by GUI submission and automatic GUI measurement. */
     public static void applyGuiCounterRotation(PoseStack pose) {
-        pose.rotateDegrees(Axis.YP, -45.0f);
-        pose.rotateDegrees(Axis.XP, -30.0f);
+        pose.rotateDegrees(Axis.YP, GUI_Y_COUNTER_ROTATION_DEGREES);
+        pose.rotateDegrees(Axis.XP, GUI_X_COUNTER_ROTATION_DEGREES);
     }
 
     /** The stack's {@code 2d} art, captured when no retained capture exists for its identity. */

@@ -2,7 +2,11 @@ package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
-import com.github.crittscott.somestacks.network.NeoForgeNetworking;
+import com.github.crittscott.somestacks.NeoForgeServerConfig;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import net.minecraft.client.Minecraft;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.config.ModConfig;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
@@ -15,13 +19,14 @@ import net.neoforged.neoforge.event.GameShuttingDownEvent;
 /**
  * Client-side registration: the three block entity renderers, the key binding, the resource reload
  * listeners behind render overrides, bar textures, and measured profiles, and the delivery target
- * for the server-to-client configuration payload.
+ * for the native synchronized configuration.
  */
 public final class NeoForgeClientSetup {
     private NeoForgeClientSetup() {}
 
     public static void init(IEventBus modBus) {
-        NeoForgeNetworking.setClientReceiver(ConfigSyncReceiver::apply);
+        modBus.addListener((ModConfigEvent.Loading event) -> applyPolicy(event.getConfig()));
+        modBus.addListener((ModConfigEvent.Reloading event) -> applyPolicy(event.getConfig()));
         NeoForgeClientEvents.init();
         modBus.addListener(NeoForgeClientSetup::onRegisterRenderers);
         modBus.addListener(NeoForgeClientSetup::onRegisterKeys);
@@ -34,6 +39,13 @@ public final class NeoForgeClientSetup {
                 });
         NeoForge.EVENT_BUS.addListener(
                 (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
+    }
+
+    private static void applyPolicy(ModConfig config) {
+        NeoForgeServerConfig backend = NeoForgeServerConfig.INSTANCE;
+        if (config.getSpec() != backend.spec) return;
+        ConfigSyncPkt snapshot = ConfigSyncPkt.fromSettings(backend.reload());
+        Minecraft.getInstance().execute(() -> ConfigSyncReceiver.apply(snapshot));
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {

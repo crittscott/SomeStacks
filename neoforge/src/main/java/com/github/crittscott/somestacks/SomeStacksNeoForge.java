@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks;
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
 import com.github.crittscott.somestacks.client.NeoForgeClientSetup;
 import com.github.crittscott.somestacks.network.NeoForgeNetworking;
-import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -19,8 +18,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
- * loader-native item-handler capability, and the listeners behind server config loading, login
- * sync, and commands. Client registration is deferred to {@link NeoForgeClientSetup} so the
+ * loader-native item-handler capability, and the listeners behind server config loading, native
+ * config sync, and commands. Client registration is deferred to {@link NeoForgeClientSetup} so the
  * dedicated server never touches it.
  */
 @Mod(SomeStacksCommon.MODID)
@@ -41,7 +40,6 @@ public class SomeStacksNeoForge {
         modBus.addListener(NeoForgeItemHandlers::onRegisterCapabilities);
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
-        NeoForge.EVENT_BUS.addListener(this::onPlayerLogin);
         NeoForge.EVENT_BUS.addListener(this::onPlayerLogout);
         NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(this::onServerTick);
@@ -61,10 +59,6 @@ public class SomeStacksNeoForge {
 
     private void onServerStopped(ServerStoppedEvent event) {
         SomeStacksServer.onServerStopped();
-    }
-
-    private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        SomeStacksServer.onPlayerJoined((ServerPlayer) event.getEntity());
     }
 
     private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {

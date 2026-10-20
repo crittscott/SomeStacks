@@ -36,7 +36,12 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_SET_ASIDE = "SetAside";
 
     /** Per-slot max-stack-size cap advertised to automation. */
-    private static final int DEFAULT_SLOT_LIMIT = 64;
+    public static final int STORAGE_SLOT_LIMIT = 64;
+
+    /** Storage capacity after applying the item's own maximum. */
+    public static int storageSlotLimit(ItemStack stack) {
+        return Math.min(STORAGE_SLOT_LIMIT, stack.getMaxStackSize());
+    }
 
     private final ItemStack[] stacks;
     private final ListTag setAside = new ListTag();
@@ -132,7 +137,7 @@ public class StackItemStorage implements SlotAccess {
 
     /** Per-position admission capacity, before the item's own maximum. */
     protected int getSlotLimit(int slot) {
-        return DEFAULT_SLOT_LIMIT;
+        return STORAGE_SLOT_LIMIT;
     }
 
     /** Admission for a newly offered item; internal relocation bypasses it. */
