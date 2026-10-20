@@ -90,8 +90,6 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         StackRun.markDirtyAt(level, pos, SinglesColumn::at);
     }
 
-    /** The configured ceiling on column height, shared with Storage piles and Bar columns. */
-
     /**
      * Whether a Singles Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.

@@ -119,7 +119,9 @@ from the block below when there is one and otherwise from the block above.</div>
 <div class="block">Stages a decoded chunk on the client thread.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#apply(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">apply(ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Publishes already-validated policy and rebuilds admission sets; does not save or synchronize clients.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#apply(java.util.Map,net.minecraft.server.packs.resources.ResourceManager,net.minecraft.util.profiling.ProfilerFiller)" class="member-name-link">apply(Map, ResourceManager, ProfilerFiller)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
@@ -190,7 +192,9 @@ measured only once across sessions.</div>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#backend()" class="member-name-link">backend()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Installed loader persistence, or null before installation.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#bakeServerLists()" class="member-name-link">bakeServerLists()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html#BAR" class="member-name-link">BAR</a> - Enum constant in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Kind.html" title="enum class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Kind</a></dt>
@@ -335,8 +339,7 @@ the server config.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#canDepositAt(int)" class="member-name-link">canDepositAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-directly below, or null when this block stands on the world instead of on another Bar Stack.</div>
+<div class="block">Whether <code>index</code> is a valid, empty, supported position for a new bar.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#canDepositAt(int)" class="member-name-link">canDepositAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
@@ -368,6 +371,14 @@ components with room left.</div>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#CELL_LOCAL_SIZE" class="member-name-link">CELL_LOCAL_SIZE</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>
 <div class="block">One four-pixel cell in those local units, where 1.0 is the eight pixels above.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#CELL_PIXELS" class="member-name-link">CELL_PIXELS</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
+<dd>
+<div class="block">Width of one cell in model pixels, shared by targeting, collision, and rendering.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StorageCubeIdx.html#CELL_PIXELS" class="member-name-link">CELL_PIXELS</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StorageCubeIdx.html" title="class in com.github.crittscott.somestacks.util">StorageCubeIdx</a></dt>
+<dd>
+<div class="block">Width of one cell in model pixels, shared by targeting, collision, and rendering.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html#CELL_RENDER_SCALE" class="member-name-link">CELL_RENDER_SCALE</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></dt>
 <dd>
@@ -569,7 +580,9 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 <div class="block">Coordinate conversion, rotation, and cell boxes for a regular cubic item grid.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/CubeGrid.html#%3Cinit%3E(int,double,int...)" class="member-name-link">CubeGrid(int, double, int...)</a> - Constructor for class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates an <code>edge</code>-cell grid along each axis.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
 <div class="block">Draws the stored items of a Storage or Singles grid according to their render profiles.</div>
@@ -866,27 +879,19 @@ when <code>simulate</code> is true.</div>
 <div class="block">Extracts up to <code>amount</code> items from one pile slot and schedules the settle that packs the
 rest down over it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
-<dd>
-<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
 <div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
 items across block seams as needed so nothing is left unsupported.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack)" class="member-name-link">extractAt(int, int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
+<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, int, ItemStack, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>
 <div class="block">Takes from one of this block's own slots, the cell the player targeted, and schedules the
 settle that packs the rest of the pile down over the gap.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#extractAt(int,int,net.minecraft.world.item.ItemStack,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, int, ItemStack, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
-<dd>
-<div class="block">Player-facing extraction variant that preserves the actor through deferred cleanup.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">Player-facing extraction variant that preserves the actor through cascade cleanup.</div>
+<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
@@ -1271,7 +1276,7 @@ player.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#INGOTS" class="member-name-link">INGOTS</a> - Static variable in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar.</div>
+<div class="block">Reloadable data-pack classification of items that belong in Bar rather than Singles.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#inRange(float,float,float)" class="member-name-link">inRange(float, float, float)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
@@ -1308,7 +1313,9 @@ that slot lies in the block above it.</div>
 <div class="block">Installs one complete backend before common client or world logic can run.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#install(com.github.crittscott.somestacks.ServerConfig.Backend)" class="member-name-link">install(ServerConfig.Backend)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Installs loader persistence before loadFor; does not load or apply policy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/InteractionContext.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client.interaction">InteractionContext</a> - Class in <a href="com/github/crittscott/somestacks/client/interaction/package-summary.html">com.github.crittscott.somestacks.client.interaction</a></dt>
 <dd>
 <div class="block">One right-click, in the terms the rules ask about: who clicked, what they hit, which modifiers
@@ -1461,7 +1468,9 @@ were held, and the placement mode in force.</div>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#isValid()" class="member-name-link">isValid()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Accepts nonempty tagged items whose namespaces are not disabled by server policy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
@@ -1588,9 +1597,13 @@ write, and reload them without touching the player's files.</div>
 <div class="block">Rejects malformed wire data without migration, recovery retention, or logging.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Backend.html#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor(MinecraftServer)</a> - Method in interface com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Loads validated policy for this world after loader installation and before world activity.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Loads and applies this world's policy using the installed backend before world activity.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.LoadResult.html#%3Cinit%3E(int,int)" class="member-name-link">LoadResult(int, int)</a> - Constructor for record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>LoadResult</code> record class.</div>
@@ -2036,9 +2049,13 @@ or changed.</div>
 <div class="block">Registers server commands with the loader's dispatcher and current registry context.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Backend.html#reload()" class="member-name-link">reload()</a> - Method in interface com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns validated policy from disk or the loader's published values; parsing fallback is backend-owned.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#reload()" class="member-name-link">reload()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Applies the backend's current policy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.html#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#RELOAD_LISTENER_ID" class="member-name-link">RELOAD_LISTENER_ID</a> - Static variable in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
@@ -2199,9 +2216,13 @@ layout alone.</div>
 <div class="block">Applies the file-format bounds to an override, dropping invalid fields.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#save()" class="member-name-link">save()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Saves current policy without changing it; false when no backend exists or saving fails.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Backend.html#save(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">save(ServerConfig.Settings)</a> - Method in interface com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Persists the supplied policy; returns whether saving succeeded, without applying it here.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)" class="member-name-link">saveAdditional(ValueOutput)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html#saveCache()" class="member-name-link">saveCache()</a> - Static method in class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/AutoRenderProfiles.html" title="class in com.github.crittscott.somestacks.client.measure">AutoRenderProfiles</a></dt>
@@ -2262,7 +2283,9 @@ layout alone.</div>
 <div class="block">A command-editable policy list.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Settings.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a> - Record Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Immutable policy values.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">ServerGestureState</a> - Class in <a href="com/github/crittscott/somestacks/server/package-summary.html">com.github.crittscott.somestacks.server</a></dt>
 <dd>
 <div class="block">Server-side placement mode and modifier state last reported by each connected client.</div>
@@ -2296,8 +2319,7 @@ a batch is open.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#setRotation(int)" class="member-name-link">setRotation(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
-<div class="block">Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately
-unless a batch is open.</div>
+<div class="block">Invalidates the local shape and requests <a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#setBlockRotation(int)"><code>StackBlockEntity.setBlockRotation(int)</code></a> modulo four.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#setRotation(int)" class="member-name-link">setRotation(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>
@@ -2312,7 +2334,9 @@ unless a batch is open.</div>
 <div class="block">Replaces a slot directly and reports the change, bypassing admission and capacity checks.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#settings()" class="member-name-link">settings()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Current immutable in-memory policy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Settings.html#%3Cinit%3E(int,boolean,boolean,boolean,java.util.List,java.util.List,int,boolean,int,java.util.List,java.util.List)" class="member-name-link">Settings(int, boolean, boolean, boolean, List, List, int, boolean, int, List, List)</a> - Constructor for record class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>Settings</code> record class.</div>
@@ -2636,7 +2660,9 @@ supports it.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath(Level, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">The overlap occupancy supporting the bottom layer at <code>pos</code>.</div>
+<div class="block">The seam supporting the bottom layer of a Bar Stack at <code>pos</code>: the top-layer occupancy of
+the Bar Stack directly below, one entry per position in that top layer, reporting whether a
+bar is there; <a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#seamSupports(int,boolean%5B%5D)"><code>BarCubeIdx.seamSupports(int, boolean[])</code></a> matches footprints across it.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath(Level, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
