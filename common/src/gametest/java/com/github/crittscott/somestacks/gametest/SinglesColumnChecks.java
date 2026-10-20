@@ -25,7 +25,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
  * Singles support and gravity in a live level that does not touch loader-native automation
  * directly: grounding at the bottom of a column, a cell resting on the one below it, visual
  * columns lining up across differently rotated blocks, and extraction shifting a column down while
- * carrying each item's rotation with it. Capability/Transfer-API-facing tests stay in each loader's
+ * carrying each item's rotation with it. Native automation-view tests stay in each loader's
  * own {@code SinglesColumnGameTests}.
  */
 public final class SinglesColumnChecks {
@@ -86,7 +86,7 @@ public final class SinglesColumnChecks {
         int lowerTop = SinglesCubeIdx.indexFromColumn(lowerStorage, 3);
         int upperBottom = SinglesCubeIdx.indexFromColumn(upperStorage, 0);
 
-        lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK), false);
+        lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK));
         ItemStack offered = new ItemStack(Items.PAPER);
 
         check(upper.depositAt(upperBottom, offered),
@@ -106,9 +106,9 @@ public final class SinglesColumnChecks {
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
         int middle = SinglesCubeIdx.indexFromColumn(column, 1);
         int top = SinglesCubeIdx.indexFromColumn(column, 2);
-        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(middle, new ItemStack(Items.PAPER), false);
-        singles.getItems().insertItem(top, new ItemStack(Items.APPLE), false);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(middle, new ItemStack(Items.PAPER));
+        singles.getItems().insertItem(top, new ItemStack(Items.APPLE));
         singles.setCubeRotation(middle, 1);
         singles.setCubeRotation(top, 3);
 
@@ -148,7 +148,7 @@ public final class SinglesColumnChecks {
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         int second = SinglesCubeIdx.indexFromColumn(0, 1);
-        singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.APPLE));
         seedSlot(singles.getItems(), second, new ItemStack(legacy));
 
         ItemStack extracted = singles.extractAt(bottom);
@@ -176,7 +176,7 @@ public final class SinglesColumnChecks {
         check(!SinglesStackBE.isValidSinglesItem(new ItemStack(legacy)),
                 "Test needs an item a Singles Stack refuses");
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
-        lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE), false);
+        lower.getItems().insertItem(bottom, new ItemStack(Items.APPLE));
         seedSlot(upper.getItems(), bottom, new ItemStack(legacy));
 
         ItemStack extracted = lower.extractAt(bottom);
@@ -200,8 +200,8 @@ public final class SinglesColumnChecks {
         int bottom = SinglesCubeIdx.indexFromColumn(column, 0);
         int second = SinglesCubeIdx.indexFromColumn(column, 1);
         int third = SinglesCubeIdx.indexFromColumn(column, 2);
-        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(third, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(third, new ItemStack(Items.PAPER));
 
         singles.extractAt(bottom);
 
@@ -230,8 +230,8 @@ public final class SinglesColumnChecks {
                 SinglesCubeIdx.storageColumnFromVisual(visualColumn, upper.getRotation());
         int lowerTop = SinglesCubeIdx.indexFromColumn(lowerColumn, 3);
         int upperBottom = SinglesCubeIdx.indexFromColumn(upperColumn, 0);
-        lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK), false);
-        upper.getItems().insertItem(upperBottom, new ItemStack(Items.PAPER), false);
+        lower.getItems().insertItem(lowerTop, new ItemStack(Items.STICK));
+        upper.getItems().insertItem(upperBottom, new ItemStack(Items.PAPER));
         upper.setCubeRotation(upperBottom, 3);
 
         lower.extractAt(lowerTop);
@@ -252,7 +252,7 @@ public final class SinglesColumnChecks {
      */
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedCell(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
-        singles.getItems().insertItem(8, new ItemStack(Items.STICK), false);
+        singles.getItems().insertItem(8, new ItemStack(Items.STICK));
         BlockPos blockPos = singles.getBlockPos();
 
         int result = SinglesCubeIdx.traceAllPositions(
@@ -295,9 +295,9 @@ public final class SinglesColumnChecks {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         SinglesStackBE middle = placeSingles(helper, ORIGIN.above());
         SinglesStackBE upper = placeSingles(helper, ORIGIN.above(2));
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE), false);
-        middle.getItems().insertItem(0, new ItemStack(Items.DIRT), false);
-        upper.getItems().insertItem(0, new ItemStack(Items.APPLE), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE));
+        middle.getItems().insertItem(0, new ItemStack(Items.DIRT));
+        upper.getItems().insertItem(0, new ItemStack(Items.APPLE));
 
         GameTestScaffold.checkStateUpdatesPreserveContents(helper, middle);
 
@@ -338,12 +338,12 @@ public final class SinglesColumnChecks {
 
         checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
 
-        singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE, 1));
         checkEquals(1, signalAt(helper, ORIGIN),
                 "Signal for a single item in a whole column");
 
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
         }
         checkEquals(15, signalAt(helper, ORIGIN), "Full column signal");
         helper.succeed();
@@ -358,7 +358,7 @@ public final class SinglesColumnChecks {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         placeSingles(helper, ORIGIN.above());
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
         }
 
         // Half the column's cells are occupied, and both blocks report that rather than their own.
@@ -378,7 +378,7 @@ public final class SinglesColumnChecks {
         SinglesStackBE lower = placeSingles(helper, ORIGIN);
         placeSingles(helper, ORIGIN.above());
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+            lower.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
         }
         checkEquals(8, signalAt(helper, ORIGIN), "Signal before the block was lost");
 

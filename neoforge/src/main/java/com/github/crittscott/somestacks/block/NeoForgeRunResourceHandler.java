@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.server.NeoForgeGrowthPlacement;
 import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
@@ -44,7 +44,7 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         StackRun<?> run = run();
         if (run == null) return this;
         StackBlockEntity base = run.baseBlockEntity();
-        return base == blockEntity ? this : base.getData(ModRegistry.RUN_RESOURCES);
+        return base == blockEntity ? this : base.getData(NeoForgeRegistry.RUN_RESOURCES);
     }
 
     @Override
@@ -74,19 +74,19 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     @Override
     public boolean isValid(int index, ItemResource resource) {
         return index >= 0 && index < size() && !resource.isEmpty()
-                && blockEntity.acceptsAutomation(resource.toStack());
+                && blockEntity.isStoredItemValid(resource.toStack());
     }
 
     @Override
     public long getCapacityAsLong(int index, ItemResource resource) {
         if (index < 0 || index >= size()) return 0;
-        if (resource.isEmpty()) return blockEntity.automationSlotLimit();
+        if (resource.isEmpty()) return blockEntity.localSlotLimit();
         return isValid(index, resource)
-                ? Math.min(blockEntity.automationSlotLimit(), resource.getMaxStackSize()) : 0;
+                ? Math.min(blockEntity.localSlotLimit(), resource.getMaxStackSize()) : 0;
     }
 
     private boolean structural() {
-        return blockEntity.automationSlotLimit() == 1;
+        return blockEntity.localSlotLimit() == 1;
     }
 
     @Override

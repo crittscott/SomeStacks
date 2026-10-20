@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#run(boolean,java.util.function.BiFunction)" tabindex="0">run(boolean, BiFunction)</a></li>
+<li><a href="#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)" tabindex="0">run(boolean, BiFunction, ClientCallbackChecks.ClientUpdate)</a></li>
 </ol>
 </li>
 </ol>
@@ -89,9 +89,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ClientCallbackChecks.ClientUpdate.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Loader-native chunk or block update on a client-attached registered scratch entity.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
 </div>
 </div>
@@ -109,8 +114,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#run(boolean,java.util.function.BiFunction)" class="member-name-link">run</a><wbr>(boolean&nbsp;modifierDown,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)" class="member-name-link">run</a><wbr>(boolean&nbsp;modifierDown,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback,
+ <a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a>&nbsp;update)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
 stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
@@ -133,11 +139,12 @@ stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="run(boolean,java.util.function.BiFunction)">
+<section class="detail" id="run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)">
 <h3>run</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">run</span><wbr><span class="parameters">(boolean&nbsp;modifierDown,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, <a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback,
+ <a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a>&nbsp;update)</span></div>
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
 stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
 loader callback for main/off hand and checks consumption plus block/item suppression. It
@@ -150,7 +157,9 @@ walk around every face, and reload resources. Models must remain fitted and corr
 with special models staying on the 3-D path unless explicitly overridden. With default
 resources, deposit resin bricks into a Bar Stack: the bars must be orange on a fresh launch
 and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint,
-Bar presentation reuse, and invalidation on resource reload and inventory updates.</div>
+Bar presentation reuse, and invalidation on resource reload and inventory updates. It also
+checks valid and malformed initial/subsequent native client updates on scratch entities,
+including atomic rejection of inventory, inherited components, and render-cache changes.</div>
 </div>
 </section>
 </li>

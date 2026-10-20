@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.network;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import com.github.crittscott.somestacks.client.ConfigSyncReceiver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -26,15 +26,15 @@ public final class FabricClientNetworking {
                         Component.translatable("somestacks.disconnect.protocol"));
             }
         });
-        registerClient(ConfigSyncPkt.TYPE, ClientRenderPacketSink::apply);
+        registerClient(ConfigSyncPkt.TYPE, ConfigSyncReceiver::apply);
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientGestures.resetSync();
-            ClientRenderPacketSink.clear();
+            ConfigSyncReceiver.clear();
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ClientGestures.resetSync();
-            ClientRenderPacketSink.clear();
+            ConfigSyncReceiver.clear();
         });
     }
 

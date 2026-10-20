@@ -1,12 +1,12 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
-import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
 import com.github.crittscott.somestacks.client.ClientRenderToolState;
-import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.github.crittscott.somestacks.client.ConfigSyncReceiver;
+import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
+import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import io.netty.buffer.Unpooled;
@@ -16,13 +16,13 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.TagValueInput;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -43,7 +43,7 @@ public final class SynchronizationChecks {
         List<String> originalGallery = ClientRenderToolState.genMods();
         List<String> originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
         boolean[] originalFlags = flags();
-        ClientRenderPacketSink.clear();
+        ConfigSyncReceiver.clear();
         try {
             for (int size : new int[] {0, 1, 4096}) {
                 List<String> gallery = new ArrayList<>();
@@ -80,7 +80,7 @@ public final class SynchronizationChecks {
                         check(raw.readableBytes() <= ConfigSyncPkt.MAX_PACKET_BYTES, "Encoded chunk too large");
                         ConfigSyncPkt decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
                         checkEquals(packet, decoded, "Chunk codec round trip");
-                        ClientRenderPacketSink.apply(decoded);
+                        ConfigSyncReceiver.apply(decoded);
                     } finally {
                         raw.release();
                     }
@@ -99,7 +99,7 @@ public final class SynchronizationChecks {
         } finally {
             ServerConfig.apply(policy);
             ConfigSyncPkt.rebuildCurrent();
-            ClientRenderPacketSink.clear();
+            ConfigSyncReceiver.clear();
             ClientRenderToolState.replace(originalGallery, originalDenied);
             restoreFlags(originalFlags);
         }
@@ -114,40 +114,40 @@ public final class SynchronizationChecks {
         var originalGallery = ClientRenderToolState.genMods();
         var originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
         boolean[] originalFlags = flags();
-        ClientRenderPacketSink.clear();
+        ConfigSyncReceiver.clear();
         try {
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, true, 1, "tail")), "Missing first accepted");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 2, "old"));
+            rejects(() -> ConfigSyncReceiver.apply(chunk(1, false, true, 1, "tail")), "Missing first accepted");
+            ConfigSyncReceiver.apply(chunk(2, true, false, 2, "old"));
             checkEquals(originalGallery, ClientRenderToolState.genMods(), "Missing last published");
-            ClientRenderPacketSink.apply(chunk(3, true, true, 1, "replacement"));
+            ConfigSyncReceiver.apply(chunk(3, true, true, 1, "replacement"));
             checkEquals(List.of("replacement"), ClientRenderToolState.genMods(), "New first did not replace staging");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(2, false, true, 2, "old_tail")), "Old tail accepted");
-            ClientRenderPacketSink.apply(chunk(4, true, false, 2, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(5, false, true, 2, "tail")), "Mismatched generation accepted");
+            rejects(() -> ConfigSyncReceiver.apply(chunk(2, false, true, 2, "old_tail")), "Old tail accepted");
+            ConfigSyncReceiver.apply(chunk(4, true, false, 2, "first"));
+            rejects(() -> ConfigSyncReceiver.apply(chunk(5, false, true, 2, "tail")), "Mismatched generation accepted");
             for (ConfigSyncPkt changed : List.of(
                     new ConfigSyncPkt(6, false, true, false, true, true, 2, 0, List.of("tail"), List.of()),
                     new ConfigSyncPkt(6, false, true, true, false, true, 2, 0, List.of("tail"), List.of()),
                     new ConfigSyncPkt(6, false, true, true, true, false, 2, 0, List.of("tail"), List.of()),
                     chunk(6, false, true, 3, "tail"),
                     new ConfigSyncPkt(6, false, true, true, true, true, 2, 1, List.of("tail"), List.of()))) {
-                ClientRenderPacketSink.apply(chunk(6, true, false, 2, "first"));
-                rejects(() -> ClientRenderPacketSink.apply(changed), "Changed metadata accepted");
-                rejects(() -> ClientRenderPacketSink.apply(chunk(6, false, true, 2, "tail")), "Rejected staging survived");
+                ConfigSyncReceiver.apply(chunk(6, true, false, 2, "first"));
+                rejects(() -> ConfigSyncReceiver.apply(changed), "Changed metadata accepted");
+                rejects(() -> ConfigSyncReceiver.apply(chunk(6, false, true, 2, "tail")), "Rejected staging survived");
             }
-            rejects(() -> ClientRenderPacketSink.apply(chunk(7, true, true, 2, "only")), "Total underflow accepted");
-            ClientRenderPacketSink.apply(chunk(8, true, false, 1, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(8, false, true, 1, "extra")), "Total overflow accepted");
-            ClientRenderPacketSink.apply(new ConfigSyncPkt(9, true, false, true, true, true,
+            rejects(() -> ConfigSyncReceiver.apply(chunk(7, true, true, 2, "only")), "Total underflow accepted");
+            ConfigSyncReceiver.apply(chunk(8, true, false, 1, "first"));
+            rejects(() -> ConfigSyncReceiver.apply(chunk(8, false, true, 1, "extra")), "Total overflow accepted");
+            ConfigSyncReceiver.apply(new ConfigSyncPkt(9, true, false, true, true, true,
                     0, 2, List.of(), List.of("denied")));
-            rejects(() -> ClientRenderPacketSink.apply(new ConfigSyncPkt(9, false, true, true, true, true,
+            rejects(() -> ConfigSyncReceiver.apply(new ConfigSyncPkt(9, false, true, true, true, true,
                     0, 2, List.of(), List.of("denied"))), "Duplicate deny entry accepted");
             checkEquals(List.of("replacement"), ClientRenderToolState.genMods(), "Bad sequence replaced published state");
             check(Arrays.equals(new boolean[] {true, true, true}, flags()), "Bad sequence changed flags");
             check(ClientRenderToolState.disabledMods().isEmpty(), "Bad sequence changed deny set");
-            ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"));
+            ConfigSyncReceiver.apply(chunk(10, true, true, 1, "recovered"));
             checkEquals(List.of("recovered"), ClientRenderToolState.genMods(), "Valid snapshot after rejection failed");
         } finally {
-            ClientRenderPacketSink.clear();
+            ConfigSyncReceiver.clear();
             ClientRenderToolState.replace(originalGallery, originalDenied);
             restoreFlags(originalFlags);
         }
@@ -241,27 +241,27 @@ public final class SynchronizationChecks {
      */
     public static void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
         List<String> published = ClientRenderToolState.genMods();
-        ClientRenderPacketSink.clear();
+        ConfigSyncReceiver.clear();
         try {
-            ClientRenderPacketSink.apply(chunk(1, true, false, 10, "first"));
+            ConfigSyncReceiver.apply(chunk(1, true, false, 10, "first"));
             checkEquals(published, ClientRenderToolState.genMods(), "Incomplete snapshot published");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, false, 10)),
+            rejects(() -> ConfigSyncReceiver.apply(chunk(1, false, false, 10)),
                     "Empty intermediate chunk accepted");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, true, 10, "second")),
+            rejects(() -> ConfigSyncReceiver.apply(chunk(1, false, true, 10, "second")),
                     "Rejected generation retained staging");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 10, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(2, false, true, 10, "first")),
+            ConfigSyncReceiver.apply(chunk(2, true, false, 10, "first"));
+            rejects(() -> ConfigSyncReceiver.apply(chunk(2, false, true, 10, "first")),
                     "Duplicate namespace accepted");
             for (int i = 0; i < ConfigSyncPkt.MAX_GENERATION_CHUNKS; i++) {
-                ClientRenderPacketSink.apply(chunk(3, i == 0, false, 4096, "mod" + i));
+                ConfigSyncReceiver.apply(chunk(3, i == 0, false, 4096, "mod" + i));
             }
-            rejects(() -> ClientRenderPacketSink.apply(chunk(3, false, false, 4096, "overflow")),
+            rejects(() -> ConfigSyncReceiver.apply(chunk(3, false, false, 4096, "overflow")),
                     "Generation chunk budget was ignored");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(3, false, true, 4096, "tail")),
+            rejects(() -> ConfigSyncReceiver.apply(chunk(3, false, true, 4096, "tail")),
                     "Over-budget generation retained staging");
             checkEquals(published, ClientRenderToolState.genMods(), "Rejected snapshot published");
         } finally {
-            ClientRenderPacketSink.clear();
+            ConfigSyncReceiver.clear();
         }
         helper.succeed();
     }
@@ -338,16 +338,18 @@ public final class SynchronizationChecks {
             CompoundTag replacement = valid.copy();
             var source = new StackItemStorage(be.getItems().getSlots());
             source.setStackInSlot(1, new ItemStack(Items.DIAMOND));
-            replacement.put("Items", source.serializeNBT(helper.getLevel().registryAccess()));
+            replacement.put("Items", source.save(helper.getLevel().registryAccess()));
             check(be.loadClientUpdate(replacement, helper.getLevel().registryAccess()),
                     "Valid current-format update rejected");
             check(be.getItems().getStackInSlot(0).isEmpty(), "Old client slot survived replacement");
             checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Replacement client item");
             var registries = helper.getLevel().registryAccess();
-            be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid));
-            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Chunk initialization item");
-            be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement));
-            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Later packet item");
+            check(be.isValidClientUpdate(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid)),
+                    "Valid client preflight was rejected");
+            check(be.loadClientUpdate(valid, registries), "Valid shared replacement was rejected");
+            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Shared initial replacement item");
+            check(be.loadClientUpdate(replacement, registries), "Valid later replacement was rejected");
+            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Later shared replacement item");
         }
         helper.succeed();
     }
@@ -355,11 +357,11 @@ public final class SynchronizationChecks {
     /** No in-game reproduction applies: malformed rotation metadata invalidates the entire update. */
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         var be = GameTestScaffold.placeSingles(helper, ORIGIN);
-        be.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        be.getItems().insertItem(0, new ItemStack(Items.STONE));
         CompoundTag valid = be.getUpdateTag(helper.getLevel().registryAccess());
         var replacement = new StackItemStorage(64);
         replacement.setStackInSlot(1, new ItemStack(Items.DIAMOND));
-        CompoundTag changedItems = replacement.serializeNBT(helper.getLevel().registryAccess());
+        CompoundTag changedItems = replacement.save(helper.getLevel().registryAccess());
         CompoundTag missingRotations = valid.copy();
         missingRotations.put("Items", changedItems.copy());
         missingRotations.remove("CubeRotations");
@@ -390,13 +392,14 @@ public final class SynchronizationChecks {
         CompoundTag before = be.getUpdateTag(helper.getLevel().registryAccess());
         check(!be.loadClientUpdate(tag, helper.getLevel().registryAccess()), "Malformed update accepted");
         var registries = helper.getLevel().registryAccess();
-        be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
-        checkEquals(before, be.getUpdateTag(registries), "Rejected chunk update changed render state");
-        be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
-        checkEquals(before, be.getUpdateTag(registries), "Rejected block update changed render state");
+        check(!be.isValidClientUpdate(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag)),
+                "Malformed client preflight was accepted");
+        checkEquals(before, be.getUpdateTag(registries), "Rejected preflight changed render state");
+        check(!be.loadClientUpdate(tag, registries), "Malformed shared replacement was accepted");
+        checkEquals(before, be.getUpdateTag(registries), "Rejected replacement changed render state");
         checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
         check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
-        check(!be.getItems().serializeNBT(helper.getLevel().registryAccess()).contains("SetAside"),
+        check(!be.getItems().save(helper.getLevel().registryAccess()).contains("SetAside"),
                 "Client retained rejected entries for recovery");
     }
 

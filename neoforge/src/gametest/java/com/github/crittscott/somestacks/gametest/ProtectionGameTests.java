@@ -10,13 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -78,7 +78,7 @@ public final class ProtectionGameTests {
         BlockPos topRelative = ORIGIN.above();
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
         GameTestScaffold.placeStorage(helper, topRelative);
-        base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1), false);
+        base.getItems().insertItem(0, new ItemStack(Items.DIRT, 1));
 
         BlockPos top = helper.absolutePos(topRelative);
         Consumer<BreakBlockEvent> denyTop = event -> {
@@ -112,7 +112,7 @@ public final class ProtectionGameTests {
      */
     public static void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE));
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
         AtomicReference<Player> observedActor = new AtomicReference<>();
@@ -140,7 +140,7 @@ public final class ProtectionGameTests {
      */
     public static void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE));
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
         AtomicReference<Player> observedActor = new AtomicReference<>();
@@ -287,7 +287,7 @@ public final class ProtectionGameTests {
     public static void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -316,7 +316,7 @@ public final class ProtectionGameTests {
     public static void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -347,7 +347,7 @@ public final class ProtectionGameTests {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
+            bars.getItems().insertItem(slot, new ItemStack(bar, 1));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);
@@ -380,7 +380,7 @@ public final class ProtectionGameTests {
             GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(storage);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -405,7 +405,7 @@ public final class ProtectionGameTests {
             GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -431,7 +431,7 @@ public final class ProtectionGameTests {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar), false);
+            bars.getItems().insertItem(slot, new ItemStack(bar));
         }
         ResourceHandler<ItemResource> capability = GameTestSupport.capability(bars);
         ItemStack offered = new ItemStack(bar, 4);

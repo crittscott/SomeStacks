@@ -145,8 +145,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return 0;
         }
 
-        return handlerOf(flatSlot).insertItem(
-                flatSlot % BarStackBE.SLOTS, stack.copyWithCount(1), false).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, stack.copyWithCount(1)).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -258,11 +257,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
             be.beginBatch();
         }
         try {
-            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1, false);
+            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1);
 
             int top = topmostOccupied();
             if (top > flatSlot) {
-                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1, false);
+                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1);
                 blockOf(flatSlot).relocateInto(flatSlot % BarStackBE.SLOTS, moved);
             }
         } finally {
@@ -290,7 +289,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(null, level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

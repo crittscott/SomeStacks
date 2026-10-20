@@ -153,15 +153,15 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     }
 
     private boolean isValid(ItemStack stack) {
-        return blockEntity.acceptsAutomation(stack);
+        return blockEntity.isStoredItemValid(stack);
     }
 
     private int capacity(ItemVariant resource) {
-        return Math.min(blockEntity.automationSlotLimit(), resource.toStack().getMaxStackSize());
+        return Math.min(blockEntity.localSlotLimit(), resource.toStack().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return blockEntity.automationSlotLimit() == 1;
+        return blockEntity.localSlotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -339,7 +339,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         public long getCapacity() {
             ItemVariant resource = getResource();
             return resource.isBlank() && !isStructural()
-                    ? blockEntity.automationSlotLimit()
+                    ? blockEntity.localSlotLimit()
                     : capacity(resource);
         }
     }
