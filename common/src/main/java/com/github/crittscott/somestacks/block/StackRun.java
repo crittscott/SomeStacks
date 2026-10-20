@@ -1,15 +1,18 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -24,6 +27,40 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
     private final int slotsPerBlock;
     private final Block block;
+    private int growthQueryDepth;
+    @Nullable
+    private Boolean queriedGrowthPermission;
+
+    /** One bulk capacity query; permission results never survive its outer call. */
+    public final class GrowthQuery implements AutoCloseable {
+        private GrowthQuery() {
+            growthQueryDepth++;
+        }
+
+        @Override
+        public void close() {
+            if (--growthQueryDepth == 0) queriedGrowthPermission = null;
+        }
+    }
+
+    /** Coalesces automation permission queries without caching collision or staged support. */
+    public final GrowthQuery growthQuery() {
+        return new GrowthQuery();
+    }
+
+    /** Shared shape-independent growth checks; player authority is always queried afresh. */
+    protected final boolean canGrowBlock(boolean enabled, @Nullable ServerPlayer actor) {
+        if (blocks.size() >= ServerConfig.maxPileHeight() || !enabled) return false;
+        BlockPos above = topPos().above();
+        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) return false;
+        if (actor == null && growthQueryDepth > 0 && queriedGrowthPermission != null) {
+            return queriedGrowthPermission;
+        }
+        boolean allowed = WorldEdits.mayPlace(
+                actor != null ? actor : WorldEdits.automationActor(level), above);
+        if (actor == null && growthQueryDepth > 0) queriedGrowthPermission = allowed;
+        return allowed;
+    }
 
     /** Creates a server-only run over a nonempty bottom-to-top list of same-type block entities. */
     protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
@@ -31,6 +68,9 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         this.blocks = blocks;
         this.slotsPerBlock = slotsPerBlock;
         this.block = block;
+        for (BE member : blocks) {
+            member.cacheRun(this, level.getGameTime());
+        }
     }
 
     /** Walks the maximal run containing {@code pos}, from its bottom block upward. */
@@ -109,6 +149,11 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
             current = current.relative(direction);
         }
         return length;
+    }
+
+    /** The member that owns the loader's shared transaction journal. */
+    public final BE baseBlockEntity() {
+        return blocks.get(0);
     }
 
     /** Bottom block position of this resolved run. */

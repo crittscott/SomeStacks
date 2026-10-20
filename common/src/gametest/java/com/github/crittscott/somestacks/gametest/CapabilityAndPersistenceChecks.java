@@ -89,7 +89,7 @@ public final class CapabilityAndPersistenceChecks {
         source.setRotation(3);
         StoragePile pile = source.pile();
         check(pile != null, "Storage pile did not resolve");
-        pile.setPermanent(true);
+        pile.setPermanent(true, null);
 
         CompoundTag saved = source.saveWithoutMetadata(registries);
         copyFacing(helper, source, loaded);
@@ -282,7 +282,7 @@ public final class CapabilityAndPersistenceChecks {
         Item barItem = firstBarItem();
         storage.getItems().insertItem(4, new ItemStack(Items.STONE, 3), false);
         storage.setRotation(2);
-        storage.pile().setPermanent(true);
+        storage.pile().setPermanent(true, null);
         singles.getItems().insertItem(5, new ItemStack(Items.APPLE), false);
         singles.setRotation(1);
         singles.setCubeRotation(5, 3);

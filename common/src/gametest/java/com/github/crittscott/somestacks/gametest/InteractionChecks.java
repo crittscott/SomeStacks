@@ -31,6 +31,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -111,7 +113,8 @@ public final class InteractionChecks {
     /**
      * Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
      * hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
-     * off-hand item is not deposited.
+     * off-hand item is not deposited. Modified empty-hand clicks and Toggle Permanent with an
+     * occupied hand retain ordinary use; plain extraction consumes even an empty target.
      */
     public static void interactionReadsOnlyTheMainHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -127,7 +130,28 @@ public final class InteractionChecks {
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
+            StackBlock block = (StackBlock) storage.getBlockState().getBlock();
+            var state = storage.getBlockState();
+            var pos = storage.getBlockPos();
+            var hit = hit(player, pos, 0.5, 0.5, 0.5);
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getOffhandItem(), state, helper.getLevel(), pos,
+                            player, InteractionHand.OFF_HAND, hit), "Off-hand native use was consumed");
+            checkEquals(InteractionResult.PASS,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Unhandled modified empty-hand use was consumed");
+            ServerGestureState.set(player, StackMode.TOGGLE_PERMANENT, true);
+            player.setItemInHand(HAND, new ItemStack(Items.APPLE));
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getMainHandItem(), state, helper.getLevel(), pos,
+                            player, HAND, hit), "Occupied permanence gesture was consumed");
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            checkEquals(InteractionResult.CONSUME,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Empty extraction attempt passed through");
         } finally {
+            player.setItemInHand(HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
         }
@@ -305,7 +329,7 @@ public final class InteractionChecks {
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
-            storage.pile().setPermanent(false);
+            storage.pile().setPermanent(false, null);
             GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
                     click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");

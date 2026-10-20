@@ -30,7 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -282,7 +281,7 @@ public final class CubeRenderHelper {
                 faces[c] = visibleFaces(cell, cameraX, cameraY, cameraZ);
             }
         }
-        state.frame = new Frame(cache, faces, LightCoordsUtil.getLightCoords(level, blockPos));
+        state.frame = new Frame(cache, faces, state.lightCoords);
         return cache;
     }
 

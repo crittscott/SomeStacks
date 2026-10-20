@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +28,11 @@ import javax.annotation.Nullable;
  * schedule on the bottom block of the column.
  */
 public class BarStackBlock extends ShapedStackBlock {
+    @Override
+    public BlockType type() {
+        return BlockType.BAR_STACK;
+    }
+
     public BarStackBlock(Properties props) {
         super(props);
     }

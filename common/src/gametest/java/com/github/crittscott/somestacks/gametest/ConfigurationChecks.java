@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
@@ -293,7 +294,8 @@ public final class ConfigurationChecks {
      * Server commands enforce permissions and save list edits immediately through the loader's
      * installed configuration. To reproduce in-game: try the administrative list commands without
      * permission, then as an operator, then run {@code /ss reload}. Only the operator edits
-     * succeed, and reloading reads them back from the server config.
+     * succeed, and reloading reads them back from the server config. Enable galleries and change
+     * their required permission while connected: command availability updates without reconnecting.
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -330,6 +332,27 @@ public final class ConfigurationChecks {
             checkEquals(0, execute(commands.getDispatcher(),
                     player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER), "ss gallery all"),
                     "Disabled gallery command ran");
+            var baseline = ServerConfig.settings();
+            var gallery = commands.getDispatcher().getRoot().getChild("ss").getChild("gallery");
+            var ordinaryPlayer = player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.ALL);
+            ServerConfig.apply(galleryPolicy(baseline, true, 0));
+            check(ServerConfig.save(), "Could not save enabled gallery policy");
+            ServerConfig.apply(baseline);
+            execute(commands.getDispatcher(), operator, "ss reload");
+            check(gallery.canUse(ordinaryPlayer), "Command reload did not enable gallery access");
+            ServerConfig.apply(galleryPolicy(baseline, true, 4));
+            check(ServerConfig.save(), "Could not save restricted gallery policy");
+            ServerConfig.apply(galleryPolicy(baseline, true, 0));
+            SomeStacksServer.reloadPolicy(server);
+            check(!gallery.canUse(ordinaryPlayer), "Policy reload retained the previous gallery permission");
+            check(gallery.canUse(player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER)),
+                    "Policy reload refused the required owner permission");
+            ServerConfig.apply(galleryPolicy(baseline, false, 4));
+            check(ServerConfig.save(), "Could not save disabled gallery policy");
+            ServerConfig.apply(galleryPolicy(baseline, true, 4));
+            SomeStacksServer.reloadPolicy(server);
+            check(!gallery.canUse(player.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER)),
+                    "Policy reload left disabled galleries available");
         } finally {
             ServerConfig.apply(original);
             ServerConfig.save();
@@ -359,6 +382,13 @@ public final class ConfigurationChecks {
             ServerConfig.apply(original);
         }
         helper.succeed();
+    }
+
+    private static ServerConfig.Settings galleryPolicy(ServerConfig.Settings policy, boolean enabled, int permission) {
+        return new ServerConfig.Settings(policy.maxPileHeight(), policy.enableStorageStackBlock(),
+                policy.enableSinglesStackBlock(), policy.enableBarStackBlock(), policy.disableMods(),
+                policy.disableItems(), policy.renderGalleryPlacementsPerTick(), enabled, permission,
+                policy.genMods(), policy.genItems());
     }
 
     private static BlockHitResult centerHit(BlockPos pos) {

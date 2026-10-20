@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#play(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" tabindex="0">play(Level, BlockPos, SoundEvent)</a></li>
 <li><a href="#playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" tabindex="0">playRotation(ServerPlayer, BlockPos, SoundEvent)</a></li>
 </ol>
 </li>
@@ -112,10 +113,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" class="member-name-link">playRotation</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#play(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" class="member-name-link">play</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.sounds.SoundEvent&nbsp;sound)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Broadcasts a successful deposit or extraction at its configured volume.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)" class="member-name-link">playRotation</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;sp,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.sounds.SoundEvent&nbsp;sound)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it.</div>
 </div>
 </div>
@@ -159,6 +167,17 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="play(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)">
+<h3>play</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">play</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.sounds.SoundEvent&nbsp;sound)</span></div>
+<div class="block">Broadcasts a successful deposit or extraction at its configured volume.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="playRotation(net.minecraft.server.level.ServerPlayer,net.minecraft.core.BlockPos,net.minecraft.sounds.SoundEvent)">
 <h3>playRotation</h3>

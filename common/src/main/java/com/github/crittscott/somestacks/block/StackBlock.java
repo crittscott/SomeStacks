@@ -46,6 +46,9 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
                 .setValue(WATERLOGGED, false));
     }
 
+    /** The stack behavior registered by this block. */
+    public abstract BlockType type();
+
     /** Shared properties for the Bar Stack's dynamic occupied shape. */
     public static BlockBehaviour.Properties barProperties() {
         return commonProperties(MapColor.METAL).dynamicShape();
@@ -101,22 +104,22 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, InteractionHand.MAIN_HAND, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, InteractionHand.MAIN_HAND, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        // Client callbacks consume recognized gestures before native block use.
+        return InteractionResult.PASS;
     }
 
     @Override
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                        Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, hand, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override

@@ -32,7 +32,8 @@ public final class StackDataMigration {
             dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
             tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
     private static final String[] PERSISTED_FIELDS = {
-            "DataVersion", "Items", "Permanent", "CubeRotations", "SetAside"
+            StackBlockEntity.TAG_DATA_VERSION, StackBlockEntity.TAG_ITEMS, StorageStackBE.TAG_PERMANENT,
+            SinglesStackBE.TAG_CUBE_ROTATIONS, StackItemStorage.TAG_SET_ASIDE
     };
 
     /** Copies only stack-owned fields at the value-I/O boundary, without typed-list filtering. */

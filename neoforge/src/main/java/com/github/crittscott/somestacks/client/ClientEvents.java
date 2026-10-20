@@ -51,7 +51,7 @@ public final class ClientEvents {
         // RightClickEmpty is a pure notification on NeoForge: there is no vanilla action behind an
         // empty-hand air click to suppress, so the rules run but nothing is canceled.
         InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
+                evt.getEntity(), evt.getHand(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
                 ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
@@ -64,7 +64,7 @@ public final class ClientEvents {
         if (evt.isCanceled()) return;
 
         InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(),
+                evt.getEntity(), evt.getHand(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown(),
                 ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
@@ -87,7 +87,7 @@ public final class ClientEvents {
         if (evt.getFace() == null) return;
 
         InteractionContext ctx = InteractionContext.forBlockClick(
-                evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(), evt.getFace(),
+                evt.getEntity(), evt.getLevel(), evt.getHand(), evt.getPos(),
                 ClientGestures.currentMode(), KeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(KeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(ctx);

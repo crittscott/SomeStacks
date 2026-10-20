@@ -38,7 +38,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks.
 
-Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
+Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Modified clicks with no applicable stack gesture retain ordinary held/off-hand use; plain extraction attempts remain consumed.
 
 ## Depositing and placing
 
@@ -147,9 +147,9 @@ Disabling types, items, mods, or ingot categories preserves existing contents. C
 | `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
-| `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
+| `/ss reload` | level 2 | Refresh policy and synchronize changed client settings; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; NeoForge validates TOML. Gallery enablement and permission reloads refresh connected players’ command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 

@@ -172,9 +172,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-        if (blockIndex >= blocks.size() && !canGrow(BarCubeIdx.shapeFor(slot))) {
-            return 0;
-        }
         boolean bottomLayer = slot < BarCubeIdx.LAYER_SIZE;
         if (bottomLayer && blockIndex == 0) {
             return 1;
@@ -182,7 +179,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         int supportBlockStart = (bottomLayer ? blockIndex - 1 : blockIndex) * BarStackBE.SLOTS;
         for (int supporter : BarCubeIdx.supportersOf(slot)) {
             if (!contents.apply(supportBlockStart + supporter).isEmpty()) {
-                return 1;
+                return blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot)) ? 1 : 0;
             }
         }
         return 0;
@@ -196,15 +193,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableBarStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return canGrowBlock(ServerConfig.enableBarStackBlock(), null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

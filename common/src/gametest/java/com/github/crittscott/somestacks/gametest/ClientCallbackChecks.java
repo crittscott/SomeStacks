@@ -5,6 +5,9 @@ import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.BarTextureStore;
+import com.github.crittscott.somestacks.client.BarStackBER;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.client.ClientRenderCommands;
 import com.github.crittscott.somestacks.client.ItemCapture;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
@@ -54,7 +57,7 @@ public final class ClientCallbackChecks {
      * loader callback for main/off hand and checks consumption plus block/item suppression. It
      * does not send a vanilla use packet or extract contents. A translated success/failure message
      * reports the assertions. It also checks item capture, model measurement, and prepared grid
-     * submission, and render-profile precedence and invalidation through
+     * submission, Bar presentation reuse and reload invalidation, and render-profile precedence and invalidation through
      * {@link RenderProfileChecks#run()}; server GameTests cannot exercise these client-only boundaries. With default
      * resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
      * walk around every face, and reload resources. Models must remain fitted and correctly tinted,
@@ -84,6 +87,7 @@ public final class ClientCallbackChecks {
             GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             checkRendering(client, hit);
+            checkBarPresentationCache(client, hit);
             checkProfileLifecycle();
             RenderProfileChecks.run();
             client.player.sendSystemMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"));
@@ -166,6 +170,28 @@ public final class ClientCallbackChecks {
     private static Map<Identifier, ItemRenderConfig> readUserFile(Path file) throws IOException {
         JsonObject json = new Gson().fromJson(Files.readString(file), JsonObject.class);
         return OverrideJsonCodec.parse(json, file.toString());
+    }
+
+    private static void checkBarPresentationCache(Minecraft client, BlockHitResult hit) {
+        BarStackBE bars = new BarStackBE(hit.getBlockPos(), CommonRegistry.barStackBlock().defaultBlockState());
+        bars.getItems().setStackInSlot(0, new ItemStack(Items.RESIN_BRICK));
+        bars.setLevel(client.level);
+        var renderer = new BarStackBER(null);
+        var state = renderer.createRenderState();
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        Object first = bars.renderCache();
+        GameTestScaffold.check(first != null, "Bar presentation was not cached");
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(first == bars.renderCache(), "Bar presentation rebuilt without changes");
+        CubeRenderHelper.onResourceReload();
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(first != bars.renderCache(), "Bar presentation survived resource invalidation");
+        var update = bars.getUpdateTag(client.level.registryAccess());
+        GameTestScaffold.check(bars.loadClientUpdate(update, client.level.registryAccess()),
+                "Valid Bar update was rejected");
+        GameTestScaffold.check(bars.renderCache() == null, "Bar presentation survived an inventory update");
+        renderer.extractRenderState(bars, state, 0, client.player.getEyePosition(), null);
+        GameTestScaffold.check(bars.renderCache() != null, "Bar presentation did not rebuild after update");
     }
 
     private static void checkRendering(Minecraft client, BlockHitResult hit) {

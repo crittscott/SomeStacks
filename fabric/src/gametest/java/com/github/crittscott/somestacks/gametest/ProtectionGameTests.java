@@ -286,7 +286,7 @@ public final class ProtectionGameTests {
         check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
-                        Blocks.STONE.defaultBlockState(), Direction.DOWN),
+                        Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                 "Unprotected placement failed");
         helper.assertBlockPresent(Blocks.STONE, ORIGIN);
         helper.getLevel().removeBlock(pos, false);

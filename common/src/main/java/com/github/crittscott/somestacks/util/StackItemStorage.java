@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
+ * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the
  * item-handler insert/extract semantics and NBT shape
  * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
  *

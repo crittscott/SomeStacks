@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.mojang.brigadier.CommandDispatcher;
@@ -471,9 +472,8 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        ServerConfig.reload();
-        ConfigSyncPkt.rebuildCurrent();
-        int synced = ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
+        int synced = SomeStacksServer.reloadPolicy(
+                ctx.getSource().getServer());
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.reloaded", synced), true);
         return synced;

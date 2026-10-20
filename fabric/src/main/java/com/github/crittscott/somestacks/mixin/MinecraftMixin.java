@@ -30,7 +30,7 @@ abstract class MinecraftMixin {
         }
 
         InteractionContext context = InteractionContext.forAirClick(
-                player, player.level(), InteractionHand.MAIN_HAND,
+                player, InteractionHand.MAIN_HAND,
                 ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown(),
                 ClientGestures.isHittingBlock(hitResult));
         ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());

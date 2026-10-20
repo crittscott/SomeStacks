@@ -51,15 +51,17 @@ public final class ModRegistry {
     public static final DeferredBlock<StorageStackBlock> STORAGE_STACK_BLOCK = BLOCKS.registerBlock(CommonRegistry.STORAGE_STACK_BLOCK.getPath(), StorageStackBlock::new,
             StackBlock::storageProperties);
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_DEPOSIT_SOUND = sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_EXTRACT_SOUND = sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> STORAGE_ROTATE_SOUND = sound(CommonRegistry.STORAGE_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_DEPOSIT_SOUND = sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_EXTRACT_SOUND = sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_SOUND = sound(CommonRegistry.SINGLES_ROTATE_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> SINGLES_ROTATE_ITEM_SOUND = sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_DEPOSIT_SOUND = sound(CommonRegistry.BAR_DEPOSIT_SOUND);
-    public static final DeferredHolder<SoundEvent, SoundEvent> BAR_EXTRACT_SOUND = sound(CommonRegistry.BAR_EXTRACT_SOUND);
+    static {
+        sound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
+        sound(CommonRegistry.STORAGE_EXTRACT_SOUND);
+        sound(CommonRegistry.STORAGE_ROTATE_SOUND);
+        sound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
+        sound(CommonRegistry.SINGLES_EXTRACT_SOUND);
+        sound(CommonRegistry.SINGLES_ROTATE_SOUND);
+        sound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
+        sound(CommonRegistry.BAR_DEPOSIT_SOUND);
+        sound(CommonRegistry.BAR_EXTRACT_SOUND);
+    }
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BarStackBE>> BAR_STACK_BE =
             BLOCK_ENTITIES.register(CommonRegistry.BAR_STACK_BE.getPath(),
@@ -73,8 +75,8 @@ public final class ModRegistry {
             BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE.getPath(),
                     () -> new BlockEntityType<>(StorageStackBE::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
-    private static DeferredHolder<SoundEvent, SoundEvent> sound(Identifier id) {
-        return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
+    private static void sound(Identifier id) {
+        SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
     }
 
     public static void init(IEventBus modBus) {

@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -38,7 +37,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS =
             new IdentityHashMap<>();
 
+    private static int resourceGeneration;
+
     static void onResourceReload() {
+        resourceGeneration++;
         SPRITE_REGIONS.clear();
     }
 
@@ -48,11 +50,12 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     /** Prepared bars have resolved UVs and tints; submission never reads the level or inventory. */
     public static final class BarRenderState extends BlockEntityRenderState {
         private List<BarRenderData> bars = List.of();
-        private int light;
     }
 
     private record BarRenderData(AABB bounds, int layer, UvRegion[] regions,
                                  BarTextureStore.BarTextureData texture) {}
+
+    private record BarCache(int generation, List<BarRenderData> bars) {}
 
     @Override
     public BarRenderState createRenderState() {
@@ -67,7 +70,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (be.getLevel() == null) {
             return;
         }
-        state.light = LightCoordsUtil.getLightCoords(be.getLevel(), be.getBlockPos());
+        if (be.renderCache() instanceof BarCache cache && cache.generation() == resourceGeneration) {
+            state.bars = cache.bars();
+            return;
+        }
         List<BarRenderData> bars = new ArrayList<>();
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = be.getItems().getStackInSlot(idx);
@@ -81,6 +87,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
                     regions(sprite), texture));
         }
         state.bars = List.copyOf(bars);
+        be.setRenderCache(new BarCache(resourceGeneration, state.bars));
     }
 
     @Override
@@ -90,7 +97,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (bars.isEmpty()) {
             return;
         }
-        int light = state.light;
+        int light = state.lightCoords;
         collector.submitCustomGeometry(pose, RenderTypes.solidMovingBlock(), (snapshot, vc) -> {
             PoseStack barPose = new PoseStack();
             barPose.last().pose().set(snapshot.pose());

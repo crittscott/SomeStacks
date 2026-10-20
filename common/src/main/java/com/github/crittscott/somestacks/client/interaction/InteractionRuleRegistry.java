@@ -6,11 +6,8 @@ import javax.annotation.Nullable;
 /**
  * The ordered rule lists behind each loader's right-click callbacks, one list per kind of click.
  *
- * <p>Order is the precedence rule: the first match wins and the walk stops. The block list starts
- * with the empty-handed permanence toggle, then runs through the item gestures from the most
- * specific to the least: the torch gestures precede deposit, deposit into the clicked stack
- * precedes deposit into its neighbor, generic placement catches the modified clicks none of those
- * claimed, and unmodified extraction sits last.
+ * <p>The permanence and torch gestures precede the generic modified deposit/placement gesture.
+ * Unmodified extraction sits last. Target selection belongs entirely to the server.
  */
 public final class InteractionRuleRegistry {
     private InteractionRuleRegistry() {}
@@ -27,8 +24,6 @@ public final class InteractionRuleRegistry {
             new TogglePermanentRule(),
             new RotateBlockWithRedstoneTorchRule(),
             new RotateItemWithSoulTorchRule(),
-            new DepositIntoClickedStackRule(),
-            new DepositIntoAdjacentStackRule(),
             new PlaceAdjacentGenericRule(),
             new ExtractionRule()
     );

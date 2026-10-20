@@ -2,6 +2,7 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
@@ -18,12 +19,7 @@ public enum BlockType {
     /** The type whose block this is, or null when it names none of the three. */
     @Nullable
     public static BlockType of(Block block) {
-        for (BlockType type : values()) {
-            if (type.getBlock() == block) {
-                return type;
-            }
-        }
-        return null;
+        return block instanceof StackBlock stack ? stack.type() : null;
     }
 
     public Block getBlock() {

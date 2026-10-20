@@ -74,15 +74,34 @@ public final class SomeStacksServer {
     public static void onPolicyReloaded() {
         MinecraftServer server = runningServer;
         if (server != null) {
-            server.execute(() -> {
-                ServerConfig.Settings previous = ServerConfig.settings();
-                ServerConfig.reload();
-                if (previous.equals(ServerConfig.settings())) return;
-                ConfigSyncPkt.rebuildCurrent();
-                ConfigSyncNetwork.syncAllPlayers(server);
-                logPolicy("Applied changed");
-            });
+            server.execute(() -> reloadPolicy(server));
         }
+    }
+
+    /** Refreshes policy on the server thread and synchronizes only changed policy. */
+    public static int reloadPolicy(MinecraftServer server) {
+        ServerConfig.Settings previous = ServerConfig.settings();
+        ServerConfig.reload();
+        ServerConfig.Settings current = ServerConfig.settings();
+        if (previous.equals(current)) return 0;
+        if (previous.galleryEnabled() != current.galleryEnabled()
+                || previous.galleryPermissionLevel() != current.galleryPermissionLevel()) {
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                server.getCommands().sendCommands(player);
+            }
+        }
+        boolean clientChanged = previous.enableStorageStackBlock() != current.enableStorageStackBlock()
+                || previous.enableSinglesStackBlock() != current.enableSinglesStackBlock()
+                || previous.enableBarStackBlock() != current.enableBarStackBlock()
+                || !previous.genMods().equals(current.genMods())
+                || !previous.disableMods().equals(current.disableMods());
+        int synced = 0;
+        if (clientChanged) {
+            ConfigSyncPkt.rebuildCurrent();
+            synced = ConfigSyncNetwork.syncAllPlayers(server);
+        }
+        logPolicy("Applied changed");
+        return synced;
     }
 
     private static void logPolicy(String action) {

@@ -63,6 +63,7 @@ public final class StoragePileChecks {
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
             storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
         }
+        storage.setRotation(2);
         ItemStack offered = new ItemStack(Items.STONE, 1);
 
         int moved = storage.deposit(offered, null);
@@ -72,6 +73,9 @@ public final class StoragePileChecks {
         checkEquals(0, offered.getCount(), "Offered remainder");
         check(pile != null, "Pile did not resolve");
         checkEquals(2, pile.height(), "Pile height");
+        StorageStackBE upper = (StorageStackBE) helper.getLevel().getBlockEntity(storage.getBlockPos().above());
+        checkEquals(2, upper.getRotation(), "Growth did not inherit native facing");
+        check(pile == upper.pile(), "Members did not share the resolved pile");
         checkEquals(Items.STONE, pile.getSlot(StorageStackBE.SLOTS).getItem(),
                 "First slot in grown block");
         helper.succeed();
@@ -164,7 +168,7 @@ public final class StoragePileChecks {
         StorageStackBE permanent = placeStorage(helper, permanentPos);
         StoragePile permanentPile = permanent.pile();
         check(permanentPile != null, "Permanent pile did not resolve");
-        permanentPile.setPermanent(true);
+        permanentPile.setPermanent(true, null);
         permanentPile.settle();
         check(helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
                         instanceof StorageStackBE,
@@ -214,7 +218,7 @@ public final class StoragePileChecks {
         }
         StoragePile originalPile = upper.pile();
         check(originalPile != null, "Original pile did not resolve");
-        originalPile.setPermanent(true);
+        originalPile.setPermanent(true, null);
 
         check(level.setBlock(
                         comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),

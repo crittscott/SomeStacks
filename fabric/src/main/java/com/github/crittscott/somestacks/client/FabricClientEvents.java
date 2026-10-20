@@ -27,8 +27,8 @@ public final class FabricClientEvents {
             }
 
             InteractionContext context = InteractionContext.forAirClick(
-                    player, level, hand, ClientGestures.currentMode(),
-                    FabricKeyMappings.STACK_MODE_KEY.isDown(),
+                    player, hand,
+                    ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown(),
                     ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
             ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
             InteractionRuleRegistry.processItemRules(context);
@@ -42,7 +42,7 @@ public final class FabricClientEvents {
     public static InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide()) return InteractionResult.PASS;
         InteractionContext context = InteractionContext.forBlockClick(
-                player, level, hand, hit.getBlockPos(), hit.getDirection(),
+                player, level, hand, hit.getBlockPos(),
                 ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
         InteractionRuleRegistry.processBlockRules(context);

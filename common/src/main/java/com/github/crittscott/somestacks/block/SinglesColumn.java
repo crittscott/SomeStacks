@@ -152,11 +152,10 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
         boolean fresh = blockIndex >= blocks.size();
-        if (fresh && !canGrow(SinglesCubeIdx.shapeFor(slot, 0))) {
+        if (!cellSupported(blockIndex, slot, fresh ? 0 : blocks.get(blockIndex).getRotation(), contents)) {
             return 0;
         }
-        return cellSupported(blockIndex, slot, fresh ? 0 : blocks.get(blockIndex).getRotation(), contents)
-                ? 1 : 0;
+        return !fresh || canGrow(SinglesCubeIdx.shapeFor(slot, 0)) ? 1 : 0;
     }
 
     private boolean cellSupported(int blockIndex, int slot, int rotation, IntFunction<ItemStack> contents) {
@@ -183,15 +182,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableSinglesStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return canGrowBlock(ServerConfig.enableSinglesStackBlock(), null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

@@ -99,8 +99,7 @@ public record ConfigSyncPkt(
             if (namespace.isEmpty() || !result.add(namespace)) {
                 continue;
             }
-            if (Identifier.tryBuild(namespace, "validation") == null
-                    || namespace.length() > MAX_NAMESPACE_LENGTH) {
+            if (!validNamespace(namespace)) {
                 result.remove(namespace);
                 SomeStacksCommon.LOGGER.warn(
                         "Ignoring invalid {} namespace '{}' in client synchronization", label, entry);
@@ -219,10 +218,14 @@ public record ConfigSyncPkt(
         return bytes;
     }
 
+    private static boolean validNamespace(String namespace) {
+        return !namespace.isEmpty() && namespace.length() <= MAX_NAMESPACE_LENGTH
+                && Identifier.tryBuild(namespace, "validation") != null;
+    }
+
     private static void validateNamespaces(List<String> namespaces) {
         for (String namespace : namespaces) {
-            if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
-                    || Identifier.tryBuild(namespace, "validation") == null) {
+            if (!validNamespace(namespace)) {
                 throw new DecoderException("Invalid synchronized namespace");
             }
         }
@@ -241,7 +244,7 @@ public record ConfigSyncPkt(
         List<String> namespaces = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             String namespace = buf.readUtf(MAX_NAMESPACE_LENGTH);
-            if (namespace.isEmpty() || Identifier.tryBuild(namespace, "validation") == null) {
+            if (!validNamespace(namespace)) {
                 throw new DecoderException("Invalid synchronized namespace: " + namespace);
             }
             namespaces.add(namespace);

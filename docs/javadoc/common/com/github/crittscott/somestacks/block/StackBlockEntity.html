@@ -59,6 +59,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
+<li><a href="#TAG_ITEMS" tabindex="0">TAG_ITEMS</a></li>
+<li><a href="#TAG_DATA_VERSION" tabindex="0">TAG_DATA_VERSION</a></li>
 <li><a href="#items" tabindex="0">items</a></li>
 </ol>
 </li>
@@ -82,7 +84,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#isEmpty()" tabindex="0">isEmpty()</a></li>
 <li><a href="#getItems()" tabindex="0">getItems()</a></li>
 <li><a href="#blockRotation()" tabindex="0">blockRotation()</a></li>
-<li><a href="#setBlockRotation(int)" tabindex="0">setBlockRotation(int)</a></li>
 <li><a href="#automationSlotLimit()" tabindex="0">automationSlotLimit()</a></li>
 <li><a href="#acceptsAutomation(net.minecraft.world.item.ItemStack)" tabindex="0">acceptsAutomation(ItemStack)</a></li>
 <li><a href="#syncToClients()" tabindex="0">syncToClients()</a></li>
@@ -152,6 +153,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected final <a href="../util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></code></div>
 <div class="col-second even-row-color"><code><a href="#items" class="member-name-link">items</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_DATA_VERSION" class="member-name-link">TAG_DATA_VERSION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
@@ -316,25 +323,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Marks local publication pending and coalesces a run tick; unattached/client entities do nothing.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBlockRotation(int)" class="member-name-link">setBlockRotation</a><wbr>(int&nbsp;rotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Changes the outer block's facing; the block-state update performs client synchronization.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRenderCache(java.lang.Object)" class="member-name-link">setRenderCache</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;cache)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevel(net.minecraft.world.level.Level)" class="member-name-link">setLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripServerOnlyUpdateData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRenderCache(java.lang.Object)" class="member-name-link">setRenderCache</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;cache)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripServerOnlyUpdateData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes server-only state before a saved tag is sent as a client update.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#syncToClients()" class="member-name-link">syncToClients</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#syncToClients()" class="member-name-link">syncToClients</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Immediately notifies block updates when attached; server callers send the local render state.</div>
 </div>
 </div>
@@ -360,6 +362,38 @@ loadScripts(document, 'script');</script>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="TAG_ITEMS">
+<h3>TAG_ITEMS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">TAG_ITEMS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.block.StackBlockEntity.TAG_ITEMS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TAG_DATA_VERSION">
+<h3>TAG_DATA_VERSION</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">TAG_DATA_VERSION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.block.StackBlockEntity.TAG_DATA_VERSION">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="items">
 <h3>items</h3>
@@ -516,15 +550,6 @@ saves and update tags; remove private fields in stripServerOnlyUpdateData before
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">blockRotation</span>()</div>
 <div class="block">The outer block's layout rotation, expressed in the grid's quarter-turn coordinates.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setBlockRotation(int)">
-<h3>setBlockRotation</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBlockRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
-<div class="block">Changes the outer block's facing; the block-state update performs client synchronization.</div>
 </div>
 </section>
 </li>
