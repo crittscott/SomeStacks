@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.github.crittscott.somestacks.util.StackMode,boolean)" tabindex="0">State(StackMode, boolean)</a></li>
+<li><a href="#%3Cinit%3E(com.github.crittscott.somestacks.util.StackMode,boolean,java.lang.Long)" tabindex="0">State(StackMode, boolean, Long)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#mode()" tabindex="0">mode()</a></li>
 <li><a href="#modifierDown()" tabindex="0">modifierDown()</a></li>
+<li><a href="#lastSoundTick()" tabindex="0">lastSoundTick()</a></li>
 </ol>
 </li>
 </ol>
@@ -89,7 +90,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public static record </span><span class="element-name type-name-label">ServerGestureState.State</span>(<a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode, boolean&nbsp;modifierDown)
+<div class="type-signature"><span class="modifiers">public static record </span><span class="element-name type-name-label">ServerGestureState.State</span>(<a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode, boolean&nbsp;modifierDown, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;lastSoundTick)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 </div>
 </section>
@@ -103,8 +104,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">State</a><wbr>(<a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode,
- boolean&nbsp;modifierDown)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.crittscott.somestacks.util.StackMode,boolean,java.lang.Long)" class="member-name-link">State</a><wbr>(<a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode,
+ boolean&nbsp;modifierDown,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;lastSoundTick)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>State</code> record class.</div>
 </div>
@@ -132,19 +134,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mode()" class="member-name-link">mode</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lastSoundTick()" class="member-name-link">lastSoundTick</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <code>lastSoundTick</code> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mode()" class="member-name-link">mode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>mode</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#modifierDown()" class="member-name-link">modifierDown</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#modifierDown()" class="member-name-link">modifierDown</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>modifierDown</code> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
 </div>
@@ -165,16 +172,19 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.util.StackMode,boolean)">
+<section class="detail" id="&lt;init&gt;(com.github.crittscott.somestacks.util.StackMode,boolean,java.lang.Long)">
 <h3>State</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">State</span><wbr><span class="parameters">(<a href="../util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a>&nbsp;mode,
- boolean&nbsp;modifierDown)</span></div>
+ boolean&nbsp;modifierDown,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;lastSoundTick)</span></div>
 <div class="block">Creates an instance of a <code>State</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>mode</code> - the value for the <code>mode</code> record component</dd>
 <dd><code>modifierDown</code> - the value for the <code>modifierDown</code> record component</dd>
+<dd><code>lastSoundTick</code> - the value for the <code>lastSoundTick</code> record component</dd>
 </dl>
 </div>
 </section>
@@ -256,6 +266,20 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <code>modifierDown</code> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lastSoundTick()">
+<h3>lastSoundTick</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">lastSoundTick</span>()</div>
+<div class="block">Returns the value of the <code>lastSoundTick</code> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <code>lastSoundTick</code> record component</dd>
 </dl>
 </div>
 </section>

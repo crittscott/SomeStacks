@@ -20,7 +20,10 @@ public abstract class ShapedStackBlock extends StackBlock {
      * Current local contents' collision shape on either side. Return an empty shape when the block
      * entity is absent or empty.
      */
-    protected abstract VoxelShape occupiedShape(BlockGetter level, BlockPos pos);
+    protected VoxelShape occupiedShape(BlockGetter level, BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof StackBlockEntity member
+                ? member.getCachedShape() : Shapes.empty();
+    }
 
     @Override
     public VoxelShape getShape(

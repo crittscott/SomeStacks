@@ -118,4 +118,5 @@ public final class StoragePileGameTests {
     public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
         StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
     }
+
 }

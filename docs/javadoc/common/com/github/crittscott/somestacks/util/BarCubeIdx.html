@@ -58,6 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#LAYER_SIZE" tabindex="0">LAYER_SIZE</a></li>
+<li><a href="#TOP_LAYER_START" tabindex="0">TOP_LAYER_START</a></li>
 <li><a href="#CELLS" tabindex="0">CELLS</a></li>
 </ol>
 </li>
@@ -66,7 +67,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#supportersOf(int)" tabindex="0">supportersOf(int)</a></li>
 <li><a href="#freshBlockSupports(int,boolean%5B%5D)" tabindex="0">freshBlockSupports(int, boolean[])</a></li>
 <li><a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)" tabindex="0">isGrounded(int, SlotAccess, boolean[])</a></li>
-<li><a href="#isGroundedIn(boolean%5B%5D,int,boolean%5B%5D)" tabindex="0">isGroundedIn(boolean[], int, boolean[])</a></li>
+<li><a href="#isGrounded(int,java.util.function.IntPredicate,boolean%5B%5D)" tabindex="0">isGrounded(int, IntPredicate, boolean[])</a></li>
+<li><a href="#isSupported(int,java.util.function.IntPredicate,java.util.function.IntPredicate)" tabindex="0">isSupported(int, IntPredicate, IntPredicate)</a></li>
 <li><a href="#seamSupports(int,boolean%5B%5D)" tabindex="0">seamSupports(int, boolean[])</a></li>
 <li><a href="#shapeFor(int)" tabindex="0">shapeFor(int)</a></li>
 <li><a href="#localBox(int)" tabindex="0">localBox(int)</a></li>
@@ -134,6 +136,11 @@ boundary, callers supply the lower block's top-layer occupancy as the supporting
 <div class="col-last odd-row-color">
 <div class="block">Slots per layer; the two orientations arrange the same count differently.</div>
 </div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TOP_LAYER_START" class="member-name-link">TOP_LAYER_START</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">First local slot in the top layer, shared by live and staged seam occupancy.</div>
+</div>
 </div>
 </section>
 </li>
@@ -182,87 +189,93 @@ boundary, callers supply the lower block's top-layer occupancy as the supporting
 <div class="block">Whether a bar has support.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGroundedIn(boolean%5B%5D,int,boolean%5B%5D)" class="member-name-link">isGroundedIn</a><wbr>(boolean[]&nbsp;occupancy,
- int&nbsp;index,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGrounded(int,java.util.function.IntPredicate,boolean%5B%5D)" class="member-name-link">isGrounded</a><wbr>(int&nbsp;index,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied,
  boolean[]&nbsp;seamBelow)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, boolean[])</code></a> to an occupancy snapshot rather than live slots.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.AABB</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#localBox(int)" class="member-name-link">localBox</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the cached block-local bounds used by collision, targeting, and rendering.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a snapshot of which slots in a block contain bars.</div>
+<div class="block">Evaluates live or proposed local occupancy using the same seam rule.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
- boolean[]&nbsp;seamBelow)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSupported(int,java.util.function.IntPredicate,java.util.function.IntPredicate)" class="member-name-link">isSupported</a><wbr>(int&nbsp;index,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;seamBelow)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Whether the top layer beneath a block overlaps the footprint of bottom-layer position
-<code>index</code>.</div>
+<div class="block">Footprint support from local slots and the lower block's top layer.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.AABB</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#localBox(int)" class="member-name-link">localBox</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the block-local collision shape of one bar slot.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelX(int,int)" class="member-name-link">startPixelX</a><wbr>(int&nbsp;x,
- int&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a bar's X origin in model pixels from its within-layer X index and layer.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelY(int)" class="member-name-link">startPixelY</a><wbr>(int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a layer's Y origin in model pixels.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelZ(int,int)" class="member-name-link">startPixelZ</a><wbr>(int&nbsp;z,
- int&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a bar's Z origin in model pixels from its within-layer Z index and layer.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportersOf(int)" class="member-name-link">supportersOf</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The block-local positions in the layer beneath <code>index</code> whose footprints overlap it; for
-the bottom layer, top-layer positions of the block below.</div>
+<div class="block">Returns the cached block-local bounds used by collision, targeting, and rendering.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a snapshot of which slots in a block contain bars.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#seamSupports(int,boolean%5B%5D)" class="member-name-link">seamSupports</a><wbr>(int&nbsp;index,
+ boolean[]&nbsp;seamBelow)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Whether the top layer beneath a block overlaps the footprint of <code>index</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shapeFor(int)" class="member-name-link">shapeFor</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the block-local collision shape of one bar slot.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelX(int,int)" class="member-name-link">startPixelX</a><wbr>(int&nbsp;x,
+ int&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a bar's X origin in model pixels from its within-layer X index and layer.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelY(int)" class="member-name-link">startPixelY</a><wbr>(int&nbsp;y)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a layer's Y origin in model pixels.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#startPixelZ(int,int)" class="member-name-link">startPixelZ</a><wbr>(int&nbsp;z,
+ int&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a bar's Z origin in model pixels from its within-layer Z index and layer.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportersOf(int)" class="member-name-link">supportersOf</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">The block-local positions whose bars can hold up <code>index</code>: overlapping positions in the
+layer beneath, which for the bottom layer is the top layer of the Bar Stack below.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topLayerOccupancy(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">topLayerOccupancy</a><wbr>(<a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the top layer's occupancy, which is the supporting seam for the Bar Stack above.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the deposit target for a Bar Stack that does not yet exist and therefore has no occupied
 slots.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceAllPositions(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">traceAllPositions</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a>&nbsp;handler)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds the slot a deposit targets: the last empty slot along the view ray before the first
 occupied one, or the farthest intersected slot if the ray meets no occupied bar.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.BarStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#traceCubes(com.github.crittscott.somestacks.util.ViewRay,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.block.BarStackBE)" class="member-name-link">traceCubes</a><wbr>(<a href="ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a>&nbsp;ray,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  <a href="../block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a>&nbsp;be)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the nearest occupied bar intersected by the view ray, or <code>-1</code> on a miss.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#xyzFromIndex(int)" class="member-name-link">xyzFromIndex</a><wbr>(int&nbsp;idx)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a slot index to its within-layer X and Z indexes and its bottom-based layer index.</div>
 </div>
 </div>
@@ -292,6 +305,15 @@ occupied one, or the farthest intersected slot if the ray meets no occupied bar.
 </section>
 </li>
 <li>
+<section class="detail" id="TOP_LAYER_START">
+<h3>TOP_LAYER_START</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">TOP_LAYER_START</span></div>
+<div class="block">First local slot in the top layer, shared by live and staged seam occupancy.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="CELLS">
 <h3>CELLS</h3>
 <div class="horizontal-scroll">
@@ -313,9 +335,8 @@ occupied one, or the farthest intersected slot if the ray meets no occupied bar.
 <h3>supportersOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">supportersOf</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
-<div class="block">The block-local positions in the layer beneath <code>index</code> whose footprints overlap it; for
-the bottom layer, top-layer positions of the block below. The array is shared and must not be
-modified.</div>
+<div class="block">The block-local positions whose bars can hold up <code>index</code>: overlapping positions in the
+layer beneath, which for the bottom layer is the top layer of the Bar Stack below.</div>
 </div>
 </section>
 </li>
@@ -347,15 +368,26 @@ underneath. A null seam means there is no Bar Stack below, so the bottom layer i
 </section>
 </li>
 <li>
-<section class="detail" id="isGroundedIn(boolean[],int,boolean[])">
-<h3>isGroundedIn</h3>
+<section class="detail" id="isGrounded(int,java.util.function.IntPredicate,boolean[])">
+<h3>isGrounded</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isGroundedIn</span><wbr><span class="parameters">(boolean[]&nbsp;occupancy,
- int&nbsp;index,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isGrounded</span><wbr><span class="parameters">(int&nbsp;index,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied,
  @Nullable
  boolean[]&nbsp;seamBelow)</span></div>
-<div class="block">Applies <a href="#isGrounded(int,com.github.crittscott.somestacks.util.SlotAccess,boolean%5B%5D)"><code>isGrounded(int, SlotAccess, boolean[])</code></a> to an occupancy snapshot rather than live slots. Settling uses
-snapshots to evaluate a proposed state without mutating inventory.</div>
+<div class="block">Evaluates live or proposed local occupancy using the same seam rule.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isSupported(int,java.util.function.IntPredicate,java.util.function.IntPredicate)">
+<h3>isSupported</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSupported</span><wbr><span class="parameters">(int&nbsp;index,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;occupied,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/IntPredicate.html" title="class or interface in java.util.function" class="external-link">IntPredicate</a>&nbsp;seamBelow)</span></div>
+<div class="block">Footprint support from local slots and the lower block's top layer.</div>
 </div>
 </section>
 </li>
@@ -365,9 +397,9 @@ snapshots to evaluate a proposed state without mutating inventory.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">seamSupports</span><wbr><span class="parameters">(int&nbsp;index,
  boolean[]&nbsp;seamBelow)</span></div>
-<div class="block">Whether the top layer beneath a block overlaps the footprint of bottom-layer position
-<code>index</code>. Layer 7 runs north-south and layer 0 east-west, so the alternating pattern
-continues across a block boundary and uses the same footprint test as support within a block.</div>
+<div class="block">Whether the top layer beneath a block overlaps the footprint of <code>index</code>. Layer 7 runs
+north-south and layer 0 east-west, so the alternating pattern continues across a block
+boundary and uses the same footprint test as support within a block.</div>
 </div>
 </section>
 </li>

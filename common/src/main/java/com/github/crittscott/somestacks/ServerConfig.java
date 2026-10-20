@@ -4,7 +4,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.permissions.PermissionCheck;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -83,14 +82,11 @@ public final class ServerConfig {
     }
     /** Loads and applies this world's policy using the installed backend before world activity. */
     public static void loadFor(MinecraftServer server) { apply(backend.loadFor(server)); }
-    /**
-     * Applies the installed backend's current policy without saving or synchronizing clients.
-     * Parsing fallback belongs to the backend.
-     */
+    /** Refreshes policy through the installed backend without saving or synchronizing clients. */
     public static void reload() {
         apply(backend.reload());
     }
-    /** Saves current policy without changing it; false when persistence fails. */
+    /** Persists policy through the installed backend; false means persistence failed. */
     public static boolean save() { return backend.save(settings); }
 
     /**
@@ -161,9 +157,8 @@ public final class ServerConfig {
             }
             apply(new Settings(current.maxPileHeight(), current.enableStorageStackBlock(),
                     current.enableSinglesStackBlock(), current.enableBarStackBlock(),
-                    disableMods, disableItems,
-                    current.renderGalleryPlacementsPerTick(), current.galleryEnabled(),
-                    current.galleryPermissionLevel(), genMods, genItems));
+                    disableMods, disableItems, current.renderGalleryPlacementsPerTick(),
+                    current.galleryEnabled(), current.galleryPermissionLevel(), genMods, genItems));
         }
     }
     public static int maxPileHeight() { return settings.maxPileHeight(); }

@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -73,8 +73,8 @@ public final class FabricRegistry {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, type);
     }
 
-    private static SoundEvent registerSound(Identifier id) {
-        return Registry.register(BuiltInRegistries.SOUND_EVENT, id,
+    private static void registerSound(Identifier id) {
+        Registry.register(BuiltInRegistries.SOUND_EVENT, id,
                 SoundEvent.createVariableRangeEvent(id));
     }
 }

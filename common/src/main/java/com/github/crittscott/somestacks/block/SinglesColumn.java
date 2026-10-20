@@ -4,18 +4,15 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.function.IntFunction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -68,7 +65,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        StackRun.invalidateAround(level, pos, SinglesStackBE.class);
+        StackRun.invalidateAround(level, pos, CommonRegistry.singlesStackBlock());
     }
 
     /**
@@ -126,52 +123,47 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(
+                flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
-     * Whether {@code flatSlot} could take an item when the column holds what {@code contents}
-     * reports: the cell must be empty and the cell beneath it occupied, which for a bottom layer
-     * means the top-layer cell of the block below in the same visual column, and for the bottom
-     * block of all means the world.
+     * One item if {@code flatSlot} is an empty cell whose supporting cell is occupied, reading cells
+     * through {@code contents}; otherwise none. A bottom-layer cell rests on the same visual column
+     * of the block below, whose rotation may differ, and the bottom block of all rests on the world.
      *
      * <p>A cell in the block above the column is checked against the block growth would put there —
-     * unrotated as a player's own placement is — and against the side-effect-free checks in
-     * {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a cell the commit would
-     * refuse.
+     * unrotated as a player's own placement is, standing on the column's top layer — and against
+     * the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot
+     * promise a cell the commit would refuse.
      */
     @Override
     public int acceptsAt(int flatSlot, ItemStack stack, IntFunction<ItemStack> contents) {
-        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)
-                || flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
+        if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
+            return 0;
+        }
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !contents.apply(flatSlot).isEmpty()) {
             return 0;
         }
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = flatSlot % SinglesStackBE.SLOTS;
-
-        if (!stagedCellSupported(flatSlot, blockIndex, slot, contents)) return 0;
-        return blockIndex < blocks.size() || canGrow(SinglesCubeIdx.shapeFor(slot, 0)) ? 1 : 0;
+        boolean fresh = blockIndex >= blocks.size();
+        if (!cellSupported(blockIndex, slot, fresh ? 0 : blocks.get(blockIndex).getRotation(), contents)) {
+            return 0;
+        }
+        return !fresh || canGrow(SinglesCubeIdx.shapeFor(slot, 0)) ? 1 : 0;
     }
 
-    private boolean stagedCellSupported(int flatSlot, int blockIndex, int slot,
-                                        IntFunction<ItemStack> contents) {
-        if (slot >= SinglesCubeIdx.LAYER_SIZE) {
-            return !contents.apply(flatSlot - SinglesCubeIdx.LAYER_SIZE).isEmpty();
-        }
-        if (blockIndex == 0) {
-            return true;
-        }
-        int visual = SinglesCubeIdx.visualColumnFromStorage(
-                SinglesCubeIdx.columnFromIndex(slot), rotationOf(blockIndex));
-        int below = SinglesCubeIdx.storageColumnFromVisual(visual, rotationOf(blockIndex - 1));
-        int supporter = (blockIndex - 1) * SinglesStackBE.SLOTS
-                + SinglesCubeIdx.indexFromColumn(below, SinglesCubeIdx.TOP_LAYER_Y);
-        return !contents.apply(supporter).isEmpty();
-    }
-
-    /** The block rotation at {@code blockIndex}; the headroom block growth would add is unrotated. */
-    private int rotationOf(int blockIndex) {
-        return blockIndex < blocks.size() ? blocks.get(blockIndex).getRotation() : 0;
+    private boolean cellSupported(int blockIndex, int slot, int rotation, IntFunction<ItemStack> contents) {
+        int blockStart = blockIndex * SinglesStackBE.SLOTS;
+        return SinglesCubeIdx.isSupported(slot,
+                local -> !contents.apply(blockStart + local).isEmpty(), rotation,
+                blockIndex == 0 ? null : visual -> {
+                    int belowColumn = SinglesCubeIdx.storageColumnFromVisual(
+                            visual, blocks.get(blockIndex - 1).getRotation());
+                    return !contents.apply(blockStart - SinglesStackBE.SLOTS
+                            + SinglesCubeIdx.indexFromColumn(belowColumn, SinglesCubeIdx.TOP_LAYER_Y)).isEmpty();
+                });
     }
 
     /**
@@ -193,18 +185,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return false;
         }
 
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.singlesStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);
-
-        blocks.add(grown);
-        return true;
+        return growBlock(null, finalCollision, SinglesStackBE.class) != null;
     }
 
     // Extraction

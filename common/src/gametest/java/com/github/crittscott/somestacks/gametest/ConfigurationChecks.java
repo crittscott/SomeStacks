@@ -16,7 +16,6 @@ import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -292,10 +291,11 @@ public final class ConfigurationChecks {
     }
 
     /**
-     * Server commands enforce permissions and save list edits immediately through whichever
-     * configuration backend the loader installed. To reproduce in-game: try the administrative list
-     * commands without permission, then as an operator, and inspect the world's server config file.
-     * Only the operator edits succeed and they are already on disk.
+     * Server commands enforce permissions and save list edits immediately through the loader's
+     * installed configuration. To reproduce in-game: try the administrative list commands without
+     * permission, then as an operator, then run {@code /ss reload}. Only the operator edits
+     * succeed, and reloading reads them back from the server config. Enable galleries and change
+     * their required permission while connected: command availability updates without reconnecting.
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -321,9 +321,7 @@ public final class ConfigurationChecks {
             check(ServerConfig.ListSetting.GEN_MODS.get().contains("examplemod"),
                     "Gen command did not update policy");
 
-            // Forget the edits in memory; reloading must bring them back from the saved file.
             ServerConfig.apply(policy(8, true, true, true, List.of(), List.of()));
-            // The return value is the synced-player count, which is zero in GameTests.
             execute(commands.getDispatcher(), operator, "ss reload");
             check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Deny command was not saved immediately");
@@ -398,7 +396,7 @@ public final class ConfigurationChecks {
     }
 
     private static int execute(
-            CommandDispatcher<CommandSourceStack> dispatcher,
+            com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher,
             CommandSourceStack source,
             String command) {
         try {
@@ -408,7 +406,7 @@ public final class ConfigurationChecks {
         }
     }
 
-    /** A default policy with the given run limits, enabled types, and deny lists. */
+    /** Default policy with the given height, enablement, and deny lists; gallery settings stay default. */
     private static ServerConfig.Settings policy(
             int maxHeight,
             boolean storage,

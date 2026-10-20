@@ -3,12 +3,12 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.client.FabricClientEvents;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.InteractionResult;
 
 /** Fabric development-client registration for {@link ClientCallbackChecks#run}. */
 public final class ClientCallbackGameTests implements ClientModInitializer {

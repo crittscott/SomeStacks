@@ -9,13 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.TriState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -37,6 +37,16 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  */
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
+
+    /** See {@link ProtectionChecks#adventureExtractionKeepsEmptyBlock}. */
+    public static void adventureExtractionKeepsEmptyBlock(GameTestHelper helper) {
+        ProtectionChecks.adventureExtractionKeepsEmptyBlock(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ProtectionChecks#placementReplacesClickedVegetation}. */
+    public static void placementReplacesClickedVegetation(GameTestHelper helper) {
+        ProtectionChecks.placementReplacesClickedVegetation(helper, GameTestSupport.playerFactory(helper));
+    }
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
     public static void automationUsesSharedIdentity(GameTestHelper helper) {
@@ -70,11 +80,6 @@ public final class ProtectionGameTests {
     /** See {@link ProtectionChecks#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused}. */
     public static void settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper helper) {
         ProtectionChecks.settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(helper, ProtectionGameTests::observeRemoval);
-    }
-
-    /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
-    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
-        ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(helper, ProtectionGameTests::observeRemoval);
     }
 
     /** See {@link ProtectionChecks#playerExtractionUsesPlayerForCleanup}. */
@@ -299,4 +304,9 @@ public final class ProtectionGameTests {
                 GameTestSupport.playerFactory(helper), ProtectionGameTests::observeRemoval);
     }
 
+
+    /** See {@link ProtectionChecks#refusedRemovalStillLetsTheBarsAboveComeDown}. */
+    public static void refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper helper) {
+        ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(helper, ProtectionGameTests::observeRemoval);
+    }
 }

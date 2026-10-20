@@ -11,7 +11,7 @@ package com.github.crittscott.somestacks.block;
 public final class RunEdit {
     // A run's world edits notify neighbors, and a woken neighbor can reach back into the same run's
     // handler mid-call: while a batch is open, while the block list is being appended to, or while
-    // a retained automation view is being invalidated. The inner call is refused so the run stays in the
+    // a held automation view is being invalidated. The inner call is refused so the run stays in the
     // state the outer call is building.
     private static boolean inProgress;
 

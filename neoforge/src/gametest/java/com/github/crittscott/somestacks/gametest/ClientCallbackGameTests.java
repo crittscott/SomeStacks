@@ -3,16 +3,16 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.client.NeoForgeClientEvents;
 import com.github.crittscott.somestacks.client.NeoForgeKeyMappings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.Commands;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.util.TriState;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.commands.Commands;
+import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /** NeoForge development-client registration for {@link ClientCallbackChecks#run}. */

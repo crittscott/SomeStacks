@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.server.NeoForgeStackInteractionEvents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
+
 /**
  * NeoForge delegates for loader-neutral interaction and validation checks.
  */

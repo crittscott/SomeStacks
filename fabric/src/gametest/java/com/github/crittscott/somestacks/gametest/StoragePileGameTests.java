@@ -1,9 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.block.StorageStackBE;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -130,4 +130,5 @@ public final class StoragePileGameTests {
     public void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
         StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
     }
+
 }

@@ -8,7 +8,7 @@ Current behavior; see `orientation-code.md` for structure.
 
 Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
 
-Minecraft 26.1.1 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
+Minecraft 26.1.1 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API and Common Protection API, which the build bundles.
 
 ## The three stack types
 
@@ -36,13 +36,13 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks.
+NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination permission through Common Protection API providers.
 
 Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Unhandled modified clicks retain item use; plain extraction attempts stay consumed.
 
 ## Depositing and placing
 
-Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind. Creating a stack counts as placing a block for advancements; automated growth does not.
+Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind. Ordinary placement replaces the clicked block when vanilla's placement context allows it, including grass and thin snow. Creating a stack counts as placing a block for advancements; automated growth does not.
 
 Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
@@ -56,7 +56,7 @@ Plain right-click targets the nearest rendered item on the view ray inside the c
 
 - Storage: as much of the targeted stack as the hand can hold.
 - Singles: one item.
-- Bar: one bar, and any bars left unsupported above it collapse and drop.
+- Bar: one bar, and any bars left unsupported above it collapse and drop. Stored Bar contents still drop when the block-drop game rule is disabled.
 
 The main hand must be empty or hold matching items/components with room. Plain clicks are consumed even when extraction fails, preventing use of unrelated held items.
 
@@ -169,7 +169,7 @@ Bar mappings live at `assets/<namespace>/textures/bars/*.json`; missing tints de
 
 ## Protection and validation
 
-Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. NeoForge consults destination interaction protection for neighbor deposits. Fabric consults destination block-use callbacks for neighbor deposits; placement and automation growth use vanilla checks. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla block-use, loader results, build limits, obstruction, border and spawn protection. Neighbor deposits consult destination interaction protection on both loaders; Fabric queries Common Protection API providers for destination placement, interaction, and removal permission. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restore denied snapshots without neighbor updates. All loaders fire native break hooks and apply vanilla game-mode removal restrictions; Adventure extraction can leave an empty block. Surviving edits emit sculk-detectable change; removing the final Single/Bar emits only destruction there.
 
 The payload carries mode/modifier state; actions use vanilla block-use hits. The server checks hand, spectator/protection state, item, target, support, enablement, height and obstruction, then selects cells along the reach ray through the hit. Clients never choose cells.
 
