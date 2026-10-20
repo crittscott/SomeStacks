@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
+
 /** Comparator used to lay out the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort(){}

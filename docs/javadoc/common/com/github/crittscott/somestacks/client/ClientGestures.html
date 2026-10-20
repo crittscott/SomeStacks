@@ -69,6 +69,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#displayModeMessage(net.minecraft.world.entity.player.Player)" tabindex="0">displayModeMessage(Player)</a></li>
 <li><a href="#syncState(boolean)" tabindex="0">syncState(boolean)</a></li>
 <li><a href="#resetSync()" tabindex="0">resetSync()</a></li>
+<li><a href="#processClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.BlockType,boolean,boolean)" tabindex="0">processClick(Player, InteractionHand, BlockType, boolean, boolean)</a></li>
 <li><a href="#isEmptyMainHandAirClick(net.minecraft.world.entity.player.Player,net.minecraft.world.phys.HitResult)" tabindex="0">isEmptyMainHandAirClick(Player, HitResult)</a></li>
 <li><a href="#isHittingBlock(net.minecraft.world.phys.HitResult)" tabindex="0">isHittingBlock(HitResult)</a></li>
 </ol>
@@ -144,19 +145,28 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Classifies the loader's current crosshair hit without consulting the client singleton.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../util/StackGesture.html" title="enum class in com.github.crittscott.somestacks.util">StackGesture</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.BlockType,boolean,boolean)" class="member-name-link">processClick</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;player,
+ net.minecraft.world.InteractionHand&nbsp;hand,
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;clicked,
+ boolean&nbsp;hittingBlock,
+ boolean&nbsp;modifier)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Recognizes client intent and performs the client-owned air-cycle action.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSync()" class="member-name-link">resetSync</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Forces the next interaction to establish state on a new connection.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a><wbr>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a><wbr>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setSender(java.util.function.Consumer)" class="member-name-link">setSender</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;net.minecraft.network.protocol.common.custom.CustomPacketPayload&gt;&nbsp;sender)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Replaces the loader sender and returns its predecessor; null detaches the sender.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#syncState(boolean)" class="member-name-link">syncState</a><wbr>(boolean&nbsp;modifierDown)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sends only state that changed since the last interaction on this connection.</div>
 </div>
 </div>
@@ -259,6 +269,20 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetSync</span>()</div>
 <div class="block">Forces the next interaction to establish state on a new connection.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="processClick(net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,com.github.crittscott.somestacks.util.BlockType,boolean,boolean)">
+<h3>processClick</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../util/StackGesture.html" title="enum class in com.github.crittscott.somestacks.util">StackGesture</a></span>&nbsp;<span class="element-name">processClick</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;player,
+ net.minecraft.world.InteractionHand&nbsp;hand,
+ @Nullable
+ <a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a>&nbsp;clicked,
+ boolean&nbsp;hittingBlock,
+ boolean&nbsp;modifier)</span></div>
+<div class="block">Recognizes client intent and performs the client-owned air-cycle action.</div>
 </div>
 </section>
 </li>

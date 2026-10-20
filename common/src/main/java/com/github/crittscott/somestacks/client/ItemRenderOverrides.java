@@ -17,6 +17,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -128,7 +129,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
     protected Map<Identifier, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<Identifier, ItemRenderConfig> configMap = new HashMap<>();
 
-        var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
+        var resources = FileToIdConverter.json("item_render_overrides").listMatchingResources(resourceManager);
         Set<String> present = presentNamespaces();
         int skipped = 0;
 

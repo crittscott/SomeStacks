@@ -1,12 +1,11 @@
 package com.github.crittscott.somestacks.gametest;
 
+import java.util.function.Consumer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.function.Consumer;
 
 /** Development-only test functions; datapack test instances supply their structure and timing. */
 @Mod(SomeStacksGameTests.MOD_ID)
@@ -16,6 +15,13 @@ public final class SomeStacksGameTests {
             DeferredRegister.create(BuiltInRegistries.TEST_FUNCTION, "somestacks");
 
     static {
+        TEST_FUNCTIONS.register("protectiongametests/adventure_extraction_keeps_empty_block", () -> ProtectionGameTests::adventureExtractionKeepsEmptyBlock);
+        TEST_FUNCTIONS.register("protectiongametests/placement_replaces_clicked_vegetation", () -> ProtectionGameTests::placementReplacesClickedVegetation);
+        TEST_FUNCTIONS.register("barcolumngametests/contents_drop_with_block_drops_disabled", () -> BarColumnGameTests::contentsDropWithBlockDropsDisabled);
+        TEST_FUNCTIONS.register("storagepilegametests/storage_disk_migration_preserves_over_cap_contents",
+                () -> StoragePileGameTests::storageDiskMigrationPreservesOverCapContents);
+        TEST_FUNCTIONS.register("storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",
+                () -> StoragePileGameTests::storageCapAppliesToPlayersAutomationAndSettlement);
         TEST_FUNCTIONS.register("barcolumngametests/validity_and_bottom_grounding_are_enforced",
                 () -> BarColumnGameTests::validityAndBottomGroundingAreEnforced);
         TEST_FUNCTIONS.register("barcolumngametests/bricks_are_bar_items_but_brick_blocks_are_not",
@@ -52,6 +58,8 @@ public final class SomeStacksGameTests {
                 () -> BarColumnGameTests::comparatorReadsTheWholeColumnFromEveryBlock);
         TEST_FUNCTIONS.register("barcolumngametests/comparator_follows_a_column_losing_a_block",
                 () -> BarColumnGameTests::comparatorFollowsAColumnLosingABlock);
+        TEST_FUNCTIONS.register("protectiongametests/refused_removal_still_lets_the_bars_above_come_down",
+                () -> ProtectionGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
         TEST_FUNCTIONS.register("automationandpersistencegametests/item_capability_is_available_from_every_side",
                 () -> AutomationAndPersistenceGameTests::itemCapabilityIsAvailableFromEverySide);
         TEST_FUNCTIONS.register("automationandpersistencegametests/single_block_capabilities_advertise_configured_headroom",
@@ -154,8 +162,6 @@ public final class SomeStacksGameTests {
                 () -> ProtectionGameTests::creativeDepositFillsTheStackWithoutSpendingTheHand);
         TEST_FUNCTIONS.register("protectiongametests/settle_keeps_an_empty_top_block_whose_removal_is_refused",
                 () -> ProtectionGameTests::settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused);
-        TEST_FUNCTIONS.register("protectiongametests/refused_removal_still_lets_the_bars_above_come_down",
-                () -> ProtectionGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
         TEST_FUNCTIONS.register("protectiongametests/player_extraction_uses_player_for_cleanup",
                 () -> ProtectionGameTests::playerExtractionUsesPlayerForCleanup);
         TEST_FUNCTIONS.register("protectiongametests/player_storage_settlement_uses_player_for_cleanup",
@@ -230,10 +236,6 @@ public final class SomeStacksGameTests {
                 () -> SinglesColumnGameTests::comparatorFollowsAColumnLosingABlock);
         TEST_FUNCTIONS.register("stacksortgametests/comparator_orders_every_identity_component",
                 () -> StackSortGameTests::comparatorOrdersEveryIdentityComponent);
-        TEST_FUNCTIONS.register("storagepilegametests/storage_disk_migration_preserves_over_cap_contents",
-                () -> StoragePileGameTests::storageDiskMigrationPreservesOverCapContents);
-        TEST_FUNCTIONS.register("storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",
-                () -> StoragePileGameTests::storageCapAppliesToPlayersAutomationAndSettlement);
         TEST_FUNCTIONS.register("storagepilegametests/deposit_fills_compatible_partial_before_empty_slot",
                 () -> StoragePileGameTests::depositFillsCompatiblePartialBeforeEmptySlot);
         TEST_FUNCTIONS.register("storagepilegametests/full_pile_grows_by_one_block",

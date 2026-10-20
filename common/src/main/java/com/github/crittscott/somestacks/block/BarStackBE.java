@@ -16,12 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Arrays;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
 
 /**
@@ -227,8 +228,8 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * The seam supporting the bottom layer of a Bar Stack at {@code pos}: the top-layer occupancy of
      * the Bar Stack directly below, one entry per position in that top layer, reporting whether a
-     * bar is there; {@link BarCubeIdx#seamSupports} matches footprints across it. Null means no Bar Stack is below, so the bottom layer rests on the
-     * world and is always grounded.
+     * bar is there; {@link BarCubeIdx#seamSupports} matches footprints across it. Null means no Bar
+     * Stack is below, so the bottom layer rests on the world and is always grounded.
      */
     @Nullable
     public static boolean[] supportSeamBeneath(Level level, BlockPos pos) {
@@ -315,7 +316,7 @@ public class BarStackBE extends StackBlockEntity {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {
-            if (!occupancy[i] || BarCubeIdx.isGroundedIn(occupancy, i, seamBelow)) {
+            if (!occupancy[i] || BarCubeIdx.isGrounded(i, slot -> occupancy[slot], seamBelow)) {
                 continue;
             }
 

@@ -2,24 +2,24 @@ package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.BarStackBlock;
-import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
-import com.github.crittscott.somestacks.block.NeoForgeStackBlockEntities;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
-import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.block.NeoForgeStackBlockEntities;
+import com.github.crittscott.somestacks.block.NeoForgeRunResourceHandler;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Set;
 
@@ -76,8 +76,8 @@ public final class NeoForgeRegistry {
             BLOCK_ENTITIES.register(CommonRegistry.STORAGE_STACK_BE.getPath(),
                     () -> new BlockEntityType<>(NeoForgeStackBlockEntities.Storage::new, Set.of(STORAGE_STACK_BLOCK.get())));
 
-    private static DeferredHolder<SoundEvent, SoundEvent> sound(Identifier id) {
-        return SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
+    private static void sound(Identifier id) {
+        SOUNDS.register(id.getPath(), () -> SoundEvent.createVariableRangeEvent(id));
     }
 
     public static void init(IEventBus modBus) {

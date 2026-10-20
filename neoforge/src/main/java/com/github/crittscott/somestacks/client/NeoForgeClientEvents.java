@@ -1,23 +1,22 @@
 package com.github.crittscott.somestacks.client;
 
-import com.github.crittscott.somestacks.client.interaction.InteractionContext;
-import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import net.minecraft.client.Minecraft;
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.TriState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 /**
  * The client's gesture entry point: the three right-click events feed
- * {@link InteractionRuleRegistry}. A matched block rule is carried by the normal vanilla use
+ * {@link ClientGestures}. A matched block rule is carried by the normal vanilla use
  * packet; the custom packet synchronizes only the selected mode and modifier state. A canceled
  * event denies both block and item use, so a gesture never also spends what the player is holding.
  */
@@ -50,30 +49,22 @@ public final class NeoForgeClientEvents {
     public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty evt) {
         // RightClickEmpty is a pure notification on NeoForge: there is no vanilla action behind an
         // empty-hand air click to suppress, so the rules run but nothing is canceled.
-        InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(),
-                evt.getHand(),
-                ClientGestures.currentMode(),
-                NeoForgeKeyMappings.STACK_MODE_KEY.isDown(),
-                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processEmptyHandRules(ctx);
+        if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return;
+        ClientGestures.processClick(evt.getEntity(), evt.getHand(), null, false,
+                NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem evt) {
         if (!evt.getLevel().isClientSide()) return;
 
-        InteractionContext ctx = InteractionContext.forAirClick(
-                evt.getEntity(),
-                evt.getHand(),
-                ClientGestures.currentMode(),
-                NeoForgeKeyMappings.STACK_MODE_KEY.isDown(),
-                ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult));
         ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processItemRules(ctx);
+        if (ClientGestures.isHittingBlock(Minecraft.getInstance().hitResult)) return;
+        var gesture = ClientGestures.processClick(evt.getEntity(), evt.getHand(), null, false,
+                NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
 
-        if (ctx.shouldCancel()) {
+        if (gesture.consumesLocalUse(evt.getEntity().getMainHandItem())) {
             evt.setCanceled(true);
         }
     }
@@ -88,16 +79,12 @@ public final class NeoForgeClientEvents {
         }
         if (evt.getFace() == null) return;
 
-        InteractionContext ctx = InteractionContext.forBlockClick(
-                evt.getEntity(),
-                evt.getHand(),
-                evt.getLevel().getBlockState(evt.getPos()).getBlock(),
-                ClientGestures.currentMode(),
-                NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
         ClientGestures.syncState(NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processBlockRules(ctx);
+        var gesture = ClientGestures.processClick(evt.getEntity(), evt.getHand(),
+                BlockType.of(evt.getLevel().getBlockState(evt.getPos()).getBlock()), true,
+                NeoForgeKeyMappings.STACK_MODE_KEY.isDown());
 
-        if (ctx.shouldCancel()) {
+        if (gesture.consumesLocalUse(evt.getEntity().getMainHandItem())) {
             evt.setCanceled(true);
             evt.setUseBlock(TriState.FALSE);
             evt.setUseItem(TriState.FALSE);

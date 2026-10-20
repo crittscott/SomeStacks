@@ -9,6 +9,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
+import java.util.function.IntPredicate;
 
 /**
  * Geometry and slot indexing shared by Bar Stack rendering, collision, ray targeting, and support.
@@ -63,7 +64,8 @@ public final class BarCubeIdx {
     private static final int LAYERS = STARTS_Y.length;
 
     private static final int TOP_LAYER_Y = LAYERS - 1;
-    private static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
+    /** First local slot in the top layer, shared by live and staged seam occupancy. */
+    public static final int TOP_LAYER_START = TOP_LAYER_Y * LAYER_SIZE;
 
     /** Slots in one block, and therefore slots in one {@link BarStackBE}. */
     public static final int CELLS = LAYER_SIZE * LAYERS;
@@ -120,7 +122,7 @@ public final class BarCubeIdx {
      * Stack below; otherwise its footprint must overlap {@code seamBelow}.
      */
     public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
-        return index < LAYER_SIZE && (seamBelow == null || seamSupports(index, seamBelow));
+        return isGrounded(index, slot -> false, seamBelow);
     }
 
     private static AABB getBarBox(int index, BlockPos blockPos) {
@@ -141,21 +143,20 @@ public final class BarCubeIdx {
      * underneath. A null seam means there is no Bar Stack below, so the bottom layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, @Nullable boolean[] seamBelow) {
-        if (index < LAYER_SIZE) return seamBelow == null || seamSupports(index, seamBelow);
-        for (int supporter : SUPPORTERS[index]) {
-            if (!handler.getStackInSlot(supporter).isEmpty()) return true;
-        }
-        return false;
+        return isGrounded(index, slot -> !handler.getStackInSlot(slot).isEmpty(), seamBelow);
     }
 
-    /**
-     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Settling and
-     * placement simulation use snapshots to evaluate a proposed state without mutating inventory.
-     */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, @Nullable boolean[] seamBelow) {
-        if (index < LAYER_SIZE) return seamBelow == null || seamSupports(index, seamBelow);
+    /** Evaluates live or proposed local occupancy using the same seam rule. */
+    public static boolean isGrounded(int index, IntPredicate occupied, @Nullable boolean[] seamBelow) {
+        return isSupported(index, occupied, seamBelow == null ? null : slot -> seamBelow[slot]);
+    }
+
+    /** Footprint support from local slots and the lower block's top layer. */
+    public static boolean isSupported(int index, IntPredicate occupied, @Nullable IntPredicate seamBelow) {
+        boolean bottom = index < LAYER_SIZE;
+        if (bottom && seamBelow == null) return true;
         for (int supporter : SUPPORTERS[index]) {
-            if (occupancy[supporter]) return true;
+            if (bottom ? seamBelow.test(supporter - TOP_LAYER_START) : occupied.test(supporter)) return true;
         }
         return false;
     }
@@ -169,10 +170,7 @@ public final class BarCubeIdx {
         if (seamBelow == null) {
             return false;
         }
-        for (int supporter : SUPPORTERS[index]) {
-            if (seamBelow[supporter - TOP_LAYER_START]) return true;
-        }
-        return false;
+        return isSupported(index % LAYER_SIZE, slot -> false, slot -> seamBelow[slot]);
     }
 
     /** Returns the block-local collision shape of one bar slot. */

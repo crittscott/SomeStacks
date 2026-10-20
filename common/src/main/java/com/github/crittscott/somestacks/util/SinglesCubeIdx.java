@@ -6,6 +6,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 
 import javax.annotation.Nullable;
+import java.util.function.IntPredicate;
 
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
@@ -46,7 +47,7 @@ public final class SinglesCubeIdx {
      * blocks are unrotated, so {@code index} is already in the visual frame.
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
-        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
+        return isGrounded(index, slot -> false, 0, seamBelow);
     }
 
     /**
@@ -56,26 +57,23 @@ public final class SinglesCubeIdx {
      * layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = xyzFromIndex(index);
-        int y = xyz[1];
-
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
-
-        return !handler.getStackInSlot(belowIndex).isEmpty();
+        return isGrounded(index, slot -> !handler.getStackInSlot(slot).isEmpty(), blockRotation, seamBelow);
     }
 
-    /**
-     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots, so a proposed
-     * placement can be validated without mutating inventory.
-     */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = xyzFromIndex(index)[1];
+    /** Evaluates live or proposed local occupancy using the same visual seam rule. */
+    public static boolean isGrounded(int index, IntPredicate occupied, int blockRotation, boolean[] seamBelow) {
+        return isSupported(index, occupied, blockRotation,
+                seamBelow == null ? null : column -> seamBelow[column]);
+    }
 
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
+    /** Support from local slots and the lower block's top layer expressed in visual columns. */
+    public static boolean isSupported(int index, IntPredicate occupied, int blockRotation,
+                                      @Nullable IntPredicate seamBelow) {
+        if (index < LAYER_SIZE) {
+            return seamBelow == null || seamBelow.test(
+                    visualColumnFromStorage(columnFromIndex(index), blockRotation));
+        }
+        return occupied.test(index - LAYER_SIZE);
     }
 
     /** Whether the top layer beneath a block occupies the visual column containing {@code index}. */
@@ -83,7 +81,7 @@ public final class SinglesCubeIdx {
         if (seamBelow == null) {
             return false;
         }
-        return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
+        return isSupported(index % LAYER_SIZE, slot -> false, blockRotation, column -> seamBelow[column]);
     }
 
     /** Returns the block-local collision shape of one stored cell. */

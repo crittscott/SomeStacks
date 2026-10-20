@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ClientCallbackChecks.ClientUpdate.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Loader-native chunk or block update on a client-attached registered scratch entity.</div>
+<div class="block">Loader-native chunk or block update on an actual client-attached registered entity.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
@@ -150,16 +150,16 @@ stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes t
 loader callback for main/off hand and checks consumption plus block/item suppression. It
 does not send a vanilla use packet or extract contents. A translated success/failure message
 reports the assertions. It also checks item capture, model measurement, and prepared grid
-submission, and render-profile precedence and invalidation through
+submission, Bar presentation reuse and reload invalidation, and render-profile precedence and invalidation through
 <a href="RenderProfileChecks.html#run()"><code>RenderProfileChecks.run()</code></a>; server GameTests cannot exercise these client-only boundaries. With default
 resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
 walk around every face, and reload resources. Models must remain fitted and correctly tinted,
 with special models staying on the 3-D path unless explicitly overridden. With default
 resources, deposit resin bricks into a Bar Stack: the bars must be orange on a fresh launch
-and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint,
-Bar presentation reuse, and invalidation on resource reload and inventory updates. It also
-checks valid and malformed initial/subsequent native client updates on scratch entities,
-including atomic rejection of inventory, inherited components, and render-cache changes.</div>
+and after F3+T. Run /ssclienttest before and after reload to check the resolved resin tint.
+The command also feeds valid and malformed initial/subsequent updates through each loader's
+native client entry point on scratch entities, checking inventory and inherited components.
+Ordinary clients cannot reproduce malformed wire data through player actions.</div>
 </div>
 </section>
 </li>

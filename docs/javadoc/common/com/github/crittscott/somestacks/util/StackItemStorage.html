@@ -53,7 +53,6 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
-<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -110,7 +109,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></span></div>
 <div class="block">A fixed-size, NBT-persisted <a href="SlotAccess.html" title="interface in com.github.crittscott.somestacks.util"><code>SlotAccess</code></a> implementation. It gives both loaders the
-immediate local mutations and NBT shape
+local insert/extract semantics and saved shape
 (<code>{Items:[{Slot, ...stack}], SetAside:[...]}</code>) used by the block entities.
 
 <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
@@ -123,23 +122,6 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="StackItemStorage.LoadResult.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Counts of newly retained entries and persisted entries that still could not be restored.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -152,7 +134,7 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#STORAGE_SLOT_LIMIT" class="member-name-link">STORAGE_SLOT_LIMIT</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Storage capacity per slot before the item's own maximum, shared by players, automation, and settlement.</div>
+<div class="block">Per-slot max-stack-size cap advertised to automation.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#TAG_ITEMS" class="member-name-link">TAG_ITEMS</a></code></div>
@@ -199,13 +181,13 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deserializeClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">deserializeClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Validates and replaces a complete current-format client inventory atomically.</div>
+<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractItem(int,int)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
  int&nbsp;amount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes up to the requested amount immediately; the returned stack belongs to the caller.</div>
+<div class="block">Removes up to the requested amount and returns an owned stack, notifying on mutation.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
@@ -226,19 +208,21 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Inserts immediately and returns the unaccepted remainder, without modifying the offered stack.</div>
+<div class="block">Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
  net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Admission for a newly offered item; internal relocation bypasses it.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidClientUpdate(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">isValidClientUpdate</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Checks a current-format wire inventory without mutating live slots or retained entries.</div>
+<div class="block">Checks a wire inventory without changing live slots or retained disk entries.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../block/StackDataMigration.LoadResult.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.LoadResult</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -338,7 +322,7 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <h3>STORAGE_SLOT_LIMIT</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">STORAGE_SLOT_LIMIT</span></div>
-<div class="block">Storage capacity per slot before the item's own maximum, shared by players, automation, and settlement.</div>
+<div class="block">Per-slot max-stack-size cap advertised to automation.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -435,8 +419,7 @@ Internal relocation and settlement use this only for already-stored contents. Th
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">insertItem</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Inserts immediately and returns the unaccepted remainder, without modifying the offered stack.
-An empty slot may keep the offered object itself; callers give it up or pass a copy.</div>
+<div class="block">Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained.</div>
 </div>
 </section>
 </li>
@@ -447,7 +430,7 @@ An empty slot may keep the offered object itself; callers give it up or pass a c
 <div class="member-signature"><span class="annotations">@Nonnull
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractItem</span><wbr><span class="parameters">(int&nbsp;slot,
  int&nbsp;amount)</span></div>
-<div class="block">Removes up to the requested amount immediately; the returned stack belongs to the caller.</div>
+<div class="block">Removes up to the requested amount and returns an owned stack, notifying on mutation.</div>
 </div>
 </section>
 </li>
@@ -467,6 +450,7 @@ An empty slot may keep the offered object itself; callers give it up or pass a c
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
  @Nonnull
  net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Admission for a newly offered item; internal relocation bypasses it.</div>
 </div>
 </section>
 </li>
@@ -500,7 +484,7 @@ An empty slot may keep the offered object itself; callers give it up or pass a c
 <section class="detail" id="load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
 <h3>load</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../block/StackDataMigration.LoadResult.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.LoadResult</a></span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
 already be in the running game's format. Ordinary entries take precedence over retries;
@@ -515,7 +499,7 @@ returned retention counts once it knows the world location.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
-<div class="block">Checks a current-format wire inventory without mutating live slots or retained entries.</div>
+<div class="block">Checks a wire inventory without changing live slots or retained disk entries.</div>
 </div>
 </section>
 </li>
@@ -525,7 +509,7 @@ returned retention counts once it knows the world location.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">deserializeClientUpdate</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
-<div class="block">Validates and replaces a complete current-format client inventory atomically.</div>
+<div class="block">Validates a current-format client snapshot before replacing any local contents.</div>
 </div>
 </section>
 </li>

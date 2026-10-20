@@ -2,17 +2,17 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
-import com.github.crittscott.somestacks.block.ShapedStackBlock;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBlock;
 import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.block.ShapedStackBlock;
+import com.github.crittscott.somestacks.server.ServerGestureState;
+import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
-import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.util.StackItemStorage;
-import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,12 +21,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -58,9 +58,10 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 
 /**
  * Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.
- * Whole-run automation presence and headroom stays in each
+ * The
+ * automation-surface half (whole-run automation-view presence and headroom) stays in each
  * loader's own {@code AutomationAndPersistenceGameTests}, since it addresses the loader-native
- * storage view directly.
+ * storage view directly. Native client ingress is exercised by /ssclienttest on client-attached entities.
  */
 public final class AutomationAndPersistenceChecks {
     /** Data version written by Minecraft 1.21.11, the target of the preceding Some Stacks release. */
@@ -303,9 +304,9 @@ public final class AutomationAndPersistenceChecks {
                 "Storage update tag exposed permanence");
         copyFacing(helper, storage, storageClient);
         copyFacing(helper, singles, singlesClient);
-        check(storageClient.loadClientUpdate(storageTag, registries), "Valid shared client update was rejected");
-        check(singlesClient.loadClientUpdate(singlesTag, registries), "Valid shared client update was rejected");
-        check(barsClient.loadClientUpdate(barTag, registries), "Valid shared client update was rejected");
+        check(storageClient.loadClientUpdate(storageTag, registries), "Valid storageClient snapshot rejected");
+        check(singlesClient.loadClientUpdate(singlesTag, registries), "Valid singlesClient snapshot rejected");
+        check(barsClient.loadClientUpdate(barTag, registries), "Valid barsClient snapshot rejected");
 
         checkEquals(3, storageClient.getItems().getStackInSlot(4).getCount(),
                 "Storage client item count");
@@ -355,9 +356,9 @@ public final class AutomationAndPersistenceChecks {
                 "Unreadable entries reached live slots");
 
         var probe = new StackItemStorage(StorageStackBE.SLOTS);
-        checkEquals(new StackItemStorage.LoadResult(4, 0), probe.load(registries, storage),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(4, 0), probe.load(registries, storage),
                 "New retention diagnostic counts");
-        checkEquals(new StackItemStorage.LoadResult(0, 4),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(0, 4),
                 probe.load(registries, probe.save(registries)), "Persisted retry diagnostic counts");
 
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
@@ -394,7 +395,7 @@ public final class AutomationAndPersistenceChecks {
             retries.add(entry);
         }
         inventory.put("SetAside", retries.copy());
-        checkEquals(new StackItemStorage.LoadResult(0, 2), storage.load(registries, inventory),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(0, 2), storage.load(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
         saved.putInt("DataVersion", DATA_VERSION_1_21_11);

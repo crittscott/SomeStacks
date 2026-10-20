@@ -449,6 +449,10 @@ the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><cod
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">getCachedShape</span>()</div>
 <div class="block">Returns the occupied-bar shape, rebuilding it only after contents invalidate the cache. Shape
 queries occur frequently enough that they must not rebuild it unconditionally.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="StackBlockEntity.html#getCachedShape()">getCachedShape</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -517,8 +521,8 @@ position reads the seam of the Bar Stack below; higher layers rest on this block
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">The seam supporting the bottom layer of a Bar Stack at <code>pos</code>: the top-layer occupancy of
 the Bar Stack directly below, one entry per position in that top layer, reporting whether a
-bar is there; <a href="../util/BarCubeIdx.html#seamSupports(int,boolean%5B%5D)"><code>BarCubeIdx.seamSupports(int, boolean[])</code></a> matches footprints across it. Null means no Bar Stack is below, so the bottom layer rests on the
-world and is always grounded.</div>
+bar is there; <a href="../util/BarCubeIdx.html#seamSupports(int,boolean%5B%5D)"><code>BarCubeIdx.seamSupports(int, boolean[])</code></a> matches footprints across it. Null means no Bar
+Stack is below, so the bottom layer rests on the world and is always grounded.</div>
 </div>
 </section>
 </li>

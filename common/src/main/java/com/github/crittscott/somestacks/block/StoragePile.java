@@ -3,16 +3,13 @@ package com.github.crittscott.somestacks.block;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.StackPlacement;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StackSort;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.IntFunction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -58,7 +56,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
     /**
      * Walks the world for the run containing {@code pos}. Every caller reaches this through the
-     * cache {@link StorageStackBE#pile()} keeps, because a automation read resolves the run once per
+     * cache {@link StorageStackBE#pile()} keeps, because an automation read resolves the run once per
      * slot and a machine reading the whole handler does that hundreds of times a tick.
      */
     static StoragePile resolve(ServerLevel level, BlockPos pos) {
@@ -76,7 +74,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * class does itself.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        StackRun.invalidateAround(level, pos, StorageStackBE.class);
+        StackRun.invalidateAround(level, pos, CommonRegistry.storageStackBlock());
     }
 
     /** Marks the pile at {@code pos} for settling, if one is there. */
@@ -328,17 +326,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             return false;
         }
 
-        BlockPos above = topPos().above();
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.storageStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                placer, level, above, newStack, Direction.DOWN, Shapes.block())) {
-            return false;
-        }
-        StorageStackBE grown = (StorageStackBE) level.getBlockEntity(above);
-
+        StorageStackBE grown = growBlock(placer, Shapes.block(), StorageStackBE.class);
+        if (grown == null) return false;
         grown.beginBatch();
-        blocks.add(grown);
         return true;
     }
 
@@ -417,24 +407,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * the pile keeps every block from the refused one down, so what it holds is what stands.
      */
     private void trimEmptyTop(@Nullable ServerPlayer actor) {
-        int keep = blocks.size();
-        while (keep > 0) {
-            StorageStackBE sbe = blocks.get(keep - 1);
-            if (!sbe.isEmpty() || sbe.isPermanent()) {
-                break;
-            }
-            keep--;
-        }
-
-        int removedDownTo = blocks.size();
-        for (int i = blocks.size() - 1; i >= keep; i--) {
-            boolean removed = WorldEdits.removeChecked(actor, level, blocks.get(i).getBlockPos());
-            if (!removed) {
-                break;
-            }
-            removedDownTo = i;
-        }
-        blocks.subList(removedDownTo, blocks.size()).clear();
+        trimEmptyTop(actor, StorageStackBE::isPermanent);
     }
 
     /** One exact identity, its precomputed sort fields, and its total stored count. */

@@ -162,13 +162,13 @@ public final class ConfigurationGameTests {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
     }
 
-    private static void loadFixture(Path file) {
+    private static void loadFixture(Path fixture) {
+        JsonServerConfig backend = new JsonServerConfig();
         ServerConfig.Backend previousBackend = ServerConfig.backend();
         ServerConfig.Settings previousSettings = ServerConfig.settings();
-        JsonServerConfig backend = new JsonServerConfig();
-        ServerConfig.Settings loaded = backend.load(file);
-        check(ServerConfig.backend() == previousBackend, "JSON loading installed a backend");
-        checkEquals(previousSettings, ServerConfig.settings(), "JSON loading published settings");
+        ServerConfig.Settings loaded = backend.load(fixture);
+        check(ServerConfig.backend() == previousBackend, "JSON load installed itself");
+        check(ServerConfig.settings() == previousSettings, "JSON load published policy");
         ServerConfig.install(backend);
         ServerConfig.apply(loaded);
     }
