@@ -64,6 +64,9 @@ ext.sharedModProperties = [
         mod_version      : mod_version,
         mod_authors      : mod_authors,
         mod_description  : mod_description,
+        mod_homepage     : mod_homepage,
+        mod_sources      : "${mod_homepage}/tree/${minecraft_version}",
+        mod_issues       : "${mod_homepage}/issues",
         minecraft_version: minecraft_version,
 ]
 
