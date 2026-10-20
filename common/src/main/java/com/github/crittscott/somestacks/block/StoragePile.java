@@ -4,6 +4,7 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.StackPlacement;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.github.crittscott.somestacks.util.StackSort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -263,9 +264,9 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         ItemStack inSlot = contents.apply(flatSlot);
         int room;
         if (inSlot.isEmpty()) {
-            room = stack.getMaxStackSize();
+            room = StackItemStorage.storageSlotLimit(stack);
         } else if (ItemStack.isSameItemSameComponents(inSlot, stack)) {
-            room = Math.max(0, inSlot.getMaxStackSize() - inSlot.getCount());
+            room = Math.max(0, StackItemStorage.storageSlotLimit(inSlot) - inSlot.getCount());
         } else {
             room = 0;
         }
@@ -281,7 +282,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             if (slot.isEmpty() || !ItemStack.isSameItemSameComponents(slot, from)) {
                 continue;
             }
-            int room = slot.getMaxStackSize() - slot.getCount();
+            int room = StackItemStorage.storageSlotLimit(slot) - slot.getCount();
             if (room > 0) {
                 moved += fillSlot(i, from, Math.min(from.getCount(), room));
             }
@@ -289,7 +290,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
 
         for (int i = 0; i < totalSlots() && !from.isEmpty(); i++) {
             if (getSlot(i).isEmpty()) {
-                moved += fillSlot(i, from, Math.min(from.getCount(), from.getMaxStackSize()));
+                moved += fillSlot(i, from, Math.min(from.getCount(), StackItemStorage.storageSlotLimit(from)));
             }
         }
 
@@ -367,13 +368,19 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         List<ItemStack> packed = new ArrayList<>();
         for (SettlementGroup group : ordered) {
             int remaining = group.count;
-            int limit = group.model.getMaxStackSize();
+            int limit = StackItemStorage.storageSlotLimit(group.model);
             while (remaining > 0) {
                 ItemStack piece = group.model.copy();
                 piece.setCount(Math.min(remaining, limit));
                 packed.add(piece);
                 remaining -= piece.getCount();
             }
+        }
+        // Preserve live contents when their legal packed form needs additional slots.
+        if (packed.size() > totalSlots()) {
+            publishPendingBlocks();
+            publishComparatorSignal();
+            return;
         }
         boolean permanent = isPermanent();
 

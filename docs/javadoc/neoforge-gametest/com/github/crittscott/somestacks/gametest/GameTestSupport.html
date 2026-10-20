@@ -57,6 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#capability(net.minecraft.world.level.block.entity.BlockEntity)" tabindex="0">capability(BlockEntity)</a></li>
+<li><a href="#offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)" tabindex="0">offerAt(StackBlockEntity, int, ItemStack, boolean)</a></li>
 <li><a href="#capabilityPresent(net.minecraft.world.level.block.entity.BlockEntity,net.minecraft.core.Direction)" tabindex="0">capabilityPresent(BlockEntity, Direction)</a></li>
 <li><a href="#count(net.neoforged.neoforge.transfer.ResourceHandler,net.minecraft.world.item.Item)" tabindex="0">count(ResourceHandler, Item)</a></li>
 <li><a href="#offer(net.neoforged.neoforge.transfer.ResourceHandler,int,net.minecraft.world.item.ItemStack,boolean)" tabindex="0">offer(ResourceHandler, int, ItemStack, boolean)</a></li>
@@ -125,9 +126,17 @@ Everything loader-neutral lives in <a href="GameTestScaffold.html" title="class 
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Offers through the native transaction API; an uncommitted offer is rolled back on close.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a><wbr>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerFactory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerFactory</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">offerAt</a><wbr>(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ boolean&nbsp;commit)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shared scenario adapter: accepted count, with an explicit commit flag.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a><wbr>&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerFactory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerFactory</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A fake-player factory that puts the player in Survival and resets the main hand for each shared check.</div>
 </div>
 </div>
@@ -152,6 +161,18 @@ Everything loader-neutral lives in <a href="GameTestScaffold.html" title="class 
 <h3>capability</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.neoforged.neoforge.transfer.ResourceHandler&lt;net.neoforged.neoforge.transfer.item.ItemResource&gt;</span>&nbsp;<span class="element-name">capability</span><wbr><span class="parameters">(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)">
+<h3>offerAt</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">offerAt</span><wbr><span class="parameters">(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ boolean&nbsp;commit)</span></div>
+<div class="block">Shared scenario adapter: accepted count, with an explicit commit flag.</div>
 </div>
 </section>
 </li>

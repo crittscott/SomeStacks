@@ -145,7 +145,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
                 configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}", fileLocation, e);
             }
         }
 
@@ -266,7 +266,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (Identifier.tryBuild(namespace, "validation") == null) {
+            if (namespace.isEmpty() || !Identifier.isValidNamespace(namespace)) {
                 SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;
@@ -351,7 +351,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Iden
                 USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, userFile.toString()));
             }
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.error("Failed to read {}", userFile, e);
+            SomeStacksCommon.LOGGER.warn("Failed to read {}", userFile, e);
         }
     }
 }

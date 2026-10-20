@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
@@ -57,7 +58,7 @@ public final class ClientGestureChecks {
         var singles = placeSingles(helper, ORIGIN.east(3));
         var bars = placeBar(helper, ORIGIN.east(6));
         BlockPos ordinary = helper.absolutePos(ORIGIN.south(3));
-        helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(ordinary, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         BlockPos[] targets = {storage.getBlockPos(), singles.getBlockPos(), bars.getBlockPos(), ordinary};
         List<Click> cases = new ArrayList<>();
         for (int target = 0; target < 4; target++) {

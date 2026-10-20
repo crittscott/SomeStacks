@@ -69,6 +69,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#breakingMiddleBlockDropsItsContentsAndSplitsThePile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">breakingMiddleBlockDropsItsContentsAndSplitsThePile(GameTestHelper)</a></li>
 <li><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorReservesZeroForAnEmptyPile(GameTestHelper)</a></li>
 <li><a href="#comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorContributionLoadsAndTracksMutations(GameTestHelper)</a></li>
+<li><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper)</a></li>
+<li><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageDiskMigrationPreservesOverCapContents(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -171,6 +173,16 @@ item automation; it reports no room, accepts nothing, and leaves the obstruction
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="StoragePileChecks.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="StoragePileChecks.html#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">See <a href="StoragePileChecks.html#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.storageDiskMigrationPreservesOverCapContents(GameTestHelper)</code></a>.</div>
 </div>
 </div>
 </div>
@@ -306,6 +318,24 @@ Storage pile; both connections expose the same items and capacity.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">comparatorContributionLoadsAndTracksMutations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="StoragePileChecks.html#comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.comparatorContributionLoadsAndTracksMutations(GameTestHelper)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storageCapAppliesToPlayersAutomationAndSettlement</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageCapAppliesToPlayersAutomationAndSettlement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="StoragePileChecks.html#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storageDiskMigrationPreservesOverCapContents</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageDiskMigrationPreservesOverCapContents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">See <a href="StoragePileChecks.html#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.storageDiskMigrationPreservesOverCapContents(GameTestHelper)</code></a>.</div>
 </div>
 </section>
 </li>
