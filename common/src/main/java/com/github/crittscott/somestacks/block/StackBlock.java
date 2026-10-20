@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.lighting.LightEngine;
 import net.minecraft.world.phys.BlockHitResult;
 
 /** Block-state and interaction plumbing shared by all three stack blocks. */
@@ -45,6 +45,9 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
                 .setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
     }
+
+    /** The stack movement model represented by this block. */
+    public abstract BlockType type();
 
     /** Shared properties for the Bar Stack's dynamic occupied shape. */
     public static BlockBehaviour.Properties barProperties() {
@@ -101,22 +104,21 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, InteractionHand.MAIN_HAND, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, InteractionHand.MAIN_HAND, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                        Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, hand, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override

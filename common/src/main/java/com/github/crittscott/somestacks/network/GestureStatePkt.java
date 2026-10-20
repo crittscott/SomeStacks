@@ -25,7 +25,7 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) implements C
                 if (id >= StackMode.values().length) {
                     throw new DecoderException("Invalid stack mode: " + id);
                 }
-                return new GestureStatePkt(StackMode.values()[id], buf.readBoolean());
+                return new GestureStatePkt(StackMode.fromOrdinal(id), buf.readBoolean());
             });
 
     @Override

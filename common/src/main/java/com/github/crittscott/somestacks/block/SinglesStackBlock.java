@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +33,11 @@ public class SinglesStackBlock extends ShapedStackBlock {
     public SinglesStackBlock(Properties props) {
         super(props);
         registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
+    }
+
+    @Override
+    public BlockType type() {
+        return BlockType.SINGLES_STACK;
     }
 
     @Override

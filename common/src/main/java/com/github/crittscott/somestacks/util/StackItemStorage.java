@@ -9,16 +9,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
+ * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the
  * item-handler insert/extract semantics and NBT shape
  * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
  *

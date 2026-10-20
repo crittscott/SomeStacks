@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -31,6 +32,11 @@ public class BarStackBlock extends ShapedStackBlock {
     }
 
     @Nullable
+    @Override
+    public BlockType type() {
+        return BlockType.BAR_STACK;
+    }
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BarStackBE(pos, state);

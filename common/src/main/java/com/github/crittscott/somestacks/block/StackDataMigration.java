@@ -12,9 +12,9 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.level.storage.ValueInput;
 
 /**
  * Brings a stack block entity's saved tag up to the running game's data version before the block
@@ -32,7 +32,8 @@ public final class StackDataMigration {
             dynamic -> dynamic.convert(NbtOps.INSTANCE).getValue(),
             tag -> new Dynamic<>(NbtOps.INSTANCE, tag));
     private static final String[] PERSISTED_FIELDS = {
-            "DataVersion", "Items", "Permanent", "CubeRotations", "SetAside"
+            StackBlockEntity.TAG_DATA_VERSION, StackBlockEntity.TAG_ITEMS, StorageStackBE.TAG_PERMANENT,
+            SinglesStackBE.TAG_CUBE_ROTATIONS, StackItemStorage.TAG_SET_ASIDE
     };
 
     /** Copies only stack-owned fields at the value-I/O boundary, without typed-list filtering. */
