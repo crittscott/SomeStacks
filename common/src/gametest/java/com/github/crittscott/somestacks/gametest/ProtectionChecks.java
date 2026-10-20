@@ -9,9 +9,11 @@ import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,7 +118,7 @@ public final class ProtectionChecks {
         try {
             StackInteractions.handleExistingStack(
                     player, InteractionHand.MAIN_HAND, centerHit(target),
-                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK);
+                    BlockType.STORAGE_STACK);
             checkEquals(64, player.getMainHandItem().getCount(),
                     "A creative deposit spent the held stack");
         } finally {
@@ -259,7 +261,7 @@ public final class ProtectionChecks {
             check(StackInteractions.handleExistingStack(player, InteractionHand.MAIN_HAND,
                     new BlockHitResult(new Vec3(target.getX() + 0.125, target.getY() + 0.125,
                             target.getZ() + 0.125), Direction.WEST, target, false),
-                    com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK),
+                    BlockType.SINGLES_STACK),
                     "Direct deposit gesture was not consumed");
             check(!singles.isEmpty(), "Direct click failed to deposit");
             checkEquals(1, player.getMainHandItem().getCount(), "Direct deposit hand");
@@ -281,7 +283,7 @@ public final class ProtectionChecks {
         var bars = GameTestScaffold.placeBar(helper, ORIGIN.east(3));
         ItemStack singleItem = new ItemStack(Items.STONE);
         ItemStack barItem = new ItemStack(GameTestScaffold.firstBarItem());
-        for (var be : java.util.List.of(singles, bars)) {
+        for (var be : List.of(singles, bars)) {
             boolean isSingles = be == singles;
             ItemStack item = isSingles ? singleItem : barItem;
             be.getItems().setStackInSlot(0, item.copy());

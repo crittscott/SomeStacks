@@ -132,7 +132,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final net.minecraft.tags.TagKey<wbr>&lt;net.minecraft.world.item.Item&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#INGOTS" class="member-name-link">INGOTS</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar.</div>
+<div class="block">Reloadable data-pack classification of items that belong in Bar rather than Singles.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#SLOTS" class="member-name-link">SLOTS</a></code></div>
@@ -220,7 +220,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Accepts nonempty tagged items whose namespaces are not disabled by server policy.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.world.level.storage.ValueInput)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.world.level.storage.ValueInput&nbsp;input)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -245,7 +247,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">The overlap occupancy supporting the bottom layer at <code>pos</code>.</div>
+<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsFreshDeposit(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,int)" class="member-name-link">supportsFreshDeposit</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -288,7 +290,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="INGOTS">
 <h3>INGOTS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">net.minecraft.tags.TagKey&lt;net.minecraft.world.item.Item&gt;</span>&nbsp;<span class="element-name">INGOTS</span></div>
-<div class="block">Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar.</div>
+<div class="block">Reloadable data-pack classification of items that belong in Bar rather than Singles.</div>
 </section>
 </li>
 </ul>
@@ -369,6 +371,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isValidBarItem(net.minecraft.world.item.ItemStack)">
 <h3>isValidBarItem</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidBarItem</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="block">Accepts nonempty tagged items whose namespaces are not disabled by server policy.</div>
 </section>
 </li>
 <li>
@@ -464,7 +467,8 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">supportSeamBeneath</span><wbr><span class="parameters">(@Nullable
  net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">The overlap occupancy supporting the bottom layer at <code>pos</code>.</div>
+<div class="block">Top-layer occupancy of the Bar Stack below <code>pos</code>, or null when no Bar Stack is beneath it.
+ A null seam grounds a bottom-layer deposit directly on the world.</div>
 </section>
 </li>
 <li>

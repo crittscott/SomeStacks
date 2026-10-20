@@ -112,7 +112,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html#editAuthority()" class="member-name-link">editAuthority()</a> - Method in class com.github.crittscott.somestacks.forge.<a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#extractItem(int,int,boolean)" class="member-name-link">extractItem(int, int, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Extracts from a bottom-up run position, returning the removed contents; simulation changes
+ nothing.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
@@ -143,11 +146,17 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Per-position capacity before the offered item's own stack limit, independent of slot occupancy.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getSlots()" class="member-name-link">getSlots()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Bottom-up run positions, including one prospective block while growth is advertised.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#getStackInSlot(int)" class="member-name-link">getStackInSlot(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns read-only live contents, or local contents without a run; headroom and invalid positions are empty.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
@@ -160,11 +169,16 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/ModRegistry.html#init(net.minecraftforge.eventbus.api.bus.BusGroup)" class="member-name-link">init(BusGroup)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Inserts at one bottom-up run position, leaving the offered stack unchanged and returning its
+ remainder.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/ForgeServerConfig.html#INSTANCE" class="member-name-link">INSTANCE</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/RunItemHandler.html#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid(int, ItemStack)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Admission only: ignores position, capacity, support, enablement for growth, and edit authority.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:K">K</h2>
 <dl class="index">

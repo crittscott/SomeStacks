@@ -77,10 +77,11 @@ public class BarStackBE extends StackBlockEntity {
         cachedShape = null;
     }
 
-    /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
+    /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
     public static final TagKey<Item> INGOTS = TagKey.create(Registries.ITEM,
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "ingots"));
 
+    /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -212,7 +213,8 @@ public class BarStackBE extends StackBlockEntity {
                 && index < SLOTS
                 && items.getStackInSlot(index).isEmpty()
                 && BarCubeIdx.isGrounded(
-                        index, items, supportSeamBeneath(level, getBlockPos()));
+                        index, items, index < BarCubeIdx.LAYER_SIZE
+                                ? supportSeamBeneath(level, getBlockPos()) : null);
     }
 
     /** Whether an empty Bar block at {@code pos} supports its first bar. */
@@ -222,7 +224,10 @@ public class BarStackBE extends StackBlockEntity {
                 && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
     }
 
-    /** The overlap occupancy supporting the bottom layer at {@code pos}. */
+    /**
+     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath it.
+     * A null seam grounds a bottom-layer deposit directly on the world.
+     */
     @Nullable
     public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
         if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {

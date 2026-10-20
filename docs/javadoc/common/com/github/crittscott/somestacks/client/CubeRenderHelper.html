@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
  <p>Work is done when something changes. A block entity's cells, profiles, resolved models, and
  cell transforms are kept in a <a href="CubeRenderHelper.GridCache.html" title="class in com.github.crittscott.somestacks.client"><code>CubeRenderHelper.GridCache</code></a> until its contents, layout rotation, or profiles
  change; a frame only selects visible faces and submits. <code>2d</code> art is captured once per
- distinct stack and shared by every block showing it. All <code>2d</code> cells of a block go out in
+ distinct stack, kept in a bounded cache, and shared by every block showing it. All <code>2d</code> cells of a block go out in
  one submission per render type.</div>
 </section>
 <section class="summary">

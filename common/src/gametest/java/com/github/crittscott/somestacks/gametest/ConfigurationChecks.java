@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
@@ -10,9 +11,11 @@ import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -176,7 +179,7 @@ public final class ConfigurationChecks {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
             StackInteractions.handleExistingStack(
                     player, InteractionHand.MAIN_HAND, centerHit(storage.getBlockPos()),
-                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK);
+                    BlockType.STORAGE_STACK);
             checkEquals(4, player.getMainHandItem().getCount(),
                     "Exact-item denial changed the player hand");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.STONE),
@@ -346,12 +349,12 @@ public final class ConfigurationChecks {
             ItemStack ingot = new ItemStack(GameTestScaffold.firstBarItem());
             check(ingot.is(BarStackBE.INGOTS), "Bar item was not in the ingot tag");
             check(BarStackBE.isValidBarItem(ingot), "Tag item was refused by Bar");
-            check(!com.github.crittscott.somestacks.block.SinglesStackBE.isValidSinglesItem(ingot),
+            check(!SinglesStackBE.isValidSinglesItem(ingot),
                     "Tag item was admitted by Singles");
             ItemStack stick = new ItemStack(Items.STICK);
             check(!stick.is(BarStackBE.INGOTS), "Fixture stick unexpectedly belongs to the ingot tag");
             check(!BarStackBE.isValidBarItem(stick), "Non-tag item was admitted by Bar");
-            check(com.github.crittscott.somestacks.block.SinglesStackBE.isValidSinglesItem(stick),
+            check(SinglesStackBE.isValidSinglesItem(stick),
                     "Non-tag item was refused by Singles");
         } finally {
             ServerConfig.apply(original);
@@ -364,7 +367,7 @@ public final class ConfigurationChecks {
     }
 
     private static int execute(
-            com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher,
+            CommandDispatcher<CommandSourceStack> dispatcher,
             CommandSourceStack source,
             String command) {
         try {

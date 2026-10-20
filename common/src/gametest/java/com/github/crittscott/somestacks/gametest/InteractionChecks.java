@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import io.netty.buffer.ByteBuf;
@@ -113,7 +114,7 @@ public final class InteractionChecks {
             check(!StackInteractions.handleExistingStack(
                             player, InteractionHand.OFF_HAND,
                             hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
-                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK),
+                    BlockType.STORAGE_STACK),
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
@@ -208,7 +209,7 @@ public final class InteractionChecks {
                 + StorageCubeIdx.GRID_EDGE + 1;
         extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3), false);
         BlockPos support = helper.absolutePos(TARGET.east(6));
-        helper.getLevel().setBlock(support, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 4));
 
         try {
@@ -364,7 +365,7 @@ public final class InteractionChecks {
                             Direction.UP,
                             singles.getBlockPos(),
                             false),
-                    com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK);
+                    BlockType.SINGLES_STACK);
             check(helper.getLevel().getBlockState(destination)
                             .is(CommonRegistry.storageStackBlock()),
                     "Top-face placement ignored the selected type");
@@ -546,7 +547,7 @@ public final class InteractionChecks {
                                  double localX, double localY, double localZ) {
         return StackInteractions.handleExistingStack(
                 player, HAND, hit(player, pos, localX, localY, localZ),
-                    com.github.crittscott.somestacks.util.BlockType.of(player.level().getBlockState(pos).getBlock()));
+                    BlockType.of(player.level().getBlockState(pos).getBlock()));
     }
 
     private static boolean rotationClick(ServerPlayer player, BlockPos pos,

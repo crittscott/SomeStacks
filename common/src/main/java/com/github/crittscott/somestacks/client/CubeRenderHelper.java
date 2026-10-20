@@ -3,7 +3,9 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.QuarterTurns;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -24,6 +26,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BlockItem;
@@ -44,12 +47,11 @@ import org.joml.Vector3fc;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import net.minecraft.core.component.DataComponentPatch;
 import java.util.Set;
 import java.util.function.IntUnaryOperator;
 
@@ -65,7 +67,7 @@ import java.util.function.IntUnaryOperator;
  * <p>Work is done when something changes. A block entity's cells, profiles, resolved models, and
  * cell transforms are kept in a {@link GridCache} until its contents, layout rotation, or profiles
  * change; a frame only selects visible faces and submits. {@code 2d} art is captured once per
- * distinct stack and shared by every block showing it. All {@code 2d} cells of a block go out in
+ * distinct stack, kept in a bounded cache, and shared by every block showing it. All {@code 2d} cells of a block go out in
  * one submission per render type.
  */
 public final class CubeRenderHelper {
@@ -102,10 +104,11 @@ public final class CubeRenderHelper {
      * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
      * tile edge to edge with no gap to absorb growth into.
      */
-    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
+    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE
+            * (float) StorageCubeIdx.CELL_PIXELS / (float) SinglesCubeIdx.CELL_PIXELS;
 
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+    public static final float CELL_LOCAL_SIZE = (float) SinglesCubeIdx.CELL_PIXELS / 8.0f;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
@@ -228,8 +231,18 @@ public final class CubeRenderHelper {
 
     private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
-    /** {@code 2d} art by stack identity, shared by every grid showing that stack until reload. */
-    private static final Map<CaptureKey, FlatArt> FLAT_ART = new HashMap<>();
+    /** Maximum number of component/count-distinct {@code 2d} captures retained across all grids. */
+    private static final int MAX_FLAT_ART = 2048;
+    /**
+     * {@code 2d} art by stack identity in access order, shared by every grid showing that stack
+     * until reload or eviction. A grid already holding evicted art keeps drawing it.
+     */
+    private static final Map<CaptureKey, FlatArt> FLAT_ART = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<CaptureKey, FlatArt> eldest) {
+            return size() > MAX_FLAT_ART;
+        }
+    };
 
     @Nullable
     private static FlatArt errorArt;
@@ -444,7 +457,7 @@ public final class CubeRenderHelper {
         pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
     }
 
-    /** The stack's {@code 2d} art, captured the first time any grid shows it after a reload. */
+    /** The stack's {@code 2d} art, captured the first time any grid shows it after a reload or eviction. */
     private static FlatArt flatArt(ItemStack stack, CaptureKey key, Level level) {
         Item item = stack.getItem();
         if (!FLAT_CAPTURE_FAILURES.contains(item)) {

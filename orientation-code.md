@@ -57,7 +57,7 @@ Forge: validated EventBus 7 typed buses, `BusGroup`, boolean cancellation, `Resu
 
 A maximal vertical run is central. Block entities own local slots; server-only `StackRun` owns resolution, slots, headroom, publication and comparators. Structural edits invalidate per-tick caches.
 
-Block entities do not tick. Mutations batch client, light, comparator, and settlement work; cached fill supplies run signals. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
+Block entities do not tick. Mutations batch client, light, comparator, and settlement work; per-slot fill fractions cached on mutation supply run signals. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
 
 Movement models:
 
@@ -91,15 +91,15 @@ Forge/NeoForge consult destination right-click events for neighbor deposits, hon
 
 `ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`); load/reload events apply policy and resync. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric's `JsonServerConfig` loads `<world>/serverconfig/somestacks-server.json`, reporting malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads JSON, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
 
-Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
+Extensions are listed in `orientation-player.md`.
 
-BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Storage/Singles BEs cache resolved models (`GridCache`) until a client update, rotation, or profile change. 2-D art is captured once per stack; 2-D cells submit once per render type. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 94.1; galleries bypass protection.
+BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Storage/Singles BEs cache resolved models (`GridCache`) until a client update, rotation, or profile change. 2-D art is captured once per stack into a bounded LRU; 2-D cells submit once per render type. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad on first render. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 94.1; galleries bypass protection.
 
 2-D selection: thinnest/longest axis ratio. Cache: 4.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 94.1. NeoForge and Fabric test transactions, growth, staged support, movement; NeoForge, vetoes. JSON config tests are Fabric-only. `/ssclienttest` (aim at a stack, Shift/V released) also checks capture, special geometry, GUI extents, profile layers, render modes, and grid/Bar submission.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions with test-instance JSON. Test data format: 94.1. NeoForge and Fabric test transactions, growth, staged support, movement; NeoForge, vetoes. JSON config tests are Fabric-only. The gallery-budget check runs alone in its own test environment. `/ssclienttest` (aim at a stack, Shift/V released) also checks capture, special geometry, GUI extents, profile layers, render modes, and grid/Bar submission.
 
 `-PwithCommonProtectionApi=true` adds Fabric's optional protection integration and its GameTests to development runs.
 

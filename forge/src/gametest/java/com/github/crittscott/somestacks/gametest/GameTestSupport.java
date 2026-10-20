@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -81,7 +82,7 @@ public final class GameTestSupport {
             // Changing the mode broadcasts through a connection this player lacks, so only the
             // abilities that decide spending are set.
             GameType.SURVIVAL.updatePlayerAbilities(player.getAbilities());
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
         };
     }

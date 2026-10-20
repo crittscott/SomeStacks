@@ -40,6 +40,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "bar_textures");
 
     private static final Gson GSON = new Gson();
+    /** Resource-pack mappings; an automatic-tint entry is replaced by its derived tint on first render. */
     private static final Map<Identifier, BarTextureData> textureMap = new HashMap<>();
     /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
     private static final Map<Identifier, BarTextureData> unmappedTints = new HashMap<>();
@@ -151,23 +152,8 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     protected void apply(Map<Identifier, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         textureMap.clear();
         unmappedTints.clear();
-        int autoTinted = 0;
-
-        for (Map.Entry<Identifier, BarTextureData> entry : prepared.entrySet()) {
-            Identifier itemLoc = entry.getKey();
-            BarTextureData data = entry.getValue();
-
-            if (data.autoTint()) {
-                data = BarTextureData.tinted(
-                        data.texture(), calculateTintFromItemTexture(itemLoc, resourceManager));
-                autoTinted++;
-            }
-
-            textureMap.put(itemLoc, data);
-        }
-
-        SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings ({} auto-tinted)",
-                textureMap.size(), autoTinted);
+        textureMap.putAll(prepared);
+        SomeStacksCommon.LOGGER.info("Applied {} bar texture mappings", textureMap.size());
     }
 
     private static int calculateTintFromItemTexture(Identifier itemLoc, ResourceManager resourceManager) {
@@ -289,8 +275,9 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     }
 
     /**
-     * Resolves an explicit bar mapping, or derives and caches a tint over the default texture for
-     * an unmapped item. Empty stacks use the fallback mapping.
+     * Resolves an explicit bar mapping or the default texture. Automatic tints are derived and
+     * cached on first render, when reloaded item models and atlas sprites are ready.
+     * Empty stacks use the fallback mapping.
      */
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
@@ -298,7 +285,14 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
         Identifier itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
 
         BarTextureData mapped = textureMap.get(itemLoc);
-        if (mapped != null) return mapped;
+        if (mapped != null) {
+            if (mapped.autoTint()) {
+                mapped = BarTextureData.tinted(mapped.texture(), calculateTintFromItemTexture(
+                        itemLoc, Minecraft.getInstance().getResourceManager()));
+                textureMap.put(itemLoc, mapped);
+            }
+            return mapped;
+        }
 
         return unmappedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
                 DEFAULT_TEXTURE,

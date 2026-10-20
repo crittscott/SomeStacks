@@ -393,7 +393,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         List<ItemStack> packed = new ArrayList<>();
         for (SettlementGroup group : ordered) {
             int remaining = group.count;
-            int limit = Math.max(1, group.model.getMaxStackSize());
+            int limit = group.model.getMaxStackSize();
             while (remaining > 0) {
                 ItemStack piece = group.model.copy();
                 piece.setCount(Math.min(remaining, limit));

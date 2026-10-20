@@ -88,9 +88,9 @@ public final class ClientCallbackChecks {
                     callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand callback outputs");
             GameTestScaffold.checkEquals(new Result(false, false, false),
                     callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand callback outputs");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(main, client.player.getMainHandItem()),
+            GameTestScaffold.check(ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(off, client.player.getOffhandItem()),
+            GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             checkRendering(client, hit);
             client.player.displayClientMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"), false);
