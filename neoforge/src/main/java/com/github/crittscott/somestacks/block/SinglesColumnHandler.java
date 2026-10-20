@@ -15,16 +15,25 @@ import javax.annotation.Nonnull;
 public class SinglesColumnHandler implements IItemHandler {
     private final SinglesStackBE blockEntity;
 
+    /** Creates a view whose column is resolved from this block entity on each access. */
     public SinglesColumnHandler(SinglesStackBE blockEntity) {
         this.blockEntity = blockEntity;
     }
 
+    /**
+     * Bottom-up column positions, including one prospective block while growth is advertised.
+     * Without a server-side column, returns only this block's local slot count.
+     */
     @Override
     public int getSlots() {
         SinglesColumn column = blockEntity.column();
         return column != null ? column.advertisedSlots() : SinglesStackBE.SLOTS;
     }
 
+    /**
+     * Returns live contents, or local contents without a column; headroom and invalid
+     * positions are empty. Callers must not modify the result.
+     */
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
@@ -35,6 +44,11 @@ public class SinglesColumnHandler implements IItemHandler {
         return column.getSlot(slot);
     }
 
+    /**
+     * Inserts at one bottom-up position, leaving the offered stack unchanged and returning its
+     * remainder. Simulation changes nothing and cannot promise acceptance by later event hooks.
+     * An unavailable column or a reentrant committed edit returns the complete offer.
+     */
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -69,6 +83,10 @@ public class SinglesColumnHandler implements IItemHandler {
                 : stack.copyWithCount(stack.getCount() - 1);
     }
 
+    /**
+     * Extracts from one bottom-up position, returning the removed contents; simulation changes
+     * nothing. An unavailable column or a reentrant committed edit returns empty. A committed extraction drops the visual column above by one cell.
+     */
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -89,11 +107,13 @@ public class SinglesColumnHandler implements IItemHandler {
         }
     }
 
+    /** One item per position, independent of occupancy. */
     @Override
     public int getSlotLimit(int slot) {
         return 1;
     }
 
+    /** Admission only: ignores position, capacity, support, enablement for growth, and edit authority. */
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return SinglesStackBE.isValidSinglesItem(stack);

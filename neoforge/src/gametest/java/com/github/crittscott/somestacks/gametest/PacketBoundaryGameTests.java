@@ -19,6 +19,12 @@ import java.util.function.Function;
 public final class PacketBoundaryGameTests {
     private PacketBoundaryGameTests() {}
 
+    /** See {@link PacketBoundaryChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        PacketBoundaryChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
+
     @GameTest(template = GameTestSupport.TEMPLATE)
     public static void reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper helper) {
         PacketBoundaryChecks.reachCheckAcceptsNearTargetAndRejectsFarTarget(

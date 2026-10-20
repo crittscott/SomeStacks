@@ -40,7 +40,7 @@ Only the main hand acts. Torch gestures do not spend the torch. Rotation reports
 
 ## Depositing and placing
 
-A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind.
+A placement and its first deposit are atomic: the block is not placed unless the item is valid, the target cell is supported, the final shape is unobstructed and replaceable, the run stays within its height limit, and protection allows the edit. Failed placement leaves nothing behind; a successful one counts as placing a block for advancements.
 
 Placement into water waterlogs the stack and keeps the water. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 

@@ -27,8 +27,8 @@ public final class StorageCubeIdx {
     public static final int CELLS = LAYER_SIZE * GRID_EDGE;
 
 
-    /** Edge of one cell, in pixels. */
-    private static final double CELL_PIXELS = 4.5;
+    /** Edge of one cell in model pixels, shared by targeting and rendering. */
+    public static final double CELL_PIXELS = 4.5;
 
     /** The largest cell coordinate on an axis, which a rotation reflects about. */
     private static final int MAX_COORD = GRID_EDGE - 1;

@@ -32,16 +32,25 @@ import javax.annotation.Nonnull;
 public class BarColumnHandler implements IItemHandler {
     private final BarStackBE blockEntity;
 
+    /** Creates a view whose column is resolved from this block entity on each access. */
     public BarColumnHandler(BarStackBE blockEntity) {
         this.blockEntity = blockEntity;
     }
 
+    /**
+     * Bottom-up column positions, including one prospective block while growth is advertised.
+     * Without a server-side column, returns only this block's local slot count.
+     */
     @Override
     public int getSlots() {
         BarColumn column = blockEntity.column();
         return column != null ? column.advertisedSlots() : BarStackBE.SLOTS;
     }
 
+    /**
+     * Returns live contents, or local contents without a column; headroom and invalid
+     * positions are empty. Callers must not modify the result.
+     */
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
@@ -52,6 +61,11 @@ public class BarColumnHandler implements IItemHandler {
         return column.getSlot(slot);
     }
 
+    /**
+     * Inserts at one bottom-up position, leaving the offered stack unchanged and returning its
+     * remainder. Simulation changes nothing and cannot promise acceptance by later event hooks.
+     * An unavailable column or a reentrant committed edit returns the complete offer.
+     */
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -87,6 +101,10 @@ public class BarColumnHandler implements IItemHandler {
                 : ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
     }
 
+    /**
+     * Extracts from one bottom-up position, returning the removed contents; simulation changes
+     * nothing. An unavailable column or a reentrant committed edit returns empty. A committed extraction moves the column's topmost bar into the opened position.
+     */
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -107,11 +125,13 @@ public class BarColumnHandler implements IItemHandler {
         }
     }
 
+    /** One bar per position, independent of occupancy. */
     @Override
     public int getSlotLimit(int slot) {
         return 1;
     }
 
+    /** Admission only: ignores position, capacity, support, enablement for growth, and edit authority. */
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return BarStackBE.isValidBarItem(stack);

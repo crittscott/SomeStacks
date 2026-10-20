@@ -75,7 +75,7 @@ Growth and cleanup use `WorldEdits` with an automation actor and check build lim
 
 Shared gesture rules recognize permanence, block rotation, item rotation, deposit, placement, and extraction in that order. Placement mode is client state sent with the placement request.
 
-The server treats every payload as a request. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
+The server treats every payload as a request. Common validation covers sender state, per-tick pacing, loaded chunks, and reach; each operation then validates hand, target, index, support, type enablement, height, and edit authority. Placement and first deposit are one transaction and fire vanilla's `PLACED_BLOCK` trigger with the original offer. Deposit and placement recompute ray targets server-side; extraction and Singles item rotation accept a client index only after range and occupancy checks.
 
 Forge and NeoForge protection events run before `RightClickBlockSuppressor` consumes the trailing vanilla click. Fabric runs its edit checks before consuming the interaction. Adjacent Singles and Bar deposits validate both the clicked position and destination.
 
@@ -85,7 +85,7 @@ World policy is `<world>/serverconfig/somestacks-server.json`, owned by `ServerC
 
 Extension points are the configured ingot list; `data/<namespace>/somestacks_sounds/*.json`; `assets/<namespace>/item_render_overrides/*.json`; `assets/<namespace>/textures/bars/*.json`; and `config/somestacks/server_item_overrides/*.json`.
 
-All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only. Galleries spread work across ticks but bypass normal placement protection.
+All types use block entity renderers. `CubeRenderHelper` renders Storage and Singles item models; Bar uses fixed cuboids with resource-defined textures and tints. Storage/Singles profile precedence is server, user, resource pack, then measurement. `AutoRenderProfiles` uses the 2-D projector only for flat geometry it can reproduce; Fabric models with no ordinary quads stay on the 3-D renderer path. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Bar appearance is client-only; automatic Bar tints are derived on first render. Galleries spread work across ticks but bypass normal placement protection.
 
 ## Maintenance invariants
 
@@ -100,4 +100,4 @@ All types use block entity renderers. `CubeRenderHelper` renders Storage and Sin
 
 ## GameTests
 
-There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions live in `common/src/gametest` and use `CommonRegistry`; native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Synthetic-player and protection tests remain loader-specific where their APIs differ. Distinct otherwise-identical test stacks use `CUSTOM_DATA`.
+There is no JUnit or production `test` source set. Each loader has a development-only `somestacks_gametest` mod under `<loader>/src/gametest` and runs it with `:<loader>:runGameTestServer`; no suite is part of `build`. Neutral assertions live in `common/src/gametest` and use `CommonRegistry`; native `IItemHandler` and Transfer API assertions stay loader-local. Forge and NeoForge use annotated holders; Fabric uses `fabric-gametest` entrypoints. NeoForge holders disable class-name template prefixes. Synthetic-player and protection tests remain loader-specific where their APIs differ. Distinct otherwise-identical test stacks use `CUSTOM_DATA`. The gallery-budget check drives the scheduler synchronously in its own `somestacks_gallery_budget` batch; the placement-advancement check uses a regular `ServerPlayer` and a `somestacks:gametest_place_storage` fixture.

@@ -13,15 +13,24 @@ import com.github.crittscott.somestacks.network.RotateItemPkt;
 import com.github.crittscott.somestacks.network.TogglePermanentPkt;
 import com.github.crittscott.somestacks.server.GestureThrottle;
 import com.github.crittscott.somestacks.util.BlockType;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 
 import java.util.function.Function;
@@ -443,6 +452,73 @@ public final class PacketBoundaryChecks {
         ItemStack stack = new ItemStack(item);
         stack.setCount(stack.getMaxStackSize());
         return stack;
+    }
+
+    /**
+     * To reproduce in-game with the test mod: revoke somestacks:gametest_place_storage, hold
+     * exactly two Dirt, and create a Storage Stack. Its placed-block criterion is awarded using
+     * the original two-item offer even though the deposit empties the hand. A blocked destination
+     * awards nothing. Revoke it again and deposit two Dirt into a full pile: growth awards nothing.
+     */
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        // Automation fake players can suppress advancement tracking. This check needs a regular
+        // player's tracker, with no connection because the fixture has no display or rewards.
+        ServerPlayer player = new ServerPlayer(level.getServer(), level,
+                new GameProfile(UUID.randomUUID(), "[SSCriterion]"), ClientInformation.createDefault()) {
+            @Override
+            public void displayClientMessage(Component message, boolean actionBar) {
+                // Action-bar output is not observed by this server-side check.
+            }
+        };
+        AdvancementHolder advancement = level.getServer().getAdvancements().get(
+                ResourceLocation.fromNamespaceAndPath("somestacks", "gametest_place_storage"));
+        check(advancement != null, "Missing placement advancement fixture");
+        PlayerAdvancements progress = player.getAdvancements();
+        BlockPos destination = helper.absolutePos(TARGET);
+        // A claimed click suppresses the vanilla click on the same support for the rest of the
+        // tick, so the refused attempt uses its own support rather than the successful one's.
+        BlockPos blocked = helper.absolutePos(TARGET.east(3));
+        try {
+            level.setBlock(destination, CommonRegistry.STORAGE_STACK_BLOCK.get().defaultBlockState(),
+                    Block.UPDATE_ALL);
+            CriteriaTriggers.PLACED_BLOCK.trigger(player, destination, new ItemStack(Items.DIRT, 2));
+            check(progress.getOrStartProgress(advancement).isDone(),
+                    "Placement advancement fixture did not respond to the control trigger");
+            progress.revoke(advancement, "placed");
+
+            level.setBlock(destination, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            level.setBlock(blocked, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+            player.setItemInHand(HAND, new ItemStack(Items.DIRT, 2));
+            PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
+                    BlockType.STORAGE_STACK, Direction.UP, blocked));
+            check(!progress.getOrStartProgress(advancement).isDone(), "Denied placement awarded criterion");
+            checkEquals(2, player.getMainHandItem().getCount(), "Denied placement spent the offer");
+
+            PlaceAndDepositPkt.apply(player, new PlaceAndDepositPkt(
+                    BlockType.STORAGE_STACK, Direction.UP, destination));
+            check(level.getBlockEntity(destination) instanceof StorageStackBE,
+                    "Player placement failed");
+            check(player.getMainHandItem().isEmpty(), "First deposit did not empty the hand");
+            check(progress.getOrStartProgress(advancement).isDone(),
+                    "Player placement did not award the original-offer criterion");
+
+            progress.revoke(advancement, "placed");
+            StorageStackBE storage = (StorageStackBE) level.getBlockEntity(destination);
+            for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                storage.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+            }
+            ItemStack offer = new ItemStack(Items.DIRT, 2);
+            player.setItemInHand(HAND, offer);
+            checkEquals(2, storage.deposit(offer, player), "Growth deposit count");
+            check(level.getBlockState(destination.above()).is(CommonRegistry.STORAGE_STACK_BLOCK.get()),
+                    "Full pile did not grow");
+            check(!progress.getOrStartProgress(advancement).isDone(), "Pile growth awarded criterion");
+        } finally {
+            progress.stopListening();
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+        }
+        helper.succeed();
     }
 
     private static void placeBy(ServerPlayer player, BlockPos pos) {

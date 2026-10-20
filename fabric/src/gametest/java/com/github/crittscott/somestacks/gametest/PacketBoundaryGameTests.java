@@ -16,6 +16,12 @@ import java.util.function.Function;
 public final class PacketBoundaryGameTests implements FabricGameTest {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
+    /** See {@link PacketBoundaryChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(template = TEMPLATE)
+    public void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        PacketBoundaryChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
+
     @GameTest(template = TEMPLATE)
     public void reachCheckAcceptsNearTargetAndRejectsFarTarget(GameTestHelper helper) {
         PacketBoundaryChecks.reachCheckAcceptsNearTargetAndRejectsFarTarget(

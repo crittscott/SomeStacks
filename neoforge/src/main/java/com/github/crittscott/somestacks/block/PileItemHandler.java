@@ -13,16 +13,25 @@ import javax.annotation.Nonnull;
 public class PileItemHandler implements IItemHandler {
     private final StorageStackBE blockEntity;
 
+    /** Creates a view whose pile is resolved from this block entity on each access. */
     public PileItemHandler(StorageStackBE blockEntity) {
         this.blockEntity = blockEntity;
     }
 
+    /**
+     * Bottom-up pile slots, including one prospective block while growth is advertised.
+     * Without a server-side pile, returns only this block's local slot count.
+     */
     @Override
     public int getSlots() {
         StoragePile pile = blockEntity.pile();
         return pile != null ? pile.advertisedSlots() : StorageStackBE.SLOTS;
     }
 
+    /**
+     * Returns live contents, or local contents without a pile; headroom and invalid
+     * slots are empty. Callers must not modify the result.
+     */
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
@@ -33,6 +42,11 @@ public class PileItemHandler implements IItemHandler {
         return pile.getSlot(slot);
     }
 
+    /**
+     * Inserts at one bottom-up slot, leaving the offered stack unchanged and returning its
+     * remainder. Simulation changes nothing and cannot promise acceptance by later event hooks.
+     * An unavailable pile or a reentrant committed edit returns the complete offer.
+     */
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -64,6 +78,10 @@ public class PileItemHandler implements IItemHandler {
                 : stack.copyWithCount(stack.getCount() - accepted);
     }
 
+    /**
+     * Extracts from one bottom-up slot, returning the removed contents; simulation changes
+     * nothing. An unavailable pile or a reentrant committed edit returns empty. A committed extraction schedules the pile's settlement.
+     */
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -90,11 +108,13 @@ public class PileItemHandler implements IItemHandler {
         }
     }
 
+    /** Advertised per-slot capacity, independent of occupancy; the offered item's own stack limit still applies. */
     @Override
     public int getSlotLimit(int slot) {
         return 64;
     }
 
+    /** Admission only: ignores position, capacity, support, enablement for growth, and edit authority. */
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return StorageStackBE.isValidStorageItem(stack);

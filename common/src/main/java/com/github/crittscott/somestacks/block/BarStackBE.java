@@ -201,7 +201,7 @@ public class BarStackBE extends BlockEntity {
             return false;
         }
 
-        if (!BarCubeIdx.isGrounded(index, items, seamBeneath())) {
+        if (!BarCubeIdx.isGrounded(index, items, index < BarCubeIdx.LAYER_SIZE ? seamBeneath() : null)) {
             return false;
         }
 

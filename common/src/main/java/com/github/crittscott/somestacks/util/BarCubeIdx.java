@@ -77,7 +77,7 @@ public final class BarCubeIdx {
      * Stack below; otherwise its footprint must overlap {@code seamBelow}.
      */
     public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
-        return isGroundedIn(new boolean[BarStackBE.SLOTS], index, seamBelow);
+        return index < LAYER_SIZE && (seamBelow == null || seamSupports(index, seamBelow));
     }
 
     private static AABB getBarBox(int index, BlockPos blockPos) {
@@ -107,7 +107,20 @@ public final class BarCubeIdx {
      * underneath. A null seam means there is no Bar Stack below, so the bottom layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, @Nullable boolean[] seamBelow) {
-        return isGroundedIn(occupancyOf(handler), index, seamBelow);
+        int[] xyz = xyzFromIndex(index);
+        int y = xyz[1];
+        if (y == 0) return seamBelow == null || seamSupports(index, seamBelow);
+        AABB footprint = getBarFootprint(xyz[0], y, xyz[2]);
+        int belowStart = (y - 1) * LAYER_SIZE;
+        for (int i = 0; i < LAYER_SIZE; i++) {
+            int belowIndex = belowStart + i;
+            if (handler.getStackInSlot(belowIndex).isEmpty()) continue;
+            int[] below = xyzFromIndex(belowIndex);
+            if (footprintsOverlap(footprint, getBarFootprint(below[0], below[1], below[2]))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -21,7 +21,7 @@ public final class RenderGalleryGameTests {
         RenderGalleryChecks.queuedStorageGalleryBuildsFloorRowsAndCompletionTotals(helper, player);
     }
 
-    @GameTest(template = GameTestSupport.TEMPLATE)
+    @GameTest(batch = "somestacks_gallery_budget", template = GameTestSupport.TEMPLATE)
     public static void queuedStorageGallerySpreadsWorkAcrossTicks(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         RenderGalleryChecks.queuedStorageGallerySpreadsWorkAcrossTicks(helper, player);

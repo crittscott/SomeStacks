@@ -41,8 +41,8 @@ public final class SinglesCubeIdx {
     /** The layer a block hands items down from, and the only one that holds up the block above. */
     public static final int TOP_LAYER_Y = LAYERS - 1;
 
-    /** Edge of one cell, in pixels. */
-    private static final double CELL_PIXELS = 4.0;
+    /** Edge of one cell in model pixels, shared by targeting and rendering. */
+    public static final double CELL_PIXELS = 4.0;
 
     /** The largest cell coordinate on an axis, which a rotation reflects about. */
     private static final int MAX_COORD = GRID_EDGE - 1;

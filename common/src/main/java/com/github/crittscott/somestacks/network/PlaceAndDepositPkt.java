@@ -17,6 +17,7 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.util.ViewRays;
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,7 +43,8 @@ import javax.annotation.Nullable;
  *
  * <p>This is the only client packet that creates a block, so it carries the widest set of server
  * checks: replaceability, entity obstruction, type enablement, pile height, and the block-place
- * event.
+ * event. A successful placement fires vanilla's placed-block advancement trigger with the item as
+ * it was offered, before the deposit consumed it.
  */
 public class PlaceAndDepositPkt implements CustomPacketPayload {
     public static final Type<PlaceAndDepositPkt> TYPE = new Type<>(
@@ -183,6 +185,8 @@ public class PlaceAndDepositPkt implements CustomPacketPayload {
                 sp, sp.serverLevel(), msg.pos, state, msg.face.getOpposite(), finalCollision)) {
             return;
         }
+        // Captured before the deposit consumes the stack, as vanilla captures the placing item.
+        ItemStack placedWith = handStack.copy();
 
         switch (msg.blockType) {
             case STORAGE_STACK -> {
@@ -207,6 +211,7 @@ public class PlaceAndDepositPkt implements CustomPacketPayload {
         if (!creative) {
             sp.setItemInHand(InteractionHand.MAIN_HAND, handStack);
         }
+        CriteriaTriggers.PLACED_BLOCK.trigger(sp, msg.pos, placedWith);
     }
 
     /**

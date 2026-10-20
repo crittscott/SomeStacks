@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 /**
@@ -26,7 +27,7 @@ import java.util.WeakHashMap;
  */
 public final class FabricEditAuthority implements EditAuthority {
     private static final GameProfile PROFILE = new GameProfile(
-            java.util.UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
+            UUID.nameUUIDFromBytes("somestacks:fabric_automation".getBytes(StandardCharsets.UTF_8)),
             "[SomeStacks]");
 
     private final Map<ServerLevel, ServerPlayer> actors = new WeakHashMap<>();

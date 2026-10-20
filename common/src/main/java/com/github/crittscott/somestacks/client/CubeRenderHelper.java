@@ -1,6 +1,8 @@
 package com.github.crittscott.somestacks.client;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -77,10 +79,11 @@ public final class CubeRenderHelper {
      * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
      * tile edge to edge with no gap to absorb growth into.
      */
-    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
+    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE
+            * (float) StorageCubeIdx.CELL_PIXELS / (float) SinglesCubeIdx.CELL_PIXELS;
 
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+    public static final float CELL_LOCAL_SIZE = (float) SinglesCubeIdx.CELL_PIXELS / 8.0f;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;

@@ -85,14 +85,14 @@ public class StackItemStorage implements SlotAccess {
 
         if (!simulate) {
             if (existing.isEmpty()) {
-                stacks[slot] = reachedLimit ? copyWithSize(stack, limit) : stack;
+                stacks[slot] = reachedLimit ? stack.copyWithCount(limit) : stack;
             } else {
                 existing.grow(reachedLimit ? limit : stack.getCount());
             }
             onContentsChanged(slot);
         }
 
-        return reachedLimit ? copyWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+        return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -119,10 +119,10 @@ public class StackItemStorage implements SlotAccess {
         }
 
         if (!simulate) {
-            stacks[slot] = copyWithSize(existing, existing.getCount() - toExtract);
+            stacks[slot] = existing.copyWithCount(existing.getCount() - toExtract);
             onContentsChanged(slot);
         }
-        return copyWithSize(existing, toExtract);
+        return existing.copyWithCount(toExtract);
     }
 
     @Override
@@ -137,15 +137,6 @@ public class StackItemStorage implements SlotAccess {
 
     /** Called after a slot's contents change, including a direct {@link #setStackInSlot}. */
     protected void onContentsChanged(int slot) {
-    }
-
-    private static ItemStack copyWithSize(ItemStack stack, int size) {
-        if (size <= 0) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack copy = stack.copy();
-        copy.setCount(size);
-        return copy;
     }
 
     public CompoundTag serializeNBT(HolderLookup.Provider registries) {

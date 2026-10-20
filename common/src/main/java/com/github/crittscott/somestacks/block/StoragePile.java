@@ -596,7 +596,7 @@ public final class StoragePile {
 
         for (Map.Entry<StackKey, Integer> entry : totals.entrySet()) {
             ItemStack model = models.get(entry.getKey());
-            int max = Math.max(1, model.getMaxStackSize());
+            int max = model.getMaxStackSize();
             int remaining = entry.getValue();
 
             while (remaining > 0) {

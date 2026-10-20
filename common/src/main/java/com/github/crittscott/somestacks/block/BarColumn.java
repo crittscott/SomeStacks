@@ -359,16 +359,17 @@ public final class BarColumn {
         int slot = flatSlot % BarStackBE.SLOTS;
 
         if (blockIndex < blocks.size()) {
-            boolean[] occupancy = BarCubeIdx.occupancyOf(blocks.get(blockIndex).getItems());
-            if (occupancy[slot]) {
+            var items = blocks.get(blockIndex).getItems();
+            if (!items.getStackInSlot(slot).isEmpty()) {
                 return false;
             }
-            return BarCubeIdx.isGroundedIn(occupancy, slot, seamUnder(blockIndex));
+            return BarCubeIdx.isGrounded(slot, items,
+                    slot < BarCubeIdx.LAYER_SIZE ? seamUnder(blockIndex) : null);
         }
 
         VoxelShape finalCollision = BarCubeIdx.shapeFor(slot);
         return canGrow(finalCollision)
-                && BarCubeIdx.isGroundedIn(new boolean[BarStackBE.SLOTS], slot, seamUnder(blockIndex));
+                && BarCubeIdx.freshBlockSupports(slot, seamUnder(blockIndex));
     }
 
     /**
