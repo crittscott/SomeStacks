@@ -9,10 +9,10 @@ import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -69,13 +69,11 @@ public final class ProtectionChecks {
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(valid.getX(), level.getMinY() - 1, valid.getZ());
 
-        check(WorldEdits.placeChecked(
-                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+        check(WorldEdits.placeChecked(player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                 "Valid checked placement was rejected");
         check(level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(
-                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+        check(!WorldEdits.placeChecked(player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -92,8 +90,7 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(
-                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN),
+        check(!WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                 "Entity-obstructed checked placement was accepted");
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
@@ -327,8 +324,7 @@ public final class ProtectionChecks {
         chest.setItem(0, new ItemStack(Items.DIAMOND, 3));
         installVeto.run();
         try {
-            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
-                    CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                     "Vetoed placement succeeded");
         } finally {
             removeVeto.run();
@@ -339,15 +335,14 @@ public final class ProtectionChecks {
         checkEquals(3, restored.getItem(0).getCount(), "Restored container count");
 
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.pile().setPermanent(true);
+        storage.pile().setPermanent(true, null);
         helper.runAfterDelay(3, () -> {
             Block storageBlock = CommonRegistry.storageStackBlock();
             check(!level.getBlockTicks().hasScheduledTick(pos, storageBlock),
                     "Initial permanent stack settlement is still pending");
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
-                        CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                         "Vetoed stack replacement succeeded");
             } finally {
                 removeVeto.run();
@@ -376,8 +371,7 @@ public final class ProtectionChecks {
         helper.runAfterDelay(6, () -> {
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
-                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                         "Vetoed placement succeeded");
             } finally {
                 removeVeto.run();
@@ -385,8 +379,7 @@ public final class ProtectionChecks {
             helper.runAfterDelay(3, () -> {
                 check(!level.getBlockState(observer).getValue(ObserverBlock.POWERED),
                         "Denied placement pulsed its observer");
-                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
-                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN),
+                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                         "Accepted placement failed");
                 ((StorageStackBE) level.getBlockEntity(target)).getItems()
                         .insertItem(0, new ItemStack(Items.STONE), false);

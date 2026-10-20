@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks.server;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -15,8 +14,4 @@ public final class AutomationActor {
 
     private AutomationActor() {}
 
-    /** Whether {@code player} is the shared Some Stacks automation identity. */
-    public static boolean is(ServerPlayer player) {
-        return ID.equals(player.getUUID());
-    }
 }

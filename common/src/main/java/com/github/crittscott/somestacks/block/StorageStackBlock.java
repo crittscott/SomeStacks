@@ -1,15 +1,16 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
@@ -27,6 +28,11 @@ public class StorageStackBlock extends StackBlock {
     public StorageStackBlock(Properties props) {
         super(props);
         registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
+    }
+
+    @Override
+    public BlockType type() {
+        return BlockType.STORAGE_STACK;
     }
 
     @Override

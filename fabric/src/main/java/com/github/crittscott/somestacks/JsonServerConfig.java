@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.IOException;
@@ -43,18 +44,14 @@ public final class JsonServerConfig implements ServerConfig.Backend {
     private static final String KEY_GEN_ITEMS = "gen_items";
 
 
-
-    /** Upper bound accepted for {@code piles.max_pile_height} in the config file. */
-    private static final int MAX_PILE_HEIGHT_LIMIT = ServerConfig.MAX_PILE_HEIGHT;
-
     private Path configFile;
 
     /**
-     * Selects a world config file, installs this backend, and applies validated settings. Malformed
+     * Selects a world config file and returns validated settings without publishing them. Malformed
      * fields use defaults; an unreadable file uses the complete defaults. A missing file is created.
      * Existing files are written only through save; loading does not synchronize players.
      */
-    public void load(Path file) {
+    public ServerConfig.Settings load(Path file) {
         configFile = file;
         ServerConfig.Settings settings = ServerConfig.defaults();
 
@@ -73,32 +70,29 @@ public final class JsonServerConfig implements ServerConfig.Backend {
             }
         }
 
-        ServerConfig.install(this);
-        ServerConfig.apply(settings);
-        if (!Files.exists(file) && save(ServerConfig.settings())) {
+        if (!Files.exists(file) && save(settings)) {
             SomeStacksCommon.LOGGER.info("Created default server config at {}", displayPath(file));
         }
 
+        return settings;
     }
 
     @Override
     public ServerConfig.Settings loadFor(MinecraftServer server) {
-        load(server.getWorldPath(LevelResource.ROOT).resolve(CONFIG_DIRECTORY)
+        return load(server.getWorldPath(LevelResource.ROOT).resolve(CONFIG_DIRECTORY)
                 .resolve(SomeStacksCommon.MODID + CONFIG_FILE_SUFFIX));
-        return ServerConfig.settings();
     }
 
     @Override
     public ServerConfig.Settings reload() {
-        load(configFile);
-        return ServerConfig.settings();
+        return load(configFile);
     }
 
     private static ServerConfig.Settings parseJson(JsonObject root, ServerConfig.Settings fallback) {
         JsonObject piles = obj(root, SECTION_PILES);
-        int parsedMaxPileHeight = clamp(
+        int parsedMaxPileHeight = Mth.clamp(
                 intOr(piles, KEY_MAX_PILE_HEIGHT, fallback.maxPileHeight()),
-                1, MAX_PILE_HEIGHT_LIMIT);
+                1, ServerConfig.MAX_PILE_HEIGHT);
 
         JsonObject stacks = obj(root, SECTION_STACKS);
         boolean parsedStorageEnabled = boolOr(
@@ -119,7 +113,7 @@ public final class JsonServerConfig implements ServerConfig.Backend {
                 1, intOr(gallery, KEY_PLACEMENTS_PER_TICK, fallback.renderGalleryPlacementsPerTick()));
         boolean parsedGalleryEnabled = boolOr(
                 gallery, KEY_GALLERY_ENABLED, fallback.galleryEnabled());
-        int parsedPermissionLevel = clamp(
+        int parsedPermissionLevel = Mth.clamp(
                 intOr(gallery, KEY_REQUIRED_PERMISSION_LEVEL, fallback.galleryPermissionLevel()),
                 0, ServerConfig.GALLERY_PERMISSION_LEVEL_MAX);
         List<String> parsedGenMods = stringListOr(gallery, KEY_GEN_MODS, fallback.genMods());
@@ -241,10 +235,6 @@ public final class JsonServerConfig implements ServerConfig.Backend {
         JsonArray array = new JsonArray();
         values.forEach(array::add);
         return array;
-    }
-
-    private static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
     }
 
 }

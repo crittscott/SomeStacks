@@ -53,13 +53,13 @@ public final class ConfigurationGameTests {
         try {
             Files.createDirectories(fixture.getParent());
             Files.deleteIfExists(fixture);
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
 
             Files.writeString(fixture, configJson(999, -3, 0));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
-            checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
+            checkEquals(0, ServerConfig.settings().galleryPermissionLevel(),
                     "Minimum gallery-permission clamp");
             checkEquals(1, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Minimum gallery placement budget");
@@ -76,9 +76,9 @@ public final class ConfigurationGameTests {
             check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Disabled item was not baked");
             Files.writeString(fixture, configJson(-9, 99, 7));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
-            checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
+            checkEquals(4, ServerConfig.settings().galleryPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
@@ -120,7 +120,7 @@ public final class ConfigurationGameTests {
         try {
             Files.createDirectories(fixture.getParent());
             Files.deleteIfExists(fixture);
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
             var operator = server.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER);
             check(server.getCommands().getDispatcher().execute(
                     "ss deny item add minecraft:diamond", operator) > 0,
@@ -163,6 +163,17 @@ public final class ConfigurationGameTests {
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
+    private static void loadFixture(Path file) {
+        ServerConfig.Backend previousBackend = ServerConfig.backend();
+        ServerConfig.Settings previousSettings = ServerConfig.settings();
+        JsonServerConfig backend = new JsonServerConfig();
+        ServerConfig.Settings loaded = backend.load(file);
+        check(ServerConfig.backend() == previousBackend, "JSON loading installed a backend");
+        checkEquals(previousSettings, ServerConfig.settings(), "JSON loading published settings");
+        ServerConfig.install(backend);
+        ServerConfig.apply(loaded);
     }
 
     private static Path serverConfigDir(GameTestHelper helper) {

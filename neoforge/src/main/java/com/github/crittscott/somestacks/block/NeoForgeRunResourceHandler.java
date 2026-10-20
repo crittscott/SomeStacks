@@ -43,8 +43,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     private NeoForgeRunResourceHandler ledger() {
         StackRun<?> run = run();
         if (run == null) return this;
-        StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
-        return base.getData(ModRegistry.RUN_RESOURCES);
+        StackBlockEntity base = run.baseBlockEntity();
+        return base == blockEntity ? this : base.getData(ModRegistry.RUN_RESOURCES);
     }
 
     @Override
@@ -130,16 +130,22 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     @Override
     public int insert(ItemResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-        int inserted = 0;
-        int size = size();
-        for (int pass = 0; pass < 2 && inserted < amount; pass++) {
-            for (int slot = 0; slot < size && inserted < amount; slot++) {
-                if (current(slot).isEmpty() == (pass == 1)) {
-                    inserted += insert(slot, resource, amount - inserted, transaction);
+        NeoForgeRunResourceHandler base = ledger();
+        if (base != this) return base.insert(resource, amount, transaction);
+        StackRun<?> run = run();
+        if (run == null) return 0;
+        try (var query = run.growthQuery()) {
+            int inserted = 0;
+            int size = size();
+            for (int pass = 0; pass < 2 && inserted < amount; pass++) {
+                for (int slot = 0; slot < size && inserted < amount; slot++) {
+                    if (current(slot).isEmpty() == (pass == 1)) {
+                        inserted += insert(slot, resource, amount - inserted, transaction);
+                    }
                 }
             }
+            return inserted;
         }
-        return inserted;
     }
 
     @Override

@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,15 +33,17 @@ public final class FabricRegistry {
     public static final Block STORAGE_STACK_BLOCK = registerBlock(CommonRegistry.STORAGE_STACK_BLOCK, StorageStackBlock::new,
             StackBlock.storageProperties());
 
-    public static final SoundEvent STORAGE_DEPOSIT_SOUND = registerSound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
-    public static final SoundEvent STORAGE_EXTRACT_SOUND = registerSound(CommonRegistry.STORAGE_EXTRACT_SOUND);
-    public static final SoundEvent STORAGE_ROTATE_SOUND = registerSound(CommonRegistry.STORAGE_ROTATE_SOUND);
-    public static final SoundEvent SINGLES_DEPOSIT_SOUND = registerSound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
-    public static final SoundEvent SINGLES_EXTRACT_SOUND = registerSound(CommonRegistry.SINGLES_EXTRACT_SOUND);
-    public static final SoundEvent SINGLES_ROTATE_SOUND = registerSound(CommonRegistry.SINGLES_ROTATE_SOUND);
-    public static final SoundEvent SINGLES_ROTATE_ITEM_SOUND = registerSound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
-    public static final SoundEvent BAR_DEPOSIT_SOUND = registerSound(CommonRegistry.BAR_DEPOSIT_SOUND);
-    public static final SoundEvent BAR_EXTRACT_SOUND = registerSound(CommonRegistry.BAR_EXTRACT_SOUND);
+    static {
+        registerSound(CommonRegistry.STORAGE_DEPOSIT_SOUND);
+        registerSound(CommonRegistry.STORAGE_EXTRACT_SOUND);
+        registerSound(CommonRegistry.STORAGE_ROTATE_SOUND);
+        registerSound(CommonRegistry.SINGLES_DEPOSIT_SOUND);
+        registerSound(CommonRegistry.SINGLES_EXTRACT_SOUND);
+        registerSound(CommonRegistry.SINGLES_ROTATE_SOUND);
+        registerSound(CommonRegistry.SINGLES_ROTATE_ITEM_SOUND);
+        registerSound(CommonRegistry.BAR_DEPOSIT_SOUND);
+        registerSound(CommonRegistry.BAR_EXTRACT_SOUND);
+    }
 
     public static final BlockEntityType<BarStackBE> BAR_STACK_BE = registerBlockEntity(
             CommonRegistry.BAR_STACK_BE,

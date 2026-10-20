@@ -53,6 +53,7 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -69,11 +70,14 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#growthQuery()" tabindex="0">growthQuery()</a></li>
+<li><a href="#canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)" tabindex="0">canGrowBlock(boolean, ServerPlayer)</a></li>
 <li><a href="#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)" tabindex="0">resolveBlocks(ServerLevel, BlockPos, Class)</a></li>
 <li><a href="#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" tabindex="0">invalidateAround(Level, BlockPos, Class)</a></li>
 <li><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" tabindex="0">markDirtyAt(Level, BlockPos, BiFunction)</a></li>
 <li><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" tabindex="0">publishAround(Level, BlockPos, BiFunction)</a></li>
 <li><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)" tabindex="0">columnHasRoomFor(Level, BlockPos, Block)</a></li>
+<li><a href="#baseBlockEntity()" tabindex="0">baseBlockEntity()</a></li>
 <li><a href="#basePos()" tabindex="0">basePos()</a></li>
 <li><a href="#topPos()" tabindex="0">topPos()</a></li>
 <li><a href="#height()" tabindex="0">height()</a></li>
@@ -120,6 +124,23 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="StackRun.GrowthQuery.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">StackRun.GrowthQuery</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">One bulk capacity query; permission results never survive its outer call.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -174,15 +195,26 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Positions visible to automation, numbered from the bottom block upward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.core.BlockPos</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#basePos()" class="member-name-link">basePos</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="#type-param-BE" title="type parameter in StackRun">BE</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#baseBlockEntity()" class="member-name-link">baseBlockEntity</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The member that owns the loader's shared transaction journal.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.core.BlockPos</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#basePos()" class="member-name-link">basePos</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Bottom block position of this resolved run.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="#type-param-BE" title="type parameter in StackRun">BE</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#blockOf(int)" class="member-name-link">blockOf</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="#type-param-BE" title="type parameter in StackRun">BE</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#blockOf(int)" class="member-name-link">blockOf</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Owning block for a validated stored flat slot; headroom and invalid indices are not accepted.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">canGrowBlock</a><wbr>(boolean&nbsp;enabled,
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Shared shape-independent growth checks; player authority is always queried afresh.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)" class="member-name-link">columnHasRoomFor</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -206,72 +238,77 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The live stack in a run position, or empty for headroom or an invalid position.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlerOf(int)" class="member-name-link">handlerOf</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="#type-param-BE" title="type parameter in StackRun">BE</a>&gt;.<a href="StackRun.GrowthQuery.html" title="class in com.github.crittscott.somestacks.block">GrowthQuery</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#growthQuery()" class="member-name-link">growthQuery</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Coalesces automation permission queries without caching collision or staged support.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final <a href="../util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlerOf(int)" class="member-name-link">handlerOf</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Mutable local storage for a validated stored flat slot.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#height()" class="member-name-link">height</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#height()" class="member-name-link">height</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Number of existing blocks in this resolved run.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">invalidateAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">invalidateAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;BE&gt;&nbsp;blockEntityClass)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Invalidates every cached run a structural change at <code>pos</code> could have altered.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlot(int)" class="member-name-link">localSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlot(int)" class="member-name-link">localSlot</a><wbr>(int&nbsp;flatSlot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Local index for a validated stored flat slot, with blocks ordered from the base upward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Coalesces server changes into one next-tick pass on the base; no immediate publication occurs.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a>&gt;<br>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a>&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">markDirtyAt</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level, net.minecraft.core.BlockPos, R&gt;&nbsp;resolver)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Publishes deferred local changes and then the run-wide comparator signal.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPendingBlocks()" class="member-name-link">publishPendingBlocks</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPendingBlocks()" class="member-name-link">publishPendingBlocks</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Publishes changed local contents and derived light, returning whether anything changed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;BE&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">resolveBlocks</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;BE&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">resolveBlocks</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;BE&gt;&nbsp;blockEntityClass)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Walks the maximal run containing <code>pos</code>, from its bottom block upward.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final net.minecraft.core.BlockPos</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#topPos()" class="member-name-link">topPos</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final net.minecraft.core.BlockPos</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#topPos()" class="member-name-link">topPos</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Top existing block position, excluding advertised headroom.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Existing slot count; valid stored flat slots satisfy <code>0 &lt;= slot &lt; totalSlots()</code>.</div>
 </div>
 </div>
@@ -339,6 +376,26 @@ distinct insertion, extraction, growth, settlement, and collapse rules.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="growthQuery()">
+<h3>growthQuery</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;<a href="#type-param-BE" title="type parameter in StackRun">BE</a>&gt;.<a href="StackRun.GrowthQuery.html" title="class in com.github.crittscott.somestacks.block">GrowthQuery</a></span>&nbsp;<span class="element-name">growthQuery</span>()</div>
+<div class="block">Coalesces automation permission queries without caching collision or staged support.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)">
+<h3>canGrowBlock</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canGrowBlock</span><wbr><span class="parameters">(boolean&nbsp;enabled,
+ @Nullable
+ net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
+<div class="block">Shared shape-independent growth checks; player authority is always queried afresh.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)">
 <h3>resolveBlocks</h3>
 <div class="horizontal-scroll">
@@ -393,6 +450,15 @@ Null resolutions are ignored; this does not publish inventories or settle Storag
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.Block&nbsp;block)</span></div>
 <div class="block">Tests the height of the same-type run a block at pos would join, including both neighbors.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="baseBlockEntity()">
+<h3>baseBlockEntity</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="#type-param-BE" title="type parameter in StackRun">BE</a></span>&nbsp;<span class="element-name">baseBlockEntity</span>()</div>
+<div class="block">The member that owns the loader's shared transaction journal.</div>
 </div>
 </section>
 </li>

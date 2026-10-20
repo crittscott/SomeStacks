@@ -16,12 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Arrays;
 import java.util.Objects;
-
 import javax.annotation.Nullable;
 
 /**
@@ -115,11 +115,11 @@ public class BarStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, BarCubeIdx.shapeFor(i));
+                shape = Shapes.joinUnoptimized(shape, BarCubeIdx.shapeFor(i), BooleanOp.OR);
             }
         }
 
-        return shape;
+        return shape.optimize();
     }
 
     /**
