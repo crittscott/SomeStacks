@@ -11,6 +11,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -212,7 +213,7 @@ public final class NeoForgeTransferGameTests {
             StackBlockEntity grown = (StackBlockEntity) helper.getLevel().getBlockEntity(above);
             check(grown != null, "Commit did not grow the run");
             checkEquals(base.getBlockState().getBlock(), grown.getBlockState().getBlock(), "Grown type");
-            check(grown.getBlockState().getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED),
+            check(grown.getBlockState().getValue(BlockStateProperties.WATERLOGGED),
                     "Growth did not retain water");
             checkEquals(1, grown.getItems().getStackInSlot(0).getCount(), "Grown inventory");
         }

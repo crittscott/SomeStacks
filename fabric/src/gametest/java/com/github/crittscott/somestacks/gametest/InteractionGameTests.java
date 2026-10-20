@@ -22,6 +22,12 @@ import net.minecraft.world.phys.Vec3;
 public final class InteractionGameTests {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
+    /** See {@link InteractionChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    @GameTest(structure = TEMPLATE, maxTicks = 100)
+    public void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
+
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {

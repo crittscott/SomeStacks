@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "placed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "block": {
+                  "blocks": "somestacks:storage_stack_block"
+                }
+              }
+            },
+            {
+              "type": "minecraft:match_tool",
+              "predicate": {
+                "items": "minecraft:dirt",
+                "count": 2
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "placed"
+    ]
+  ]
+}

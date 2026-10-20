@@ -54,7 +54,8 @@ public final class ClientCallbackChecks {
      * loader callback for main/off hand and checks consumption plus block/item suppression. It
      * does not send a vanilla use packet or extract contents. A translated success/failure message
      * reports the assertions. It also checks item capture, model measurement, and prepared grid
-     * submission; server GameTests cannot exercise these client-only boundaries. With default
+     * submission, and render-profile precedence and invalidation through
+     * {@link RenderProfileChecks#run()}; server GameTests cannot exercise these client-only boundaries. With default
      * resources, view Stone, an Apple, and a Chest in 3d/gui/block/2d profiles, rotate Singles items,
      * walk around every face, and reload resources. Models must remain fitted and correctly tinted,
      * with special models staying on the 3-D path unless explicitly overridden. With default
@@ -78,12 +79,13 @@ public final class ClientCallbackChecks {
                     callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand callback outputs");
             GameTestScaffold.checkEquals(new Result(false, false, false),
                     callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand callback outputs");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(main, client.player.getMainHandItem()),
+            GameTestScaffold.check(ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(off, client.player.getOffhandItem()),
+            GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             checkRendering(client, hit);
             checkProfileLifecycle();
+            RenderProfileChecks.run();
             client.player.sendSystemMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"));
             return 1;
         } catch (RuntimeException failure) {

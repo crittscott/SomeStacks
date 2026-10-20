@@ -7,13 +7,21 @@ import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
+import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
+import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEventListener;
@@ -25,6 +33,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SculkSensorBlock;
@@ -35,6 +44,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -113,7 +123,7 @@ public final class InteractionChecks {
             check(!StackInteractions.handleExistingStack(
                             player, InteractionHand.OFF_HAND,
                             hit(player, storage.getBlockPos(), 0.5, 0.5, 0.5),
-                    com.github.crittscott.somestacks.util.BlockType.STORAGE_STACK),
+                    BlockType.STORAGE_STACK),
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
@@ -208,7 +218,7 @@ public final class InteractionChecks {
                 + StorageCubeIdx.GRID_EDGE + 1;
         extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3), false);
         BlockPos support = helper.absolutePos(TARGET.east(6));
-        helper.getLevel().setBlock(support, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 4));
 
         try {
@@ -364,7 +374,7 @@ public final class InteractionChecks {
                             Direction.UP,
                             singles.getBlockPos(),
                             false),
-                    com.github.crittscott.somestacks.util.BlockType.SINGLES_STACK);
+                    BlockType.SINGLES_STACK);
             check(helper.getLevel().getBlockState(destination)
                             .is(CommonRegistry.storageStackBlock()),
                     "Top-face placement ignored the selected type");
@@ -542,11 +552,80 @@ public final class InteractionChecks {
         return events;
     }
 
+    /**
+     * Creating a stack counts as placing that block for advancements, judged against the item the
+     * player offered before the first deposit spent it. To reproduce in-game with the test mod:
+     * revoke {@code somestacks_gametest:placed_storage_stack}, hold exactly two Dirt, and create a
+     * Storage Stack. The advancement is awarded even though the deposit empties the hand. A blocked
+     * destination awards nothing. Revoke it again and deposit two Dirt into a full pile: growth
+     * awards nothing.
+     */
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        // Automation fake players can suppress advancement tracking. This check needs a regular
+        // player's tracker, with no connection because the fixture has no display or rewards.
+        ServerPlayer player = new ServerPlayer(level.getServer(), level,
+                new GameProfile(UUID.randomUUID(), "[SSCriterion]"), ClientInformation.createDefault()) {
+            @Override
+            public void sendOverlayMessage(Component message) {
+                // Action-bar output is not observed by this server-side check.
+            }
+        };
+        // Survival spending; setGameMode would broadcast through the connection this player lacks.
+        GameType.SURVIVAL.updatePlayerAbilities(player.getAbilities());
+        player.setItemInHand(HAND, new ItemStack(Items.DIRT, 2));
+        AdvancementHolder advancement = level.getServer().getAdvancements().get(
+                Identifier.fromNamespaceAndPath("somestacks_gametest", "placed_storage_stack"));
+        check(advancement != null, "Missing placement advancement fixture");
+        PlayerAdvancements progress = player.getAdvancements();
+        BlockPos support = helper.absolutePos(TARGET.east());
+        BlockPos destination = support.west();
+        level.setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        try {
+            level.setBlock(destination, CommonRegistry.storageStackBlock().defaultBlockState(),
+                    Block.UPDATE_ALL);
+            CriteriaTriggers.PLACED_BLOCK.trigger(player, destination, new ItemStack(Items.DIRT, 2));
+            check(progress.getOrStartProgress(advancement).isDone(),
+                    "Placement advancement fixture did not respond to the control trigger");
+            progress.revoke(advancement, "placed");
+
+            level.setBlock(destination, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+            BlockHitResult hit = hit(player, support, 0.0, 0.5, 0.5);
+            StackInteractions.handleAdjacentClick(player, HAND, hit, true, true);
+            check(!progress.getOrStartProgress(advancement).isDone(), "Denied placement awarded criterion");
+            checkEquals(2, player.getMainHandItem().getCount(), "Denied placement spent the offer");
+
+            level.setBlock(destination, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            StackInteractions.handleAdjacentClick(player, HAND, hit, true, true);
+            check(level.getBlockEntity(destination) instanceof StorageStackBE, "Player placement failed");
+            check(player.getMainHandItem().isEmpty(), "First deposit did not empty the hand");
+            check(progress.getOrStartProgress(advancement).isDone(),
+                    "Player placement did not award the original-offer criterion");
+
+            progress.revoke(advancement, "placed");
+            StorageStackBE storage = (StorageStackBE) level.getBlockEntity(destination);
+            for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+                storage.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+            }
+            ItemStack offer = new ItemStack(Items.DIRT, 2);
+            player.setItemInHand(HAND, offer);
+            checkEquals(2, storage.deposit(offer, player), "Growth deposit count");
+            check(level.getBlockState(destination.above()).is(CommonRegistry.storageStackBlock()),
+                    "Full pile did not grow");
+            check(!progress.getOrStartProgress(advancement).isDone(), "Pile growth awarded criterion");
+        } finally {
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.clear(player.getUUID());
+        }
+        helper.succeed();
+    }
+
     private static boolean click(ServerPlayer player, BlockPos pos,
                                  double localX, double localY, double localZ) {
         return StackInteractions.handleExistingStack(
                 player, HAND, hit(player, pos, localX, localY, localZ),
-                    com.github.crittscott.somestacks.util.BlockType.of(player.level().getBlockState(pos).getBlock()));
+                    BlockType.of(player.level().getBlockState(pos).getBlock()));
     }
 
     private static boolean rotationClick(ServerPlayer player, BlockPos pos,

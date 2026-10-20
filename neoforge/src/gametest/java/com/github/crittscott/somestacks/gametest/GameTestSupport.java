@@ -4,6 +4,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -82,7 +83,7 @@ public final class GameTestSupport {
             ServerPlayer player = fakePlayer(level);
             // Checks expect Survival spending; the shared fake player keeps whatever mode it last had.
             player.setGameMode(GameType.SURVIVAL);
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, mainHand);
+            player.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
             return player;
         };
     }

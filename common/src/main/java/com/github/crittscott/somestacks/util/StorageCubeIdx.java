@@ -14,7 +14,9 @@ import net.minecraft.core.BlockPos;
 public final class StorageCubeIdx {
     private StorageCubeIdx(){}
 
-    public static final CubeGrid GRID = new CubeGrid(3, 4.5, 1, 6, 11);
+    /** Width of one cell in model pixels, shared by targeting, collision, and rendering. */
+    public static final double CELL_PIXELS = 4.5;
+    public static final CubeGrid GRID = new CubeGrid(3, CELL_PIXELS, 1, 6, 11);
 
     /** Cells along one axis of the grid. */
     public static final int GRID_EDGE = GRID.edge();
