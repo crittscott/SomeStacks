@@ -20,7 +20,9 @@ import javax.annotation.Nullable;
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 
-    public static final CubeGrid GRID = new CubeGrid(4, 4.0, 0, 4, 8, 12);
+    /** Cell width in model pixels, shared by targeting and rendering. */
+    public static final double CELL_PIXELS = 4.0;
+    public static final CubeGrid GRID = new CubeGrid(4, CELL_PIXELS, 0, 4, 8, 12);
 
     /** Cells along one axis of the grid. */
     public static final int GRID_EDGE = GRID.edge();

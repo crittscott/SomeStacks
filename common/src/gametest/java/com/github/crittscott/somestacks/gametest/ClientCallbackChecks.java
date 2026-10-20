@@ -1,8 +1,10 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.client.ClientRenderCommands;
+import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
 import com.github.crittscott.somestacks.client.RenderProfile;
+import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import com.github.crittscott.somestacks.renderconfig.ItemRenderConfig;
 import com.github.crittscott.somestacks.renderconfig.OverrideJsonCodec;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
@@ -13,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.client.Minecraft;
@@ -42,7 +45,8 @@ public final class ClientCallbackChecks {
      * stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
      * loader callback for main/off hand and checks consumption plus block/item suppression. It
      * does not send a vanilla use packet or extract contents. A translated success/failure message
-     * reports the assertions; server GameTests cannot exercise this client-only boundary.
+     * reports the assertions; server GameTests cannot exercise this client-only boundary. It also
+     * checks render-profile layer precedence and invalidation and the profile commands.
      */
     public static int run(boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback) {
         Minecraft client = Minecraft.getInstance();
@@ -61,9 +65,9 @@ public final class ClientCallbackChecks {
                     callback.apply(InteractionHand.MAIN_HAND, hit), "Main-hand callback outputs");
             GameTestScaffold.checkEquals(new Result(false, false, false),
                     callback.apply(InteractionHand.OFF_HAND, hit), "Off-hand callback outputs");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(main, client.player.getMainHandItem()),
+            GameTestScaffold.check(ItemStack.matches(main, client.player.getMainHandItem()),
                     "Local callback changed main-hand contents");
-            GameTestScaffold.check(net.minecraft.world.item.ItemStack.matches(off, client.player.getOffhandItem()),
+            GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
             checkProfileCommands();
             client.player.displayClientMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"), false);
@@ -101,6 +105,7 @@ public final class ClientCallbackChecks {
         try {
             directory = Files.createTempDirectory("somestacks-overrides");
             try (ItemRenderOverrides.Sandbox sandbox = new ItemRenderOverrides.Sandbox(directory)) {
+                checkProfileLayers(stone, stoneId);
                 RenderProfile measured = ItemRenderOverrides.resolve(stone);
 
                 dispatcher.execute("ss item minecraft:stone 2d 1.5 0.25 0.5", new Object());
@@ -135,6 +140,56 @@ public final class ClientCallbackChecks {
             }
         }
         GameTestScaffold.checkEquals(2, feedback.size(), "The item commands should each report once");
+    }
+
+    /**
+     * Runs inside a sandbox whose layers start empty, and leaves them empty. To reproduce in-game:
+     * give Stone distinct user and resource-pack profiles, edit the user profile, reset it, and
+     * reload a changed resource pack. Each change immediately updates the displayed mode, scale,
+     * and offset; the user layer wins over the pack, which wins over measurement. A user entry
+     * containing only a mode uses scale one and zero offset rather than the pack's fields.
+     */
+    private static void checkProfileLayers(ItemStack stone, ResourceLocation id) {
+        RenderProfile measured = AutoRenderProfiles.get(stone);
+        GameTestScaffold.checkEquals(measured, ItemRenderOverrides.resolve(stone),
+                "An unconfigured item did not use its measured profile");
+
+        ItemRenderConfig pack = new ItemRenderConfig(RenderMode.GUI, 0.8f, new RenderOffset(0.1f, 0.2f, 0.3f));
+        ItemRenderOverrides.CONFIG_MAP.put(id, pack);
+        CubeRenderHelper.onResourceReload();
+        GameTestScaffold.checkEquals(profileOf(pack), ItemRenderOverrides.resolve(stone),
+                "A resource reload did not apply the resource-pack layer");
+
+        ItemRenderConfig user = new ItemRenderConfig(RenderMode.TWO_D, 0.6f, new RenderOffset(-0.1f, -0.2f, -0.3f));
+        ItemRenderOverrides.putUser(id, user);
+        GameTestScaffold.checkEquals(profileOf(user), ItemRenderOverrides.resolve(stone),
+                "The user layer did not take priority over the resource-pack layer");
+
+        ItemRenderConfig edited = new ItemRenderConfig(RenderMode.THREE_D, 0.9f, new RenderOffset(0.2f, 0.0f, -0.2f));
+        ItemRenderOverrides.putUser(id, edited);
+        GameTestScaffold.checkEquals(profileOf(edited), ItemRenderOverrides.resolve(stone),
+                "Editing a user override left the previous profile resolved");
+
+        ItemRenderOverrides.putUser(id, new ItemRenderConfig(RenderMode.BLOCK, null, null));
+        GameTestScaffold.checkEquals(new RenderProfile(RenderMode.BLOCK, 1.0f, RenderOffset.ZERO),
+                ItemRenderOverrides.resolve(stone), "A mode-only user entry took the pack's scale or offset");
+
+        ItemRenderOverrides.removeUser(id);
+        GameTestScaffold.checkEquals(profileOf(pack), ItemRenderOverrides.resolve(stone),
+                "Resetting a user override did not return to the resource-pack layer");
+
+        ItemRenderConfig replacement = new ItemRenderConfig(RenderMode.THREE_D, 0.4f, new RenderOffset(0.0f, 0.1f, 0.0f));
+        ItemRenderOverrides.CONFIG_MAP.put(id, replacement);
+        CubeRenderHelper.onResourceReload();
+        GameTestScaffold.checkEquals(profileOf(replacement), ItemRenderOverrides.resolve(stone),
+                "A resource reload left the replaced pack profile resolved");
+
+        ItemRenderOverrides.CONFIG_MAP.remove(id);
+        CubeRenderHelper.onResourceReload();
+    }
+
+    private static RenderProfile profileOf(ItemRenderConfig config) {
+        return new RenderProfile(config.mode(), config.scale(), config.offset());
     }
 
     private static Map<?, ItemRenderConfig> readUserFile(Path file) throws IOException {

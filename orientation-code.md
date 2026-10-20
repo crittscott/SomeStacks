@@ -57,7 +57,7 @@ Forge uses EventBus 7 (`BusGroup`, boolean cancellation, `Result` denial) and `A
 
 A maximal vertical run of one type is central. Block entities own local slots; server-only `StackRun` owns resolution, slots, headroom, publication and comparators. Concrete runs own movement. Structural edits invalidate per-tick resolution caches.
 
-Block entities do not tick. Mutations batch client, light, comparator, and Storage settlement work. Blocks report the run's signal using fill cached on mutation/load. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
+Block entities do not tick. Mutations batch client, light, comparator, and Storage settlement work. Blocks report run signals from per-slot fill fractions cached on mutation/load. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
 
 Movement models:
 
@@ -91,15 +91,15 @@ Forge/NeoForge consult destination right-click events for neighbor Singles/Bar d
 
 `ServerConfig` publishes immutable policy. Forge/NeoForge use native SERVER configs (`ForgeConfigSpec`/`ModConfigSpec`); load/reload events apply policy and resync. Commented TOML supports `<world>/serverconfig/somestacks-server.toml` overrides. Fabric loads `<world>/serverconfig/somestacks-server.json` from defaults and reports malformed fields independently. `/ss deny` and `/ss gen` save through the backend. `/ss reload` refreshes policy and resyncs players; Fabric rereads JSON, while Forge/NeoForge use native config events. Bar/Singles classification uses the `somestacks:ingots` tag.
 
-Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
+Extensions are listed in `orientation-player.md`.
 
-Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; Each distinct stack (item, components, count) prepares its item model or Z-facing 2-D plates once for all blocks until profiles or resources change, so time-dependent models freeze; a throwing 2-D capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Resources target pack format 63.
+Block entity renderers use `CubeGrid` and `CubeRenderHelper` for Storage/Singles item models; Bar uses resource-defined cuboids and tints. Storage/Singles profile precedence is user, resource pack, then measurement. Resolved profiles cache per item until override change or reload. `ItemCapture` records baked quads, tints, and optional bounds. Measurement uses bounds; Each distinct stack (item, components, count) prepares its item model or Z-facing 2-D plates once for all blocks in a bounded LRU until eviction or a profile/resource change, so time-dependent models freeze; a throwing 2-D capture draws `stack_cube_error` until reload. Bar UV regions cache per atlas sprite until reload. Bar auto-tint reads the first quad on first render. `measured_cache.json` is keyed by format version, resource packs, and owning-mod versions. Resources target pack format 63.
 
 2-D selection: thinnest/longest axis ratio. Cache: 3.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`, applying policy in memory; JSON config tests are Fabric-only. Loader wrappers use Fabric entrypoints, Forge annotations, or NeoForge deferred functions/test-instance JSON. Test data format: 80. JSON/references checked; compilation/discovery pending. For `/ssclienttest`, aim at a stack; release Shift/V.
+`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`, applying policy in memory; JSON config tests are Fabric-only. Loader wrappers use Fabric entrypoints or Forge/NeoForge deferred functions/test-instance JSON. Test data format: 80. JSON/references checked; compilation/discovery pending. The gallery-budget check runs alone in its own test environment; a regular player checks the placed-block criterion fixture. `/ssclienttest` (aim at a stack; release Shift/V) also checks profile layers and commands.
 
 `-PwithCommonProtectionApi=true` adds the compile-only Fabric integration to development runs with provider-backed GameTests; default tests cover its absence.
 

@@ -97,6 +97,8 @@ public final class SomeStacksGameTests {
                 () -> ConfigurationGameTests::ingotTagControlsBarAndSinglesAdmission);
         TEST_FUNCTIONS.register("configurationgametests/native_server_policy_persists_command_lists",
                 () -> ConfigurationGameTests::nativeServerPolicyPersistsCommandLists);
+        TEST_FUNCTIONS.register("interactiongametests/player_placement_awards_criterion_after_deposit",
+                () -> InteractionGameTests::playerPlacementAwardsCriterionAfterDeposit);
         TEST_FUNCTIONS.register("interactiongametests/malformed_gesture_state_fails_during_decoding",
                 () -> InteractionGameTests::malformedGestureStateFailsDuringDecoding);
         TEST_FUNCTIONS.register("interactiongametests/gesture_state_tracks_mode_and_modifier",

@@ -113,7 +113,7 @@ public final class BarCubeIdx {
      * Stack below; otherwise its footprint must overlap {@code seamBelow}.
      */
     public static boolean freshBlockSupports(int index, @Nullable boolean[] seamBelow) {
-        return isGroundedIn(new boolean[BarStackBE.SLOTS], index, seamBelow);
+        return index < LAYER_SIZE && (seamBelow == null || seamSupports(index, seamBelow));
     }
 
     private static AABB getBarBox(int index, BlockPos blockPos) {

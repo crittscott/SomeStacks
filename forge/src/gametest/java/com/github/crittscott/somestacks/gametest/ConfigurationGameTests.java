@@ -1,5 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.ForgeServerConfig;
+import com.github.crittscott.somestacks.ServerConfig;
+import java.io.IOException;
+import java.nio.file.Files;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 
@@ -48,26 +52,26 @@ public final class ConfigurationGameTests {
      * loader-managed TOML, and reopen the world. The saved denial is exposed through common policy.
      */
     public static void nativeServerPolicyPersistsCommandLists(GameTestHelper helper) {
-        com.github.crittscott.somestacks.ForgeServerConfig config =
-                com.github.crittscott.somestacks.ForgeServerConfig.INSTANCE;
-        com.github.crittscott.somestacks.ServerConfig.Settings original = config.reload();
-        com.github.crittscott.somestacks.ServerConfig.Backend previous =
-                com.github.crittscott.somestacks.ServerConfig.backend();
+        ForgeServerConfig config =
+                ForgeServerConfig.INSTANCE;
+        ServerConfig.Settings original = config.reload();
+        ServerConfig.Backend previous =
+                ServerConfig.backend();
         try {
-            com.github.crittscott.somestacks.ServerConfig.install(config);
-            com.github.crittscott.somestacks.ServerConfig.apply(original);
-            com.github.crittscott.somestacks.ServerConfig.addListEntry(
-                    com.github.crittscott.somestacks.ServerConfig.ListSetting.DISABLE_ITEMS, "minecraft:diamond");
+            ServerConfig.install(config);
+            ServerConfig.apply(original);
+            ServerConfig.addListEntry(
+                    ServerConfig.ListSetting.DISABLE_ITEMS, "minecraft:diamond");
             GameTestScaffold.check(config.reload().disableItems().contains("minecraft:diamond"),
                     "Command edit did not reach native config values");
-            GameTestScaffold.check(java.nio.file.Files.readString(config.path()).contains("minecraft:diamond"),
+            GameTestScaffold.check(Files.readString(config.path()).contains("minecraft:diamond"),
                     "Command edit did not reach the loader-managed TOML");
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             throw helper.assertionException(Component.literal("Could not read native config: " + e));
         } finally {
             config.save(original);
-            com.github.crittscott.somestacks.ServerConfig.install(previous);
-            com.github.crittscott.somestacks.ServerConfig.reload();
+            ServerConfig.install(previous);
+            ServerConfig.reload();
         }
         helper.succeed();
     }

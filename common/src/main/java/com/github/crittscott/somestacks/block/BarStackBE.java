@@ -77,10 +77,11 @@ public class BarStackBE extends StackBlockEntity {
         cachedShape = null;
     }
 
-    /** Items in the reloadable SomeStacks ingot tag, excluding denied namespaces, belong in Bar. */
+    /** Reloadable data-pack classification of items that belong in Bar rather than Singles. */
     public static final TagKey<Item> INGOTS = TagKey.create(Registries.ITEM,
             ResourceLocation.fromNamespaceAndPath(SomeStacksCommon.MODID, "ingots"));
 
+    /** Accepts nonempty tagged items whose namespaces are not disabled by server policy. */
     public static boolean isValidBarItem(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
@@ -169,12 +170,8 @@ public class BarStackBE extends StackBlockEntity {
      * takes a different path — see {@link BarColumn#extract}, which backfills instead.
      *
      * @param index the position to empty, in {@code [0, SLOTS)}
+     * @param actor the player responsible for cleanup, or null for automation
      */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /** Player-facing extraction variant that preserves the actor through cascade cleanup. */
     public ItemStack extractAt(int index, @Nullable ServerPlayer actor) {
         ServerLevel serverLevel = (ServerLevel) Objects.requireNonNull(level);
         boolean[] topBefore = BarCubeIdx.topLayerOccupancy(items);
@@ -207,17 +204,14 @@ public class BarStackBE extends StackBlockEntity {
         items.setStackInSlot(index, bar);
     }
 
-    /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Bar Stack
-     * directly below, or null when this block stands on the world instead of on another Bar Stack.
-     */
-    @Nullable
+    /** Whether this local position is valid, empty, and supported by the layer or seam below. */
     public boolean canDepositAt(int index) {
         return index >= 0
                 && index < SLOTS
                 && items.getStackInSlot(index).isEmpty()
                 && BarCubeIdx.isGrounded(
-                        index, items, supportSeamBeneath(level, getBlockPos()));
+                        index, items, index < BarCubeIdx.LAYER_SIZE
+                                ? supportSeamBeneath(level, getBlockPos()) : null);
     }
 
     /** Whether an empty Bar block at {@code pos} supports its first bar. */
@@ -227,7 +221,10 @@ public class BarStackBE extends StackBlockEntity {
                 && BarCubeIdx.freshBlockSupports(index, supportSeamBeneath(level, pos));
     }
 
-    /** The overlap occupancy supporting the bottom layer at {@code pos}. */
+    /**
+     * Top-layer occupancy of the Bar Stack below {@code pos}, or null when no Bar Stack is beneath it.
+     * A null seam grounds a bottom-layer deposit directly on the world.
+     */
     @Nullable
     public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
         if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {

@@ -16,8 +16,11 @@ public final class ServerConfig {
 
     /** Persistence and lifecycle supplied by the selected loader. */
     public interface Backend {
+        /** Loads validated policy for this world after loader installation and before world activity. */
         Settings loadFor(MinecraftServer server);
+        /** Returns validated policy from disk or the loader's published values; parsing fallback is backend-owned. */
         Settings reload();
+        /** Persists the supplied policy; returns whether saving succeeded, without applying it here. */
         boolean save(Settings settings);
     }
     public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
@@ -40,21 +43,35 @@ public final class ServerConfig {
     private static volatile Set<String> disabledMods = Set.of();
     private static volatile Set<ResourceLocation> disabledItems = Set.of();
 
+    /** Installs loader persistence before loadFor; does not load or apply policy. */
     public static void install(Backend implementation) { backend = implementation; }
+    /** Installed loader persistence, or null before installation. */
     public static Backend backend() { return backend; }
+    /** Current immutable in-memory policy. */
     public static Settings settings() { return settings; }
+    /** Publishes already-validated policy and rebuilds admission sets; does not save or synchronize clients. */
     public static void apply(Settings policy) {
         settings = policy;
         bakeServerLists();
     }
+    /** Loads and applies this world's policy using the installed backend before world activity. */
     public static void loadFor(MinecraftServer server) { apply(backend.loadFor(server)); }
+    /**
+     * Applies the backend's current policy. True means a backend existed, not that parsing succeeded;
+     * a backend may return defaults for invalid input. Does not save or synchronize clients.
+     */
     public static boolean reload() {
         if (backend == null) return false;
         apply(backend.reload());
         return true;
     }
+    /** Saves current policy without changing it; false when no backend exists or saving fails. */
     public static boolean save() { return backend != null && backend.save(settings); }
 
+    /**
+     * Immutable policy values. Lists are defensively copied; backends and other callers
+     * must validate numeric ranges and list entries before application. This record does not validate them.
+     */
     public record Settings(
             int maxPileHeight,
             boolean enableStorageStackBlock,

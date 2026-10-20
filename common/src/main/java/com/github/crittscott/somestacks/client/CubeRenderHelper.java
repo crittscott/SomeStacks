@@ -3,7 +3,9 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.QuarterTurns;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,6 +24,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.BlockItem;
@@ -42,9 +45,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashMap;
-import net.minecraft.core.component.DataComponentPatch;
 import java.util.Set;
 import java.util.function.IntUnaryOperator;
 
@@ -58,8 +60,8 @@ import java.util.function.IntUnaryOperator;
  * of a small background cube, which is what makes a wall of stored items readable at a distance.
  *
  * <p>Work is done when something changes. Each distinct stack's profile, item model, and
- * {@code 2d} plates are prepared once and shared by every grid showing it until profiles or
- * resources change, so a model that changes with time, such as a compass, shows its state from
+ * {@code 2d} plates are shared by every grid showing it while retained in a bounded cache, until
+ * profiles or resources change or the entry is evicted, so a model that changes with time, such as a compass, shows its state from
  * when it was prepared.
  */
 public final class CubeRenderHelper {
@@ -96,10 +98,11 @@ public final class CubeRenderHelper {
      * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
      * tile edge to edge with no gap to absorb growth into.
      */
-    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
+    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE
+            * (float) StorageCubeIdx.CELL_PIXELS / (float) SinglesCubeIdx.CELL_PIXELS;
 
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+    public static final float CELL_LOCAL_SIZE = (float) SinglesCubeIdx.CELL_PIXELS / 8.0f;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
@@ -190,8 +193,15 @@ public final class CubeRenderHelper {
     private record PreparedItem(RenderProfile profile, @Nullable List<ItemCapture.TintedQuad> plates,
                                 @Nullable ItemStackRenderState item) {}
 
-    /** Prepared stacks for every grid, valid for {@link #preparedGeneration} of the profiles. */
-    private static final Map<CaptureKey, PreparedItem> PREPARED = new HashMap<>();
+    /** Maximum number of component/count-distinct prepared displays retained across all grids. */
+    private static final int MAX_PREPARED_ITEMS = 2048;
+    /** Prepared displays in access order, valid for {@link #preparedGeneration} of the profiles. */
+    private static final Map<CaptureKey, PreparedItem> PREPARED = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<CaptureKey, PreparedItem> eldest) {
+            return size() > MAX_PREPARED_ITEMS;
+        }
+    };
     private static int preparedGeneration = -1;
 
     private static void renderItemInCube(ItemStack stack, PoseStack pose, MultiBufferSource buffers,
@@ -214,7 +224,7 @@ public final class CubeRenderHelper {
 
     /**
      * The stack's shared presentation, prepared the first time any grid shows it since the
-     * profiles or resources last changed; null for a stack with no profile.
+     * profiles or resources last changed or its entry was evicted; null for a stack with no profile.
      */
     @Nullable
     private static PreparedItem prepared(ItemStack stack, Level level) {
@@ -387,10 +397,10 @@ public final class CubeRenderHelper {
     }
 
     /**
-     * Clears failure state tied to models being replaced by a resource reload; clearing the
-     * resolved profiles also discards every prepared stack.
+     * Immediately discards prepared models and failure state tied to the replaced resources.
      */
     public static void onResourceReload() {
+        PREPARED.clear();
         BLOCK_RENDER_FAILURES.clear();
         FLAT_CAPTURE_FAILURES.clear();
         BarStackBER.onResourceReload();

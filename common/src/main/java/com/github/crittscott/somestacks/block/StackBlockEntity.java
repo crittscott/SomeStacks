@@ -41,6 +41,8 @@ public abstract class StackBlockEntity extends BlockEntity {
     private boolean publishPending;
     private int publishedSignal = -1;
     private double comparatorContribution;
+    private final double[] slotContributions;
+    private boolean comparatorDirty;
     private StackRunItemAccess cachedRun;
     private long cachedRunTick = Long.MIN_VALUE;
 
@@ -48,11 +50,12 @@ public abstract class StackBlockEntity extends BlockEntity {
     protected StackBlockEntity(
             BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
         super(type, pos, state);
+        slotContributions = new double[slots];
         items = new StackItemStorage(slots) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
-                refreshComparatorContribution();
+                refreshSlotContribution(slot);
                 onLocalContentsChanged(slot);
                 if (isBatching()) {
                     batchTouched = true;
@@ -117,19 +120,30 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Cached local numerator of the run's comparator fill fraction. */
     final double comparatorContribution() {
+        if (comparatorDirty) {
+            double sum = 0.0;
+            for (double contribution : slotContributions) {
+                sum += contribution;
+            }
+            comparatorContribution = sum;
+            comparatorDirty = false;
+        }
         return comparatorContribution;
     }
 
+    /** Updates only the changed slot; summing cached fractions on demand avoids cumulative rounding drift. */
+    private void refreshSlotContribution(int slot) {
+        ItemStack stack = items.getStackInSlot(slot);
+        slotContributions[slot] = stack.isEmpty() ? 0.0 : localSlotLimit() == 1 ? 1.0
+                : (double) stack.getCount() / stack.getMaxStackSize();
+        comparatorDirty = true;
+    }
+
     private void refreshComparatorContribution() {
-        double sum = 0.0;
         for (int slot = 0; slot < items.getSlots(); slot++) {
-            ItemStack stack = items.getStackInSlot(slot);
-            if (!stack.isEmpty()) {
-                sum += localSlotLimit() == 1 ? 1.0
-                        : (double) stack.getCount() / stack.getMaxStackSize();
-            }
+            refreshSlotContribution(slot);
         }
-        comparatorContribution = sum;
+        comparatorContribution();
     }
 
     /**

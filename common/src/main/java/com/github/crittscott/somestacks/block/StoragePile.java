@@ -84,8 +84,6 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         StackRun.markDirtyAt(level, pos, StoragePile::at);
     }
 
-    /** The configured ceiling on pile height. Server-side only. */
-
     /**
      * Whether a Storage Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum. Testing the
@@ -388,7 +386,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         List<ItemStack> packed = new ArrayList<>();
         for (SettlementGroup group : ordered) {
             int remaining = group.count;
-            int limit = Math.max(1, group.model.getMaxStackSize());
+            int limit = group.model.getMaxStackSize();
             while (remaining > 0) {
                 ItemStack piece = group.model.copy();
                 piece.setCount(Math.min(remaining, limit));

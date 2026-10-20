@@ -7,6 +7,7 @@ import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.server.ForgeEditAuthority;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
@@ -190,8 +191,8 @@ public final class ProtectionGameTests {
     public static void adjacentStackConsultsDestinationProtection(GameTestHelper helper) {
         ServerPlayer player = GameTestSupport.fakePlayer(helper.getLevel());
         BlockPos target = helper.absolutePos(ORIGIN);
-        java.util.concurrent.atomic.AtomicInteger clicks = new java.util.concurrent.atomic.AtomicInteger();
-        java.util.concurrent.atomic.AtomicInteger denial = new java.util.concurrent.atomic.AtomicInteger();
+        AtomicInteger clicks = new AtomicInteger();
+        AtomicInteger denial = new AtomicInteger();
         Predicate<PlayerInteractEvent.RightClickBlock> observe = event -> {
             if (event.getLevel() != helper.getLevel() || !event.getPos().equals(target)) return false;
             clicks.incrementAndGet();
@@ -253,7 +254,7 @@ public final class ProtectionGameTests {
     }
 
     private static Runnable observeRemoval(ServerLevel level, BlockPos pos,
-            java.util.function.Consumer<Player> observed, java.util.function.Predicate<Player> allowed) {
+            Consumer<Player> observed, Predicate<Player> allowed) {
         Consumer<BlockEvent.BreakEvent> listener = event -> {
             if (event.getLevel() == level && event.getPos().equals(pos)) {
                 observed.accept(event.getPlayer());

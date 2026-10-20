@@ -186,7 +186,7 @@ public final class BarColumnGameTests {
 
         var denyListener = BlockEvent.BreakEvent.BUS.addListener(denyLower);
         try {
-            lower.extractAt(0);
+            lower.extractAt(0, null);
         } finally {
             BlockEvent.BreakEvent.BUS.removeListener(denyListener);
         }

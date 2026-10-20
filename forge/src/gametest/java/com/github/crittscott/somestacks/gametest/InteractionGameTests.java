@@ -11,6 +11,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 public final class InteractionGameTests {
     public InteractionGameTests() {}
 
+    /** See {@link InteractionChecks#playerPlacementAwardsCriterionAfterDeposit}. */
+    public static void playerPlacementAwardsCriterionAfterDeposit(GameTestHelper helper) {
+        InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(helper);
+    }
+
     /** See {@link InteractionChecks#malformedGestureStateFailsDuringDecoding}. */
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         InteractionChecks.malformedGestureStateFailsDuringDecoding(helper);
