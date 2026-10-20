@@ -1,9 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.server.StackInteractionEvents;
+import com.github.crittscott.somestacks.server.NeoForgeStackInteractionEvents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-
 
 /**
  * NeoForge delegates for loader-neutral interaction and validation checks.
@@ -44,7 +43,7 @@ public final class InteractionGameTests {
                 helper, GameTestSupport.playerFactory(helper), (player, hit) -> {
                     var event = new PlayerInteractEvent.RightClickBlock(
                             player, InteractionChecks.HAND, hit.getBlockPos(), hit);
-                    StackInteractionEvents.onRightClickBlock(event);
+                    NeoForgeStackInteractionEvents.onRightClickBlock(event);
                     return event.isCanceled();
                 });
     }

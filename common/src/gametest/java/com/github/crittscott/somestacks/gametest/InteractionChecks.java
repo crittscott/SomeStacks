@@ -240,7 +240,7 @@ public final class InteractionChecks {
         StorageStackBE extractTarget = GameTestScaffold.placeStorage(helper, TARGET.east(3));
         int center = StorageCubeIdx.GRID_EDGE * StorageCubeIdx.GRID_EDGE
                 + StorageCubeIdx.GRID_EDGE + 1;
-        extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3), false);
+        extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3));
         BlockPos support = helper.absolutePos(TARGET.east(6));
         helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 4));
@@ -349,7 +349,7 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
         int center = 13;
-        storage.getItems().insertItem(center, new ItemStack(Items.STONE, 8), false);
+        storage.getItems().insertItem(center, new ItemStack(Items.STONE, 8));
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
         try {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
@@ -381,7 +381,7 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.DIRT), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.DIRT));
         }
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 2));
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
@@ -493,8 +493,8 @@ public final class InteractionChecks {
             var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
                     : GameTestScaffold.placeSingles(helper, TARGET);
             var item = bar ? GameTestScaffold.firstBarItem() : Items.STONE;
-            be.getItems().insertItem(0, new ItemStack(item), false);
-            be.getItems().insertItem(1, new ItemStack(item), false);
+            be.getItems().insertItem(0, new ItemStack(item));
+            be.getItems().insertItem(1, new ItemStack(item));
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             try {
@@ -525,8 +525,7 @@ public final class InteractionChecks {
         for (boolean bar : new boolean[] {false, true}) {
             var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
                     : GameTestScaffold.placeSingles(helper, TARGET);
-            be.getItems().insertItem(0,
-                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE), false);
+            be.getItems().insertItem(0, new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE));
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             Runnable unregister = observer.install(helper.getLevel(), be.getBlockPos(),
                     actor -> {}, actor -> false);

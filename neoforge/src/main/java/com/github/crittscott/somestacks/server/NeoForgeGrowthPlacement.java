@@ -19,7 +19,7 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
 
     /** Consults the native placement event against a tentative block, then restores it silently. */
     public static NeoForgeGrowthPlacement prepare(ServerLevel level, BlockPos pos, BlockState state) {
-        if (level.captureBlockSnapshots || level.restoringBlockSnapshots || !WorldEdits.mayPlace(level, pos)) {
+        if (level.captureBlockSnapshots || level.restoringBlockSnapshots || !WorldEdits.mayPlace(null, level, pos)) {
             return null;
         }
         List<BlockSnapshot> snapshots = new ArrayList<>();

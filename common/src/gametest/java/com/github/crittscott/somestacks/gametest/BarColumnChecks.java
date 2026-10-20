@@ -150,7 +150,7 @@ public final class BarColumnChecks {
         Item barItem = firstBarItem();
         int lowerTop = 56;
         int upperBottom = firstSeamSupportedBy(0);
-        lower.getItems().insertItem(lowerTop, new ItemStack(barItem), false);
+        lower.getItems().insertItem(lowerTop, new ItemStack(barItem));
 
         check(upper.depositAt(upperBottom, new ItemStack(barItem)),
                 "Cross-block footprint support was rejected");
@@ -165,7 +165,7 @@ public final class BarColumnChecks {
     public static void depositTraceStopsAtLastEmptyBeforeOccupiedBar(GameTestHelper helper) {
         BarStackBE bars = placeBar(helper, ORIGIN);
         Item barItem = firstBarItem();
-        bars.getItems().insertItem(1, new ItemStack(barItem), false);
+        bars.getItems().insertItem(1, new ItemStack(barItem));
         BlockPos pos = bars.getBlockPos();
         double y = pos.getY() + 1.0 / 16.0;
         double z = pos.getZ() + 2.0 / 16.0;
@@ -188,7 +188,7 @@ public final class BarColumnChecks {
         BarStackBE upper = placeBar(helper, ORIGIN.above());
         Item barItem = firstBarItem();
         int upperBottom = firstSeamSupportedBy(0);
-        lower.getItems().insertItem(56, new ItemStack(barItem), false);
+        lower.getItems().insertItem(56, new ItemStack(barItem));
         upper.depositAt(upperBottom, new ItemStack(barItem));
 
         helper.getLevel().setBlock(lower.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
@@ -340,12 +340,12 @@ public final class BarColumnChecks {
 
         checkEquals(0, signalAt(helper, ORIGIN), "Empty column signal");
 
-        bars.getItems().insertItem(0, new ItemStack(barItem, 1), false);
+        bars.getItems().insertItem(0, new ItemStack(barItem, 1));
         checkEquals(1, signalAt(helper, ORIGIN),
                 "Signal for a single bar in a whole column");
 
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+            bars.getItems().insertItem(slot, new ItemStack(barItem, 1));
         }
         checkEquals(15, signalAt(helper, ORIGIN), "Full column signal");
         helper.succeed();
@@ -361,7 +361,7 @@ public final class BarColumnChecks {
         placeBar(helper, ORIGIN.above());
         Item barItem = firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            lower.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+            lower.getItems().insertItem(slot, new ItemStack(barItem, 1));
         }
 
         // Half the column's positions are occupied, and both blocks report that rather than their own.
@@ -382,7 +382,7 @@ public final class BarColumnChecks {
         placeBar(helper, ORIGIN.above());
         Item barItem = firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            lower.getItems().insertItem(slot, new ItemStack(barItem, 1), false);
+            lower.getItems().insertItem(slot, new ItemStack(barItem, 1));
         }
         checkEquals(8, signalAt(helper, ORIGIN), "Signal before the block was lost");
 

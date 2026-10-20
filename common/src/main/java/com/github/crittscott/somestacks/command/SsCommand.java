@@ -100,7 +100,7 @@ public final class SsCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
             String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> isPlayer(source) && ServerConfig.galleryEnabled()
+                .requires(source -> source.isPlayer() && ServerConfig.galleryEnabled()
                         && ServerConfig.galleryPermission().check(source.permissions()))
                 .then(Commands.literal("all")
                         .executes(ctx -> galleryAll(ctx, kind)))
@@ -196,10 +196,6 @@ public final class SsCommand {
                                                 IdentifierArgument.getId(ctx, ARG_ITEM).toString()))))
                         .then(Commands.literal("list")
                                 .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
-    }
-
-    private static boolean isPlayer(CommandSourceStack source) {
-        return source.isPlayer();
     }
 
     /** Vanilla's gamerule and world-editing level, the gate on the administrative subcommands. */

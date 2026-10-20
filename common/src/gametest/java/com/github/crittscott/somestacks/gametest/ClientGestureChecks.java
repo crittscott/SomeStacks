@@ -149,7 +149,7 @@ public final class ClientGestureChecks {
                     assertModifiedClickCancelled(player, be.getBlockPos());
                 }
                 for (int slot = 0; slot < be.getItems().getSlots(); slot++) {
-                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.automationSlotLimit()));
+                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.localSlotLimit()));
                 }
                 assertModifiedClickCancelled(player, be.getBlockPos());
             }

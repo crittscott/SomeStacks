@@ -260,7 +260,7 @@ public final class ProtectionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
             RemovalObserver observer) {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
-        bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()), false);
+        bars.getItems().insertItem(0, new ItemStack(GameTestScaffold.firstBarItem()));
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
         Runnable unregister = observer.install(helper.getLevel(), bars.getBlockPos(), actor::set,
@@ -284,7 +284,7 @@ public final class ProtectionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory,
             RemovalObserver observer) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 2));
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
         AtomicReference<Player> actor = new AtomicReference<>();
         Runnable unregister = observer.install(helper.getLevel(), storage.getBlockPos(), actor::set,
@@ -382,7 +382,7 @@ public final class ProtectionChecks {
                 check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
                         "Accepted placement failed");
                 ((StorageStackBE) level.getBlockEntity(target)).getItems()
-                        .insertItem(0, new ItemStack(Items.STONE), false);
+                        .insertItem(0, new ItemStack(Items.STONE));
                 helper.runAfterDelay(3, () -> {
                     check(level.getBlockState(observer).getValue(ObserverBlock.POWERED),
                             "Accepted placement never published to its observer");
