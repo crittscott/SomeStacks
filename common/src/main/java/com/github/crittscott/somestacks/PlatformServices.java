@@ -12,7 +12,8 @@ public final class PlatformServices {
     public interface Backend {
         Path configFolder();
         String modVersion(String namespace);
-        void sendConfig(ServerPlayer player, ConfigSyncPkt packet);
+        /** Sends an explicit snapshot, or returns false when the loader owns native config sync. */
+        boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet);
         EditAuthority editAuthority();
     }
 
@@ -40,8 +41,8 @@ public final class PlatformServices {
         return backend.modVersion(namespace);
     }
 
-    public static void sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
-        backend.sendConfig(player, packet);
+    public static boolean sendConfig(ServerPlayer player, ConfigSyncPkt packet) {
+        return backend.sendConfig(player, packet);
     }
 
     public static EditAuthority editAuthority() {

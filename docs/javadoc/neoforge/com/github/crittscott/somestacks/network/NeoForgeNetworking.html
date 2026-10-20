@@ -56,7 +56,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#setClientReceiver(java.util.function.Consumer)" tabindex="0">setClientReceiver(Consumer)</a></li>
 <li><a href="#onRegisterPayloadHandlers(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent)" tabindex="0">onRegisterPayloadHandlers(RegisterPayloadHandlersEvent)</a></li>
 </ol>
 </li>
@@ -75,13 +74,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">NeoForgeNetworking</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The mod's payloads and their handler registration. Every packet class is shared; this binds the
-shared <code>TYPE</code>/<code>STREAM_CODEC</code> pair to NeoForge's payload system.
-
-<p>The server-to-client payload is delivered to <code>clientReceiver</code>, which the
-physical client installs from <code>NeoForgeClientSetup</code>; the dedicated server never touches a client
-rendering class. NeoForge rejects peers whose registrar version does not match the shared
-protocol version or which omit a required payload.</div>
+<div class="block">Registers the shared gesture payload; NeoForge synchronizes policy through its config lifecycle.</div>
 </div>
 </section>
 <section class="summary">
@@ -100,11 +93,6 @@ protocol version or which omit a required payload.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onRegisterPayloadHandlers(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent)" class="member-name-link">onRegisterPayloadHandlers</a><wbr>(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setClientReceiver(java.util.function.Consumer)" class="member-name-link">setClientReceiver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;com.github.crittscott.somestacks.network.ConfigSyncPkt&gt;&nbsp;receiver)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Installed once by <code>NeoForgeClientSetup</code> on the physical client.</div>
-</div>
 </div>
 </div>
 </div>
@@ -122,15 +110,6 @@ protocol version or which omit a required payload.</div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="setClientReceiver(java.util.function.Consumer)">
-<h3>setClientReceiver</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setClientReceiver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;com.github.crittscott.somestacks.network.ConfigSyncPkt&gt;&nbsp;receiver)</span></div>
-<div class="block">Installed once by <code>NeoForgeClientSetup</code> on the physical client.</div>
-</div>
-</section>
-</li>
 <li>
 <section class="detail" id="onRegisterPayloadHandlers(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent)">
 <h3>onRegisterPayloadHandlers</h3>

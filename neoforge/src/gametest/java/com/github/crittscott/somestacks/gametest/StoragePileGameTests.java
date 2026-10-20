@@ -109,4 +109,13 @@ public final class StoragePileGameTests {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
     }
 
+    /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
+    public static void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
+        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(helper, GameTestSupport::offerAt);
+    }
+
+    /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */
+    public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
+    }
 }

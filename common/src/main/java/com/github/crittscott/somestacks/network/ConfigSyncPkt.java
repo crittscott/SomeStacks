@@ -4,284 +4,76 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 
-/** One byte-bounded chunk of the server settings synchronized to clients. */
-public record ConfigSyncPkt(
-        int generation,
-        boolean first,
-        boolean last,
-        boolean enableStorage,
-        boolean enableSingles,
-        boolean enableBar,
-        int totalGenMods,
-        int totalDisabledMods,
-        List<String> genMods,
-        List<String> disabledMods) implements CustomPacketPayload {
-
+/** Complete client policy snapshot; Fabric sends it as one bounded play payload. */
+public record ConfigSyncPkt(boolean enableStorage, boolean enableSingles, boolean enableBar,
+                            List<String> genMods, List<String> disabledMods) implements CustomPacketPayload {
+    /** ASCII namespaces: both lists together encode to at most about 130 KiB. */
+    public static final int MAX_NAMESPACES = 256;
+    public static final int MAX_NAMESPACE_LENGTH = 256;
     public static final Type<ConfigSyncPkt> TYPE = new Type<>(
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "config_sync"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC =
-            StreamCodec.ofMember(ConfigSyncPkt::encode, ConfigSyncPkt::decode);
-
-    public static final int MAX_PACKET_BYTES = 256 * 1024;
-    private static final int PACKET_OVERHEAD_BYTES = 64;
-    private static final int MAX_TOTAL_NAMESPACES = 4_096;
-    private static final int MAX_NAMESPACE_LENGTH = 256;
-    private static final int MAX_ENCODED_NAMESPACE_BYTES = MAX_NAMESPACE_LENGTH + 2;
-    private static final int MAX_NAMESPACE_BYTES = 2 * MAX_TOTAL_NAMESPACES * MAX_ENCODED_NAMESPACE_BYTES;
-    public static final int MAX_GENERATION_CHUNKS = (MAX_NAMESPACE_BYTES
-            + MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES - 1)
-            / (MAX_PACKET_BYTES - PACKET_OVERHEAD_BYTES - MAX_ENCODED_NAMESPACE_BYTES);
-    public static final int MAX_GENERATION_BYTES = MAX_NAMESPACE_BYTES
-            + MAX_GENERATION_CHUNKS * PACKET_OVERHEAD_BYTES;
-
-    private static volatile List<ConfigSyncPkt> currentPackets = List.of();
-    private static int nextGeneration;
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPkt> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, ConfigSyncPkt::enableStorage,
+            ByteBufCodecs.BOOL, ConfigSyncPkt::enableSingles,
+            ByteBufCodecs.BOOL, ConfigSyncPkt::enableBar,
+            ByteBufCodecs.stringUtf8(MAX_NAMESPACE_LENGTH).apply(ByteBufCodecs.list(MAX_NAMESPACES)), ConfigSyncPkt::genMods,
+            ByteBufCodecs.stringUtf8(MAX_NAMESPACE_LENGTH).apply(ByteBufCodecs.list(MAX_NAMESPACES)), ConfigSyncPkt::disabledMods,
+            ConfigSyncPkt::new);
 
     public ConfigSyncPkt {
-        genMods = List.copyOf(genMods);
-        disabledMods = List.copyOf(disabledMods);
-        if (generation <= 0 || totalGenMods < 0 || totalGenMods > MAX_TOTAL_NAMESPACES
-                || totalDisabledMods < 0 || totalDisabledMods > MAX_TOTAL_NAMESPACES
-                || genMods.size() > totalGenMods || disabledMods.size() > totalDisabledMods) {
-            throw new DecoderException("Invalid config synchronization totals");
+        genMods = validated(genMods);
+        disabledMods = validated(disabledMods);
+    }
+
+    private static List<String> validated(List<String> namespaces) {
+        if (namespaces.size() > MAX_NAMESPACES) throw new DecoderException("Too many synchronized namespaces");
+        var unique = new LinkedHashSet<String>();
+        for (String namespace : namespaces) {
+            if (namespace.isEmpty() || namespace.length() > MAX_NAMESPACE_LENGTH
+                    || !Identifier.isValidNamespace(namespace) || !unique.add(namespace)) {
+                throw new DecoderException("Invalid or duplicate synchronized namespace");
+            }
         }
-        validateNamespaces(genMods);
-        validateNamespaces(disabledMods);
-        if (budgetBytes(genMods, disabledMods) > MAX_PACKET_BYTES) {
-            throw new DecoderException("Config synchronization packet exceeds byte limit");
-        }
+        return List.copyOf(namespaces);
     }
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    /** Normalizes policy for either native NeoForge receipt or Fabric payload delivery. */
+    public static ConfigSyncPkt fromSettings(ServerConfig.Settings settings) {
+        return new ConfigSyncPkt(settings.enableStorageStackBlock(), settings.enableSinglesStackBlock(),
+                settings.enableBarStackBlock(), boundedNamespaces(settings.genMods(), "gallery mod"),
+                boundedNamespaces(settings.disableMods(), "disabled mod"));
     }
 
-    /**
-     * Replaces the immutable cached sequence with a new generation after world policy is loaded
-     * or changed. Call before sending login or reload synchronization; this does not send packets.
-     */
-    public static synchronized void rebuildCurrent() {
-        nextGeneration = nextGeneration == Integer.MAX_VALUE ? 1 : nextGeneration + 1;
-
-        List<String> genMods = boundedNamespaces(ServerConfig.ListSetting.GEN_MODS.get(), "gallery mod");
-        List<String> disabledMods = boundedNamespaces(
-                ServerConfig.ListSetting.DISABLE_MODS.get(), "disabled mod");
-
-        currentPackets = buildPackets(
-                nextGeneration,
-                ServerConfig.enableStorageStackBlock(),
-                ServerConfig.enableSinglesStackBlock(),
-                ServerConfig.enableBarStackBlock(),
-                genMods,
-                disabledMods);
-    }
-
-    /** The packet sequence most recently built at server start or by {@code /ss reload}. */
-    public static List<ConfigSyncPkt> currentPackets() {
-        return currentPackets;
-    }
-
-    private static List<String> boundedNamespaces(List<String> source, String label) {
-        LinkedHashSet<String> result = new LinkedHashSet<>();
-        for (String entry : source) {
-            String namespace = entry.trim().toLowerCase(Locale.ROOT);
-            if (namespace.isEmpty() || !result.add(namespace)) {
+    private static List<String> boundedNamespaces(List<String> entries, String label) {
+        var result = new LinkedHashSet<String>();
+        boolean omitted = false;
+        for (String entry : entries) {
+            String namespace = ServerConfig.normalizeNamespace(entry);
+            if (namespace.isEmpty()) continue;
+            if (namespace.length() > MAX_NAMESPACE_LENGTH || !Identifier.isValidNamespace(namespace)) {
+                SomeStacksCommon.LOGGER.warn("Ignoring invalid {} namespace '{}' in client policy", label, entry);
+            } else if (result.contains(namespace)) {
                 continue;
-            }
-            if (!validNamespace(namespace)) {
-                result.remove(namespace);
-                SomeStacksCommon.LOGGER.warn(
-                        "Ignoring invalid {} namespace '{}' in client synchronization", label, entry);
-                continue;
-            }
-            if (result.size() == MAX_TOTAL_NAMESPACES) {
-                SomeStacksCommon.LOGGER.warn(
-                        "The {} list exceeds the synchronization limit of {}; remaining entries "
-                                + "will not be sent",
-                        label, MAX_TOTAL_NAMESPACES);
-                break;
+            } else if (result.size() < MAX_NAMESPACES) {
+                result.add(namespace);
+            } else {
+                omitted = true;
             }
         }
+        if (omitted) SomeStacksCommon.LOGGER.warn(
+                "The {} list exceeds the client policy limit of {}; remaining entries are omitted",
+                label, MAX_NAMESPACES);
         return List.copyOf(result);
     }
 
-    private static List<ConfigSyncPkt> buildPackets(
-            int generation,
-            boolean enableStorage,
-            boolean enableSingles,
-            boolean enableBar,
-            List<String> genMods,
-            List<String> disabledMods) {
-        List<Chunk> chunks = new ArrayList<>();
-        Chunk chunk = new Chunk();
-
-        for (String namespace : genMods) {
-            int size = encodedStringSize(namespace);
-            if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
-                chunks.add(chunk);
-                chunk = new Chunk();
-            }
-            chunk.genMods.add(namespace);
-            chunk.encodedBytes += size;
-        }
-        for (String namespace : disabledMods) {
-            int size = encodedStringSize(namespace);
-            if (!chunk.isEmpty() && chunk.encodedBytes + size > MAX_PACKET_BYTES) {
-                chunks.add(chunk);
-                chunk = new Chunk();
-            }
-            chunk.disabledMods.add(namespace);
-            chunk.encodedBytes += size;
-        }
-        if (!chunk.isEmpty() || chunks.isEmpty()) {
-            chunks.add(chunk);
-        }
-
-        List<ConfigSyncPkt> packets = new ArrayList<>(chunks.size());
-        for (int i = 0; i < chunks.size(); i++) {
-            Chunk current = chunks.get(i);
-            packets.add(new ConfigSyncPkt(
-                    generation,
-                    i == 0,
-                    i == chunks.size() - 1,
-                    enableStorage,
-                    enableSingles,
-                    enableBar,
-                    genMods.size(),
-                    disabledMods.size(),
-                    current.genMods,
-                    current.disabledMods));
-        }
-        return List.copyOf(packets);
-    }
-
-    private static void encode(ConfigSyncPkt packet, RegistryFriendlyByteBuf buf) {
-        buf.writeVarInt(packet.generation);
-        buf.writeBoolean(packet.first);
-        buf.writeBoolean(packet.last);
-        buf.writeBoolean(packet.enableStorage);
-        buf.writeBoolean(packet.enableSingles);
-        buf.writeBoolean(packet.enableBar);
-        buf.writeVarInt(packet.totalGenMods);
-        buf.writeVarInt(packet.totalDisabledMods);
-
-        writeNamespaces(buf, packet.genMods);
-        writeNamespaces(buf, packet.disabledMods);
-    }
-
-    private static ConfigSyncPkt decode(RegistryFriendlyByteBuf buf) {
-        if (buf.readableBytes() > MAX_PACKET_BYTES) {
-            throw new DecoderException("Config synchronization packet exceeds byte limit");
-        }
-        int generation = buf.readVarInt();
-        if (generation <= 0) {
-            throw new DecoderException("Invalid config generation: " + generation);
-        }
-        boolean first = buf.readBoolean();
-        boolean last = buf.readBoolean();
-        boolean enableStorage = buf.readBoolean();
-        boolean enableSingles = buf.readBoolean();
-        boolean enableBar = buf.readBoolean();
-        int totalGenMods = readBoundedCount(buf, MAX_TOTAL_NAMESPACES, "gallery mod total");
-        int totalDisabledMods = readBoundedCount(
-                buf, MAX_TOTAL_NAMESPACES, "disabled mod total");
-
-        List<String> genMods = readNamespaces(buf, totalGenMods, "gallery mod chunk");
-        List<String> disabledMods = readNamespaces(
-                buf, totalDisabledMods, "disabled mod chunk");
-        return new ConfigSyncPkt(
-                generation, first, last, enableStorage, enableSingles, enableBar,
-                totalGenMods, totalDisabledMods,
-                genMods, disabledMods);
-    }
-
-    /** Conservative encoded size, including bounded metadata overhead. */
-    public int budgetBytes() {
-        return budgetBytes(genMods, disabledMods);
-    }
-
-    private static int budgetBytes(List<String> genMods, List<String> disabledMods) {
-        int bytes = PACKET_OVERHEAD_BYTES;
-        for (String namespace : genMods) bytes += encodedStringSize(namespace);
-        for (String namespace : disabledMods) bytes += encodedStringSize(namespace);
-        return bytes;
-    }
-
-    private static boolean validNamespace(String namespace) {
-        return !namespace.isEmpty() && namespace.length() <= MAX_NAMESPACE_LENGTH
-                && Identifier.tryBuild(namespace, "validation") != null;
-    }
-
-    private static void validateNamespaces(List<String> namespaces) {
-        for (String namespace : namespaces) {
-            if (!validNamespace(namespace)) {
-                throw new DecoderException("Invalid synchronized namespace");
-            }
-        }
-    }
-
-    private static void writeNamespaces(RegistryFriendlyByteBuf buf, List<String> namespaces) {
-        buf.writeVarInt(namespaces.size());
-        for (String namespace : namespaces) {
-            buf.writeUtf(namespace, MAX_NAMESPACE_LENGTH);
-        }
-    }
-
-    private static List<String> readNamespaces(
-            RegistryFriendlyByteBuf buf, int total, String description) {
-        int count = readBoundedCount(buf, total, description);
-        List<String> namespaces = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            String namespace = buf.readUtf(MAX_NAMESPACE_LENGTH);
-            if (!validNamespace(namespace)) {
-                throw new DecoderException("Invalid synchronized namespace: " + namespace);
-            }
-            namespaces.add(namespace);
-        }
-        return namespaces;
-    }
-
-    private static int readBoundedCount(
-            RegistryFriendlyByteBuf buf, int maximum, String description) {
-        int count = buf.readVarInt();
-        if (count < 0 || count > maximum) {
-            throw new DecoderException("Invalid " + description + " count: " + count);
-        }
-        return count;
-    }
-
-    private static int encodedStringSize(String value) {
-        int bytes = value.getBytes(StandardCharsets.UTF_8).length;
-        return varIntSize(bytes) + bytes;
-    }
-
-    private static int varIntSize(int value) {
-        int bytes = 1;
-        while ((value & ~0x7F) != 0) {
-            value >>>= 7;
-            bytes++;
-        }
-        return bytes;
-    }
-
-    private static final class Chunk {
-        private final List<String> genMods = new ArrayList<>();
-        private final List<String> disabledMods = new ArrayList<>();
-        private int encodedBytes = PACKET_OVERHEAD_BYTES;
-
-        private boolean isEmpty() {
-            return genMods.isEmpty() && disabledMods.isEmpty();
-        }
-    }
+    @Override
+    public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }

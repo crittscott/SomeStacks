@@ -66,6 +66,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#breakingMiddleBlockDropsItsContentsAndSplitsThePile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">breakingMiddleBlockDropsItsContentsAndSplitsThePile(GameTestHelper)</a></li>
 <li><a href="#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorReservesZeroForAnEmptyPile(GameTestHelper)</a></li>
 <li><a href="#comparatorContributionLoadsAndTracksMutations(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">comparatorContributionLoadsAndTracksMutations(GameTestHelper)</a></li>
+<li><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" tabindex="0">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, ProtectionChecks.OfferAt)</a></li>
+<li><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" tabindex="0">storageDiskMigrationPreservesOverCapContents(GameTestHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -155,6 +157,18 @@ base, and republishes comparator output.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Settlement merges only exact component identities, restores legal stack sizes, sorts, and
 packs downward.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
+automation, then let it settle.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce in-game: load a preceding-release Storage block containing stacks above 64.</div>
 </div>
 </div>
 </div>
@@ -287,6 +301,29 @@ full pile. Their comparator outputs are 0, at least 1, and 15 respectively.</div
 <div class="block">To reproduce in-game: fill a Storage pile with mixed stack limits, save and reopen
 the world, then extract an item. Comparators match the contents immediately after loading
 and again after extraction, before the deferred settlement runs.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)">
+<h3>storageCapAppliesToPlayersAutomationAndSettlement</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageCapAppliesToPlayersAutomationAndSettlement</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper,
+ <a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a>&nbsp;offer)</span></div>
+<div class="block">To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
+automation, then let it settle. Every slot holds at most 64 and a fully filled pile gives
+comparator strength 15. An item with a smaller maximum still uses that smaller capacity.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>storageDiskMigrationPreservesOverCapContents</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storageDiskMigrationPreservesOverCapContents</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game: load a preceding-release Storage block containing stacks above 64.
+Spare cubes take the excess. When every cube is occupied, excess remains saved in SetAside
+and returns after freeing its original cube and loading the block again.</div>
 </div>
 </section>
 </li>

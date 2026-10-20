@@ -80,10 +80,8 @@ public final class BarCubeIdx {
             double maxX = minX + barWidth(xyz[1]);
             double maxY = minY + barHeight(xyz[1]);
             double maxZ = minZ + barDepth(xyz[1]);
-            LOCAL_BOXES[index] = new AABB(
-                    minX / 16.0, minY / 16.0, minZ / 16.0,
-                    maxX / 16.0, maxY / 16.0, maxZ / 16.0);
             LOCAL_SHAPES[index] = Block.box(minX, minY, minZ, maxX, maxY, maxZ);
+            LOCAL_BOXES[index] = LOCAL_SHAPES[index].bounds();
         }
     }
 

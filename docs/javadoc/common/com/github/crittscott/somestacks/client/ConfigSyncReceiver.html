@@ -75,7 +75,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ConfigSyncReceiver</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Stages config chunks and atomically publishes a complete server snapshot.</div>
+<div class="block">Publishes a complete, already validated server policy snapshot on the client thread.</div>
 </div>
 </section>
 <section class="summary">
@@ -92,14 +92,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Stages a decoded chunk on the client thread.</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply</a><wbr>(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Discards incomplete data at disconnect or after rejection.</div>
+<div class="block">Restores the defaults and connection diagnostics at disconnect.</div>
 </div>
 </div>
 </div>
@@ -122,10 +120,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)">
 <h3>apply</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;packet)</span></div>
-<div class="block">Stages a decoded chunk on the client thread. A first chunk replaces incomplete staging;
-only a complete final chunk publishes flags and lists. Rejection clears staging and throws
-a runtime exception to the loader's receive handler.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a>&nbsp;snapshot)</span></div>
 </div>
 </section>
 </li>
@@ -134,7 +129,7 @@ a runtime exception to the loader's receive handler.</div>
 <h3>clear</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
-<div class="block">Discards incomplete data at disconnect or after rejection.</div>
+<div class="block">Restores the defaults and connection diagnostics at disconnect.</div>
 </div>
 </section>
 </li>
