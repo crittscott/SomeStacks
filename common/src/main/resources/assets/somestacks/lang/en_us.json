@@ -56,7 +56,7 @@
   "somestacks.command.gallery_created": "Created %s %s (%s %s) for %s. Rows run north.",
   "somestacks.command.gallery_warning": " WARNING: %s of %s placements failed; see log for positions and reasons.",
   "somestacks.command.gallery_building": "Building %s %s (%s %s) for %s.",
-  "somestacks.command.reloaded": "Reloaded Some Stacks server config and overrides; synced %s player(s)",
+  "somestacks.command.reloaded": "Refreshed Some Stacks server policy",
   "somestacks.command.list_contains": "The %s already contains %s",
   "somestacks.command.list_added": "Added %s to the %s",
   "somestacks.command.list_missing": "The %s does not contain %s",

@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
@@ -29,6 +30,8 @@ import javax.annotation.Nullable;
 public abstract class StackBlockEntity extends BlockEntity {
     public static final String TAG_ITEMS = StackItemStorage.TAG_ITEMS;
     public static final String TAG_DATA_VERSION = "DataVersion";
+
+    private static boolean reportedClientUpdateRejection;
 
     protected final StackItemStorage items;
     @Nullable
@@ -125,7 +128,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** Local slot capacity before the item's own stack limit, or one for positional display types. */
     public int localSlotLimit() {
-        return 64;
+        return StackItemStorage.STORAGE_SLOT_LIMIT;
     }
 
     /** Cached local numerator of the run's comparator fill fraction. */
@@ -145,7 +148,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private void refreshSlotContribution(int slot) {
         ItemStack stack = items.getStackInSlot(slot);
         slotContributions[slot] = stack.isEmpty() ? 0.0 : localSlotLimit() == 1 ? 1.0
-                : (double) stack.getCount() / stack.getMaxStackSize();
+                : Math.min(1.0, (double) stack.getCount() / Math.min(localSlotLimit(), stack.getMaxStackSize()));
         comparatorDirty = true;
     }
 
@@ -328,11 +331,14 @@ public abstract class StackBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         pendingLoadResult = null;
         pendingMigrationSave = StackDataMigration.upgrade(tag, registries);
+        CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
+        if (this instanceof StorageStackBE) {
+            pendingMigrationSave |= StackDataMigration.normalizeStorageInventory(inventory, registries);
+        }
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
         }
-        CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
         pendingLoadResult = items.load(registries, inventory);
         reportSavedItems();
         loadStackData(input);
@@ -342,24 +348,43 @@ public abstract class StackBlockEntity extends BlockEntity {
     /** Validates native ingress before inherited loading can change components or inventory. */
     public final boolean isValidClientUpdate(ValueInput input) {
         CompoundTag tag = StackDataMigration.readTag(input);
-        return isValidClientMetadata(tag)
-                && items.isValidClientUpdate(input.lookup(), tag.getCompound(TAG_ITEMS).orElseThrow());
+        String reason = invalidClientMetadata(tag);
+        if (reason != null) return rejectClientUpdate(reason);
+        return items.isValidClientUpdate(input.lookup(), tag.getCompound(TAG_ITEMS).orElseThrow())
+                || rejectClientUpdate("invalid inventory");
     }
 
-    private boolean isValidClientMetadata(CompoundTag tag) {
-        return tag.get(TAG_DATA_VERSION) instanceof IntTag version
-                && version.intValue() == SharedConstants.getCurrentVersion().dataVersion().version()
-                && tag.get(TAG_ITEMS) instanceof CompoundTag
-                && !tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                && !tag.contains(StorageStackBE.TAG_PERMANENT)
-                && isValidClientStackData(tag);
+    @Nullable
+    private String invalidClientMetadata(CompoundTag tag) {
+        if (!(tag.get(TAG_DATA_VERSION) instanceof IntTag version)
+                || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()) {
+            return "missing or mismatched data version";
+        }
+        if (!(tag.get(TAG_ITEMS) instanceof CompoundTag)) return "missing or malformed inventory";
+        if (tag.contains(StackItemStorage.TAG_SET_ASIDE) || tag.contains(StorageStackBE.TAG_PERMANENT)) {
+            return "server-only field";
+        }
+        return isValidClientStackData(tag) ? null : "invalid stack metadata";
     }
 
-    /** Rejects malformed wire data without migration, recovery retention, or logging. */
+    private boolean rejectClientUpdate(String reason) {
+        if (level != null && level.isClientSide() && !reportedClientUpdateRejection) {
+            reportedClientUpdateRejection = true;
+            SomeStacksCommon.LOGGER.warn("Rejected Some Stacks client update in {} at {} ({}): {}",
+                    level.dimension().identifier(), getBlockPos().toShortString(), getBlockState().getBlock(), reason);
+        }
+        return false;
+    }
+
+    /** Starts a new connection's diagnostic budget without retaining block positions. */
+    public static void resetClientUpdateDiagnostic() { reportedClientUpdateRejection = false; }
+
+    /** Rejects malformed wire data atomically, without migration or recovery retention. */
     public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
-        if (!isValidClientMetadata(tag)
-                || !items.deserializeClientUpdate(registries, tag.getCompound(TAG_ITEMS).orElseThrow())) {
-            return false;
+        String reason = invalidClientMetadata(tag);
+        if (reason != null) return rejectClientUpdate(reason);
+        if (!items.deserializeClientUpdate(registries, tag.getCompound(TAG_ITEMS).orElseThrow())) {
+            return rejectClientUpdate("invalid inventory");
         }
         loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         refreshComparatorContribution();

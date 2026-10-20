@@ -110,11 +110,11 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
                         }
                         configMap.put(itemLoc, data);
                     } catch (Exception e) {
-                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}' in {}: {}", key, fileLocation, e.getMessage());
+                        SomeStacksCommon.LOGGER.warn("Invalid mapping for '{}' in {}", key, fileLocation, e);
                     }
                 }
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}", fileLocation, e);
             }
         });
 
@@ -173,7 +173,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
                     ARGB.color(0xFF, ARGB.red(first.color()), ARGB.green(first.color()),
                             ARGB.blue(first.color())));
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}: {}", itemLoc, e.getMessage(), e);
+            SomeStacksCommon.LOGGER.warn("Could not auto-calculate tint for {}", itemLoc, e);
             return BarTextureData.WHITE;
         }
     }

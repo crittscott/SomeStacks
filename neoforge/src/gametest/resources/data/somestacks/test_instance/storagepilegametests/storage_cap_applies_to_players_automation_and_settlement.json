@@ -1,6 +1,6 @@
 {
   "type": "minecraft:function",
-  "function": "somestacks:barcolumngametests/refused_removal_still_lets_the_bars_above_come_down",
+  "function": "somestacks:storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",
   "environment": "minecraft:default",
   "structure": "somestacks:somestacks_empty",
   "max_ticks": 100

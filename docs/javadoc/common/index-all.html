@@ -108,12 +108,12 @@ from the block below when there is one and otherwise from the block above.</div>
 <dd>
 <div class="block">Reports a completed removal to loader-native observers.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#allowsInsertion()" class="member-name-link">allowsInsertion()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#alpha()" class="member-name-link">alpha()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ConfigSyncReceiver.html#apply(com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">apply(ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ConfigSyncReceiver.html" title="class in com.github.crittscott.somestacks.client">ConfigSyncReceiver</a></dt>
-<dd>
-<div class="block">Stages a decoded chunk on the client thread.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#apply(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">apply(ServerConfig.Settings)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
 <div class="block">Publishes already-validated policy and rebuilds admission sets; does not save or synchronize clients.</div>
@@ -320,10 +320,6 @@ the server config.</div>
 <dd>
 <div class="block">Returns the value of the <code>bounds</code> record component.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#budgetBytes()" class="member-name-link">budgetBytes()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Conservative encoded size, including bounded metadata overhead.</div>
-</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
@@ -410,7 +406,7 @@ cube becomes eight pixels.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ConfigSyncReceiver.html#clear()" class="member-name-link">clear()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ConfigSyncReceiver.html" title="class in com.github.crittscott.somestacks.client">ConfigSyncReceiver</a></dt>
 <dd>
-<div class="block">Discards incomplete data at disconnect or after rejection.</div>
+<div class="block">Restores the defaults and connection diagnostics at disconnect.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html#clear(java.util.UUID)" class="member-name-link">clear(UUID)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/RotationSoundThrottle.html" title="class in com.github.crittscott.somestacks.server">RotationSoundThrottle</a></dt>
 <dd>&nbsp;</dd>
@@ -539,19 +535,19 @@ counting the runs both below and above it, must fit the configured maximum.</div
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a> - Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
 <dd>
-<div class="block">Loader-specific delivery for the cached server configuration snapshot.</div>
+<div class="block">Explicit snapshot delivery on loaders without native config synchronization.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a> - Record Class in <a href="com/github/crittscott/somestacks/network/package-summary.html">com.github.crittscott.somestacks.network</a></dt>
 <dd>
-<div class="block">One byte-bounded chunk of the server settings synchronized to clients.</div>
+<div class="block">Complete client policy snapshot; Fabric sends it as one bounded play payload.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#%3Cinit%3E(int,boolean,boolean,boolean,boolean,boolean,int,int,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt(int, boolean, boolean, boolean, boolean, boolean, int, int, List, List)</a> - Constructor for record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#%3Cinit%3E(boolean,boolean,boolean,java.util.List,java.util.List)" class="member-name-link">ConfigSyncPkt(boolean, boolean, boolean, List, List)</a> - Constructor for record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>ConfigSyncPkt</code> record class.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ConfigSyncReceiver.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ConfigSyncReceiver</a> - Class in <a href="com/github/crittscott/somestacks/client/package-summary.html">com.github.crittscott.somestacks.client</a></dt>
 <dd>
-<div class="block">Stages config chunks and atomically publishes a complete server snapshot.</div>
+<div class="block">Publishes a complete, already validated server policy snapshot on the client thread.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#consulting(java.util.function.BooleanSupplier)" class="member-name-link">consulting(BooleanSupplier)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>
@@ -592,12 +588,10 @@ running so a listener cannot re-enter a stack gesture through it.</div>
 <dd>
 <div class="block">One frame's prepared grid; submission never reads the level or inventory.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#current(int,com.github.crittscott.somestacks.block.StackRunItemAccess)" class="member-name-link">current(int, StackRunItemAccess)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#currentMode()" class="member-name-link">currentMode()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#currentPackets()" class="member-name-link">currentPackets()</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">The packet sequence most recently built at server start or by <code>/ss reload</code>.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#cycleMode()" class="member-name-link">cycleMode()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>
 <div class="block">Advances to the next mode, skipping disabled block types but always retaining permanence.</div>
@@ -745,6 +739,10 @@ logging mod vetoes an edit.</div>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#entryToJson(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">entryToJson(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Serializes one sanitized override entry, returning an empty object if encoding fails.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
@@ -907,10 +905,6 @@ reach ray.</div>
 <dd>
 <div class="block">Whole-run fill computed from each block's maintained local contribution.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#first()" class="member-name-link">first()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>first</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#flatProjectionAvailable()" class="member-name-link">flatProjectionAvailable()</a> - Method in record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#param-flatProjectionAvailable"><code>flatProjectionAvailable</code></a> record component.</div>
@@ -937,6 +931,10 @@ reach ray.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackMode.html#fromOrdinal(int)" class="member-name-link">fromOrdinal(int)</a> - Static method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#fromSettings(com.github.crittscott.somestacks.ServerConfig.Settings)" class="member-name-link">fromSettings(ServerConfig.Settings)</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dd>
+<div class="block">Normalizes policy for either native NeoForge receipt or Fabric payload delivery.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in enum class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderMode.html" title="enum class in com.github.crittscott.somestacks.renderconfig">RenderMode</a></dt>
 <dd>
 <div class="block">The mode with this id, or null when the id names none.</div>
@@ -964,10 +962,6 @@ reach ray.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.ListSetting.html#GEN_MODS" class="member-name-link">GEN_MODS</a> - Enum constant in enum class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#generation()" class="member-name-link">generation()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>generation</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Settings.html#genItems()" class="member-name-link">genItems()</a> - Method in record class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>genItems</code> record component.</div>
@@ -1061,7 +1055,9 @@ the cache.</div>
 <div class="block">The live stack in a run position, or empty for headroom or an invalid position.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#getSlotLimit(int)" class="member-name-link">getSlotLimit(int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Per-position admission capacity, before the item's own maximum.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#getSlots()" class="member-name-link">getSlots()</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">The number of slots, indexed <code>[0, getSlots())</code>.</div>
@@ -1108,6 +1104,8 @@ whatever will not fit at their feet.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/CubeRenderHelper.GridRenderState.html#%3Cinit%3E()" class="member-name-link">GridRenderState()</a> - Constructor for class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/CubeRenderHelper.GridRenderState.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper.GridRenderState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#growsBeyond(int)" class="member-name-link">growsBeyond(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#growthQuery()" class="member-name-link">growthQuery()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
 <div class="block">Coalesces automation permission queries without caching collision or staged support.</div>
@@ -1148,6 +1146,10 @@ player.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlock.html#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">hasAnalogOutputSignal(BlockState)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlock.html" title="class in com.github.crittscott.somestacks.block">StackBlock</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -1518,10 +1520,6 @@ write, and reload them without touching the player's files.</div>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#last()" class="member-name-link">last()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>last</code> record component.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#lastEmptyBeforeOccupied(int,com.github.crittscott.somestacks.util.SlotAccess,java.util.function.IntFunction)" class="member-name-link">lastEmptyBeforeOccupied(int, SlotAccess, IntFunction)</a> - Method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>
 <div class="block">Last empty hit before the first occupied hit; null slots describe a prospective block.</div>
@@ -1556,7 +1554,7 @@ write, and reload them without touching the player's files.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)" class="member-name-link">loadClientUpdate(CompoundTag, HolderLookup.Provider)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
-<div class="block">Rejects malformed wire data without migration, recovery retention, or logging.</div>
+<div class="block">Rejects malformed wire data atomically, without migration or recovery retention.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.Backend.html#loadFor(net.minecraft.server.MinecraftServer)" class="member-name-link">loadFor(MinecraftServer)</a> - Method in interface com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.Backend.html" title="interface in com.github.crittscott.somestacks">ServerConfig.Backend</a></dt>
 <dd>
@@ -1639,13 +1637,13 @@ write, and reload them without touching the player's files.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html#matches(com.github.crittscott.somestacks.client.interaction.InteractionContext)" class="member-name-link">matches(InteractionContext)</a> - Method in class com.github.crittscott.somestacks.client.interaction.<a href="com/github/crittscott/somestacks/client/interaction/TogglePermanentRule.html" title="class in com.github.crittscott.somestacks.client.interaction">TogglePermanentRule</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_BYTES" class="member-name-link">MAX_GENERATION_BYTES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_NAMESPACE_LENGTH" class="member-name-link">MAX_NAMESPACE_LENGTH</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_GENERATION_CHUNKS" class="member-name-link">MAX_GENERATION_CHUNKS</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_NAMESPACES" class="member-name-link">MAX_NAMESPACES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
+<dd>
+<div class="block">ASCII namespaces: both lists together encode to at most about 130 KiB.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MAX_OFFSET" class="member-name-link">MAX_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#MAX_PACKET_BYTES" class="member-name-link">MAX_PACKET_BYTES</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MAX_PILE_HEIGHT" class="member-name-link">MAX_PILE_HEIGHT</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -1657,6 +1655,8 @@ write, and reload them without touching the player's files.</div>
 <dd>
 <div class="block">Returns the value of the <code>maxPileHeight</code> record component.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#mayExtract(int)" class="member-name-link">mayExtract(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/server/WorldEdits.html#mayPlace(net.minecraft.server.level.ServerPlayer,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">mayPlace(ServerPlayer, ServerLevel, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/WorldEdits.html" title="class in com.github.crittscott.somestacks.server">WorldEdits</a></dt>
 <dd>
 <div class="block">Vanilla and loader query checks used before automation promises growth capacity.</div>
@@ -1687,10 +1687,14 @@ counter-rotation that path applies, so the fit accounts for the tilted presentat
 <div class="block">Moves as much of <code>incoming</code> into <code>hand</code> as it will hold, growing the hand in
 place.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MIN_GALLERY_PLACEMENTS_PER_TICK" class="member-name-link">MIN_GALLERY_PLACEMENTS_PER_TICK</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_OFFSET" class="member-name-link">MIN_OFFSET</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Inclusive offset bounds in cell widths.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#MIN_PILE_HEIGHT" class="member-name-link">MIN_PILE_HEIGHT</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_SCALE" class="member-name-link">MIN_SCALE</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
 <div class="block">Inclusive scale bounds shared by authored overrides, resource-pack profiles, and automatic
@@ -1777,6 +1781,12 @@ transform and origin shift.</div>
 <dt><a href="com/github/crittscott/somestacks/util/QuarterTurns.html#next(int)" class="member-name-link">next(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/QuarterTurns.html#normalize(int)" class="member-name-link">normalize(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/QuarterTurns.html" title="class in com.github.crittscott.somestacks.util">QuarterTurns</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/ServerConfig.html#normalizeNamespace(java.lang.String)" class="member-name-link">normalizeNamespace(String)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
+<dd>
+<div class="block">Canonical spelling for configured item namespaces.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#noteStructuralExtraction(int)" class="member-name-link">noteStructuralExtraction(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
@@ -1868,6 +1878,10 @@ the in-memory cache and the file are discarded.</div>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksServer.html#onServerTickEnd()" class="member-name-link">onServerTickEnd()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></dt>
 <dd>
 <div class="block">Advances queued gallery work once at the end of each server tick.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#originals()" class="member-name-link">originals()</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>originals</code> record component.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a> - Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
 <dd>
@@ -1961,6 +1975,10 @@ override file, and the measured cache.</div>
 <dd>
 <div class="block">Publishes changed local contents and derived light, returning whether anything changed.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/SomeStacksServer.html#publishPolicy(net.minecraft.server.MinecraftServer)" class="member-name-link">publishPolicy(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></dt>
+<dd>
+<div class="block">Publishes policy changes from file reloads and persisted command edits exactly once.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#putUser(net.minecraft.resources.Identifier,com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">putUser(Identifier, ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides</a></dt>
 <dd>
 <div class="block">Changes one in-memory user override; <a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.html#handleWriteRequest()"><code>ItemRenderOverrides.handleWriteRequest()</code></a> persists the layer.</div>
@@ -1981,11 +1999,6 @@ override file, and the measured cache.</div>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#rebuildCurrent()" class="member-name-link">rebuildCurrent()</a> - Static method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Replaces the immutable cached sequence with a new generation after world policy is loaded
-or changed.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#red()" class="member-name-link">red()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/command/SsCommand.html#register(com.mojang.brigadier.CommandDispatcher,net.minecraft.commands.CommandBuildContext)" class="member-name-link">register(CommandDispatcher, CommandBuildContext)</a> - Static method in class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/SsCommand.html" title="class in com.github.crittscott.somestacks.command">SsCommand</a></dt>
@@ -2012,7 +2025,7 @@ or changed.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksServer.html#reloadPolicy(net.minecraft.server.MinecraftServer)" class="member-name-link">reloadPolicy(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></dt>
 <dd>
-<div class="block">Reloads on the server thread, refreshing command visibility and only changed policy.</div>
+<div class="block">Refreshes policy on the server thread and synchronizes only changed policy.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html#reloadUserFile()" class="member-name-link">reloadUserFile()</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ItemRenderOverrides.Sandbox.html" title="class in com.github.crittscott.somestacks.client">ItemRenderOverrides.Sandbox</a></dt>
 <dd>
@@ -2083,6 +2096,10 @@ override layers, or of measuring the item's model when no layer configures it.</
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html#replace(java.util.List,java.util.List)" class="member-name-link">replace(List, List)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#replay(java.util.function.Supplier,net.minecraft.core.BlockPos)" class="member-name-link">replay(Supplier, BlockPos)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>
+<div class="block">Clears staged state, then removes before inserting bottom-up, resolving after each edit.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksServer.html#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems(ServerLevel, BlockPos, StackItemStorage.LoadResult)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksServer.html" title="class in com.github.crittscott.somestacks">SomeStacksServer</a></dt>
 <dd>
 <div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
@@ -2090,6 +2107,10 @@ per dimension and block position per server session.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.Action.html#RESET" class="member-name-link">RESET</a> - Enum constant in enum class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.Action.html" title="enum class in com.github.crittscott.somestacks.command">ClientRenderCommandSyntax.Action</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#resetClientUpdateDiagnostic()" class="member-name-link">resetClientUpdateDiagnostic()</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
+<dd>
+<div class="block">Starts a new connection's diagnostic budget without retaining block positions.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#resetSync()" class="member-name-link">resetSync()</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>
 <div class="block">Forces the next interaction to establish state on a new connection.</div>
@@ -2111,6 +2132,8 @@ per dimension and block position per server session.</div>
 <div class="block">Resolves the current server-side run without consulting the per-tick cache.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun(ServerLevel)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#restore(com.github.crittscott.somestacks.block.RunTransferLedger.State)" class="member-name-link">restore(RunTransferLedger.State)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html#%3Cinit%3E(boolean,net.minecraft.world.phys.AABB,java.lang.String)" class="member-name-link">Result(boolean, AABB, String)</a> - Constructor for record class com.github.crittscott.somestacks.client.measure.<a href="com/github/crittscott/somestacks/client/measure/ModelMeasurement.Result.html" title="class in com.github.crittscott.somestacks.client.measure">ModelMeasurement.Result</a></dt>
 <dd>
@@ -2155,6 +2178,14 @@ layout alone.</div>
 <dd>
 <div class="block">Holds off an automation edit that arrives while another one is still running.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
+<dd>
+<div class="block">Loader-neutral staged slot differences, rollback state, and ordered commit replay.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#%3Cinit%3E()" class="member-name-link">RunTransferLedger()</a> - Constructor for class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a> - Record Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -2221,13 +2252,11 @@ serialization as well as after parsing.</div>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#SECTION_STACKS" class="member-name-link">SECTION_STACKS</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/PlatformServices.Backend.html#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig(ServerPlayer, ConfigSyncPkt)</a> - Method in interface com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/PlatformServices.Backend.html" title="interface in com.github.crittscott.somestacks">PlatformServices.Backend</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sends an explicit snapshot, or returns false when the loader owns native config sync.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/PlatformServices.html#sendConfig(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">sendConfig(ServerPlayer, ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/PlatformServices.html" title="class in com.github.crittscott.somestacks">PlatformServices</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html#sendCurrent(java.util.function.Consumer)" class="member-name-link">sendCurrent(Consumer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></dt>
-<dd>
-<div class="block">Delivers every cached chunk in order on the caller's thread, without rebuilding policy.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ServerConfig</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
 <div class="block">Immutable server policy, command edits, and normalized admission lookups.</div>
@@ -2389,6 +2418,8 @@ state, the shapes, and the breaking behavior.</div>
 <dd>
 <div class="block">Slots in one block.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#snapshot()" class="member-name-link">snapshot()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/SomeStacksCommon.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksCommon</a> - Class in <a href="com/github/crittscott/somestacks/package-summary.html">com.github.crittscott.somestacks</a></dt>
 <dd>
 <div class="block">Shared mod identity for common code.</div>
@@ -2487,6 +2518,12 @@ stack types, or toggle a Storage pile's permanence.</div>
 <div class="block">The loader-neutral client copy of which stack types the server has enabled, delivered by the configuration
 sync.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.html#stage(int,net.minecraft.world.item.ItemStack,com.github.crittscott.somestacks.block.StackRunItemAccess)" class="member-name-link">stage(int, ItemStack, StackRunItemAccess)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#staged()" class="member-name-link">staged()</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>staged</code> record component.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#startPixelX(int,int)" class="member-name-link">startPixelX(int, int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BarCubeIdx.html" title="class in com.github.crittscott.somestacks.util">BarCubeIdx</a></dt>
 <dd>
 <div class="block">Returns a bar's X origin in model pixels from its within-layer X index and layer.</div>
@@ -2500,6 +2537,10 @@ sync.</div>
 <div class="block">Returns a bar's Z origin in model pixels from its within-layer Z index and layer.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/server/ServerGestureState.State.html#%3Cinit%3E(com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">State(StackMode, boolean)</a> - Constructor for record class com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>State</code> record class.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#%3Cinit%3E(java.util.LinkedHashMap,java.util.LinkedHashMap,int)" class="member-name-link">State(LinkedHashMap, LinkedHashMap, int)</a> - Constructor for record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>State</code> record class.</div>
 </dd>
@@ -2522,6 +2563,10 @@ sync.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/CommonRegistry.html#STORAGE_ROTATE_SOUND" class="member-name-link">STORAGE_ROTATE_SOUND</a> - Static variable in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/CommonRegistry.html" title="class in com.github.crittscott.somestacks">CommonRegistry</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#STORAGE_SLOT_LIMIT" class="member-name-link">STORAGE_SLOT_LIMIT</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
+<dd>
+<div class="block">Storage capacity per slot before the item's own maximum, shared by players, automation, and settlement.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BlockType.html#STORAGE_STACK" class="member-name-link">STORAGE_STACK</a> - Enum constant in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackMode.html#STORAGE_STACK" class="member-name-link">STORAGE_STACK</a> - Enum constant in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></dt>
@@ -2554,6 +2599,10 @@ what box it occupies, and which one a player's reach ray hits first.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/CommonRegistry.html#storageRotateSound()" class="member-name-link">storageRotateSound()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/CommonRegistry.html" title="class in com.github.crittscott.somestacks">CommonRegistry</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#storageSlotLimit(net.minecraft.world.item.ItemStack)" class="member-name-link">storageSlotLimit(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
+<dd>
+<div class="block">Storage capacity after applying the item's own maximum.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/CommonRegistry.html#storageStackBe()" class="member-name-link">storageStackBe()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/CommonRegistry.html" title="class in com.github.crittscott.somestacks">CommonRegistry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a> - Class in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
@@ -2581,6 +2630,8 @@ state, shapes, and breaking behavior.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/network/GestureStatePkt.html#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a> - Static variable in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/GestureStatePkt.html" title="class in com.github.crittscott.somestacks.network">GestureStatePkt</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StackMode.html#STREAM_CODEC" class="member-name-link">STREAM_CODEC</a> - Static variable in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackMode.html" title="enum class in com.github.crittscott.somestacks.util">StackMode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripServerOnlyUpdateData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></dt>
 <dd>
 <div class="block">Removes server-only state before a saved tag is sent as a client update.</div>
@@ -2590,6 +2641,10 @@ state, shapes, and breaking behavior.</div>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#stripSetAside(net.minecraft.nbt.CompoundTag)" class="member-name-link">stripSetAside(CompoundTag)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
 <div class="block">Removes the set-aside tags from serialized storage, which clients have no use for.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#structuralExtractionSlot()" class="member-name-link">structuralExtractionSlot()</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>structuralExtractionSlot</code> record component.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarStackBER.html#submit(com.github.crittscott.somestacks.client.BarStackBER.BarRenderState,com.mojang.blaze3d.vertex.PoseStack,net.minecraft.client.renderer.SubmitNodeCollector,net.minecraft.client.renderer.state.level.CameraRenderState)" class="member-name-link">submit(BarStackBER.BarRenderState, PoseStack, SubmitNodeCollector, CameraRenderState)</a> - Method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarStackBER.html" title="class in com.github.crittscott.somestacks.client">BarStackBER</a></dt>
 <dd>&nbsp;</dd>
@@ -2626,14 +2681,12 @@ bar is there; <a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#sea
 <dd>
 <div class="block">Whether an empty, unrotated Singles block at <code>pos</code> supports its first item.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html#syncAllPlayers(net.minecraft.server.MinecraftServer)" class="member-name-link">syncAllPlayers(MinecraftServer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></dt>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html#syncAllPlayers(net.minecraft.server.MinecraftServer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">syncAllPlayers(MinecraftServer, ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></dt>
 <dd>
-<div class="block">Sends the rebuilt snapshot to all connected players; returns the connected player count.</div>
+<div class="block">Returns the number of players sent an explicit payload; native sync is loader-owned.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html#syncPlayer(net.minecraft.server.level.ServerPlayer)" class="member-name-link">syncPlayer(ServerPlayer)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></dt>
-<dd>
-<div class="block">Sends the cached sequence after backend installation and startup/reload snapshot rebuild.</div>
-</dd>
+<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html#syncPlayer(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.network.ConfigSyncPkt)" class="member-name-link">syncPlayer(ServerPlayer, ConfigSyncPkt)</a> - Static method in class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncNetwork.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncNetwork</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/ClientGestures.html#syncState(boolean)" class="member-name-link">syncState(boolean)</a> - Static method in class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientGestures.html" title="class in com.github.crittscott.somestacks.client">ClientGestures</a></dt>
 <dd>
 <div class="block">Sends only state that changed since the last interaction on this connection.</div>
@@ -2725,6 +2778,10 @@ boundary even when adjacent blocks have different rotations.</div>
 <dd>
 <div class="block">Top existing block position, excluding advertised headroom.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunTransferLedger.State.html" title="class in com.github.crittscott.somestacks.block">RunTransferLedger.State</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
@@ -2780,14 +2837,6 @@ boundary even when adjacent blocks have different rotations.</div>
 <dt><a href="com/github/crittscott/somestacks/util/ViewRay.html#toString()" class="member-name-link">toString()</a> - Method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRay.html" title="class in com.github.crittscott.somestacks.util">ViewRay</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#totalDisabledMods()" class="member-name-link">totalDisabledMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>totalDisabledMods</code> record component.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html#totalGenMods()" class="member-name-link">totalGenMods()</a> - Method in record class com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ConfigSyncPkt.html" title="class in com.github.crittscott.somestacks.network">ConfigSyncPkt</a></dt>
-<dd>
-<div class="block">Returns the value of the <code>totalGenMods</code> record component.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html#totalItems()" class="member-name-link">totalItems()</a> - Method in record class com.github.crittscott.somestacks.command.<a href="com/github/crittscott/somestacks/command/RenderGalleryGenerator.Plan.html" title="class in com.github.crittscott.somestacks.command">RenderGalleryGenerator.Plan</a></dt>
 <dd>

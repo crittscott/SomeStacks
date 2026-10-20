@@ -9,6 +9,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collections;
@@ -92,10 +93,10 @@ public final class RenderGalleryChecks {
                 BlockPos base = bases[job];
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        helper.getLevel().setBlock(base.offset(x, -1, z), Blocks.AIR.defaultBlockState(), 3);
+                        helper.getLevel().setBlock(base.offset(x, -1, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                     }
                 }
-                helper.getLevel().setBlock(base, Blocks.AIR.defaultBlockState(), 3);
+                helper.getLevel().setBlock(base, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                 player.setPos(base.getX() - 0.5, base.getY(), base.getZ() + 0.5);
                 int index = job;
                 RenderGalleryGenerator.Plan plan = RenderGalleryGenerator.enqueue(player,
