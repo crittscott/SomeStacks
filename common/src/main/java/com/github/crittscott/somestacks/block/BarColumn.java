@@ -4,18 +4,15 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.function.IntFunction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -77,7 +74,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        StackRun.invalidateAround(level, pos, BarStackBE.class);
+        StackRun.invalidateAround(level, pos, CommonRegistry.barStackBlock());
     }
 
     /**
@@ -147,7 +144,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % BarStackBE.SLOTS, one).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(
+                flatSlot % BarStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -170,23 +168,12 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-        if (!stagedBarSupported(flatSlot, blockIndex, slot, contents)) return 0;
-        return blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot)) ? 1 : 0;
-    }
-
-    private boolean stagedBarSupported(int flatSlot, int blockIndex, int slot,
-                                       IntFunction<ItemStack> contents) {
-        boolean bottomLayer = slot < BarCubeIdx.LAYER_SIZE;
-        if (bottomLayer && blockIndex == 0) {
-            return true;
-        }
-        int supportBlockStart = (bottomLayer ? blockIndex - 1 : blockIndex) * BarStackBE.SLOTS;
-        for (int supporter : BarCubeIdx.supportersOf(slot)) {
-            if (!contents.apply(supportBlockStart + supporter).isEmpty()) {
-                return true;
-            }
-        }
-        return false;
+        int blockStart = blockIndex * BarStackBE.SLOTS;
+        boolean supported = BarCubeIdx.isSupported(slot,
+                local -> !contents.apply(blockStart + local).isEmpty(),
+                blockIndex == 0 ? null : seam -> !contents.apply(
+                        blockStart - BarStackBE.SLOTS + BarCubeIdx.TOP_LAYER_START + seam).isEmpty());
+        return supported && (blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot))) ? 1 : 0;
     }
 
     /**
@@ -208,18 +195,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return false;
         }
 
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.barStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
-
-        blocks.add(grown);
-        return true;
+        return growBlock(null, finalCollision, BarStackBE.class) != null;
     }
 
     // Extraction
@@ -283,18 +259,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * the column keeps every block from the refused one down, so what it holds is what stands.
      */
     private void trimEmptyTop() {
-        int keep = blocks.size();
-        while (keep > 0 && blocks.get(keep - 1).isEmpty()) {
-            keep--;
-        }
-
-        int removedDownTo = blocks.size();
-        for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(null, level, blocks.get(i).getBlockPos())) {
-                break;
-            }
-            removedDownTo = i;
-        }
-        blocks.subList(removedDownTo, blocks.size()).clear();
+        trimEmptyTop(null, ignored -> false);
     }
 }

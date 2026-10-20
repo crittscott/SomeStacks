@@ -294,8 +294,8 @@ public final class ConfigurationChecks {
      * Server commands enforce permissions and save list edits immediately through the loader's
      * installed configuration. To reproduce in-game: try the administrative list commands without
      * permission, then as an operator, then run {@code /ss reload}. Only the operator edits
-     * succeed, and reloading reads them back from the server config. Enable galleries, change their
-     * permission level, and disable them again with reloads; connected players' suggestions follow.
+     * succeed, and reloading reads them back from the server config. Enable galleries and change
+     * their required permission while connected: command availability updates without reconnecting.
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {

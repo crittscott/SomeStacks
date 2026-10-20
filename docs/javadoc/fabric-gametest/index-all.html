@@ -60,9 +60,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Empty grounded cells remain depositable beside occupied cells in both stack types.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsHonorBlockUseCallbacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsHonorBlockUseCallbacks(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsHonorProtectionQueries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsHonorProtectionQueries(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
-<div class="block">Destination block-use callbacks can refuse neighboring deposits.</div>
+<div class="block">Destination protection queries can refuse neighboring deposits.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adventureExtractionKeepsEmptyBlock(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.adventureExtractionKeepsEmptyBlock(GameTestHelper, Function)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">adventureExtractionKeepsEmptyBlock(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
+<div class="block">Adventure players may extract contents but cannot remove the emptied block.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">airRulesAndDisabledModeCycling(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
@@ -147,11 +155,6 @@ backfills from the top instead.</div>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.barDiskSaveRoundTripsItems(GameTestHelper)</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#barGrowthAnswersToBlockUseCallbacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthAnswersToBlockUseCallbacks(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
-<dd>
-<div class="block">To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
-Bar column, insert through item automation; nothing is accepted and no block is created.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
@@ -160,6 +163,11 @@ Bar column, insert through item automation; nothing is accepted and no block is 
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
 through item automation; it accepts nothing and creates no block.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#barGrowthAnswersToProtectionQueries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthAnswersToProtectionQueries(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: with a protection mod that denies placement to [SomeStacks] above a full
+Bar column, insert through item automation; nothing is accepted and no block is created.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#barGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
@@ -272,7 +280,7 @@ block through the new gap.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.ClientUpdate.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a> - Interface in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Loader-native chunk or block update on a client-attached registered scratch entity.</div>
+<div class="block">Loader-native chunk or block update on an actual client-attached registered entity.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a> - Record Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
@@ -430,6 +438,14 @@ holds one item, so full means every cell of every block occupied.</div>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html#consumed()" class="member-name-link">consumed()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>consumed</code> record component.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">contentsDropWithBlockDropsDisabled(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
+<dd>
+<div class="block">Stored Bars survive breaking and cascades with block drops disabled.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">contentsDropWithBlockDropsDisabled(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.contentsDropWithBlockDropsDisabled(GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#count(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.item.Item)" class="member-name-link">count(SlotAccess, Item)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
@@ -666,7 +682,7 @@ modifier-click its top face.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientGestureChecks.html#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacesFallThroughToPlacement(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientGestureChecks</a></dt>
 <dd>
-<div class="block">Modified clicks stay consumed for server targeting on both empty and full top faces.</div>
+<div class="block">Modified top-face clicks are consumed for both full and partially filled stacks.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -931,6 +947,14 @@ empty grounded cells at their support.</div>
 <dd>
 <div class="block">To reproduce in-game: face an observer toward a denied placement position.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementReplacesClickedVegetation(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.placementReplacesClickedVegetation(GameTestHelper, Function)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">placementReplacesClickedVegetation(GameTestHelper, Function)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
+<div class="block">Ordinary new placement replaces clicked vegetation instead of floating above it.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#placeSingles(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeSingles(GameTestHelper, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#placeStorage(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeStorage(GameTestHelper, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
@@ -989,6 +1013,10 @@ player offered before the first deposit spent it.</div>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerPlacementAwardsCriterionAfterDeposit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#playerPlacementAwardsCriterionAfterDeposit(net.minecraft.gametest.framework.GameTestHelper)"><code>InteractionChecks.playerPlacementAwardsCriterionAfterDeposit(GameTestHelper)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerPlacementConsultsDestination(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerPlacementConsultsDestination(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">Player placement checks the destination independently of the clicked block.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerStorageSettlementUsesPlayerForCleanup(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
@@ -1239,11 +1267,6 @@ and per-item rotations.</div>
 <div class="block">To reproduce in-game: extract a lower Singles cell through item automation; the item above
 shifts down by the same gravity path used for player extraction.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#singlesGrowthAnswersToBlockUseCallbacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToBlockUseCallbacks(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
-<dd>
-<div class="block">To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
-Singles column, insert through item automation; nothing is accepted and no block is created.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
@@ -1252,6 +1275,11 @@ Singles column, insert through item automation; nothing is accepted and no block
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
 through item automation; it accepts nothing and creates no block.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#singlesGrowthAnswersToProtectionQueries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionQueries(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: with a protection mod that denies placement to [SomeStacks] above a full
+Singles column, insert through item automation; nothing is accepted and no block is created.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
@@ -1347,11 +1375,6 @@ above shifts down with its rotation, just as it does after player extraction.</d
 <div class="block">To reproduce in-game: connect item automation separately to the lower and upper blocks of one
 Storage pile; both connections expose the same items and capacity.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#storageGrowthAnswersToBlockUseCallbacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToBlockUseCallbacks(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
-<dd>
-<div class="block">To reproduce in-game: with a protection mod that denies block use to [SomeStacks] above a full
-Storage pile, insert through item automation; nothing is accepted and no block is created.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</code></a>.</div>
@@ -1360,6 +1383,11 @@ Storage pile, insert through item automation; nothing is accepted and no block i
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
 through item automation; it accepts nothing and creates no block.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#storageGrowthAnswersToProtectionQueries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionQueries(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">To reproduce in-game: with a protection mod that denies placement to [SomeStacks] above a full
+Storage pile, insert through item automation; nothing is accepted and no block is created.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthRejectsAnObstructingEntityInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>

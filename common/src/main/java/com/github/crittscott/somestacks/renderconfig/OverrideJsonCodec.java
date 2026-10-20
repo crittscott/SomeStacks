@@ -1,15 +1,15 @@
 package com.github.crittscott.somestacks.renderconfig;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.resources.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.annotation.Nullable;
 
 /**
  * Parses and serializes the item render override schema shared by bundled resources, the client
@@ -26,7 +26,7 @@ public final class OverrideJsonCodec {
     private OverrideJsonCodec() {}
 
     /**
-     * Inclusive scale bounds shared by authored overrides, resource-pack profiles, and automatic
+     * Inclusive scale bounds shared by authored overrides and automatic
      * measurement.
      */
     public static final float MIN_SCALE = 0.01f;
@@ -42,8 +42,7 @@ public final class OverrideJsonCodec {
     }
 
     /**
-     * Applies file-format bounds to authored or measured profiles, dropping invalid fields before
-     * serialization as well as after parsing.
+     * Applies the file-format bounds to an override, dropping invalid fields. Serialization may receive measured data as well as authored profiles.
      */
     public static ItemRenderConfig sanitize(ItemRenderConfig config) {
         Float scale = config.scale();

@@ -10,10 +10,15 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.count;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.droppedNear;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.firstBarItem;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.heldAt;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.occupied;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeBar;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.seedSlot;
 
 /**
  * Bar support and collapse in a live level: item validity, grounding at the bottom of a column,
@@ -147,4 +152,9 @@ public final class BarColumnGameTests {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
     }
 
+
+    /** See {@link BarColumnChecks#contentsDropWithBlockDropsDisabled}. */
+    public static void contentsDropWithBlockDropsDisabled(GameTestHelper helper) {
+        BarColumnChecks.contentsDropWithBlockDropsDisabled(helper);
+    }
 }

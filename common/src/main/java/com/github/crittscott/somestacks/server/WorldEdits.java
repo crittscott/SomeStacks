@@ -1,11 +1,12 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.PlatformServices;
-import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import javax.annotation.Nullable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -14,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.BooleanSupplier;
-import javax.annotation.Nullable;
 
 /**
  * Vanilla world-edit mechanics for stack growth and removal: world border and spawn protection,
@@ -33,12 +33,12 @@ public final class WorldEdits {
         return !sp.level().mayInteract(sp, pos);
     }
 
-    /** Resolves player-attributed edits or the level's automation identity. */
-    private static ServerPlayer actor(ServerLevel level, @Nullable ServerPlayer source) {
-        return source != null ? source : automationActor(level);
+    /** Resolves player-attributed edits or the level's automation identity in one place. */
+    private static ServerPlayer actor(ServerLevel level, @Nullable ServerPlayer actor) {
+        return actor != null ? actor : automationActor(level);
     }
 
-    /** Vanilla and loader query checks used before automation promises growth capacity. */
+    /** Vanilla and loader queries before growth can promise capacity. */
     public static boolean mayPlace(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
         ServerPlayer player = actor(level, source);
         return !isProtected(player, pos)
@@ -74,7 +74,7 @@ public final class WorldEdits {
     /** Destination hit used by loader protection listeners for a neighboring deposit. */
     public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
         var level = player.level();
-        var ray = ViewRays.of(player);
+        var ray = ViewRay.of(player);
         BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
                 .clip(ray.eye(), ray.end(), pos);
         return hit != null ? hit
@@ -104,27 +104,34 @@ public final class WorldEdits {
                                        BlockState state, Direction placedAgainst,
                                        VoxelShape finalCollision) {
         ServerPlayer placer = actor(level, source);
-        if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
+        if (level.isOutsideBuildHeight(pos) || !mayPlace(placer, level, pos)
+                || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
         if (!PlatformServices.editAuthority().place(placer, level, pos, state, placedAgainst)) {
             return false;
         }
+        completePlacement(placer, level, pos);
+        return true;
+    }
+
+    /** Finishes loader-accepted placement with the actor callback and one placement game event. */
+    public static void completePlacement(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         BlockState placedState = level.getBlockState(pos);
         placedState.getBlock().setPlacedBy(
                 level, pos, placedState, placer, placer.getMainHandItem());
         level.gameEvent(
                 GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
-        return true;
     }
 
     /**
-     * Removes a stack block for the source player, or automation when null, preserving identity through vanilla
+     * Removes a stack block on behalf of a player or automation, preserving that identity through vanilla
      * protection, loader-native removal events, and the emitted game event.
      */
     public static boolean removeChecked(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
         ServerPlayer actor = actor(level, source);
-        if (isProtected(actor, pos)) {
+        if (isProtected(actor, pos)
+                || actor.blockActionRestricted(level, pos, actor.gameMode.getGameModeForPlayer())) {
             return false;
         }
         BlockState state = level.getBlockState(pos);

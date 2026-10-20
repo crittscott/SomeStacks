@@ -58,7 +58,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#onServerStarting(net.minecraft.server.MinecraftServer)" tabindex="0">onServerStarting(MinecraftServer)</a></li>
 <li><a href="#onServerStopped()" tabindex="0">onServerStopped()</a></li>
-<li><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" tabindex="0">reportSavedItems(ServerLevel, BlockPos, StackItemStorage.LoadResult)</a></li>
 <li><a href="#onPolicyReloaded()" tabindex="0">onPolicyReloaded()</a></li>
 <li><a href="#reloadPolicy(net.minecraft.server.MinecraftServer)" tabindex="0">reloadPolicy(MinecraftServer)</a></li>
 <li><a href="#publishPolicy(net.minecraft.server.MinecraftServer)" tabindex="0">publishPolicy(MinecraftServer)</a></li>
@@ -145,14 +144,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Refreshes policy on the server thread and synchronizes only changed policy.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)" class="member-name-link">reportSavedItems</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- <a href="util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a>&nbsp;result)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
-per dimension and block position per server session.</div>
-</div>
 </div>
 </div>
 </div>
@@ -187,18 +178,6 @@ before world loading and player joins.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onServerStopped</span>()</div>
 <div class="block">Releases the stopped server and clears session diagnostics after world activity ends.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="reportSavedItems(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,com.github.crittscott.somestacks.util.StackItemStorage.LoadResult)">
-<h3>reportSavedItems</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reportSavedItems</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- <a href="util/StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a>&nbsp;result)</span></div>
-<div class="block">Reports newly retained disk entries on each occurrence, and failed persisted retries once
-per dimension and block position per server session. Call only for server disk loads.</div>
 </div>
 </section>
 </li>

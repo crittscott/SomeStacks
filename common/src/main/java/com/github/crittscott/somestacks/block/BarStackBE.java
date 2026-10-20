@@ -16,12 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Arrays;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
 
 /**
@@ -315,7 +316,7 @@ public class BarStackBE extends StackBlockEntity {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {
-            if (!occupancy[i] || BarCubeIdx.isGroundedIn(occupancy, i, seamBelow)) {
+            if (!occupancy[i] || BarCubeIdx.isGrounded(i, slot -> occupancy[slot], seamBelow)) {
                 continue;
             }
 

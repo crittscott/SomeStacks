@@ -4,18 +4,15 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.function.IntFunction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -68,7 +65,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        StackRun.invalidateAround(level, pos, SinglesStackBE.class);
+        StackRun.invalidateAround(level, pos, CommonRegistry.singlesStackBlock());
     }
 
     /**
@@ -126,7 +123,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(
+                flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -158,18 +156,14 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
     private boolean cellSupported(int blockIndex, int slot, int rotation, IntFunction<ItemStack> contents) {
         int blockStart = blockIndex * SinglesStackBE.SLOTS;
-        if (slot >= SinglesCubeIdx.LAYER_SIZE) {
-            return !contents.apply(blockStart + slot - SinglesCubeIdx.LAYER_SIZE).isEmpty();
-        }
-        if (blockIndex == 0) {
-            return true;
-        }
-        int visualColumn = SinglesCubeIdx.visualColumnFromStorage(
-                SinglesCubeIdx.columnFromIndex(slot), rotation);
-        int belowColumn = SinglesCubeIdx.storageColumnFromVisual(
-                visualColumn, blocks.get(blockIndex - 1).getRotation());
-        return !contents.apply(blockStart - SinglesStackBE.SLOTS
-                + SinglesCubeIdx.indexFromColumn(belowColumn, SinglesCubeIdx.TOP_LAYER_Y)).isEmpty();
+        return SinglesCubeIdx.isSupported(slot,
+                local -> !contents.apply(blockStart + local).isEmpty(), rotation,
+                blockIndex == 0 ? null : visual -> {
+                    int belowColumn = SinglesCubeIdx.storageColumnFromVisual(
+                            visual, blocks.get(blockIndex - 1).getRotation());
+                    return !contents.apply(blockStart - SinglesStackBE.SLOTS
+                            + SinglesCubeIdx.indexFromColumn(belowColumn, SinglesCubeIdx.TOP_LAYER_Y)).isEmpty();
+                });
     }
 
     /**
@@ -191,18 +185,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
             return false;
         }
 
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.singlesStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);
-
-        blocks.add(grown);
-        return true;
+        return growBlock(null, finalCollision, SinglesStackBE.class) != null;
     }
 
     // Extraction

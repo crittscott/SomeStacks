@@ -4,6 +4,13 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.datafixers.util.Either;
+import java.util.Optional;
+import java.util.function.Function;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -11,6 +18,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.ARGB;
@@ -51,6 +59,22 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     private static final String FIELD_TEXTURE = "texture";
     private static final String FIELD_TINT = "tint";
 
+    private static final Codec<Integer> COLOR_CODEC = Codec.STRING.comapFlatMap(value -> {
+        try {
+            return DataResult.success(parseColor(value));
+        } catch (IllegalArgumentException error) {
+            return DataResult.error(error::getMessage);
+        }
+    }, color -> String.format("#%08X", color));
+    private static final Codec<BarTextureData> OBJECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Identifier.CODEC.optionalFieldOf(FIELD_TEXTURE, DEFAULT_TEXTURE).forGetter(BarTextureData::texture),
+            COLOR_CODEC.optionalFieldOf(FIELD_TINT).forGetter(
+                    data -> data.autoTint() ? Optional.empty() : Optional.of(data.color())))
+            .apply(instance, (texture, tint) -> tint.map(color -> BarTextureData.tinted(texture, color))
+                    .orElseGet(() -> BarTextureData.auto(texture))));
+    private static final Codec<BarTextureData> ENTRY_CODEC = Codec.either(Identifier.CODEC, OBJECT_CODEC)
+            .xmap(entry -> entry.map(BarTextureData::auto, Function.identity()), Either::right);
+
     /**
      * A bar's texture and tint. {@code autoTint} is separate from {@code color} because white is a
      * valid authored color meaning "no tint," not a sentinel requesting automatic tinting.
@@ -89,7 +113,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
     protected Map<Identifier, BarTextureData> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<Identifier, BarTextureData> configMap = new HashMap<>();
 
-        var resources = resourceManager.listResources("textures/bars", loc -> loc.getPath().endsWith(".json"));
+        var resources = FileToIdConverter.json("textures/bars").listMatchingResources(resourceManager);
 
         // Read in file order so that two files mapping one item resolve the same way every reload.
         resources.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(fileEntry -> {
@@ -133,20 +157,9 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Identifi
      */
     @Nullable
     static BarTextureData parseEntry(JsonElement value) {
-        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
-            return BarTextureData.auto(Identifier.parse(value.getAsString()));
-        }
-        if (!value.isJsonObject()) {
-            return null;
-        }
-
-        JsonObject obj = value.getAsJsonObject();
-        Identifier texture = obj.has(FIELD_TEXTURE)
-                ? Identifier.parse(obj.get(FIELD_TEXTURE).getAsString())
-                : DEFAULT_TEXTURE;
-        return obj.has(FIELD_TINT)
-                ? BarTextureData.tinted(texture, parseColor(obj.get(FIELD_TINT).getAsString()))
-                : BarTextureData.auto(texture);
+        if (!value.isJsonObject()
+                && !(value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())) return null;
+        return ENTRY_CODEC.parse(JsonOps.INSTANCE, value).getOrThrow();
     }
 
     @Override
