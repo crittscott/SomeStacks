@@ -1,12 +1,13 @@
 package com.github.crittscott.somestacks.server;
 
 import com.github.crittscott.somestacks.SomeStacksCommon;
+
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /** Applies Some Stacks gestures from NeoForge's actual server-side right-click event. */

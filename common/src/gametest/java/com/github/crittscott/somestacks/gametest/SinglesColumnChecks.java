@@ -25,7 +25,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.signalA
  * Singles support and gravity in a live level that does not touch loader-native automation
  * directly: grounding at the bottom of a column, a cell resting on the one below it, visual
  * columns lining up across differently rotated blocks, and extraction shifting a column down while
- * carrying each item's rotation with it. Native automation-view tests stay in each loader's
+ * carrying each item's rotation with it. Loader-automation-facing tests stay in each loader's
  * own {@code SinglesColumnGameTests}.
  */
 public final class SinglesColumnChecks {

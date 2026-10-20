@@ -2,10 +2,8 @@ package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
-import com.github.crittscott.somestacks.block.StackBlock;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
@@ -14,22 +12,27 @@ import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
-import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.gameevent.PositionSource;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -37,10 +40,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SculkSensorBlock;
 import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
-import net.minecraft.world.level.gameevent.BlockPositionSource;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.gameevent.GameEventListener;
-import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -124,8 +123,8 @@ public final class InteractionChecks {
     /**
      * Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
      * hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
-     * off-hand item is not deposited. Unhandled modified empty-hand clicks and occupied permanence
-     * clicks retain ordinary use; plain empty extraction attempts still consume the click.
+     * off-hand item is not deposited. Modified empty-hand clicks and Toggle Permanent with an
+     * occupied hand retain ordinary use; plain extraction consumes even an empty target.
      */
     public static void interactionReadsOnlyTheMainHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -200,7 +199,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -234,7 +233,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -317,7 +316,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -452,15 +451,15 @@ public final class InteractionChecks {
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
-        RotationSoundThrottle.clear(player.getUUID());
+        ServerGestureState.resetSound(player.getUUID());
         try {
-            check(RotationSoundThrottle.claim(player), "First rotation sound was refused");
-            check(!RotationSoundThrottle.claim(player),
+            check(ServerGestureState.claimSound(player), "First rotation sound was refused");
+            check(!ServerGestureState.claimSound(player),
                     "Second same-tick rotation sound succeeded");
-            RotationSoundThrottle.clear(player.getUUID());
-            check(RotationSoundThrottle.claim(player), "Clear did not reset sound pacing");
+            ServerGestureState.resetSound(player.getUUID());
+            check(ServerGestureState.claimSound(player), "Clear did not reset sound pacing");
         } finally {
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -536,7 +535,8 @@ public final class InteractionChecks {
         for (boolean bar : new boolean[] {false, true}) {
             var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
                     : GameTestScaffold.placeSingles(helper, TARGET);
-            be.getItems().insertItem(0, new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE));
+            be.getItems().insertItem(0,
+                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE));
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             Runnable unregister = observer.install(helper.getLevel(), be.getBlockPos(),
                     actor -> {}, actor -> false);
@@ -649,7 +649,6 @@ public final class InteractionChecks {
                     "Full pile did not grow");
             check(!progress.getOrStartProgress(advancement).isDone(), "Pile growth awarded criterion");
         } finally {
-            progress.stopListening();
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
         }

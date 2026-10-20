@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.mojang.datafixers.util.Pair;
+import com.github.crittscott.somestacks.block.StackDataMigration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -9,18 +10,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Arrays;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the
- * immediate local mutations and NBT shape
+ * local insert/extract semantics and saved shape
  * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
  *
  * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
@@ -35,7 +36,7 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_ITEMS = "Items";
     public static final String TAG_SET_ASIDE = "SetAside";
 
-    /** Storage capacity per slot before the item's own maximum, shared by players, automation, and settlement. */
+    /** Per-slot max-stack-size cap advertised to automation. */
     public static final int STORAGE_SLOT_LIMIT = 64;
 
     /** Storage capacity after applying the item's own maximum. */
@@ -44,10 +45,7 @@ public class StackItemStorage implements SlotAccess {
     }
 
     private final ItemStack[] stacks;
-    private final ListTag setAside = new ListTag();
-
-    /** Counts of newly retained entries and persisted entries that still could not be restored. */
-    public record LoadResult(int newlySetAside, int failedRetries) {}
+    private final StackDataMigration.SavedItems savedItems = new StackDataMigration.SavedItems();
 
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
@@ -68,45 +66,63 @@ public class StackItemStorage implements SlotAccess {
     /**
      * Replaces a slot directly and reports the change, bypassing admission and capacity checks.
      * Internal relocation and settlement use this only for already-stored contents. The slot keeps
-     * {@code stack} itself, so the caller gives it up or passes a copy.
+     * {@code stack} itself, so the caller must give up the object or pass a copy.
      */
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         stacks[slot] = stack;
         onContentsChanged(slot);
     }
 
-    /**
-     * Inserts immediately and returns the unaccepted remainder, without modifying the offered stack.
-     * An empty slot may keep the offered object itself; callers give it up or pass a copy.
-     */
+    /** Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained. */
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack) {
-        if (stack.isEmpty()) return ItemStack.EMPTY;
-        if (!isItemValid(slot, stack)) return stack;
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        if (!isItemValid(slot, stack)) {
+            return stack;
+        }
+
         ItemStack existing = stacks[slot];
         int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+
         if (!existing.isEmpty()) {
-            if (!ItemStack.isSameItemSameComponents(existing, stack) || !existing.isStackable()) return stack;
+            if (!ItemStack.isSameItemSameComponents(existing, stack) || !existing.isStackable()) {
+                return stack;
+            }
             limit -= existing.getCount();
         }
-        if (limit <= 0) return stack;
+
+        if (limit <= 0) {
+            return stack;
+        }
+
         boolean reachedLimit = stack.getCount() > limit;
+
         if (existing.isEmpty()) {
             stacks[slot] = reachedLimit ? stack.copyWithCount(limit) : stack;
         } else {
             existing.grow(reachedLimit ? limit : stack.getCount());
         }
         onContentsChanged(slot);
+
         return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
-    /** Removes up to the requested amount immediately; the returned stack belongs to the caller. */
+    /** Removes up to the requested amount and returns an owned stack, notifying on mutation. */
     @Nonnull
     public ItemStack extractItem(int slot, int amount) {
-        if (amount == 0) return ItemStack.EMPTY;
+        if (amount == 0) {
+            return ItemStack.EMPTY;
+        }
+
         ItemStack existing = stacks[slot];
-        if (existing.isEmpty()) return ItemStack.EMPTY;
+        if (existing.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
         int toExtract = Math.min(amount, existing.getMaxStackSize());
+
         if (existing.getCount() <= toExtract) {
             stacks[slot] = ItemStack.EMPTY;
             onContentsChanged(slot);
@@ -122,6 +138,7 @@ public class StackItemStorage implements SlotAccess {
         return STORAGE_SLOT_LIMIT;
     }
 
+    /** Admission for a newly offered item; internal relocation bypasses it. */
     protected boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return true;
     }
@@ -174,9 +191,7 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        if (!setAside.isEmpty()) {
-            nbt.put(TAG_SET_ASIDE, setAside.copy());
-        }
+        savedItems.saveTo(nbt);
         return nbt;
     }
 
@@ -186,48 +201,25 @@ public class StackItemStorage implements SlotAccess {
      * loading bypasses admission and does not call contents-change hooks. The caller reports
      * returned retention counts once it knows the world location.
      */
-    public LoadResult load(HolderLookup.Provider registries, CompoundTag nbt) {
+    public StackDataMigration.LoadResult load(HolderLookup.Provider registries, CompoundTag nbt) {
         return load(RegistryOps.create(NbtOps.INSTANCE, registries), nbt);
     }
 
-    private <T> LoadResult load(DynamicOps<T> ops, CompoundTag nbt) {
-        Arrays.fill(stacks, ItemStack.EMPTY);
-        setAside.clear();
-        readItems(ops, nbt.getListOrEmpty(TAG_ITEMS));
-        int newlySetAside = setAside.size();
-        readItems(ops, nbt.getListOrEmpty(TAG_SET_ASIDE));
-        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
+    private <T> StackDataMigration.LoadResult load(DynamicOps<T> ops, CompoundTag nbt) {
+        return savedItems.load(ops, nbt, stacks);
     }
 
-    private <T> void readItems(DynamicOps<T> ops, ListTag list) {
-        for (Tag entry : list) {
-            if (!(entry instanceof CompoundTag itemTag) || !(itemTag.get(TAG_SLOT) instanceof IntTag slotTag)) {
-                setAside.add(entry.copy());
-                continue;
-            }
-            int slot = slotTag.intValue();
-            Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
-                    ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
-                    : Optional.empty();
-            if (parsed.isPresent() && !parsed.get().isEmpty()) {
-                stacks[slot] = parsed.get();
-            } else {
-                setAside.add(itemTag.copy());
-            }
-        }
-    }
-
-    /** Checks a current-format wire inventory without mutating live slots or retained entries. */
+    /** Checks a wire inventory without changing live slots or retained disk entries. */
     public boolean isValidClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
         return decodeClientUpdate(registries, nbt) != null;
     }
 
-    /** Validates and replaces a complete current-format client inventory atomically. */
+    /** Validates a current-format client snapshot before replacing any local contents. */
     public boolean deserializeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
         ItemStack[] decoded = decodeClientUpdate(registries, nbt);
         if (decoded == null) return false;
         System.arraycopy(decoded, 0, stacks, 0, stacks.length);
-        setAside.clear();
+        savedItems.clear();
         return true;
     }
 

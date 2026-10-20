@@ -5,12 +5,11 @@ import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.world.level.storage.LevelResource;
 
@@ -22,7 +21,7 @@ import java.util.List;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-/** Fabric JSON server-config checks plus delegates for loader-neutral policy checks. */
+/** Fabric JSON server-config checks and delegates for loader-neutral configuration checks. */
 public final class ConfigurationGameTests {
     private static final String TEMPLATE = FabricGameTestSupport.TEMPLATE;
 
@@ -48,7 +47,7 @@ public final class ConfigurationGameTests {
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void serverConfigLoadsBoundsAndLists(GameTestHelper helper) {
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigDir(helper).resolve(SomeStacksCommon.MODID + "-gametest.json");
+        Path fixture = fixturePath(helper, SomeStacksCommon.MODID + "-gametest.json");
 
         try {
             Files.createDirectories(fixture.getParent());
@@ -103,36 +102,35 @@ public final class ConfigurationGameTests {
         } catch (IOException e) {
             throw helper.assertionException(Component.literal("Could not prepare server-config fixture: " + e));
         } finally {
-            restoreConfig(original, fixture);
+            restore(original, fixture);
         }
         helper.succeed();
     }
 
     /**
      * To reproduce in-game: use /ss deny item add minecraft:diamond as an operator and inspect the
-     * world's {@code serverconfig/somestacks-server.json}. The denial is already saved there.
+     * world's {@code somestacks-server.json}. The denial is already written there.
      */
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void jsonServerPolicyPersistsCommandLists(GameTestHelper helper) {
         ServerConfig.Backend original = ServerConfig.backend();
-        Path fixture = serverConfigDir(helper).resolve(SomeStacksCommon.MODID + "-commands-gametest.json");
-        MinecraftServer server = helper.getLevel().getServer();
+        Path fixture = fixturePath(helper, SomeStacksCommon.MODID + "-commands-gametest.json");
         try {
             Files.createDirectories(fixture.getParent());
             Files.deleteIfExists(fixture);
             loadFixture(fixture);
-            var operator = server.createCommandSourceStack().withPermission(LevelBasedPermissionSet.OWNER);
-            check(server.getCommands().getDispatcher().execute(
-                    "ss deny item add minecraft:diamond", operator) > 0,
-                    "Operator deny command failed");
+            var operator = helper.getLevel().getServer().createCommandSourceStack()
+                    .withPermission(LevelBasedPermissionSet.OWNER);
+            helper.getLevel().getServer().getCommands().performPrefixedCommand(
+                    operator, "ss deny item add minecraft:diamond");
             JsonObject written = JsonParser.parseString(Files.readString(fixture)).getAsJsonObject();
             check(written.getAsJsonObject("compatibility").getAsJsonArray("disable_items")
-                            .contains(JsonParser.parseString("\"minecraft:diamond\"")),
-                    "Command edit did not reach the JSON file");
-        } catch (IOException | CommandSyntaxException e) {
-            throw helper.assertionException(Component.literal("Could not run command fixture: " + e));
+                            .contains(new JsonPrimitive("minecraft:diamond")),
+                    "Deny command was not written to the JSON file");
+        } catch (IOException e) {
+            throw helper.assertionException(Component.literal("Could not read JSON config: " + e));
         } finally {
-            restoreConfig(original, fixture);
+            restore(original, fixture);
         }
         helper.succeed();
     }
@@ -158,30 +156,30 @@ public final class ConfigurationGameTests {
         ConfigurationChecks.serverCommandsEnforcePermissionsAndPersistEdits(
                 helper, FabricGameTestSupport.playerFactory(helper));
     }
-
     /** See {@link ConfigurationChecks#ingotTagControlsBarAndSinglesAdmission}. */
-    @GameTest(structure = TEMPLATE, maxTicks = 100)
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
     }
 
-    private static void loadFixture(Path file) {
+    private static void loadFixture(Path fixture) {
+        JsonServerConfig backend = new JsonServerConfig();
         ServerConfig.Backend previousBackend = ServerConfig.backend();
         ServerConfig.Settings previousSettings = ServerConfig.settings();
-        JsonServerConfig backend = new JsonServerConfig();
-        ServerConfig.Settings loaded = backend.load(file);
-        check(ServerConfig.backend() == previousBackend, "JSON loading installed a backend");
-        checkEquals(previousSettings, ServerConfig.settings(), "JSON loading published settings");
+        ServerConfig.Settings loaded = backend.load(fixture);
+        check(ServerConfig.backend() == previousBackend, "JSON load installed itself");
+        check(ServerConfig.settings() == previousSettings, "JSON load published policy");
         ServerConfig.install(backend);
         ServerConfig.apply(loaded);
     }
 
-    private static Path serverConfigDir(GameTestHelper helper) {
-        return helper.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("serverconfig");
+    private static Path fixturePath(GameTestHelper helper, String name) {
+        return helper.getLevel().getServer().getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig").resolve(name);
     }
 
     /** Reinstalls the world's own backend, rereads its file, and deletes the fixture. */
-    private static void restoreConfig(ServerConfig.Backend original, Path fixture) {
+    private static void restore(ServerConfig.Backend original, Path fixture) {
         ServerConfig.install(original);
         ServerConfig.reload();
         try {

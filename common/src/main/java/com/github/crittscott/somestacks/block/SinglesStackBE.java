@@ -15,11 +15,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Objects;
+
 import javax.annotation.Nullable;
 
 /**
@@ -358,6 +359,7 @@ public class SinglesStackBE extends StackBlockEntity {
             current = current.below();
         }
     }
+
 
     /**
      * An empty cell carries no orientation, so the next item deposited into it cannot inherit

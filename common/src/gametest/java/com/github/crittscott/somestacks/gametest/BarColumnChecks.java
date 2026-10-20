@@ -38,6 +38,42 @@ public final class BarColumnChecks {
     private BarColumnChecks() {}
 
     /**
+     * Stored Bars survive breaking and cascades with block drops disabled. To reproduce in-game:
+     * disable minecraft:block_drops, break a filled Bar column, then extract a support from another.
+     * All stored ingots are returned in packed drops.
+     */
+    public static void contentsDropWithBlockDropsDisabled(GameTestHelper helper) {
+        var server = helper.getLevel().getServer();
+        var dispatcher = server.getCommands().getDispatcher();
+        var source = server.createCommandSourceStack().withSuppressedOutput();
+        try {
+            int previous = dispatcher.execute("gamerule minecraft:block_drops", source);
+            try {
+                dispatcher.execute("gamerule minecraft:block_drops false", source);
+                breakFullColumnAndCheckDrops(helper);
+                // Keep the cascade outside the broken column's drop search area.
+                BarStackBE bars = placeBar(helper, ORIGIN.east(6));
+                Item item = firstBarItem();
+                int upper = firstSupportedBy(0, BarCubeIdx.LAYER_SIZE, 2 * BarCubeIdx.LAYER_SIZE);
+                seedSlot(bars.getItems(), 0, new ItemStack(item));
+                seedSlot(bars.getItems(), upper, new ItemStack(item));
+                int before = droppedNear(helper, bars.getBlockPos(), item);
+                ItemStack extracted = bars.extractAt(0, null);
+                int after = droppedNear(helper, bars.getBlockPos(), item);
+                checkEquals(1, extracted.getCount(), "Extracted support count");
+                checkEquals(1, after - before, "Unsupported bar drop count with block drops disabled");
+                checkEquals(2, after - before + GameTestScaffold.count(bars.getItems(), item)
+                        + extracted.getCount(), "Cascade item conservation with block drops disabled");
+            } finally {
+                dispatcher.execute("gamerule minecraft:block_drops " + (previous != 0), source);
+            }
+        } catch (com.mojang.brigadier.exceptions.CommandSyntaxException error) {
+            throw new IllegalStateException("Cannot configure block-drops regression", error);
+        }
+        helper.succeed();
+    }
+
+    /**
      * Bar accepts configured ingots on its grounded bottom layer and rejects other items or
      * unsupported positions. To reproduce in-game: deposit a configured ingot into a bottom Bar
      * position, then try a non-ingot and a floating position. Only the grounded ingot is stored.
@@ -206,6 +242,11 @@ public final class BarColumnChecks {
      * block. Every ingot is returned once in consolidated dropped stacks.
      */
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
+        breakFullColumnAndCheckDrops(helper);
+        helper.succeed();
+    }
+
+    private static void breakFullColumnAndCheckDrops(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
         BarStackBE upper = placeBar(helper, ORIGIN.above());
         BarStackBE top = placeBar(helper, ORIGIN.above(2));
@@ -243,7 +284,6 @@ public final class BarColumnChecks {
                 "Consolidated item count");
         check(drops.stream().allMatch(entity -> entity.getItem().getCount() == 64),
                 "A full block's bars were not packed into one full stack");
-        helper.succeed();
     }
 
     /**
@@ -406,7 +446,7 @@ public final class BarColumnChecks {
         int[] supported = new int[to - from];
         int count = 0;
         for (int index = from; index < to; index++) {
-            if (BarCubeIdx.isGroundedIn(occupancy, index, null)) {
+            if (BarCubeIdx.isGrounded(index, slot -> occupancy[slot], null)) {
                 supported[count++] = index;
             }
         }

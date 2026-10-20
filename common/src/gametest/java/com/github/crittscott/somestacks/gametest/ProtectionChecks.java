@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.minecraft.world.phys.shapes.Shapes;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
@@ -11,10 +12,10 @@ import com.github.crittscott.somestacks.server.AutomationActor;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.StackMode;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import com.github.crittscott.somestacks.util.StackMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -22,8 +23,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,6 +48,69 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.putCowI
 /** Loader-neutral placement and player-deposit protection scenarios. */
 public final class ProtectionChecks {
     private ProtectionChecks() {}
+
+    /**
+     * Adventure players may extract contents but cannot remove the emptied block. To reproduce
+     * in-game: enter Adventure mode and empty a Singles Stack; the item is returned and its block remains.
+     */
+    public static void adventureExtractionKeepsEmptyBlock(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory) {
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        var previous = player.gameMode.getGameModeForPlayer();
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().setStackInSlot(0, new ItemStack(Items.APPLE));
+        try {
+            player.setGameMode(net.minecraft.world.level.GameType.ADVENTURE);
+            check(!singles.extractAt(0, player).isEmpty(), "Adventure extraction lost the item");
+            check(helper.getLevel().getBlockEntity(singles.getBlockPos()) == singles,
+                    "Adventure cleanup removed the block");
+            check(singles.isEmpty(), "Adventure extraction left the item behind");
+        } finally {
+            player.setGameMode(previous);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Ordinary new placement replaces clicked vegetation instead of floating above it. To reproduce
+     * in-game: hold dirt and the modifier in Storage mode and click short grass, thin snow, then full snow from above.
+     * Grass and thin snow are replaced; full snow stays below the new stack.
+     */
+    public static void placementReplacesClickedVegetation(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory) {
+        var level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        level.setBlock(target.below(), Blocks.DIRT.defaultBlockState(), Block.UPDATE_ALL);
+        level.setBlock(target, Blocks.SHORT_GRASS.defaultBlockState(), Block.UPDATE_ALL);
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        try {
+            check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(Vec3.atCenterOf(target), Direction.UP, target, false), true, true),
+                    "Placement gesture was not consumed");
+            check(level.getBlockState(target).is(CommonRegistry.storageStackBlock()), "Clicked grass was not replaced");
+            check(level.getBlockState(target.above()).isAir(), "Placement floated above the grass");
+            check(player.getMainHandItem().isEmpty(), "Successful placement did not consume dirt");
+            for (int layers : new int[]{1, 8}) {
+                BlockPos snow = target.east(layers == 1 ? 3 : 6);
+                level.setBlock(snow.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+                var snowState = Blocks.SNOW.defaultBlockState().setValue(
+                        net.minecraft.world.level.block.SnowLayerBlock.LAYERS, layers);
+                level.setBlock(snow, snowState, Block.UPDATE_ALL);
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
+                check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(snow), Direction.UP, snow, false), true, true),
+                        "Snow placement gesture was not consumed");
+                BlockPos placed = layers == 1 ? snow : snow.above();
+                check(level.getBlockState(placed).is(CommonRegistry.storageStackBlock()),
+                        "Snow placement chose the wrong destination at " + layers + " layers");
+                if (layers == 8) check(level.getBlockState(snow).equals(snowState), "Full snow was overwritten");
+            }
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+        }
+        helper.succeed();
+    }
 
     /**
      * Every loader attributes automation to the same [SomeStacks] profile. To reproduce in-game:
@@ -73,11 +136,13 @@ public final class ProtectionChecks {
         BlockPos valid = helper.absolutePos(ORIGIN);
         BlockPos invalid = new BlockPos(valid.getX(), level.getMinY() - 1, valid.getZ());
 
-        check(WorldEdits.placeChecked(player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
+        check(WorldEdits.placeChecked(
+                        player, level, valid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Valid checked placement was rejected");
         check(level.getBlockState(valid).is(Blocks.STONE),
                 "Valid checked placement did not change the world");
-        check(!WorldEdits.placeChecked(player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
+        check(!WorldEdits.placeChecked(
+                        player, level, invalid, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Out-of-height checked placement was accepted");
         helper.succeed();
     }
@@ -94,7 +159,8 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         putCowIn(helper, ORIGIN);
 
-        check(!WorldEdits.placeChecked(player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
+        check(!WorldEdits.placeChecked(
+                        player, level, target, Blocks.STONE.defaultBlockState(), Direction.DOWN, Shapes.block()),
                 "Entity-obstructed checked placement was accepted");
         helper.assertBlockNotPresent(Blocks.STONE, ORIGIN);
         helper.succeed();
@@ -142,6 +208,7 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
         BlockPos support = target.below();
+        level.setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
 
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
@@ -328,7 +395,8 @@ public final class ProtectionChecks {
         chest.setItem(0, new ItemStack(Items.DIAMOND, 3));
         installVeto.run();
         try {
-            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
+            check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
+                    CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                     "Vetoed placement succeeded");
         } finally {
             removeVeto.run();
@@ -346,7 +414,8 @@ public final class ProtectionChecks {
                     "Initial permanent stack settlement is still pending");
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos, CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, pos,
+                        CommonRegistry.barStackBlock().defaultBlockState(), Direction.DOWN, Shapes.empty()),
                         "Vetoed stack replacement succeeded");
             } finally {
                 removeVeto.run();
@@ -357,7 +426,7 @@ public final class ProtectionChecks {
             check(!level.getBlockTicks().hasScheduledTick(pos, storageBlock),
                     "Rollback ran the restored stack's placement hook");
             helper.succeed();
-        });
+    });
     }
 
     /**
@@ -375,7 +444,8 @@ public final class ProtectionChecks {
         helper.runAfterDelay(6, () -> {
             installVeto.run();
             try {
-                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
+                check(!WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
+                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                         "Vetoed placement succeeded");
             } finally {
                 removeVeto.run();
@@ -383,7 +453,8 @@ public final class ProtectionChecks {
             helper.runAfterDelay(3, () -> {
                 check(!level.getBlockState(observer).getValue(ObserverBlock.POWERED),
                         "Denied placement pulsed its observer");
-                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target, CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
+                check(WorldEdits.placeChecked(playerFactory.apply(ItemStack.EMPTY), level, target,
+                        CommonRegistry.storageStackBlock().defaultBlockState(), Direction.DOWN, Shapes.block()),
                         "Accepted placement failed");
                 ((StorageStackBE) level.getBlockEntity(target)).getItems()
                         .insertItem(0, new ItemStack(Items.STONE));
@@ -399,7 +470,6 @@ public final class ProtectionChecks {
     private static BlockHitResult centerHit(BlockPos pos) {
         return new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false);
     }
-
     /** Native per-slot offer returning the accepted count; commit=false rolls back. */
     @FunctionalInterface
     public interface OfferAt {
@@ -611,4 +681,5 @@ public final class ProtectionChecks {
                 CommonRegistry.barStackBlock(), ORIGIN.above());
         helper.succeed();
     }
+
 }

@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.server.NeoForgeGrowthPlacement;
-import com.github.crittscott.somestacks.util.StackPlacement;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -12,18 +12,20 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
+
 /**
  * Whole-run NeoForge transfer view. Only the ledger changes during a transaction; nested aborts
  * restore it and the root commit applies net slot changes through the common movement rules.
- * Insertion checks the staged contents, so one transaction can build on its own pending changes.
- * Positional runs permit one structural extraction position, without other pending positions or
- * later insertion, because gravity and backfill remap the slots at commit.
+ * Positional runs permit one structural extraction position, without other pending positions,
+ * because gravity and backfill remap the slots at commit.
  */
 public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRunResourceHandler.State>
         implements ResourceHandler<ItemResource> {
     private final StackBlockEntity blockEntity;
     private final RunTransferLedger changes = new RunTransferLedger();
     private NeoForgeGrowthPlacement growth;
+    private int offerDepth;
+    private BlockPos refusedGrowth;
 
     public NeoForgeRunResourceHandler(StackBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
@@ -38,7 +40,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         StackRun<?> run = run();
         if (run == null) return this;
         StackBlockEntity base = run.baseBlockEntity();
-        return base == blockEntity ? this : base.getData(NeoForgeRegistry.RUN_RESOURCES);
+        if (base == blockEntity) return this;
+        return base.getData(NeoForgeRegistry.RUN_RESOURCES);
     }
 
     @Override
@@ -93,23 +96,27 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         if (!current.isEmpty() && !resource.matches(current)) return 0;
         int inserted = Math.min(amount, getCapacityAsInt(index, resource) - current.getCount());
         if (inserted <= 0) return 0;
-
         StackRun<?> run = run();
         inserted = Math.min(inserted, run.acceptsAt(index, resource.toStack(inserted), this::current));
         if (inserted <= 0) return 0;
+
         if (index >= run.totalSlots()) {
             ServerLevel level = (ServerLevel) blockEntity.getLevel();
             BlockPos pos = run.basePos().above(run.height());
             if (growth == null) {
+                if (pos.equals(refusedGrowth)) return 0;
                 if (!RunEdit.begin()) return 0;
                 NeoForgeGrowthPlacement prepared;
                 try {
                     prepared = NeoForgeGrowthPlacement.prepare(level, pos,
-                            StackPlacement.stateFor(blockEntity.getBlockState().getBlock(), level, pos));
+                            StackBlock.placementState(blockEntity.getBlockState().getBlock(), level, pos));
                 } finally {
                     RunEdit.end();
                 }
-                if (prepared == null) return 0;
+                if (prepared == null) {
+                    if (offerDepth > 0) refusedGrowth = pos;
+                    return 0;
+                }
                 updateSnapshots(transaction);
                 growth = prepared;
             }
@@ -123,10 +130,11 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     @Override
     public int insert(ItemResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-        NeoForgeRunResourceHandler base = ledger();
-        if (base != this) return base.insert(resource, amount, transaction);
+        NeoForgeRunResourceHandler ledger = ledger();
+        if (ledger != this) return ledger.insert(resource, amount, transaction);
         StackRun<?> run = run();
         if (run == null) return 0;
+        offerDepth++;
         try (var query = run.growthQuery()) {
             int inserted = 0;
             int size = size();
@@ -138,6 +146,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
                 }
             }
             return inserted;
+        } finally {
+            if (--offerDepth == 0) refusedGrowth = null;
         }
     }
 

@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
-import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -14,6 +13,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -264,8 +264,7 @@ public final class FabricTransferGameTests {
 
     /**
      * No in-game reproduction applies: aborting extraction preserves Singles rotations and Bar
-     * positions; committing invokes the common gravity or backfill path exactly once. Insertion is
-     * refused while a structural extraction is pending.
+     * positions; committing invokes the common gravity or backfill path exactly once.
      */
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void positionalExtractionRollsBackAndCommitsMovement(GameTestHelper helper) {
@@ -280,15 +279,14 @@ public final class FabricTransferGameTests {
         for (StackBlockEntity base : new StackBlockEntity[]{singles, bars}) {
             SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
             ItemVariant resource = storage.getSlot(0).getResource();
-            // An empty, supported position that would accept the resource without the pending extraction.
-            int emptySlot = base instanceof BarStackBE ? BarStackBE.SLOTS : SinglesCubeIdx.indexFromColumn(1, 0);
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
             try (Transaction transaction = Transaction.openOuter()) {
                 checkEquals(1L, storage.getSlot(0).extract(resource, 1, transaction), "Staged positional extraction");
                 checkEquals(0L, storage.getSlot(0).extract(resource, 1, transaction), "Position extracted twice");
-                checkEquals(0L, storage.getSlot(emptySlot).insert(resource, 1, transaction),
-                        "Insertion followed structural extraction");
-                checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Extraction changed live data");
+                checkEquals(0L, storage.getSlot(aboveSlot).insert(resource, 1, transaction),
+                        "Insertion accepted during structural extraction");
+                checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()),
+                        "Extraction changed live data");
             }
             checkEquals(saved, base.saveWithoutMetadata(helper.getLevel().registryAccess()), "Abort changed saved data");
             try (Transaction transaction = Transaction.openOuter()) {
@@ -310,8 +308,10 @@ public final class FabricTransferGameTests {
         base.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
         try (Transaction transaction = Transaction.openOuter()) {
-            checkEquals(64L, storage.getSlot(0).extract(ItemVariant.of(Items.STONE), 64, transaction), "Extract original");
-            checkEquals(8L, storage.getSlot(0).insert(ItemVariant.of(Items.DIRT), 8, transaction), "Insert replacement");
+            checkEquals(64L, storage.getSlot(0).extract(ItemVariant.of(Items.STONE), 64, transaction),
+                    "Extract original");
+            checkEquals(8L, storage.getSlot(0).insert(ItemVariant.of(Items.DIRT), 8, transaction),
+                    "Insert replacement");
             transaction.commit();
         }
         checkEquals(Items.DIRT, base.getItems().getStackInSlot(0).getItem(), "Replacement identity");

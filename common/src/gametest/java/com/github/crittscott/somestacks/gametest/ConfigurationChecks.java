@@ -41,7 +41,7 @@ import java.util.function.Function;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEquals;
 
-/** Loader-neutral render-override parsing and in-memory server-policy checks. */
+/** Loader-neutral render-override parsing and server-policy checks. */
 public final class ConfigurationChecks {
     private ConfigurationChecks() {}
 
@@ -291,10 +291,11 @@ public final class ConfigurationChecks {
     }
 
     /**
-     * Server commands enforce permissions and save list edits through the installed backend
-     * immediately. To reproduce in-game: try the administrative list commands without permission,
-     * then as an operator, and run {@code /ss reload}. Only the operator edits succeed, and they
-     * survive the reload because they were already saved.
+     * Server commands enforce permissions and save list edits immediately through the loader's
+     * installed configuration. To reproduce in-game: try the administrative list commands without
+     * permission, then as an operator, then run {@code /ss reload}. Only the operator edits
+     * succeed, and reloading reads them back from the server config. Enable galleries and change
+     * their required permission while connected: command availability updates without reconnecting.
      */
     public static void serverCommandsEnforcePermissionsAndPersistEdits(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -317,12 +318,12 @@ public final class ConfigurationChecks {
             check(execute(commands.getDispatcher(), operator,
                     "ss gen mod add examplemod") > 0,
                     "Operator gallery-list command failed");
+            check(ServerConfig.ListSetting.GEN_MODS.get().contains("examplemod"),
+                    "Gen command did not update policy");
 
-            // Forget the edits in memory; only what the commands saved can bring them back.
             ServerConfig.apply(policy(8, true, true, true, List.of(), List.of()));
-            // The result is the synced-player count, which is zero in a GameTest.
             execute(commands.getDispatcher(), operator, "ss reload");
-            check(ServerConfig.ListSetting.DISABLE_ITEMS.get().contains("minecraft:stone"),
+            check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Deny command was not saved immediately");
             check(ServerConfig.ListSetting.GEN_MODS.get().contains("examplemod"),
                     "Gen command was not saved immediately");
@@ -405,7 +406,7 @@ public final class ConfigurationChecks {
         }
     }
 
-    /** An in-memory policy with the given admission fields and defaults for everything else. */
+    /** Default policy with the given height, enablement, and deny lists; gallery settings stay default. */
     private static ServerConfig.Settings policy(
             int maxHeight,
             boolean storage,
@@ -414,8 +415,7 @@ public final class ConfigurationChecks {
             List<String> disabledMods,
             List<String> disabledItems) {
         ServerConfig.Settings defaults = ServerConfig.defaults();
-        return new ServerConfig.Settings(
-                maxHeight, storage, singles, bars, disabledMods, disabledItems,
+        return new ServerConfig.Settings(maxHeight, storage, singles, bars, disabledMods, disabledItems,
                 defaults.renderGalleryPlacementsPerTick(), defaults.galleryEnabled(),
                 defaults.galleryPermissionLevel(), defaults.genMods(), defaults.genItems());
     }

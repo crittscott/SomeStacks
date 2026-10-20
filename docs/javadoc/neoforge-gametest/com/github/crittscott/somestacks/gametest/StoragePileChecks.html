@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Storage pile behavior in a live level that does not touch loader-native automation directly:
 deposits filling partial stacks before empty ones, growth when a pile fills, and settling
-consolidating, packing, and sorting. Native automation-view tests stay in each loader's
+consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's
 own <code>StoragePileGameTests</code>.</div>
 </div>
 </section>
@@ -205,8 +205,7 @@ reaches its limit before any remainder appears in another cube.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fullPileGrowsByOneBlock</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: fill
 every slot in one Storage block, then deposit one more allowed item. A second Storage block
-appears above and holds the item.
-Rotate the base with a redstone torch before filling it; the grown block inherits its facing.</div>
+appears above and holds the item.</div>
 </div>
 </section>
 </li>

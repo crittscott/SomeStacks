@@ -8,10 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
-import net.minecraft.world.level.storage.TagValueInput;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -29,7 +29,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 /**
  * Storage pile behavior in a live level that does not touch loader-native automation directly:
  * deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- * consolidating, packing, and sorting. Native automation-view tests stay in each loader's
+ * consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's
  * own {@code StoragePileGameTests}.
  */
 public final class StoragePileChecks {
@@ -60,7 +60,6 @@ public final class StoragePileChecks {
      * Depositing into a full Storage pile grows it upward by one block. To reproduce in-game: fill
      * every slot in one Storage block, then deposit one more allowed item. A second Storage block
      * appears above and holds the item.
-     * Rotate the base with a redstone torch before filling it; the grown block inherits its facing.
      */
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -352,7 +351,6 @@ public final class StoragePileChecks {
         checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
         helper.succeed();
     }
-
     /**
      * To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
      * automation, then let it settle. Every slot holds at most 64 and a fully filled pile gives

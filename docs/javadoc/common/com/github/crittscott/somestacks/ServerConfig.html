@@ -319,7 +319,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Applies the installed backend's current policy without saving or synchronizing clients.</div>
+<div class="block">Refreshes policy through the installed backend without saving or synchronizing clients.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#removeListEntry(com.github.crittscott.somestacks.ServerConfig.ListSetting,java.lang.String)" class="member-name-link">removeListEntry</a><wbr>(<a href="ServerConfig.ListSetting.html" title="enum class in com.github.crittscott.somestacks">ServerConfig.ListSetting</a>&nbsp;list,
@@ -333,7 +333,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save()" class="member-name-link">save</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Saves current policy without changing it; false when persistence fails.</div>
+<div class="block">Persists policy through the installed backend; false means persistence failed.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerConfig.Settings.html" title="class in com.github.crittscott.somestacks">ServerConfig.Settings</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settings()" class="member-name-link">settings</a>()</code></div>
@@ -766,8 +766,7 @@ drops or hands it to the player:
 <h3>reload</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span>()</div>
-<div class="block">Applies the installed backend's current policy without saving or synchronizing clients.
-Parsing fallback belongs to the backend.</div>
+<div class="block">Refreshes policy through the installed backend without saving or synchronizing clients.</div>
 </div>
 </section>
 </li>
@@ -776,7 +775,7 @@ Parsing fallback belongs to the backend.</div>
 <h3>save</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">save</span>()</div>
-<div class="block">Saves current policy without changing it; false when persistence fails.</div>
+<div class="block">Persists policy through the installed backend; false means persistence failed.</div>
 </div>
 </section>
 </li>
