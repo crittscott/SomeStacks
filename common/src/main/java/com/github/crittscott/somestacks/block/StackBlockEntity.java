@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
@@ -70,12 +69,12 @@ public abstract class StackBlockEntity extends BlockEntity {
             }
 
             @Override
-            public int getSlotLimit(int slot) {
+            protected int getSlotLimit(int slot) {
                 return localSlotLimit();
             }
 
             @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            protected boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return isStoredItemValid(stack);
             }
         };
@@ -85,7 +84,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Admission for new local/automation inserts, including current namespace and type policy.
      * Existing saved or internally relocated items bypass this check; no slot is selected here.
      */
-    protected abstract boolean isStoredItemValid(ItemStack stack);
+    public abstract boolean isStoredItemValid(ItemStack stack);
 
     /** Resolves the current server-side run without consulting the per-tick cache. */
     protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
@@ -125,7 +124,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     }
 
     /** Local slot capacity before the item's own stack limit, or one for positional display types. */
-    protected int localSlotLimit() {
+    public int localSlotLimit() {
         return 64;
     }
 
@@ -203,16 +202,6 @@ public abstract class StackBlockEntity extends BlockEntity {
         return state.hasProperty(StackBlock.HORIZONTAL_FACING)
                 ? QuarterTurns.fromDirection(state.getValue(StackBlock.HORIZONTAL_FACING))
                 : 0;
-    }
-
-    /** Per-position automation capacity before the offered item's own stack limit. */
-    public final int automationSlotLimit() {
-        return localSlotLimit();
-    }
-
-    /** Checks new automation admission without choosing a slot or checking support/growth authority. */
-    public final boolean acceptsAutomation(ItemStack stack) {
-        return isStoredItemValid(stack);
     }
 
     /** Immediately notifies block updates when attached; server callers send the local render state. */
@@ -344,31 +333,32 @@ public abstract class StackBlockEntity extends BlockEntity {
             pendingMigrationSave = false;
         }
         CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
-        pendingLoadResult = items.deserializeNBT(registries, inventory);
+        pendingLoadResult = items.load(registries, inventory);
         reportSavedItems();
         loadStackData(input);
         refreshComparatorContribution();
     }
 
-    /** NeoForge chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional. */
-    public final void handleUpdateTag(ValueInput input) {
-        loadClientUpdate(StackDataMigration.readTag(input), input.lookup());
+    /** Validates a native client update before inherited loading can change any state. */
+    public final boolean isValidClientUpdate(ValueInput input) {
+        CompoundTag tag = StackDataMigration.readTag(input);
+        return isValidClientMetadata(tag) && items.isValidClientUpdate(
+                input.lookup(), tag.getCompound(TAG_ITEMS).orElseThrow());
     }
 
-    /** NeoForge block-update hook, sharing the same staged validation as chunk initialization. */
-    public final void onDataPacket(Connection connection, ValueInput input) {
-        handleUpdateTag(input);
+    private boolean isValidClientMetadata(CompoundTag tag) {
+        return tag.get(TAG_DATA_VERSION) instanceof IntTag version
+                && version.intValue() == SharedConstants.getCurrentVersion().dataVersion().version()
+                && tag.get(TAG_ITEMS) instanceof CompoundTag
+                && !tag.contains(StackItemStorage.TAG_SET_ASIDE)
+                && !tag.contains(StorageStackBE.TAG_PERMANENT)
+                && isValidClientStackData(tag);
     }
 
     /** Rejects malformed wire data without migration, recovery retention, or logging. */
     public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
-        if (!(tag.get(TAG_DATA_VERSION) instanceof IntTag version)
-                || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()
-                || !(tag.get(TAG_ITEMS) instanceof CompoundTag inventory)
-                || tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                || tag.contains(StorageStackBE.TAG_PERMANENT)
-                || !isValidClientStackData(tag)
-                || !items.deserializeClientUpdate(registries, inventory)) {
+        if (!isValidClientMetadata(tag) || !items.deserializeClientUpdate(
+                registries, tag.getCompound(TAG_ITEMS).orElseThrow())) {
             return false;
         }
         loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));

@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.StackState;
 import com.github.crittscott.somestacks.client.interaction.InteractionContext;
-import com.github.crittscott.somestacks.client.interaction.InteractionRule;
 import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import com.github.crittscott.somestacks.client.interaction.ModeCycleRule;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
@@ -137,7 +136,7 @@ public final class ClientGestureChecks {
                     assertConsumed(player, be.getBlockPos());
                 }
                 for (int slot = 0; slot < be.getItems().getSlots(); slot++) {
-                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.automationSlotLimit()));
+                    be.getItems().setStackInSlot(slot, new ItemStack(item, be.localSlotLimit()));
                 }
                 assertConsumed(player, be.getBlockPos());
             }

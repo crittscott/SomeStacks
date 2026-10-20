@@ -1,5 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
+import com.github.crittscott.somestacks.CommonRegistry;
+
 import com.github.crittscott.somestacks.util.BlockType;
 
 import net.minecraft.core.BlockPos;
@@ -61,7 +63,7 @@ public class SinglesStackBlock extends ShapedStackBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SinglesStackBE(pos, state);
+        return CommonRegistry.singlesStackBe().create(pos, state);
     }
 
     @Override

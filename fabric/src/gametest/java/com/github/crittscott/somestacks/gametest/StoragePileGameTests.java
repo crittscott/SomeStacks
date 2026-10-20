@@ -76,7 +76,7 @@ public final class StoragePileGameTests {
     public void storageFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12));
 
         SlottedStorage<ItemVariant> lowerStorage = FabricGameTestSupport.storage(lower);
         SlottedStorage<ItemVariant> upperStorage = FabricGameTestSupport.storage(upper);

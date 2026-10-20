@@ -100,7 +100,7 @@ public final class ProtectionGameTests {
     public void playerExtractionUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
-        singles.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        singles.getItems().insertItem(0, new ItemStack(Items.STONE));
         ServerPlayer player = FakePlayer.get(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
@@ -125,7 +125,7 @@ public final class ProtectionGameTests {
     public void playerStorageSettlementUsesPlayerForCleanup(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE));
         ServerPlayer player = FakePlayer.get(level);
         BlockPos target = helper.absolutePos(ORIGIN);
         TestTarget key = new TestTarget(level, target);
@@ -157,7 +157,7 @@ public final class ProtectionGameTests {
         BlockPos topRelative = ORIGIN.above();
         StorageStackBE base = GameTestScaffold.placeStorage(helper, ORIGIN);
         GameTestScaffold.placeStorage(helper, topRelative);
-        base.getItems().insertItem(0, new ItemStack(Items.DIRT), false);
+        base.getItems().insertItem(0, new ItemStack(Items.DIRT));
 
         ServerLevel level = helper.getLevel();
         TestTarget key = new TestTarget(level, helper.absolutePos(topRelative));
@@ -283,7 +283,7 @@ public final class ProtectionGameTests {
     public void placementAndAdjacentDepositsUseVanillaAuthority(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(ORIGIN);
         ServerPlayer player = FakePlayer.get(helper.getLevel());
-        check(WorldEdits.mayPlace(player, pos), "Unprotected placement was denied");
+        check(WorldEdits.mayPlace(player, helper.getLevel(), pos), "Unprotected placement was denied");
         check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
         check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
                         Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
@@ -340,7 +340,7 @@ public final class ProtectionGameTests {
     public void storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -370,7 +370,7 @@ public final class ProtectionGameTests {
     public void singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE, 1));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -402,7 +402,7 @@ public final class ProtectionGameTests {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar, 1), false);
+            bars.getItems().insertItem(slot, new ItemStack(bar, 1));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(bar, 4);
@@ -433,7 +433,7 @@ public final class ProtectionGameTests {
     public void storageGrowthAnswersToBlockUseCallbacks(GameTestHelper helper) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         checkRefusedGrowth(helper, FabricGameTestSupport.storage(storage), StorageStackBE.SLOTS,
                 new ItemStack(Items.STONE, 4), CommonRegistry.storageStackBlock());
@@ -447,7 +447,7 @@ public final class ProtectionGameTests {
     public void singlesGrowthAnswersToBlockUseCallbacks(GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
         }
         checkRefusedGrowth(helper, FabricGameTestSupport.storage(singles), SinglesStackBE.SLOTS,
                 new ItemStack(Items.STONE, 4), CommonRegistry.singlesStackBlock());
@@ -462,7 +462,7 @@ public final class ProtectionGameTests {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar), false);
+            bars.getItems().insertItem(slot, new ItemStack(bar));
         }
         checkRefusedGrowth(helper, FabricGameTestSupport.storage(bars), BarStackBE.SLOTS,
                 new ItemStack(bar, 4), CommonRegistry.barStackBlock());
@@ -496,7 +496,7 @@ public final class ProtectionGameTests {
             GameTestHelper helper) {
         StorageStackBE blockEntity = GameTestScaffold.placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            blockEntity.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(blockEntity);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -522,7 +522,7 @@ public final class ProtectionGameTests {
             GameTestHelper helper) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, ORIGIN);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.STONE), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.STONE));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
         ItemStack offered = new ItemStack(Items.STONE, 4);
@@ -548,7 +548,7 @@ public final class ProtectionGameTests {
         BarStackBE bars = GameTestScaffold.placeBar(helper, ORIGIN);
         Item bar = GameTestScaffold.firstBarItem();
         for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
-            bars.getItems().insertItem(slot, new ItemStack(bar), false);
+            bars.getItems().insertItem(slot, new ItemStack(bar));
         }
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(bars);
         ItemStack offered = new ItemStack(bar, 4);

@@ -8,7 +8,6 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -128,7 +127,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         ItemStack one = stack.copy();
         one.setCount(1);
         return handlerOf(flatSlot).insertItem(
-                flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
+                flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -194,11 +193,10 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
                 CommonRegistry.singlesStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
+                null, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         SinglesStackBE grown = (SinglesStackBE) level.getBlockEntity(above);

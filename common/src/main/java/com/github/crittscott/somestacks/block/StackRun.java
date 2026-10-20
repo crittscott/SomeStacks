@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -56,8 +56,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         if (actor == null && growthQueryDepth > 0 && queriedGrowthPermission != null) {
             return queriedGrowthPermission;
         }
-        boolean allowed = WorldEdits.mayPlace(
-                actor != null ? actor : WorldEdits.automationActor(level), above);
+        boolean allowed = WorldEdits.mayPlace(actor, level, above);
         if (actor == null && growthQueryDepth > 0) queriedGrowthPermission = allowed;
         return allowed;
     }
@@ -196,7 +195,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /** Mutable local storage for a validated stored flat slot. */
-    protected final SlotAccess handlerOf(int flatSlot) {
+    protected final StackItemStorage handlerOf(int flatSlot) {
         return blockOf(flatSlot).getItems();
     }
 

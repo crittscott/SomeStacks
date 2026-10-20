@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
+import javax.annotation.Nullable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -33,14 +33,16 @@ public final class WorldEdits {
         return !sp.level().mayInteract(sp, pos);
     }
 
-    /** Vanilla and loader query checks used before automation promises growth capacity. */
-    public static boolean mayPlace(ServerPlayer player, BlockPos pos) {
-        return !isProtected(player, pos)
-                && PlatformServices.editAuthority().mayPlace(player, player.level(), pos);
+    /** Resolves player-attributed edits or the level's automation identity in one place. */
+    private static ServerPlayer actor(ServerLevel level, @Nullable ServerPlayer actor) {
+        return actor != null ? actor : automationActor(level);
     }
 
-    public static boolean mayPlace(ServerLevel level, BlockPos pos) {
-        return mayPlace(automationActor(level), pos);
+    /** Vanilla and loader queries before growth can promise capacity. */
+    public static boolean mayPlace(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
+        ServerPlayer player = actor(level, source);
+        return !isProtected(player, pos)
+                && PlatformServices.editAuthority().mayPlace(player, level, pos);
     }
 
     /** Consults destination protection without allowing the consultation to execute gestures. */
@@ -98,9 +100,10 @@ public final class WorldEdits {
      * completed placement's collision shape, since a block-entity stack can start empty and acquire
      * its real shape only with its first deposit.
      */
-    public static boolean placeChecked(Player placer, ServerLevel level, BlockPos pos,
+    public static boolean placeChecked(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos,
                                        BlockState state, Direction placedAgainst,
                                        VoxelShape finalCollision) {
+        ServerPlayer placer = actor(level, source);
         if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
@@ -116,20 +119,11 @@ public final class WorldEdits {
     }
 
     /**
-     * Removes a stack block the mod itself decided to take down, answering to the same protection
-     * growth does and reporting the removal to claim/logging mods.
-     *
-     * @return whether the block was removed
-     */
-    public static boolean removeChecked(ServerLevel level, BlockPos pos) {
-        return removeChecked(automationActor(level), level, pos);
-    }
-
-    /**
-     * Removes a stack block on behalf of {@code actor}, preserving that identity through vanilla
+     * Removes a stack block on behalf of a player or automation, preserving that identity through vanilla
      * protection, loader-native removal events, and the emitted game event.
      */
-    public static boolean removeChecked(ServerPlayer actor, ServerLevel level, BlockPos pos) {
+    public static boolean removeChecked(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
+        ServerPlayer actor = actor(level, source);
         if (isProtected(actor, pos)) {
             return false;
         }

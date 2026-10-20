@@ -33,8 +33,8 @@ import javax.annotation.Nullable;
  * is what automation addresses; this class owns one block's slots, its shape, and the player-facing
  * cascade that drops whatever an extracted bar was holding up.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Automation exposure is loader-specific and lives outside this class; {@link #getItems()} is
+ * what a loader-specific automation view adapts.
  */
 public class BarStackBE extends StackBlockEntity {
     /** Positions in one block. The column's flat range is this times its height. */
@@ -64,12 +64,12 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean isStoredItemValid(ItemStack stack) {
         return isValidBarItem(stack);
     }
 
     @Override
-    protected int localSlotLimit() {
+    public int localSlotLimit() {
         return 1;
     }
 
@@ -97,7 +97,7 @@ public class BarStackBE extends StackBlockEntity {
     /**
      * The column this block belongs to, or null on the client and for a block being removed.
      *
-     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
+     * <p>Resolved once a tick and held, because a machine reading this block's automation view resolves
      * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
      */
     @Nullable
@@ -157,7 +157,7 @@ public class BarStackBE extends StackBlockEntity {
 
         ItemStack toInsert = fromHand.copy();
         toInsert.setCount(1);
-        ItemStack remainder = items.insertItem(index, toInsert, false);
+        ItemStack remainder = items.insertItem(index, toInsert);
 
         if (remainder.isEmpty()) {
             fromHand.shrink(1);
@@ -182,7 +182,7 @@ public class BarStackBE extends StackBlockEntity {
         ItemStack extracted;
         beginBatch();
         try {
-            extracted = items.extractItem(index, 1, false);
+            extracted = items.extractItem(index, 1);
 
             if (!extracted.isEmpty()) {
                 cascadeFrom(serverLevel, this,
@@ -232,8 +232,8 @@ public class BarStackBE extends StackBlockEntity {
      * Stack is below, so the bottom layer rests on the world and is always grounded.
      */
     @Nullable
-    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
-        if (level != null && level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
+    public static boolean[] supportSeamBeneath(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.below()) instanceof BarStackBE below) {
             return BarCubeIdx.topLayerOccupancy(below.items);
         }
         return null;
@@ -275,9 +275,7 @@ public class BarStackBE extends StackBlockEntity {
             // attached, so clear the flag when removal is refused.
             if (be.isEmpty()) {
                 be.removedByCascade = true;
-                boolean removed = actor == null
-                        ? WorldEdits.removeChecked(columnLevel, be.getBlockPos())
-                        : WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
+                boolean removed = WorldEdits.removeChecked(actor, columnLevel, be.getBlockPos());
                 if (!removed) {
                     be.removedByCascade = false;
                 }
@@ -322,7 +320,7 @@ public class BarStackBE extends StackBlockEntity {
                 continue;
             }
 
-            ItemStack removed = items.extractItem(i, 1, false);
+            ItemStack removed = items.extractItem(i, 1);
             if (!removed.isEmpty()) {
                 occupancy[i] = false;
                 drops.add(getBlockPos(), removed);

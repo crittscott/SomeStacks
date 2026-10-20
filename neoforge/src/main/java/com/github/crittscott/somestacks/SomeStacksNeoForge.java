@@ -1,9 +1,8 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.NeoForgeItemHandlers;
-import com.github.crittscott.somestacks.client.ClientSetup;
-import com.github.crittscott.somestacks.neoforge.NeoForgePlatformServices;
-import com.github.crittscott.somestacks.network.ModNetworking;
+import com.github.crittscott.somestacks.client.NeoForgeClientSetup;
+import com.github.crittscott.somestacks.network.NeoForgeNetworking;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -21,25 +20,24 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 /**
  * NeoForge entry point: registers the blocks and block entities, the network payloads, the
  * loader-native item-handler capability, and the listeners behind server config loading, login
- * sync, and commands. Client registration is deferred to {@link ClientSetup} so the
+ * sync, and commands. Client registration is deferred to {@link NeoForgeClientSetup} so the
  * dedicated server never touches it.
  */
-@Mod(SomeStacksNeoForge.MODID)
+@Mod(SomeStacksCommon.MODID)
 public class SomeStacksNeoForge {
-    public static final String MODID = SomeStacksCommon.MODID;
 
     public SomeStacksNeoForge(IEventBus modBus, ModContainer container) {
         PlatformServices.install(new NeoForgePlatformServices());
         NeoForgeServerConfig config = NeoForgeServerConfig.INSTANCE;
         // Named explicitly: worlds from the preceding release keep their somestacks-server.toml.
         container.registerConfig(ModConfig.Type.SYNCED, config.spec,
-                MODID + "-server.toml");
+                SomeStacksCommon.MODID + "-server.toml");
         ServerConfig.install(config);
         modBus.addListener(config::onLoading);
         modBus.addListener(config::onReloading);
 
-        ModRegistry.init(modBus);
-        modBus.addListener(ModNetworking::onRegisterPayloadHandlers);
+        NeoForgeRegistry.init(modBus);
+        modBus.addListener(NeoForgeNetworking::onRegisterPayloadHandlers);
         modBus.addListener(NeoForgeItemHandlers::onRegisterCapabilities);
 
         NeoForge.EVENT_BUS.addListener(this::onServerAboutToStart);
@@ -50,11 +48,11 @@ public class SomeStacksNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
-            ClientSetup.init(modBus);
+            NeoForgeClientSetup.init(modBus);
         }
 
         SomeStacksCommon.LOGGER.info(
-                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(MODID));
+                "Some Stacks v{} initialized for NeoForge", PlatformServices.modVersion(SomeStacksCommon.MODID));
     }
 
     private void onServerAboutToStart(ServerAboutToStartEvent event) {

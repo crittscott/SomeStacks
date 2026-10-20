@@ -26,7 +26,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 /**
  * Storage pile behavior in a live level that does not touch loader-native automation directly:
  * deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- * consolidating, packing, and sorting. Capability/Transfer-API-facing tests stay in each loader's
+ * consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's
  * own {@code StoragePileGameTests}.
  */
 public final class StoragePileChecks {
@@ -39,7 +39,7 @@ public final class StoragePileChecks {
      */
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
+        storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60));
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
         int moved = storage.deposit(offered, null);
@@ -61,7 +61,7 @@ public final class StoragePileChecks {
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         storage.setRotation(2);
         ItemStack offered = new ItemStack(Items.STONE, 1);
@@ -100,15 +100,15 @@ public final class StoragePileChecks {
         compatible.set(DataComponents.CUSTOM_DATA, CustomData.of(firstTag.copy()));
         ItemStack distinct = new ItemStack(Items.STONE, 5);
         distinct.set(DataComponents.CUSTOM_DATA, CustomData.of(secondTag));
-        storage.getItems().insertItem(10, first, false);
-        storage.getItems().insertItem(20, compatible, false);
-        storage.getItems().insertItem(25, distinct, false);
+        storage.getItems().insertItem(10, first);
+        storage.getItems().insertItem(20, compatible);
+        storage.getItems().insertItem(25, distinct);
         ItemStack firstPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
         firstPickaxe.setDamageValue(1);
         ItemStack secondPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
         secondPickaxe.setDamageValue(2);
-        storage.getItems().insertItem(3, firstPickaxe, false);
-        storage.getItems().insertItem(4, secondPickaxe, false);
+        storage.getItems().insertItem(3, firstPickaxe);
+        storage.getItems().insertItem(4, secondPickaxe);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -134,8 +134,8 @@ public final class StoragePileChecks {
      */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
-        storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
+        storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1));
 
         ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
@@ -184,7 +184,7 @@ public final class StoragePileChecks {
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
         StoragePile pile = lower.pile();
         check(pile != null, "Pile did not resolve");
 
@@ -214,7 +214,7 @@ public final class StoragePileChecks {
 
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            upper.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+            upper.getItems().insertItem(slot, new ItemStack(Items.STONE, 64));
         }
         StoragePile originalPile = upper.pile();
         check(originalPile != null, "Original pile did not resolve");
@@ -275,9 +275,9 @@ public final class StoragePileChecks {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE middle = placeStorage(helper, ORIGIN.above());
         StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
-        middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7), false);
-        upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 2));
+        middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7));
+        upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3));
 
         GameTestScaffold.checkStateUpdatesPreserveContents(helper, middle);
 
@@ -317,11 +317,11 @@ public final class StoragePileChecks {
 
         checkEquals(0, pile.comparatorSignal(), "Empty pile signal");
 
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1));
         checkEquals(1, pile.comparatorSignal(), "Signal for a single item in a whole pile");
 
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64));
         }
         checkEquals(15, pile.comparatorSignal(), "Full pile signal");
         helper.succeed();
@@ -342,7 +342,7 @@ public final class StoragePileChecks {
         checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
                 "Signal after loading saved contents");
         checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");
-        loaded.getItems().extractItem(1, 1, false);
+        loaded.getItems().extractItem(1, 1);
         checkEquals(1, loaded.pile().comparatorSignal(), "Signal after extraction");
         loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
         checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");

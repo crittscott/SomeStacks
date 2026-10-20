@@ -8,7 +8,6 @@ import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -149,7 +148,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         ItemStack one = stack.copy();
         one.setCount(1);
         return handlerOf(flatSlot).insertItem(
-                flatSlot % BarStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
+                flatSlot % BarStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -205,11 +204,10 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
 
         BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
         BlockState newStack = StackPlacement.stateFor(
                 CommonRegistry.barStackBlock(), level, above);
         if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
+                null, level, above, newStack, Direction.DOWN, finalCollision)) {
             return false;
         }
         BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
@@ -254,11 +252,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
             be.beginBatch();
         }
         try {
-            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1, false);
+            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1);
 
             int top = topmostOccupied();
             if (top > flatSlot) {
-                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1, false);
+                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1);
                 blockOf(flatSlot).relocateInto(flatSlot % BarStackBE.SLOTS, moved);
             }
         } finally {
@@ -286,7 +284,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
 
         int removedDownTo = blocks.size();
         for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
+            if (!WorldEdits.removeChecked(null, level, blocks.get(i).getBlockPos())) {
                 break;
             }
             removedDownTo = i;

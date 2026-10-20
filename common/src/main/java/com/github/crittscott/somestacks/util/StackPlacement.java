@@ -18,7 +18,7 @@ public final class StackPlacement {
      *
      * <p>Vanilla reads the fluid at the target through {@code getStateForPlacement}, which runs off
      * a {@code BlockPlaceContext} the mod never builds: every stack block reaches the world through
-     * a vanilla interaction or a capability-driven growth instead. This is where those routes ask
+     * a vanilla interaction or a automation-driven growth instead. This is where those routes ask
      * the same question, so that a stack placed in water displaces it no more than a vanilla slab
      * does.
      */
