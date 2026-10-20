@@ -1,7 +1,6 @@
 package com.github.crittscott.somestacks;
 
 import com.github.crittscott.somestacks.block.FabricItemStorage;
-import com.github.crittscott.somestacks.fabric.FabricPlatformServices;
 import com.github.crittscott.somestacks.network.FabricNetworking;
 import com.github.crittscott.somestacks.network.ProtocolPkt;
 import com.github.crittscott.somestacks.server.FabricStackInteractionEvents;

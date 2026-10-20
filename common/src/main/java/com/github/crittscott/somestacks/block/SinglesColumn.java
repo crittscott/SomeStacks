@@ -126,8 +126,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
 
         ItemStack one = stack.copy();
         one.setCount(1);
-        return handlerOf(flatSlot).insertItem(
-                flatSlot % SinglesStackBE.SLOTS, one, false).isEmpty() ? 1 : 0;
+        return handlerOf(flatSlot).insertItem(flatSlot % SinglesStackBE.SLOTS, one).isEmpty() ? 1 : 0;
     }
 
     /**
