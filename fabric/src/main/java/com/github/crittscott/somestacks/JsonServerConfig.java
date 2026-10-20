@@ -45,6 +45,11 @@ public final class JsonServerConfig implements ServerConfig.Backend {
 
     private Path configFile;
 
+    /**
+     * Selects a world config file, installs this backend, and applies validated settings. Malformed
+     * fields use defaults; an unreadable file uses the complete defaults. A missing file is created.
+     * Existing files are written only through save; loading does not synchronize players.
+     */
     public void load(Path file) {
         configFile = file;
         ServerConfig.Settings settings = ServerConfig.defaults();

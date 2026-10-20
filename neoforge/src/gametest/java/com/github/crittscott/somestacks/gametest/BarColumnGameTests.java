@@ -192,7 +192,7 @@ public final class BarColumnGameTests {
 
         NeoForge.EVENT_BUS.addListener(denyLower);
         try {
-            lower.extractAt(0);
+            lower.extractAt(0, null);
         } finally {
             NeoForge.EVENT_BUS.unregister(denyLower);
         }
