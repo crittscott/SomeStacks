@@ -1,10 +1,8 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.client.StackState;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
-import com.github.crittscott.somestacks.client.ConfigSyncReceiver;
-import com.github.crittscott.somestacks.client.ClientRenderToolState;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
@@ -37,8 +35,8 @@ public final class SynchronizationChecks {
      * list. Repeat after a policy edit without reconnecting.
      */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
-        var originalGallery = ClientRenderToolState.genMods();
-        var originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
+        var originalGallery = ClientServerSettings.genMods();
+        var originalDenied = List.copyOf(ClientServerSettings.disabledMods());
         boolean[] originalFlags = flags();
         try {
             for (int size : new int[] {0, 1, ConfigSyncPkt.MAX_NAMESPACES}) {
@@ -59,12 +57,12 @@ public final class SynchronizationChecks {
                     var decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
                     checkEquals(packet, decoded, "Snapshot codec round trip");
                     checkEquals(0, raw.readableBytes(), "Snapshot decoder left fields unread");
-                    ConfigSyncReceiver.apply(decoded);
+                    ClientServerSettings.apply(decoded);
                 } finally {
                     raw.release();
                 }
-                checkEquals(gallery, ClientRenderToolState.genMods(), "Published gallery list");
-                checkEquals(Set.copyOf(denied), ClientRenderToolState.disabledMods(), "Published deny set");
+                checkEquals(gallery, ClientServerSettings.genMods(), "Published gallery list");
+                checkEquals(Set.copyOf(denied), ClientServerSettings.disabledMods(), "Published deny set");
                 check(Arrays.equals(new boolean[] {size == 0, size == 1, size > 1}, flags()), "Published flags");
             }
             var defaults = ServerConfig.defaults();
@@ -74,8 +72,12 @@ public final class SynchronizationChecks {
                     List.of(" SomeStacks ", "somestacks"), List.of()));
             checkEquals(List.of("minecraft"), normalized.disabledMods(), "Deny normalization");
             checkEquals(List.of("somestacks"), normalized.genMods(), "Gallery normalization");
+            ClientServerSettings.clear();
+            check(Arrays.equals(new boolean[]{true, true, true}, flags()), "Disconnect defaults");
+            check(ClientServerSettings.genMods().isEmpty(), "Disconnected gallery list survived");
+            check(ClientServerSettings.disabledMods().isEmpty(), "Disconnected deny list survived");
         } finally {
-            ClientRenderToolState.replace(originalGallery, originalDenied);
+            ClientServerSettings.replace(originalGallery, originalDenied);
             restoreFlags(originalFlags);
         }
         helper.succeed();
@@ -121,14 +123,14 @@ public final class SynchronizationChecks {
     }
 
     private static boolean[] flags() {
-        return new boolean[] {StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK),
-                StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK), StackState.isBlockTypeEnabled(BlockType.BAR_STACK)};
+        return new boolean[] {ClientServerSettings.isBlockTypeEnabled(BlockType.STORAGE_STACK),
+                ClientServerSettings.isBlockTypeEnabled(BlockType.SINGLES_STACK), ClientServerSettings.isBlockTypeEnabled(BlockType.BAR_STACK)};
     }
 
     private static void restoreFlags(boolean[] flags) {
-        StackState.setBlockEnabled(BlockType.STORAGE_STACK, flags[0]);
-        StackState.setBlockEnabled(BlockType.SINGLES_STACK, flags[1]);
-        StackState.setBlockEnabled(BlockType.BAR_STACK, flags[2]);
+        ClientServerSettings.setBlockEnabled(BlockType.STORAGE_STACK, flags[0]);
+        ClientServerSettings.setBlockEnabled(BlockType.SINGLES_STACK, flags[1]);
+        ClientServerSettings.setBlockEnabled(BlockType.BAR_STACK, flags[2]);
     }
 
     /**

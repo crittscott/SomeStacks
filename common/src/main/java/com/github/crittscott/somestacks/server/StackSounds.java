@@ -21,7 +21,7 @@ public final class StackSounds {
 
     /** Broadcasts a slightly pitch-varied rotation sound if the player's sound throttle permits it. */
     public static void playRotation(ServerPlayer sp, BlockPos pos, SoundEvent sound) {
-        if (!RotationSoundThrottle.claim(sp)) {
+        if (!ServerGestureState.claimSound(sp)) {
             return;
         }
         float pitch = ROTATION_PITCH_BASE

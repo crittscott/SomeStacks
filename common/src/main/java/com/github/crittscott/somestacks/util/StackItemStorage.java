@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.mojang.datafixers.util.Pair;
+import com.github.crittscott.somestacks.block.StackDataMigration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -44,10 +45,7 @@ public class StackItemStorage implements SlotAccess {
     }
 
     private final ItemStack[] stacks;
-    private final ListTag setAside = new ListTag();
-
-    /** Counts of newly retained entries and persisted entries that still could not be restored. */
-    public record LoadResult(int newlySetAside, int failedRetries) {}
+    private final StackDataMigration.SavedItems savedItems = new StackDataMigration.SavedItems();
 
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
@@ -193,9 +191,7 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        if (!setAside.isEmpty()) {
-            nbt.put(TAG_SET_ASIDE, setAside.copy());
-        }
+        savedItems.saveTo(nbt);
         return nbt;
     }
 
@@ -205,35 +201,12 @@ public class StackItemStorage implements SlotAccess {
      * loading bypasses admission and does not call contents-change hooks. The caller reports
      * returned retention counts once it knows the world location.
      */
-    public LoadResult load(HolderLookup.Provider registries, CompoundTag nbt) {
+    public StackDataMigration.LoadResult load(HolderLookup.Provider registries, CompoundTag nbt) {
         return load(RegistryOps.create(NbtOps.INSTANCE, registries), nbt);
     }
 
-    private <T> LoadResult load(DynamicOps<T> ops, CompoundTag nbt) {
-        Arrays.fill(stacks, ItemStack.EMPTY);
-        setAside.clear();
-        readItems(ops, nbt.getListOrEmpty(TAG_ITEMS));
-        int newlySetAside = setAside.size();
-        readItems(ops, nbt.getListOrEmpty(TAG_SET_ASIDE));
-        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
-    }
-
-    private <T> void readItems(DynamicOps<T> ops, ListTag list) {
-        for (Tag entry : list) {
-            if (!(entry instanceof CompoundTag itemTag) || !(itemTag.get(TAG_SLOT) instanceof IntTag slotTag)) {
-                setAside.add(entry.copy());
-                continue;
-            }
-            int slot = slotTag.intValue();
-            Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
-                    ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
-                    : Optional.empty();
-            if (parsed.isPresent() && !parsed.get().isEmpty()) {
-                stacks[slot] = parsed.get();
-            } else {
-                setAside.add(itemTag.copy());
-            }
-        }
+    private <T> StackDataMigration.LoadResult load(DynamicOps<T> ops, CompoundTag nbt) {
+        return savedItems.load(ops, nbt, stacks);
     }
 
     /** Checks a wire inventory without changing live slots or retained disk entries. */
@@ -246,7 +219,7 @@ public class StackItemStorage implements SlotAccess {
         ItemStack[] decoded = decodeClientUpdate(registries, nbt);
         if (decoded == null) return false;
         System.arraycopy(decoded, 0, stacks, 0, stacks.length);
-        setAside.clear();
+        savedItems.clear();
         return true;
     }
 

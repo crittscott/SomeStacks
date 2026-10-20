@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
@@ -200,7 +199,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -234,7 +233,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -317,7 +316,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -452,15 +451,15 @@ public final class InteractionChecks {
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
-        RotationSoundThrottle.clear(player.getUUID());
+        ServerGestureState.resetSound(player.getUUID());
         try {
-            check(RotationSoundThrottle.claim(player), "First rotation sound was refused");
-            check(!RotationSoundThrottle.claim(player),
+            check(ServerGestureState.claimSound(player), "First rotation sound was refused");
+            check(!ServerGestureState.claimSound(player),
                     "Second same-tick rotation sound succeeded");
-            RotationSoundThrottle.clear(player.getUUID());
-            check(RotationSoundThrottle.claim(player), "Clear did not reset sound pacing");
+            ServerGestureState.resetSound(player.getUUID());
+            check(ServerGestureState.claimSound(player), "Clear did not reset sound pacing");
         } finally {
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }

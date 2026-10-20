@@ -316,7 +316,7 @@ public class BarStackBE extends StackBlockEntity {
         boolean[] occupancy = BarCubeIdx.occupancyOf(items);
 
         for (int i = 0; i < SLOTS; i++) {
-            if (!occupancy[i] || BarCubeIdx.isGroundedIn(occupancy, i, seamBelow)) {
+            if (!occupancy[i] || BarCubeIdx.isGrounded(i, slot -> occupancy[slot], seamBelow)) {
                 continue;
             }
 

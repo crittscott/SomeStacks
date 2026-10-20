@@ -284,6 +284,9 @@ public final class NeoForgeTransferGameTests {
      */
     public static void placementVetoRefusesOfferBeforeCommit(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            base.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+        }
         ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
         BlockPos above = base.getBlockPos().above();
         int[] events = {0};
@@ -301,11 +304,20 @@ public final class NeoForgeTransferGameTests {
                             "Vetoed placement accepted items");
                     if (commit) transaction.commit();
                 }
+                try (Transaction transaction = Transaction.open(null)) {
+                    checkEquals(0, handler.insert(ItemResource.of(Items.STONE), 4, transaction),
+                            "Bulk vetoed placement accepted items");
+                    if (commit) transaction.commit();
+                }
             }
         } finally {
             NeoForge.EVENT_BUS.unregister(deny);
         }
-        checkEquals(2, events[0], "Placement event count");
+        checkEquals(4, events[0], "One placement probe per direct or bulk offer");
+        try (Transaction transaction = Transaction.open(null)) {
+            checkEquals(1, handler.insert(StorageStackBE.SLOTS, ItemResource.of(Items.STONE), 1, transaction),
+                    "A stale denial survived removal of the protection listener");
+        }
         check(helper.getLevel().getBlockEntity(above) == null, "Veto left a block entity");
         checkEquals(0, GameTestSupport.count(handler, Items.STONE), "Veto kept items");
         helper.succeed();

@@ -16,6 +16,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
@@ -89,21 +91,44 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return blocks;
     }
 
-    /** Invalidates every cached run a structural change at {@code pos} could have altered. */
-    protected static <BE extends StackBlockEntity> void invalidateAround(
-            Level level, BlockPos pos, Class<BE> blockEntityClass) {
-        invalidateRun(level, pos, Direction.UP, blockEntityClass);
-        invalidateRun(level, pos.above(), Direction.UP, blockEntityClass);
-        invalidateRun(level, pos.below(), Direction.DOWN, blockEntityClass);
+    /** Invalidates every cached same-type run a structural change at the position could alter. */
+    protected static void invalidateAround(Level level, BlockPos pos, Block block) {
+        invalidateRun(level, pos, Direction.UP, block);
+        invalidateRun(level, pos.above(), Direction.UP, block);
+        invalidateRun(level, pos.below(), Direction.DOWN, block);
     }
 
-    private static <BE extends StackBlockEntity> void invalidateRun(
-            Level level, BlockPos from, Direction direction, Class<BE> blockEntityClass) {
+    private static void invalidateRun(Level level, BlockPos from, Direction direction, Block block) {
         BlockPos current = from;
-        while (blockEntityClass.isInstance(level.getBlockEntity(current))) {
-            blockEntityClass.cast(level.getBlockEntity(current)).invalidateRunCache();
+        while (level.getBlockState(current).is(block)
+                && level.getBlockEntity(current) instanceof StackBlockEntity member) {
+            member.invalidateRunCache();
             current = current.relative(direction);
         }
+    }
+
+    /** Installs checked headroom; subclasses retain collision rules and batching policy. */
+    protected final BE growBlock(@Nullable ServerPlayer actor,
+                                 VoxelShape finalCollision,
+                                 Class<BE> entityClass) {
+        BlockPos above = topPos().above();
+        if (!WorldEdits.placeChecked(actor, level, above,
+                StackBlock.placementState(block, level, above), Direction.DOWN, finalCollision)) return null;
+        BE grown = entityClass.cast(level.getBlockEntity(above));
+        blocks.add(grown);
+        return grown;
+    }
+
+    /** Removes only empty top blocks, stopping at a kept block or a permission refusal. */
+    protected final void trimEmptyTop(@Nullable ServerPlayer actor, Predicate<BE> keep) {
+        int remaining = blocks.size();
+        while (remaining > 0) {
+            BE top = blocks.get(remaining - 1);
+            if (!top.isEmpty() || keep.test(top)
+                    || !WorldEdits.removeChecked(actor, level, top.getBlockPos())) break;
+            remaining--;
+        }
+        blocks.subList(remaining, blocks.size()).clear();
     }
 
     /** Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing. */

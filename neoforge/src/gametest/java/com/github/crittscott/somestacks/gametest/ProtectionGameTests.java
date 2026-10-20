@@ -22,7 +22,6 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -39,6 +38,16 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.checkEq
  */
 public final class ProtectionGameTests {
     private ProtectionGameTests() {}
+
+    /** See {@link ProtectionChecks#adventureExtractionKeepsEmptyBlock}. */
+    public static void adventureExtractionKeepsEmptyBlock(GameTestHelper helper) {
+        ProtectionChecks.adventureExtractionKeepsEmptyBlock(helper, GameTestSupport.playerFactory(helper));
+    }
+
+    /** See {@link ProtectionChecks#placementReplacesClickedVegetation}. */
+    public static void placementReplacesClickedVegetation(GameTestHelper helper) {
+        ProtectionChecks.placementReplacesClickedVegetation(helper, GameTestSupport.playerFactory(helper));
+    }
 
     /** See {@link ProtectionChecks#automationUsesSharedIdentity}. */
     public static void automationUsesSharedIdentity(GameTestHelper helper) {

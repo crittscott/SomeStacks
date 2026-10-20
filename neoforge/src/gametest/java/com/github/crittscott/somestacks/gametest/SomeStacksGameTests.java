@@ -15,6 +15,9 @@ public final class SomeStacksGameTests {
             DeferredRegister.create(BuiltInRegistries.TEST_FUNCTION, "somestacks");
 
     static {
+        TEST_FUNCTIONS.register("protectiongametests/adventure_extraction_keeps_empty_block", () -> ProtectionGameTests::adventureExtractionKeepsEmptyBlock);
+        TEST_FUNCTIONS.register("protectiongametests/placement_replaces_clicked_vegetation", () -> ProtectionGameTests::placementReplacesClickedVegetation);
+        TEST_FUNCTIONS.register("barcolumngametests/contents_drop_with_block_drops_disabled", () -> BarColumnGameTests::contentsDropWithBlockDropsDisabled);
         TEST_FUNCTIONS.register("storagepilegametests/storage_disk_migration_preserves_over_cap_contents",
                 () -> StoragePileGameTests::storageDiskMigrationPreservesOverCapContents);
         TEST_FUNCTIONS.register("storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",

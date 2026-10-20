@@ -6,9 +6,9 @@
 
 See `orientation-code.md` for structure.
 
-Three storage blocks; no block items, recipes, creative entries, or screens. Depositing creates a stack; emptying normally removes it.
+Three storage blocks, created by depositing items and normally removed when emptied; no block items, recipes, creative entries, or screens.
 
-Minecraft 26.3 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API.
+Minecraft 26.3 on Fabric and NeoForge. Client/server builds must match. Fabric needs Fabric API and Common Protection API; the build includes the latter library.
 
 ## The three stack types
 
@@ -36,13 +36,13 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 | Shift-right-click a Storage/Singles Stack with a redstone torch | Rotate that block's layout 90 degrees |
 | Shift-right-click an occupied Singles cell with a soul torch | Rotate that item 90 degrees |
 
-NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks.
+NeoForge allows deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination permission through Common Protection API providers.
 
-Only the main hand acts; off-hand items allow cycling. Torches are retained. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Modified clicks with no applicable stack gesture retain ordinary held/off-hand use; plain extraction attempts remain consumed.
+Only the main hand acts; off-hand items allow cycling. Torches stay. Rotation shows above the hotbar with sound throttled per player. Storage/Singles turn with structures. Sneaking retains ordinary use except torch gestures. Unhandled modified clicks retain held/off-hand use; plain extraction attempts stay consumed.
 
 ## Depositing and placing
 
-Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind.
+Placement and first deposit are atomic: the item must be valid, the cell supported, the final shape unobstructed, the target replaceable, the run within its height limit, and the edit permitted. Failure leaves nothing behind. Ordinary placement replaces the clicked block when vanilla's placement context allows it, including grass and thin snow.
 
 Placement in water waterlogs the stack. A top-face deposit onto an occupied or unsupported top cell adds a new block above the run, of the currently selected type; different types can therefore sit beside or atop one another, and only contiguous same-type blocks share a run.
 
@@ -56,7 +56,7 @@ Plain right-click targets the nearest rendered item on the view ray inside the c
 
 - Storage: as much of the targeted stack as the hand can hold.
 - Singles: one item.
-- Bar: one bar, and any bars left unsupported above it collapse and drop.
+- Bar: one bar, and any bars left unsupported above it collapse and drop. Stored Bar contents still drop when the block-drop game rule is disabled.
 
 The main hand must be empty or hold matching items/components with room. Plain clicks are consumed even when extraction fails, preventing use of unrelated held items.
 
@@ -80,7 +80,7 @@ A redstone torch rotates a whole block; a soul torch rotates only the aimed item
 
 ### Bar
 
-64 server-approved ingots appear as cuboids in eight crossed layers of eight. Resource packs supply textures/tints instead of item models.
+64 server-approved ingots appear as cuboids in eight crossed layers of eight. Resource packs supply textures/tints.
 
 Every bar above the bottom layer must overlap a bar directly below, and support crosses a seam between adjacent Bar blocks. Removing a bar, or breaking a Bar block, drops every bar that loses support, possibly cascading through layers and blocks. Bars do not rotate.
 
@@ -105,7 +105,7 @@ Every block exposes the whole run on all sides: transactional `ResourceHandler<I
 
 Storage advertises current positions plus one block of headroom below the height limit; headroom insertion can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. Automation uses `[SomeStacks]` for machine and claim policies.
 
-Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
+Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. Extraction settles Storage, shifts one Singles visual column, and backfills a Bar hole from the top without a player-style collapse.
 
 Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On NeoForge and Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and different blocks; aborts leave the inventory and world unchanged. Insertion sees earlier changes in the same transaction, so one transfer can fill supporting layers and then the layers above, or empty a Storage slot and refill it with another item. Singles and Bar allow one structural extraction position per transaction, refusing other pending positions and further insertion.
 
@@ -134,7 +134,7 @@ NeoForge uses loader-managed synchronized `somestacks-server.toml`, with per-wor
 | `render_gallery.placements_per_tick` | `64` | Throttles gallery construction |
 | `render_gallery.gen_mods` / `gen_items` | empty | Namespace and item lists used by the `list` and `items` gallery forms |
 
-Disabling types, items, mods, or ingot categories preserves existing contents. Clients receive enable flags on login and skip disabled types when cycling. NeoForge uses its native config sync; Fabric sends one bounded snapshot. Local authoring lists use up to 256 unique namespaces of at most 256 characters per list; omissions warn, and full server admission policy still applies. Data-pack tags refresh on reload.
+Disabling admission preserves existing contents. Clients skip disabled types; NeoForge syncs native config and Fabric sends a bounded snapshot. Authoring lists allow 256 unique namespaces, up to 256 characters each; omissions warn without weakening server policy. Tags refresh on reload.
 
 ## Commands
 
@@ -159,7 +159,7 @@ Resolution order is local override, resource-pack data, then automatic measureme
 
 `/ss item` changes the client's in-memory layer; `/ss write changed` saves it to `config/somestacks/item_overrides.json`. Namespace forms write complete files to `config/somestacks/generated_overrides/`, output only; servers cannot request writes.
 
-Resource packs map Bar item ids to textures and tints under `assets/<namespace>/textures/bars/*.json`, with missing tints derived from the item's sprite and color. Bar mappings are not synchronized, so players with different packs may see different bars.
+Bar mappings live at `assets/<namespace>/textures/bars/*.json`; missing tints derive from the item. Mappings are client-local, so packs can produce different appearances.
 
 ## Extension points
 
@@ -169,11 +169,10 @@ Resource packs map Bar item ids to textures and tints under `assets/<namespace>/
 
 ## Protection and validation
 
-Gestures honor vanilla use, loader results, build limits, obstruction, border and spawn protection. Neighbor deposits consult destination interaction protection on both loaders. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restores denied snapshots silently. Both loaders fire native break hooks. Surviving player edits emit block change; removing the final Single/Bar emits only destruction there.
+Gestures honor vanilla use, loader results, build limits, obstruction, border and spawn protection. Neighbor deposits consult destination interaction protection on both loaders. Automation uses `[SomeStacks]`; player cleanup retains the player, mixed Storage cleanup uses automation. NeoForge publishes accepted placements and restores denied snapshots silently. Both loaders fire native break hooks and apply vanilla game-mode removal restrictions; Adventure extraction can leave an empty block. Fabric queries Common Protection API providers for destination placement, interaction, and removal permission. Surviving player edits emit block change; removing the final Single/Bar emits only destruction there.
 
 The gesture payload carries mode/modifier state. The server validates actions against vanilla hits, permissions, items, support, policy, height, and obstruction, then selects cells itself.
 
 ## Saved worlds
 
-A world saved by the preceding 26.1 (0.8.3) release upgrades its stored items on load. Storage stacks above the local cap split into free cubes; excess stays saved in `SetAside` and retries its original cube on later loads. Only that release is supported. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session.
-
+The preceding 26.1 (0.8.3) release upgrades stored items on load. Over-cap Storage entries split into free cubes; excess and unreadable items remain in SetAside and retry their original cube on load. Only that release is supported. Warnings identify dimension/position; failed retries warn once per location/session.

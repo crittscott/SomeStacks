@@ -66,11 +66,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#type()" tabindex="0">type()</a></li>
 <li><a href="#newBlockEntity(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" tabindex="0">newBlockEntity(BlockPos, BlockState)</a></li>
-<li><a href="#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" tabindex="0">occupiedShape(BlockGetter, BlockPos)</a></li>
-<li><a href="#tick(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.util.RandomSource)" tabindex="0">tick(BlockState, ServerLevel, BlockPos, RandomSource)</a></li>
-<li><a href="#onPlace(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" tabindex="0">onPlace(BlockState, Level, BlockPos, BlockState, boolean)</a></li>
-<li><a href="#affectNeighborsAfterRemoval(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,boolean)" tabindex="0">affectNeighborsAfterRemoval(BlockState, ServerLevel, BlockPos, boolean)</a></li>
-<li><a href="#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" tabindex="0">getAnalogOutputSignal(BlockState, Level, BlockPos, Direction)</a></li>
 </ol>
 </li>
 </ol>
@@ -168,52 +163,13 @@ schedule on the bottom block of the column.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#affectNeighborsAfterRemoval(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,boolean)" class="member-name-link">affectNeighborsAfterRemoval</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- boolean&nbsp;isMoving)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Publishes surviving runs after the block entity has completed its removal cascade.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">getAnalogOutputSignal</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;direction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Reports the whole column's fill, so a comparator reads the same value anywhere along it.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.level.block.entity.BlockEntity</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBlockEntity(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">newBlockEntity</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">occupiedShape</a><wbr>(net.minecraft.world.level.BlockGetter&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Current local contents' collision shape on either side.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlace(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" class="member-name-link">onPlace</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;oldState,
- boolean&nbsp;isMoving)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates cached columns and schedules publication after this block joins a run.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.util.RandomSource)" class="member-name-link">tick</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.util.RandomSource&nbsp;random)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Publishes deferred content, lighting, and comparator changes.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The stack behavior registered by this block.</div>
 </div>
 </div>
@@ -221,16 +177,16 @@ schedule on the bottom block of the column.</div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.ShapedStackBlock">Methods inherited from class&nbsp;<a href="ShapedStackBlock.html#method-summary" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></h3>
-<code><a href="ShapedStackBlock.html#getCollisionShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getCollisionShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getCollisionShape</a>, <a href="ShapedStackBlock.html#getInteractionShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" title="getInteractionShape(BlockState, BlockGetter, BlockPos)">getInteractionShape</a>, <a href="ShapedStackBlock.html#getShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getShape</a>, <a href="ShapedStackBlock.html#getVisualShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getVisualShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getVisualShape</a>, <a href="ShapedStackBlock.html#isPathfindable(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.pathfinder.PathComputationType)" title="isPathfindable(BlockState, PathComputationType)">isPathfindable</a></code></div>
+<code><a href="ShapedStackBlock.html#getCollisionShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getCollisionShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getCollisionShape</a>, <a href="ShapedStackBlock.html#getInteractionShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" title="getInteractionShape(BlockState, BlockGetter, BlockPos)">getInteractionShape</a>, <a href="ShapedStackBlock.html#getShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getShape</a>, <a href="ShapedStackBlock.html#getVisualShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos,net.minecraft.world.phys.shapes.CollisionContext)" title="getVisualShape(BlockState, BlockGetter, BlockPos, CollisionContext)">getVisualShape</a>, <a href="ShapedStackBlock.html#isPathfindable(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.pathfinder.PathComputationType)" title="isPathfindable(BlockState, PathComputationType)">isPathfindable</a>, <a href="ShapedStackBlock.html#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" title="occupiedShape(BlockGetter, BlockPos)">occupiedShape</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlock">Methods inherited from class&nbsp;<a href="StackBlock.html#method-summary" title="class in com.github.crittscott.somestacks.block">StackBlock</a></h3>
-<code><a href="StackBlock.html#barProperties()" title="barProperties()">barProperties</a>, <a href="StackBlock.html#createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder)" title="createBlockStateDefinition(StateDefinition.Builder)">createBlockStateDefinition</a>, <a href="StackBlock.html#getFluidState(net.minecraft.world.level.block.state.BlockState)" title="getFluidState(BlockState)">getFluidState</a>, <a href="StackBlock.html#getRenderShape(net.minecraft.world.level.block.state.BlockState)" title="getRenderShape(BlockState)">getRenderShape</a>, <a href="StackBlock.html#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)" title="hasAnalogOutputSignal(BlockState)">hasAnalogOutputSignal</a>, <a href="StackBlock.html#singlesProperties()" title="singlesProperties()">singlesProperties</a>, <a href="StackBlock.html#storageProperties()" title="storageProperties()">storageProperties</a>, <a href="StackBlock.html#updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)" title="updateShape(BlockState, LevelReader, ScheduledTickAccess, BlockPos, Direction, BlockPos, BlockState, RandomSource)">updateShape</a>, <a href="StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" title="useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)">useItemOn</a>, <a href="StackBlock.html#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)" title="useWithoutItem(BlockState, Level, BlockPos, Player, BlockHitResult)">useWithoutItem</a></code></div>
+<code><a href="StackBlock.html#affectNeighborsAfterRemoval(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,boolean)" title="affectNeighborsAfterRemoval(BlockState, ServerLevel, BlockPos, boolean)">affectNeighborsAfterRemoval</a>, <a href="StackBlock.html#afterRunAdded(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" title="afterRunAdded(Level, BlockPos)">afterRunAdded</a>, <a href="StackBlock.html#afterRunRemoved(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" title="afterRunRemoved(ServerLevel, BlockPos)">afterRunRemoved</a>, <a href="StackBlock.html#barProperties()" title="barProperties()">barProperties</a>, <a href="StackBlock.html#createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder)" title="createBlockStateDefinition(StateDefinition.Builder)">createBlockStateDefinition</a>, <a href="StackBlock.html#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" title="getAnalogOutputSignal(BlockState, Level, BlockPos, Direction)">getAnalogOutputSignal</a>, <a href="StackBlock.html#getFluidState(net.minecraft.world.level.block.state.BlockState)" title="getFluidState(BlockState)">getFluidState</a>, <a href="StackBlock.html#getRenderShape(net.minecraft.world.level.block.state.BlockState)" title="getRenderShape(BlockState)">getRenderShape</a>, <a href="StackBlock.html#getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext)" title="getStateForPlacement(BlockPlaceContext)">getStateForPlacement</a>, <a href="StackBlock.html#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)" title="hasAnalogOutputSignal(BlockState)">hasAnalogOutputSignal</a>, <a href="StackBlock.html#mirror(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.Mirror)" title="mirror(BlockState, Mirror)">mirror</a>, <a href="StackBlock.html#onPlace(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" title="onPlace(BlockState, Level, BlockPos, BlockState, boolean)">onPlace</a>, <a href="StackBlock.html#placementState(net.minecraft.world.level.block.Block,net.minecraft.world.level.LevelReader,net.minecraft.core.BlockPos)" title="placementState(Block, LevelReader, BlockPos)">placementState</a>, <a href="StackBlock.html#rotate(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.Rotation)" title="rotate(BlockState, Rotation)">rotate</a>, <a href="StackBlock.html#singlesProperties()" title="singlesProperties()">singlesProperties</a>, <a href="StackBlock.html#storageProperties()" title="storageProperties()">storageProperties</a>, <a href="StackBlock.html#tick(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.util.RandomSource)" title="tick(BlockState, ServerLevel, BlockPos, RandomSource)">tick</a>, <a href="StackBlock.html#tickRun(com.github.crittscott.somestacks.block.StackRun,net.minecraft.core.BlockPos)" title="tickRun(StackRun, BlockPos)">tickRun</a>, <a href="StackBlock.html#updateShape(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.LevelReader,net.minecraft.world.level.ScheduledTickAccess,net.minecraft.core.BlockPos,net.minecraft.core.Direction,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.util.RandomSource)" title="updateShape(BlockState, LevelReader, ScheduledTickAccess, BlockPos, Direction, BlockPos, BlockState, RandomSource)">updateShape</a>, <a href="StackBlock.html#useItemOn(net.minecraft.world.item.ItemStack,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" title="useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)">useItemOn</a>, <a href="StackBlock.html#useWithoutItem(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.phys.BlockHitResult)" title="useWithoutItem(BlockState, Level, BlockPos, Player, BlockHitResult)">useWithoutItem</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.Block">Methods inherited from class&nbsp;net.minecraft.world.level.block.Block</h3>
-<code>animateTick, asBlock, asItem, bounceOn, box, boxes, boxZ, boxZ, boxZ, builtInRegistryHolder, byItem, canSupportCenter, canSupportRigidBlock, column, column, cube, cube, defaultBlockState, destroy, dropFromBlockInteractLootTable, dropFromExplosion, dropFromLootTable, dropResources, dropResources, dropResources, fallOn, getBounceRestitution, getDrops, getDrops, getExplosionResistance, getFallDistanceReduction, getFriction, getId, getJumpFactor, getName, getShapeForEachState, getShapeForEachState, getSpeedFactor, getStateDefinition, getStateForPlacement, handlePrecipitation, hasDynamicShape, isExceptionForConnection, isFaceFull, isPossibleToRespawnInThis, isShapeFullBlock, playerDestroy, playerWillDestroy, popExperience, popResource, popResourceFromFace, pushEntitiesUp, registerDefaultState, setPlacedBy, shouldRenderFace, spawnDestroyByEntityParticles, spawnDestroyParticles, stateById, stepOn, toString, tryDropExperience, updateFromNeighbourShapes, updateOrDestroy, updateOrDestroy, wasExploded, withPropertiesOf</code></div>
+<code>animateTick, asBlock, asItem, bounceOn, box, boxes, boxZ, boxZ, boxZ, builtInRegistryHolder, byItem, canSupportCenter, canSupportRigidBlock, column, column, cube, cube, defaultBlockState, destroy, dropFromBlockInteractLootTable, dropFromExplosion, dropFromLootTable, dropResources, dropResources, dropResources, fallOn, getBounceRestitution, getDrops, getDrops, getExplosionResistance, getFallDistanceReduction, getFriction, getId, getJumpFactor, getName, getShapeForEachState, getShapeForEachState, getSpeedFactor, getStateDefinition, handlePrecipitation, hasDynamicShape, isExceptionForConnection, isFaceFull, isPossibleToRespawnInThis, isShapeFullBlock, playerDestroy, playerWillDestroy, popExperience, popResource, popResourceFromFace, pushEntitiesUp, registerDefaultState, setPlacedBy, shouldRenderFace, spawnDestroyByEntityParticles, spawnDestroyParticles, stateById, stepOn, toString, tryDropExperience, updateFromNeighbourShapes, updateOrDestroy, updateOrDestroy, wasExploded, withPropertiesOf</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.state.BlockBehaviour">Methods inherited from class&nbsp;net.minecraft.world.level.block.state.BlockBehaviour</h3>
-<code>attack, canBeReplaced, canBeReplaced, canSurvive, defaultDestroyTime, defaultMapColor, entityInside, getBlockSupportShape, getCloneItemStack, getDescriptionId, getDestroyProgress, getDirectSignal, getDrops, getEntityInsideCollisionShape, getLightDampening, getLootTable, getMaxHorizontalOffset, getMaxVerticalOffset, getMenuProvider, getOcclusionShape, getSeed, getShadeBrightness, getSignal, getSoundType, isCollisionShapeFullBlock, isRandomlyTicking, isSignalSource, mirror, neighborChanged, onExplosionHit, onProjectileHit, ownSignal, propagatesSkylightDown, properties, randomTick, requiredFeatures, rotate, shouldChangedStateKeepBlockEntity, shouldRedstoneWireConnectTo, showAsInteractableInSpectatorMode, skipRendering, spawnAfterBreak, triggerEvent, updateIndirectNeighbourShapes, useShapeForLightOcclusion</code></div>
+<code>attack, canBeReplaced, canBeReplaced, canSurvive, defaultDestroyTime, defaultMapColor, entityInside, getBlockSupportShape, getCloneItemStack, getDescriptionId, getDestroyProgress, getDirectSignal, getDrops, getEntityInsideCollisionShape, getLightDampening, getLootTable, getMaxHorizontalOffset, getMaxVerticalOffset, getMenuProvider, getOcclusionShape, getSeed, getShadeBrightness, getSignal, getSoundType, isCollisionShapeFullBlock, isRandomlyTicking, isSignalSource, neighborChanged, onExplosionHit, onProjectileHit, ownSignal, propagatesSkylightDown, properties, randomTick, requiredFeatures, shouldChangedStateKeepBlockEntity, shouldRedstoneWireConnectTo, showAsInteractableInSpectatorMode, skipRendering, spawnAfterBreak, triggerEvent, updateIndirectNeighbourShapes, useShapeForLightOcclusion</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -291,88 +247,6 @@ schedule on the bottom block of the column.</div>
 <div class="member-signature"><span class="annotations">@Nullable
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.level.block.entity.BlockEntity</span>&nbsp;<span class="element-name">newBlockEntity</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)">
-<h3>occupiedShape</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">occupiedShape</span><wbr><span class="parameters">(net.minecraft.world.level.BlockGetter&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="ShapedStackBlock.html#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)">ShapedStackBlock</a></code></span></div>
-<div class="block">Current local contents' collision shape on either side. Return an empty shape when the block
-entity is absent or empty.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="ShapedStackBlock.html#occupiedShape(net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)">occupiedShape</a></code>&nbsp;in class&nbsp;<code><a href="ShapedStackBlock.html" title="class in com.github.crittscott.somestacks.block">ShapedStackBlock</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="tick(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.util.RandomSource)">
-<h3>tick</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">tick</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.util.RandomSource&nbsp;random)</span></div>
-<div class="block">Publishes deferred content, lighting, and comparator changes. Edits schedule this tick on the
-column's bottom block, coalescing a burst of changes anywhere in the run into one pass.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>tick</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="onPlace(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)">
-<h3>onPlace</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlace</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;oldState,
- boolean&nbsp;isMoving)</span></div>
-<div class="block">Invalidates cached columns and schedules publication after this block joins a run.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>onPlace</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="affectNeighborsAfterRemoval(net.minecraft.world.level.block.state.BlockState,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,boolean)">
-<h3>affectNeighborsAfterRemoval</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">affectNeighborsAfterRemoval</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- boolean&nbsp;isMoving)</span></div>
-<div class="block">Publishes surviving runs after the block entity has completed its removal cascade.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>affectNeighborsAfterRemoval</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.core.Direction)">
-<h3>getAnalogOutputSignal</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getAnalogOutputSignal</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state,
- net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.core.Direction&nbsp;direction)</span></div>
-<div class="block">Reports the whole column's fill, so a comparator reads the same value anywhere along it.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>getAnalogOutputSignal</code>&nbsp;in class&nbsp;<code>net.minecraft.world.level.block.state.BlockBehaviour</code></dd>
-</dl>
 </div>
 </section>
 </li>

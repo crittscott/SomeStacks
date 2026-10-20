@@ -356,9 +356,9 @@ public final class AutomationAndPersistenceChecks {
                 "Unreadable entries reached live slots");
 
         var probe = new StackItemStorage(StorageStackBE.SLOTS);
-        checkEquals(new StackItemStorage.LoadResult(4, 0), probe.load(registries, storage),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(4, 0), probe.load(registries, storage),
                 "New retention diagnostic counts");
-        checkEquals(new StackItemStorage.LoadResult(0, 4),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(0, 4),
                 probe.load(registries, probe.save(registries)), "Persisted retry diagnostic counts");
 
         CompoundTag persisted = loaded.saveWithoutMetadata(registries);
@@ -395,7 +395,7 @@ public final class AutomationAndPersistenceChecks {
             retries.add(entry);
         }
         inventory.put("SetAside", retries.copy());
-        checkEquals(new StackItemStorage.LoadResult(0, 2), storage.load(registries, inventory),
+        checkEquals(new com.github.crittscott.somestacks.block.StackDataMigration.LoadResult(0, 2), storage.load(registries, inventory),
                 "Recovery counted a restored entry as a failed retry");
         CompoundTag saved = new CompoundTag();
         saved.putInt("DataVersion", DATA_VERSION_26_1);

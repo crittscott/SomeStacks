@@ -1200,3 +1200,435 @@ IDs use LOG (logging), MN (magic numbers), ML (multiloader organization), and NW
 - Exclusions: retain ClientGestures sender injection, native transaction classes, explicit failed user-write error severity, and the double comparator mapping. Review open questions about vanilla-server connectivity, full block-update contents, storage primitive naming, quarter-turn representation, migration totals, and protocol-mismatch logging did not authorize extra changes.
 
 Published evidence: [NeoForge 26.3.x ConfigSync](https://raw.githubusercontent.com/neoforged/NeoForge/26.3.x/src/main/java/net/neoforged/neoforge/network/ConfigSync.java) confirms login and live reload synchronization and skips memory connections; [NeoForge 26.3.x ModConfigSpec](https://raw.githubusercontent.com/neoforged/NeoForge/26.3.x/src/main/java/net/neoforged/neoforge/common/ModConfigSpec.java) documents save-triggered reloading. These are published sources, not decompiled/cache sources. Runtime verification against the pinned dependency remains necessary.
+
+## Batch 4: organization, protection, and reinvention
+
+Validation: the user reports that all builds succeed after this batch and its compilation/fixture corrections. The agent ran no builds or GameTests. The last explicit GameTest log reported 135 tests with two failures; both fixture defects were corrected afterward, but a subsequent GameTest result and development-client `/ssclienttest` result have not been explicitly reported. Keep build success separate from runtime validation, and validate every other target independently.
+
+This batch covers all 21 numbered findings in the organization, protection, and reinvention reviews, including partial and rejected recommendations. New IDs are `OR` for organization, `PR` for protection, and `RI` for reinvention. Their original finding numbers are preserved. Earlier related findings keep their existing IDs in cross-references; the new IDs do not undo earlier qualified decisions. Original quoted API names and line references may be obsolete.
+
+### Organization
+
+#### OR-01: The gesture rules are written twice, once for the client and once for the server
+
+**Status:** Implemented the surviving intent duplication; obsolete target-selection duplication rejected.
+
+**Verification:** The client and server repeated basic gesture predicates, but the two client deposit-target rules had already been removed by DC-01. Target/cell selection was already server-only.
+
+**Implementation result:** Added pure StackGesture classification for main-hand intent and used it from ClientGestures, native loader callbacks, and server StackInteractions. Removed the former client/interaction strategy package. Mode cycling remains client-owned; empty-hand air cycling does not consume local use. Preserve each loader's cancellation result, packet behavior, off-hand behavior, torch/permanence precedence, and server authority. Existing gesture/callback tests were adapted to intent/cancellation rather than deleted strategy-class identities.
+
+**Original issue text (verbatim):**
+
+> ### 1. The gesture rules are written twice, once for the client and once for the server
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/interaction/ (all 10 files: InteractionRule, InteractionRuleRegistry, InteractionContext, ModeCycleRule, TogglePermanentRule, RotateBlockWithRedstoneTorchRule, RotateItemWithSoulTorchRule, DepositIntoClickedStackRule, DepositIntoAdjacentStackRule, PlaceAdjacentGenericRule, ExtractionRule); common/src/main/java/com/github/crittscott/somestacks/server/StackInteractions.java:59-196 (handleSneakingRotation, handleAdjacentClick, applyExistingStack, applySneakingRotation, depositsIntoClickedBlock)
+> - **In plain English:** The client and the server each keep their own copy of the table that maps a right-click (with or without the V key, Shift, a torch, an empty hand) to an action. The client copy only decides whether to block the normal click. The server copy actually does the action.
+> - **Consequence:** A maintainer who changes a gesture has to change both copies the same way. If they miss one, the client blocks a click the server then ignores, or lets through a click the server acts on. The player sees a click that does nothing, or a torch that gets placed as well as rotating the stack. `depositsIntoClickedBlock` already exists word for word in `DepositIntoClickedStackRule` and `StackInteractions`.
+> - **Action:** Add one loader-neutral classifier in common, for example `enum StackGesture { TOGGLE_PERMANENT, ROTATE_BLOCK, ROTATE_ITEM, DEPOSIT, DEPOSIT_ADJACENT, PLACE, EXTRACT, CYCLE_MODE, NONE }` with `static StackGesture classify(Player, Level, BlockPos?, Direction?, ItemStack held, StackMode, boolean modifier, boolean shift)`. The client cancels when the result is not `NONE`. The server switches on the same result. Delete the `client/interaction` package and have `ClientGestures` call the classifier.
+> - **Technical detail:** Each of the 8 rule classes implements `matches` with a different predicate. All but `ModeCycleRule` implement `execute` as `ctx.cancelEvent()`. So the strategy pattern carries no behavior, only an ordered list of predicates. On the server, `applyExistingStack`, `applySneakingRotation` and `handleAdjacentClick` encode the same predicates in the same order (modifier + empty hand + TOGGLE_PERMANENT + Storage → toggle; Shift + redstone torch + Storage/Singles → rotate; and so on). `InteractionContext` (168 lines) exists only to carry these inputs into the rules.
+
+#### OR-03: Each stack block repeats the same placement, removal, tick and comparator code
+
+**Status:** Implemented shared lifecycle plumbing with explicit type-specific hooks.
+
+**Verification:** The block classes repeated comparator lookup, structural invalidation/publication, tick dispatch, and Storage/Singles rotation behavior. Storage settlement and neighbor-state adoption are genuinely different.
+
+**Implementation result:** StackBlock owns lifecycle/comparator plumbing, placement state, and facing rotation/mirroring only for states that have facing. Storage retains base-only settlement, neighbor permanence adoption, and publication after settlement/trim through overrides. ShapedStackBlock obtains the entity's cached occupied shape through the base contract. Bar receives no facing property; client collision/outline and native removal ordering remain.
+
+**Original issue text (verbatim):**
+
+> ### 3. Each stack block repeats the same placement, removal, tick and comparator code
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/SinglesStackBlock.java:35-113; BarStackBlock.java:44-92; StorageStackBlock.java:29-117
+> - **In plain English:** All three stack blocks do the same housekeeping when placed, broken or ticked, and when a comparator reads them. Each block class has its own copy of it, with only the run type's name changed.
+> - **Consequence:** A change to run repair (for example, a new cache to invalidate on removal) has to be made in three files. Singles and Bar are already nearly identical, and Storage differs only by settling instead of publishing. A missed copy breaks comparator output or leaves stale run caches for one block type.
+> - **Action:** Put `tick`, `onPlace`, `affectNeighborsAfterRemoval` and `getAnalogOutputSignal` into `StackBlock`, driven by one abstract `StackRun<?> runAt(Level, BlockPos)` plus an overridable `onRunTick(run)` (publish or settle). Move the `HORIZONTAL_FACING` state definition, `rotate` and `mirror` (identical in Storage and Singles) into one shared place. Move `occupiedShape` into `ShapedStackBlock` using a `getCachedShape()` declared on the block-entity base.
+> - **Technical detail:** In `SinglesStackBlock` and `BarStackBlock`, `tick`, `onPlace`, `affectNeighborsAfterRemoval`, `getAnalogOutputSignal` and `occupiedShape` are the same text apart from `SinglesColumn`/`BarColumn` and `SinglesStackBE`/`BarStackBE`. `StorageStackBlock` repeats the same `invalidateAround` → `markDirtyAt(below/above)` pattern.
+
+#### OR-04: Each run type repeats the growth, trim and static-lookup code that belongs in `StackRun`
+
+**Status:** Implemented residual growth/trim duplication; existing shared lookup/preflight retained.
+
+**Verification:** EF-01 already put height, enablement, build height, replaceability, and authority preflight in StackRun. Lookup, invalidation, scheduling, publication, and joined-height helpers were also shared. Typed forwarding wrappers were not separate implementations.
+
+**Implementation result:** Added StackRun.growBlock and shared protected top trimming. Subclasses retain collision/admission rules; Storage starts the grown member's batch and keeps permanent empty blocks, Bar trims only empty tops, and Singles retains its separate movement cleanup. Typed resolver wrappers stay where useful. Growth still uses checked world placement and current actor authority.
+
+**Original issue text (verbatim):**
+
+> ### 4. Each run type repeats the growth, trim and static-lookup code that belongs in `StackRun`
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/SinglesColumn.java:52-99, 187-215; BarColumn.java:58-111, 200-230, 293-308; StoragePile.java:49-95, 327-370, 433-455
+> - **In plain English:** Each kind of stack column has its own copy of "can I add a block on top?", "add a block on top", "remove empty blocks at the top", and "find the column at this spot".
+> - **Consequence:** These checks are what make growth respect protection, build height and the height limit. Three copies means a protection fix (a new check in `canGrow`, say) can land in two of them and leave a bypass in the third. An admin would see one stack type grow into a claim the others respect.
+> - **Action:** Move into `StackRun`: `canGrow(ServerPlayer editor, VoxelShape finalCollision)`, `grow(ServerPlayer editor, VoxelShape finalCollision)` returning the new block entity, `trimEmptyTop(@Nullable ServerPlayer actor, Predicate<BE> keep)`, and the `invalidateAround`/`publishAround`/`markDirtyAt`/`columnHasRoomFor` wrappers keyed by the run's block. Subclasses supply only the type-specific parts: the enable flag, the collision shape, and Storage's permanent-keeps-block rule.
+> - **Technical detail:** `SinglesColumn.canGrow` and `BarColumn.canGrow` differ only in `enableSinglesStackBlock()` versus `enableBarStackBlock()`. `StoragePile.canGrow` differs only in the editor and `Shapes.block()`. All three `grow` methods are `StackPlacement.stateFor` → `WorldEdits.placeChecked(editor, …, Direction.DOWN, shape)` → cast → `blocks.add`. The `at`/`resolve`/`invalidateAround`/`publishAround`/`markDirtyAt`/`columnHasRoomFor` statics in each subclass are one-line forwards to `StackRun` statics with the class or block filled in.
+
+#### OR-05: The block support rule is written three times for each positional stack type
+
+**Status:** Implemented shared positional support predicates.
+
+**Verification:** Each geometry class repeated live-slot and snapshot support checks, while SinglesColumn and BarColumn implemented staged support separately. No existing simulation/commit mismatch was demonstrated.
+
+**Implementation result:** SinglesCubeIdx and BarCubeIdx now evaluate supplied occupancy predicates, including staged contents and visual seam support, without allocating a seam array per candidate insertion. Live/snapshot/seam helpers delegate to that rule; isGroundedIn is removed. Singles keeps rotation-aware visual mapping across seams; Bar keeps footprint overlap. BarCubeIdx.TOP_LAYER_START is public because staged seam access needs the same geometry-owned offset.
+
+**Original issue text (verbatim):**
+
+> ### 5. The block support rule is written three times for each positional stack type
+> - **Severity:** Medium
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/util/SinglesCubeIdx.java:56-85 (isGrounded, isGroundedIn, seamSupports); SinglesColumn.java:147-178 (acceptsAt, cellSupported); BarCubeIdx.java:145-178 (isGrounded, isGroundedIn, seamSupports); BarColumn.java:168-193 (acceptsAt)
+> - **In plain English:** The rule "an item must rest on something beneath it" is coded once for real slots, once for a snapshot of which slots are full, and once more for what automation is about to put in. This happens separately for Singles and for Bar.
+> - **Consequence:** If the support rule changes (for example, how Singles columns line up across differently rotated blocks), the three versions can disagree. Automation might then be promised a cell that the player path refuses, or the reverse. A pipe would see an insertion accepted in simulation and refused at commit, and the commit-time `IllegalStateException` in the transfer adapters would fire.
+> - **Action:** Give each geometry class one `isGrounded(int index, IntPredicate occupied, int blockRotation, @Nullable boolean[] seamBelow)`. Have the block entity pass `slot -> !items.getStackInSlot(slot).isEmpty()`, the cascade pass its occupancy array, and the column pass its staged `contents` (building the seam from the block below through `topLayerOccupancy`). Delete `isGroundedIn` and the hand-written support code in `SinglesColumn.cellSupported` and `BarColumn.acceptsAt`.
+> - **Technical detail:** `SinglesColumn.cellSupported` re-derives the cross-block mapping (`visualColumnFromStorage` → `storageColumnFromVisual` → `indexFromColumn(…, TOP_LAYER_Y)`) that `SinglesCubeIdx.topLayerOccupancy` and `seamSupports` already encode. `BarColumn.acceptsAt` re-walks `supportersOf(slot)` against `supportBlockStart`, which is what `BarCubeIdx.isGroundedIn`/`seamSupports` do over arrays.
+
+#### OR-08: The client's copy of the server settings is split across three classes, and client connection cleanup differs by loader
+
+**Status:** Implemented immutable client policy and shared lifecycle; obsolete staging claim rejected.
+
+**Verification:** ClientRenderPacketSink had already been removed. ConfigSyncReceiver applied a complete packet to separate flag and authoring-list holders; lifecycle registration differed by loader, without a demonstrated stale-policy bug.
+
+**Implementation result:** ClientServerSettings replaces ConfigSyncReceiver, StackState, and ClientRenderToolState with one immutable published policy and derived deny set. SomeStacksClient owns join/disconnect/stopping operations called by native loader events. Join resets gesture synchronization without erasing policy delivered during configuration; disconnect clears policy and rejection diagnostics and saves measured cache. Native NeoForge config delivery and Fabric payload delivery stay distinct.
+
+**Original issue text (verbatim):**
+
+> ### 8. The client's copy of the server settings is split across three classes, and client connection cleanup differs by loader
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/ClientRenderPacketSink.java; client/StackState.java; client/ClientRenderToolState.java; network/ConfigSyncNetwork.java; neoforge/src/main/java/com/github/crittscott/somestacks/client/ClientSetup.java:27-36; fabric/src/main/java/com/github/crittscott/somestacks/network/FabricClientNetworking.java:31-38; fabric/src/main/java/com/github/crittscott/somestacks/client/FabricClientRendering.java:33-36
+> - **In plain English:** What the client knows about the server's settings is staged in one class, then stored half in a second class (which stack types are on) and half in a third (mod lists). What happens when the player joins or leaves a server is wired separately on each loader, and the two lists differ.
+> - **Consequence:** A maintainer adding a synced setting has to touch three static holders plus the staging. Fabric resets gesture sync and config staging on join and on disconnect. NeoForge does it only on logout. Fabric's cache save on disconnect lives in a different class from its other disconnect handling. A new per-connection reset will likely be added to one loader and forgotten on the other.
+> - **Action:** Merge `ClientRenderPacketSink`, `StackState` and `ClientRenderToolState` into one `ClientServerSettings` class (staging plus published state). Add a common `SomeStacksClient` with `onJoin()`, `onDisconnect()` and `onStopping()`, mirroring `SomeStacksServer`, and call it from each loader's native events. Fold `ConfigSyncNetwork`'s three one-line methods into `SomeStacksServer`.
+> - **Technical detail:** `ClientRenderPacketSink` (named "render" though it carries config) holds staging fields `enableStack/enableSingles/enableBar` and then copies them into `StackState`'s three booleans through a `BlockType` switch. `ClientRenderToolState` holds the lists.
+
+#### OR-10: Data migration and set-aside recovery are spread over four classes
+
+**Status:** Implemented recovery ownership cleanup without a format change.
+
+**Verification:** SetAside decoding/retention lived in StackItemStorage, attachment reporting in StackBlockEntity, and warn-once state in SomeStacksServer. Some cited saved-field duplication had already been fixed by DC-05.
+
+**Implementation result:** StackDataMigration owns SavedItems raw retention/retry decoding, LoadResult/LoadOutcome, version normalization, and per-location/session warning state. StackItemStorage delegates disk recovery and retains ordinary slot operations, encoding, and strict client validation. Entities retain attachment-dependent dirty marking and reporting; SomeStacksServer retains lifecycle entry points. Preserve raw unreadable entries, ordinary-slot priority, original-slot retries, Storage overflow retention, immediately preceding release migration, and unchanged disk/wire shapes.
+
+**Original issue text (verbatim):**
+
+> ### 10. Data migration and set-aside recovery are spread over four classes
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/StackDataMigration.java; util/StackItemStorage.java:35-44, 173-270; block/StackBlockEntity.java:36-38, 268-300, 340-362; SomeStacksServer.java:28-66
+> - **In plain English:** Upgrading old saves and keeping unreadable items aside for later should live in one place, per the project's own rule. Today it is split between the migration class, the item storage, the block-entity base, and the server lifecycle class.
+> - **Consequence:** A maintainer changing the save format has to follow four files to see what happens on load. Session bookkeeping is kept in two different static places (`StackDataMigration` session counters and `SomeStacksServer.reportedSavedItems`), so it is easy to reset one and not the other.
+> - **Action:** Move set-aside retention, `LoadResult` reporting, the per-location warn-once set and the session counters into `StackDataMigration` as the single migration layer. Leave `StackItemStorage` as plain slots plus a codec, and leave `StackBlockEntity` with one call: `StackDataMigration.load(tag, items, level, pos)`.
+> - **Technical detail:** `TAG_ITEMS` is also defined in both `StackBlockEntity` and `StackItemStorage`. `"DataVersion"` and `"Permanent"` are string literals in `StackBlockEntity.loadClientUpdate` and `saveAdditional`, separate from `StackDataMigration.PERSISTED_FIELDS`.
+
+#### OR-11: Render-override validation is layered twice, and part of it serves a network path that no longer exists
+
+**Status:** Rejected deletion of sanitation; retained small documentation cleanup.
+
+**Verification:** DC-12 had already corrected synchronized/server override wording. Programmatically constructed profiles bypass decoder validation, and measured offsets are not clamped even though measured scale is. Removing sanitize could discard valid sibling fields when encoding fails.
+
+**Implementation result:** Kept field-preserving sanitation, codec bounds, and the separate coherent render vocabulary types. Corrected RenderMode's obsolete statement that its ids appear on the wire. Do not blindly delete sanitize, RenderOffset.isValid, or range checking when porting this batch.
+
+**Original issue text (verbatim):**
+
+> ### 11. Render-override validation is layered twice, and part of it serves a network path that no longer exists
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.java:14-62, 110-119; renderconfig/RenderOffset.java:23-27; renderconfig/ItemRenderConfig.java:30-31
+> - **In plain English:** The rules for valid scale and offset values are checked by the data format itself, and then checked again by hand. The hand-written check's log messages and comments talk about overrides "synchronized" from the server, which the mod no longer does.
+> - **Consequence:** Someone reading the code goes looking for a server-to-client override channel that is not there. A range change has to be made in both the codec and `sanitize`/`isValid`. The four-file `renderconfig` package splits one small data format across classes.
+> - **Action:** Delete `sanitize`, `RenderOffset.isValid` and `inRange`: the codecs already use `Codec.floatRange`, and measured values are clamped in `AutoRenderProfiles.fit`. Fix the class javadoc, which mentions a "server override directory". Put `RenderMode`, `RenderOffset` and the parse/serialize helpers in `ItemRenderConfig` as nested types and static methods, with the bounds constants next to the codecs that use them.
+> - **Technical detail:** `sanitize` logs "Dropping out of range scale {} from a synchronized override", but its only caller is `entryToJson` when writing local files. Orientation confirms the only play-phase S2C payload is config.
+
+#### OR-12: Interfaces with a single implementation
+
+**Status:** Retained; single implementation alone is not a defect.
+
+**Verification:** SlotAccess has one storage implementation and deliberately limits its consumer surface. StackRunItemAccess has one run base implementation and adds some indirection, but no behavioral problem was established.
+
+**Implementation result:** Kept both interfaces and their documentation. This batch does not widen geometry/render consumers to mutable storage or remove the whole-run interface merely to reduce file count.
+
+**Original issue text (verbatim):**
+
+> ### 12. Interfaces with a single implementation
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/util/SlotAccess.java (only `StackItemStorage`); block/StackRunItemAccess.java (only `StackRun`)
+> - **In plain English:** Two "contracts" each have exactly one class that fulfills them, so they add a file to read without adding any flexibility.
+> - **Consequence:** Readers have to jump between interface and class to find the docs and behavior. `StackBlockEntity.itemRun()` returns the interface, so callers cast it back (`(SinglesColumn) itemRun()`, `(BarColumn) itemRun()`).
+> - **Action:** Delete `SlotAccess` and use `StackItemStorage` directly. Delete `StackRunItemAccess`, moving its javadoc onto the `StackRun` methods, and have `itemRun()` return `StackRun<?>`.
+> - **Technical detail:** `NeoForgeRunResourceHandler.run()` already returns `StackRun<?>`, while `FabricRunItemStorage.run()` returns `StackRunItemAccess`. The two adapters use different types for the same thing.
+
+#### OR-13: Small one-idea classes that belong in the class that uses them
+
+**Status:** Implemented selected ownership cleanup; blanket class merging rejected.
+
+**Verification:** ViewRays factories naturally belong on ViewRay, and gesture/sound state used parallel UUID maps. AutomationActor.is was already gone. StackKey is shared by Storage and Bar, while StorageCubeIdx has multiple consumers.
+
+**Implementation result:** Moved ray factories to ViewRay and removed ViewRays. ServerGestureState now stores mode, modifier, and last sound tick in one per-player record; claimSound/resetSound preserve gesture state, and player disconnect clears the whole record. Removed RotationSoundThrottle. Placement state moved from StackPlacement into StackBlock, shared by native player placement and growth. Kept StackKey, StorageCubeIdx, the automation profile home, StackSort, and deliberate Bar drop grouping. Further cosmetic folds are optional, not implemented fixes.
+
+**Original issue text (verbatim):**
+
+> ### 13. Small one-idea classes that belong in the class that uses them
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/util/ViewRays.java (into ViewRay); util/StackPlacement.java (into StackBlock); util/StackSort.java (into StoragePile, its only user); util/StorageCubeIdx.java (32 lines around one `CubeGrid`); server/RotationSoundThrottle.java (into StackSounds, its only caller); server/AutomationActor.java (`is()` unused; constants used only by the two edit authorities); server/ServerGestureState.java and RotationSoundThrottle.java (two parallel per-player UUID maps cleared together in `SomeStacksServer.onPlayerLeft`); util/StackMode.java:36-42 (`toBlockType` switch duplicating `BlockType`); block/StackKey.java and block/BarDropBatch.java (Bar-only drop packing)
+> - **In plain English:** Several tiny files each hold one or two methods that are used in exactly one place, which makes a reader open many files to follow one action.
+> - **Consequence:** Navigation cost for every maintainer. Per-player state is tracked in two maps that have to be kept in step by hand.
+> - **Action:** Make `ViewRays.of`/`through` static factories on `ViewRay`. Put `StackPlacement.stateFor` in `StackBlock` as `placementState(level, pos)`. Make `StackSort` a private nested type of `StoragePile`. Fold `RotationSoundThrottle` into `StackSounds`. Merge the per-player maps into `ServerGestureState` as one per-player record that includes the last rotation-sound tick. Give `StackMode` a nullable `BlockType` field instead of a switch. Put the `AutomationActor` profile on `EditAuthority` (or `WorldEdits`) and delete the unused `is()`. Make `BarDropBatch` a nested class of `BarStackBE`.
+> - **Technical detail:** None of these classes has more than one production caller apart from `StackPlacement` (three, all stack growth or placement) and `ViewRays` (gesture and adjacent-hit code).
+
+#### OR-14: The Storage and Singles renderers are the same class twice
+
+**Status:** Implemented shared grid renderer.
+
+**Verification:** StorageStackBER and SinglesStackBER differed only in grid/slot count, scale, layout rotation, and per-item rotation behavior.
+
+**Implementation result:** GridStackBER has typed Storage/Singles factories and receives the current block entity when resolving rotations. Both loaders register those factories. Removed the duplicate renderers while retaining superclass state extraction, frame light, cached grid presentation, resource/content invalidation, and native submission. Do not bind a per-entity rotation callback once in the renderer constructor.
+
+**Original issue text (verbatim):**
+
+> ### 14. The Storage and Singles renderers are the same class twice
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/StorageStackBER.java; client/SinglesStackBER.java
+> - **In plain English:** The code that draws Storage and Singles stacks is the same apart from the grid size and whether each item has its own rotation.
+> - **Consequence:** A change to how grids are extracted or submitted has to be made twice. It already lives in `CubeRenderHelper`, so the two files are pure duplication.
+> - **Action:** Replace both with one `GridStackBER<T extends StackBlockEntity>` that takes the grid, the cell scale and an `IntUnaryOperator` for item rotation in its constructor, registered twice per loader with different arguments.
+> - **Technical detail:** The only differences are `StorageCubeIdx.GRID` versus `SinglesCubeIdx.GRID`, `STORAGE_CELL_RENDER_SCALE` versus `CELL_RENDER_SCALE`, and `index -> 0` versus `be::getCubeRotation`.
+
+#### OR-15: Loader glue is split into many tiny classes
+
+**Status:** Partially addressed through lifecycle consolidation; wholesale registration folding not adopted.
+
+**Verification:** Tiny loader registration helpers remain a navigation preference rather than a missing-registration bug. NeoForge config loading/reloading already delegated to one handler before this batch.
+
+**Implementation result:** Common client lifecycle removes the meaningful disconnect/join/stopping duplication; renderer registrations now target the shared renderer. Remaining capability/storage/key/event registration helpers stay in their existing loader homes. Preserve Fabric callback phase ordering, native attachments, NeoForge event subscription, and loader-specific transaction ownership. Do not claim all small loader classes or config event wrappers were deleted.
+
+**Original issue text (verbatim):**
+
+> ### 15. Loader glue is split into many tiny classes
+> - **Severity:** Low
+> - **Confidence:** Certain
+> - **Where:** neoforge/src/main/java/com/github/crittscott/somestacks/block/NeoForgeItemHandlers.java; neoforge/.../client/KeyMappings.java; fabric/src/main/java/com/github/crittscott/somestacks/block/FabricItemStorage.java; fabric/.../server/FabricStackInteractionEvents.java; fabric/.../client/FabricKeyMappings.java; fabric/.../client/FabricClientRendering.java; fabric/.../client/FabricClientEvents.java; neoforge/src/main/java/com/github/crittscott/somestacks/NeoForgeServerConfig.java:101-115 (identical `onLoading`/`onReloading` bodies)
+> - **In plain English:** Each loader's setup is spread over many small files of 20 to 50 lines, each registering one thing.
+> - **Consequence:** To see everything a loader registers, a maintainer has to open seven or eight files per loader. Missing registrations, like the client cleanup gap in finding 8, are hard to spot.
+> - **Action:** On NeoForge, put capability registration in `ModRegistry` and key mappings in `ClientSetup`. On Fabric, put item-storage registration in `FabricRegistry`, the server use-block callback in `SomeStacksFabric`, and key mappings, rendering and client events in `SomeStacksFabricClient`. Merge the two NeoForge config event handlers into one method that takes `ModConfigEvent`.
+> - **Technical detail:** These classes have only static `init` or `onRegister…` methods that call one loader API three times, once per block entity type.
+
+#### OR-16: The client command tree is split three ways so the server can print help for it
+
+**Status:** Retained; proposed replacement would duplicate syntax.
+
+**Verification:** ClientRenderCommandSyntax provides one command grammar for executable local commands and server-safe generated help. Action dispatch costs indirection, but static usage strings would create another grammar copy.
+
+**Implementation result:** Kept shared syntax generation, Action dispatch, and SsHelp usage derivation. Replacing generated help remains a separate product decision.
+
+**Original issue text (verbatim):**
+
+> ### 16. The client command tree is split three ways so the server can print help for it
+> - **Severity:** Low
+> - **Confidence:** Unsure
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/command/ClientRenderCommandSyntax.java; client/ClientRenderCommands.java:35-62; command/SsHelp.java
+> - **In plain English:** The local `/ss item` and `/ss write` commands are described in one file, run in another, and connected through a list of action names, so that the server's help command can list them without loading client code.
+> - **Consequence:** Adding a client subcommand means editing the syntax tree, the `Action` enum, the dispatch switch, and possibly help text, across three files.
+> - **Action:** Register the client tree directly in `ClientRenderCommands` with ordinary `.executes(...)` lambdas, and give `SsHelp` static usage strings (or lang keys) for the two client topics. This assumes generated help is not worth the indirection; see Open questions.
+> - **Technical detail:** `ClientRenderCommandSyntax.usages` builds a throwaway `CommandDispatcher<Object>` with no-op commands only to call `getAllUsage`. That is the only reason the `Action` enum and the `Function<Action, Command<S>>` parameter exist.
+
+### Protection
+
+#### PR-01: Fabric lets players build stacks into a neighboring claim
+
+**Status:** Implemented destination authorization with a required included Fabric library.
+
+**Verification:** Fabric player placement preflight exempted real players, and committed placement called setBlock without a destination query. Vanilla origin gates alone did not establish claim permission at the new block or growth headroom.
+
+**Implementation result:** FabricEditAuthority uses Common Protection API 2.0.0 canPlaceBlock for player/automation destination queries and committed placement. WorldEdits.placeChecked performs destination preflight before mutation. The published API uses NameAndId, not the review's GameProfile parameter. Added Nucleoid Maven, the root version property, implementation/include dependency and metadata requirement, and loom.nestJars for the production Shadow artifact as well as native inclusion in the dev jar. Updated build-env and orientation snapshots. Coverage depends on installed protection providers; this is not universal claim-mod support. Verify compatible library APIs/artifacts for each port.
+
+**Original issue text (verbatim):**
+
+> ### 1. Fabric lets players build stacks into a neighboring claim
+> - **Severity:** High
+> - **Confidence:** Likely
+> - **Where:** fabric/src/main/java/com/github/crittscott/somestacks/server/FabricEditAuthority.java:40-55; common/src/main/java/com/github/crittscott/somestacks/server/StackInteractions.java:253-299 (`placeAndDeposit`), 145-150 (`applyExistingStack` placing on the neighbor), 122-124 (`handleAdjacentClick`); common/src/main/java/com/github/crittscott/somestacks/block/StoragePile.java:327-358 (player-attributed Storage growth)
+> - **In plain English:** On Fabric, when you click a block in your own claim while holding an ingot or other item, the mod places a new stack in the space next to it. The claim mod is only asked about the block you clicked, not the space where the new stack appears, so you can put stacks into someone else's claim from the border. The same happens when a deposit makes a Storage pile grow upward into protected space.
+> - **Consequence:** Server admins running Fabric claim mods see griefing at claim borders: players drop stacks (and their contents) into claims they do not belong to. Vanilla block placement does not have this hole because claim mods special-case held block items; Some Stacks places from non-block items, which claim mods do not anticipate.
+> - **Action:** Ask for permission at the destination. On Fabric the established facility for "may this player place a block here" is Patbox's Common Protection API (`eu.pb4.common.protection.api.CommonProtection.canPlaceBlock(world, pos, profile, player)`), which GOML, Flan, and other Fabric claim mods implement. Call it from `FabricEditAuthority.mayPlace` for every placer (not only the automation actor) and from `place` before `setBlock`. Update the "Fabric placement ... uses vanilla checks" lines in orientation-player.md and orientation-code.md to match.
+> - **Technical detail:** `WorldEdits.placeChecked` checks build height, obstruction, then `EditAuthority.place`; Fabric's `place` is a bare `level.setBlock`. `mayPlace` returns `true` whenever `placer != automationActor(level)`, justified by the comment "A player's own click already ran the block-use callbacks" — but those callbacks ran with `hit.getBlockPos()` of the clicked block, while the stack goes to `clickedPos.relative(face)` (or `topPos().above()` for Storage growth). `isProtected` (`Level.mayInteract`) and `mayUseItemAt` cover only spawn protection, world border and build/adventure rules. NeoForge does not have this hole because `NeoForgeEditAuthority.place` fires `EventHooks.onBlockPlace` for the destination.
+
+#### PR-02: Protection "questions" are asked by firing fake right-clicks that other mods act on
+
+**Status:** Implemented pure Fabric queries; retained NeoForge event consultation and recursion guard.
+
+**Verification:** Fabric synthetic UseBlockCallback calls could execute unrelated gameplay listeners; NeoForge neighbor queries post RightClickBlock. EW-11 had already replaced the thread-local with a boolean, and AutomationActor.is had already been removed.
+
+**Implementation result:** Fabric uses CommonProtection.canInteractBlock for neighbor use and canPlaceBlock for growth/placement, passing the actual player or automation identity. Removal also consults canBreakBlock before native Fabric break callbacks. No synthetic Fabric use callbacks remain. Native origin callbacks and break lifecycle remain; NeoForge still posts its neighbor event, so the common consulting guard remains necessary. Fabric GameTests now install a real ProtectionProvider and reject accidental invocation of gameplay callbacks during destination queries.
+
+**Original issue text (verbatim):**
+
+> ### 2. Protection "questions" are asked by firing fake right-clicks that other mods act on
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** fabric/src/main/java/com/github/crittscott/somestacks/server/FabricEditAuthority.java:33-37 (`mayUseAdjacent`), 40-48 (`mayPlace` for automation); neoforge/src/main/java/com/github/crittscott/somestacks/server/NeoForgeEditAuthority.java:28-36 (`mayUseAdjacent`); common/src/main/java/com/github/crittscott/somestacks/server/WorldEdits.java:50-75 (`consulting` guard)
+> - **In plain English:** To find out whether a player may put an item into a stack next to the block they clicked, or whether a hopper may make a stack grow, the mod pretends the player (or its machine identity) right-clicked that spot. Every mod listening for right-clicks hears it, not just claim mods, so something else may react to a click that never happened.
+> - **Consequence:** Players see phantom actions from other mods (a mod that harvests, opens a screen, or uses an item on right-click acts on the destination), and on Fabric a listener that returns SUCCESS after doing its own thing is read as a denial, so the deposit silently fails after the side effect ran. For automation on Fabric the fake click is aimed at an empty air position with the machine identity and fires on every simulated hopper insertion that needs headroom, so the side effects repeat every transfer cooldown. The `consulting` thread-local only stops our own handlers from reacting.
+> - **Action:** On Fabric, replace both synthetic `UseBlockCallback` invocations with Common Protection API queries (`canInteractBlock` for neighbor deposits, `canPlaceBlock` for growth, using `AutomationActor.PROFILE` for automation). On NeoForge there is no query API, so keep the synthetic `RightClickBlock` only for the neighbor deposit, and drop the `consulting` machinery once Fabric no longer needs it.
+> - **Technical detail:** `UseBlockCallback.EVENT.invoker().interact(...)` runs every registered listener in order until one returns non-PASS; listeners are gameplay handlers, not pure predicates. Automation growth builds `new BlockHitResult(Vec3.atCenterOf(pos), Direction.DOWN, pos, false)` on the headroom position (usually air), which matches no vanilla interaction. `FabricEditAuthority.mayPlace` also identifies automation by reference comparison with a fresh `automationActor(level)` call instead of `AutomationActor.is(...)`.
+
+#### PR-04: A refused hopper growth on NeoForge is retried as a world edit on every transfer
+
+**Status:** Implemented offer-scoped veto coalescing; long-lived denial cache rejected.
+
+**Verification:** EF-01 cached pure mayPlace preflight, but a NeoForge bulk headroom scan could still repeatedly capture, post the native placement event, and restore the same denied placement.
+
+**Implementation result:** NeoForgeRunResourceHandler remembers a denied headroom position only while its bulk offer is active, clearing it when the outer offer exits. Equivalent candidates in that offer skip repeated preparation. A later offer or direct insertion still queries authority afresh; no denial survives solely because blocks/claims appear unchanged. Extended the native veto test for event counts across direct/bulk simulated/committed offers and successful re-query after removing the veto listener.
+
+**Original issue text (verbatim):**
+
+> ### 4. A refused hopper growth on NeoForge is retried as a world edit on every transfer
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** neoforge/src/main/java/com/github/crittscott/somestacks/block/NeoForgeRunResourceHandler.java:106-121; neoforge/src/main/java/com/github/crittscott/somestacks/server/NeoForgeGrowthPlacement.java:20-34
+> - **In plain English:** When a hopper feeds a full stack inside a claim that forbids the mod's machine identity from building, the stack can never grow, but every time the hopper tries again the mod briefly places a block, asks the claim mod, and takes it back.
+> - **Consequence:** Server admins pay for a block set, snapshot capture, a placement event broadcast, and a restore every hopper cooldown for every such hopper, indefinitely; claim or logging mods that record denied fake-player placements fill their logs. This contradicts "work happens when something changes."
+> - **Action:** Remember a refused growth on the run (for example on the base block entity, cleared when the headroom block or the run's structure changes, or after a short tick window) and refuse headroom insertion without calling `prepare` while it stands. Fabric's automation `mayPlace` consultation (finding 2) needs the same treatment if it is kept.
+> - **Technical detail:** `insert(index, ...)` for `index >= run.totalSlots()` calls `NeoForgeGrowthPlacement.prepare` whenever `growth == null`, including inside simulated transactions that are then aborted; `prepare` performs `level.setBlock` under capture and `restore` on every call. Nothing records the denial, so the next transaction repeats it.
+
+#### PR-05: Removals do not respect game-mode block restrictions
+
+**Status:** Implemented common vanilla game-mode gate; speculative helper substitution not adopted.
+
+**Verification:** WorldEdits.removeChecked checked mayInteract and loader veto but did not apply blockActionRestricted. Both native removal callback paths could therefore omit the game-mode destruction restriction.
+
+**Implementation result:** WorldEdits resolves the actor, applies blockActionRestricted using the actor's native game mode before loader events/removal, and leaves an emptied block when removal is forbidden. Permitted content extraction remains available. Added the shared Adventure cleanup regression on both loaders. NeoForge's direct BreakBlockEvent posting remains; the review's proposed helper was not substituted without verified target API/semantics.
+
+**Original issue text (verbatim):**
+
+> ### 5. Removals do not respect game-mode block restrictions
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/server/WorldEdits.java:147-163; neoforge/src/main/java/com/github/crittscott/somestacks/server/NeoForgeEditAuthority.java:65-71
+> - **In plain English:** In adventure mode a player is not allowed to break blocks, but emptying a stack by taking items out makes the mod remove the now-empty block on that player's behalf, so adventure players on a map can make stack blocks disappear.
+> - **Consequence:** Adventure-map makers and servers using adventure mode for protected areas see decorative or puzzle stacks vanish when players empty them.
+> - **Action:** In `WorldEdits.removeChecked`, refuse when `actor.blockActionRestricted(level, pos, actor.gameMode.getGameModeForPlayer())` is true (vanilla's own break gate). On NeoForge, fire the break event through `CommonHooks.fireBlockBreak` (the loader's helper, which pre-cancels for restricted game modes) instead of constructing `BreakBlockEvent` directly.
+> - **Technical detail:** `removeChecked` checks only `Level.mayInteract` (spawn/border) and the loader veto. NeoForge's `vetoesRemoval` builds `new BreakBlockEvent(level, pos, state, actor)` and posts it, bypassing the loader helper vanilla's `ServerPlayerGameMode.destroyBlock` uses. Placement, by contrast, goes through `player.mayUseItemAt`, which does apply adventure rules.
+
+### Reinvention
+
+#### RI-01: Bar Stack contents vanish when block drops are turned off
+
+**Status:** Implemented inventory-safe native item drops while retaining deliberate consolidation.
+
+**Verification:** BarDropBatch used Block.popResource for stored contents, unlike ordinary container contents. Existing GameTests explicitly require consolidation by exact item/components and source position.
+
+**Implementation result:** BarDropBatch spawns native ItemEntity instances with ordinary pickup delay, packed to item limits, independent of the block-drop game rule. It retains per-position grouping and exact component identity instead of switching to a helper that randomly splits groups or deleting consolidation. Added a shared disabled-rule regression covering full-column destruction and a two-bar dependency cascade with exact item conservation. The sparse cascade fixture ensures its upper bar has no alternate support.
+
+**Original issue text (verbatim):**
+
+> ### 1. Bar Stack contents vanish when block drops are turned off
+> - **Severity:** High
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/block/BarDropBatch.java:43; compare common/src/main/java/com/github/crittscott/somestacks/util/ItemOps.java:56 (Storage/Singles path)
+> - **In plain English:** When a Bar Stack is broken or its bars lose support and fall, the ingots are dropped the way a block drops *itself*, not the way a chest spills its contents. If a server turns off block drops, those ingots are deleted, while Storage and Singles contents still spill normally.
+> - **Consequence:** On any server or world with the block-drop game rule off (common on minigame, creative-build, and some survival servers), a player who breaks a Bar Stack or pulls a supporting bar loses every ingot that falls. Admins get bug reports of ingots disappearing and nothing explains why only Bar is affected.
+> - **Action:** Spawn Bar drops with `Containers.dropItemStack` (the same call `ItemOps.dropAllItems` uses, and what vanilla container blocks use), which ignores the block-drop rule. Drop the manual per-identity regrouping in `BarDropBatch` unless the merging is a deliberate player-visible feature; `ItemEntity` already merges nearby identical drops.
+> - **Technical detail:** `BarDropBatch.spawn` calls `Block.popResource(level, pos, drop)`. `popResource` is the loot-drop helper and returns early unless the block-drops game rule is on (it also skips while snapshots are restoring). Vanilla container contents go through `Containers.dropContents`/`dropItemStack`, which have no such gate. `StackBlockEntity.dropContentsOnRemoval` uses `Containers` for Storage/Singles, but `BarStackBE` overrides it with `BarDropBatch`, and player extraction cascades (`BarStackBE.extractAt` → `cascadeFrom` → `dropUnsupported`) go through the same batch.
+
+#### RI-02: Placing a stack against grass, snow, or other replaceable blocks floats it one block too far
+
+**Status:** Implemented context-sensitive ordinary placement without replacing target selection.
+
+**Verification:** Ordinary new placement always selected the neighbor and used generic replacement. Existing overflow, adjacent positional deposits, and gap targeting intentionally have separate target decisions.
+
+**Implementation result:** Ordinary non-stack clicks create BlockPlaceContext from the original vanilla hit/player/hand, use its destination and contextual replacement, and obtain state through StackBlock.getStateForPlacement. StackBlock.placementState shares waterlogging and Storage facing inheritance with growth; removed StackPlacement. Existing-stack overflow and neighbor deposits keep their branches and authoritative ray/cell selection. Tests cover vegetation, thin/full snow, and waterlogging. The water fixture explicitly seeds the clicked support as solid so it models a valid vanilla block hit rather than a hit on replaceable air. Do not add a test-only runtime fallback for air hits.
+
+**Original issue text (verbatim):**
+
+> ### 2. Placing a stack against grass, snow, or other replaceable blocks floats it one block too far
+> - **User comment:** Be very careful modifying the interactions system. All attempts to replace it have failed to preserve the desired UI.
+> - **Severity:** High
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/server/StackInteractions.java:116 (`handleAdjacentClick`), :308-316 (`placeAndDeposit` replaceability check), common/src/main/java/com/github/crittscott/somestacks/util/StackPlacement.java:24, common/src/main/java/com/github/crittscott/somestacks/block/StoragePile.java:372 (`canGrow`)
+> - **In plain English:** In vanilla, if you place a block while looking at tall grass or a thin snow layer, the new block replaces the grass or snow. Some Stacks always places next to whatever you clicked, so the stack lands in the air above the grass, and the grass stays.
+> - **Consequence:** Players placing stacks outdoors get stacks hovering a block above the ground (Storage needs no support, so it simply floats), or a refused placement for Singles/Bar that have no support there. A thick snow layer can also be replaced when vanilla would refuse.
+> - **Action:** Build a vanilla `BlockPlaceContext` from the player, main hand, held stack, and the vanilla `BlockHitResult`, and take the destination from `context.getClickedPos()`, replaceability from `context.canPlace()`, and the initial state from `block.getStateForPlacement(context)` (moving the waterlogging logic into `StackBlock.getStateForPlacement`). Delete `StackPlacement.stateFor` for the player path. For automation growth, which has no click, keep the `BlockState.canBeReplaced()` check but use `getStateForPlacement` through a `DirectionalPlaceContext` so all paths share one state rule.
+> - **Technical detail:** `handleAdjacentClick` computes `destination = clickedPos.relative(hit.getDirection())` unconditionally. Vanilla's `BlockPlaceContext` sets `replaceClicked` when the clicked state's `canBeReplaced(context)` is true and then places at the clicked position. `placeAndDeposit` uses the no-argument `BlockState.canBeReplaced()`, which reads only the generic replaceable flag and skips block overrides of `canBeReplaced(BlockPlaceContext)`, such as snow layers that refuse replacement above one layer. `StackPlacement`'s own javadoc says it exists because the mod "never builds" a `BlockPlaceContext`.
+
+#### RI-05: NeoForge placement copies NeoForge's internal snapshot machinery, and placement completion lives in three places
+
+**Status:** Implemented common completion; retained native tentative snapshot machinery.
+
+**Verification:** Capture/restore/publication were already shared between NeoForgeEditAuthority and NeoForgeGrowthPlacement. Actor completion still duplicated setPlacedBy and BLOCK_PLACE. The proposed no-world-state event or ordinary place/restore replacement did not preserve established transaction visibility and silence.
+
+**Implementation result:** WorldEdits.completePlacement owns setPlacedBy and the placement game event for checked placement and NeoForge committed growth. Loader-owned capture, silent state/block-entity restoration, deferred installation, native event veto, and fill-before-publication remain. Do not route automation through a helper that publishes an empty block before replay, post a placement event without expected tentative state, or delete restoration guards.
+
+**Original issue text (verbatim):**
+
+> ### 5. NeoForge placement copies NeoForge's internal snapshot machinery, and placement completion lives in three places
+> - **Severity:** Medium
+> - **Confidence:** Likely
+> - **Where:** neoforge/src/main/java/com/github/crittscott/somestacks/server/NeoForgeGrowthPlacement.java:47-103, neoforge/src/main/java/com/github/crittscott/somestacks/server/NeoForgeEditAuthority.java:46-66, common/src/main/java/com/github/crittscott/somestacks/server/WorldEdits.java:120-131
+> - **In plain English:** To ask NeoForge's protection mods "may this block go here?", the mod reaches into NeoForge's private bookkeeping for undoing block placements and reproduces by hand what NeoForge does internally after a normal placement. The steps that finish a placement (telling the block it was placed, notifying sensors) are written out separately in three places.
+> - **Consequence:** These are NeoForge internals (`captureBlockSnapshots`, `capturedBlockSnapshots`, `restoringBlockSnapshots`, the manual `onPlace` + `markAndNotifyBlock` replay), so a NeoForge update that changes how capture works breaks placement silently, possibly leaving half-placed blocks or missing neighbor updates. A maintainer who adds a placement side effect, such as a stat or criterion, has to add it to `WorldEdits.placeChecked`, `NeoForgeGrowthPlacement.publish`, and the snapshot replay, and automated growth on NeoForge already skips `WorldEdits.placeChecked`.
+> - **Action:** Use the public pattern: `BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos)`, place the block, post `EventHooks.onBlockPlace(actor, snapshot, face)`, and on cancel call `snapshot.restore(...)`. For the transfer journal, which must decide before commit, post `onBlockPlace` with a snapshot of the tentative state without writing to the level, or accept place-then-restore at commit. Route NeoForge growth publication through `WorldEdits.placeChecked` so `setPlacedBy` and `GameEvent.BLOCK_PLACE` have one home.
+> - **Technical detail:** `capture()` toggles `level.captureBlockSnapshots` around `setBlock` and slices `level.capturedBlockSnapshots`; `restore()` toggles `restoringBlockSnapshots`; `publishSnapshots()` replays `current.onPlace(...)` and `level.markAndNotifyBlock(..., 512)`, which is NeoForge's own post-capture code from the item-placement hook, copied. `NeoForgeGrowthPlacement.publish` then repeats `setPlacedBy` and `gameEvent(BLOCK_PLACE)` from `WorldEdits.placeChecked`.
+
+#### RI-07: Resource-pack JSON is hand-parsed instead of using vanilla's JSON reload listener and codecs
+
+**Status:** Implemented native discovery and Bar codecs; retained intentional field leniency and pack paths.
+
+**Verification:** Both listeners already used native preparable reload listeners. File discovery and Bar entry parsing were manual; item profile fields intentionally decoded independently so valid siblings survived malformed fields.
+
+**Implementation result:** Both listeners use FileToIdConverter discovery at their existing paths. Bar entry codecs retain string shorthand, optional texture/tint, authored color versus automatic tint, accepted hex forms, deterministic file ordering, and per-entry diagnostics. Kept item-profile per-field codecs/sanitation, current pack paths, tint computations and rounding, and absent-namespace skipping. No resource-pack format migration, whole-record item decode, or speculative ExtraCodecs/ARGB substitution was made.
+
+**Original issue text (verbatim):**
+
+> ### 7. Resource-pack JSON is hand-parsed instead of using vanilla's JSON reload listener and codecs
+> - **Severity:** Low
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/client/BarTextureStore.java:89-151, 265-280 (`parseColor`); common/src/main/java/com/github/crittscott/somestacks/client/ItemRenderOverrides.java:128-160; common/src/main/java/com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.java:66-104; common/src/main/java/com/github/crittscott/somestacks/renderconfig/ItemRenderConfig.java:21-28
+> - **In plain English:** The files resource packs use to restyle bars and item displays are read with custom parsing code instead of the loading mechanism Minecraft uses for its own data files.
+> - **Consequence:** Error messages, file discovery, and value formats differ from every other resource-pack file, so pack authors get unfamiliar errors. Every new field needs hand-written parse code next to a codec that already describes it, and the two can drift: `OverrideJsonCodec.parse` ignores `ItemRenderConfig.CODEC` for decoding. Bar mappings also live under `textures/`, a folder for images, which pack authors would not expect.
+> - **Action:** Use `FileToIdConverter.json(...)` (or extend `SimpleJsonResourceReloadListener`) with codecs. Use `ExtraCodecs`' hex color codecs instead of `parseColor`, and `StringRepresentable.fromEnum` for `RenderMode` if it is an enum. Keep per-entry leniency with `Codec.unboundedMap(Identifier.CODEC, ...)` plus `resultOrPartial` per entry if needed. Consider moving bar mappings to `assets/<ns>/somestacks/bars/` (or similar) when the format next changes. In `BarTextureStore`, also use `ARGB.opaque(color)` in place of `ARGB.color(0xFF, red, green, blue)`, `ARGB.lerp(BRIGHTEN_FACTOR, avg, WHITE)` in place of the three hand-written `Math.min(255, ...)` lines, and `FileToIdConverter("textures", ".png").idToFile(spriteName)` in place of `"textures/" + path + ".png"`.
+> - **Technical detail:** Both listeners call `resourceManager.listResources(..., endsWith(".json"))`, open readers manually, and parse with a private `Gson`. `BarTextureStore.parseEntry` reads `JsonObject` fields by hand; `OverrideJsonCodec.parseEntry` calls three per-field codecs instead of the record codec.
+
+#### RI-08: Creative-mode item handling is home-grown
+
+**Status:** Retained; no demonstrated creative consumption bug.
+
+**Verification:** Deposit routines shrink their input. Creative callers deliberately pass a copy, while survival callers pass the live hand. Calling consume on the real hand afterward would change that contract and can double-consume.
+
+**Implementation result:** Kept copy-based creative handling and returnToHand behavior, with the existing creative deposit regression. A broader mutation-contract or infinite-material helper cleanup is outside this batch.
+
+**Original issue text (verbatim):**
+
+> ### 8. Creative-mode item handling is home-grown
+> - **Severity:** Low
+> - **Confidence:** Likely
+> - **Where:** common/src/main/java/com/github/crittscott/somestacks/server/StackInteractions.java:199-201, 296-298, 449-453
+> - **In plain English:** To avoid using up items in creative mode, the mod copies the held stack and puts the result back by hand, instead of using Minecraft's built-in "consume unless creative" helper.
+> - **Consequence:** Small risk that the mod drifts from vanilla's rule for infinite materials (vanilla's checks have changed between versions), and every new deposit path has to copy the copy-then-`returnToHand` dance correctly.
+> - **Action:** Operate on the real held stack and shrink through `ItemStack.consume(n, player)` (or check `player.hasInfiniteMaterials()`), then remove `returnToHand` and the `creative` copies.
+> - **Technical detail:** `deposit` and `placeAndDeposit` read `player.getAbilities().instabuild`, deposit from `held.copy()` in creative, and call `setItemInHand` with the same object otherwise.
+
+### Batch 4 implementation and validation handoff
+
+- Protection and dependency: inspect FabricEditAuthority, WorldEdits, fabric/build.gradle, fabric.mod.json, the root version property, and build-env copies. Port the target's actual Common Protection API signature and native Loom nesting facility. The normal include configuration alone targets the development jar in this no-remap build; the production Shadow task also needs loom.nestJars. Confirm provider-based denied/allowed destination checks, player and automation attribution, and native removal callbacks. Common Protection without a provider does not establish coverage for an arbitrary claim mod.
+- Placement and drops: run the shared vegetation/thin/full snow/waterlogging and disabled-block-drop Bar cases. Seed a solid clicked support in water tests. A cascade fixture must have an upper bar supported solely by the extracted lower bar; a full lower layer supplies alternate supports and is not a guaranteed cascade. Check exact extracted, dropped, and remaining totals and retain the full-column/component-distinct grouping checks. New Bar extraction calls require an explicit nullable actor; no deleted one-argument overload is restored.
+- Native transactions: validate the full native transfer/protection suites, including nested rollback, shared staging, staged support, reentrancy, denied growth event counts, fresh authorization after a veto is removed, tentative block-entity restoration, and publication only after contents are filled. The denial optimization is scoped to a bulk offer, not ticks or claim lifetime; individual later offers still probe. Snapshot implementation simplification remains deferred.
+- Movement/lifecycle: inspect StackBlock and its Storage hooks, ShapedStackBlock/StackBlockEntity shapes, StackRun growth/trim helpers, both geometry classes, and the positional run adapters. Run run-wide comparators, middle-block removal, permanent trimming, rotated Singles seams, Bar support/cascades/backfill, height, obstruction, and shape checks. Preserve Storage batching/adoption/settlement ordering and type-specific movement.
+- Client and gestures: inspect StackGesture, ClientGestures, each loader's callbacks, ClientServerSettings, SomeStacksClient, GridStackBER, and renderer registrations. Run client gesture/callback and synchronization suites and `/ssclienttest` on both clients. Verify modifier/Shift/torch/permanence precedence, air versus block, both hands, plain extraction consumption, unhandled item use, empty-hand air cycling, reconnect defaults, gesture resynchronization, and native config received before join.
+- Recovery and resources: inspect StackDataMigration.SavedItems/load/reportSavedItems and StackItemStorage's delegations. Run migration/persistence/overflow/client-ingress checks; preserve disk shapes and raw unreadable data. Exercise resource reload, shorthand/object Bar mappings, authored versus automatic tints, malformed item-profile sibling fields, measured-cache serialization, and render-cache invalidation. Keep public pack paths and schemas.
+- Build and documentation: all three orientations and changed build reference copies were updated. Source checks found no unresolved project imports, unbalanced delimiters, stale references to removed implementations, or malformed native test-instance JSON; orientation sizes remain within their limits. Those checks are not compilation or runtime tests. The user reported successful builds after correcting the public geometry constant and explicit Bar actor call. Existing branches outside 26.3 were not changed.
+
+### Stale summary claims and exclusions carried forward
+
+- Organization's shared-ledger recommendation is already ML-01, not another ledger rewrite. Both adapters retain RunTransferLedger and native loader transactions.
+- Duplicate NeoForge config and custom packet chunks are already NW-01/NW-02/NW-03 work. NeoForge retains native SYNCED config and Fabric retains one bounded config packet. Do not change native config type or add another transport.
+- The removed client targeting rules, AutomationActor.is, obsolete server/synchronized override wording, and literal field duplication were already addressed by DC-01/DC-07/DC-12/DC-05. Do not reintroduce them or claim their old findings remain current.
+- Retain SlotAccess, StackRunItemAccess, generated client command help, sanitation, coherent geometry/identity helpers, safe creative handling, native NeoForge capture/restoration, and its consultation guard. Optional cosmetic registration/sort folds were not implemented.
+- Per-position versus whole-run claim authority for upper content movement, removal particles/sound, a different saved-slot representation, replacing deny config with a tag, and static command-help text remain separate decisions. No halfway-through-cascade permission veto or new saved format was introduced.
+
+Published API evidence used during implementation: [Common Protection API source](https://github.com/Patbox/common-protection-api), [published version metadata](https://maven.nucleoid.xyz/eu/pb4/common-protection-api/maven-metadata.xml), and [Loom's public nesting API](https://raw.githubusercontent.com/architectury/architectury-loom/dev/1.17/src/main/java/net/fabricmc/loom/api/LoomGradleExtensionAPI.java). Recheck target compatibility before applying dependency or API details to another version.

@@ -4,15 +4,13 @@
 
 # Some Stacks â€” code orientation
 
-See `orientation-player.md` and `orientation-build.md`.
-
 ## Project shape
 
 Java 25; Minecraft 26.3 (unobfuscated, no mappings) on Fabric and NeoForge; package `com.github.crittscott.somestacks`, id `somestacks`.
 
 `common` folds into loader JARs. NeoForge glue uses loader prefixes; platform services sit beside entrypoints. `PlatformServices.Backend` supplies paths, versions, networking and edit authority; loaders own adapters. `CommonRegistry` supplies lookups.
 
-Three blocks; no block items, menus, or recipes:
+`StackBlock` owns lifecycle/comparator plumbing with Storage settlement hooks; `StackRun` shares checked growth installation and top trimming. Geometry supplies one support predicate per positional type for live, staged, and snapshot occupancy. Three blocks; no block items, menus, or recipes:
 
 `ShapedStackBlock`: Singles/Bar use content-shaped targeting/outlines/collision, full-block interaction, and empty visual shapes. Rays pass through gaps; empty stacks have no outline.
 
@@ -49,13 +47,13 @@ Three blocks; no block items, menus, or recipes:
 | Networking | versioned payload registrar | payload registry plus a configuration-phase `ProtocolPkt` version marker |
 | Gestures | interaction/input events | callbacks plus air-click mixin |
 | Automation | whole-run `ResourceHandler<ItemResource>` | generic Transfer API `Storage<ItemVariant>` |
-| Edit protection | vanilla plus place/break events | vanilla and break callbacks |
+| Edit protection | vanilla plus place/break events | vanilla, Common Protection API destination queries, and break callbacks |
 
 ## Runtime and movement model
 
 A maximal vertical run is central. Block entities own local slots; server-only `StackRun` owns resolution, slots, headroom, publication and comparators. All members share one per-tick resolved run; structural edits invalidate affected caches.
 
-Block entities do not tick. Mutations batch client, light, comparator, and settlement work; cached per-slot fill fractions supply run signals. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
+Block entities do not tick. Mutations batch publication and settlement; cached slot contributions supply comparators. Removal drops local contents and cascades, then repairs surviving runs.
 
 Movement models:
 
@@ -65,7 +63,7 @@ Movement models:
 
 Persistence uses `ValueInput`/`ValueOutput` and registry-aware `ItemStack.CODEC`. `StackDataMigration.readTag` preserves raw disk/wire types at the boundary. Encode failure aborts serialization with slot/location context. All types save `DataVersion` and `Items`; Storage adds `Permanent`, and Singles adds `CubeRotations`. Storage and Singles layout rotation is the outer block's `horizontal_facing`; Singles item rotation remains block-entity data. `Permanent` is server-only and is stripped from update tags.
 
-`StackDataMigration` upgrades the preceding 26.1 (0.8.3) release's items through DataFixerUpper and splits over-cap Storage entries into legal local slots, retaining excess in `SetAside`; absent `DataVersion` means current. Unreadable or malformed entries persist verbatim in `SetAside` and retry on load. Warnings identify dimension/position; failed retries warn once per location/session. Client updates require current version, bounded inventories, unique integer slots, valid Singles rotations, and no server-only fields; rejection changes nothing and logs its reason once per client connection, including preflight rejection before inherited components load. Client ingress validates before inherited component loading: Fabric guards `loadWithComponents` with a client mixin; registered NeoForge entity subclasses override native hooks with compile-time checks. Accepted updates use the shared client load branch. Deferred migration marks dirty on attachment. Permanence belongs to the base; block rotation is local; Singles item rotation travels.
+`StackDataMigration` owns version upgrades, raw SetAside retention/retries, Storage overflow splitting, and session diagnostics. It upgrades the preceding 26.1 (0.8.3) release; missing DataVersion means current. Failures retain their raw tags and original slots. Entities defer reporting/dirty marking until attachment. Client ingress rejects malformed/version-mismatched inventories, duplicate/noninteger slots, invalid rotations, and server-only fields atomically before inherited component loading. Fabric guards native loading with a mixin; NeoForge uses registered subclasses. Rejection logs once per connection. Permanence belongs to the base; layout rotation is block state; Singles item rotation travels with contents.
 
 ## Admission, automation, and edits
 
@@ -73,29 +71,29 @@ Storage takes nonempty items; Bar takes the reloadable `somestacks:ingots` tag; 
 
 Native views expose `StackRunItemAccess` plus one headroom block. Storage capacity is min(64, item limit); positional slots hold one item. Transient base-block adapters share `RunTransferLedger` staging, rollback snapshots, extraction restrictions, and ordered replay. Native transaction participation stays in each loader. `acceptsAt` checks staged support before growth; bulk insertion shares a permission query, keeps collision per position, and rechecks authority at commit. Root/outer commits remove first, then insert bottom-up with fresh run resolution. Positional extraction permits one position without other pending positions or later insertion. NeoForge prepares growth through native placement events, restores it silently, then installs/fills/publishes at commit. `RunEdit` blocks reentrant mutations.
 
-`WorldEdits` resolves nullable actors and checks build limits, replaceability, obstruction, border, spawn and loader authority. Both loaders use fake players with the `[SomeStacks]` automation identity. Cleanup retains a responsible player; automated or mixed Storage cleanup uses automation. NeoForge fires placement events against captured snapshots, restores denied block/entity state silently, and publishes accepted edits. Fabric consults block-use callbacks for automation and native break callbacks for removal. Player creation fires `PLACED_BLOCK`. Edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`, or `BLOCK_CHANGE` for surviving player content/rotation edits.
+`WorldEdits` resolves nullable actors and checks build limits, replaceability, obstruction, border, spawn and loader authority. Both loaders use fake players with the `[SomeStacks]` automation identity. Removal applies vanilla game-mode block restrictions before loader hooks. Cleanup retains a responsible player; automated or mixed Storage cleanup uses automation. NeoForge fires placement events against captured snapshots, restores denied block/entity state silently, and publishes accepted edits. Fabric uses Common Protection API for player/automation placement, neighbor use, and removal queries, with native break callbacks around removals. It sends no synthetic use callbacks. NeoForge bulk offers coalesce repeated growth vetoes within the offer and retry authority on the next offer. Placement completion lives in `WorldEdits`. Player creation fires `PLACED_BLOCK`. Edits emit `BLOCK_PLACE`/`BLOCK_DESTROY`, or `BLOCK_CHANGE` for surviving player content/rotation edits.
 
 ## Player interaction and networking
 
-Main-hand rules order permanence, block rotation, item rotation, modified-click cancellation, then extraction; targeting stays server-side. NeoForge cancellation and Fabric `SUCCESS` suppress local use while retaining vanilla block-use packets. A payload sends mode and modifier state only when changed.
+`StackGesture` shares pure main-hand intent between client and server: permanence, block rotation, item rotation, modified deposit/placement, then extraction; targeting stays server-side. NeoForge cancellation and Fabric `SUCCESS` suppress local use while retaining vanilla block-use packets. A payload sends mode and modifier state only when changed.
 
-`ConfigSyncReceiver` publishes a complete validated client policy. Fabric sends one composite-codec `ConfigSyncPkt`; NeoForge feeds the same snapshot from native SYNCED config load/reload events and registers no custom clientbound payload. Each list allows 256 unique ASCII namespaces of up to 256 characters (about 130 KiB total); invalid/excess entries warn and are omitted. Disconnect resets policy and rejection diagnostics. Protocol 6 covers both wire formats. `/ss item` and `/ss write` act locally; no server packet requests client writes.
+`ClientServerSettings` publishes immutable policy; `SomeStacksClient` owns shared lifecycle and preserves policy on join. Fabric sends one bounded `ConfigSyncPkt`; NeoForge applies native SYNCED config with no clientbound custom payload. Policy lists bound namespace size/count and reject malformed ingress. Protocol 6 covers both formats. Disconnect clears settings and diagnostics. Client render commands never accept remote write requests.
 
-`StackBlock.useItemOn`/`useWithoutItem` handle non-sneaking clicks; loader hooks handle sneaking torch rotation and neighbor actions. `StackInteractions` validates hand, spectator/protection state, items, support, policy, height, obstruction, and authority. Placement plus first deposit is atomic. Unhandled uses pass through; plain extraction attempts remain consumed. Rotation reads are pure; edits use native facing, inherited before Storage placement. Cell selection follows the server ray through the vanilla hit; clients send no cell index.
+`StackBlock.useItemOn`/`useWithoutItem` handle non-sneaking clicks; loader hooks handle sneaking torch rotation and neighbor actions. `StackInteractions` validates hand, spectator/protection state, items, support, policy, height, obstruction, and authority. Ordinary new placement resolves context-sensitive replacement through `BlockPlaceContext`; overflow and neighbor deposits retain their target resolution. `StackBlock` constructs state for both player placement and growth. Placement plus first deposit is atomic. Unhandled uses pass through; plain extraction attempts remain consumed. Rotation reads are pure; edits use native facing, inherited before Storage placement. Cell selection follows the server ray through the vanilla hit; clients send no cell index.
 
-Neighbor deposits consult NeoForge right-click events or Fabric block-use callbacks. Guards prevent recursive gestures; each loader owns placement authority. Brigadier handles commands; Fabric forwards unclaimed client `ss` forms.
+Neighbor deposits consult NeoForge right-click events or Fabric Common Protection API queries. Guards prevent recursive gestures; each loader owns placement authority. Brigadier handles commands; Fabric forwards unclaimed client `ss` forms.
 
 ## Configuration and presentation
 
 `ServerConfig` publishes immutable policy. NeoForge uses native SYNCED `ModConfigSpec` with the explicit `somestacks-server.toml` filename and loader-managed world overrides; Fabric reads `<world>/serverconfig/somestacks-server.json` with per-field defaults. Backends share common setting keys/defaults and return settings; the facade applies them. `/ss deny` and `/ss gen` persist edits. Reloads and list edits share server-thread publication/logging. Fabric sends only changed normalized snapshots; NeoForge owns native sync. Gallery enablement/permission changes resend command trees. Policy logs include gallery access and deny-list counts.
 
 
-BERs prepare presentation before queued submission and use inherited frame light. Storage/Singles use `CubeGrid`/`CubeRenderHelper` and cache resolved models until content, rotation, or profile changes; time-dependent models freeze. Bar caches cuboids, UVs, and tints until a content update or resource-generation change. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns quads, tints, and render types; measurement visits vanilla model extents. Special features disqualify automatic flat projection. 2-D art uses the item atlas and render type, caches the 2,048 most recent stacks until reload, and submits once per render type per block. Capture failure draws `stack_cube_error` until reload. Block mode submits native block features; non-model blocks use FIXED. Bar UVs cache per sprite; tint reads the first quad. Measured caches key format/packs/mod versions. Data format: 121.0.
+BERs prepare presentation before queued submission using frame light. Storage/Singles share `GridStackBER`, `CubeGrid`, and `CubeRenderHelper`, caching until content, rotation, or profile changes; time-dependent models freeze. Bar caches geometry/UVs/tints until content or resource-generation changes. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns quads, tints, and render types; measurement uses vanilla extents. Special features disqualify automatic 2-D projection. Item-atlas art caches 2,048 recent stacks and submits once per render type/block; failures draw stack_cube_error until reload. Block mode submits native features, falling back to FIXED for non-model blocks. Bar entry codecs and native file discovery retain pack paths. Measured caches key format, packs, and mod versions. Data format: 121.0.
 
-Automatic Bar tints resolve on first render, once models are ready; authored colors stay; reload clears computed tints. `/ssclienttest` checks resin's default orange tint.
+Bar tints resolve on first render; authored colors stay and reload clears computed tints. Client smoke tests cover resin tint.
 
 2-D selection uses thinnest/longest axis ratio; cache format 4.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Common checks use Fabric entrypoints or NeoForge deferred functions/test-instance JSON; persistence wrappers share `AutomationAndPersistence` names. Test data format is 121.0. Protection checks take native removal observers and accepted-count offers. Capacity/migration checks cover Storage limits, fullness, and retained overflow. Native transfer suites cover support, replacement, rollback, shared staging, growth, movement, and NeoForge vetoes. Fabric owns JSON config tests; gallery-budget tests have a separate environment. `/ssclienttest`, aimed at a stack with Shift/V released, checks callbacks, capture/geometry, GUI extents, cache invalidation, queued rendering, and atomic native update rejection including inherited components.
+`somestacks_gametest` is excluded from build. Fabric entrypoints and NeoForge deferred functions/JSON wrap common scenarios. Tests cover placement/protection, block-drop-disabled Bar conservation, Adventure cleanup, vegetation/snow replacement, persistence/migration, capacity, native transactions, support/movement, vetoes, and policy sync. `/ssclienttest` checks callbacks, capture/geometry, GUI extents, cache invalidation, queued rendering, and atomic update rejection including inherited components. Gallery-budget tests use a separate environment.

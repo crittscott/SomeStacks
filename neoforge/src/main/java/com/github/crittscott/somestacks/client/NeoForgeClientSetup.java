@@ -32,25 +32,25 @@ public final class NeoForgeClientSetup {
         modBus.addListener(NeoForgeClientSetup::onRegisterKeys);
         modBus.addListener(NeoForgeClientSetup::onRegisterReloadListeners);
         NeoForge.EVENT_BUS.addListener(
+                (ClientPlayerNetworkEvent.LoggingIn evt) -> SomeStacksClient.onJoin());
+        NeoForge.EVENT_BUS.addListener(
                 (ClientPlayerNetworkEvent.LoggingOut evt) -> {
-                    ClientGestures.resetSync();
-                    ConfigSyncReceiver.clear();
-                    AutoRenderProfiles.saveCache();
+                    SomeStacksClient.onDisconnect();
                 });
         NeoForge.EVENT_BUS.addListener(
-                (GameShuttingDownEvent evt) -> AutoRenderProfiles.saveCache());
+                (GameShuttingDownEvent evt) -> SomeStacksClient.onStopping());
     }
 
     private static void applyPolicy(ModConfig config) {
         NeoForgeServerConfig backend = NeoForgeServerConfig.INSTANCE;
         if (config.getSpec() != backend.spec) return;
         ConfigSyncPkt snapshot = ConfigSyncPkt.fromSettings(backend.reload());
-        Minecraft.getInstance().execute(() -> ConfigSyncReceiver.apply(snapshot));
+        Minecraft.getInstance().execute(() -> ClientServerSettings.apply(snapshot));
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        evt.registerBlockEntityRenderer(NeoForgeRegistry.STORAGE_STACK_BE.get(), StorageStackBER::new);
-        evt.registerBlockEntityRenderer(NeoForgeRegistry.SINGLES_STACK_BE.get(), SinglesStackBER::new);
+        evt.registerBlockEntityRenderer(NeoForgeRegistry.STORAGE_STACK_BE.get(), GridStackBER::storage);
+        evt.registerBlockEntityRenderer(NeoForgeRegistry.SINGLES_STACK_BE.get(), GridStackBER::singles);
         evt.registerBlockEntityRenderer(NeoForgeRegistry.BAR_STACK_BE.get(), BarStackBER::new);
     }
 

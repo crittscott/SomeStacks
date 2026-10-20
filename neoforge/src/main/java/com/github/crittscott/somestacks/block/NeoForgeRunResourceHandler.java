@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.NeoForgeRegistry;
 import com.github.crittscott.somestacks.server.NeoForgeGrowthPlacement;
-import com.github.crittscott.somestacks.util.StackPlacement;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +24,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
     private final StackBlockEntity blockEntity;
     private final RunTransferLedger changes = new RunTransferLedger();
     private NeoForgeGrowthPlacement growth;
+    private int offerDepth;
+    private BlockPos refusedGrowth;
 
     public NeoForgeRunResourceHandler(StackBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
@@ -102,15 +104,19 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
             ServerLevel level = (ServerLevel) blockEntity.getLevel();
             BlockPos pos = run.basePos().above(run.height());
             if (growth == null) {
+                if (pos.equals(refusedGrowth)) return 0;
                 if (!RunEdit.begin()) return 0;
                 NeoForgeGrowthPlacement prepared;
                 try {
                     prepared = NeoForgeGrowthPlacement.prepare(level, pos,
-                            StackPlacement.stateFor(blockEntity.getBlockState().getBlock(), level, pos));
+                            StackBlock.placementState(blockEntity.getBlockState().getBlock(), level, pos));
                 } finally {
                     RunEdit.end();
                 }
-                if (prepared == null) return 0;
+                if (prepared == null) {
+                    if (offerDepth > 0) refusedGrowth = pos;
+                    return 0;
+                }
                 updateSnapshots(transaction);
                 growth = prepared;
             }
@@ -128,6 +134,7 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
         if (ledger != this) return ledger.insert(resource, amount, transaction);
         StackRun<?> run = run();
         if (run == null) return 0;
+        offerDepth++;
         try (var query = run.growthQuery()) {
             int inserted = 0;
             int size = size();
@@ -139,6 +146,8 @@ public final class NeoForgeRunResourceHandler extends SnapshotJournal<NeoForgeRu
                 }
             }
             return inserted;
+        } finally {
+            if (--offerDepth == 0) refusedGrowth = null;
         }
     }
 

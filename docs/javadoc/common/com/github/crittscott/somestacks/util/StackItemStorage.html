@@ -53,7 +53,6 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
-<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -123,23 +122,6 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="StackItemStorage.LoadResult.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Counts of newly retained entries and persisted entries that still could not be restored.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -240,7 +222,7 @@ block, and retried on every load, so contents from a temporarily missing mod ret
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks a wire inventory without changing live slots or retained disk entries.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../block/StackDataMigration.LoadResult.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.LoadResult</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -502,7 +484,7 @@ Internal relocation and settlement use this only for already-stored contents. Th
 <section class="detail" id="load(net.minecraft.core.HolderLookup.Provider,net.minecraft.nbt.CompoundTag)">
 <h3>load</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StackItemStorage.LoadResult.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage.LoadResult</a></span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../block/StackDataMigration.LoadResult.html" title="class in com.github.crittscott.somestacks.block">StackDataMigration.LoadResult</a></span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.core.HolderLookup.Provider&nbsp;registries,
  net.minecraft.nbt.CompoundTag&nbsp;nbt)</span></div>
 <div class="block">Loads slot contents from NBT, setting aside every item tag that cannot be placed. The tag must
 already be in the running game's format. Ordinary entries take precedence over retries;

@@ -60,6 +60,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#get(net.minecraft.server.level.ServerPlayer)" tabindex="0">get(ServerPlayer)</a></li>
 <li><a href="#set(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.util.StackMode,boolean)" tabindex="0">set(ServerPlayer, StackMode, boolean)</a></li>
 <li><a href="#clear(java.util.UUID)" tabindex="0">clear(UUID)</a></li>
+<li><a href="#claimSound(net.minecraft.server.level.ServerPlayer)" tabindex="0">claimSound(ServerPlayer)</a></li>
+<li><a href="#resetSound(java.util.UUID)" tabindex="0">resetSound(UUID)</a></li>
 </ol>
 </li>
 </ol>
@@ -108,11 +110,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear(java.util.UUID)" class="member-name-link">clear</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#claimSound(net.minecraft.server.level.ServerPlayer)" class="member-name-link">claimSound</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Claims one rotation sound without limiting the rotations themselves.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear(java.util.UUID)" class="member-name-link">clear</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(net.minecraft.server.level.ServerPlayer)" class="member-name-link">get</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ServerGestureState.State.html" title="class in com.github.crittscott.somestacks.server">ServerGestureState.State</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(net.minecraft.server.level.ServerPlayer)" class="member-name-link">get</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resetSound(java.util.UUID)" class="member-name-link">resetSound</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#set(net.minecraft.server.level.ServerPlayer,com.github.crittscott.somestacks.util.StackMode,boolean)" class="member-name-link">set</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
@@ -159,6 +169,23 @@ loadScripts(document, 'script');</script>
 <h3>clear</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerId)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="claimSound(net.minecraft.server.level.ServerPlayer)">
+<h3>claimSound</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">claimSound</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
+<div class="block">Claims one rotation sound without limiting the rotations themselves.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="resetSound(java.util.UUID)">
+<h3>resetSound</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetSound</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;id)</span></div>
 </div>
 </section>
 </li>

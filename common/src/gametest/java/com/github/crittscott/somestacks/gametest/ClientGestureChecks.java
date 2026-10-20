@@ -2,13 +2,11 @@ package com.github.crittscott.somestacks.gametest;
 
 import net.minecraft.world.level.block.Block;
 import com.github.crittscott.somestacks.client.ClientGestures;
-import com.github.crittscott.somestacks.client.StackState;
-import com.github.crittscott.somestacks.client.interaction.InteractionContext;
-import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
-import com.github.crittscott.somestacks.client.interaction.ModeCycleRule;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackGesture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -85,11 +83,12 @@ public final class ClientGestureChecks {
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(click.held()));
                 player.setShiftKeyDown(click.shift());
                 for (InteractionHand hand : InteractionHand.values()) {
-                    InteractionContext ctx = InteractionContext.forBlockClick(
-                            player, helper.getLevel(), hand, targets[click.target()], click.mode(), click.modifier());
-                    InteractionRuleRegistry.processBlockRules(ctx);
+                    StackGesture gesture = StackGesture.classify(
+                            BlockType.of(helper.getLevel().getBlockState(targets[click.target()]).getBlock()),
+                            click.mode(), click.modifier(), click.shift(), player.getMainHandItem(), true, hand);
                     boolean expected = hand == InteractionHand.MAIN_HAND && click.consumed();
-                    checkEquals(expected, ctx.shouldCancel(), "Cancellation for " + click + " / " + hand);
+                    checkEquals(expected, gesture.consumesLocalUse(player.getMainHandItem()),
+                            "Cancellation for " + click + " / " + hand);
                 }
             }
             // Both clicked and adjacent destinations consume the same client gesture.
@@ -152,10 +151,10 @@ public final class ClientGestureChecks {
     }
 
     private static void assertConsumed(ServerPlayer player, BlockPos pos) {
-        var ctx = InteractionContext.forBlockClick(
-                player, player.level(), InteractionHand.MAIN_HAND, pos, StackMode.STORAGE_STACK, true);
-        InteractionRuleRegistry.processBlockRules(ctx);
-        check(ctx.shouldCancel(), "Claimed click not consumed");
+        StackGesture gesture = StackGesture.classify(BlockType.of(player.level().getBlockState(pos).getBlock()),
+                StackMode.STORAGE_STACK, true, player.isShiftKeyDown(), player.getMainHandItem(),
+                true, InteractionHand.MAIN_HAND);
+        check(gesture.consumesLocalUse(player.getMainHandItem()), "Claimed click not consumed");
     }
 
     /**
@@ -177,12 +176,11 @@ public final class ClientGestureChecks {
                         for (InteractionHand hand : InteractionHand.values()) {
                             for (boolean itemRules : new boolean[] {false, true}) {
                                 var before = ClientGestures.currentMode();
-                                var ctx = InteractionContext.forAirClick(player, hand, before, modifier, hittingBlock);
-                                var rule = itemRules ? InteractionRuleRegistry.processItemRules(ctx)
-                                        : InteractionRuleRegistry.processEmptyHandRules(ctx);
+                                var gesture = hittingBlock ? StackGesture.NONE
+                                        : ClientGestures.processClick(player, hand, null, false, modifier);
                                 boolean claimed = hand == InteractionHand.MAIN_HAND && modifier && !hittingBlock;
-                                checkEquals(claimed ? ModeCycleRule.class : null, rule == null ? null : rule.getClass(), "Air rule");
-                                checkEquals(claimed && occupied, ctx.shouldCancel(), "Air cancellation");
+                                checkEquals(claimed ? StackGesture.CYCLE_MODE : StackGesture.NONE, gesture, "Air intent");
+                                checkEquals(claimed && occupied, gesture.consumesLocalUse(player.getMainHandItem()), "Air cancellation");
                                 checkEquals(claimed, before != ClientGestures.currentMode(), "Air mode change");
                             }
                         }
@@ -190,10 +188,10 @@ public final class ClientGestureChecks {
                 }
             }
             for (int mask = 0; mask < 8; mask++) {
-                for (BlockType type : BlockType.values()) StackState.setBlockEnabled(type, true);
+                for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, true);
                 selectMode(StackMode.STORAGE_STACK);
                 BlockType[] types = {BlockType.STORAGE_STACK, BlockType.SINGLES_STACK, BlockType.BAR_STACK};
-                for (int i = 0; i < types.length; i++) StackState.setBlockEnabled(types[i], (mask & (1 << i)) != 0);
+                for (int i = 0; i < types.length; i++) ClientServerSettings.setBlockEnabled(types[i], (mask & (1 << i)) != 0);
                 List<StackMode> expected = new ArrayList<>();
                 if ((mask & 2) != 0) expected.add(StackMode.SINGLES_STACK);
                 if ((mask & 4) != 0) expected.add(StackMode.BAR_STACK);
@@ -257,8 +255,8 @@ public final class ClientGestureChecks {
 
         private GestureStateScope() {
             for (BlockType type : BlockType.values()) {
-                previousFlags[type.ordinal()] = StackState.isBlockTypeEnabled(type);
-                StackState.setBlockEnabled(type, true);
+                previousFlags[type.ordinal()] = ClientServerSettings.isBlockTypeEnabled(type);
+                ClientServerSettings.setBlockEnabled(type, true);
             }
             previousSender = ClientGestures.setSender(sent::add);
             ClientGestures.resetSync();
@@ -266,9 +264,9 @@ public final class ClientGestureChecks {
 
         @Override
         public void close() {
-            for (BlockType type : BlockType.values()) StackState.setBlockEnabled(type, true);
+            for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, true);
             selectMode(previousMode);
-            for (BlockType type : BlockType.values()) StackState.setBlockEnabled(type, previousFlags[type.ordinal()]);
+            for (BlockType type : BlockType.values()) ClientServerSettings.setBlockEnabled(type, previousFlags[type.ordinal()]);
             ClientGestures.setSender(previousSender);
             ClientGestures.resetSync();
         }

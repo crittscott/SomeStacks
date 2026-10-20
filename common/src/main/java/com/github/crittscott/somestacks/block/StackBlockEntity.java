@@ -1,6 +1,5 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.SomeStacksServer;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,7 +36,7 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     protected final StackItemStorage items;
     @Nullable
-    private StackItemStorage.LoadResult pendingLoadResult;
+    private StackDataMigration.LoadResult pendingLoadResult;
     private boolean pendingMigrationSave;
     private int batchDepth;
     private boolean batchTouched;
@@ -124,6 +125,11 @@ public abstract class StackBlockEntity extends BlockEntity {
         if (run != null) {
             run.markDirty();
         }
+    }
+
+    /** Full-block contents by default; positional entities supply their cached occupied shape. */
+    public VoxelShape getCachedShape() {
+        return Shapes.block();
     }
 
     /** Local slot capacity before the item's own stack limit, or one for positional display types. */
@@ -296,7 +302,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private void reportSavedItems() {
         if (pendingLoadResult == null || level == null) return;
         if (level instanceof ServerLevel serverLevel) {
-            SomeStacksServer.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
+            StackDataMigration.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
         }
         pendingLoadResult = null;
     }
@@ -330,16 +336,14 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
         super.loadAdditional(input);
         pendingLoadResult = null;
-        pendingMigrationSave = StackDataMigration.upgrade(tag, registries);
-        CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
-        if (this instanceof StorageStackBE) {
-            pendingMigrationSave |= StackDataMigration.normalizeStorageInventory(inventory, registries);
-        }
+        StackDataMigration.LoadOutcome loaded = StackDataMigration.load(
+                tag, items, registries, this instanceof StorageStackBE);
+        pendingMigrationSave = loaded.changed();
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
         }
-        pendingLoadResult = items.load(registries, inventory);
+        pendingLoadResult = loaded.result();
         reportSavedItems();
         loadStackData(input);
         refreshComparatorContribution();

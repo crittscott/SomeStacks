@@ -1,7 +1,7 @@
 package com.github.crittscott.somestacks.server;
 
+import com.github.crittscott.somestacks.util.ViewRay;
 import com.github.crittscott.somestacks.PlatformServices;
-import com.github.crittscott.somestacks.util.ViewRays;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -74,7 +74,7 @@ public final class WorldEdits {
     /** Destination hit used by loader protection listeners for a neighboring deposit. */
     public static BlockHitResult adjacentHit(ServerPlayer player, BlockPos pos) {
         var level = player.level();
-        var ray = ViewRays.of(player);
+        var ray = ViewRay.of(player);
         BlockHitResult hit = level.getBlockState(pos).getInteractionShape(level, pos)
                 .clip(ray.eye(), ray.end(), pos);
         return hit != null ? hit
@@ -104,18 +104,24 @@ public final class WorldEdits {
                                        BlockState state, Direction placedAgainst,
                                        VoxelShape finalCollision) {
         ServerPlayer placer = actor(level, source);
-        if (level.isOutsideBuildHeight(pos) || !isUnobstructed(level, pos, finalCollision)) {
+        if (level.isOutsideBuildHeight(pos) || !mayPlace(placer, level, pos)
+                || !isUnobstructed(level, pos, finalCollision)) {
             return false;
         }
         if (!PlatformServices.editAuthority().place(placer, level, pos, state, placedAgainst)) {
             return false;
         }
+        completePlacement(placer, level, pos);
+        return true;
+    }
+
+    /** Finishes loader-accepted placement with the actor callback and one placement game event. */
+    public static void completePlacement(ServerPlayer placer, ServerLevel level, BlockPos pos) {
         BlockState placedState = level.getBlockState(pos);
         placedState.getBlock().setPlacedBy(
                 level, pos, placedState, placer, placer.getMainHandItem());
         level.gameEvent(
                 GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(placer, placedState));
-        return true;
     }
 
     /**
@@ -124,7 +130,8 @@ public final class WorldEdits {
      */
     public static boolean removeChecked(@Nullable ServerPlayer source, ServerLevel level, BlockPos pos) {
         ServerPlayer actor = actor(level, source);
-        if (isProtected(actor, pos)) {
+        if (isProtected(actor, pos)
+                || actor.blockActionRestricted(level, pos, actor.gameMode.getGameModeForPlayer())) {
             return false;
         }
         BlockState state = level.getBlockState(pos);

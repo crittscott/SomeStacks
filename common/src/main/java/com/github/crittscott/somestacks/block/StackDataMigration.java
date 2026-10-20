@@ -4,6 +4,14 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -141,6 +149,71 @@ public final class StackDataMigration {
         return changed;
     }
 
+    /** Disk recovery counts; failed persisted retries are reported once per location and session. */
+    public record LoadResult(int newlySetAside, int failedRetries) {}
+    record LoadOutcome(boolean changed, LoadResult result) {}
+    private record SavedItemLocation(Identifier dimension, BlockPos pos) {}
+    private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
+
+    /** Retained raw entries belong to disk recovery and never enter the client inventory decoder. */
+    public static final class SavedItems {
+        private final ListTag retained = new ListTag();
+
+        public void saveTo(CompoundTag tag) {
+            if (!retained.isEmpty()) tag.put(StackItemStorage.TAG_SET_ASIDE, retained.copy());
+        }
+
+        public void clear() { retained.clear(); }
+
+        public <T> LoadResult load(DynamicOps<T> ops, CompoundTag tag, ItemStack[] slots) {
+            Arrays.fill(slots, ItemStack.EMPTY);
+            retained.clear();
+            read(ops, tag.getListOrEmpty(StackItemStorage.TAG_ITEMS), slots);
+            int newlySetAside = retained.size();
+            read(ops, tag.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE), slots);
+            return new LoadResult(newlySetAside, retained.size() - newlySetAside);
+        }
+
+        private <T> void read(DynamicOps<T> ops, ListTag entries, ItemStack[] slots) {
+            for (Tag entry : entries) {
+                if (!(entry instanceof CompoundTag itemTag)
+                        || !(itemTag.get(StackItemStorage.TAG_SLOT) instanceof IntTag slotTag)) {
+                    retained.add(entry.copy());
+                    continue;
+                }
+                int slot = slotTag.intValue();
+                Optional<ItemStack> parsed = slot >= 0 && slot < slots.length && slots[slot].isEmpty()
+                        ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
+                        : Optional.empty();
+                if (parsed.isPresent() && !parsed.get().isEmpty()) {
+                    slots[slot] = parsed.get();
+                } else {
+                    retained.add(itemTag.copy());
+                }
+            }
+        }
+    }
+
+    /** Upgrades disk data, normalizes Storage limits, then recovers local slots and retained entries. */
+    static LoadOutcome load(CompoundTag tag, StackItemStorage items,
+                            HolderLookup.Provider registries, boolean storage) {
+        boolean changed = upgrade(tag, registries);
+        CompoundTag inventory = tag.getCompound(StackBlockEntity.TAG_ITEMS).orElseGet(CompoundTag::new);
+        if (storage) changed |= normalizeStorageInventory(inventory, registries);
+        return new LoadOutcome(changed, items.load(registries, inventory));
+    }
+
+    public static synchronized void reportSavedItems(ServerLevel level, BlockPos pos, LoadResult result) {
+        if (result.newlySetAside() == 0 && result.failedRetries() == 0) return;
+        SavedItemLocation location = new SavedItemLocation(level.dimension().identifier(), pos.immutable());
+        boolean firstReport = reportedSavedItems.add(location);
+        if (result.newlySetAside() > 0 || firstReport) {
+            SomeStacksCommon.LOGGER.warn(
+                    "Kept saved item stack(s) aside in {} at {}: {} newly retained, {} failed retries",
+                    location.dimension(), pos.toShortString(), result.newlySetAside(), result.failedRetries());
+        }
+    }
+
     private static long sessionUpgradeCount;
     private static int sessionTargetVersion;
 
@@ -149,12 +222,14 @@ public final class StackDataMigration {
 
     /** Starts migration accounting for a server session. */
     public static synchronized void beginSession() {
+        reportedSavedItems.clear();
         sessionUpgradeCount = 0;
         sessionTargetVersion = 0;
     }
 
     /** Logs the completed migration count, if this server session upgraded any block data. */
     public static synchronized void endSession() {
+        reportedSavedItems.clear();
         if (sessionUpgradeCount > 0) {
             SomeStacksCommon.LOGGER.info("Upgraded {} Some Stacks block(s) to data version {}",
                     sessionUpgradeCount, sessionTargetVersion);

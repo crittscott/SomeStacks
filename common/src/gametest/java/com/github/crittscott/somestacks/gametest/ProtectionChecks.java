@@ -50,6 +50,69 @@ public final class ProtectionChecks {
     private ProtectionChecks() {}
 
     /**
+     * Adventure players may extract contents but cannot remove the emptied block. To reproduce
+     * in-game: enter Adventure mode and empty a Singles Stack; the item is returned and its block remains.
+     */
+    public static void adventureExtractionKeepsEmptyBlock(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory) {
+        ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
+        var previous = player.gameMode.getGameModeForPlayer();
+        var singles = GameTestScaffold.placeSingles(helper, ORIGIN);
+        singles.getItems().setStackInSlot(0, new ItemStack(Items.APPLE));
+        try {
+            player.setGameMode(net.minecraft.world.level.GameType.ADVENTURE);
+            check(!singles.extractAt(0, player).isEmpty(), "Adventure extraction lost the item");
+            check(helper.getLevel().getBlockEntity(singles.getBlockPos()) == singles,
+                    "Adventure cleanup removed the block");
+            check(singles.isEmpty(), "Adventure extraction left the item behind");
+        } finally {
+            player.setGameMode(previous);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Ordinary new placement replaces clicked vegetation instead of floating above it. To reproduce
+     * in-game: hold dirt and the modifier in Storage mode and click short grass, thin snow, then full snow from above.
+     * Grass and thin snow are replaced; full snow stays below the new stack.
+     */
+    public static void placementReplacesClickedVegetation(GameTestHelper helper,
+            Function<ItemStack, ServerPlayer> playerFactory) {
+        var level = helper.getLevel();
+        BlockPos target = helper.absolutePos(ORIGIN);
+        level.setBlock(target.below(), Blocks.DIRT.defaultBlockState(), Block.UPDATE_ALL);
+        level.setBlock(target, Blocks.SHORT_GRASS.defaultBlockState(), Block.UPDATE_ALL);
+        ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
+        ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
+        try {
+            check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(Vec3.atCenterOf(target), Direction.UP, target, false), true, true),
+                    "Placement gesture was not consumed");
+            check(level.getBlockState(target).is(CommonRegistry.storageStackBlock()), "Clicked grass was not replaced");
+            check(level.getBlockState(target.above()).isAir(), "Placement floated above the grass");
+            check(player.getMainHandItem().isEmpty(), "Successful placement did not consume dirt");
+            for (int layers : new int[]{1, 8}) {
+                BlockPos snow = target.east(layers == 1 ? 3 : 6);
+                level.setBlock(snow.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+                var snowState = Blocks.SNOW.defaultBlockState().setValue(
+                        net.minecraft.world.level.block.SnowLayerBlock.LAYERS, layers);
+                level.setBlock(snow, snowState, Block.UPDATE_ALL);
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
+                check(StackInteractions.handleAdjacentClick(player, InteractionHand.MAIN_HAND,
+                        new BlockHitResult(Vec3.atCenterOf(snow), Direction.UP, snow, false), true, true),
+                        "Snow placement gesture was not consumed");
+                BlockPos placed = layers == 1 ? snow : snow.above();
+                check(level.getBlockState(placed).is(CommonRegistry.storageStackBlock()),
+                        "Snow placement chose the wrong destination at " + layers + " layers");
+                if (layers == 8) check(level.getBlockState(snow).equals(snowState), "Full snow was overwritten");
+            }
+        } finally {
+            ServerGestureState.clear(player.getUUID());
+        }
+        helper.succeed();
+    }
+
+    /**
      * Every loader attributes automation to the same [SomeStacks] profile. To reproduce in-game:
      * configure a claim or logging mod to report the actor for machine-driven stack growth or
      * cleanup. It reports [SomeStacks] with the shared profile identity.
@@ -145,6 +208,7 @@ public final class ProtectionChecks {
         BlockPos target = helper.absolutePos(ORIGIN);
         level.setBlock(target, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
         BlockPos support = target.below();
+        level.setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
 
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
         try {
