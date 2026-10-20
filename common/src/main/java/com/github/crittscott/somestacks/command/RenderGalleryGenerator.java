@@ -114,14 +114,6 @@ public final class RenderGalleryGenerator {
      */
     private static Map<String, List<Item>> itemsByNamespace;
 
-    /**
-     * The ingot subset of {@link #itemsByNamespace}, holding only namespaces that have one.
-     * Membership is the Bar Stack's own validity test rather than the registry, so unlike the
-     * registry grouping this one is rebuilt whenever Bar validity can have changed.
-     */
-
-    /** The ingot generation {@link #barItemsByNamespace} was grouped under. */
-
     /** Queued galleries. Server thread only: appended by the command, drained by the tick handler. */
     private static final Deque<Job> jobs = new ArrayDeque<>();
 

@@ -55,7 +55,7 @@ Three blocks; no block items, menus, or recipes:
 
 A maximal vertical run is central. Block entities own local slots; server-only `StackRun` owns resolution, slots, headroom, publication and comparators. Structural edits invalidate per-tick resolution caches.
 
-Block entities do not tick. Mutations batch client, light, comparator, and settlement work; cached fill supplies run signals. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
+Block entities do not tick. Mutations batch client, light, comparator, and settlement work; cached per-slot fill fractions supply run signals. `preRemoveSideEffects` drops contents and cascades; block removal hooks then repair surviving runs.
 
 Movement models:
 
@@ -91,14 +91,14 @@ NeoForge consults destination right-click events for neighbor deposits, honoring
 
 Extensions: `somestacks:ingots` data-pack tag; registered `somestacks:block.*` sounds through ordinary resource-pack `sounds.json`; `assets/<namespace>/item_render_overrides/*.json`; and `assets/<namespace>/textures/bars/*.json`. Servers distribute profiles through resource packs.
 
-BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs and tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type, which binds the item atlas; measurement visits vanilla model extents. Special features disqualify automatic flat projection. Storage/Singles block entities keep a client `GridCache` with resolved models until a client update, rotation, or profile change, so time-dependent models freeze. 2-D art is captured once per stack until reload; a block's 2-D cells submit once per render type. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 107.1; galleries bypass protection.
+BERs extract presentation before queued submission: Storage/Singles use `CubeGrid`/`CubeRenderHelper`; Bar uses prepared cuboids, UVs, tints. Profiles resolve user, resource pack, then measurement. `ItemCapture` owns submitted quads, tints, and render types; 2-D plates draw with the item's own render type (item atlas); measurement visits vanilla model extents. Special features disqualify automatic flat projection. Storage/Singles block entities keep a client `GridCache` with resolved models until a client update, rotation, or profile change, so time-dependent models freeze. 2-D art is captured once per stack, keeping the 2,048 most recent, until reload; a block's 2-D cells submit once per render type. Throwing 2-D capture draws `stack_cube_error` until reload. Block mode submits native block features; non-model block forms use FIXED. Bar UVs cache per sprite; auto-tint reads the first quad. Measured cache keys format, packs and mod versions. The combined mod pack declares data format 107.1; galleries bypass protection.
 
-Automatic Bar tints resolve on first render after item models are ready; mapped items retain their authored textures, and resource reload clears computed tints. `/ssclienttest` checks resin's orange tint with default resources.
+Automatic Bar tints resolve on first render, once models are ready; authored colors stay; reload clears computed tints. `/ssclienttest` checks resin's default orange tint.
 
 2-D selection: thinnest/longest axis ratio. Cache: 4.
 
 ## GameTests
 
-`somestacks_gametest` is excluded from `build`. Shared checks: `common/src/gametest`; loader wrappers use Fabric entrypoints or NeoForge deferred functions with test-instance JSON. Test data format: 107.1. The empty structure fixture is upgraded by vanilla's structure data fixing on load. Loader transfer tests cover staged support, slot replacement, rollback, growth, and movement; NeoForge also covers vetoes. JSON config tests are Fabric-only. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, and inventory-independent grid submission.
+`somestacks_gametest` is excluded from `build`. Shared: `common/src/gametest`; loader wrappers: Fabric entrypoints, NeoForge deferred functions plus test-instance JSON. Test data format: 107.1. Vanilla data fixing upgrades the empty structure fixture. Loader transfer tests cover staged support, slot replacement, rollback, growth, and movement; NeoForge also covers vetoes. JSON config tests are Fabric-only. For `/ssclienttest`, aim at a stack; release Shift/V. It also checks capture ownership, special geometry, GUI extents, profile precedence/invalidation, and inventory-independent grid submission. The gallery-budget test has its own environment.
 
 

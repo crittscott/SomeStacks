@@ -78,7 +78,8 @@ public class SinglesStackBE extends StackBlockEntity {
 
     /**
      * Whether Singles accepts this item. Items from disabled namespaces and items accepted by Bar
-     * are excluded, so widening the configured ingot list narrows what Singles accepts.
+     * are excluded, so widening the reloadable {@code somestacks:ingots} item tag narrows what Singles
+     * accepts.
      */
     public static boolean isValidSinglesItem(ItemStack stack) {
         if (stack.isEmpty()) {
@@ -95,8 +96,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Sets the block layout rotation modulo four, invalidates its shape, and publishes immediately
-     * unless a batch is open.
+     * Invalidates the local shape and requests {@link #setBlockRotation(int)} modulo four. The outer
+     * block-state update applies immediately on a server level, including during an inventory batch.
      */
     public void setRotation(int rotation) {
         cachedShape = null;
