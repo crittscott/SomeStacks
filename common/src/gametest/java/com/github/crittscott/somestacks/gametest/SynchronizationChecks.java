@@ -22,6 +22,8 @@ import net.minecraft.world.item.Items;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -85,14 +87,14 @@ public final class SynchronizationChecks {
                     if (!packet.last()) {
                         checkEquals(beforeGallery, ClientRenderToolState.genMods(), "Gallery published early");
                         checkEquals(beforeDenied, ClientRenderToolState.disabledMods(), "Deny list published early");
-                        check(java.util.Arrays.equals(beforeFlags, flags()), "Flags published early");
+                        check(Arrays.equals(beforeFlags, flags()), "Flags published early");
                     }
                 }
                 check(packets.size() <= ConfigSyncPkt.MAX_GENERATION_CHUNKS, "Chunk budget");
                 check(bytes <= ConfigSyncPkt.MAX_GENERATION_BYTES, "Generation byte budget");
                 checkEquals(gallery, ClientRenderToolState.genMods(), "Published gallery list");
-                checkEquals(java.util.Set.copyOf(denied), ClientRenderToolState.disabledMods(), "Published deny set");
-                check(java.util.Arrays.equals(expectedFlags, flags()), "Published flags");
+                checkEquals(Set.copyOf(denied), ClientRenderToolState.disabledMods(), "Published deny set");
+                check(Arrays.equals(expectedFlags, flags()), "Published flags");
             }
         } finally {
             ServerConfig.apply(policy);
@@ -140,7 +142,7 @@ public final class SynchronizationChecks {
             rejects(() -> ClientRenderPacketSink.apply(new ConfigSyncPkt(9, false, true, true, true, true,
                     0, 2, List.of(), List.of("denied"))), "Duplicate deny entry accepted");
             checkEquals(List.of("replacement"), ClientRenderToolState.genMods(), "Bad sequence replaced published state");
-            check(java.util.Arrays.equals(new boolean[] {true, true, true}, flags()), "Bad sequence changed flags");
+            check(Arrays.equals(new boolean[] {true, true, true}, flags()), "Bad sequence changed flags");
             check(ClientRenderToolState.disabledMods().isEmpty(), "Bad sequence changed deny set");
             ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"));
             checkEquals(List.of("recovered"), ClientRenderToolState.genMods(), "Valid snapshot after rejection failed");

@@ -150,7 +150,8 @@ sandstone floor and the completion message reports the placed stacks and items.<
  net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 <div class="block">Gallery placement obeys the configured per-tick budget. To reproduce in-game: lower
 <code>render_gallery.placements_per_tick</code> and request a large Storage gallery. Construction
-visibly progresses across multiple ticks rather than completing in one server tick.</div>
+visibly progresses across multiple ticks rather than completing in one server tick. The
+automated check uses two isolated jobs and a budget of four, including both phase boundaries.</div>
 </div>
 </section>
 </li>

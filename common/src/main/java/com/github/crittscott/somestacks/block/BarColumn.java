@@ -100,8 +100,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
         StackRun.markDirtyAt(level, pos, BarColumn::at);
     }
 
-    /** The configured ceiling on column height, shared with Storage piles. */
-
     /**
      * Whether a Bar Stack may be created at {@code pos}: the contiguous column it would form,
      * counting the runs both below and above it, must fit the configured maximum.

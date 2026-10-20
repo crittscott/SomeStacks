@@ -3,7 +3,9 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.CubeGrid;
 import com.github.crittscott.somestacks.util.QuarterTurns;
+import com.github.crittscott.somestacks.util.SinglesCubeIdx;
 import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.github.crittscott.somestacks.renderconfig.RenderOffset;
 import com.github.crittscott.somestacks.renderconfig.RenderMode;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -105,10 +107,11 @@ public final class CubeRenderHelper {
      * 4.5-pixel cell, halving the gap between Storage's cells. Storage-only: Singles' cells already
      * tile edge to edge with no gap to absorb growth into.
      */
-    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE * 4.5f / 4.0f;
+    public static final float STORAGE_CELL_RENDER_SCALE = CELL_RENDER_SCALE
+            * (float) StorageCubeIdx.CELL_PIXELS / (float) SinglesCubeIdx.CELL_PIXELS;
 
     /** One four-pixel cell in those local units, where 1.0 is the eight pixels above. */
-    public static final float CELL_LOCAL_SIZE = 4.0f / 8.0f;
+    public static final float CELL_LOCAL_SIZE = (float) SinglesCubeIdx.CELL_PIXELS / 8.0f;
 
     /** The cell's center in the same units, which a cell's contents are drawn about. */
     public static final float CELL_LOCAL_CENTRE = CELL_LOCAL_SIZE / 2.0f;
@@ -231,8 +234,19 @@ public final class CubeRenderHelper {
 
     private static final Set<Item> FLAT_CAPTURE_FAILURES = Collections.newSetFromMap(new IdentityHashMap<>());
 
-    /** {@code 2d} art by stack identity, shared by every grid showing that stack until reload. */
-    private static final Map<CaptureKey, FlatArt> FLAT_ART = new HashMap<>();
+    /** Maximum number of component/count-distinct {@code 2d} captures retained across all grids. */
+    private static final int MAX_FLAT_ART_ITEMS = 2048;
+
+    /**
+     * {@code 2d} art by stack identity, shared by every grid showing that stack, in access order.
+     * The least recently shown capture is evicted above {@link #MAX_FLAT_ART_ITEMS}; reload clears all.
+     */
+    private static final Map<CaptureKey, FlatArt> FLAT_ART = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<CaptureKey, FlatArt> eldest) {
+            return size() > MAX_FLAT_ART_ITEMS;
+        }
+    };
 
     @Nullable
     private static FlatArt errorArt;
@@ -450,7 +464,7 @@ public final class CubeRenderHelper {
         pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
     }
 
-    /** The stack's {@code 2d} art, captured the first time any grid shows it after a reload. */
+    /** The stack's {@code 2d} art, captured when no retained capture exists for its identity. */
     private static FlatArt flatArt(ItemStack stack, CaptureKey key, Level level) {
         Item item = stack.getItem();
         if (!FLAT_CAPTURE_FAILURES.contains(item)) {
