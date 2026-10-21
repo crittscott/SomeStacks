@@ -54,7 +54,6 @@ loadScripts(document, 'script');</script>
 <li><a href="com/github/crittscott/somestacks/package-tree.html">com.github.crittscott.somestacks</a>, </li>
 <li><a href="com/github/crittscott/somestacks/block/package-tree.html">com.github.crittscott.somestacks.block</a>, </li>
 <li><a href="com/github/crittscott/somestacks/client/package-tree.html">com.github.crittscott.somestacks.client</a>, </li>
-<li><a href="com/github/crittscott/somestacks/neoforge/package-tree.html">com.github.crittscott.somestacks.neoforge</a>, </li>
 <li><a href="com/github/crittscott/somestacks/network/package-tree.html">com.github.crittscott.somestacks.network</a>, </li>
 <li><a href="com/github/crittscott/somestacks/server/package-tree.html">com.github.crittscott.somestacks.server</a></li>
 </ul>
@@ -63,22 +62,50 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
-<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></li>
-<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/ClientSetup.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">ClientSetup</a></li>
-<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/KeyMappings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">KeyMappings</a></li>
-<li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/ModNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">ModNetworking</a></li>
-<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ModRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks">ModRegistry</a></li>
+<li class="circle">net.neoforged.neoforge.attachment.AttachmentHolder (implements net.neoforged.neoforge.attachment.IAttachmentHolder)
+<ul>
+<li class="circle">net.minecraft.world.level.block.entity.BlockEntity (implements net.neoforged.neoforge.common.extensions.IBlockEntityExtension)
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.StackBlockEntity
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.BarStackBE
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.Bar.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">NeoForgeStackBlockEntities.Bar</a></li>
+</ul>
+</li>
+<li class="circle">com.github.crittscott.somestacks.block.SinglesStackBE
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.Singles.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">NeoForgeStackBlockEntities.Singles</a></li>
+</ul>
+</li>
+<li class="circle">com.github.crittscott.somestacks.block.StorageStackBE
+<ul>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.Storage.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">NeoForgeStackBlockEntities.Storage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/NeoForgeClientEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">NeoForgeClientEvents</a></li>
+<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/NeoForgeClientSetup.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">NeoForgeClientSetup</a></li>
 <li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/NeoForgeEditAuthority.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">NeoForgeEditAuthority</a> (implements com.github.crittscott.somestacks.server.EditAuthority)</li>
 <li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeItemHandlers.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">NeoForgeItemHandlers</a></li>
-<li class="circle">com.github.crittscott.somestacks.neoforge.<a href="com/github/crittscott/somestacks/neoforge/NeoForgePlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks.neoforge">NeoForgePlatformServices</a> (implements com.github.crittscott.somestacks.PlatformServices.Backend)</li>
+<li class="circle">com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/NeoForgeKeyMappings.html" class="type-name-link" title="class in com.github.crittscott.somestacks.client">NeoForgeKeyMappings</a></li>
+<li class="circle">com.github.crittscott.somestacks.network.<a href="com/github/crittscott/somestacks/network/NeoForgeNetworking.html" class="type-name-link" title="class in com.github.crittscott.somestacks.network">NeoForgeNetworking</a></li>
+<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/NeoForgePlatformServices.html" class="type-name-link" title="class in com.github.crittscott.somestacks">NeoForgePlatformServices</a> (implements com.github.crittscott.somestacks.PlatformServices.Backend)</li>
+<li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/NeoForgeRegistry.html" class="type-name-link" title="class in com.github.crittscott.somestacks">NeoForgeRegistry</a></li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/NeoForgeServerConfig.html" class="type-name-link" title="class in com.github.crittscott.somestacks">NeoForgeServerConfig</a> (implements com.github.crittscott.somestacks.ServerConfig.Backend)</li>
+<li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/NeoForgeStackBlockEntities.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">NeoForgeStackBlockEntities</a></li>
+<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/NeoForgeStackInteractionEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">NeoForgeStackInteractionEvents</a></li>
 <li class="circle">com.github.crittscott.somestacks.block.RunItemHandlerBase
 <ul>
 <li class="circle">com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/RunItemHandler.html" class="type-name-link" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a> (implements net.neoforged.neoforge.items.IItemHandler)</li>
 </ul>
 </li>
 <li class="circle">com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/SomeStacksNeoForge.html" class="type-name-link" title="class in com.github.crittscott.somestacks">SomeStacksNeoForge</a></li>
-<li class="circle">com.github.crittscott.somestacks.server.<a href="com/github/crittscott/somestacks/server/StackInteractionEvents.html" class="type-name-link" title="class in com.github.crittscott.somestacks.server">StackInteractionEvents</a></li>
 </ul>
 </li>
 </ul>

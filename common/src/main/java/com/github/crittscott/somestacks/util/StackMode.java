@@ -1,5 +1,10 @@
 package com.github.crittscott.somestacks.util;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+
 /**
  * What the placement modifier does next, as cycled by the mode gesture: place one of the three
  * stack types, or toggle a Storage pile's permanence. Client-side selection state only; the server
@@ -14,6 +19,9 @@ public enum StackMode {
     BAR_STACK("somestacks.mode.bar_stack"),
     TOGGLE_PERMANENT("somestacks.mode.toggle_permanent");
 
+    public static final StreamCodec<ByteBuf, StackMode> STREAM_CODEC =
+            ByteBufCodecs.idMapper(StackMode::fromOrdinal, StackMode::ordinal);
+
     private final String translationKey;
 
     StackMode(String translationKey) {
@@ -21,6 +29,7 @@ public enum StackMode {
     }
 
     public static StackMode fromOrdinal(int ordinal) {
+        if (ordinal < 0 || ordinal >= values().length) throw new DecoderException("Invalid stack mode: " + ordinal);
         return values()[ordinal];
     }
 

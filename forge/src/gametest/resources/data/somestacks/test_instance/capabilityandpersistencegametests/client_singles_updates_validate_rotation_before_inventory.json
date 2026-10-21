@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:function",
-  "function": "somestacks:capabilityandpersistencegametests/client_singles_updates_validate_rotation_before_inventory",
-  "environment": "minecraft:default",
-  "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
-}

@@ -14,7 +14,7 @@ Minecraft 1.21.8 build target; source copied from 1.21.6; port, compilation, and
 
 | Type | Capacity per block | Contents | Character |
 | --- | --- | --- | --- |
-| **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs down, and grows or shrinks |
+| **Storage Stack** | 27 item stacks | Any allowed item | Bulk storage that merges, sorts, packs, and grows or shrinks |
 | **Singles Stack** | 64 items | Allowed non-ingots | A 4 x 4 x 4 display grid, one item per cell |
 | **Bar Stack** | 64 items | Data-pack-defined ingots and bricks | Eight alternating layers of bars |
 
@@ -38,7 +38,7 @@ Hold `V` and right-click air to cycle placement mode: Storage, Singles, Bar, Tog
 
 Forge/NeoForge allow deposits into adjacent Singles/Bar Stacks after consulting destination protection; aiming through an empty grounded cell at its support fills that cell. Fabric checks destination block-use callbacks and also Common Protection API when installed.
 
-Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures.
+Only the main hand acts; off-hand items do not block cycling. Torches are not spent. Rotation shows above the hotbar; sound plays at most once per 4 ticks per player. Storage/Singles turn with structures. Sneaking retains ordinary use except for torch gestures. Modified clicks with no stack gesture keep ordinary use; plain extraction attempts stay consumed.
 
 ## Depositing and placing
 
@@ -60,7 +60,7 @@ Plain right-click targets the nearest rendered item on the view ray inside the c
 
 The main hand must be empty or hold matching items/components with room. A plain click on a stack is consumed even when extraction fails, so an unrelated held item is not used against the stack.
 
-Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently. Removing a Bar Stack also removes the support seam beneath the Bars above it, so those collapse.
+Breaking or replacing any stack block drops that block's local contents, even with block drops off; no stack block item drops. New stacks replace clicked grass, snow, and similar blocks. Storage runs above and below the gap settle independently. Removing a Bar Stack also removes the support seam beneath the Bars above it, so those collapse.
 
 ## Per-type behavior
 
@@ -99,15 +99,15 @@ Every block exposes the whole run on all sides: `IItemHandler` on Forge/NeoForge
 
 | Type | One slot | Slot limit |
 | --- | --- | --- |
-| Storage | one inventory slot | 64 advertised; the item's own max still applies |
+| Storage | one inventory slot | 64, or the item's own lower max; players, automation, and settlement share the cap |
 | Singles | one display cell | 1 |
 | Bar | one bar position | 1 |
 
-The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space cannot be replaced, an entity blocks the final shape, a height limit is reached, or the loader's edit authority refuses the automation actor. All three loaders present automation under the same `[SomeStacks]` identity so machine and claim policies can recognize it.
+The advertised storage includes every current position plus one block of headroom while below the max height; inserting into headroom can grow the run. Growth is refused when the type is disabled, the space is not replaceable or is blocked, a height limit is reached, or loader authority refuses the automation actor. All loaders use the `[SomeStacks]` automation identity.
 
 Storage insertion is positional at the moment of the call, then the next settlement packs and sorts. Singles and Bar accept only the exact empty supported position named. For extraction, Storage removes from the named slot then settles, Singles uses the same one-column gravity as player extraction, and Bar moves the column's topmost bar into the hole to avoid the player-extraction collapse.
 
-Reentrant automation during another structural mutation is refused with the ordinary loader failure and can be retried next tick. On Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and blocks, and insertion is judged against them: one transaction can fill a layer and then the layer above, or empty a Storage slot and refill it. Singles and Bar allow one structural extraction per transaction, which blocks insertion and needs no other staged change.
+Reentrant structural automation is refused. On Fabric, all accesses to one run share staged contents until the transaction commits, including different sides and blocks, and insertion is judged against them: one transaction can fill a layer and then the layer above, or empty a Storage slot and refill it. Singles and Bar allow one structural extraction per transaction, which blocks insertion and needs no other staged change.
 
 ## Comparators
 
@@ -147,9 +147,9 @@ Disabling types, items, mods, or ingot categories preserves existing contents. C
 | `/ss write changed\|<modid>\|all\|list` | anyone; client-local | Save changed item profiles, or generate complete profile files |
 | `/ss gallery ...` / `/ss ingotgallery ...` | `render_gallery.required_permission_level`; off by default | Build Storage or Bar render galleries |
 | `/ss gen ...` / `deny ...` | level 2 | Edit gallery lists or disabled lists |
-| `/ss reload` | level 2 | Refresh server policy, then resync players; Fabric rereads JSON |
+| `/ss reload` | level 2 | Refresh policy and resync changed client settings; Fabric rereads JSON |
 
-Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; Forge/NeoForge validate TOML. Edit `somestacks:ingots` and use `/reload` for ingot classification.
+Galleries build east over sandstone, one alphabetized column per mod, spread across ticks, skipping disabled mods/items. Fabric defaults malformed JSON fields; Forge/NeoForge validate TOML. Gallery access changes refresh connected players' command suggestions. Edit `somestacks:ingots` and use `/reload` for ingot classification.
 
 ## Item appearance
 
@@ -175,5 +175,5 @@ The payload carries mode/modifier state; actions use vanilla block-use hits. The
 
 ## Saved worlds
 
-A 1.21.1 world migrates its items and rotations on load; versioned 1.21.4 and 1.21.5 saves also upgrade their items. Unreadable items stay saved and return when readable into a free valid slot. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
+A 1.21.1 world migrates its items and rotations on load; versioned 1.21.4 and 1.21.5 saves also upgrade their items. Unreadable items stay saved and return when readable into a free valid slot. Saved Storage stacks above 64 split into free slots and otherwise stay saved. Warnings include dimension and position; failed retries warn once per location per server session. Custom 1.21.1 `compatibility.ingots` entries are unread; server start logs them for moving into `somestacks:ingots`.
 

@@ -1,18 +1,23 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.util.SlotAccess;
+import com.github.crittscott.somestacks.server.WorldEdits;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
@@ -24,6 +29,39 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
     private final int slotsPerBlock;
     private final Block block;
+    private int growthQueryDepth;
+    @Nullable
+    private Boolean queriedGrowthPermission;
+
+    /** One bulk capacity query; permission results never survive its outer call. */
+    public final class GrowthQuery implements AutoCloseable {
+        private GrowthQuery() {
+            growthQueryDepth++;
+        }
+
+        @Override
+        public void close() {
+            if (--growthQueryDepth == 0) queriedGrowthPermission = null;
+        }
+    }
+
+    /** Coalesces automation permission queries without caching collision or staged support. */
+    public final GrowthQuery growthQuery() {
+        return new GrowthQuery();
+    }
+
+    /** Shared shape-independent growth checks; player authority is always queried afresh. */
+    protected final boolean canGrowBlock(boolean enabled, @Nullable ServerPlayer actor) {
+        if (blocks.size() >= ServerConfig.maxPileHeight() || !enabled) return false;
+        BlockPos above = topPos().above();
+        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) return false;
+        if (actor == null && growthQueryDepth > 0 && queriedGrowthPermission != null) {
+            return queriedGrowthPermission;
+        }
+        boolean allowed = WorldEdits.mayPlace(actor, level, above);
+        if (actor == null && growthQueryDepth > 0) queriedGrowthPermission = allowed;
+        return allowed;
+    }
 
     /** Creates a server-only run over a nonempty bottom-to-top list of same-type block entities. */
     protected StackRun(ServerLevel level, List<BE> blocks, int slotsPerBlock, Block block) {
@@ -31,6 +69,9 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         this.blocks = blocks;
         this.slotsPerBlock = slotsPerBlock;
         this.block = block;
+        for (BE member : blocks) {
+            member.cacheRun(this, level.getGameTime());
+        }
     }
 
     /** Walks the maximal run containing {@code pos}, from its bottom block upward. */
@@ -50,21 +91,44 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return blocks;
     }
 
-    /** Invalidates every cached run a structural change at {@code pos} could have altered. */
-    protected static <BE extends StackBlockEntity> void invalidateAround(
-            Level level, BlockPos pos, Class<BE> blockEntityClass) {
-        invalidateRun(level, pos, Direction.UP, blockEntityClass);
-        invalidateRun(level, pos.above(), Direction.UP, blockEntityClass);
-        invalidateRun(level, pos.below(), Direction.DOWN, blockEntityClass);
+    /** Invalidates every cached same-type run a structural change at the position could alter. */
+    protected static void invalidateAround(Level level, BlockPos pos, Block block) {
+        invalidateRun(level, pos, Direction.UP, block);
+        invalidateRun(level, pos.above(), Direction.UP, block);
+        invalidateRun(level, pos.below(), Direction.DOWN, block);
     }
 
-    private static <BE extends StackBlockEntity> void invalidateRun(
-            Level level, BlockPos from, Direction direction, Class<BE> blockEntityClass) {
+    private static void invalidateRun(Level level, BlockPos from, Direction direction, Block block) {
         BlockPos current = from;
-        while (blockEntityClass.isInstance(level.getBlockEntity(current))) {
-            blockEntityClass.cast(level.getBlockEntity(current)).invalidateRunCache();
+        while (level.getBlockState(current).is(block)
+                && level.getBlockEntity(current) instanceof StackBlockEntity member) {
+            member.invalidateRunCache();
             current = current.relative(direction);
         }
+    }
+
+    /** Installs checked headroom; subclasses retain collision rules and batching policy. */
+    protected final BE growBlock(@Nullable ServerPlayer actor,
+                                 VoxelShape finalCollision,
+                                 Class<BE> entityClass) {
+        BlockPos above = topPos().above();
+        if (!WorldEdits.placeChecked(actor, level, above,
+                StackBlock.placementState(block, level, above), Direction.DOWN, finalCollision)) return null;
+        BE grown = entityClass.cast(level.getBlockEntity(above));
+        blocks.add(grown);
+        return grown;
+    }
+
+    /** Removes only empty top blocks, stopping at a kept block or a permission refusal. */
+    protected final void trimEmptyTop(@Nullable ServerPlayer actor, Predicate<BE> keep) {
+        int remaining = blocks.size();
+        while (remaining > 0) {
+            BE top = blocks.get(remaining - 1);
+            if (!top.isEmpty() || keep.test(top)
+                    || !WorldEdits.removeChecked(actor, level, top.getBlockPos())) break;
+            remaining--;
+        }
+        blocks.subList(remaining, blocks.size()).clear();
     }
 
     /** Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing. */
@@ -111,6 +175,11 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return length;
     }
 
+    /** The member that owns the loader's shared transaction journal. */
+    public final BE baseBlockEntity() {
+        return blocks.get(0);
+    }
+
     /** Bottom block position of this resolved run. */
     public final BlockPos basePos() {
         return blocks.get(0).getBlockPos();
@@ -151,7 +220,7 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     }
 
     /** Mutable local storage for a validated stored flat slot. */
-    protected final SlotAccess handlerOf(int flatSlot) {
+    protected final StackItemStorage handlerOf(int flatSlot) {
         return blockOf(flatSlot).getItems();
     }
 
@@ -169,10 +238,12 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         return blocks.isEmpty() ? 0.0 : sum / totalSlots();
     }
 
+    private static final int MAX_COMPARATOR_SIGNAL = 15;
+
     /** Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1. */
     public final int comparatorSignal() {
         double fill = fillLevel();
-        return fill > 0.0 ? Mth.floor(fill * 14.0) + 1 : 0;
+        return fill > 0.0 ? Mth.floor(fill * (MAX_COMPARATOR_SIGNAL - 1)) + 1 : 0;
     }
 
     /** Notifies every block's comparator neighbors only when the base's last published signal changes. */

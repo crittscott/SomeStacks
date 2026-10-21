@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -101,7 +101,7 @@ loadScripts(document, 'script');</script>
 
  <p>Every operation on a Storage Stack resolves the pile it belongs to and acts on the whole
  column: deposits fill from the base upward whatever block or slot they were aimed at, the
- capability exposes every block's slots as one flat range, and settling consolidates, sorts and
+ automation view exposes every block's slots as one flat range, and settling consolidates, sorts and
  packs the entire height down. The base block's <code>permanent</code> flag is the pile's, and
  settling propagates it, so a pile that is split or joined returns to a consistent state.
 
@@ -110,6 +110,15 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Nested classes/interfaces inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h2>
+<code><a href="StackRun.GrowthQuery.html" title="class in com.github.crittscott.somestacks.block">StackRun.GrowthQuery</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -189,19 +198,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Whether this pile's blocks survive being emptied.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPermanent(boolean,net.minecraft.server.level.ServerPlayer)" class="member-name-link">setPermanent</a><wbr>(boolean&nbsp;permanent,
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Changes permanence and attributes any resulting deferred cleanup to <code>actor</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#settle()" class="member-name-link">settle</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#settle()" class="member-name-link">settle</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Consolidates and sorts the whole pile, writes it back from the base upward, propagates the
  base's permanent flag, removes empty blocks left at the top, and publishes all deferred
  changes.</div>
@@ -211,7 +215,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackRun">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></h3>
-<code><a href="StackRun.html#advertisedSlots()">advertisedSlots</a>, <a href="StackRun.html#basePos()">basePos</a>, <a href="StackRun.html#blockOf(int)">blockOf</a>, <a href="StackRun.html#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">columnHasRoomFor</a>, <a href="StackRun.html#comparatorSignal()">comparatorSignal</a>, <a href="StackRun.html#fillLevel()">fillLevel</a>, <a href="StackRun.html#getSlot(int)">getSlot</a>, <a href="StackRun.html#handlerOf(int)">handlerOf</a>, <a href="StackRun.html#height()">height</a>, <a href="StackRun.html#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.lang.Class)">invalidateAround</a>, <a href="StackRun.html#localSlot(int)">localSlot</a>, <a href="StackRun.html#markDirty()">markDirty</a>, <a href="StackRun.html#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">markDirtyAt</a>, <a href="StackRun.html#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">publishAround</a>, <a href="StackRun.html#publishPending()">publishPending</a>, <a href="StackRun.html#publishPendingBlocks()">publishPendingBlocks</a>, <a href="StackRun.html#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)">resolveBlocks</a>, <a href="StackRun.html#topPos()">topPos</a>, <a href="StackRun.html#totalSlots()">totalSlots</a></code></div>
+<code><a href="StackRun.html#advertisedSlots()">advertisedSlots</a>, <a href="StackRun.html#baseBlockEntity()">baseBlockEntity</a>, <a href="StackRun.html#basePos()">basePos</a>, <a href="StackRun.html#blockOf(int)">blockOf</a>, <a href="StackRun.html#canGrowBlock(boolean,net.minecraft.server.level.ServerPlayer)">canGrowBlock</a>, <a href="StackRun.html#columnHasRoomFor(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">columnHasRoomFor</a>, <a href="StackRun.html#comparatorSignal()">comparatorSignal</a>, <a href="StackRun.html#fillLevel()">fillLevel</a>, <a href="StackRun.html#getSlot(int)">getSlot</a>, <a href="StackRun.html#growBlock(net.minecraft.server.level.ServerPlayer,net.minecraft.world.phys.shapes.VoxelShape,java.lang.Class)">growBlock</a>, <a href="StackRun.html#growthQuery()">growthQuery</a>, <a href="StackRun.html#handlerOf(int)">handlerOf</a>, <a href="StackRun.html#height()">height</a>, <a href="StackRun.html#invalidateAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.Block)">invalidateAround</a>, <a href="StackRun.html#localSlot(int)">localSlot</a>, <a href="StackRun.html#markDirty()">markDirty</a>, <a href="StackRun.html#markDirtyAt(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">markDirtyAt</a>, <a href="StackRun.html#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)">publishAround</a>, <a href="StackRun.html#publishPending()">publishPending</a>, <a href="StackRun.html#publishPendingBlocks()">publishPendingBlocks</a>, <a href="StackRun.html#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)">resolveBlocks</a>, <a href="StackRun.html#topPos()">topPos</a>, <a href="StackRun.html#totalSlots()">totalSlots</a>, <a href="StackRun.html#trimEmptyTop(net.minecraft.server.level.ServerPlayer,java.util.function.Predicate)">trimEmptyTop</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -265,13 +269,6 @@ loadScripts(document, 'script');</script>
 <h3>isPermanent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPermanent</span>()</div>
 <div class="block">Whether this pile's blocks survive being emptied. The base block's flag is authoritative.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setPermanent(boolean)">
-<h3>setPermanent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPermanent</span><wbr><span class="parameters">(boolean&nbsp;permanent)</span></div>
-<div class="block">Changes permanence and attributes any resulting cleanup to automation.</div>
 </section>
 </li>
 <li>

@@ -1,5 +1,15 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.block.BarStackBE;
+import com.github.crittscott.somestacks.block.StackBlock;
+import com.github.crittscott.somestacks.block.StackBlockEntity;
+import com.github.crittscott.somestacks.util.StackItemStorage;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
+import com.github.crittscott.somestacks.client.BarStackBER;
 import com.github.crittscott.somestacks.client.ClientRenderCommands;
 import com.github.crittscott.somestacks.client.CubeRenderHelper;
 import com.github.crittscott.somestacks.client.ItemRenderOverrides;
@@ -14,6 +24,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -40,15 +55,26 @@ public final class ClientCallbackChecks {
     /** Observable local callback outputs; none of these performs the server's world action. */
     public record Result(boolean consumed, boolean blockDenied, boolean itemDenied) {}
 
+    /** Loader-native chunk or block update on an actual client-attached registered entity. */
+    @FunctionalInterface
+    public interface ClientUpdate {
+        void load(StackBlockEntity blockEntity, CompoundTag tag, boolean initial);
+    }
+
     /**
      * To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
      * stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
      * loader callback for main/off hand and checks consumption plus block/item suppression. It
      * does not send a vanilla use packet or extract contents. A translated success/failure message
      * reports the assertions; server GameTests cannot exercise this client-only boundary. It also
-     * checks render-profile layer precedence and invalidation and the profile commands.
+     * checks Bar presentation reuse and invalidation, render-profile layer precedence and
+     * invalidation, and the profile commands. The command also feeds valid and malformed
+     * initial/subsequent updates through each loader's native client entry point on scratch
+     * entities, checking inventory and inherited components. Ordinary clients cannot reproduce
+     * malformed wire data through player actions.
      */
-    public static int run(boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback) {
+    public static int run(boolean modifierDown, BiFunction<InteractionHand, BlockHitResult, Result> callback,
+                          ClientUpdate update) {
         Minecraft client = Minecraft.getInstance();
         try {
             if (client.player == null || client.level == null
@@ -69,6 +95,8 @@ public final class ClientCallbackChecks {
                     "Local callback changed main-hand contents");
             GameTestScaffold.check(ItemStack.matches(off, client.player.getOffhandItem()),
                     "Local callback changed off-hand contents");
+            checkBarPresentationCache(client, hit);
+            checkClientUpdateIngress(client, hit, update);
             checkProfileCommands();
             client.player.displayClientMessage(Component.translatable("somestacks_gametest.message.client_callback_passed"), false);
             return 1;
@@ -78,6 +106,96 @@ public final class ClientCallbackChecks {
                         "somestacks_gametest.message.client_callback_failed", failure.getMessage()), false);
             }
             return 0;
+        }
+    }
+
+    private static CompoundTag namedComponents(Minecraft client, String name) {
+        ItemStack named = new ItemStack(Items.STONE);
+        named.set(DataComponents.CUSTOM_NAME, Component.literal(name));
+        CompoundTag encoded = (CompoundTag) ItemStack.CODEC.encodeStart(
+                RegistryOps.create(NbtOps.INSTANCE, client.level.registryAccess()), named).getOrThrow();
+        return encoded.getCompound("components").orElseThrow();
+    }
+
+    private static void checkClientUpdateIngress(Minecraft client, BlockHitResult hit, ClientUpdate update) {
+        var registries = client.level.registryAccess();
+        for (BlockType type : BlockType.values()) {
+            var state = type.getBlock().defaultBlockState();
+            StackBlockEntity be = (StackBlockEntity) ((StackBlock) type.getBlock()).newBlockEntity(hit.getBlockPos(), state);
+            be.getItems().setStackInSlot(0, new ItemStack(Items.STONE));
+            be.setLevel(client.level);
+            CompoundTag valid = be.getUpdateTag(registries);
+            valid.put("components", namedComponents(client, "original"));
+            update.load(be, valid, true);
+            CompoundTag baseline = be.saveWithoutMetadata(registries);
+            GameTestScaffold.check(baseline.contains("components"), "Inherited update components were not loaded");
+            GameTestScaffold.checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(),
+                    "Initial client update lost its inventory");
+            for (boolean initial : new boolean[] {true, false}) {
+                for (int malformed = 0; malformed < 4; malformed++) {
+                    CompoundTag invalid = valid.copy();
+                    invalid.put("components", namedComponents(client, "rejected"));
+                    switch (malformed) {
+                        case 0 -> invalid.remove(StackBlockEntity.TAG_DATA_VERSION);
+                        case 1 -> invalid.putString(StackBlockEntity.TAG_ITEMS, "not an inventory");
+                        case 2 -> invalid.putBoolean("Permanent", true);
+                        case 3 -> invalid.getCompound(StackBlockEntity.TAG_ITEMS).orElseThrow()
+                                .putString(StackItemStorage.TAG_SET_ASIDE, "server-only recovery data");
+                        default -> throw new IllegalStateException();
+                    }
+                    Object cached = new Object();
+                    be.setRenderCache(cached);
+                    update.load(be, invalid, initial);
+                    GameTestScaffold.checkEquals(baseline, be.saveWithoutMetadata(registries),
+                            "Rejected native update changed state for " + type + " / " + initial);
+                    GameTestScaffold.check(be.renderCache() == cached,
+                            "Rejected native update discarded prepared presentation");
+                }
+            }
+            StackItemStorage replacement = new StackItemStorage(be.getItems().getSlots());
+            replacement.setStackInSlot(1, new ItemStack(Items.DIAMOND));
+            CompoundTag changed = valid.copy();
+            changed.put(StackBlockEntity.TAG_ITEMS, replacement.save(registries));
+            changed.put("components", namedComponents(client, "replacement"));
+            update.load(be, changed, false);
+            GameTestScaffold.check(be.getItems().getStackInSlot(0).isEmpty(), "Native update retained an old slot");
+            GameTestScaffold.checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(),
+                    "Subsequent client update did not replace inventory");
+            GameTestScaffold.checkEquals(changed.getCompound("components").orElseThrow(),
+                    be.saveWithoutMetadata(registries).getCompound("components").orElseThrow(),
+                    "Subsequent client update did not replace inherited components");
+            GameTestScaffold.check(be.renderCache() == null, "Accepted native update retained prepared presentation");
+        }
+    }
+
+
+    /**
+     * Draws a scratch Bar Stack into a discarded buffer: unchanged frames reuse its prepared bars,
+     * while a resource reload or a valid client inventory update discards them.
+     */
+    private static void checkBarPresentationCache(Minecraft client, BlockHitResult hit) {
+        BarStackBE bars = new BarStackBE(hit.getBlockPos(), CommonRegistry.barStackBlock().defaultBlockState());
+        bars.getItems().setStackInSlot(0, new ItemStack(Items.RESIN_BRICK));
+        bars.setLevel(client.level);
+        BarStackBER renderer = new BarStackBER(null);
+        try (ByteBufferBuilder scratch = new ByteBufferBuilder(4096)) {
+            MultiBufferSource buffers = MultiBufferSource.immediate(scratch);
+            Runnable frame = () -> renderer.render(bars, 0, new PoseStack(), buffers,
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, client.player.getEyePosition());
+            frame.run();
+            Object first = bars.renderCache();
+            GameTestScaffold.check(first != null, "Bar presentation was not cached");
+            frame.run();
+            GameTestScaffold.check(first == bars.renderCache(), "Bar presentation rebuilt without changes");
+            CubeRenderHelper.onResourceReload();
+            frame.run();
+            GameTestScaffold.check(first != bars.renderCache(), "Bar presentation survived resource invalidation");
+            var update = bars.getUpdateTag(client.level.registryAccess());
+            GameTestScaffold.check(bars.loadClientUpdate(update, client.level.registryAccess()),
+                    "Valid Bar update was rejected");
+            GameTestScaffold.check(bars.renderCache() == null, "Bar presentation survived an inventory update");
+            frame.run();
+            GameTestScaffold.check(bars.renderCache() != null, "Bar presentation did not rebuild after update");
         }
     }
 

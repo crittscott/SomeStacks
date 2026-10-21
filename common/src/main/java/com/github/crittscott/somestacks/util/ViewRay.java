@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
@@ -17,9 +18,32 @@ import java.util.function.IntFunction;
  * attribute rather than a fixed distance, so a player whose reach has been raised finds the cells
  * of the block they are looking at.
  *
- * <p>{@link ViewRays#of} defines the segment's length and reach allowance.
+ * <p>{@link ViewRay#of} defines the segment's length and reach allowance.
  */
 public record ViewRay(Vec3 eye, Vec3 end) {
+    // Vanilla reach allowance plus the distance through the far corner of the clicked block.
+    // Vanilla reach allowance plus the distance through the far corner of the clicked block.
+    private static final double BLOCK_CROSSING = 2.0;
+
+    public static ViewRay of(Player player) {
+        Vec3 eye = player.getEyePosition(1.0f);
+        double length = player.blockInteractionRange() + BLOCK_CROSSING;
+        return new ViewRay(eye, eye.add(player.getLookAngle().scale(length)));
+    }
+
+    /** Builds a reach-length ray through the exact point carried by a vanilla block interaction. */
+    public static ViewRay through(Player player, Vec3 hitLocation) {
+        Vec3 eye = player.getEyePosition(1.0f);
+        Vec3 direction = hitLocation.subtract(eye);
+        if (direction.lengthSqr() < 1.0E-8) {
+            direction = player.getLookAngle();
+        } else {
+            direction = direction.normalize();
+        }
+        double length = player.blockInteractionRange() + BLOCK_CROSSING;
+        return new ViewRay(eye, eye.add(direction.scale(length)));
+    }
+
     /** Nearest occupied hit; equal distances retain ascending slot order. */
     public int nearestOccupied(SlotAccess slots, IntFunction<AABB> boxAt) {
         double closest = Double.MAX_VALUE;

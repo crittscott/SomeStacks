@@ -1,0 +1,89 @@
+package com.github.crittscott.somestacks;
+
+import com.github.crittscott.somestacks.client.ForgeClientSetup;
+import com.github.crittscott.somestacks.network.ForgeNetworking;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+/**
+ * The mod entry point: registers the blocks and block entities, the network channel, and the
+ * listeners behind server config loading, login sync, and commands. Client
+ * registration is deferred to {@link ForgeClientSetup} so the dedicated server never touches it.
+ *
+ * <p>The mod must be present on both sides; there is no client-optional or server-optional mode.
+ */
+@Mod(SomeStacksCommon.MODID)
+public class SomeStacksForge {
+
+    private final ForgePlatformServices platform = new ForgePlatformServices();
+
+    public SomeStacksForge(FMLJavaModLoadingContext context) {
+        BusGroup modBus = context.getModBusGroup();
+        PlatformServices.install(platform);
+
+        ForgeServerConfig config = ForgeServerConfig.INSTANCE;
+        context.registerConfig(ModConfig.Type.SERVER, config.spec);
+        ServerConfig.install(config);
+        ModConfigEvent.Loading.getBus(modBus).addListener(config::onLoading);
+        ModConfigEvent.Reloading.getBus(modBus).addListener(config::onReloading);
+
+        ForgeRegistry.init(modBus);
+        ForgeNetworking.init();
+        ServerAboutToStartEvent.BUS.addListener(this::onServerAboutToStart);
+        PlayerEvent.PlayerLoggedInEvent.BUS.addListener(this::onPlayerLogin);
+        PlayerEvent.PlayerLoggedOutEvent.BUS.addListener(this::onPlayerLogout);
+        RegisterCommandsEvent.BUS.addListener(this::onRegisterCommands);
+        TickEvent.ServerTickEvent.Post.BUS.addListener(this::onServerTick);
+        LevelEvent.Unload.BUS.addListener(this::onLevelUnload);
+        ServerStoppedEvent.BUS.addListener(this::onServerStopped);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientSetup.init(modBus));
+
+        SomeStacksCommon.LOGGER.info(
+                "Some Stacks v{} initialized for Forge", PlatformServices.modVersion(SomeStacksCommon.MODID));
+    }
+
+    /** Publishes the loader-managed server policy for this world. */
+    private void onServerAboutToStart(ServerAboutToStartEvent event) {
+        SomeStacksServer.onServerStarting(event.getServer());
+    }
+
+    private void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel level) {
+            platform.editAuthority().unload(level);
+        }
+    }
+
+    private void onServerStopped(ServerStoppedEvent event) {
+        SomeStacksServer.onServerStopped();
+        platform.editAuthority().clear();
+    }
+
+    private void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        SomeStacksServer.onPlayerJoined((ServerPlayer) event.getEntity());
+    }
+
+    private void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        SomeStacksServer.onPlayerLeft(event.getEntity().getUUID());
+    }
+
+    private void onRegisterCommands(RegisterCommandsEvent event) {
+        SomeStacksServer.registerCommands(event.getDispatcher(), event.getBuildContext());
+    }
+
+    private void onServerTick(TickEvent.ServerTickEvent.Post event) {
+        SomeStacksServer.onServerTickEnd();
+    }
+}

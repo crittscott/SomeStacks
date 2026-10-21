@@ -17,6 +17,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -128,7 +129,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
     protected Map<ResourceLocation, ItemRenderConfig> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, ItemRenderConfig> configMap = new HashMap<>();
 
-        var resources = resourceManager.listResources("item_render_overrides", loc -> loc.getPath().endsWith(".json"));
+        var resources = FileToIdConverter.json("item_render_overrides").listMatchingResources(resourceManager);
         Set<String> present = presentNamespaces();
         int skipped = 0;
 
@@ -145,7 +146,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 JsonObject json = GSON.fromJson(reader, JsonObject.class);
                 configMap.putAll(OverrideJsonCodec.parse(json, fileLocation.toString()));
             } catch (Exception e) {
-                SomeStacksCommon.LOGGER.warn("Failed to process file {}: {}", fileLocation, e.getMessage());
+                SomeStacksCommon.LOGGER.warn("Failed to process file {}", fileLocation, e);
             }
         }
 
@@ -266,7 +267,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
         List<String> rejected = new ArrayList<>();
         for (String namespace : namespaces) {
             // A valid namespace contains no path separator, so it cannot escape the dump directory.
-            if (ResourceLocation.tryBuild(namespace, "validation") == null) {
+            if (namespace.isEmpty() || !ResourceLocation.isValidNamespace(namespace)) {
                 SomeStacksCommon.LOGGER.warn("Ignoring dump request for invalid namespace '{}'", namespace);
                 rejected.add(namespace);
                 continue;
@@ -351,7 +352,7 @@ public class ItemRenderOverrides extends SimplePreparableReloadListener<Map<Reso
                 USER_OVERRIDES.putAll(OverrideJsonCodec.parse(json, userFile.toString()));
             }
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.error("Failed to read {}", userFile, e);
+            SomeStacksCommon.LOGGER.warn("Failed to read {}", userFile, e);
         }
     }
 }

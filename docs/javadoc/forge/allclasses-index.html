@@ -54,20 +54,20 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ClientEvents.html" title="class in com.github.crittscott.somestacks.client">ClientEvents</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The client's gesture entry point: the three right-click events feed
- <code>InteractionRuleRegistry</code>.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ClientSetup.html" title="class in com.github.crittscott.somestacks.client">ClientSetup</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Client-side registration: the three block entity renderers, the key binding, and the resource
- reload listeners behind render overrides, bar textures, and measured profiles.</div>
-</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ForgeCapabilityAttachment.html" title="class in com.github.crittscott.somestacks.block">ForgeCapabilityAttachment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Attaches one whole-run <code>ForgeCapabilities.ITEM_HANDLER</code> view to each stack block entity
  through Forge's capability-attachment event.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ForgeClientEvents.html" title="class in com.github.crittscott.somestacks.client">ForgeClientEvents</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">The client's gesture entry point: the three right-click events feed
+ <code>ClientGestures</code>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ForgeClientSetup.html" title="class in com.github.crittscott.somestacks.client">ForgeClientSetup</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Client-side registration: the three block entity renderers, the key binding, and the resource
+ reload listeners behind render overrides, bar textures, and measured profiles.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/ForgeEditAuthority.html" title="class in com.github.crittscott.somestacks.server">ForgeEditAuthority</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -75,38 +75,48 @@ loadScripts(document, 'script');</script>
  automation, and claim, protection, and logging mods are given the chance to veto through the
  ordinary Forge placement and break events.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/forge/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks.forge">ForgePlatformServices</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Forge implementations of the common platform services.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loader-managed server configuration exposed as one immutable common policy snapshot.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/KeyMappings.html" title="class in com.github.crittscott.somestacks.client">KeyMappings</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/client/ForgeKeyMappings.html" title="class in com.github.crittscott.somestacks.client">ForgeKeyMappings</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The mod's key bindings.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/network/ModNetworking.html" title="class in com.github.crittscott.somestacks.network">ModNetworking</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/network/ForgeNetworking.html" title="class in com.github.crittscott.somestacks.network">ForgeNetworking</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The mod's single channel and the payload registrations on it.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ModRegistry.html" title="class in com.github.crittscott.somestacks">ModRegistry</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ForgePlatformServices.html" title="class in com.github.crittscott.somestacks">ForgePlatformServices</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Forge implementations of the common platform services.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ForgeRegistry.html" title="class in com.github.crittscott.somestacks">ForgeRegistry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">The mod's registered blocks and block entity types, and the Forge registration glue behind them.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Forge item-handler view over whichever complete run owns the attached stack block.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacks.html" title="class in com.github.crittscott.somestacks">SomeStacks</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/ForgeServerConfig.html" title="class in com.github.crittscott.somestacks">ForgeServerConfig</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The mod entry point: registers the blocks and block entities, the network channel, and the
- listeners behind server config loading, login sync, and commands.</div>
+<div class="block">Loader-managed server configuration exposed as one immutable common policy snapshot.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/StackInteractionEvents.html" title="class in com.github.crittscott.somestacks.server">StackInteractionEvents</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Native update entry points validate the complete stack snapshot before inherited loading.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Bar.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities.Bar</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Singles.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities.Singles</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/ForgeStackBlockEntities.Storage.html" title="class in com.github.crittscott.somestacks.block">ForgeStackBlockEntities.Storage</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/server/ForgeStackInteractionEvents.html" title="class in com.github.crittscott.somestacks.server">ForgeStackInteractionEvents</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Applies Some Stacks gestures from Forge's actual server-side right-click event.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/block/RunItemHandler.html" title="class in com.github.crittscott.somestacks.block">RunItemHandler</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Forge item-handler view over whichever complete run owns the attached stack block.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/github/crittscott/somestacks/SomeStacksForge.html" title="class in com.github.crittscott.somestacks">SomeStacksForge</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">The mod entry point: registers the blocks and block entities, the network channel, and the
+ listeners behind server config loading, login sync, and commands.</div>
 </div>
 </div>
 </div>

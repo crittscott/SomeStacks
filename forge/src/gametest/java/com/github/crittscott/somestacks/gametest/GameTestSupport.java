@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -42,6 +43,11 @@ public final class GameTestSupport {
         GameTestScaffold.check(handler != null,
                 "Missing item-handler capability at " + blockEntity.getBlockPos());
         return handler;
+    }
+
+    /** Shared scenario adapter: accepted count, with an explicit commit flag. */
+    public static int offerAt(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
+        return stack.getCount() - capability(blockEntity).insertItem(slot, stack, !commit).getCount();
     }
 
     /** {@link GameTestScaffold#count} for a real Forge capability, as {@link #capability} returns. */

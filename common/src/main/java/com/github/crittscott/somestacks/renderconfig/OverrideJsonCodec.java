@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 /**
  * Parses and serializes the item render override schema shared by bundled resources, the client
- * override file, the measured cache, and the server override directory.
+ * override file, and the measured cache.
  *
  * <p>A document is a JSON object keyed by item id; each value contains optional {@code mode},
  * {@code scale}, and {@code offset} fields. Malformed entries and fields are logged and skipped.
@@ -26,7 +26,7 @@ public final class OverrideJsonCodec {
     private OverrideJsonCodec() {}
 
     /**
-     * Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
+     * Inclusive scale bounds shared by authored overrides and automatic
      * measurement.
      */
     public static final float MIN_SCALE = 0.01f;
@@ -42,20 +42,18 @@ public final class OverrideJsonCodec {
     }
 
     /**
-     * Applies the file-format bounds to an override, dropping invalid fields. Network overrides
-     * bypass {@link #parse}, and serialization may receive measured data, so both use the same
-     * validation.
+     * Applies the file-format bounds to an override, dropping invalid fields. Serialization may receive measured data as well as authored profiles.
      */
     public static ItemRenderConfig sanitize(ItemRenderConfig config) {
         Float scale = config.scale();
         if (scale != null && !inRange(scale, MIN_SCALE, MAX_SCALE)) {
-            SomeStacksCommon.LOGGER.warn("Dropping out of range scale {} from a synchronized override", scale);
+            SomeStacksCommon.LOGGER.warn("Dropping out of range scale {} from an item render profile", scale);
             scale = null;
         }
 
         RenderOffset offset = config.offset();
         if (offset != null && !offset.isValid()) {
-            SomeStacksCommon.LOGGER.warn("Dropping out of range offset from a synchronized override");
+            SomeStacksCommon.LOGGER.warn("Dropping out of range offset from an item render profile");
             offset = null;
         }
 

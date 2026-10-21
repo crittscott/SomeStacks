@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.ModRegistry;
+import com.github.crittscott.somestacks.NeoForgeRegistry;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -15,13 +15,13 @@ public final class NeoForgeItemHandlers {
 
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK, ModRegistry.STORAGE_STACK_BE.get(),
+                Capabilities.ItemHandler.BLOCK, NeoForgeRegistry.STORAGE_STACK_BE.get(),
                 (blockEntity, side) -> new RunItemHandler(blockEntity));
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK, ModRegistry.SINGLES_STACK_BE.get(),
+                Capabilities.ItemHandler.BLOCK, NeoForgeRegistry.SINGLES_STACK_BE.get(),
                 (blockEntity, side) -> new RunItemHandler(blockEntity));
         event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK, ModRegistry.BAR_STACK_BE.get(),
+                Capabilities.ItemHandler.BLOCK, NeoForgeRegistry.BAR_STACK_BE.get(),
                 (blockEntity, side) -> new RunItemHandler(blockEntity));
     }
 }

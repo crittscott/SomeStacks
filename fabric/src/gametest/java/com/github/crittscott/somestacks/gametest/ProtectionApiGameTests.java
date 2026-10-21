@@ -1,9 +1,14 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.server.WorldEdits;
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.common.protection.api.ProtectionProvider;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Blocks;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +16,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-/** Provider-backed checks loaded only in development runs with Common Protection API installed. */
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
+import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
+
+/** Provider-backed checks through the required Common Protection API, with a test provider installed. */
 public final class ProtectionApiGameTests {
     static {
         CommonProtection.register(ResourceLocation.fromNamespaceAndPath("somestacks", "test_protection"),
@@ -30,6 +38,11 @@ public final class ProtectionApiGameTests {
                     @Override
                     public boolean canInteractBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
                         return ProtectionGameTests.consult(level, pos, player);
+                    }
+
+                    @Override
+                    public boolean canBreakBlock(Level level, BlockPos pos, GameProfile profile, Player player) {
+                        return true;
                     }
                 });
     }
@@ -56,5 +69,26 @@ public final class ProtectionApiGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void allowedAdjacentDepositUsesProtectionQuery(GameTestHelper helper) {
         new ProtectionGameTests().allowedAdjacentDepositUsesProtectionQuery(helper);
+    }
+
+    /**
+     * To reproduce in-game outside any claim: place a stack against an ordinary block, then
+     * modifier-click through empty grounded cells at their support. Both placement and neighboring
+     * deposits work when no protection provider objects.
+     */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void placementAndAdjacentDepositsWorkWithoutClaims(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(ORIGIN);
+        ServerPlayer player = FakePlayer.get(helper.getLevel());
+        check(WorldEdits.mayPlace(player, helper.getLevel(), pos), "Unprotected placement was denied");
+        check(WorldEdits.mayUseAdjacent(player, pos), "Unprotected neighboring deposit was denied");
+        check(WorldEdits.placeChecked(player, helper.getLevel(), pos,
+                        Blocks.STONE.defaultBlockState(), Direction.DOWN, net.minecraft.world.phys.shapes.Shapes.block()),
+                "Unprotected placement failed");
+        helper.assertBlockPresent(Blocks.STONE, ORIGIN);
+        helper.getLevel().removeBlock(pos, false);
+        ProtectionChecks.checkAdjacentAndDirectDeposits(
+                helper, FabricGameTestSupport.playerFactory(helper), true);
+        helper.succeed();
     }
 }

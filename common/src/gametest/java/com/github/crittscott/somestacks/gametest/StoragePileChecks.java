@@ -3,6 +3,7 @@ package com.github.crittscott.somestacks.gametest;
 import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.StoragePile;
 import com.github.crittscott.somestacks.block.StorageStackBE;
+import com.github.crittscott.somestacks.util.StackItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -10,6 +11,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
@@ -26,7 +29,7 @@ import static com.github.crittscott.somestacks.gametest.GameTestScaffold.placeSt
 /**
  * Storage pile behavior in a live level that does not touch loader-native automation directly:
  * deposits filling partial stacks before empty ones, growth when a pile fills, and settling
- * consolidating, packing, and sorting. Capability/Transfer-API-facing tests stay in each loader's
+ * consolidating, packing, and sorting. Loader-automation-facing tests stay in each loader's
  * own {@code StoragePileGameTests}.
  */
 public final class StoragePileChecks {
@@ -39,7 +42,7 @@ public final class StoragePileChecks {
      */
     public static void depositFillsCompatiblePartialBeforeEmptySlot(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60), false);
+        storage.getItems().insertItem(5, new ItemStack(Items.STONE, 60));
         ItemStack offered = new ItemStack(Items.STONE, 8);
 
         int moved = storage.deposit(offered, null);
@@ -61,8 +64,9 @@ public final class StoragePileChecks {
     public static void fullPileGrowsByOneBlock(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
+        storage.setRotation(2);
         ItemStack offered = new ItemStack(Items.STONE, 1);
 
         int moved = storage.deposit(offered, null);
@@ -72,6 +76,9 @@ public final class StoragePileChecks {
         checkEquals(0, offered.getCount(), "Offered remainder");
         check(pile != null, "Pile did not resolve");
         checkEquals(2, pile.height(), "Pile height");
+        StorageStackBE upper = (StorageStackBE) helper.getLevel().getBlockEntity(storage.getBlockPos().above());
+        checkEquals(2, upper.getRotation(), "Growth did not inherit native facing");
+        check(pile == upper.pile(), "Members did not share the resolved pile");
         checkEquals(Items.STONE, pile.getSlot(StorageStackBE.SLOTS).getItem(),
                 "First slot in grown block");
         helper.succeed();
@@ -96,15 +103,15 @@ public final class StoragePileChecks {
         compatible.set(DataComponents.CUSTOM_DATA, CustomData.of(firstTag.copy()));
         ItemStack distinct = new ItemStack(Items.STONE, 5);
         distinct.set(DataComponents.CUSTOM_DATA, CustomData.of(secondTag));
-        storage.getItems().insertItem(10, first, false);
-        storage.getItems().insertItem(20, compatible, false);
-        storage.getItems().insertItem(25, distinct, false);
+        storage.getItems().insertItem(10, first);
+        storage.getItems().insertItem(20, compatible);
+        storage.getItems().insertItem(25, distinct);
         ItemStack firstPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
         firstPickaxe.setDamageValue(1);
         ItemStack secondPickaxe = new ItemStack(Items.WOODEN_PICKAXE);
         secondPickaxe.setDamageValue(2);
-        storage.getItems().insertItem(3, firstPickaxe, false);
-        storage.getItems().insertItem(4, secondPickaxe, false);
+        storage.getItems().insertItem(3, firstPickaxe);
+        storage.getItems().insertItem(4, secondPickaxe);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
@@ -130,8 +137,8 @@ public final class StoragePileChecks {
      */
     public static void extractionSettlesOnScheduledBlockTick(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
-        storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
+        storage.getItems().insertItem(1, new ItemStack(Items.DIRT, 1));
 
         ItemStack extracted = storage.extractAt(0, 64, ItemStack.EMPTY, null);
         checkEquals(64, extracted.getCount(), "Extracted count");
@@ -164,7 +171,7 @@ public final class StoragePileChecks {
         StorageStackBE permanent = placeStorage(helper, permanentPos);
         StoragePile permanentPile = permanent.pile();
         check(permanentPile != null, "Permanent pile did not resolve");
-        permanentPile.setPermanent(true);
+        permanentPile.setPermanent(true, null);
         permanentPile.settle();
         check(helper.getLevel().getBlockEntity(helper.absolutePos(permanentPos))
                         instanceof StorageStackBE,
@@ -180,7 +187,7 @@ public final class StoragePileChecks {
     public static void comparatorReadsTheWholePileFromEveryBlock(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
         StoragePile pile = lower.pile();
         check(pile != null, "Pile did not resolve");
 
@@ -210,11 +217,11 @@ public final class StoragePileChecks {
 
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            upper.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+            upper.getItems().insertItem(slot, new ItemStack(Items.STONE, 64));
         }
         StoragePile originalPile = upper.pile();
         check(originalPile != null, "Original pile did not resolve");
-        originalPile.setPermanent(true);
+        originalPile.setPermanent(true, null);
 
         check(level.setBlock(
                         comparatorPos.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL),
@@ -271,9 +278,9 @@ public final class StoragePileChecks {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE middle = placeStorage(helper, ORIGIN.above());
         StorageStackBE upper = placeStorage(helper, ORIGIN.above(2));
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 2), false);
-        middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7), false);
-        upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 2));
+        middle.getItems().insertItem(0, new ItemStack(Items.DIRT, 7));
+        upper.getItems().insertItem(0, new ItemStack(Items.APPLE, 3));
 
         GameTestScaffold.checkStateUpdatesPreserveContents(helper, middle);
 
@@ -313,11 +320,11 @@ public final class StoragePileChecks {
 
         checkEquals(0, pile.comparatorSignal(), "Empty pile signal");
 
-        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1), false);
+        storage.getItems().insertItem(0, new ItemStack(Items.STONE, 1));
         checkEquals(1, pile.comparatorSignal(), "Signal for a single item in a whole pile");
 
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.STONE, 64));
         }
         checkEquals(15, pile.comparatorSignal(), "Full pile signal");
         helper.succeed();
@@ -338,10 +345,82 @@ public final class StoragePileChecks {
         checkEquals(source.pile().comparatorSignal(), loaded.pile().comparatorSignal(),
                 "Signal after loading saved contents");
         checkEquals(2, loaded.pile().comparatorSignal(), "Mixed stack-limit fill");
-        loaded.getItems().extractItem(1, 1, false);
+        loaded.getItems().extractItem(1, 1);
         checkEquals(1, loaded.pile().comparatorSignal(), "Signal after extraction");
         loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
         checkEquals(0, loaded.pile().comparatorSignal(), "Signal after clearing the last slot");
+        helper.succeed();
+    }
+    /**
+     * To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
+     * automation, then let it settle. Every slot holds at most 64 and a fully filled pile gives
+     * comparator strength 15. An item with a smaller maximum still uses that smaller capacity.
+     */
+    public static void storageCapAppliesToPlayersAutomationAndSettlement(
+            GameTestHelper helper, ProtectionChecks.OfferAt offer) {
+        StorageStackBE storage = placeStorage(helper, ORIGIN);
+        StoragePile pile = storage.pile();
+        pile.setPermanent(true, null);
+        ItemStack large = new ItemStack(Items.STONE, 99);
+        large.set(DataComponents.MAX_STACK_SIZE, 99);
+        checkEquals(64, pile.insertAt(0, large, true), "Run simulation capacity");
+        check(storage.getItems().getStackInSlot(0).isEmpty(), "Run simulation mutated contents");
+        checkEquals(64, pile.insertAt(0, large, false), "Run commit capacity");
+        checkEquals(64, offer.insert(storage, 1, large, false), "Native simulation capacity");
+        check(storage.getItems().getStackInSlot(1).isEmpty(), "Native abort changed contents");
+        checkEquals(64, offer.insert(storage, 1, large, true), "Native commit capacity");
+        ItemStack hand = large.copy();
+        checkEquals(99, storage.deposit(hand, null), "Player deposit count");
+        pile.settle();
+        checkEquals(227, GameTestScaffold.count(storage.getItems(), Items.STONE), "Settlement lost items");
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            check(storage.getItems().getStackInSlot(slot).getCount() <= StackItemStorage.STORAGE_SLOT_LIMIT,
+                    "Settlement exceeded Storage capacity");
+            storage.getItems().setStackInSlot(slot, large.copyWithCount(64));
+        }
+        checkEquals(15, pile.comparatorSignal(), "Capped pile did not report full");
+        checkEquals(0, offer.insert(storage, 0, large, false), "Native offer overfilled a full slot");
+        storage.getItems().setStackInSlot(0, new ItemStack(Items.ENDER_PEARL, 16));
+        checkEquals(15, pile.comparatorSignal(), "Smaller item limit did not count as full");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce in-game: load a preceding-release Storage block containing stacks above 64.
+     * Spare cubes take the excess. When every cube is occupied, excess remains saved in SetAside
+     * and returns after freeing its original cube and loading the block again.
+     */
+    public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        StorageStackBE source = placeStorage(helper, ORIGIN);
+        ItemStack large = new ItemStack(Items.STONE, 99);
+        large.set(DataComponents.MAX_STACK_SIZE, 99);
+        source.getItems().setStackInSlot(0, large.copy());
+        var sparseTag = source.saveWithoutMetadata(registries);
+        StorageStackBE loaded = placeStorage(helper, ORIGIN.east(3));
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, sparseTag));
+        checkEquals(64, loaded.getItems().getStackInSlot(0).getCount(), "Loaded primary capacity");
+        checkEquals(99, GameTestScaffold.count(loaded.getItems(), Items.STONE), "Sparse migration lost items");
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) source.getItems().setStackInSlot(slot, large.copy());
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries,
+                source.saveWithoutMetadata(registries)));
+        checkEquals(StorageStackBE.SLOTS * 64, GameTestScaffold.count(loaded.getItems(), Items.STONE),
+                "Dense migration did not cap occupied slots");
+        CompoundTag saved = loaded.saveWithoutMetadata(registries);
+        var inventory = saved.getCompound(StackItemStorage.TAG_ITEMS).orElseThrow();
+        var retained = inventory.getListOrEmpty(StackItemStorage.TAG_SET_ASIDE);
+        int retainedCount = 0;
+        for (int i = 0; i < retained.size(); i++) {
+            retainedCount += ItemStack.CODEC.parse(RegistryOps.create(
+                    NbtOps.INSTANCE, registries), retained.get(i)).getOrThrow().getCount();
+        }
+        checkEquals(StorageStackBE.SLOTS * 35, retainedCount, "Dense migration lost overflow");
+        loaded.getItems().setStackInSlot(0, ItemStack.EMPTY);
+        saved = loaded.saveWithoutMetadata(registries);
+        loaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, saved));
+        checkEquals(35, loaded.getItems().getStackInSlot(0).getCount(), "Retained overflow did not retry");
+        checkEquals(StorageStackBE.SLOTS - 1, loaded.getItems().save(registries)
+                .getListOrEmpty(StackItemStorage.TAG_SET_ASIDE).size(), "Retry removed wrong retained entries");
         helper.succeed();
     }
 }

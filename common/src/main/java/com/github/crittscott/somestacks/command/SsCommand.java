@@ -1,8 +1,7 @@
 package com.github.crittscott.somestacks.command;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
-import com.github.crittscott.somestacks.network.ConfigSyncPkt;
+import com.github.crittscott.somestacks.SomeStacksServer;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -102,7 +101,7 @@ public final class SsCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> galleryTree(
             String name, RenderGalleryGenerator.Kind kind) {
         return Commands.literal(name)
-                .requires(source -> isPlayer(source) && ServerConfig.galleryEnabled()
+                .requires(source -> source.isPlayer() && ServerConfig.galleryEnabled()
                         && source.hasPermission(ServerConfig.galleryRequiredPermissionLevel()))
                 .then(Commands.literal("all")
                         .executes(ctx -> galleryAll(ctx, kind)))
@@ -200,9 +199,6 @@ public final class SsCommand {
                                 .executes(ctx -> listEntries(ctx, ServerConfig.ListSetting.DISABLE_ITEMS, DISABLED_ITEMS_LABEL, true))));
     }
 
-    private static boolean isPlayer(CommandSourceStack source) {
-        return source.isPlayer();
-    }
 
     private static boolean isAdmin(CommandSourceStack source) {
         return source.hasPermission(GAME_MASTER_PERMISSION_LEVEL);
@@ -473,12 +469,9 @@ public final class SsCommand {
     }
 
     private static int reload(CommandContext<CommandSourceStack> ctx) {
-        ServerConfig.reload();
-        ConfigSyncPkt.rebuildCurrent();
-        int synced = ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
-        ctx.getSource().sendSuccess(() -> Component.translatable(
-                "somestacks.command.reloaded", synced), true);
-        return synced;
+        SomeStacksServer.reloadPolicy(ctx.getSource().getServer());
+        ctx.getSource().sendSuccess(() -> Component.translatable("somestacks.command.reloaded"), true);
+        return 1;
     }
 
     /**
@@ -509,7 +502,7 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_added", entry, Component.translatable(label)), true);
-        syncClientToolState(ctx, list);
+        SomeStacksServer.publishPolicy(ctx.getSource().getServer());
         return 1;
     }
 
@@ -524,18 +517,8 @@ public final class SsCommand {
 
         ctx.getSource().sendSuccess(() -> Component.translatable(
                 "somestacks.command.list_removed", entry, Component.translatable(label)), true);
-        syncClientToolState(ctx, list);
+        SomeStacksServer.publishPolicy(ctx.getSource().getServer());
         return 1;
-    }
-
-    /** Keeps client-local {@code ss write list} inputs current after their server lists change. */
-    private static void syncClientToolState(CommandContext<CommandSourceStack> ctx,
-                                            ServerConfig.ListSetting list) {
-        if (list != ServerConfig.ListSetting.GEN_MODS && list != ServerConfig.ListSetting.DISABLE_MODS) {
-            return;
-        }
-        ConfigSyncPkt.rebuildCurrent();
-        ConfigSyncNetwork.syncAllPlayers(ctx.getSource().getServer());
     }
 
     /**

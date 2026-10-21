@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.util;
 
 import com.mojang.datafixers.util.Pair;
+import com.github.crittscott.somestacks.block.StackDataMigration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -14,12 +15,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives all three loaders the
- * item-handler insert/extract semantics and NBT shape
+ * A fixed-size, NBT-persisted {@link SlotAccess} implementation. It gives both loaders the
+ * local insert/extract semantics and saved shape
  * ({@code {Items:[{Slot, ...stack}], SetAside:[...]}}) used by the block entities.
  *
  * <p>A saved item tag that cannot be read, or whose slot is out of range or already taken, is set
@@ -35,13 +37,15 @@ public class StackItemStorage implements SlotAccess {
     public static final String TAG_SET_ASIDE = "SetAside";
 
     /** Per-slot max-stack-size cap used by the Forge and NeoForge item-handler contracts. */
-    private static final int DEFAULT_SLOT_LIMIT = 64;
+    public static final int STORAGE_SLOT_LIMIT = 64;
+
+    /** Storage capacity after applying the item's own maximum. */
+    public static int storageSlotLimit(ItemStack stack) {
+        return Math.min(STORAGE_SLOT_LIMIT, stack.getMaxStackSize());
+    }
 
     private final ItemStack[] stacks;
-    private final ListTag setAside = new ListTag();
-
-    /** Counts of newly retained entries and persisted entries that still could not be restored. */
-    public record LoadResult(int newlySetAside, int failedRetries) {}
+    private final StackDataMigration.SavedItems savedItems = new StackDataMigration.SavedItems();
 
     public StackItemStorage(int size) {
         stacks = new ItemStack[size];
@@ -69,9 +73,9 @@ public class StackItemStorage implements SlotAccess {
         onContentsChanged(slot);
     }
 
+    /** Inserts up to the legal capacity, returning the remainder; an accepted stack may be retained. */
     @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -95,21 +99,19 @@ public class StackItemStorage implements SlotAccess {
 
         boolean reachedLimit = stack.getCount() > limit;
 
-        if (!simulate) {
-            if (existing.isEmpty()) {
-                stacks[slot] = reachedLimit ? stack.copyWithCount(limit) : stack;
-            } else {
-                existing.grow(reachedLimit ? limit : stack.getCount());
-            }
-            onContentsChanged(slot);
+        if (existing.isEmpty()) {
+            stacks[slot] = reachedLimit ? stack.copyWithCount(limit) : stack;
+        } else {
+            existing.grow(reachedLimit ? limit : stack.getCount());
         }
+        onContentsChanged(slot);
 
         return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
+    /** Removes up to the requested amount and returns an owned stack, notifying on mutation. */
     @Nonnull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+    public ItemStack extractItem(int slot, int amount) {
         if (amount == 0) {
             return ItemStack.EMPTY;
         }
@@ -122,28 +124,22 @@ public class StackItemStorage implements SlotAccess {
         int toExtract = Math.min(amount, existing.getMaxStackSize());
 
         if (existing.getCount() <= toExtract) {
-            if (!simulate) {
-                stacks[slot] = ItemStack.EMPTY;
-                onContentsChanged(slot);
-                return existing;
-            }
-            return existing.copy();
-        }
-
-        if (!simulate) {
-            stacks[slot] = existing.copyWithCount(existing.getCount() - toExtract);
+            stacks[slot] = ItemStack.EMPTY;
             onContentsChanged(slot);
+            return existing;
         }
+        stacks[slot] = existing.copyWithCount(existing.getCount() - toExtract);
+        onContentsChanged(slot);
         return existing.copyWithCount(toExtract);
     }
 
-    @Override
-    public int getSlotLimit(int slot) {
-        return DEFAULT_SLOT_LIMIT;
+    /** Per-position admission capacity, before the item's own maximum. */
+    protected int getSlotLimit(int slot) {
+        return STORAGE_SLOT_LIMIT;
     }
 
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    /** Admission for a newly offered item; internal relocation bypasses it. */
+    protected boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return true;
     }
 
@@ -156,25 +152,25 @@ public class StackItemStorage implements SlotAccess {
         return new Codec<>() {
             @Override
             public <T> DataResult<T> encode(StackItemStorage storage, DynamicOps<T> ops, T prefix) {
-                return CompoundTag.CODEC.encode(storage.serializeNBT(ops), ops, prefix);
+                return CompoundTag.CODEC.encode(storage.save(ops), ops, prefix);
             }
 
             @Override
             public <T> DataResult<Pair<StackItemStorage, T>> decode(DynamicOps<T> ops, T input) {
                 return CompoundTag.CODEC.decode(ops, input).map(pair -> pair.mapFirst(tag -> {
                     StackItemStorage storage = new StackItemStorage(slots);
-                    storage.deserializeNBT(ops, tag);
+                    storage.load(ops, tag);
                     return storage;
                 }));
             }
         };
     }
 
-    public CompoundTag serializeNBT(HolderLookup.Provider registries) {
-        return serializeNBT(RegistryOps.create(NbtOps.INSTANCE, registries));
+    public CompoundTag save(HolderLookup.Provider registries) {
+        return save(RegistryOps.create(NbtOps.INSTANCE, registries));
     }
 
-    private <T> CompoundTag serializeNBT(DynamicOps<T> ops) {
+    private <T> CompoundTag save(DynamicOps<T> ops) {
         ListTag list = new ListTag();
         for (int i = 0; i < stacks.length; i++) {
             if (!stacks[i].isEmpty()) {
@@ -195,9 +191,7 @@ public class StackItemStorage implements SlotAccess {
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put(TAG_ITEMS, list);
-        if (!setAside.isEmpty()) {
-            nbt.put(TAG_SET_ASIDE, setAside.copy());
-        }
+        savedItems.saveTo(nbt);
         return nbt;
     }
 
@@ -207,42 +201,33 @@ public class StackItemStorage implements SlotAccess {
      * loading bypasses admission and does not call contents-change hooks. The caller reports
      * returned retention counts once it knows the world location.
      */
-    public LoadResult deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
-        return deserializeNBT(RegistryOps.create(NbtOps.INSTANCE, registries), nbt);
+    public StackDataMigration.LoadResult load(HolderLookup.Provider registries, CompoundTag nbt) {
+        return load(RegistryOps.create(NbtOps.INSTANCE, registries), nbt);
     }
 
-    private <T> LoadResult deserializeNBT(DynamicOps<T> ops, CompoundTag nbt) {
-        Arrays.fill(stacks, ItemStack.EMPTY);
-        setAside.clear();
-        readItems(ops, nbt.getListOrEmpty(TAG_ITEMS));
-        int newlySetAside = setAside.size();
-        readItems(ops, nbt.getListOrEmpty(TAG_SET_ASIDE));
-        return new LoadResult(newlySetAside, setAside.size() - newlySetAside);
+    private <T> StackDataMigration.LoadResult load(DynamicOps<T> ops, CompoundTag nbt) {
+        return savedItems.load(ops, nbt, stacks);
     }
 
-    private <T> void readItems(DynamicOps<T> ops, ListTag list) {
-        for (Tag entry : list) {
-            if (!(entry instanceof CompoundTag itemTag) || !(itemTag.get(TAG_SLOT) instanceof IntTag slotTag)) {
-                setAside.add(entry.copy());
-                continue;
-            }
-            int slot = slotTag.intValue();
-            Optional<ItemStack> parsed = slot >= 0 && slot < stacks.length && stacks[slot].isEmpty()
-                    ? ItemStack.CODEC.parse(ops, NbtOps.INSTANCE.convertTo(ops, itemTag)).result()
-                    : Optional.empty();
-            if (parsed.isPresent() && !parsed.get().isEmpty()) {
-                stacks[slot] = parsed.get();
-            } else {
-                setAside.add(itemTag.copy());
-            }
-        }
+    /** Checks a wire inventory without changing live slots or retained disk entries. */
+    public boolean isValidClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
+        return decodeClientUpdate(registries, nbt) != null;
     }
 
     /** Validates a current-format client snapshot before replacing any local contents. */
     public boolean deserializeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
+        ItemStack[] decoded = decodeClientUpdate(registries, nbt);
+        if (decoded == null) return false;
+        System.arraycopy(decoded, 0, stacks, 0, stacks.length);
+        savedItems.clear();
+        return true;
+    }
+
+    @Nullable
+    private ItemStack[] decodeClientUpdate(HolderLookup.Provider registries, CompoundTag nbt) {
         if (nbt.contains(TAG_SET_ASIDE) || !(nbt.get(TAG_ITEMS) instanceof ListTag list)
                 || list.size() > stacks.length) {
-            return false;
+            return null;
         }
         ItemStack[] decoded = new ItemStack[stacks.length];
         Arrays.fill(decoded, ItemStack.EMPTY);
@@ -250,17 +235,15 @@ public class StackItemStorage implements SlotAccess {
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         for (int i = 0; i < list.size(); i++) {
             if (!(list.get(i) instanceof CompoundTag entry)
-                    || !(entry.get(TAG_SLOT) instanceof IntTag slotTag)) return false;
+                    || !(entry.get(TAG_SLOT) instanceof IntTag slotTag)) return null;
             int slot = slotTag.intValue();
-            if (slot < 0 || slot >= stacks.length || used[slot]) return false;
+            if (slot < 0 || slot >= stacks.length || used[slot]) return null;
             Optional<ItemStack> parsed = ItemStack.CODEC.parse(ops, entry).result();
-            if (parsed.isEmpty() || parsed.get().isEmpty()) return false;
+            if (parsed.isEmpty() || parsed.get().isEmpty()) return null;
             used[slot] = true;
             decoded[slot] = parsed.get();
         }
-        System.arraycopy(decoded, 0, stacks, 0, stacks.length);
-        setAside.clear();
-        return true;
+        return decoded;
     }
 
     /** Removes the set-aside tags from serialized storage, which clients have no use for. */

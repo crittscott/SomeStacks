@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:function",
-  "function": "somestacks:capabilityandpersistencegametests/set_aside_items_recover_into_free_slots",
-  "environment": "minecraft:default",
-  "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
-}

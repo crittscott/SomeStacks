@@ -4,7 +4,6 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.server.StackInteractions;
 import com.github.crittscott.somestacks.util.BlockType;
@@ -13,6 +12,7 @@ import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -25,6 +25,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import com.github.crittscott.somestacks.block.StackBlock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -65,11 +67,21 @@ public final class InteractionChecks {
      */
     public static void malformedGestureStateFailsDuringDecoding(GameTestHelper helper) {
         ByteBuf buffer = Unpooled.buffer();
-        buffer.writeByte(StackMode.values().length);
-        buffer.writeBoolean(false);
         try {
-            check(decodeGestureFails(buffer),
-                    "Invalid stack-mode ordinal reached the state handler");
+            for (StackMode mode : StackMode.values()) {
+                for (boolean modifier : new boolean[] {false, true}) {
+                    buffer.clear();
+                    var packet = new GestureStatePkt(mode, modifier);
+                    GestureStatePkt.STREAM_CODEC.encode(buffer, packet);
+                    checkEquals(packet, GestureStatePkt.STREAM_CODEC.decode(buffer), "Valid gesture round trip");
+                }
+            }
+            for (int id : new int[] {-1, StackMode.values().length, Integer.MAX_VALUE}) {
+                buffer.clear();
+                ByteBufCodecs.VAR_INT.encode(buffer, id);
+                buffer.writeBoolean(false);
+                check(decodeGestureFails(buffer), "Invalid stack-mode ordinal reached the state handler");
+            }
         } finally {
             buffer.release();
         }
@@ -108,7 +120,8 @@ public final class InteractionChecks {
     /**
      * Stack gestures act only from the main hand. To reproduce in-game: leave the main hand empty,
      * hold a depositable item in the off hand, hold the modifier, and right-click a stack. The
-     * off-hand item is not deposited.
+     * off-hand item is not deposited. Modified empty-hand clicks and Toggle Permanent with an
+     * occupied hand retain ordinary use; plain extraction consumes even an empty target.
      */
     public static void interactionReadsOnlyTheMainHand(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
@@ -124,7 +137,28 @@ public final class InteractionChecks {
                     "Off-hand interaction was consumed");
             checkEquals(0, GameTestScaffold.count(storage.getItems(), Items.DIRT),
                     "Off-hand item was deposited");
+            StackBlock block = (StackBlock) storage.getBlockState().getBlock();
+            var state = storage.getBlockState();
+            var pos = storage.getBlockPos();
+            var hit = hit(player, pos, 0.5, 0.5, 0.5);
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getOffhandItem(), state, helper.getLevel(), pos,
+                            player, InteractionHand.OFF_HAND, hit), "Off-hand native use was consumed");
+            checkEquals(InteractionResult.PASS,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Unhandled modified empty-hand use was consumed");
+            ServerGestureState.set(player, StackMode.TOGGLE_PERMANENT, true);
+            player.setItemInHand(HAND, new ItemStack(Items.APPLE));
+            checkEquals(InteractionResult.PASS,
+                    block.useItemOn(player.getMainHandItem(), state, helper.getLevel(), pos,
+                            player, HAND, hit), "Occupied permanence gesture was consumed");
+            player.setItemInHand(HAND, ItemStack.EMPTY);
+            ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
+            checkEquals(InteractionResult.CONSUME,
+                    block.useWithoutItem(state, helper.getLevel(), pos, player, hit),
+                    "Empty extraction attempt passed through");
         } finally {
+            player.setItemInHand(HAND, ItemStack.EMPTY);
             player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
         }
@@ -162,7 +196,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -196,7 +230,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -213,9 +247,9 @@ public final class InteractionChecks {
         StorageStackBE extractTarget = GameTestScaffold.placeStorage(helper, TARGET.east(3));
         int center = StorageCubeIdx.GRID_EDGE * StorageCubeIdx.GRID_EDGE
                 + StorageCubeIdx.GRID_EDGE + 1;
-        extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3), false);
+        extractTarget.getItems().insertItem(center, new ItemStack(Items.STICK, 3));
         BlockPos support = helper.absolutePos(TARGET.east(6));
-        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), 3);
+        helper.getLevel().setBlock(support, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT, 4));
 
         try {
@@ -279,7 +313,7 @@ public final class InteractionChecks {
             player.setShiftKeyDown(false);
             player.setItemInHand(HAND, ItemStack.EMPTY);
             ServerGestureState.clear(player.getUUID());
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -302,7 +336,7 @@ public final class InteractionChecks {
             click(player, storage.getBlockPos(), 0.5, 0.5, 0.5);
             check(storage.pile().isPermanent(), "Empty hand did not toggle permanence");
 
-            storage.pile().setPermanent(false);
+            storage.pile().setPermanent(false, null);
             GameTestScaffold.outsideWorldBorder(helper, TARGET, () ->
                     click(player, storage.getBlockPos(), 0.5, 0.5, 0.5));
             check(!storage.pile().isPermanent(), "Protected pile changed permanence");
@@ -322,7 +356,7 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         StorageStackBE storage = GameTestScaffold.placeStorage(helper, TARGET);
         int center = 13;
-        storage.getItems().insertItem(center, new ItemStack(Items.STONE, 8), false);
+        storage.getItems().insertItem(center, new ItemStack(Items.STONE, 8));
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.DIRT));
         try {
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
@@ -354,7 +388,7 @@ public final class InteractionChecks {
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         SinglesStackBE singles = GameTestScaffold.placeSingles(helper, TARGET);
         for (int slot = 0; slot < SinglesStackBE.SLOTS; slot++) {
-            singles.getItems().insertItem(slot, new ItemStack(Items.DIRT), false);
+            singles.getItems().insertItem(slot, new ItemStack(Items.DIRT));
         }
         ServerPlayer player = playerFactory.apply(new ItemStack(Items.STONE, 2));
         ServerGestureState.set(player, StackMode.STORAGE_STACK, true);
@@ -414,15 +448,15 @@ public final class InteractionChecks {
     public static void rotationSoundThrottleSuppressesSameTickAndClears(
             GameTestHelper helper, Function<ItemStack, ServerPlayer> playerFactory) {
         ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
-        RotationSoundThrottle.clear(player.getUUID());
+        ServerGestureState.resetSound(player.getUUID());
         try {
-            check(RotationSoundThrottle.claim(player), "First rotation sound was refused");
-            check(!RotationSoundThrottle.claim(player),
+            check(ServerGestureState.claimSound(player), "First rotation sound was refused");
+            check(!ServerGestureState.claimSound(player),
                     "Second same-tick rotation sound succeeded");
-            RotationSoundThrottle.clear(player.getUUID());
-            check(RotationSoundThrottle.claim(player), "Clear did not reset sound pacing");
+            ServerGestureState.resetSound(player.getUUID());
+            check(ServerGestureState.claimSound(player), "Clear did not reset sound pacing");
         } finally {
-            RotationSoundThrottle.clear(player.getUUID());
+            ServerGestureState.resetSound(player.getUUID());
         }
         helper.succeed();
     }
@@ -466,8 +500,8 @@ public final class InteractionChecks {
             var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
                     : GameTestScaffold.placeSingles(helper, TARGET);
             var item = bar ? GameTestScaffold.firstBarItem() : Items.STONE;
-            be.getItems().insertItem(0, new ItemStack(item), false);
-            be.getItems().insertItem(1, new ItemStack(item), false);
+            be.getItems().insertItem(0, new ItemStack(item));
+            be.getItems().insertItem(1, new ItemStack(item));
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             ServerGestureState.set(player, StackMode.STORAGE_STACK, false);
             try {
@@ -499,7 +533,7 @@ public final class InteractionChecks {
             var be = bar ? GameTestScaffold.placeBar(helper, TARGET)
                     : GameTestScaffold.placeSingles(helper, TARGET);
             be.getItems().insertItem(0,
-                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE), false);
+                    new ItemStack(bar ? GameTestScaffold.firstBarItem() : Items.STONE));
             ServerPlayer player = playerFactory.apply(ItemStack.EMPTY);
             Runnable unregister = observer.install(helper.getLevel(), be.getBlockPos(),
                     actor -> {}, actor -> false);

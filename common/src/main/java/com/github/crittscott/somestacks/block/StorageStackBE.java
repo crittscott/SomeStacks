@@ -1,6 +1,7 @@
 package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.CommonRegistry;
+import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import net.minecraft.core.BlockPos;
@@ -9,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -18,7 +20,7 @@ import javax.annotation.Nullable;
  * One Storage Stack: 27 item stacks drawn as a 3 x 3 x 3 grid.
  *
  * <p>The block owns its own slots, but it is not the unit of storage. A vertical run of these is a
- * {@link StoragePile}, and deposits, capability access, sorting and packing all act on the whole
+ * {@link StoragePile}, and deposits, automation access, sorting and packing all act on the whole
  * run. Everything here that reaches past this block's own slots resolves the pile first.
  *
  * <p>Automation exposure is loader-specific and lives outside this class: Forge and NeoForge use
@@ -29,7 +31,7 @@ public class StorageStackBE extends StackBlockEntity {
     /** Slots in one block. The pile's flat slot range is this times its height. */
     public static final int SLOTS = StorageCubeIdx.CELLS;
 
-    private static final String TAG_PERMANENT = "Permanent";
+    public static final String TAG_PERMANENT = "Permanent";
 
     private boolean permanent = false;
     @Nullable
@@ -55,14 +57,14 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean isStoredItemValid(ItemStack stack) {
         return isValidStorageItem(stack);
     }
 
     /**
      * The pile this block belongs to, or null on the client and for a block being removed.
      *
-     * <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
+     * <p>Resolved once a tick and held. A machine reading this block's automation view resolves the
      * pile once per slot it walks, which is hundreds of times a tick for one attached storage
      * network, and the run cannot change between two of those reads without passing through the
      * block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is what
@@ -84,7 +86,10 @@ public class StorageStackBE extends StackBlockEntity {
 
     /** Sets the outer block's rendered layout rotation modulo four. */
     public void setRotation(int rotation) {
-        setBlockRotation(rotation);
+        if (level instanceof ServerLevel) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(StackBlock.HORIZONTAL_FACING,
+                    QuarterTurns.toDirection(rotation)), Block.UPDATE_ALL);
+        }
     }
 
     /** Whether this block survives being emptied. The pile's base block is authoritative. */
@@ -101,10 +106,9 @@ public class StorageStackBE extends StackBlockEntity {
     }
 
     /** Gives a block that has just joined a pile the pile's presentation and mode. */
-    void adoptPileState(boolean permanent, int rotation) {
+    void adoptPileState(boolean permanent) {
         this.permanent = permanent;
         setChanged();
-        setBlockRotation(rotation);
     }
 
     /**
@@ -152,7 +156,7 @@ public class StorageStackBE extends StackBlockEntity {
      * Takes from one of this block's own slots, the cell the player targeted, and schedules the
      * settle that packs the rest of the pile down over the gap. A null actor selects automation cleanup.
      */
-    public ItemStack extractAt(int index, int maxCount, @Nullable ItemStack playerHand,
+    public ItemStack extractAt(int index, int maxCount, ItemStack playerHand,
                                @Nullable ServerPlayer actor) {
         if (index < 0 || index >= items.getSlots()) {
             return ItemStack.EMPTY;
@@ -170,7 +174,7 @@ public class StorageStackBE extends StackBlockEntity {
         int toTake = Math.min(maxCount, inSlot.getCount());
         ItemStack taken = inSlot.copy();
         taken.setCount(toTake);
-        items.extractItem(index, toTake, false);
+        items.extractItem(index, toTake);
 
         StoragePile pile = pile();
         if (pile != null) {

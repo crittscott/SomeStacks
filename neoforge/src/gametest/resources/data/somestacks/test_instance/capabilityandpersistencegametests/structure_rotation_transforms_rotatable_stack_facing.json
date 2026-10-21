@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:function",
-  "function": "somestacks:capabilityandpersistencegametests/structure_rotation_transforms_rotatable_stack_facing",
-  "environment": "minecraft:default",
-  "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
-}

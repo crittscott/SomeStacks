@@ -15,6 +15,14 @@ public final class SomeStacksGameTests {
             DeferredRegister.create(Registries.TEST_FUNCTION, "somestacks");
 
     static {
+        TEST_FUNCTIONS.register("protectiongametests/placement_replaces_clicked_vegetation",
+                () -> ProtectionGameTests::placementReplacesClickedVegetation);
+        TEST_FUNCTIONS.register("barcolumngametests/contents_drop_with_block_drops_disabled",
+                () -> BarColumnGameTests::contentsDropWithBlockDropsDisabled);
+        TEST_FUNCTIONS.register("storagepilegametests/storage_disk_migration_preserves_over_cap_contents",
+                () -> StoragePileGameTests::storageDiskMigrationPreservesOverCapContents);
+        TEST_FUNCTIONS.register("storagepilegametests/storage_cap_applies_to_players_automation_and_settlement",
+                () -> StoragePileGameTests::storageCapAppliesToPlayersAutomationAndSettlement);
         TEST_FUNCTIONS.register("barcolumngametests/validity_and_bottom_grounding_are_enforced",
                 () -> BarColumnGameTests::validityAndBottomGroundingAreEnforced);
         TEST_FUNCTIONS.register("barcolumngametests/bricks_are_bar_items_but_brick_blocks_are_not",
@@ -51,38 +59,38 @@ public final class SomeStacksGameTests {
                 () -> BarColumnGameTests::comparatorReadsTheWholeColumnFromEveryBlock);
         TEST_FUNCTIONS.register("barcolumngametests/comparator_follows_a_column_losing_a_block",
                 () -> BarColumnGameTests::comparatorFollowsAColumnLosingABlock);
-        TEST_FUNCTIONS.register("barcolumngametests/refused_removal_still_lets_the_bars_above_come_down",
-                () -> BarColumnGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/item_capability_is_available_from_every_side",
-                () -> CapabilityAndPersistenceGameTests::itemCapabilityIsAvailableFromEverySide);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/single_block_capabilities_advertise_configured_headroom",
-                () -> CapabilityAndPersistenceGameTests::singleBlockCapabilitiesAdvertiseConfiguredHeadroom);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/storage_disk_save_round_trips_items_rotation_and_permanence",
-                () -> CapabilityAndPersistenceGameTests::storageDiskSaveRoundTripsItemsRotationAndPermanence);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/singles_disk_save_round_trips_items_and_both_rotations",
-                () -> CapabilityAndPersistenceGameTests::singlesDiskSaveRoundTripsItemsAndBothRotations);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/bar_disk_save_round_trips_items",
-                () -> CapabilityAndPersistenceGameTests::barDiskSaveRoundTripsItems);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/update_tags_carry_render_state_and_omit_server_only_data",
-                () -> CapabilityAndPersistenceGameTests::updateTagsCarryRenderStateAndOmitServerOnlyData);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/unreadable_saved_items_are_kept_aside_on_disk",
-                () -> CapabilityAndPersistenceGameTests::unreadableSavedItemsAreKeptAsideOnDisk);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/set_aside_items_recover_into_free_slots",
-                () -> CapabilityAndPersistenceGameTests::setAsideItemsRecoverIntoFreeSlots);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/unversioned_save_upgrades_items_on_load",
-                () -> CapabilityAndPersistenceGameTests::unversionedSaveUpgradesItemsOnLoad);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/structure_rotation_transforms_rotatable_stack_facing",
-                () -> CapabilityAndPersistenceGameTests::structureRotationTransformsRotatableStackFacing);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/cached_shapes_invalidate_when_contents_change",
-                () -> CapabilityAndPersistenceGameTests::cachedShapesInvalidateWhenContentsChange);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/reentrant_structural_edit_is_refused",
-                () -> CapabilityAndPersistenceGameTests::reentrantStructuralEditIsRefused);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/capability_simulation_does_not_mutate_any_stack",
-                () -> CapabilityAndPersistenceGameTests::capabilitySimulationDoesNotMutateAnyStack);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/client_inventory_updates_reject_malformed_data_atomically",
-                () -> CapabilityAndPersistenceGameTests::clientInventoryUpdatesRejectMalformedDataAtomically);
-        TEST_FUNCTIONS.register("capabilityandpersistencegametests/client_singles_updates_validate_rotation_before_inventory",
-                () -> CapabilityAndPersistenceGameTests::clientSinglesUpdatesValidateRotationBeforeInventory);
+        TEST_FUNCTIONS.register("protectiongametests/refused_removal_still_lets_the_bars_above_come_down",
+                () -> ProtectionGameTests::refusedRemovalStillLetsTheBarsAboveComeDown);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/item_capability_is_available_from_every_side",
+                () -> AutomationAndPersistenceGameTests::itemCapabilityIsAvailableFromEverySide);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/single_block_capabilities_advertise_configured_headroom",
+                () -> AutomationAndPersistenceGameTests::singleBlockCapabilitiesAdvertiseConfiguredHeadroom);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/storage_disk_save_round_trips_items_rotation_and_permanence",
+                () -> AutomationAndPersistenceGameTests::storageDiskSaveRoundTripsItemsRotationAndPermanence);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/singles_disk_save_round_trips_items_and_both_rotations",
+                () -> AutomationAndPersistenceGameTests::singlesDiskSaveRoundTripsItemsAndBothRotations);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/bar_disk_save_round_trips_items",
+                () -> AutomationAndPersistenceGameTests::barDiskSaveRoundTripsItems);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/update_tags_carry_render_state_and_omit_server_only_data",
+                () -> AutomationAndPersistenceGameTests::updateTagsCarryRenderStateAndOmitServerOnlyData);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/unreadable_saved_items_are_kept_aside_on_disk",
+                () -> AutomationAndPersistenceGameTests::unreadableSavedItemsAreKeptAsideOnDisk);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/set_aside_items_recover_into_free_slots",
+                () -> AutomationAndPersistenceGameTests::setAsideItemsRecoverIntoFreeSlots);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/unversioned_save_upgrades_items_on_load",
+                () -> AutomationAndPersistenceGameTests::unversionedSaveUpgradesItemsOnLoad);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/structure_rotation_transforms_rotatable_stack_facing",
+                () -> AutomationAndPersistenceGameTests::structureRotationTransformsRotatableStackFacing);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/cached_shapes_invalidate_when_contents_change",
+                () -> AutomationAndPersistenceGameTests::cachedShapesInvalidateWhenContentsChange);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/reentrant_structural_edit_is_refused",
+                () -> AutomationAndPersistenceGameTests::reentrantStructuralEditIsRefused);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/capability_simulation_does_not_mutate_any_stack",
+                () -> AutomationAndPersistenceGameTests::capabilitySimulationDoesNotMutateAnyStack);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/client_inventory_updates_reject_malformed_data_atomically",
+                () -> AutomationAndPersistenceGameTests::clientInventoryUpdatesRejectMalformedDataAtomically);
+        TEST_FUNCTIONS.register("automationandpersistencegametests/client_singles_updates_validate_rotation_before_inventory",
+                () -> AutomationAndPersistenceGameTests::clientSinglesUpdatesValidateRotationBeforeInventory);
         TEST_FUNCTIONS.register("configurationgametests/override_json_round_trips_valid_fields_and_skips_malformed_ones",
                 () -> ConfigurationGameTests::overrideJsonRoundTripsValidFieldsAndSkipsMalformedOnes);
         TEST_FUNCTIONS.register("configurationgametests/override_json_uses_inclusive_bounds",
@@ -127,14 +135,8 @@ public final class SomeStacksGameTests {
                 () -> InteractionGameTests::everyStackTypeBlocksPistons);
         TEST_FUNCTIONS.register("interactiongametests/extraction_events_follow_block_survival",
                 () -> InteractionGameTests::extractionEventsFollowBlockSurvival);
-        TEST_FUNCTIONS.register("interactiongametests/config_decoder_enforces_packet_budget",
-                () -> InteractionGameTests::configDecoderEnforcesPacketBudget);
-        TEST_FUNCTIONS.register("interactiongametests/config_staging_rejects_and_clears_invalid_generations",
-                () -> InteractionGameTests::configStagingRejectsAndClearsInvalidGenerations);
         TEST_FUNCTIONS.register("interactiongametests/config_snapshots_round_trip_and_publish_atomically",
                 () -> InteractionGameTests::configSnapshotsRoundTripAndPublishAtomically);
-        TEST_FUNCTIONS.register("interactiongametests/config_staging_checks_sequences_and_totals",
-                () -> InteractionGameTests::configStagingChecksSequencesAndTotals);
         TEST_FUNCTIONS.register("interactiongametests/config_decoder_rejects_malformed_counts_and_namespaces",
                 () -> InteractionGameTests::configDecoderRejectsMalformedCountsAndNamespaces);
         TEST_FUNCTIONS.register("interactiongametests/block_rules_respect_precedence_and_hands",

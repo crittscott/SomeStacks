@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.network;
 
-import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -20,6 +20,6 @@ final class ForgePacketHandlers {
     }
 
     static void handleClient(ConfigSyncPkt msg, CustomPayloadEvent.Context ctx) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientRenderPacketSink.apply(msg));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientServerSettings.apply(msg));
     }
 }

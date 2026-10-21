@@ -79,7 +79,7 @@ The gallery commands also require a **player** rather than the console, because 
 | `/ss gen item add\|remove\|list <item>` | Level 2 | Edit the gallery item list. |
 | `/ss deny mod add\|remove\|list <modid>` | Level 2 | Edit the disabled namespace list. |
 | `/ss deny item add\|remove\|list <item>` | Level 2 | Edit the disabled item list. |
-| `/ss reload` | Level 2 | Refresh server policy and re-sync every player. |
+| `/ss reload` | Level 2 | Refresh policy and synchronize changed client settings. |
 | `/ss help [<command>]` | Anyone | Command forms, gates, and detail. |
 
 Command edits to the four text lists update both the running server and the config file, so a later save cannot undo them.
@@ -88,7 +88,7 @@ An item id is checked against the registry when it is added to a list, because t
 
 ### `/ss reload`
 
-Refreshes server policy and pushes the client-facing settings to every player. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on Forge and NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
+Refreshes server policy and pushes changed client-facing settings to every player. Gallery enablement or permission changes also refresh command suggestions without reconnecting. On Fabric it rereads `<world>/serverconfig/somestacks-server.json`; on Forge and NeoForge, TOML edits are loaded by the loader's config system. It does not reload data packs: use vanilla `/reload` for the ingot tag.
 
 ### Render galleries
 

@@ -91,10 +91,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">SlotAccess</span></div>
-<div class="block">A numbered range of item slots, matching the Forge and NeoForge <code>IItemHandler</code> contract so
- their capability views stay thin adapters. This is the internal storage primitive for block
- entities, piles, and columns; only the Forge/NeoForge capability and Fabric Transfer API adapters
- that expose it to automation are loader-specific.</div>
+<div class="block">A read-only view of numbered local item slots for geometry, rendering, drops, and inventory reads.
+ Mutations belong to StackItemStorage; loader-native automation adapts whole runs.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,19 +107,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#extractItem(int,int,boolean)" class="member-name-link">extractItem</a><wbr>(int&nbsp;slot,
- int&nbsp;amount,
- boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed — <code>ItemStack.EMPTY</code> if the slot was empty.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSlotLimit(int)" class="member-name-link">getSlotLimit</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSlots()" class="member-name-link">getSlots</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -131,20 +116,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getStackInSlot(int)" class="member-name-link">getStackInSlot</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem</a><wbr>(int&nbsp;slot,
- net.minecraft.world.item.ItemStack&nbsp;stack,
- boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> allow.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#isItemValid(int,net.minecraft.world.item.ItemStack)" class="member-name-link">isItemValid</a><wbr>(int&nbsp;slot,
- net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
 </div>
 </div>
 </div>
@@ -175,51 +146,6 @@ loadScripts(document, 'script');</script>
 <div class="block">The stack in <code>slot</code>, or <code>ItemStack.EMPTY</code> if the slot is empty; never null. The
  returned stack is the live stored object: callers must not modify it, and must copy it before
  keeping or editing it.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="insertItem(int,net.minecraft.world.item.ItemStack,boolean)">
-<h3>insertItem</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">insertItem</span><wbr><span class="parameters">(int&nbsp;slot,
- @Nonnull
- net.minecraft.world.item.ItemStack&nbsp;stack,
- boolean&nbsp;simulate)</span></div>
-<div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
- <a href="#getSlotLimit(int)"><code>getSlotLimit(int)</code></a> allow. Returns the remainder that was not accepted —
- <code>ItemStack.EMPTY</code> if all of it was — and never changes <code>stack</code>'s count. When
- <code>simulate</code> is <code>true</code>, the slot is left unchanged and only the would-be
- remainder is computed. A committed insertion may store <code>stack</code> itself, so the caller
- must give it up or pass a copy.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="extractItem(int,int,boolean)">
-<h3>extractItem</h3>
-<div class="member-signature"><span class="annotations">@Nonnull
-</span><span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractItem</span><wbr><span class="parameters">(int&nbsp;slot,
- int&nbsp;amount,
- boolean&nbsp;simulate)</span></div>
-<div class="block">Removes up to <code>amount</code> items from <code>slot</code> and returns the stack that was
- removed — <code>ItemStack.EMPTY</code> if the slot was empty. When <code>simulate</code> is
- <code>true</code>, the slot is left unchanged and only the would-be result is computed. The
- returned stack belongs to the caller.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getSlotLimit(int)">
-<h3>getSlotLimit</h3>
-<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getSlotLimit</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
-<div class="block">The maximum stack size <code>slot</code> accepts, independent of the item's own max stack size.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isItemValid(int,net.minecraft.world.item.ItemStack)">
-<h3>isItemValid</h3>
-<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">isItemValid</span><wbr><span class="parameters">(int&nbsp;slot,
- @Nonnull
- net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
-<div class="block">Whether <code>stack</code> is allowed in <code>slot</code> at all, before any capacity check.</div>
 </section>
 </li>
 </ul>

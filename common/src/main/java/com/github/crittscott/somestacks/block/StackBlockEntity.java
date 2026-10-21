@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.SomeStacksServer;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.util.ItemOps;
 import com.github.crittscott.somestacks.util.QuarterTurns;
 import com.github.crittscott.somestacks.util.StackItemStorage;
@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,14 +29,21 @@ import javax.annotation.Nullable;
 
 /** Local storage, persistence, synchronization, lighting, and batching shared by every stack. */
 public abstract class StackBlockEntity extends BlockEntity {
-    static final String TAG_ITEMS = "Items";
+    public static final String TAG_ITEMS = StackItemStorage.TAG_ITEMS;
+    public static final String TAG_DATA_VERSION = "DataVersion";
+
+    private static boolean reportedClientUpdateRejection;
 
     protected final StackItemStorage items;
     @Nullable
-    private Integer pendingBlockRotation;
-    @Nullable
-    private StackItemStorage.LoadResult pendingLoadResult;
+    private StackDataMigration.LoadResult pendingLoadResult;
     private boolean pendingMigrationSave;
+    /** Client-only prepared presentation, discarded whenever server contents replace this entity's. */
+    @Nullable
+    private Object renderCache;
+    /** A released save's block-entity layout rotation, converted to native facing once attached. */
+    @Nullable
+    private Integer pendingLegacyRotation;
     private int batchDepth;
     private boolean batchTouched;
     private boolean publishPending;
@@ -65,12 +73,12 @@ public abstract class StackBlockEntity extends BlockEntity {
             }
 
             @Override
-            public int getSlotLimit(int slot) {
+            protected int getSlotLimit(int slot) {
                 return localSlotLimit();
             }
 
             @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            protected boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return isStoredItemValid(stack);
             }
         };
@@ -80,7 +88,7 @@ public abstract class StackBlockEntity extends BlockEntity {
      * Admission for new local/automation inserts, including current namespace and type policy.
      * Existing saved or internally relocated items bypass this check; no slot is selected here.
      */
-    protected abstract boolean isStoredItemValid(ItemStack stack);
+    public abstract boolean isStoredItemValid(ItemStack stack);
 
     /** Resolves the current server-side run without consulting the per-tick cache. */
     protected abstract StackRunItemAccess resolveRun(ServerLevel serverLevel);
@@ -100,6 +108,12 @@ public abstract class StackBlockEntity extends BlockEntity {
         return cachedRun;
     }
 
+    /** Shares one resolved run with all current members for this server tick. */
+    final void cacheRun(StackRunItemAccess run, long tick) {
+        cachedRun = run;
+        cachedRunTick = tick;
+    }
+
     /** Drops the cached run so a structural edit is visible again within the current tick. */
     final void invalidateRunCache() {
         cachedRun = null;
@@ -113,9 +127,14 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
     }
 
+    /** Full-block contents by default; positional entities supply their cached occupied shape. */
+    public VoxelShape getCachedShape() {
+        return Shapes.block();
+    }
+
     /** Local slot capacity before the item's own stack limit, or one for positional display types. */
-    protected int localSlotLimit() {
-        return 64;
+    public int localSlotLimit() {
+        return StackItemStorage.STORAGE_SLOT_LIMIT;
     }
 
     /** Cached local numerator of the run's comparator fill fraction. */
@@ -135,7 +154,7 @@ public abstract class StackBlockEntity extends BlockEntity {
     private void refreshSlotContribution(int slot) {
         ItemStack stack = items.getStackInSlot(slot);
         slotContributions[slot] = stack.isEmpty() ? 0.0 : localSlotLimit() == 1 ? 1.0
-                : (double) stack.getCount() / stack.getMaxStackSize();
+                : Math.min(1.0, (double) stack.getCount() / Math.min(localSlotLimit(), stack.getMaxStackSize()));
         comparatorDirty = true;
     }
 
@@ -189,27 +208,10 @@ public abstract class StackBlockEntity extends BlockEntity {
 
     /** The outer block's layout rotation, expressed in the grid's quarter-turn coordinates. */
     protected final int blockRotation() {
-        applyPendingBlockRotation();
         BlockState state = getBlockState();
         return state.hasProperty(StackBlock.HORIZONTAL_FACING)
                 ? QuarterTurns.fromDirection(state.getValue(StackBlock.HORIZONTAL_FACING))
                 : 0;
-    }
-
-    /** Changes the outer block's facing; the block-state update performs client synchronization. */
-    protected final void setBlockRotation(int rotation) {
-        pendingBlockRotation = QuarterTurns.normalize(rotation);
-        applyPendingBlockRotation();
-    }
-
-    /** Per-position automation capacity before the offered item's own stack limit. */
-    public final int automationSlotLimit() {
-        return localSlotLimit();
-    }
-
-    /** Checks new automation admission without choosing a slot or checking support/growth authority. */
-    public final boolean acceptsAutomation(ItemStack stack) {
-        return isStoredItemValid(stack);
     }
 
     /** Immediately notifies block updates when attached; server callers send the local render state. */
@@ -276,11 +278,11 @@ public abstract class StackBlockEntity extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        applyPendingBlockRotation();
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
         }
+        applyLegacyRotation();
         reportSavedItems();
     }
 
@@ -302,28 +304,28 @@ public abstract class StackBlockEntity extends BlockEntity {
     private void reportSavedItems() {
         if (pendingLoadResult == null || level == null) return;
         if (level instanceof ServerLevel serverLevel) {
-            SomeStacksServer.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
+            StackDataMigration.reportSavedItems(serverLevel, getBlockPos(), pendingLoadResult);
         }
         pendingLoadResult = null;
     }
 
-    /** Applies a requested or migrated rotation once the block belongs to a server level. */
-    private void applyPendingBlockRotation() {
-        if (pendingBlockRotation == null || level == null || level.isClientSide) {
+    /** Converts a migrated layout rotation into native facing once the block belongs to a server level. */
+    private void applyLegacyRotation() {
+        if (pendingLegacyRotation == null || level == null || level.isClientSide) {
             return;
         }
         BlockState state = getBlockState();
         if (!state.hasProperty(StackBlock.HORIZONTAL_FACING)) {
-            pendingBlockRotation = null;
+            pendingLegacyRotation = null;
             return;
         }
         BlockState migrated = state.setValue(
                 StackBlock.HORIZONTAL_FACING,
-                QuarterTurns.toDirection(pendingBlockRotation));
+                QuarterTurns.toDirection(pendingLegacyRotation));
         if (state == migrated || level.getBlockState(getBlockPos()) == migrated
                 || level.setBlock(getBlockPos(), migrated, Block.UPDATE_ALL)) {
             setBlockState(migrated);
-            pendingBlockRotation = null;
+            pendingLegacyRotation = null;
             setChanged();
         }
     }
@@ -357,66 +359,88 @@ public abstract class StackBlockEntity extends BlockEntity {
         }
         super.loadAdditional(input);
         pendingLoadResult = null;
-        pendingMigrationSave = StackDataMigration.upgrade(tag, registries);
+        StackDataMigration.LoadOutcome loaded = StackDataMigration.load(
+                tag, items, registries, this instanceof StorageStackBE);
+        pendingMigrationSave = loaded.changed();
         Integer legacyBlockRotation = StackDataMigration.takeLegacyBlockRotation(tag);
         if (legacyBlockRotation != null) {
-            pendingBlockRotation = legacyBlockRotation;
-            applyPendingBlockRotation();
+            pendingLegacyRotation = legacyBlockRotation;
+            applyLegacyRotation();
             pendingMigrationSave = true;
         }
         if (pendingMigrationSave && level instanceof ServerLevel) {
             setChanged();
             pendingMigrationSave = false;
         }
-        CompoundTag inventory = tag.getCompound(TAG_ITEMS).orElseGet(CompoundTag::new);
-        pendingLoadResult = items.deserializeNBT(registries, inventory);
+        pendingLoadResult = loaded.result();
         reportSavedItems();
         loadStackData(input);
         refreshComparatorContribution();
     }
 
-    /** NeoForge chunk-update hook; vanilla/Fabric loads use the client branch of loadAdditional. */
-    public final void handleUpdateTag(ValueInput input) {
-        loadClientUpdate(StackDataMigration.readTag(input), input.lookup());
+    /** Validates native ingress before inherited loading can change components or inventory. */
+    public final boolean isValidClientUpdate(ValueInput input) {
+        CompoundTag tag = StackDataMigration.readTag(input);
+        String reason = invalidClientMetadata(tag);
+        if (reason != null) return rejectClientUpdate(reason);
+        return items.isValidClientUpdate(input.lookup(), tag.getCompound(TAG_ITEMS).orElseThrow())
+                || rejectClientUpdate("invalid inventory");
     }
 
-    /** Forge chunk-update hook, sharing the same staged validation as NeoForge. */
-    public final void handleUpdateTag(ValueInput input, HolderLookup.Provider registries) {
-        handleUpdateTag(input);
-    }
-
-    /** NeoForge block-update hook, sharing the same staged validation as chunk initialization. */
-    public final void onDataPacket(Connection connection, ValueInput input) {
-        handleUpdateTag(input);
-    }
-
-    /** Forge block-update hook; the input already carries its registry context. */
-    public final void onDataPacket(
-            Connection connection, ValueInput input, HolderLookup.Provider registries) {
-        handleUpdateTag(input);
-    }
-
-    /** Rejects malformed wire data without migration, recovery retention, or logging. */
-    public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
-        if (!(tag.get("DataVersion") instanceof IntTag version)
-                || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()
-                || !(tag.get(TAG_ITEMS) instanceof CompoundTag inventory)
-                || tag.contains(StackItemStorage.TAG_SET_ASIDE)
-                || tag.contains("Permanent") || tag.contains("Rotation")
-                || !isValidClientStackData(tag)
-                || !items.deserializeClientUpdate(registries, inventory)) {
-            return false;
+    @Nullable
+    private String invalidClientMetadata(CompoundTag tag) {
+        if (!(tag.get(TAG_DATA_VERSION) instanceof IntTag version)
+                || version.intValue() != SharedConstants.getCurrentVersion().dataVersion().version()) {
+            return "missing or mismatched data version";
         }
-        pendingBlockRotation = null;
+        if (!(tag.get(TAG_ITEMS) instanceof CompoundTag)) return "missing or malformed inventory";
+        if (tag.contains(StackItemStorage.TAG_SET_ASIDE) || tag.contains(StorageStackBE.TAG_PERMANENT)
+                || tag.contains(StackDataMigration.LEGACY_TAG_ROTATION)) {
+            return "server-only field";
+        }
+        return isValidClientStackData(tag) ? null : "invalid stack metadata";
+    }
+
+    private boolean rejectClientUpdate(String reason) {
+        if (level != null && level.isClientSide && !reportedClientUpdateRejection) {
+            reportedClientUpdateRejection = true;
+            SomeStacksCommon.LOGGER.warn("Rejected Some Stacks client update in {} at {} ({}): {}",
+                    level.dimension().location(), getBlockPos().toShortString(), getBlockState().getBlock(), reason);
+        }
+        return false;
+    }
+
+    /** Starts a new connection's diagnostic budget without retaining block positions. */
+    public static void resetClientUpdateDiagnostic() { reportedClientUpdateRejection = false; }
+
+    /** Rejects malformed wire data atomically, without migration or recovery retention. */
+    public final boolean loadClientUpdate(CompoundTag tag, HolderLookup.Provider registries) {
+        String reason = invalidClientMetadata(tag);
+        if (reason != null) return rejectClientUpdate(reason);
+        if (!items.deserializeClientUpdate(registries, tag.getCompound(TAG_ITEMS).orElseThrow())) {
+            return rejectClientUpdate("invalid inventory");
+        }
+        pendingLegacyRotation = null;
         loadStackData(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
         refreshComparatorContribution();
+        renderCache = null;
         return true;
+    }
+
+    /** The renderer's prepared presentation for the current contents, or null before preparation. */
+    @Nullable
+    public final Object renderCache() {
+        return renderCache;
+    }
+
+    public final void setRenderCache(@Nullable Object cache) {
+        renderCache = cache;
     }
 
     @Override
     protected final void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("DataVersion", SharedConstants.getCurrentVersion().dataVersion().version());
+        output.putInt(TAG_DATA_VERSION, SharedConstants.getCurrentVersion().dataVersion().version());
         try {
             output.store(TAG_ITEMS, StackItemStorage.codec(items.getSlots()), items);
         } catch (RuntimeException failure) {

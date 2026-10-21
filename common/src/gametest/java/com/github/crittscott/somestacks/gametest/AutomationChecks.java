@@ -63,7 +63,7 @@ public final class AutomationChecks {
             GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
         for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
-            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64), false);
+            storage.getItems().insertItem(slot, new ItemStack(Items.DIRT, 64));
         }
         BlockPos above = helper.absolutePos(ORIGIN.above());
         helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
@@ -125,8 +125,8 @@ public final class AutomationChecks {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int bottom = SinglesCubeIdx.indexFromColumn(0, 0);
         int above = SinglesCubeIdx.indexFromColumn(0, 1);
-        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(above, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(bottom, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(above, new ItemStack(Items.PAPER));
 
         ItemStack simulated = singles.itemRun().extract(bottom, 64, true);
         checkEquals(Items.STICK, simulated.getItem(), "Simulated extracted item");
@@ -186,7 +186,7 @@ public final class AutomationChecks {
         BlockPos pos = bars.getBlockPos();
         check(!BarStackBE.isValidBarItem(new ItemStack(Items.STICK)),
                 "Test needs an item Bar refuses");
-        bars.getItems().insertItem(0, new ItemStack(barItem), false);
+        bars.getItems().insertItem(0, new ItemStack(barItem));
         seedSlot(bars.getItems(), 1, new ItemStack(Items.STICK));
 
         ItemStack extracted = bars.itemRun().extract(0, 64, false);

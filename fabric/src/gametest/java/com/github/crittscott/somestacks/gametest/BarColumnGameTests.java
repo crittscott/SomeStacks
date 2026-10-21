@@ -162,4 +162,9 @@ public final class BarColumnGameTests {
     public void comparatorFollowsAColumnLosingABlock(GameTestHelper helper) {
         BarColumnChecks.comparatorFollowsAColumnLosingABlock(helper);
     }
+    /** See {@link BarColumnChecks#contentsDropWithBlockDropsDisabled}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void contentsDropWithBlockDropsDisabled(GameTestHelper helper) {
+        BarColumnChecks.contentsDropWithBlockDropsDisabled(helper);
+    }
 }

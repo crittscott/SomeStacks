@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:function",
-  "function": "somestacks:interactiongametests/config_staging_rejects_and_clears_invalid_generations",
-  "environment": "minecraft:default",
-  "structure": "somestacks:somestacks_empty",
-  "max_ticks": 100
-}

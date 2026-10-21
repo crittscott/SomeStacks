@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
-import com.github.crittscott.somestacks.server.StackInteractionEvents;
+import com.github.crittscott.somestacks.server.ForgeStackInteractionEvents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -44,7 +44,7 @@ public final class InteractionGameTests {
                 helper, GameTestSupport.playerFactory(helper), (player, hit) -> {
                     var event = new PlayerInteractEvent.RightClickBlock(
                             player, InteractionChecks.HAND, hit.getBlockPos(), hit);
-                    return StackInteractionEvents.onRightClickBlock(event);
+                    return ForgeStackInteractionEvents.onRightClickBlock(event);
                 });
     }
 
@@ -103,24 +103,9 @@ public final class InteractionGameTests {
         InteractionChecks.extractionEventsFollowBlockSurvival(helper, GameTestSupport.playerFactory(helper));
     }
 
-    /** See {@link SynchronizationChecks#configDecoderEnforcesPacketBudget}. */
-    public static void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
-        SynchronizationChecks.configDecoderEnforcesPacketBudget(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingRejectsAndClearsInvalidGenerations}. */
-    public static void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
-        SynchronizationChecks.configStagingRejectsAndClearsInvalidGenerations(helper);
-    }
-
     /** See {@link SynchronizationChecks#configSnapshotsRoundTripAndPublishAtomically}. */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
         SynchronizationChecks.configSnapshotsRoundTripAndPublishAtomically(helper);
-    }
-
-    /** See {@link SynchronizationChecks#configStagingChecksSequencesAndTotals}. */
-    public static void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
-        SynchronizationChecks.configStagingChecksSequencesAndTotals(helper);
     }
 
     /** See {@link SynchronizationChecks#configDecoderRejectsMalformedCountsAndNamespaces}. */

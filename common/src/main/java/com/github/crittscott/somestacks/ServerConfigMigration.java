@@ -26,7 +26,6 @@ public final class ServerConfigMigration {
 
     private static final String CONFIG_DIRECTORY = "serverconfig";
     private static final String LEGACY_FILE_SUFFIX = "-server.json";
-    private static final String SECTION_COMPATIBILITY = "compatibility";
     private static final String KEY_INGOTS = "ingots";
 
     /** The 1.21.1 default entries, all covered by the shipped {@code somestacks:ingots} tag. */
@@ -43,7 +42,7 @@ public final class ServerConfigMigration {
         try {
             JsonElement root = JsonParser.parseString(Files.readString(file));
             if (!root.isJsonObject()) return;
-            JsonElement compatibility = root.getAsJsonObject().get(SECTION_COMPATIBILITY);
+            JsonElement compatibility = root.getAsJsonObject().get(ServerConfig.SECTION_COMPATIBILITY);
             if (compatibility == null || !compatibility.isJsonObject()) return;
             JsonElement entries = ((JsonObject) compatibility).get(KEY_INGOTS);
             if (entries == null || !entries.isJsonArray()) return;

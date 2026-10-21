@@ -148,18 +148,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupied(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage)" class="member-name-link">occupied</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a><wbr>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerFactory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerFactory</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">offerAt</a><wbr>(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ boolean&nbsp;commit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shared scenario adapter: accepted count, with an explicit commit flag.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a><wbr>&lt;net.minecraft.world.item.ItemStack,<wbr>net.minecraft.server.level.ServerPlayer&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerFactory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerFactory</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A fake-player factory that resets the main hand for each shared check.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stackAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int)" class="member-name-link">stackAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stackAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int)" class="member-name-link">stackAt</a><wbr>(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;&nbsp;storage,
  int&nbsp;slot)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<wbr>&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storage(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">storage</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage<wbr>&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#storage(net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">storage</a><wbr>(net.minecraft.world.level.block.entity.BlockEntity&nbsp;blockEntity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">The registered whole-run storage for <code>blockEntity</code>, queried the way an external
  automation caller would: through <code>ItemStorage.SIDED</code>, not the block entity directly.</div>
 </div>
@@ -202,6 +210,16 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)">
+<h3>offerAt</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">offerAt</span><wbr><span class="parameters">(com.github.crittscott.somestacks.block.StackBlockEntity&nbsp;blockEntity,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack,
+ boolean&nbsp;commit)</span></div>
+<div class="block">Shared scenario adapter: accepted count, with an explicit commit flag.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="storage(net.minecraft.world.level.block.entity.BlockEntity)">
 <h3>storage</h3>

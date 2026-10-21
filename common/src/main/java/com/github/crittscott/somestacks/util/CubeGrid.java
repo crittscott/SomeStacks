@@ -31,7 +31,7 @@ public final class CubeGrid {
         this.maxCoord = edge - 1;
         this.localBoxes = new AABB[cells];
         this.localShapes = new VoxelShape[cells];
-        this.rotatedIndices = new int[4][cells];
+        this.rotatedIndices = new int[QuarterTurns.COUNT][cells];
         for (int y = 0; y < edge; y++) {
             for (int z = 0; z < edge; z++) {
                 for (int x = 0; x < edge; x++) {
@@ -40,16 +40,11 @@ public final class CubeGrid {
                         int[] visual = rotateXYZ(x, y, z, rotation);
                         rotatedIndices[rotation][index] = indexFromXYZ(visual[0], visual[1], visual[2]);
                     }
-                    double minX = starts[x] / 16.0;
-                    double minY = starts[y] / 16.0;
-                    double minZ = starts[z] / 16.0;
-                    double size = cellPixels / 16.0;
-                    localBoxes[index] = new AABB(
-                            minX, minY, minZ, minX + size, minY + size, minZ + size);
                     localShapes[index] = Block.box(
                             starts[x], starts[y], starts[z],
                             starts[x] + cellPixels, starts[y] + cellPixels,
                             starts[z] + cellPixels);
+                    localBoxes[index] = localShapes[index].bounds();
                 }
             }
         }

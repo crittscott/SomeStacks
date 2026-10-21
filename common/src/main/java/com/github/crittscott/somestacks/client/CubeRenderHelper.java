@@ -14,7 +14,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.LevelRenderer;
+
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
+
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
@@ -135,9 +135,8 @@ public final class CubeRenderHelper {
     public static void renderGridItems(
             SlotAccess items, int slots, CubeGrid grid, int blockRotation,
             float renderScale, IntUnaryOperator itemRotation,
-            Level level, BlockPos blockPos, PoseStack pose, MultiBufferSource buffers,
+            Level level, int cubeLight, PoseStack pose, MultiBufferSource buffers,
             BlockRenderDispatcher blockRenderer) {
-        int cubeLight = LevelRenderer.getLightColor(level, blockPos);
         for (int index = 0; index < slots; index++) {
             ItemStack stack = items.getStackInSlot(index);
             if (stack.isEmpty()) {
@@ -275,10 +274,13 @@ public final class CubeRenderHelper {
         pose.popPose();
     }
 
+    private static final float GUI_Y_COUNTER_ROTATION_DEGREES = -45.0f;
+    private static final float GUI_X_COUNTER_ROTATION_DEGREES = -30.0f;
+
     /** Applies the counter-rotation shared by GUI rendering and automatic GUI measurement. */
     public static void applyGuiCounterRotation(PoseStack pose) {
-        pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
-        pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
+        pose.mulPose(Axis.YP.rotationDegrees(GUI_Y_COUNTER_ROTATION_DEGREES));
+        pose.mulPose(Axis.XP.rotationDegrees(GUI_X_COUNTER_ROTATION_DEGREES));
     }
 
     private static void render2DItem(@Nullable List<ItemCapture.TintedQuad> quads, PoseStack pose,

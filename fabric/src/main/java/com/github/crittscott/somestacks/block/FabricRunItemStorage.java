@@ -68,6 +68,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
 
     @Override
     public Iterator<StorageView<ItemVariant>> iterator() {
+        FabricRunItemStorage ledger = ledger();
+        if (ledger != this) return ledger.iterator();
         int slotCount = getSlotCount();
         return new Iterator<>() {
             private int slot;
@@ -87,12 +89,19 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-        return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
+        FabricRunItemStorage ledger = ledger();
+        if (ledger != this) return ledger.insert(resource, maxAmount, transaction);
+        if (!(blockEntity.itemRun() instanceof StackRun<?> run)) return 0;
+        try (var query = run.growthQuery()) {
+            return StorageUtil.insertStacking(getSlots(), resource, maxAmount, transaction);
+        }
     }
 
     @Override
     public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
+        FabricRunItemStorage ledger = ledger();
+        if (ledger != this) return ledger.extract(resource, maxAmount, transaction);
         long extracted = 0;
         int slotCount = getSlotCount();
         for (int slot = 0; slot < slotCount && extracted < maxAmount; slot++) {
@@ -106,7 +115,8 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         if (blockEntity.isRemoved()) return this;
         StackRunItemAccess access = blockEntity.itemRun();
         if (access instanceof StackRun<?> run) {
-            StackBlockEntity base = (StackBlockEntity) blockEntity.getLevel().getBlockEntity(run.basePos());
+            StackBlockEntity base = run.baseBlockEntity();
+            if (base == blockEntity) return this;
             return FabricItemStorage.of(base);
         }
         return this;
@@ -153,15 +163,15 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
     }
 
     private boolean isValid(ItemStack stack) {
-        return blockEntity.acceptsAutomation(stack);
+        return blockEntity.isStoredItemValid(stack);
     }
 
     private int capacity(ItemVariant resource) {
-        return Math.min(blockEntity.automationSlotLimit(), resource.toStack().getMaxStackSize());
+        return Math.min(blockEntity.localSlotLimit(), resource.toStack().getMaxStackSize());
     }
 
     private boolean isStructural() {
-        return blockEntity.automationSlotLimit() == 1;
+        return blockEntity.localSlotLimit() == 1;
     }
 
     /** Records a slot's original live value once, then replaces its transaction-visible value. */
@@ -355,7 +365,7 @@ public final class FabricRunItemStorage extends SnapshotParticipant<FabricRunIte
         public long getCapacity() {
             ItemVariant resource = getResource();
             return resource.isBlank() && !isStructural()
-                    ? blockEntity.automationSlotLimit()
+                    ? blockEntity.localSlotLimit()
                     : capacity(resource);
         }
     }

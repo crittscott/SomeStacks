@@ -78,10 +78,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">com.github.crittscott.somestacks</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="interaction/package-summary.html">com.github.crittscott.somestacks.client.interaction</a></div>
+<div class="col-first odd-row-color"><a href="measure/package-summary.html">com.github.crittscott.somestacks.client.measure</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="measure/package-summary.html">com.github.crittscott.somestacks.client.measure</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
@@ -115,17 +113,17 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ClientRenderCommands.Feedback.html" title="interface in com.github.crittscott.somestacks.client">ClientRenderCommands.Feedback</a>&lt;S&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientRenderPacketSink.html" title="class in com.github.crittscott.somestacks.client">ClientRenderPacketSink</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientServerSettings.html" title="class in com.github.crittscott.somestacks.client">ClientServerSettings</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Stages config chunks and atomically publishes a complete server snapshot.</div>
+<div class="block">Connection-owned server policy, published as one immutable value on the client thread.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ClientRenderToolState.html" title="class in com.github.crittscott.somestacks.client">ClientRenderToolState</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Passive server lists used only when the local player invokes a render-authoring command.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CubeRenderHelper.html" title="class in com.github.crittscott.somestacks.client">CubeRenderHelper</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Draws one stored item inside one cell according to its render profile.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GridStackBER.html" title="class in com.github.crittscott.somestacks.client">GridStackBER</a>&lt;T extends <a href="../block/StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Loader-neutral renderer for the Storage and Singles cube grids.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemCapture.html" title="class in com.github.crittscott.somestacks.client">ItemCapture</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -150,18 +148,9 @@ loadScripts(document, 'script');</script>
 <div class="block">A complete, ready-to-render presentation for one item: the output of resolving the
  override layers, or of measuring the item's model when no layer configures it.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SinglesStackBER.html" title="class in com.github.crittscott.somestacks.client">SinglesStackBER</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SomeStacksClient.html" title="class in com.github.crittscott.somestacks.client">SomeStacksClient</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral renderer for a Singles Stack's 64 stored items.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StackState.html" title="class in com.github.crittscott.somestacks.client">StackState</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">The loader-neutral client copy of which stack types the server has enabled, delivered by the configuration
- sync.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StorageStackBER.html" title="class in com.github.crittscott.somestacks.client">StorageStackBER</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Loader-neutral renderer for a Storage Stack's 27 stored stacks.</div>
+<div class="block">Shared connection lifecycle; joining preserves policy received during native configuration.</div>
 </div>
 </div>
 </div>

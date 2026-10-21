@@ -1,12 +1,9 @@
 package com.github.crittscott.somestacks.gametest;
 
 import com.github.crittscott.somestacks.ServerConfig;
-import com.github.crittscott.somestacks.client.StackState;
+import com.github.crittscott.somestacks.client.ClientServerSettings;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
-import com.github.crittscott.somestacks.client.ClientRenderPacketSink;
-import com.github.crittscott.somestacks.client.ClientRenderToolState;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.util.BlockType;
 import com.github.crittscott.somestacks.util.StackItemStorage;
 import io.netty.buffer.Unpooled;
@@ -17,12 +14,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.List;
+import java.util.Collections;
 import java.util.ArrayList;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
@@ -34,242 +30,107 @@ public final class SynchronizationChecks {
     private SynchronizationChecks() {}
 
     /**
-     * Complete snapshots publish flags and both lists only at their final chunk. To reproduce
-     * in-game: configure disabled types and namespace lists, join, and inspect mode cycling and
-     * /ss write list. A large list exercises multiple packets; exact atomicity requires this test.
+     * Complete snapshots publish flags and both lists in one operation. To reproduce in-game:
+     * configure disabled types and namespace lists, join, and inspect mode cycling and /ss write
+     * list. Repeat after a policy edit without reconnecting.
      */
     public static void configSnapshotsRoundTripAndPublishAtomically(GameTestHelper helper) {
-        var policy = ServerConfig.settings();
-        List<String> originalGallery = ClientRenderToolState.genMods();
-        List<String> originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
+        var originalGallery = ClientServerSettings.genMods();
+        var originalDenied = List.copyOf(ClientServerSettings.disabledMods());
         boolean[] originalFlags = flags();
-        ClientRenderPacketSink.clear();
         try {
-            for (int size : new int[] {0, 1, 4096}) {
+            for (int size : new int[] {0, 1, ConfigSyncPkt.MAX_NAMESPACES}) {
                 List<String> gallery = new ArrayList<>();
                 List<String> denied = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
-                    gallery.add("gallery" + i + "a".repeat(240));
-                    denied.add("denied" + i + "b".repeat(240));
+                    String prefix = "namespace" + i;
+                    String namespace = prefix + "a".repeat(ConfigSyncPkt.MAX_NAMESPACE_LENGTH - prefix.length());
+                    gallery.add(namespace);
+                    denied.add(namespace);
                 }
-                boolean[] expectedFlags = {size == 4096, size != 4096, size == 0};
-                ServerConfig.apply(new ServerConfig.Settings(policy.maxPileHeight(),
-                        expectedFlags[0], expectedFlags[1], expectedFlags[2],
-                        denied, policy.disableItems(), policy.renderGalleryPlacementsPerTick(),
-                        policy.galleryEnabled(), policy.galleryPermissionLevel(), gallery, policy.genItems()));
-                ConfigSyncPkt.rebuildCurrent();
-                List<ConfigSyncPkt> packets = ConfigSyncPkt.currentPackets();
-                check(size == 4096 ? packets.size() > 1 : packets.size() == 1, "Wrong chunking");
-                List<ConfigSyncPkt> sent = new ArrayList<>();
-                ConfigSyncNetwork.sendCurrent(sent::add);
-                checkEquals(packets, sent, "Delivery skipped/reordered cached chunks");
-                List<String> beforeGallery = ClientRenderToolState.genMods();
-                var beforeDenied = ClientRenderToolState.disabledMods();
-                boolean[] beforeFlags = flags();
-                int bytes = 0;
-                for (int i = 0; i < sent.size(); i++) {
-                    ConfigSyncPkt packet = sent.get(i);
-                    checkEquals(i == 0, packet.first(), "First marker");
-                    checkEquals(i == sent.size() - 1, packet.last(), "Last marker");
-                    checkEquals(packets.get(0).generation(), packet.generation(), "Generation changed");
-                    bytes += packet.budgetBytes();
-                    var raw = Unpooled.buffer();
-                    try {
-                        var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
-                        ConfigSyncPkt.STREAM_CODEC.encode(buf, packet);
-                        check(raw.readableBytes() <= ConfigSyncPkt.MAX_PACKET_BYTES, "Encoded chunk too large");
-                        ConfigSyncPkt decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
-                        checkEquals(packet, decoded, "Chunk codec round trip");
-                        ClientRenderPacketSink.apply(decoded);
-                    } finally {
-                        raw.release();
-                    }
-                    if (!packet.last()) {
-                        checkEquals(beforeGallery, ClientRenderToolState.genMods(), "Gallery published early");
-                        checkEquals(beforeDenied, ClientRenderToolState.disabledMods(), "Deny list published early");
-                        check(Arrays.equals(beforeFlags, flags()), "Flags published early");
-                    }
+                var packet = new ConfigSyncPkt(size == 0, size == 1, size > 1, gallery, denied);
+                var raw = Unpooled.buffer();
+                try {
+                    var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
+                    ConfigSyncPkt.STREAM_CODEC.encode(buf, packet);
+                    check(raw.readableBytes() < 132 * 1024, "Maximum snapshot exceeds its bounded size");
+                    var decoded = ConfigSyncPkt.STREAM_CODEC.decode(buf);
+                    checkEquals(packet, decoded, "Snapshot codec round trip");
+                    checkEquals(0, raw.readableBytes(), "Snapshot decoder left fields unread");
+                    ClientServerSettings.apply(decoded);
+                } finally {
+                    raw.release();
                 }
-                check(packets.size() <= ConfigSyncPkt.MAX_GENERATION_CHUNKS, "Chunk budget");
-                check(bytes <= ConfigSyncPkt.MAX_GENERATION_BYTES, "Generation byte budget");
-                checkEquals(gallery, ClientRenderToolState.genMods(), "Published gallery list");
-                checkEquals(Set.copyOf(denied), ClientRenderToolState.disabledMods(), "Published deny set");
-                check(Arrays.equals(expectedFlags, flags()), "Published flags");
+                checkEquals(gallery, ClientServerSettings.genMods(), "Published gallery list");
+                checkEquals(Set.copyOf(denied), ClientServerSettings.disabledMods(), "Published deny set");
+                check(Arrays.equals(new boolean[] {size == 0, size == 1, size > 1}, flags()), "Published flags");
             }
+            var defaults = ServerConfig.defaults();
+            var normalized = ConfigSyncPkt.fromSettings(new ServerConfig.Settings(defaults.maxPileHeight(),
+                    true, true, true, List.of(" Minecraft ", "minecraft"), defaults.disableItems(),
+                    defaults.renderGalleryPlacementsPerTick(), false, defaults.galleryPermissionLevel(),
+                    List.of(" SomeStacks ", "somestacks"), List.of()));
+            checkEquals(List.of("minecraft"), normalized.disabledMods(), "Deny normalization");
+            checkEquals(List.of("somestacks"), normalized.genMods(), "Gallery normalization");
+            ClientServerSettings.clear();
+            check(Arrays.equals(new boolean[]{true, true, true}, flags()), "Disconnect defaults");
+            check(ClientServerSettings.genMods().isEmpty(), "Disconnected gallery list survived");
+            check(ClientServerSettings.disabledMods().isEmpty(), "Disconnected deny list survived");
         } finally {
-            ServerConfig.apply(policy);
-            ConfigSyncPkt.rebuildCurrent();
-            ClientRenderPacketSink.clear();
-            ClientRenderToolState.replace(originalGallery, originalDenied);
+            ClientServerSettings.replace(originalGallery, originalDenied);
             restoreFlags(originalFlags);
         }
         helper.succeed();
     }
 
-    /**
-     * Missing, inconsistent, and superseded generations cannot publish partial settings. No
-     * in-game reproduction applies: these are synthetic interrupted and malformed sequences.
-     */
-    public static void configStagingChecksSequencesAndTotals(GameTestHelper helper) {
-        var originalGallery = ClientRenderToolState.genMods();
-        var originalDenied = List.copyOf(ClientRenderToolState.disabledMods());
-        boolean[] originalFlags = flags();
-        ClientRenderPacketSink.clear();
-        try {
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, true, 1, "tail")), "Missing first accepted");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 2, "old"));
-            checkEquals(originalGallery, ClientRenderToolState.genMods(), "Missing last published");
-            ClientRenderPacketSink.apply(chunk(3, true, true, 1, "replacement"));
-            checkEquals(List.of("replacement"), ClientRenderToolState.genMods(), "New first did not replace staging");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(2, false, true, 2, "old_tail")), "Old tail accepted");
-            ClientRenderPacketSink.apply(chunk(4, true, false, 2, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(5, false, true, 2, "tail")), "Mismatched generation accepted");
-            for (ConfigSyncPkt changed : List.of(
-                    new ConfigSyncPkt(6, false, true, false, true, true, 2, 0, List.of("tail"), List.of()),
-                    new ConfigSyncPkt(6, false, true, true, false, true, 2, 0, List.of("tail"), List.of()),
-                    new ConfigSyncPkt(6, false, true, true, true, false, 2, 0, List.of("tail"), List.of()),
-                    chunk(6, false, true, 3, "tail"),
-                    new ConfigSyncPkt(6, false, true, true, true, true, 2, 1, List.of("tail"), List.of()))) {
-                ClientRenderPacketSink.apply(chunk(6, true, false, 2, "first"));
-                rejects(() -> ClientRenderPacketSink.apply(changed), "Changed metadata accepted");
-                rejects(() -> ClientRenderPacketSink.apply(chunk(6, false, true, 2, "tail")), "Rejected staging survived");
-            }
-            rejects(() -> ClientRenderPacketSink.apply(chunk(7, true, true, 2, "only")), "Total underflow accepted");
-            ClientRenderPacketSink.apply(chunk(8, true, false, 1, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(8, false, true, 1, "extra")), "Total overflow accepted");
-            ClientRenderPacketSink.apply(new ConfigSyncPkt(9, true, false, true, true, true,
-                    0, 2, List.of(), List.of("denied")));
-            rejects(() -> ClientRenderPacketSink.apply(new ConfigSyncPkt(9, false, true, true, true, true,
-                    0, 2, List.of(), List.of("denied"))), "Duplicate deny entry accepted");
-            checkEquals(List.of("replacement"), ClientRenderToolState.genMods(), "Bad sequence replaced published state");
-            check(Arrays.equals(new boolean[] {true, true, true}, flags()), "Bad sequence changed flags");
-            check(ClientRenderToolState.disabledMods().isEmpty(), "Bad sequence changed deny set");
-            ClientRenderPacketSink.apply(chunk(10, true, true, 1, "recovered"));
-            checkEquals(List.of("recovered"), ClientRenderToolState.genMods(), "Valid snapshot after rejection failed");
-        } finally {
-            ClientRenderPacketSink.clear();
-            ClientRenderToolState.replace(originalGallery, originalDenied);
-            restoreFlags(originalFlags);
-        }
-        helper.succeed();
-    }
-
-    /** No in-game reproduction applies: invalid wire counts and namespace encodings must fail decoding. */
+    /** No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail decoding. */
     public static void configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper helper) {
-        for (int[] counts : new int[][] {{-1, 0, 0, 0}, {4097, 0, 0, 0},
-                {0, -1, 0, 0}, {0, 4097, 0, 0}, {1, 0, -1, 0}, {1, 0, 2, 0},
-                {0, 1, 0, -1}, {0, 1, 0, 2}}) {
-            var raw = Unpooled.buffer();
-            try {
-                var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
-                writeHeader(buf, 1, counts[0], counts[1]);
-                buf.writeVarInt(counts[2]);
-                buf.writeVarInt(counts[3]);
-                rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid wire count decoded");
-            } finally {
-                raw.release();
+        for (boolean gallery : new boolean[] {true, false}) {
+            for (int count : new int[] {-1, ConfigSyncPkt.MAX_NAMESPACES + 1}) {
+                var raw = Unpooled.buffer();
+                try {
+                    var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
+                    writeFlags(buf);
+                    if (!gallery) buf.writeVarInt(0);
+                    buf.writeVarInt(count);
+                    rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid wire count decoded");
+                } finally { raw.release(); }
             }
         }
-        for (int generation : new int[] {0, -1}) {
+        for (List<String> namespaces : List.of(List.of(""), List.of("Uppercase"),
+                List.of("bad namespace"), List.of("a".repeat(ConfigSyncPkt.MAX_NAMESPACE_LENGTH + 1)),
+                List.of("duplicate", "duplicate"))) {
             var raw = Unpooled.buffer();
             try {
                 var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
-                writeHeader(buf, generation, 0, 0);
-                buf.writeVarInt(0);
-                buf.writeVarInt(0);
-                rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid generation decoded");
-            } finally {
-                raw.release();
-            }
-        }
-        for (String namespace : List.of("", "Uppercase", "bad namespace", "a".repeat(257))) {
-            var raw = Unpooled.buffer();
-            try {
-                var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
-                writeHeader(buf, 1, 1, 0);
-                buf.writeVarInt(1);
-                buf.writeUtf(namespace);
+                writeFlags(buf);
+                buf.writeVarInt(namespaces.size());
+                namespaces.forEach(buf::writeUtf);
                 buf.writeVarInt(0);
                 rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Invalid namespace decoded");
-            } finally {
-                raw.release();
-            }
+            } finally { raw.release(); }
         }
+        rejects(() -> new ConfigSyncPkt(true, true, true,
+                Collections.nCopies(ConfigSyncPkt.MAX_NAMESPACES + 1, "namespace"), List.of()),
+                "Direct construction bypassed count limit");
         helper.succeed();
     }
 
-    private static void writeHeader(RegistryFriendlyByteBuf buf, int generation, int gallery, int denied) {
-        buf.writeVarInt(generation);
-        for (int i = 0; i < 5; i++) buf.writeBoolean(true);
-        buf.writeVarInt(gallery);
-        buf.writeVarInt(denied);
+    private static void writeFlags(RegistryFriendlyByteBuf buf) {
+        buf.writeBoolean(true);
+        buf.writeBoolean(true);
+        buf.writeBoolean(true);
     }
 
     private static boolean[] flags() {
-        return new boolean[] {StackState.isBlockTypeEnabled(BlockType.STORAGE_STACK),
-                StackState.isBlockTypeEnabled(BlockType.SINGLES_STACK), StackState.isBlockTypeEnabled(BlockType.BAR_STACK)};
+        return new boolean[] {ClientServerSettings.isBlockTypeEnabled(BlockType.STORAGE_STACK),
+                ClientServerSettings.isBlockTypeEnabled(BlockType.SINGLES_STACK), ClientServerSettings.isBlockTypeEnabled(BlockType.BAR_STACK)};
     }
 
     private static void restoreFlags(boolean[] flags) {
-        StackState.setBlockEnabled(BlockType.STORAGE_STACK, flags[0]);
-        StackState.setBlockEnabled(BlockType.SINGLES_STACK, flags[1]);
-        StackState.setBlockEnabled(BlockType.BAR_STACK, flags[2]);
-    }
-
-    /** No in-game reproduction applies: an oversized server payload is rejected before decoding. */
-    public static void configDecoderEnforcesPacketBudget(GameTestHelper helper) {
-        var raw = Unpooled.buffer();
-        var buf = new RegistryFriendlyByteBuf(raw, helper.getLevel().registryAccess());
-        try {
-            raw.writeZero(ConfigSyncPkt.MAX_PACKET_BYTES + 1);
-            rejects(() -> ConfigSyncPkt.STREAM_CODEC.decode(buf), "Oversized config packet decoded");
-            checkEquals(0, raw.readerIndex(), "Oversized packet was read before rejection");
-            raw.clear();
-            var packet = new ConfigSyncPkt(1, true, true, true, false, true,
-                    2, 1, List.of("minecraft", "somestacks"), List.of("denied"));
-            ConfigSyncPkt.STREAM_CODEC.encode(buf, packet);
-            checkEquals(packet, ConfigSyncPkt.STREAM_CODEC.decode(buf), "Bounded config round trip");
-        } finally {
-            raw.release();
-        }
-        helper.succeed();
-    }
-
-    /**
-     * No in-game reproduction applies: malicious chunk sequences must clear staging without
-     * publishing an incomplete snapshot; an honest client cannot construct these sequences.
-     */
-    public static void configStagingRejectsAndClearsInvalidGenerations(GameTestHelper helper) {
-        List<String> published = ClientRenderToolState.genMods();
-        ClientRenderPacketSink.clear();
-        try {
-            ClientRenderPacketSink.apply(chunk(1, true, false, 10, "first"));
-            checkEquals(published, ClientRenderToolState.genMods(), "Incomplete snapshot published");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, false, 10)),
-                    "Empty intermediate chunk accepted");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(1, false, true, 10, "second")),
-                    "Rejected generation retained staging");
-            ClientRenderPacketSink.apply(chunk(2, true, false, 10, "first"));
-            rejects(() -> ClientRenderPacketSink.apply(chunk(2, false, true, 10, "first")),
-                    "Duplicate namespace accepted");
-            for (int i = 0; i < ConfigSyncPkt.MAX_GENERATION_CHUNKS; i++) {
-                ClientRenderPacketSink.apply(chunk(3, i == 0, false, 4096, "mod" + i));
-            }
-            rejects(() -> ClientRenderPacketSink.apply(chunk(3, false, false, 4096, "overflow")),
-                    "Generation chunk budget was ignored");
-            rejects(() -> ClientRenderPacketSink.apply(chunk(3, false, true, 4096, "tail")),
-                    "Over-budget generation retained staging");
-            checkEquals(published, ClientRenderToolState.genMods(), "Rejected snapshot published");
-        } finally {
-            ClientRenderPacketSink.clear();
-        }
-        helper.succeed();
-    }
-
-    private static ConfigSyncPkt chunk(int generation, boolean first, boolean last, int total,
-                                       String... namespaces) {
-        return new ConfigSyncPkt(generation, first, last, true, true, true,
-                total, 0, List.of(namespaces), List.of());
+        ClientServerSettings.setBlockEnabled(BlockType.STORAGE_STACK, flags[0]);
+        ClientServerSettings.setBlockEnabled(BlockType.SINGLES_STACK, flags[1]);
+        ClientServerSettings.setBlockEnabled(BlockType.BAR_STACK, flags[2]);
     }
 
     /**
@@ -338,20 +199,11 @@ public final class SynchronizationChecks {
             CompoundTag replacement = valid.copy();
             var source = new StackItemStorage(be.getItems().getSlots());
             source.setStackInSlot(1, new ItemStack(Items.DIAMOND));
-            replacement.put("Items", source.serializeNBT(helper.getLevel().registryAccess()));
+            replacement.put("Items", source.save(helper.getLevel().registryAccess()));
             check(be.loadClientUpdate(replacement, helper.getLevel().registryAccess()),
                     "Valid current-format update rejected");
             check(be.getItems().getStackInSlot(0).isEmpty(), "Old client slot survived replacement");
             checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Replacement client item");
-            var registries = helper.getLevel().registryAccess();
-            be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid));
-            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Chunk initialization item");
-            be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement));
-            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Later packet item");
-            be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, valid), registries);
-            checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Forge chunk initialization item");
-            be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, replacement), registries);
-            checkEquals(Items.DIAMOND, be.getItems().getStackInSlot(1).getItem(), "Forge later packet item");
         }
         helper.succeed();
     }
@@ -359,11 +211,11 @@ public final class SynchronizationChecks {
     /** No in-game reproduction applies: malformed rotation metadata invalidates the entire update. */
     public static void clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper helper) {
         var be = GameTestScaffold.placeSingles(helper, ORIGIN);
-        be.getItems().insertItem(0, new ItemStack(Items.STONE), false);
+        be.getItems().insertItem(0, new ItemStack(Items.STONE));
         CompoundTag valid = be.getUpdateTag(helper.getLevel().registryAccess());
         var replacement = new StackItemStorage(64);
         replacement.setStackInSlot(1, new ItemStack(Items.DIAMOND));
-        CompoundTag changedItems = replacement.serializeNBT(helper.getLevel().registryAccess());
+        CompoundTag changedItems = replacement.save(helper.getLevel().registryAccess());
         CompoundTag missingRotations = valid.copy();
         missingRotations.put("Items", changedItems.copy());
         missingRotations.remove("CubeRotations");
@@ -394,17 +246,10 @@ public final class SynchronizationChecks {
         CompoundTag before = be.getUpdateTag(helper.getLevel().registryAccess());
         check(!be.loadClientUpdate(tag, helper.getLevel().registryAccess()), "Malformed update accepted");
         var registries = helper.getLevel().registryAccess();
-        be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
-        checkEquals(before, be.getUpdateTag(registries), "Rejected chunk update changed render state");
-        be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
-        checkEquals(before, be.getUpdateTag(registries), "Rejected block update changed render state");
-        be.handleUpdateTag(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag), registries);
-        checkEquals(before, be.getUpdateTag(registries), "Rejected Forge chunk update changed render state");
-        be.onDataPacket(null, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag), registries);
-        checkEquals(before, be.getUpdateTag(registries), "Rejected Forge block update changed render state");
+        checkEquals(before, be.getUpdateTag(registries), "Rejected snapshot changed render state");
         checkEquals(Items.STONE, be.getItems().getStackInSlot(0).getItem(), "Rejected update changed slot 0");
         check(be.getItems().getStackInSlot(1).isEmpty(), "Rejected update partially changed inventory");
-        check(!be.getItems().serializeNBT(helper.getLevel().registryAccess()).contains("SetAside"),
+        check(!be.getItems().save(helper.getLevel().registryAccess()).contains("SetAside"),
                 "Client retained rejected entries for recovery");
     }
 

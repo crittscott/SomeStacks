@@ -103,9 +103,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ClientCallbackChecks.ClientUpdate.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Loader-native chunk or block update on an actual client-attached registered entity.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
 </div>
 </div>
@@ -123,8 +128,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#run(boolean,java.util.function.BiFunction)" class="member-name-link">run</a><wbr>(boolean&nbsp;modifierDown,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand,<wbr>net.minecraft.world.phys.BlockHitResult,<wbr><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)" class="member-name-link">run</a><wbr>(boolean&nbsp;modifierDown,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand,<wbr>net.minecraft.world.phys.BlockHitResult,<wbr><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback,
+ <a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a>&nbsp;update)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
  stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
@@ -147,16 +153,21 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="run(boolean,java.util.function.BiFunction)">
+<section class="detail" id="run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)">
 <h3>run</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">run</span><wbr><span class="parameters">(boolean&nbsp;modifierDown,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand,<wbr>net.minecraft.world.phys.BlockHitResult,<wbr><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.InteractionHand,<wbr>net.minecraft.world.phys.BlockHitResult,<wbr><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a>&gt;&nbsp;callback,
+ <a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a>&nbsp;update)</span></div>
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
  stack, release Shift and the Stack Modifier, and run /ssclienttest. It invokes the actual
  loader callback for main/off hand and checks consumption plus block/item suppression. It
  does not send a vanilla use packet or extract contents. A translated success/failure message
  reports the assertions; server GameTests cannot exercise this client-only boundary. It also
- checks render-profile layer precedence and invalidation and the profile commands.</div>
+ checks Bar presentation reuse and invalidation, render-profile layer precedence and
+ invalidation, and the profile commands. The command also feeds valid and malformed
+ initial/subsequent updates through each loader's native client entry point on scratch
+ entities, checking inventory and inherited components. Ordinary clients cannot reproduce
+ malformed wire data through player actions.</div>
 </section>
 </li>
 </ul>

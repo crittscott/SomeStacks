@@ -2,8 +2,6 @@ package com.github.crittscott.somestacks.mixin;
 
 import com.github.crittscott.somestacks.client.ClientGestures;
 import com.github.crittscott.somestacks.client.FabricKeyMappings;
-import com.github.crittscott.somestacks.client.interaction.InteractionContext;
-import com.github.crittscott.somestacks.client.interaction.InteractionRuleRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -29,11 +27,8 @@ abstract class MinecraftMixin {
             return;
         }
 
-        InteractionContext context = InteractionContext.forAirClick(
-                player, player.level(), InteractionHand.MAIN_HAND,
-                ClientGestures.currentMode(), FabricKeyMappings.STACK_MODE_KEY.isDown(),
-                ClientGestures.isHittingBlock(hitResult));
         ClientGestures.syncState(FabricKeyMappings.STACK_MODE_KEY.isDown());
-        InteractionRuleRegistry.processEmptyHandRules(context);
+        ClientGestures.processClick(player, InteractionHand.MAIN_HAND, null, false,
+                FabricKeyMappings.STACK_MODE_KEY.isDown());
     }
 }

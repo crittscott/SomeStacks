@@ -3,6 +3,9 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.network.GestureStatePkt;
 import com.github.crittscott.somestacks.util.StackMode;
+import com.github.crittscott.somestacks.util.StackGesture;
+import com.github.crittscott.somestacks.util.BlockType;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +47,7 @@ public final class ClientGestures {
         do {
             stackMode = StackMode.fromOrdinal((stackMode.ordinal() + 1) % StackMode.values().length);
             if (stackMode == StackMode.TOGGLE_PERMANENT) break;
-            if (stackMode.isBlockType() && StackState.isBlockTypeEnabled(stackMode.toBlockType())) break;
+            if (stackMode.isBlockType() && ClientServerSettings.isBlockTypeEnabled(stackMode.toBlockType())) break;
             if (stackMode == startMode) break;
         } while (true);
     }
@@ -69,6 +72,20 @@ public final class ClientGestures {
     /** Forces the next interaction to establish state on a new connection. */
     public static void resetSync() {
         lastSentMode = null;
+    }
+
+    /** Recognizes client intent and performs the client-owned air-cycle action. */
+    public static StackGesture processClick(Player player, InteractionHand hand,
+                                            @Nullable BlockType clicked, boolean hittingBlock,
+                                            boolean modifier) {
+        StackGesture gesture = StackGesture.classify(clicked, stackMode, modifier,
+                player.isShiftKeyDown(), player.getMainHandItem(), hittingBlock, hand);
+        if (gesture == StackGesture.CYCLE_MODE) {
+            cycleMode();
+            syncState(true);
+            displayModeMessage(player);
+        }
+        return gesture;
     }
 
     /** Whether an input is the main-hand air click used for empty-hand placement-mode cycling. */
