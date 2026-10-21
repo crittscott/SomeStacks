@@ -3,10 +3,8 @@ package com.github.crittscott.somestacks.server;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.EventHooks;
 
@@ -19,7 +17,7 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
 
     /** Consults the native placement event against a tentative block, then restores it silently. */
     public static NeoForgeGrowthPlacement prepare(ServerLevel level, BlockPos pos, BlockState state) {
-        if (level.captureBlockSnapshots || level.restoringBlockSnapshots || !WorldEdits.mayPlace(level, pos)) {
+        if (level.captureBlockSnapshots || level.restoringBlockSnapshots || !WorldEdits.mayPlace(null, level, pos)) {
             return null;
         }
         List<BlockSnapshot> snapshots = new ArrayList<>();
@@ -47,10 +45,7 @@ public record NeoForgeGrowthPlacement(ServerLevel level, BlockPos pos, BlockStat
     /** Publishes only after all committed inventory changes have been applied. */
     public void publish(List<BlockSnapshot> snapshots) {
         publishSnapshots(level, snapshots);
-        ServerPlayer actor = WorldEdits.automationActor(level);
-        BlockState placed = level.getBlockState(pos);
-        placed.getBlock().setPlacedBy(level, pos, placed, actor, actor.getMainHandItem());
-        level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(actor, placed));
+        WorldEdits.completePlacement(WorldEdits.automationActor(level), level, pos);
     }
 
     static void publishSnapshots(ServerLevel level, List<BlockSnapshot> snapshots) {

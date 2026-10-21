@@ -108,7 +108,7 @@ public final class AutoRenderProfiles {
         try {
             deleted = Files.deleteIfExists(cacheFile);
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to delete {}: {}", cacheFile, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to delete {}", cacheFile, e);
         }
         if (clearedProfiles > 0 || deleted) {
             SomeStacksCommon.LOGGER.info(
@@ -146,7 +146,7 @@ public final class AutoRenderProfiles {
             Files.writeString(cacheFile, PRETTY_GSON.toJson(root));
             dirty = false;
         } catch (IOException e) {
-            SomeStacksCommon.LOGGER.warn("Failed to write {}: {}", cacheFile, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to write {}", cacheFile, e);
         }
     }
 
@@ -217,7 +217,7 @@ public final class AutoRenderProfiles {
                     "Loaded {} measured render profile(s) from {}; skipped {} stale or invalid cache entries",
                     CACHE.size(), cacheFile, skipped);
         } catch (Exception e) {
-            SomeStacksCommon.LOGGER.warn("Failed to read {}: {}", cacheFile, e.getMessage());
+            SomeStacksCommon.LOGGER.warn("Failed to read {}", cacheFile, e);
         }
     }
 

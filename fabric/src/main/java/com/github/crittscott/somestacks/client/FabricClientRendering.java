@@ -3,7 +3,6 @@ package com.github.crittscott.somestacks.client;
 import com.github.crittscott.somestacks.FabricRegistry;
 import com.github.crittscott.somestacks.client.measure.AutoRenderProfiles;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.server.packs.PackType;
@@ -15,9 +14,9 @@ public final class FabricClientRendering {
 
     public static void init() {
         BlockEntityRenderers.register(
-                FabricRegistry.STORAGE_STACK_BE, StorageStackBER::new);
+                FabricRegistry.STORAGE_STACK_BE, GridStackBER::storage);
         BlockEntityRenderers.register(
-                FabricRegistry.SINGLES_STACK_BE, SinglesStackBER::new);
+                FabricRegistry.SINGLES_STACK_BE, GridStackBER::singles);
         BlockEntityRenderers.register(
                 FabricRegistry.BAR_STACK_BE, BarStackBER::new);
 
@@ -30,9 +29,7 @@ public final class FabricClientRendering {
                     CubeRenderHelper.onResourceReload();
                 });
 
-        ClientPlayConnectionEvents.DISCONNECT.register(
-                (handler, client) -> AutoRenderProfiles.saveCache());
         ClientLifecycleEvents.CLIENT_STOPPING.register(
-                client -> AutoRenderProfiles.saveCache());
+                client -> SomeStacksClient.onStopping());
     }
 }

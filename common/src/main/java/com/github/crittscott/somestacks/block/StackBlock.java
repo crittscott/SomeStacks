@@ -5,11 +5,15 @@ import com.github.crittscott.somestacks.util.BlockType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -44,7 +48,33 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
         registerDefaultState(defaultBlockState()
                 .setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
+        if (type() != BlockType.BAR_STACK) {
+            registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
+        }
     }
+
+    /** State shared by player placement and automatic growth, including Storage facing inheritance. */
+    public static BlockState placementState(Block block, LevelReader level, BlockPos pos) {
+        BlockState state = block.defaultBlockState().setValue(WATERLOGGED,
+                level.getFluidState(pos).getType() == Fluids.WATER);
+        if (block instanceof StackBlock stack && stack.type() == BlockType.STORAGE_STACK) {
+            StorageStackBE neighbour = level.getBlockEntity(pos.below()) instanceof StorageStackBE below
+                    ? below : level.getBlockEntity(pos.above()) instanceof StorageStackBE above ? above : null;
+            if (neighbour != null) {
+                state = state.setValue(HORIZONTAL_FACING,
+                        neighbour.getBlockState().getValue(HORIZONTAL_FACING));
+            }
+        }
+        return state;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return placementState(this, context.getLevel(), context.getClickedPos());
+    }
+
+    /** The stack behavior registered by this block. */
+    public abstract BlockType type();
 
     /** Shared properties for the Bar Stack's dynamic occupied shape. */
     public static BlockBehaviour.Properties barProperties() {
@@ -73,6 +103,66 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIGHT_LEVEL, WATERLOGGED);
+        if (type() != BlockType.BAR_STACK) builder.add(HORIZONTAL_FACING);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.hasProperty(HORIZONTAL_FACING)
+                ? state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING))) : state;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.hasProperty(HORIZONTAL_FACING)
+                ? rotate(state, mirror.getRotation(state.getValue(HORIZONTAL_FACING))) : state;
+    }
+
+    private StackRun<?> runAt(Level level, BlockPos pos) {
+        return level.getBlockState(pos).is(this)
+                && level.getBlockEntity(pos) instanceof StackBlockEntity member
+                && member.itemRun() instanceof StackRun<?> run ? run : null;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+        StackRun<?> run = runAt(level, pos);
+        return run == null ? 0 : run.comparatorSignal();
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        StackRun<?> run = runAt(level, pos);
+        if (run != null) tickRun(run, pos);
+    }
+
+    protected void tickRun(StackRun<?> run, BlockPos tickPos) { run.publishPending(); }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moving) {
+        super.onPlace(state, level, pos, oldState, moving);
+        if (!oldState.is(this)) {
+            StackRun.invalidateAround(level, pos, this);
+            afterRunAdded(level, pos);
+        }
+    }
+
+    protected void afterRunAdded(Level level, BlockPos pos) {
+        StackRun.publishAround(level, pos, this::runAt);
+    }
+
+    @Override
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean moving) {
+        if (level.getBlockState(pos).is(this)) return;
+        StackRun.invalidateAround(level, pos, this);
+        super.affectNeighborsAfterRemoval(state, level, pos, moving);
+        afterRunRemoved(level, pos);
+        StackRun.markDirtyAt(level, pos.below(), this::runAt);
+        StackRun.markDirtyAt(level, pos.above(), this::runAt);
+    }
+
+    protected void afterRunRemoved(ServerLevel level, BlockPos pos) {
+        StackRun.publishAround(level, pos, this::runAt);
     }
 
     @Override
@@ -101,22 +191,22 @@ public abstract class StackBlock extends Block implements EntityBlock, SimpleWat
     @Override
     public InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack(
-                    (ServerPlayer) player, InteractionHand.MAIN_HAND, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, InteractionHand.MAIN_HAND, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        // Client callbacks consume recognized gestures before native block use.
+        return InteractionResult.PASS;
     }
 
     @Override
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                        Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            StackInteractions.handleExistingStack((ServerPlayer) player, hand, hit,
-                    BlockType.of(state.getBlock()));
+        if (!level.isClientSide() && StackInteractions.handleExistingStack(
+                (ServerPlayer) player, hand, hit, type())) {
+            return InteractionResult.CONSUME;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     @Override

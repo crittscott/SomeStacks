@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="block">One Storage Stack: 27 item stacks drawn as a 3 x 3 x 3 grid.
 
  <p>The block owns its own slots, but it is not the unit of storage. A vertical run of these is a
- <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block"><code>StoragePile</code></a>, and deposits, capability access, sorting and packing all act on the whole
+ <a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block"><code>StoragePile</code></a>, and deposits, automation access, sorting and packing all act on the whole
  run. Everything here that reaches past this block's own slots resolves the pile first.
 
  <p>Automation exposure is loader-specific and lives outside this class: Forge uses an item-handler
@@ -134,10 +134,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Slots in one block.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_PERMANENT" class="member-name-link">TAG_PERMANENT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#items">items</a></code></div>
+<code><a href="StackBlockEntity.html#items">items</a>, <a href="StackBlockEntity.html#TAG_DATA_VERSION">TAG_DATA_VERSION</a>, <a href="StackBlockEntity.html#TAG_ITEMS">TAG_ITEMS</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Fields inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>level, remove, worldPosition</code></div>
@@ -192,7 +195,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Whether this block survives being emptied.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Admission for new local/automation inserts, including current namespace and type policy.</div>
@@ -237,7 +240,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#dropContentsOnRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">dropContentsOnRemoval</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#handleUpdateTag(net.minecraft.world.level.storage.ValueInput)">handleUpdateTag</a>, <a href="StackBlockEntity.html#handleUpdateTag(net.minecraft.world.level.storage.ValueInput,net.minecraft.core.HolderLookup.Provider)">handleUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)">isValidClientStackData</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.world.level.storage.ValueInput)">loadAdditional</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadClientUpdate</a>, <a href="StackBlockEntity.html#localSlotLimit()">localSlotLimit</a>, <a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a>, <a href="StackBlockEntity.html#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput)">onDataPacket</a>, <a href="StackBlockEntity.html#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput,net.minecraft.core.HolderLookup.Provider)">onDataPacket</a>, <a href="StackBlockEntity.html#onLocalContentsChanged(int)">onLocalContentsChanged</a>, <a href="StackBlockEntity.html#preRemoveSideEffects(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">preRemoveSideEffects</a>, <a href="StackBlockEntity.html#renderCache()">renderCache</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setBlockRotation(int)">setBlockRotation</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#setRenderCache(java.lang.Object)">setRenderCache</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
+<code><a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#dropContentsOnRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">dropContentsOnRemoval</a>, <a href="StackBlockEntity.html#getCachedShape()">getCachedShape</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#isValidClientStackData(net.minecraft.nbt.CompoundTag)">isValidClientStackData</a>, <a href="StackBlockEntity.html#isValidClientUpdate(net.minecraft.world.level.storage.ValueInput)">isValidClientUpdate</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.world.level.storage.ValueInput)">loadAdditional</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadClientUpdate</a>, <a href="StackBlockEntity.html#localSlotLimit()">localSlotLimit</a>, <a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a>, <a href="StackBlockEntity.html#onLocalContentsChanged(int)">onLocalContentsChanged</a>, <a href="StackBlockEntity.html#preRemoveSideEffects(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">preRemoveSideEffects</a>, <a href="StackBlockEntity.html#renderCache()">renderCache</a>, <a href="StackBlockEntity.html#resetClientUpdateDiagnostic()">resetClientUpdateDiagnostic</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#setRenderCache(java.lang.Object)">setRenderCache</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, applyComponents, applyComponentsFromItemStack, applyImplicitComponents, clearRemoved, collectComponents, collectImplicitComponents, components, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getNameForReporting, getPosFromTag, getType, hasLevel, isRemoved, isValidBlockState, loadCustomOnly, loadStatic, loadWithComponents, parseCustomNameSafe, problemPath, registerDebugValues, removeComponentsFromTag, saveCustomOnly, saveCustomOnly, saveWithFullMetadata, saveWithFullMetadata, saveWithId, saveWithoutMetadata, saveWithoutMetadata, setBlockState, setChanged, setChanged, setComponents, setRemoved, triggerEvent</code></div>
@@ -260,6 +263,20 @@ loadScripts(document, 'script');</script>
 <h3>SLOTS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SLOTS</span></div>
 <div class="block">Slots in one block. The pile's flat slot range is this times its height.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TAG_PERMANENT">
+<h3>TAG_PERMANENT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">TAG_PERMANENT</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.block.StorageStackBE.TAG_PERMANENT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -296,7 +313,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="isStoredItemValid(net.minecraft.world.item.ItemStack)">
 <h3>isStoredItemValid</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStoredItemValid</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStoredItemValid</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#isStoredItemValid(net.minecraft.world.item.ItemStack)">StackBlockEntity</a></code></span></div>
 <div class="block">Admission for new local/automation inserts, including current namespace and type policy.
  Existing saved or internally relocated items bypass this check; no slot is selected here.</div>
@@ -313,7 +330,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></span>&nbsp;<span class="element-name">pile</span>()</div>
 <div class="block">The pile this block belongs to, or null on the client and for a block being removed.
 
- <p>Resolved once a tick and held. A machine reading this block's item handler resolves the
+ <p>Resolved once a tick and held. A machine reading this block's automation view resolves the
  pile once per slot it walks, which is hundreds of times a tick for one attached storage
  network, and the run cannot change between two of those reads without passing through the
  block's own place or remove hook. Those hooks drop the cache; the tick it was taken on is what
@@ -372,7 +389,6 @@ loadScripts(document, 'script');</script>
 <h3>extractAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index,
  int&nbsp;maxCount,
- @Nullable
  net.minecraft.world.item.ItemStack&nbsp;playerHand,
  @Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>

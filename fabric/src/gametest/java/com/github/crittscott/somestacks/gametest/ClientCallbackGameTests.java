@@ -6,6 +6,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.InteractionResult;
 
 /** Fabric development-client registration for {@link ClientCallbackChecks#run}. */
@@ -20,6 +22,7 @@ public final class ClientCallbackGameTests implements ClientModInitializer {
                             InteractionResult result = FabricClientEvents.onUseBlock(client.player, client.level, hand, hit);
                             boolean consumed = result == InteractionResult.SUCCESS;
                             return new ClientCallbackChecks.Result(consumed, consumed, consumed);
-                        }))));
+                        }, (be, tag, initial) -> be.loadWithComponents(TagValueInput.create(
+                                ProblemReporter.DISCARDING, be.getLevel().registryAccess(), tag))))));
     }
 }

@@ -55,13 +55,13 @@ public final class ConfigurationGameTests {
         try {
             Files.createDirectories(serverConfigDir);
             Files.deleteIfExists(fixture);
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
 
             Files.writeString(fixture, configJson(999, -3, 0));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
 
             checkEquals(64, ServerConfig.maxPileHeight(), "Maximum pile-height clamp");
-            checkEquals(0, ServerConfig.galleryRequiredPermissionLevel(),
+            checkEquals(0, ServerConfig.settings().galleryPermissionLevel(),
                     "Minimum gallery-permission clamp");
             checkEquals(1, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Minimum gallery placement budget");
@@ -78,9 +78,9 @@ public final class ConfigurationGameTests {
             check(ServerConfig.isItemDisabled(Identifier.parse("minecraft:stone")),
                     "Disabled item was not baked");
             Files.writeString(fixture, configJson(-9, 99, 7));
-            new JsonServerConfig().load(fixture);
+            loadFixture(fixture);
             checkEquals(1, ServerConfig.maxPileHeight(), "Minimum pile-height clamp");
-            checkEquals(4, ServerConfig.galleryRequiredPermissionLevel(),
+            checkEquals(4, ServerConfig.settings().galleryPermissionLevel(),
                     "Maximum gallery-permission clamp");
             checkEquals(7, ServerConfig.renderGalleryPlacementsPerTick(),
                     "Positive gallery placement budget");
@@ -91,7 +91,7 @@ public final class ConfigurationGameTests {
                       "compatibility": {"disable_mods": ["minecraft", 7]}
                     }
                     """);
-            check(ServerConfig.reload(), "Server config did not reload its current file");
+            ServerConfig.reload();
             checkEquals(8, ServerConfig.maxPileHeight(),
                     "Malformed height did not fall back independently");
             check(!ServerConfig.enableStorageStackBlock(),
@@ -168,6 +168,17 @@ public final class ConfigurationGameTests {
     @GameTest(structure = TEMPLATE, maxTicks = 100)
     public void ingotTagControlsBarAndSinglesAdmission(GameTestHelper helper) {
         ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(helper);
+    }
+
+    private static void loadFixture(Path fixture) {
+        JsonServerConfig backend = new JsonServerConfig();
+        ServerConfig.Backend previousBackend = ServerConfig.backend();
+        ServerConfig.Settings previousSettings = ServerConfig.settings();
+        ServerConfig.Settings loaded = backend.load(fixture);
+        check(ServerConfig.backend() == previousBackend, "JSON load installed itself");
+        check(ServerConfig.settings() == previousSettings, "JSON load published policy");
+        ServerConfig.install(backend);
+        ServerConfig.apply(loaded);
     }
 
     private static String configJson(int height, int permission, int placements) {

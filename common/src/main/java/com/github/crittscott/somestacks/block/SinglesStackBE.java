@@ -11,10 +11,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Objects;
@@ -29,14 +31,14 @@ import javax.annotation.Nullable;
  * which is what automation addresses; this class owns one block's cells, its shape, its layout
  * rotation, and a rotation for each rendered item.
  *
- * <p>Capability exposure is loader-specific and lives outside this class; {@link #getItems()} is
- * what a loader-specific capability view adapts.
+ * <p>Automation exposure is loader-specific and lives outside this class; {@link #getItems()} is
+ * what a loader-specific automation view adapts.
  */
 public class SinglesStackBE extends StackBlockEntity {
     /** Cells in one block. The column's flat range is this times its height. */
     public static final int SLOTS = SinglesCubeIdx.CELLS;
 
-    private static final String TAG_CUBE_ROTATIONS = "CubeRotations";
+    public static final String TAG_CUBE_ROTATIONS = "CubeRotations";
 
     private VoxelShape cachedShape = null;
     private int cachedShapeRotation = -1;
@@ -46,12 +48,12 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     @Override
-    protected boolean isStoredItemValid(ItemStack stack) {
+    public boolean isStoredItemValid(ItemStack stack) {
         return isValidSinglesItem(stack);
     }
 
     @Override
-    protected int localSlotLimit() {
+    public int localSlotLimit() {
         return 1;
     }
 
@@ -63,7 +65,7 @@ public class SinglesStackBE extends StackBlockEntity {
     /**
      * The column this block belongs to, or null on the client and for a block being removed.
      *
-     * <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
+     * <p>Resolved once a tick and held, because a machine reading this block's automation view resolves
      * the column once per slot it walks. See {@link StorageStackBE#pile()} for the full reasoning.
      */
     @Nullable
@@ -95,12 +97,14 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * Invalidates the local shape and requests {@link #setBlockRotation(int)} modulo four.
-     * The outer block-state update applies immediately on a server level, including during an inventory batch.
+     * Invalidates the local shape and changes the native facing on a server level.
      */
     public void setRotation(int rotation) {
         cachedShape = null;
-        setBlockRotation(rotation);
+        if (level instanceof ServerLevel) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(StackBlock.HORIZONTAL_FACING,
+                    QuarterTurns.toDirection(rotation)), Block.UPDATE_ALL);
+        }
     }
 
     /** The rendered rotation of the item at {@code index}, which must be in {@code [0, SLOTS)}. */
@@ -128,11 +132,11 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, SinglesCubeIdx.GRID.localShape(i, blockRotation));
+                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.GRID.localShape(i, blockRotation), BooleanOp.OR);
             }
         }
 
-        return shape;
+        return shape.optimize();
     }
 
     /**
@@ -166,7 +170,7 @@ public class SinglesStackBE extends StackBlockEntity {
 
         ItemStack toInsert = fromHand.copy();
         toInsert.setCount(1);
-        ItemStack remainder = items.insertItem(index, toInsert, false);
+        ItemStack remainder = items.insertItem(index, toInsert);
 
         if (remainder.isEmpty()) {
             fromHand.shrink(1);
@@ -192,7 +196,7 @@ public class SinglesStackBE extends StackBlockEntity {
         ItemStack extracted;
         beginBatch();
         try {
-            extracted = items.extractItem(index, 1, false);
+            extracted = items.extractItem(index, 1);
             if (extracted.isEmpty()) {
                 return ItemStack.EMPTY;
             }
@@ -206,9 +210,8 @@ public class SinglesStackBE extends StackBlockEntity {
     }
 
     /**
-     * The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
-     * directly below, or null when this block stands on the world instead of on another Singles
-     * Stack.
+     * Whether the index names an empty cell supported in its visual column, including across
+     * the rotation-aware seam with the Singles block below.
      */
     public boolean canDepositAt(int index) {
         return index >= 0
@@ -227,8 +230,8 @@ public class SinglesStackBE extends StackBlockEntity {
 
     /** The visual-column occupancy supporting the bottom layer at {@code pos}. */
     @Nullable
-    public static boolean[] supportSeamBeneath(@Nullable Level level, BlockPos pos) {
-        if (level != null && level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
+    public static boolean[] supportSeamBeneath(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos.below()) instanceof SinglesStackBE below) {
             return SinglesCubeIdx.topLayerOccupancy(below.items, below.getRotation());
         }
         return null;
@@ -237,7 +240,7 @@ public class SinglesStackBE extends StackBlockEntity {
     /**
      * Closes the gap one column left behind: every occupied cell above {@code fromY} moves down
      * exactly one layer, carrying its rotation. The shift is positional rather than a compaction, so
-     * gaps that capability inserts created are preserved rather than quietly closed, and it always
+     * gaps that automation inserts created are preserved rather than quietly closed, and it always
      * leaves the top cell of the column empty for the block above to hand down into.
      *
      * <p>The cell moved into is always empty — vacated by the extraction that started the pass,
@@ -253,7 +256,7 @@ public class SinglesStackBE extends StackBlockEntity {
             if (!items.getStackInSlot(sourceIndex).isEmpty()) {
                 int targetIndex = SinglesCubeIdx.indexFromColumn(column, checkY - 1);
 
-                items.setStackInSlot(targetIndex, items.extractItem(sourceIndex, 1, false));
+                items.setStackInSlot(targetIndex, items.extractItem(sourceIndex, 1));
 
                 cubeRotations[targetIndex] = cubeRotations[sourceIndex];
             }
@@ -292,7 +295,7 @@ public class SinglesStackBE extends StackBlockEntity {
                     above.beginBatch();
                     try {
                         be.items.setStackInSlot(targetIndex,
-                                above.items.extractItem(sourceIndex, 1, false));
+                                above.items.extractItem(sourceIndex, 1));
                         // Block rotation turns a cell's position but never the item in it, so the
                         // stored rotation carries an item's facing across a change of frame as is.
                         be.cubeRotations[targetIndex] = above.cubeRotations[sourceIndex];
@@ -330,7 +333,7 @@ public class SinglesStackBE extends StackBlockEntity {
 
         if (isEmpty()
                 && !(columnLevel.getBlockEntity(getBlockPos().above()) instanceof SinglesStackBE)
-                && removeChecked(actor, columnLevel, getBlockPos())) {
+                && WorldEdits.removeChecked(actor, columnLevel, getBlockPos())) {
             removeEmptyBelow(columnLevel, getBlockPos().below(), actor);
             return;
         }
@@ -345,19 +348,13 @@ public class SinglesStackBE extends StackBlockEntity {
         BlockPos current = pos;
 
         while (columnLevel.getBlockEntity(current) instanceof SinglesStackBE be && be.isEmpty()) {
-            if (!removeChecked(actor, columnLevel, current)) {
+            if (!WorldEdits.removeChecked(actor, columnLevel, current)) {
                 return;
             }
             current = current.below();
         }
     }
 
-    private static boolean removeChecked(@Nullable ServerPlayer actor, ServerLevel level,
-                                         BlockPos pos) {
-        return actor == null
-                ? WorldEdits.removeChecked(level, pos)
-                : WorldEdits.removeChecked(actor, level, pos);
-    }
 
     /**
      * An empty cell carries no orientation, so the next item deposited into it cannot inherit

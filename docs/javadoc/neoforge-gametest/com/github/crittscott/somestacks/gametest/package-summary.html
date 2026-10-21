@@ -76,6 +76,16 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">The automation surface and the saved state behind it: the item handler exposed on every side,
+ a run advertising its reachable headroom, and each type's update tag round-tripping the contents
+ and presentation state it is responsible for.</div>
+</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationChecks</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral automation semantics exercised directly through <code>StackRunItemAccess</code>.</div>
@@ -93,78 +103,76 @@ loadScripts(document, 'script');</script>
  between player extraction, which drops what it unsupports, and automated extraction, which
  backfills from the top instead.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CapabilityAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceGameTests</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The automation surface and the saved state behind it: the item handler exposed on every side,
- a run advertising its reachable headroom, and each type's update tag round-tripping the contents
- and presentation state it is responsible for.</div>
-</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ClientCallbackChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Development-client assertions for callback cancellation and prepared rendering.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab4"><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Loader-native chunk or block update on an actual client-attached registered entity.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
 <div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ClientCallbackGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">NeoForge development-client registration for <a href="ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;)</code></a>.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientGestureChecks</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ClientCallbackGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">NeoForge development-client registration for <a href="ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientGestureChecks</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Client decision and state checks with explicit hit classification, runnable without a client singleton.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ConfigurationChecks.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral render-override parsing and server-policy checks.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ConfigurationGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ConfigurationGameTests</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">NeoForge delegates for loader-neutral render-override and server-policy checks.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Scaffolding shared by each loader's GameTests: placing each stack type on the empty template
  through <code>CommonRegistry</code>, seeding handlers directly, and the assertion helpers every test
  reads through.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="GameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">GameTestSupport</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="GameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">GameTestSupport</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">NeoForge-native scaffolding for the GameTests: <code>ResourceHandler</code>
  capability access through <code>Capabilities.Item.BLOCK</code>, and the level's fake player.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InteractionChecks.html" title="class in com.github.crittscott.somestacks.gametest">InteractionChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral checks for the state packet and vanilla-interaction gesture service.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="InteractionChecks.LoaderBlockClick.html" title="interface in com.github.crittscott.somestacks.gametest">InteractionChecks.LoaderBlockClick</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">NeoForge delegates for loader-neutral interaction and validation checks.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
- merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ItemOpsChecks.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsChecks</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
  merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NeoForgeTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">NeoForgeTransferGameTests</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ItemOpsGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ItemOpsGameTests</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">The shared item helpers, exercised against real registry items: what a hand will accept, what a
+ merge moves and reports, empty-handler detection, and the per-slot light contribution and its cap.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NeoForgeTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">NeoForgeTransferGameTests</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">NeoForge-native whole-run transactions, rollback, and protected growth.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Loader-neutral placement and player-deposit protection scenarios.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">Native per-slot offer returning the accepted count; commit=false rolls back.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="ProtectionChecks.RemovalObserver.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab1">

@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class FabricRunItemStorage" class="title">Class FabricRunItemStorage</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;
+<div class="inheritance">net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;
 <div class="inheritance">com.github.crittscott.somestacks.block.FabricRunItemStorage</div>
 </div>
 </div>
@@ -96,7 +96,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FabricRunItemStorage</span>
-<span class="extends-implements">extends net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;
+<span class="extends-implements">extends net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;
 implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fabricmc.fabric.api.transfer.v1.item.ItemVariant&gt;</span></div>
 <div class="block">Fabric Transfer API view over a complete Storage pile, Singles column, or Bar column.
  Slot changes are staged in the Fabric transaction and applied through the shared run mutations
@@ -131,7 +131,7 @@ implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fab
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.crittscott.somestacks.block.FabricRunItemStorage.State</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.github.crittscott.somestacks.block.RunTransferLedger.State</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createSnapshot()" class="member-name-link">createSnapshot</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
@@ -155,13 +155,9 @@ implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fab
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onFinalCommit()" class="member-name-link">onFinalCommit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Applies each touched slot's net difference through shared run mutations after the outer
- transaction commits: every net removal first, then net additions from the lowest slot up, so
- staged supporting positions exist before the positions resting on them.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readSnapshot(com.github.crittscott.somestacks.block.FabricRunItemStorage.State)" class="member-name-link">readSnapshot</a><wbr>(com.github.crittscott.somestacks.block.FabricRunItemStorage.State&nbsp;snapshot)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readSnapshot(com.github.crittscott.somestacks.block.RunTransferLedger.State)" class="member-name-link">readSnapshot</a><wbr>(com.github.crittscott.somestacks.block.RunTransferLedger.State&nbsp;snapshot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -265,20 +261,20 @@ implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fab
 <li>
 <section class="detail" id="createSnapshot()">
 <h3>createSnapshot</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.crittscott.somestacks.block.FabricRunItemStorage.State</span>&nbsp;<span class="element-name">createSnapshot</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.crittscott.somestacks.block.RunTransferLedger.State</span>&nbsp;<span class="element-name">createSnapshot</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>createSnapshot</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;</code></dd>
+<dd><code>createSnapshot</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="readSnapshot(com.github.crittscott.somestacks.block.FabricRunItemStorage.State)">
+<section class="detail" id="readSnapshot(com.github.crittscott.somestacks.block.RunTransferLedger.State)">
 <h3>readSnapshot</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">readSnapshot</span><wbr><span class="parameters">(com.github.crittscott.somestacks.block.FabricRunItemStorage.State&nbsp;snapshot)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">readSnapshot</span><wbr><span class="parameters">(com.github.crittscott.somestacks.block.RunTransferLedger.State&nbsp;snapshot)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>readSnapshot</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;</code></dd>
+<dd><code>readSnapshot</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -286,13 +282,9 @@ implements net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage&lt;net.fab
 <section class="detail" id="onFinalCommit()">
 <h3>onFinalCommit</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onFinalCommit</span>()</div>
-<div class="block">Applies each touched slot's net difference through shared run mutations after the outer
- transaction commits: every net removal first, then net additions from the lowest slot up, so
- staged supporting positions exist before the positions resting on them. The run is resolved
- afresh for each operation because growth changes it.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>onFinalCommit</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.FabricRunItemStorage.State&gt;</code></dd>
+<dd><code>onFinalCommit</code>&nbsp;in class&nbsp;<code>net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant&lt;com.github.crittscott.somestacks.block.RunTransferLedger.State&gt;</code></dd>
 </dl>
 </section>
 </li>

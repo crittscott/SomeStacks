@@ -80,6 +80,14 @@ Rotation is limited to one sound per player every four ticks, because the gestur
 - An **object** may carry `texture` and `tint`. A mapping that carries a tint is settled by it — including a white one, which is how you say *draw this texture as it is*. A mapping with no tint gets a computed one.
 - An item with **no mapping at all** uses the base ingot texture with an automatically derived tint where one can be found.
 
+The sprite uses a 32-unit grid. Each face stretches the following rectangle over the corresponding cuboid face; coordinates are rectangle endpoints, with the origin at the sprite's upper left.
+
+| Face | From (u, v) | To (u, v) |
+| --- | --- | --- |
+| Top and bottom | (0, 0) | (24, 12) |
+| Long side | (0, 12) | (24, 20) |
+| End cap | (0, 20) | (12, 28) |
+
 This data is **not synchronized**. Players with different resource packs may see different bar appearances, which is fine — it is presentation only.
 
 ## Item render profiles

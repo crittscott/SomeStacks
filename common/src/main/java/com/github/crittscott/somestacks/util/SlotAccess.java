@@ -5,11 +5,8 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * A numbered range of item slots whose insert and extract conventions follow Forge's
- * {@code IItemHandler}, so the Forge capability view stays a thin adapter. This is the internal
- * storage primitive for block entities, piles, and columns; only the adapters that expose it to
- * automation are loader-specific: Forge's {@code IItemHandler}, NeoForge's transactional
- * {@code ResourceHandler<ItemResource>}, and Fabric's Transfer API.
+ * A read-only view of numbered local item slots for geometry, rendering, drops, and inventory reads.
+ * Mutations belong to StackItemStorage; loader-native automation adapts whole runs.
  */
 public interface SlotAccess {
     /** The number of slots, indexed {@code [0, getSlots())}. */
@@ -22,30 +19,4 @@ public interface SlotAccess {
      */
     @Nonnull
     ItemStack getStackInSlot(int slot);
-
-    /**
-     * Inserts as much of {@code stack} into {@code slot} as {@link #isItemValid} and
-     * {@link #getSlotLimit} allow. Returns the remainder that was not accepted —
-     * {@link ItemStack#EMPTY} if all of it was — and never mutates {@code stack} itself. When
-     * {@code simulate} is {@code true}, the slot is left unchanged and only the would-be
-     * remainder is computed. A committed insertion may keep {@code stack} itself as the stored
-     * object, so the caller must give it up or pass a copy.
-     */
-    @Nonnull
-    ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate);
-
-    /**
-     * Removes up to {@code amount} items from {@code slot} and returns the stack that was
-     * removed — {@link ItemStack#EMPTY} if the slot was empty. When {@code simulate} is
-     * {@code true}, the slot is left unchanged and only the would-be result is computed. The
-     * result belongs to the caller.
-     */
-    @Nonnull
-    ItemStack extractItem(int slot, int amount, boolean simulate);
-
-    /** The maximum stack size {@code slot} accepts, independent of the item's own max stack size. */
-    int getSlotLimit(int slot);
-
-    /** Whether {@code stack} is allowed in {@code slot} at all, before any capacity check. */
-    boolean isItemValid(int slot, @Nonnull ItemStack stack);
 }

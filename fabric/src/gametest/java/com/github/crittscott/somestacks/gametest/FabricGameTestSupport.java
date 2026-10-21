@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import com.github.crittscott.somestacks.block.StackBlockEntity;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -34,6 +35,11 @@ public final class FabricGameTestSupport {
     public static final String TEMPLATE = "somestacks:somestacks_empty";
 
     private FabricGameTestSupport() {}
+
+    /** Shared scenario adapter: accepted count, with an explicit commit flag. */
+    public static int offerAt(StackBlockEntity blockEntity, int slot, ItemStack stack, boolean commit) {
+        return stack.getCount() - insertAt(storage(blockEntity), slot, stack, !commit).getCount();
+    }
 
     /**
      * The registered whole-run storage for {@code blockEntity}, queried the way an external

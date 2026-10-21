@@ -4,14 +4,10 @@ import com.github.crittscott.somestacks.CommonRegistry;
 import com.github.crittscott.somestacks.ServerConfig;
 import com.github.crittscott.somestacks.server.WorldEdits;
 import com.github.crittscott.somestacks.util.BarCubeIdx;
-import com.github.crittscott.somestacks.util.StackPlacement;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
@@ -78,7 +74,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * {@link StoragePile#invalidateAround} for the reasoning.
      */
     static void invalidateAround(Level level, BlockPos pos) {
-        StackRun.invalidateAround(level, pos, BarStackBE.class);
+        StackRun.invalidateAround(level, pos, CommonRegistry.barStackBlock());
     }
 
     /**
@@ -147,7 +143,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
 
         return handlerOf(flatSlot).insertItem(
-                flatSlot % BarStackBE.SLOTS, stack.copyWithCount(1), false).isEmpty() ? 1 : 0;
+                flatSlot % BarStackBE.SLOTS, stack.copyWithCount(1)).isEmpty() ? 1 : 0;
     }
 
     /**
@@ -170,21 +166,12 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = flatSlot % BarStackBE.SLOTS;
-        if (blockIndex >= blocks.size() && !canGrow(BarCubeIdx.shapeFor(slot))) {
-            return 0;
-        }
-        if (slot < BarCubeIdx.LAYER_SIZE && blockIndex == 0) {
-            return 1;
-        }
-
-        // Layer-zero supporters are top-layer indexes of the block below.
-        int supportBlock = slot < BarCubeIdx.LAYER_SIZE ? blockIndex - 1 : blockIndex;
-        for (int supporter : BarCubeIdx.supportersOf(slot)) {
-            if (!contents.apply(supportBlock * BarStackBE.SLOTS + supporter).isEmpty()) {
-                return 1;
-            }
-        }
-        return 0;
+        int blockStart = blockIndex * BarStackBE.SLOTS;
+        boolean supported = BarCubeIdx.isSupported(slot,
+                local -> !contents.apply(blockStart + local).isEmpty(),
+                blockIndex == 0 ? null : seam -> !contents.apply(
+                        blockStart - BarStackBE.SLOTS + BarCubeIdx.TOP_LAYER_START + seam).isEmpty());
+        return supported && (blockIndex < blocks.size() || canGrow(BarCubeIdx.shapeFor(slot))) ? 1 : 0;
     }
 
     /**
@@ -195,15 +182,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
-        if (blocks.size() >= ServerConfig.maxPileHeight() || !ServerConfig.enableBarStackBlock()) {
-            return false;
-        }
-        BlockPos above = topPos().above();
-        if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
-            return false;
-        }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return canGrowBlock(ServerConfig.enableBarStackBlock(), null)
+                && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */
@@ -213,18 +193,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
             return false;
         }
 
-        BlockPos above = topPos().above();
-        ServerPlayer editor = WorldEdits.automationActor(level);
-        BlockState newStack = StackPlacement.stateFor(
-                CommonRegistry.barStackBlock(), level, above);
-        if (!WorldEdits.placeChecked(
-                editor, level, above, newStack, Direction.DOWN, finalCollision)) {
-            return false;
-        }
-        BarStackBE grown = (BarStackBE) level.getBlockEntity(above);
-
-        blocks.add(grown);
-        return true;
+        return growBlock(null, finalCollision, BarStackBE.class) != null;
     }
 
     // Extraction
@@ -263,11 +232,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
             be.beginBatch();
         }
         try {
-            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1, false);
+            handlerOf(flatSlot).extractItem(flatSlot % BarStackBE.SLOTS, 1);
 
             int top = topmostOccupied();
             if (top > flatSlot) {
-                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1, false);
+                ItemStack moved = handlerOf(top).extractItem(top % BarStackBE.SLOTS, 1);
                 blockOf(flatSlot).relocateInto(flatSlot % BarStackBE.SLOTS, moved);
             }
         } finally {
@@ -288,18 +257,6 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * the column keeps every block from the refused one down, so what it holds is what stands.
      */
     private void trimEmptyTop() {
-        int keep = blocks.size();
-        while (keep > 0 && blocks.get(keep - 1).isEmpty()) {
-            keep--;
-        }
-
-        int removedDownTo = blocks.size();
-        for (int i = blocks.size() - 1; i >= keep; i--) {
-            if (!WorldEdits.removeChecked(level, blocks.get(i).getBlockPos())) {
-                break;
-            }
-            removedDownTo = i;
-        }
-        blocks.subList(removedDownTo, blocks.size()).clear();
+        trimEmptyTop(null, ignored -> false);
     }
 }

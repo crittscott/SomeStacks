@@ -98,12 +98,12 @@ public final class RunItemHandler implements IItemHandler {
     /** Per-position capacity before the offered item's own stack limit, independent of slot occupancy. */
     @Override
     public int getSlotLimit(int slot) {
-        return blockEntity.automationSlotLimit();
+        return blockEntity.localSlotLimit();
     }
 
     /** Admission only: ignores position, capacity, support, enablement for growth, and edit authority. */
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return blockEntity.acceptsAutomation(stack);
+        return blockEntity.isStoredItemValid(stack);
     }
 }

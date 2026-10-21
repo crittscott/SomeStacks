@@ -12,12 +12,13 @@
       "com.github.crittscott.somestacks.gametest.ConfigurationGameTests",
       "com.github.crittscott.somestacks.gametest.RenderGalleryGameTests",
       "com.github.crittscott.somestacks.gametest.InteractionGameTests",
-      "com.github.crittscott.somestacks.gametest.StorageAndPersistenceGameTests",
+      "com.github.crittscott.somestacks.gametest.AutomationAndPersistenceGameTests",
       "com.github.crittscott.somestacks.gametest.FabricTransferGameTests",
       "com.github.crittscott.somestacks.gametest.StoragePileGameTests",
       "com.github.crittscott.somestacks.gametest.SinglesColumnGameTests",
       "com.github.crittscott.somestacks.gametest.BarColumnGameTests",
-      "com.github.crittscott.somestacks.gametest.ProtectionGameTests"${protection_api_gametest_entrypoint}${no_protection_api_gametest_entrypoint}
+      "com.github.crittscott.somestacks.gametest.ProtectionGameTests",
+      "com.github.crittscott.somestacks.gametest.ProtectionApiGameTests"
     ],
     "client": [
       "com.github.crittscott.somestacks.gametest.ClientCallbackGameTests"

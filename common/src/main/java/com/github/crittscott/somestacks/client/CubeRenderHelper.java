@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -278,7 +277,7 @@ public final class CubeRenderHelper {
                 faces[c] = visibleFaces(cell, cameraX, cameraY, cameraZ);
             }
         }
-        state.frame = new Frame(cache, faces, LevelRenderer.getLightColor(level, blockPos));
+        state.frame = new Frame(cache, faces, state.lightCoords);
         return cache;
     }
 
@@ -451,10 +450,13 @@ public final class CubeRenderHelper {
         }
     }
 
+    private static final float GUI_Y_COUNTER_ROTATION_DEGREES = -45.0f;
+    private static final float GUI_X_COUNTER_ROTATION_DEGREES = -30.0f;
+
     /** Applies the counter-rotation shared by GUI submission and automatic GUI measurement. */
     public static void applyGuiCounterRotation(PoseStack pose) {
-        pose.mulPose(Axis.YP.rotationDegrees(-45.0f));
-        pose.mulPose(Axis.XP.rotationDegrees(-30.0f));
+        pose.mulPose(Axis.YP.rotationDegrees(GUI_Y_COUNTER_ROTATION_DEGREES));
+        pose.mulPose(Axis.XP.rotationDegrees(GUI_X_COUNTER_ROTATION_DEGREES));
     }
 
     /** The stack's {@code 2d} art, captured the first time any grid shows it after a reload or eviction. */

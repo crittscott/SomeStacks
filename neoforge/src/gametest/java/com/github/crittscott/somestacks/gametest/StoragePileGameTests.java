@@ -69,7 +69,7 @@ public final class StoragePileGameTests {
     public static void capabilityFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12));
 
         ResourceHandler<ItemResource> lowerCapability = GameTestSupport.capability(lower);
         ResourceHandler<ItemResource> upperCapability = GameTestSupport.capability(upper);
@@ -107,6 +107,16 @@ public final class StoragePileGameTests {
     /** See {@link StoragePileChecks#comparatorContributionLoadsAndTracksMutations}. */
     public static void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
+    }
+
+    /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
+    public static void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
+        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(helper, GameTestSupport::offerAt);
+    }
+
+    /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */
+    public static void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
     }
 
 }

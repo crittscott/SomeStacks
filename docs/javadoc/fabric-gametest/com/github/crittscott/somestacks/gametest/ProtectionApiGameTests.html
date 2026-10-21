@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ProtectionApiGameTests</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Provider-backed checks loaded only in development runs with Common Protection API installed.</div>
+<div class="block">Provider-backed checks through the required Common Protection API, with a test provider installed.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -137,6 +137,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#destinationConsultationRunsBeforePlacement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">destinationConsultationRunsBeforePlacement</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">See <a href="ProtectionGameTests.html#destinationConsultationRunsBeforePlacement(net.minecraft.gametest.framework.GameTestHelper)"><code>ProtectionGameTests.destinationConsultationRunsBeforePlacement(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placementAndAdjacentDepositsWorkWithoutClaims(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementAndAdjacentDepositsWorkWithoutClaims</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce in-game outside any claim: place a stack against an ordinary block, then
+ modifier-click through empty grounded cells at their support.</div>
 </div>
 </div>
 </div>
@@ -203,6 +209,17 @@ loadScripts(document, 'script');</script>
           maxTicks=100)
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">allowedAdjacentDepositUsesProtectionQuery</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">See <a href="ProtectionGameTests.html#allowedAdjacentDepositUsesProtectionQuery(net.minecraft.gametest.framework.GameTestHelper)"><code>ProtectionGameTests.allowedAdjacentDepositUsesProtectionQuery(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementAndAdjacentDepositsWorkWithoutClaims(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>placementAndAdjacentDepositsWorkWithoutClaims</h3>
+<div class="member-signature"><span class="annotations">@GameTest(structure="somestacks:somestacks_empty",
+          maxTicks=100)
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placementAndAdjacentDepositsWorkWithoutClaims</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce in-game outside any claim: place a stack against an ordinary block, then
+ modifier-click through empty grounded cells at their support. Both placement and neighboring
+ deposits work when no protection provider objects.</div>
 </section>
 </li>
 </ul>

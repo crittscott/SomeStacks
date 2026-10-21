@@ -1,5 +1,6 @@
 package com.github.crittscott.somestacks.gametest;
 
+import net.minecraft.world.level.block.Block;
 import com.github.crittscott.somestacks.block.BarStackBE;
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import com.github.crittscott.somestacks.block.StackBlockEntity;
@@ -105,8 +106,8 @@ public final class NeoForgeTransferGameTests {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int firstSlot = SinglesCubeIdx.indexFromColumn(0, 0);
         int secondSlot = SinglesCubeIdx.indexFromColumn(1, 0);
-        singles.getItems().insertItem(firstSlot, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(secondSlot, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(firstSlot, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(secondSlot, new ItemStack(Items.PAPER));
         ResourceHandler<ItemResource> storage = GameTestSupport.capability(singles);
 
         try (Transaction outer = Transaction.open(null)) {
@@ -146,7 +147,7 @@ public final class NeoForgeTransferGameTests {
     public static void repeatedLookupsShareOneRunLedger(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
         StorageStackBE top = placeStorage(helper, ORIGIN.above());
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 4), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 4));
         ResourceHandler<ItemResource> first = GameTestSupport.capability(base);
         ResourceHandler<ItemResource> second = helper.getLevel().getCapability(
                 Capabilities.Item.BLOCK, base.getBlockPos(), Direction.DOWN);
@@ -167,7 +168,7 @@ public final class NeoForgeTransferGameTests {
             outer.commit();
         }
         checkEquals(0, first.getAmountAsInt(0), "Extraction committed twice");
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 60), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 60));
         try (Transaction outer = Transaction.open(null)) {
             checkEquals(3, second.insert(0, stone, 3, outer), "First insertion");
             checkEquals(1, above.insert(0, stone, 3, outer), "Shared remaining capacity");
@@ -187,10 +188,10 @@ public final class NeoForgeTransferGameTests {
         for (StackBlockEntity base : bases) {
             ItemResource resource = ItemResource.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
             for (int slot = 0; slot < base.getItems().getSlots(); slot++) {
-                base.getItems().insertItem(slot, resource.toStack(base.automationSlotLimit()), false);
+                base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
-            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), 3);
+            helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             int headroom = base.getItems().getSlots();
             var saved = base.saveWithoutMetadata(helper.getLevel().registryAccess());
@@ -249,12 +250,12 @@ public final class NeoForgeTransferGameTests {
     public static void positionalExtractionRollsBackAndCommitsMovement(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int aboveSlot = SinglesCubeIdx.indexFromColumn(0, 1);
-        singles.getItems().insertItem(0, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(aboveSlot, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(0, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(aboveSlot, new ItemStack(Items.PAPER));
         singles.setCubeRotation(aboveSlot, 2);
         BarStackBE bars = placeBar(helper, ORIGIN.east(3));
         ItemResource bar = ItemResource.of(firstBarItem());
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) bars.getItems().insertItem(slot, bar.toStack(), false);
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) bars.getItems().insertItem(slot, bar.toStack());
         for (StackBlockEntity base : new StackBlockEntity[]{singles, bars}) {
             ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
             ItemResource resource = handler.getResource(0);
@@ -283,6 +284,9 @@ public final class NeoForgeTransferGameTests {
      */
     public static void placementVetoRefusesOfferBeforeCommit(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            base.getItems().setStackInSlot(slot, new ItemStack(Items.DIRT, 64));
+        }
         ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
         BlockPos above = base.getBlockPos().above();
         int[] events = {0};
@@ -300,11 +304,20 @@ public final class NeoForgeTransferGameTests {
                             "Vetoed placement accepted items");
                     if (commit) transaction.commit();
                 }
+                try (Transaction transaction = Transaction.open(null)) {
+                    checkEquals(0, handler.insert(ItemResource.of(Items.STONE), 4, transaction),
+                            "Bulk vetoed placement accepted items");
+                    if (commit) transaction.commit();
+                }
             }
         } finally {
             NeoForge.EVENT_BUS.unregister(deny);
         }
-        checkEquals(2, events[0], "Placement event count");
+        checkEquals(4, events[0], "One placement probe per direct or bulk offer");
+        try (Transaction transaction = Transaction.open(null)) {
+            checkEquals(1, handler.insert(StorageStackBE.SLOTS, ItemResource.of(Items.STONE), 1, transaction),
+                    "A stale denial survived removal of the protection listener");
+        }
         check(helper.getLevel().getBlockEntity(above) == null, "Veto left a block entity");
         checkEquals(0, GameTestSupport.count(handler, Items.STONE), "Veto kept items");
         helper.succeed();
@@ -313,7 +326,7 @@ public final class NeoForgeTransferGameTests {
     /** No in-game reproduction applies: one transaction can replace a Storage slot's identity. */
     public static void storageSlotReplacementUsesStagedCapacity(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
         ResourceHandler<ItemResource> handler = GameTestSupport.capability(base);
         try (Transaction transaction = Transaction.open(null)) {
             checkEquals(64, handler.extract(0, ItemResource.of(Items.STONE), 64, transaction), "Extract original");

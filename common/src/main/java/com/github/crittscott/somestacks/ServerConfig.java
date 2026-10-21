@@ -24,6 +24,24 @@ public final class ServerConfig {
         /** Persists the supplied policy; returns whether saving succeeded, without applying it here. */
         boolean save(Settings settings);
     }
+    public static final String SECTION_PILES = "piles";
+    public static final String SECTION_STACKS = "stacks";
+    public static final String SECTION_COMPATIBILITY = "compatibility";
+    public static final String SECTION_RENDER_GALLERY = "render_gallery";
+    public static final String KEY_MAX_PILE_HEIGHT = "max_pile_height";
+    public static final String KEY_ENABLE_STORAGE = "enable_storage_stack_block";
+    public static final String KEY_ENABLE_SINGLES = "enable_singles_stack_block";
+    public static final String KEY_ENABLE_BAR = "enable_bar_stack_block";
+    public static final String KEY_DISABLE_MODS = "disable_mods";
+    public static final String KEY_DISABLE_ITEMS = "disable_items";
+    public static final String KEY_PLACEMENTS_PER_TICK = "placements_per_tick";
+    public static final String KEY_GALLERY_ENABLED = "enabled";
+    public static final String KEY_REQUIRED_PERMISSION_LEVEL = "required_permission_level";
+    public static final String KEY_GEN_MODS = "gen_mods";
+    public static final String KEY_GEN_ITEMS = "gen_items";
+
+    public static final int MIN_PILE_HEIGHT = 1;
+    public static final int MIN_GALLERY_PLACEMENTS_PER_TICK = 1;
     public static final int DEFAULT_MAX_PILE_HEIGHT = 8;
     public static final int MAX_PILE_HEIGHT = 64;
     public static final int DEFAULT_GALLERY_PLACEMENTS_PER_TICK = 64;
@@ -31,7 +49,7 @@ public final class ServerConfig {
     private static final List<PermissionCheck> PERMISSION_LEVELS = List.of(
             Commands.LEVEL_ALL, Commands.LEVEL_MODERATORS, Commands.LEVEL_GAMEMASTERS,
             Commands.LEVEL_ADMINS, Commands.LEVEL_OWNERS);
-    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = 3;
+    public static final int DEFAULT_GALLERY_PERMISSION_LEVEL = PERMISSION_LEVELS.indexOf(Commands.LEVEL_ADMINS);
     /** Upper bound accepted for {@code render_gallery.required_permission_level}, vanilla's top op level. */
     public static final int GALLERY_PERMISSION_LEVEL_MAX = PERMISSION_LEVELS.size() - 1;
 
@@ -64,17 +82,12 @@ public final class ServerConfig {
     }
     /** Loads and applies this world's policy using the installed backend before world activity. */
     public static void loadFor(MinecraftServer server) { apply(backend.loadFor(server)); }
-    /**
-     * Applies the backend's current policy. True means a backend existed, not that parsing succeeded;
-     * a backend may return defaults for invalid input. Does not save or synchronize clients.
-     */
-    public static boolean reload() {
-        if (backend == null) return false;
+    /** Refreshes policy through the installed backend without saving or synchronizing clients. */
+    public static void reload() {
         apply(backend.reload());
-        return true;
     }
-    /** Saves current policy without changing it; false when no backend exists or saving fails. */
-    public static boolean save() { return backend != null && backend.save(settings); }
+    /** Persists policy through the installed backend; false means persistence failed. */
+    public static boolean save() { return backend.save(settings); }
 
     /**
      * Immutable policy values. Lists are defensively copied; backends and other callers
@@ -154,12 +167,16 @@ public final class ServerConfig {
     public static boolean enableBarStackBlock() { return settings.enableBarStackBlock(); }
     public static int renderGalleryPlacementsPerTick() { return settings.renderGalleryPlacementsPerTick(); }
     public static boolean galleryEnabled() { return settings.galleryEnabled(); }
-    public static int galleryRequiredPermissionLevel() { return settings.galleryPermissionLevel(); }
     public static PermissionCheck galleryPermission() { return PERMISSION_LEVELS.get(settings.galleryPermissionLevel()); }
+    /** Canonical spelling for configured item namespaces. */
+    public static String normalizeNamespace(String namespace) {
+        return namespace.trim().toLowerCase(Locale.ROOT);
+    }
+
     public static void bakeServerLists() {
         Set<String> mods = new HashSet<>();
         for (String entry : ListSetting.DISABLE_MODS.get()) {
-            String modId = entry.trim().toLowerCase(Locale.ROOT);
+            String modId = normalizeNamespace(entry);
             if (!modId.isEmpty()) {
                 mods.add(modId);
             }

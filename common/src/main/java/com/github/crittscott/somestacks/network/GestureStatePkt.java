@@ -4,8 +4,8 @@ import com.github.crittscott.somestacks.SomeStacksCommon;
 import com.github.crittscott.somestacks.server.ServerGestureState;
 import com.github.crittscott.somestacks.util.StackMode;
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,18 +15,9 @@ public record GestureStatePkt(StackMode mode, boolean modifierDown) implements C
     public static final Type<GestureStatePkt> TYPE = new Type<>(
             Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "gesture_state"));
 
-    public static final StreamCodec<ByteBuf, GestureStatePkt> STREAM_CODEC = StreamCodec.of(
-            (buf, packet) -> {
-                buf.writeByte(packet.mode.ordinal());
-                buf.writeBoolean(packet.modifierDown);
-            },
-            buf -> {
-                int id = buf.readUnsignedByte();
-                if (id >= StackMode.values().length) {
-                    throw new DecoderException("Invalid stack mode: " + id);
-                }
-                return new GestureStatePkt(StackMode.values()[id], buf.readBoolean());
-            });
+    public static final StreamCodec<ByteBuf, GestureStatePkt> STREAM_CODEC = StreamCodec.composite(
+            StackMode.STREAM_CODEC, GestureStatePkt::mode,
+            ByteBufCodecs.BOOL, GestureStatePkt::modifierDown, GestureStatePkt::new);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

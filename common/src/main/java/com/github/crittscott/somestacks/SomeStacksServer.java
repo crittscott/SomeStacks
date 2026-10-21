@@ -5,31 +5,22 @@ import com.github.crittscott.somestacks.command.RenderGalleryGenerator;
 import com.github.crittscott.somestacks.command.SsCommand;
 import com.github.crittscott.somestacks.network.ConfigSyncNetwork;
 import com.github.crittscott.somestacks.network.ConfigSyncPkt;
-import com.github.crittscott.somestacks.server.RotationSoundThrottle;
 import com.github.crittscott.somestacks.server.ServerGestureState;
-import com.github.crittscott.somestacks.util.StackItemStorage;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
-import java.util.HashSet;
-import java.util.Set;
 
 /** Loader-neutral server lifecycle operations called by each loader's native event adapters. */
 public final class SomeStacksServer {
     private SomeStacksServer() {}
 
     private static volatile MinecraftServer runningServer;
-    private static final Set<SavedItemLocation> reportedSavedItems = new HashSet<>();
-
-    private record SavedItemLocation(Identifier dimension, BlockPos pos) {}
-
+    private static ServerConfig.Settings publishedPolicy;
+    private static ConfigSyncPkt clientSnapshot;
     /**
      * Starts session accounting, loads world policy, then builds the login snapshot. Loader
      * backends and networking must be installed before this server-thread callback, which runs
@@ -37,34 +28,19 @@ public final class SomeStacksServer {
      */
     public static synchronized void onServerStarting(MinecraftServer server) {
         runningServer = server;
-        reportedSavedItems.clear();
         StackDataMigration.beginSession();
         ServerConfig.loadFor(server);
+        publishedPolicy = ServerConfig.settings();
+        clientSnapshot = ConfigSyncPkt.fromSettings(publishedPolicy);
         logPolicy("loaded");
-        ConfigSyncPkt.rebuildCurrent();
     }
 
     /** Releases the stopped server and clears session diagnostics after world activity ends. */
     public static synchronized void onServerStopped() {
         runningServer = null;
-        reportedSavedItems.clear();
+        publishedPolicy = null;
+        clientSnapshot = null;
         StackDataMigration.endSession();
-    }
-
-    /**
-     * Reports newly retained disk entries on each occurrence, and failed persisted retries once
-     * per dimension and block position per server session. Call only for server disk loads.
-     */
-    public static synchronized void reportSavedItems(
-            ServerLevel level, BlockPos pos, StackItemStorage.LoadResult result) {
-        if (result.newlySetAside() == 0 && result.failedRetries() == 0) return;
-        SavedItemLocation location = new SavedItemLocation(level.dimension().identifier(), pos.immutable());
-        boolean firstReport = reportedSavedItems.add(location);
-        if (result.newlySetAside() > 0 || firstReport) {
-            SomeStacksCommon.LOGGER.warn(
-                    "Kept saved item stack(s) aside in {} at {}: {} newly retained, {} failed retries",
-                    location.dimension(), pos.toShortString(), result.newlySetAside(), result.failedRetries());
-        }
     }
 
     /**
@@ -74,36 +50,63 @@ public final class SomeStacksServer {
     public static void onPolicyReloaded() {
         MinecraftServer server = runningServer;
         if (server != null) {
-            server.execute(() -> {
-                ServerConfig.Settings previous = ServerConfig.settings();
-                ServerConfig.reload();
-                if (previous.equals(ServerConfig.settings())) return;
-                ConfigSyncPkt.rebuildCurrent();
-                ConfigSyncNetwork.syncAllPlayers(server);
-                logPolicy("reloaded");
-            });
+            server.execute(() -> reloadPolicy(server));
         }
     }
 
-    /** Records the stack types and run height that policy now enforces. */
-    public static void logPolicy(String action) {
-        SomeStacksCommon.LOGGER.info("Server policy {}: Storage {}, Singles {}, Bar {}, maximum run height {}",
+    /** Refreshes policy on the server thread and synchronizes only changed policy. */
+    public static int reloadPolicy(MinecraftServer server) {
+        ServerConfig.reload();
+        return publishPolicy(server);
+    }
+
+    /** Publishes policy changes from file reloads and persisted command edits exactly once. */
+    public static int publishPolicy(MinecraftServer server) {
+        ServerConfig.Settings previous = publishedPolicy;
+        ServerConfig.Settings current = ServerConfig.settings();
+        if (current.equals(previous)) return 0;
+        publishedPolicy = current;
+        if (previous.galleryEnabled() != current.galleryEnabled()
+                || previous.galleryPermissionLevel() != current.galleryPermissionLevel()) {
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                server.getCommands().sendCommands(player);
+            }
+        }
+        ConfigSyncPkt next = ConfigSyncPkt.fromSettings(current);
+        int synced = 0;
+        if (!next.equals(clientSnapshot)) {
+            clientSnapshot = next;
+            synced = ConfigSyncNetwork.syncAllPlayers(server, next);
+        }
+        logPolicy("reloaded");
+        return synced;
+    }
+
+    /** Records the stack types, run height, gallery access, and deny-list sizes policy now enforces. */
+    private static void logPolicy(String action) {
+        ServerConfig.Settings settings = ServerConfig.settings();
+        SomeStacksCommon.LOGGER.info("Server policy {}: Storage {}, Singles {}, Bar {}, maximum run height {}, "
+                        + "galleries {} at permission {}, {} disabled mods, {} disabled items",
                 action,
-                ServerConfig.enableStorageStackBlock() ? "enabled" : "disabled",
-                ServerConfig.enableSinglesStackBlock() ? "enabled" : "disabled",
-                ServerConfig.enableBarStackBlock() ? "enabled" : "disabled",
-                ServerConfig.maxPileHeight());
+                enabledLabel(settings.enableStorageStackBlock()),
+                enabledLabel(settings.enableSinglesStackBlock()),
+                enabledLabel(settings.enableBarStackBlock()),
+                settings.maxPileHeight(), enabledLabel(settings.galleryEnabled()),
+                settings.galleryPermissionLevel(), settings.disableMods().size(), settings.disableItems().size());
+    }
+
+    private static String enabledLabel(boolean enabled) {
+        return enabled ? "enabled" : "disabled";
     }
 
     /** Sends the startup/reload snapshot on the server thread after play networking is ready. */
     public static void onPlayerJoined(ServerPlayer player) {
-        ConfigSyncNetwork.syncPlayer(player);
+        ConfigSyncNetwork.syncPlayer(player, clientSnapshot);
     }
 
     /** Clears gesture and sound state when this player disconnects, before a later reconnect. */
     public static void onPlayerLeft(UUID playerId) {
         ServerGestureState.clear(playerId);
-        RotationSoundThrottle.clear(playerId);
     }
 
     /** Advances queued gallery work once at the end of each server tick. */

@@ -5,7 +5,6 @@ import com.github.crittscott.somestacks.util.BarCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
@@ -35,9 +34,16 @@ import java.util.Map;
  * texture runs along each bar's long axis whichever way its layer lies.
  */
 public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.BarRenderState> {
+    private static final float TEXTURE_GRID = 32f;
+    private static final float[] TOP_BOTTOM_RECT = {0f, 0f, 24f, 12f};
+    private static final float[] LONG_SIDE_RECT = {0f, 12f, 24f, 20f};
+    private static final float[] END_CAP_RECT = {0f, 20f, 12f, 28f};
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS = new IdentityHashMap<>();
 
+    private static int resourceGeneration;
+
     static void onResourceReload() {
+        resourceGeneration++;
         SPRITE_REGIONS.clear();
     }
 
@@ -47,11 +53,12 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
     /** Prepared bars have resolved UVs and tints; submission never reads the level or inventory. */
     public static final class BarRenderState extends BlockEntityRenderState {
         private List<BarRenderData> bars = List.of();
-        private int light;
     }
 
     private record BarRenderData(AABB bounds, int layer, UvRegion[] regions,
                                  BarTextureStore.BarTextureData texture) {}
+
+    private record BarCache(int generation, List<BarRenderData> bars) {}
 
     @Override
     public BarRenderState createRenderState() {
@@ -66,7 +73,10 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (be.getLevel() == null) {
             return;
         }
-        state.light = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos());
+        if (be.renderCache() instanceof BarCache cache && cache.generation() == resourceGeneration) {
+            state.bars = cache.bars();
+            return;
+        }
         List<BarRenderData> bars = new ArrayList<>();
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
             ItemStack stack = be.getItems().getStackInSlot(idx);
@@ -80,6 +90,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
                     regions(sprite), texture));
         }
         state.bars = List.copyOf(bars);
+        be.setRenderCache(new BarCache(resourceGeneration, state.bars));
     }
 
     @Override
@@ -89,7 +100,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
         if (bars.isEmpty()) {
             return;
         }
-        int light = state.light;
+        int light = state.lightCoords;
         collector.submitCustomGeometry(pose, RenderTypes.solidMovingBlock(), (snapshot, vc) -> {
             PoseStack barPose = new PoseStack();
             barPose.last().pose().set(snapshot.pose());
@@ -111,9 +122,9 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
             float uRange = sp.getU1() - u0, vRange = sp.getV1() - v0;
             // Top/bottom, long side, and end cap on the sprite's 32-unit grid.
             return new UvRegion[]{
-                    region(u0, v0, uRange, vRange, 0f, 0f, 24f, 12f),
-                    region(u0, v0, uRange, vRange, 0f, 12f, 24f, 20f),
-                    region(u0, v0, uRange, vRange, 0f, 20f, 12f, 28f)};
+                    region(u0, v0, uRange, vRange, TOP_BOTTOM_RECT),
+                    region(u0, v0, uRange, vRange, LONG_SIDE_RECT),
+                    region(u0, v0, uRange, vRange, END_CAP_RECT)};
         });
     }
 
@@ -160,12 +171,12 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE, BarStackBER.
 
     /** Maps a rectangle of the sprite's 32-unit grid onto its place in the atlas. */
     private static UvRegion region(float u0, float v0, float uRange, float vRange,
-                                   float gridU0, float gridV0, float gridU1, float gridV1) {
+                                   float[] rectangle) {
         return new UvRegion(
-                u0 + uRange * (gridU0 / 32f),
-                v0 + vRange * (gridV0 / 32f),
-                u0 + uRange * (gridU1 / 32f),
-                v0 + vRange * (gridV1 / 32f));
+                u0 + uRange * (rectangle[0] / TEXTURE_GRID),
+                v0 + vRange * (rectangle[1] / TEXTURE_GRID),
+                u0 + uRange * (rectangle[2] / TEXTURE_GRID),
+                v0 + vRange * (rectangle[3] / TEXTURE_GRID));
     }
 
     private static void quad(PoseStack pose, VertexConsumer vc, int light, int overlay,

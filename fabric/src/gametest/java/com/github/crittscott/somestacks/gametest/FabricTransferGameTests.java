@@ -139,8 +139,8 @@ public final class FabricTransferGameTests {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int firstSlot = SinglesCubeIdx.indexFromColumn(0, 0);
         int secondSlot = SinglesCubeIdx.indexFromColumn(1, 0);
-        singles.getItems().insertItem(firstSlot, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(secondSlot, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(firstSlot, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(secondSlot, new ItemStack(Items.PAPER));
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(singles);
 
         try (Transaction transaction = Transaction.openOuter()) {
@@ -164,7 +164,7 @@ public final class FabricTransferGameTests {
     public void repeatedLookupsShareOneRunLedger(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
         StorageStackBE top = placeStorage(helper, ORIGIN.above());
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 4), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 4));
         SlottedStorage<ItemVariant> first = FabricGameTestSupport.storage(base);
         SlottedStorage<ItemVariant> second = (SlottedStorage<ItemVariant>) ItemStorage.SIDED.find(
                 helper.getLevel(), base.getBlockPos(), base.getBlockState(), base, Direction.DOWN);
@@ -185,7 +185,7 @@ public final class FabricTransferGameTests {
             outer.commit();
         }
         checkEquals(0L, first.getSlot(0).getAmount(), "Extraction committed twice");
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 60), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 60));
         try (Transaction outer = Transaction.openOuter()) {
             checkEquals(3L, second.getSlot(0).insert(stone, 3, outer), "First insertion");
             checkEquals(1L, above.getSlot(0).insert(stone, 3, outer), "Shared remaining capacity");
@@ -206,7 +206,7 @@ public final class FabricTransferGameTests {
         for (StackBlockEntity base : bases) {
             ItemVariant resource = ItemVariant.of(base instanceof BarStackBE ? firstBarItem() : Items.STONE);
             for (int slot = 0; slot < base.getItems().getSlots(); slot++) {
-                base.getItems().insertItem(slot, resource.toStack(base.automationSlotLimit()), false);
+                base.getItems().insertItem(slot, resource.toStack(base.localSlotLimit()));
             }
             BlockPos above = base.getBlockPos().above();
             helper.getLevel().setBlock(above, Blocks.WATER.defaultBlockState(), Block.UPDATE_ALL);
@@ -271,12 +271,12 @@ public final class FabricTransferGameTests {
     public void positionalExtractionRollsBackAndCommitsMovement(GameTestHelper helper) {
         SinglesStackBE singles = placeSingles(helper, ORIGIN);
         int aboveSlot = SinglesCubeIdx.indexFromColumn(0, 1);
-        singles.getItems().insertItem(0, new ItemStack(Items.STICK), false);
-        singles.getItems().insertItem(aboveSlot, new ItemStack(Items.PAPER), false);
+        singles.getItems().insertItem(0, new ItemStack(Items.STICK));
+        singles.getItems().insertItem(aboveSlot, new ItemStack(Items.PAPER));
         singles.setCubeRotation(aboveSlot, 2);
         BarStackBE bars = placeBar(helper, ORIGIN.east(3));
         ItemVariant bar = ItemVariant.of(firstBarItem());
-        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) bars.getItems().insertItem(slot, bar.toStack(), false);
+        for (int slot = 0; slot < BarStackBE.SLOTS; slot++) bars.getItems().insertItem(slot, bar.toStack());
         for (StackBlockEntity base : new StackBlockEntity[]{singles, bars}) {
             SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
             ItemVariant resource = storage.getSlot(0).getResource();
@@ -304,7 +304,7 @@ public final class FabricTransferGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void storageSlotReplacementUsesStagedCapacity(GameTestHelper helper) {
         StorageStackBE base = placeStorage(helper, ORIGIN);
-        base.getItems().insertItem(0, new ItemStack(Items.STONE, 64), false);
+        base.getItems().insertItem(0, new ItemStack(Items.STONE, 64));
         SlottedStorage<ItemVariant> storage = FabricGameTestSupport.storage(base);
         try (Transaction transaction = Transaction.openOuter()) {
             checkEquals(64L, storage.getSlot(0).extract(ItemVariant.of(Items.STONE), 64, transaction),

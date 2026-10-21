@@ -48,7 +48,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.PlacementProbe.html#actor()" class="member-name-link">actor()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.PlacementProbe.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests.PlacementProbe</a></dt>
@@ -71,15 +71,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Empty grounded cells remain depositable beside occupied cells in both stack types.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsHonorBlockUseCallbacks(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsHonorBlockUseCallbacks(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adjacentDepositsHonorProtectionQueries(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adjacentDepositsHonorProtectionQueries(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
-<div class="block">Destination block-use callbacks can refuse neighboring deposits with or without Common
- Protection API.</div>
+<div class="block">Destination protection queries can refuse neighboring deposits.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#advancementPlayerFactory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">advancementPlayerFactory(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
 <dd>
 <div class="block">A factory for checks that observe advancement progress, which Fabric's <code>FakePlayer</code>
  does not record.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">adventureExtractionKeepsEmptyBlock(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#adventureExtractionKeepsEmptyBlock(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">adventureExtractionKeepsEmptyBlock(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
+<div class="block">Adventure players may extract contents but cannot remove the emptied block.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#airRulesAndDisabledModeCycling(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">airRulesAndDisabledModeCycling(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
@@ -96,8 +103,20 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#allowedAdjacentDepositUsesProtectionQuery(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">allowedAdjacentDepositUsesProtectionQuery(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
 <div class="block">To reproduce in-game: hold the modifier and click a neighboring face toward a Singles Stack
- allowed by Common Protection API and destination block-use callbacks.</div>
+ allowed by Common Protection API.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">The automation surface and the saved state behind it: the whole-run storage exposed on every
+ side, a run advertising its reachable headroom, and each type's update tag round-tripping the
+ contents and presentation state it is responsible for.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#%3Cinit%3E()" class="member-name-link">AutomationAndPersistenceGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#automationBackfillsWithoutDropping(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationBackfillsWithoutDropping(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
 <dd>
 <div class="block">To reproduce in-game: fill a supported Bar column, let item automation extract a lower
@@ -162,15 +181,19 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#%3Cinit%3E()" class="member-name-link">BarColumnGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Bar disk data from the current format and the 1.21.8 release preserves the item in each position.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barDiskSaveRoundTripsItems(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.barDiskSaveRoundTripsItems(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#barGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">barGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Bar column from SomeStacks and insert
  through item automation; it accepts nothing and creates no block.</div>
@@ -242,17 +265,13 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>CapabilityAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>AutomationAndPersistenceChecks.cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Singles and Bar targeting, outlines, and collision follow occupied contents.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
-<dd>
-<div class="block">Disk persistence, client render tags, saved-world migration/recovery, and block shape contracts.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#check(boolean,java.lang.String)" class="member-name-link">check(boolean, String)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
@@ -288,13 +307,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Development-client assertions for callback cancellation and prepared rendering.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.ClientUpdate.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a> - Interface in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Loader-native chunk or block update on an actual client-attached registered entity.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a> - Record Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
 <div class="block">Observable local callback outputs; none of these performs the server's world action.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Fabric development-client registration for <a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;)</code></a>.</div>
+<div class="block">Fabric development-client registration for <a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)"><code>ClientCallbackChecks.run(boolean, java.util.function.BiFunction&lt;net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.Result&gt;, com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackGameTests.html#%3Cinit%3E()" class="member-name-link">ClientCallbackGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a></dt>
 <dd>&nbsp;</dd>
@@ -302,7 +325,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Client decision and state checks with explicit hit classification, runnable without a client singleton.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientInventoryUpdatesRejectMalformedDataAtomically(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)"><code>clientInventoryUpdatesRejectMalformedDataAtomically(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
@@ -311,7 +334,7 @@ loadScripts(document, 'script');</script>
 <div class="block">No in-game reproduction applies: malformed server NBT must leave the displayed inventory
  untouched rather than run saved-world recovery or retain rejected entries.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">clientSinglesUpdatesValidateRotationBeforeInventory(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)"><code>clientSinglesUpdatesValidateRotationBeforeInventory(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
@@ -415,21 +438,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.comparatorReservesZeroForAnEmptyPile(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderEnforcesPacketBudget(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
-<dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)"><code>configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderEnforcesPacketBudget(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></dt>
-<dd>
-<div class="block">No in-game reproduction applies: an oversized server payload is rejected before decoding.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)"><code>configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderRejectsMalformedCountsAndNamespaces(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></dt>
 <dd>
-<div class="block">No in-game reproduction applies: invalid wire counts and namespace encodings must fail decoding.</div>
+<div class="block">No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail decoding.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configSnapshotsRoundTripAndPublishAtomically(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
@@ -437,24 +452,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configSnapshotsRoundTripAndPublishAtomically(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></dt>
 <dd>
-<div class="block">Complete snapshots publish flags and both lists only at their final chunk.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingChecksSequencesAndTotals(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
-<dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)"><code>configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingChecksSequencesAndTotals(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></dt>
-<dd>
-<div class="block">Missing, inconsistent, and superseded generations cannot publish partial settings.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingRejectsAndClearsInvalidGenerations(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
-<dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)"><code>configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html#configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingRejectsAndClearsInvalidGenerations(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SynchronizationChecks.html" title="class in com.github.crittscott.somestacks.gametest">SynchronizationChecks</a></dt>
-<dd>
-<div class="block">No in-game reproduction applies: malicious chunk sequences must clear staging without
- publishing an incomplete snapshot; an honest client cannot construct these sequences.</div>
+<div class="block">Complete snapshots publish flags and both lists in one operation.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ConfigurationChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
@@ -471,6 +469,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html#consumed()" class="member-name-link">consumed()</a> - Method in record class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.Result.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.Result</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>consumed</code> record component.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">contentsDropWithBlockDropsDisabled(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
+<dd>
+<div class="block">Stored Bars survive breaking and cascades with block drops disabled.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">contentsDropWithBlockDropsDisabled(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.contentsDropWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#count(com.github.crittscott.somestacks.util.SlotAccess,net.minecraft.world.item.Item)" class="member-name-link">count(SlotAccess, Item)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
@@ -719,7 +725,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientGestureChecks.html#fullTopFacesFallThroughToPlacement(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">fullTopFacesFallThroughToPlacement(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientGestureChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientGestureChecks</a></dt>
 <dd>
-<div class="block">Full top-face display deposits fall through to placement; Storage keeps its own pile deposit.</div>
+<div class="block">Modified top-face clicks are consumed for both full and partially filled stacks.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -791,6 +797,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/ConfigurationChecks.html#ingotTagControlsBarAndSinglesAdmission(net.minecraft.gametest.framework.GameTestHelper)"><code>ConfigurationChecks.ingotTagControlsBarAndSinglesAdmission(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.OfferAt.html#insert(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insert(StackBlockEntity, int, ItemStack, boolean)</a> - Method in interface com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.OfferAt.html" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#insertAt(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertAt(SlottedStorage&lt;ItemVariant&gt;, int, ItemStack, boolean)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
 <dd>
 <div class="block">Inserts <code>stack</code> into <code>slot</code>, mirroring Forge's
@@ -847,7 +855,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Item rotation affects only the occupied Singles cell on the view ray.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#itemStorageIsAvailableFromEverySide(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">itemStorageIsAvailableFromEverySide(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#itemStorageIsAvailableFromEverySide(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">itemStorageIsAvailableFromEverySide(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">To reproduce in-game: connect sided item automation to each face of every stack type and
  verify every face exposes the same inventory.</div>
@@ -876,6 +884,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/ItemOpsChecks.html#lightIsPerOccupiedSlotIntegerDividedAndCapped(net.minecraft.gametest.framework.GameTestHelper)"><code>ItemOpsChecks.lightIsPerOccupiedSlotIntegerDividedAndCapped(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.ClientUpdate.html#load(com.github.crittscott.somestacks.block.StackBlockEntity,net.minecraft.nbt.CompoundTag,boolean)" class="member-name-link">load(StackBlockEntity, CompoundTag, boolean)</a> - Method in interface com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.ClientUpdate.html" title="interface in com.github.crittscott.somestacks.gametest">ClientCallbackChecks.ClientUpdate</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
@@ -906,15 +916,6 @@ loadScripts(document, 'script');</script>
  by hand and the other by automation before settlement.</div>
 </dd>
 </dl>
-<h2 class="title" id="I:N">N</h2>
-<dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/NoProtectionApiGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">NoProtectionApiGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
-<dd>
-<div class="block">Checks the Fabric edit policy when no protection query provider is installed.</div>
-</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/NoProtectionApiGameTests.html#%3Cinit%3E()" class="member-name-link">NoProtectionApiGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/NoProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">NoProtectionApiGameTests</a></dt>
-<dd>&nbsp;</dd>
-</dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#obstructionPreventsGrowthAndSimulationReportsNoRoom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">obstructionPreventsGrowthAndSimulationReportsNoRoom(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
@@ -926,6 +927,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#occupied(net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage)" class="member-name-link">occupied(SlottedStorage&lt;ItemVariant&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html#offerAt(com.github.crittscott.somestacks.block.StackBlockEntity,int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">offerAt(StackBlockEntity, int, ItemStack, boolean)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricGameTestSupport.html" title="class in com.github.crittscott.somestacks.gametest">FabricGameTestSupport</a></dt>
+<dd>
+<div class="block">Shared scenario adapter: accepted count, with an explicit commit flag.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackGameTests.html#onInitializeClient()" class="member-name-link">onInitializeClient()</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackGameTests</a></dt>
 <dd>
 <div class="block">Registers the local /ssclienttest smoke command in a client running the test mod.</div>
@@ -979,10 +984,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#PLACEMENT_PROBES" class="member-name-link">PLACEMENT_PROBES</a> - Static variable in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/NoProtectionApiGameTests.html#placementAndAdjacentDepositsWorkWithoutProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementAndAdjacentDepositsWorkWithoutProtectionApi(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/NoProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">NoProtectionApiGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#placementAndAdjacentDepositsWorkWithoutClaims(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementAndAdjacentDepositsWorkWithoutClaims(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
 <dd>
-<div class="block">To reproduce in-game without Common Protection API: place a stack against an ordinary block,
- then modifier-click through empty grounded cells at their support.</div>
+<div class="block">To reproduce in-game outside any claim: place a stack against an ordinary block, then
+ modifier-click through empty grounded cells at their support.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#placementIntoWaterKeepsTheWater(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementIntoWaterKeepsTheWater(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
@@ -999,6 +1004,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#placementPublicationAnswersToVeto(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,java.lang.Runnable,java.lang.Runnable)" class="member-name-link">placementPublicationAnswersToVeto(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;, Runnable, Runnable)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">To reproduce in-game: face an observer toward a denied placement position.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementReplacesClickedVegetation(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)"><code>ProtectionChecks.placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#placementReplacesClickedVegetation(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function)" class="member-name-link">placementReplacesClickedVegetation(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
+<div class="block">Ordinary new placement replaces clicked vegetation instead of floating above it.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html#placeSingles(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.core.BlockPos)" class="member-name-link">placeSingles(GameTestHelper, BlockPos)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/GameTestScaffold.html" title="class in com.github.crittscott.somestacks.gametest">GameTestScaffold</a></dt>
 <dd>&nbsp;</dd>
@@ -1031,6 +1044,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerExtractionUsesPlayerForCleanup(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#playerExtractionUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">playerExtractionUsesPlayerForCleanup(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;, ProtectionChecks.RemovalObserver)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
 <div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
  extract the last Single.</div>
 </dd>
@@ -1057,6 +1074,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerStorageSettlementUsesPlayerForCleanup(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#playerStorageSettlementUsesPlayerForCleanup(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">playerStorageSettlementUsesPlayerForCleanup(GameTestHelper, Function&lt;ItemStack, ServerPlayer&gt;, ProtectionChecks.RemovalObserver)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
+<dd>
 <div class="block">To reproduce in-game: allow a player but deny [SomeStacks] in a claim, then have the player
  extract the last Storage item.</div>
 </dd>
@@ -1070,25 +1091,29 @@ loadScripts(document, 'script');</script>
  positions, and a pending structural extraction refuses further insertion; committing invokes
  the common gravity or backfill path exactly once.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">A Storage Stack saved by the Some Stacks 1.21.8 release keeps its contents and permanence, and
  the block is marked for saving in the current data version, whether it loads in place or
  before chunk attachment.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">previousReleaseSaveUpgradesOnLoad(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.previousReleaseSaveUpgradesOnLoad(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
-<div class="block">Provider-backed checks loaded only in development runs with Common Protection API installed.</div>
+<div class="block">Provider-backed checks through the required Common Protection API, with a test provider installed.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#%3Cinit%3E()" class="member-name-link">ProtectionApiGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
 <div class="block">Loader-neutral placement and player-deposit protection scenarios.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.OfferAt.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.OfferAt</a> - Interface in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dd>
+<div class="block">Native per-slot offer returning the accepted count; commit=false rolls back.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.RemovalObserver.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.gametest">ProtectionChecks.RemovalObserver</a> - Interface in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
 <dd>
@@ -1140,11 +1165,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reentrantStructuralEditIsRefused(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#reentrantStructuralEditIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">reentrantStructuralEditIsRefused(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">No in-game reproduction applies: a reentrant Fabric storage edit is refused.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#refusedRemovalStillLetsTheBarsAboveComeDown(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">refusedRemovalStillLetsTheBarsAboveComeDown(GameTestHelper, ProtectionChecks.RemovalObserver)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">A refused removal keeps an emptied Bar block without preventing the unsupported block above
  from collapsing.</div>
@@ -1192,7 +1221,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Redstone torches rotate Storage and Singles blocks, soul torches rotate Singles items, and
  Bar blocks do not rotate.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction)" class="member-name-link">run(boolean, BiFunction&lt;InteractionHand, BlockHitResult, ClientCallbackChecks.Result&gt;)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html#run(boolean,java.util.function.BiFunction,com.github.crittscott.somestacks.gametest.ClientCallbackChecks.ClientUpdate)" class="member-name-link">run(boolean, BiFunction&lt;InteractionHand, BlockHitResult, ClientCallbackChecks.Result&gt;, ClientCallbackChecks.ClientUpdate)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ClientCallbackChecks.html" title="class in com.github.crittscott.somestacks.gametest">ClientCallbackChecks</a></dt>
 <dd>
 <div class="block">To reproduce in-game: launch the loader's runClientGameTests client, join a world, aim at any
  stack, release Shift and the Stack Modifier, and run /ssclienttest.</div>
@@ -1222,14 +1251,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Server policy loads independent fields, clamps numeric bounds, normalizes deny lists, and
  validates JSON fields independently.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Set-aside entries in 1.21.8 release data recover only into free valid slots and disappear
  from retained disk data.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">setAsideItemsRecoverIntoFreeSlots(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.setAsideItemsRecoverIntoFreeSlots(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
 <dd>
@@ -1241,6 +1270,10 @@ loadScripts(document, 'script');</script>
 <div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)"><code>ProtectionChecks.settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.RemovalObserver)" class="member-name-link">settleKeepsAnEmptyTopBlockWhoseRemovalIsRefused(GameTestHelper, ProtectionChecks.RemovalObserver)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">A refused cleanup leaves the empty top Storage block in both the world and the resolved run.</div>
 </dd>
@@ -1257,12 +1290,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The comparator output at <code>relative</code>, read the way a comparator against it reads.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#simulatedInsertionDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">simulatedInsertionDoesNotMutateAnyStack(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#simulatedInsertionDoesNotMutateAnyStack(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">simulatedInsertionDoesNotMutateAnyStack(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">No in-game reproduction applies: this verifies that aborted Fabric transactions leave
  Storage, Singles, and Bar stacks unchanged.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#singleBlockStorageAdvertisesConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singleBlockStorageAdvertisesConfiguredHeadroom(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#singleBlockStorageAdvertisesConfiguredHeadroom(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singleBlockStorageAdvertisesConfiguredHeadroom(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
 <div class="block">To reproduce in-game: connect item automation to a one-block stack below its height limit and
  verify it can address one additional block of empty positions for growth.</div>
@@ -1282,14 +1315,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html#%3Cinit%3E()" class="member-name-link">SinglesColumnGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Singles disk data from the current format and the 1.21.8 release preserves contents plus block-state
  and per-item rotations.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesDiskSaveRoundTripsItemsAndBothRotations(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.singlesDiskSaveRoundTripsItemsAndBothRotations(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/AutomationChecks.html#singlesExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesExtractionUsesThePlayerGravityPath(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationChecks</a></dt>
 <dd>
@@ -1297,6 +1330,10 @@ loadScripts(document, 'script');</script>
  shifts down by the same gravity path used for player extraction.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#singlesGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">singlesGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Singles column from SomeStacks and insert
  through item automation; it accepts nothing and creates no block.</div>
@@ -1359,22 +1396,31 @@ loadScripts(document, 'script');</script>
 <div class="block">The registered whole-run storage for <code>blockEntity</code>, queried the way an external
  automation caller would: through <code>ItemStorage.SIDED</code>, not the block entity directly.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" class="type-name-link" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a> - Class in <a href="com/github/crittscott/somestacks/gametest/package-summary.html">com.github.crittscott.somestacks.gametest</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
 <dd>
-<div class="block">The automation surface and the saved state behind it: the whole-run storage exposed on every
- side, a run advertising its reachable headroom, and each type's update tag round-tripping the
- contents and presentation state it is responsible for.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#%3Cinit%3E()" class="member-name-link">StorageAndPersistenceGameTests()</a> - Constructor for class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#storageCapAppliesToPlayersAutomationAndSettlement(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper, ProtectionChecks.OfferAt)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
+<dd>
+<div class="block">To reproduce in-game: use an item with max_stack_size=99, fill Storage by hand and through
+ automation, then let it settle.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
+<dd>
+<div class="block">To reproduce in-game: load a preceding-release Storage block containing stacks above 64.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskMigrationPreservesOverCapContents(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)"><code>StoragePileChecks.storageDiskMigrationPreservesOverCapContents(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Storage disk data from the current format and the 1.21.8 release preserves items, data components,
  block-state rotation, and permanence.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageDiskSaveRoundTripsItemsRotationAndPermanence(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.storageDiskSaveRoundTripsItemsRotationAndPermanence(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html#storageExtractionUsesThePlayerGravityPath(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageExtractionUsesThePlayerGravityPath(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/SinglesColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">SinglesColumnGameTests</a></dt>
 <dd>
@@ -1387,6 +1433,10 @@ loadScripts(document, 'script');</script>
  Storage pile; both connections expose the same items and capacity.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)"><code>ProtectionChecks.storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper, com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html#storageGrowthAnswersToProtectionInSimulationAndCommit(net.minecraft.gametest.framework.GameTestHelper,com.github.crittscott.somestacks.gametest.ProtectionChecks.OfferAt)" class="member-name-link">storageGrowthAnswersToProtectionInSimulationAndCommit(GameTestHelper, ProtectionChecks.OfferAt)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionChecks.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionChecks</a></dt>
 <dd>
 <div class="block">To reproduce in-game: protect the space above a full Storage pile from SomeStacks and insert
  through item automation; it accepts nothing and creates no block.</div>
@@ -1454,14 +1504,14 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce in-game: let item automation walk the advertised Singles cells in order and
  verify the column fills from the lowest supported cell upward.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Structure rotation transforms the outer facing of Storage and Singles while leaving their
  internal slot identities intact.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structureRotationTransformsRotatableStackFacing(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.structureRotationTransformsRotatableStackFacing(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#supportedBy(int,int,int)" class="member-name-link">supportedBy(int, int, int)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
 <dd>&nbsp;</dd>
@@ -1512,22 +1562,22 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Unreadable and unplaceable saved entries remain byte-for-byte in disk data and never enter a
  live slot.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">unreadableSavedItemsAreKeptAsideOnDisk(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.unreadableSavedItemsAreKeptAsideOnDisk(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Client update tags carry every field the renderers need while omitting server-only state.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StorageAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StorageAndPersistenceGameTests</a></dt>
+<dt><a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">updateTagsCarryRenderStateAndOmitServerOnlyData(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">AutomationAndPersistenceGameTests</a></dt>
 <dd>
-<div class="block">See <a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)"><code>CapabilityAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/AutomationAndPersistenceChecks.html#updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)"><code>AutomationAndPersistenceChecks.updateTagsCarryRenderStateAndOmitServerOnlyData(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#upperBarRequiresOverlappingSupport(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">upperBarRequiresOverlappingSupport(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
 <dd>
@@ -1579,7 +1629,7 @@ loadScripts(document, 'script');</script>
  nested rollback, commit all mutations together or leave the run unchanged.</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
 </div>
 </div>
 </body>

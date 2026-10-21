@@ -117,30 +117,14 @@ loadScripts(document, 'script');</script>
 <div class="block">No in-game reproduction applies: malformed rotation metadata invalidates the entire update.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderEnforcesPacketBudget</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderRejectsMalformedCountsAndNamespaces</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: an oversized server payload is rejected before decoding.</div>
+<div class="block">No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail decoding.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configDecoderRejectsMalformedCountsAndNamespaces</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configSnapshotsRoundTripAndPublishAtomically</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: invalid wire counts and namespace encodings must fail decoding.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configSnapshotsRoundTripAndPublishAtomically</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Complete snapshots publish flags and both lists only at their final chunk.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingChecksSequencesAndTotals</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Missing, inconsistent, and superseded generations cannot publish partial settings.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">configStagingRejectsAndClearsInvalidGenerations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">No in-game reproduction applies: malicious chunk sequences must clear staging without
- publishing an incomplete snapshot; an honest client cannot construct these sequences.</div>
+<div class="block">Complete snapshots publish flags and both lists in one operation.</div>
 </div>
 </div>
 </div>
@@ -163,39 +147,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="configSnapshotsRoundTripAndPublishAtomically(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>configSnapshotsRoundTripAndPublishAtomically</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configSnapshotsRoundTripAndPublishAtomically</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Complete snapshots publish flags and both lists only at their final chunk. To reproduce
- in-game: configure disabled types and namespace lists, join, and inspect mode cycling and
- /ss write list. A large list exercises multiple packets; exact atomicity requires this test.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="configStagingChecksSequencesAndTotals(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>configStagingChecksSequencesAndTotals</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configStagingChecksSequencesAndTotals</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">Missing, inconsistent, and superseded generations cannot publish partial settings. No
- in-game reproduction applies: these are synthetic interrupted and malformed sequences.</div>
+<div class="block">Complete snapshots publish flags and both lists in one operation. To reproduce in-game:
+ configure disabled types and namespace lists, join, and inspect mode cycling and /ss write
+ list. Repeat after a policy edit without reconnecting.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="configDecoderRejectsMalformedCountsAndNamespaces(net.minecraft.gametest.framework.GameTestHelper)">
 <h3>configDecoderRejectsMalformedCountsAndNamespaces</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configDecoderRejectsMalformedCountsAndNamespaces</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: invalid wire counts and namespace encodings must fail decoding.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="configDecoderEnforcesPacketBudget(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>configDecoderEnforcesPacketBudget</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configDecoderEnforcesPacketBudget</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: an oversized server payload is rejected before decoding.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="configStagingRejectsAndClearsInvalidGenerations(net.minecraft.gametest.framework.GameTestHelper)">
-<h3>configStagingRejectsAndClearsInvalidGenerations</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">configStagingRejectsAndClearsInvalidGenerations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
-<div class="block">No in-game reproduction applies: malicious chunk sequences must clear staging without
- publishing an incomplete snapshot; an honest client cannot construct these sequences.</div>
+<div class="block">No in-game reproduction applies: hostile list counts, names, and duplicate entries must fail decoding.</div>
 </section>
 </li>
 <li>

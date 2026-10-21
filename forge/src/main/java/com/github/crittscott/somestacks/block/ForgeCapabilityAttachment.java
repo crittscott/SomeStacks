@@ -1,6 +1,6 @@
 package com.github.crittscott.somestacks.block;
 
-import com.github.crittscott.somestacks.SomeStacks;
+import com.github.crittscott.somestacks.SomeStacksCommon;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,10 +22,10 @@ import javax.annotation.Nullable;
  * <p>One {@link LazyOptional} is created per block entity and invalidated through the event's own
  * listener hook when the attached provider is invalidated.
  */
-@Mod.EventBusSubscriber(modid = SomeStacks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = SomeStacksCommon.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ForgeCapabilityAttachment {
     private static final Identifier ITEM_HANDLER_ID =
-            Identifier.fromNamespaceAndPath(SomeStacks.MODID, "item_handler");
+            Identifier.fromNamespaceAndPath(SomeStacksCommon.MODID, "item_handler");
 
     private ForgeCapabilityAttachment() {
     }

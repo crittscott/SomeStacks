@@ -106,8 +106,8 @@ loadScripts(document, 'script');</script>
  which is what automation addresses; this class owns one block's cells, its shape, its layout
  rotation, and a rotation for each rendered item.
 
- <p>Capability exposure is loader-specific and lives outside this class; <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a> is
- what a loader-specific capability view adapts.</div>
+ <p>Automation exposure is loader-specific and lives outside this class; <a href="StackBlockEntity.html#getItems()"><code>StackBlockEntity.getItems()</code></a> is
+ what a loader-specific automation view adapts.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -134,10 +134,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Cells in one block.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#TAG_CUBE_ROTATIONS" class="member-name-link">TAG_CUBE_ROTATIONS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Fields inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#items">items</a></code></div>
+<code><a href="StackBlockEntity.html#items">items</a>, <a href="StackBlockEntity.html#TAG_DATA_VERSION">TAG_DATA_VERSION</a>, <a href="StackBlockEntity.html#TAG_ITEMS">TAG_ITEMS</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Fields inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>level, remove, worldPosition</code></div>
@@ -171,9 +174,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canDepositAt(int)" class="member-name-link">canDepositAt</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
- directly below, or null when this block stands on the world instead of on another Singles
- Stack.</div>
+<div class="block">Whether the index names an empty cell supported in its visual column, including across
+ the rotation-aware seam with the Singles block below.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#column()" class="member-name-link">column</a>()</code></div>
@@ -212,7 +214,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRotation()" class="member-name-link">getRotation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Admission for new local/automation inserts, including current namespace and type policy.</div>
@@ -232,7 +234,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Loads subtype metadata and refreshes derived state after inventory replacement.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Local slot capacity before the item's own stack limit, or one for positional display types.</div>
@@ -262,7 +264,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotation(int)" class="member-name-link">setRotation</a><wbr>(int&nbsp;rotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Invalidates the local shape and requests <a href="StackBlockEntity.html#setBlockRotation(int)"><code>StackBlockEntity.setBlockRotation(int)</code></a> modulo four.</div>
+<div class="block">Invalidates the local shape and changes the native facing on a server level.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">supportSeamBeneath</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
@@ -282,7 +284,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackBlockEntity">Methods inherited from class&nbsp;com.github.crittscott.somestacks.block.<a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></h3>
-<code><a href="StackBlockEntity.html#acceptsAutomation(net.minecraft.world.item.ItemStack)">acceptsAutomation</a>, <a href="StackBlockEntity.html#automationSlotLimit()">automationSlotLimit</a>, <a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#dropContentsOnRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">dropContentsOnRemoval</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#handleUpdateTag(net.minecraft.world.level.storage.ValueInput)">handleUpdateTag</a>, <a href="StackBlockEntity.html#handleUpdateTag(net.minecraft.world.level.storage.ValueInput,net.minecraft.core.HolderLookup.Provider)">handleUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.world.level.storage.ValueInput)">loadAdditional</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadClientUpdate</a>, <a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a>, <a href="StackBlockEntity.html#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput)">onDataPacket</a>, <a href="StackBlockEntity.html#onDataPacket(net.minecraft.network.Connection,net.minecraft.world.level.storage.ValueInput,net.minecraft.core.HolderLookup.Provider)">onDataPacket</a>, <a href="StackBlockEntity.html#preRemoveSideEffects(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">preRemoveSideEffects</a>, <a href="StackBlockEntity.html#renderCache()">renderCache</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setBlockRotation(int)">setBlockRotation</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#setRenderCache(java.lang.Object)">setRenderCache</a>, <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)">stripServerOnlyUpdateData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
+<code><a href="StackBlockEntity.html#blockRotation()">blockRotation</a>, <a href="StackBlockEntity.html#dropContentsOnRemoval(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">dropContentsOnRemoval</a>, <a href="StackBlockEntity.html#getItems()">getItems</a>, <a href="StackBlockEntity.html#getUpdatePacket()">getUpdatePacket</a>, <a href="StackBlockEntity.html#getUpdateTag(net.minecraft.core.HolderLookup.Provider)">getUpdateTag</a>, <a href="StackBlockEntity.html#isBatching()">isBatching</a>, <a href="StackBlockEntity.html#isEmpty()">isEmpty</a>, <a href="StackBlockEntity.html#isValidClientUpdate(net.minecraft.world.level.storage.ValueInput)">isValidClientUpdate</a>, <a href="StackBlockEntity.html#itemRun()">itemRun</a>, <a href="StackBlockEntity.html#loadAdditional(net.minecraft.world.level.storage.ValueInput)">loadAdditional</a>, <a href="StackBlockEntity.html#loadClientUpdate(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup.Provider)">loadClientUpdate</a>, <a href="StackBlockEntity.html#markRunDirty()">markRunDirty</a>, <a href="StackBlockEntity.html#preRemoveSideEffects(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">preRemoveSideEffects</a>, <a href="StackBlockEntity.html#renderCache()">renderCache</a>, <a href="StackBlockEntity.html#resetClientUpdateDiagnostic()">resetClientUpdateDiagnostic</a>, <a href="StackBlockEntity.html#saveAdditional(net.minecraft.world.level.storage.ValueOutput)">saveAdditional</a>, <a href="StackBlockEntity.html#schedulePublish()">schedulePublish</a>, <a href="StackBlockEntity.html#setLevel(net.minecraft.world.level.Level)">setLevel</a>, <a href="StackBlockEntity.html#setRenderCache(java.lang.Object)">setRenderCache</a>, <a href="StackBlockEntity.html#stripServerOnlyUpdateData(net.minecraft.nbt.CompoundTag)">stripServerOnlyUpdateData</a>, <a href="StackBlockEntity.html#syncToClients()">syncToClients</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, applyComponents, applyComponentsFromItemStack, applyImplicitComponents, clearRemoved, collectComponents, collectImplicitComponents, components, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getNameForReporting, getPosFromTag, getType, hasLevel, isRemoved, isValidBlockState, loadCustomOnly, loadStatic, loadWithComponents, parseCustomNameSafe, problemPath, registerDebugValues, removeComponentsFromTag, saveCustomOnly, saveCustomOnly, saveWithFullMetadata, saveWithFullMetadata, saveWithId, saveWithoutMetadata, saveWithoutMetadata, setBlockState, setChanged, setChanged, setComponents, setRemoved, triggerEvent</code></div>
@@ -305,6 +307,20 @@ loadScripts(document, 'script');</script>
 <h3>SLOTS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SLOTS</span></div>
 <div class="block">Cells in one block. The column's flat range is this times its height.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TAG_CUBE_ROTATIONS">
+<h3>TAG_CUBE_ROTATIONS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">TAG_CUBE_ROTATIONS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.github.crittscott.somestacks.block.SinglesStackBE.TAG_CUBE_ROTATIONS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -333,7 +349,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="isStoredItemValid(net.minecraft.world.item.ItemStack)">
 <h3>isStoredItemValid</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStoredItemValid</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStoredItemValid</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#isStoredItemValid(net.minecraft.world.item.ItemStack)">StackBlockEntity</a></code></span></div>
 <div class="block">Admission for new local/automation inserts, including current namespace and type policy.
  Existing saved or internally relocated items bypass this check; no slot is selected here.</div>
@@ -346,7 +362,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="localSlotLimit()">
 <h3>localSlotLimit</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">localSlotLimit</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">localSlotLimit</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="StackBlockEntity.html#localSlotLimit()">StackBlockEntity</a></code></span></div>
 <div class="block">Local slot capacity before the item's own stack limit, or one for positional display types.</div>
 <dl class="notes">
@@ -376,7 +392,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></span>&nbsp;<span class="element-name">column</span>()</div>
 <div class="block">The column this block belongs to, or null on the client and for a block being removed.
 
- <p>Resolved once a tick and held, because a machine reading this block's item handler resolves
+ <p>Resolved once a tick and held, because a machine reading this block's automation view resolves
  the column once per slot it walks. See <a href="StorageStackBE.html#pile()"><code>StorageStackBE.pile()</code></a> for the full reasoning.</div>
 </section>
 </li>
@@ -410,8 +426,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setRotation(int)">
 <h3>setRotation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRotation</span><wbr><span class="parameters">(int&nbsp;rotation)</span></div>
-<div class="block">Invalidates the local shape and requests <a href="StackBlockEntity.html#setBlockRotation(int)"><code>StackBlockEntity.setBlockRotation(int)</code></a> modulo four.
- The outer block-state update applies immediately on a server level, including during an inventory batch.</div>
+<div class="block">Invalidates the local shape and changes the native facing on a server level.</div>
 </section>
 </li>
 <li>
@@ -443,6 +458,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.shapes.VoxelShape</span>&nbsp;<span class="element-name">getCachedShape</span>()</div>
 <div class="block">Returns the occupied-cell shape, rebuilding it only after contents or rotation invalidates
  the cache. Shape queries occur frequently enough that they must not rebuild it unconditionally.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="StackBlockEntity.html#getCachedShape()">getCachedShape</a></code>&nbsp;in class&nbsp;<code><a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -482,9 +501,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="canDepositAt(int)">
 <h3>canDepositAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canDepositAt</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
-<div class="block">The support this block's bottom layer rests on: the top-layer occupancy of the Singles Stack
- directly below, or null when this block stands on the world instead of on another Singles
- Stack.</div>
+<div class="block">Whether the index names an empty cell supported in its visual column, including across
+ the rotation-aware seam with the Singles block below.</div>
 </section>
 </li>
 <li>
@@ -500,8 +518,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="supportSeamBeneath(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)">
 <h3>supportSeamBeneath</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">supportSeamBeneath</span><wbr><span class="parameters">(@Nullable
- net.minecraft.world.level.Level&nbsp;level,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">supportSeamBeneath</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 <div class="block">The visual-column occupancy supporting the bottom layer at <code>pos</code>.</div>
 </section>

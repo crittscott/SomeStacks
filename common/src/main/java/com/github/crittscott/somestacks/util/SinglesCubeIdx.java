@@ -2,8 +2,11 @@ package com.github.crittscott.somestacks.util;
 
 import com.github.crittscott.somestacks.block.SinglesStackBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
 
 import javax.annotation.Nullable;
+import java.util.function.IntPredicate;
 
 /**
  * Geometry and slot indexing shared by Singles Stack rendering, collision, ray targeting, and
@@ -18,7 +21,7 @@ import javax.annotation.Nullable;
 public final class SinglesCubeIdx {
     private SinglesCubeIdx(){}
 
-    /** Cell width in model pixels, shared by targeting and rendering. */
+    /** Width of one cell in model pixels, shared by targeting, collision, and rendering. */
     public static final double CELL_PIXELS = 4.0;
     public static final CubeGrid GRID = new CubeGrid(4, CELL_PIXELS, 0, 4, 8, 12);
 
@@ -44,7 +47,7 @@ public final class SinglesCubeIdx {
      * blocks are unrotated, so {@code index} is already in the visual frame.
      */
     public static boolean freshBlockSupports(int index, boolean[] seamBelow) {
-        return isGroundedIn(new boolean[SinglesStackBE.SLOTS], index, 0, seamBelow);
+        return isGrounded(index, slot -> false, 0, seamBelow);
     }
 
     /**
@@ -54,26 +57,23 @@ public final class SinglesCubeIdx {
      * layer is grounded.
      */
     public static boolean isGrounded(int index, SlotAccess handler, int blockRotation, boolean[] seamBelow) {
-        int[] xyz = GRID.xyzFromIndex(index);
-        int y = xyz[1];
-
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        int belowIndex = indexFromColumn(columnFromIndex(index), y - 1);
-
-        return !handler.getStackInSlot(belowIndex).isEmpty();
+        return isGrounded(index, slot -> !handler.getStackInSlot(slot).isEmpty(), blockRotation, seamBelow);
     }
 
-    /**
-     * Applies {@link #isGrounded} to an occupancy snapshot rather than live slots. Column insertion
-     * uses this to validate a proposed placement without mutating inventory.
-     */
-    public static boolean isGroundedIn(boolean[] occupancy, int index, int blockRotation, boolean[] seamBelow) {
-        int y = GRID.xyzFromIndex(index)[1];
+    /** Evaluates live or proposed local occupancy using the same visual seam rule. */
+    public static boolean isGrounded(int index, IntPredicate occupied, int blockRotation, boolean[] seamBelow) {
+        return isSupported(index, occupied, blockRotation,
+                seamBelow == null ? null : column -> seamBelow[column]);
+    }
 
-        if (y == 0) return seamBelow == null || seamSupports(index, blockRotation, seamBelow);
-
-        return occupancy[indexFromColumn(columnFromIndex(index), y - 1)];
+    /** Support from local slots and the lower block's top layer expressed in visual columns. */
+    public static boolean isSupported(int index, IntPredicate occupied, int blockRotation,
+                                      @Nullable IntPredicate seamBelow) {
+        if (index < LAYER_SIZE) {
+            return seamBelow == null || seamBelow.test(
+                    visualColumnFromStorage(columnFromIndex(index), blockRotation));
+        }
+        return occupied.test(index - LAYER_SIZE);
     }
 
     /** Whether the top layer beneath a block occupies the visual column containing {@code index}. */
@@ -81,7 +81,12 @@ public final class SinglesCubeIdx {
         if (seamBelow == null) {
             return false;
         }
-        return seamBelow[visualColumnFromStorage(columnFromIndex(index), blockRotation)];
+        return isSupported(index % LAYER_SIZE, slot -> false, blockRotation, column -> seamBelow[column]);
+    }
+
+    /** Returns the block-local collision shape of one stored cell. */
+    public static VoxelShape shapeFor(int storageIndex, int blockRotation) {
+        return GRID.localShape(storageIndex, blockRotation);
     }
 
     /**
@@ -90,7 +95,7 @@ public final class SinglesCubeIdx {
      * {@code r} is its normalized inverse.
      */
     public static int storageColumnFromVisual(int visualColumn, int blockRotation) {
-        int[] storage = GRID.rotateXYZ(
+        int[] storage = rotateXYZ(
                 visualColumn % GRID_EDGE, 0, visualColumn / GRID_EDGE,
                 QuarterTurns.inverse(blockRotation));
         return storage[2] * GRID_EDGE + storage[0];
@@ -141,7 +146,7 @@ public final class SinglesCubeIdx {
      * but never y, so columns always map to columns and only their horizontal identity moves.
      */
     public static int visualColumnFromStorage(int storageColumn, int blockRotation) {
-        int[] visual = GRID.rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
+        int[] visual = rotateXYZ(storageColumn % GRID_EDGE, 0, storageColumn / GRID_EDGE, blockRotation);
         return visual[2] * GRID_EDGE + visual[0];
     }
 
@@ -153,6 +158,19 @@ public final class SinglesCubeIdx {
     /** The slot holding the cell at {@code y} in a storage column. */
     public static int indexFromColumn(int storageColumn, int y) {
         return y * LAYER_SIZE + storageColumn;
+    }
+
+    /**
+     * The visual position of a stored cell under a block rotation. A rotation is that many quarter
+     * turns counterclockwise seen from above, matching the direction of per-item rotation.
+     */
+    public static int[] rotateXYZ(int x, int y, int z, int rotation) {
+        return GRID.rotateXYZ(x, y, z, rotation);
+    }
+
+    /** Converts a slot index to its cell coordinates, indexed from the bottom layer upward. */
+    public static int[] xyzFromIndex(int idx) {
+        return GRID.xyzFromIndex(idx);
     }
 
 }

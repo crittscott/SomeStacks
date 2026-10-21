@@ -76,7 +76,7 @@ public final class StoragePileGameTests {
     public void storageFromEveryBlockAddressesTheSamePile(GameTestHelper helper) {
         StorageStackBE lower = placeStorage(helper, ORIGIN);
         StorageStackBE upper = placeStorage(helper, ORIGIN.above());
-        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12), false);
+        lower.getItems().insertItem(0, new ItemStack(Items.STONE, 12));
 
         SlottedStorage<ItemVariant> lowerStorage = FabricGameTestSupport.storage(lower);
         SlottedStorage<ItemVariant> upperStorage = FabricGameTestSupport.storage(upper);
@@ -117,6 +117,18 @@ public final class StoragePileGameTests {
     @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
     public void comparatorContributionLoadsAndTracksMutations(GameTestHelper helper) {
         StoragePileChecks.comparatorContributionLoadsAndTracksMutations(helper);
+    }
+
+    /** See {@link StoragePileChecks#storageCapAppliesToPlayersAutomationAndSettlement}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageCapAppliesToPlayersAutomationAndSettlement(GameTestHelper helper) {
+        StoragePileChecks.storageCapAppliesToPlayersAutomationAndSettlement(helper, FabricGameTestSupport::offerAt);
+    }
+
+    /** See {@link StoragePileChecks#storageDiskMigrationPreservesOverCapContents}. */
+    @GameTest(structure = FabricGameTestSupport.TEMPLATE, maxTicks = 100)
+    public void storageDiskMigrationPreservesOverCapContents(GameTestHelper helper) {
+        StoragePileChecks.storageDiskMigrationPreservesOverCapContents(helper);
     }
 
 }
