@@ -83,9 +83,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.github.crittscott.somestacks.server.EditAuthority</span></div>
 <div class="block">Fabric's <code>EditAuthority</code>: the automation actor is Fabric API's native <code>FakePlayer</code>
- with the shared <code>AutomationActor</code> profile, and
- removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
- so claim and protection mods can veto automation-driven removal the same way they can on Forge.
+ with the shared <code>AutomationActor</code> profile. Removal answers to Common Protection API and
+ Fabric API's block-break event, so claim and protection mods can veto cleanup.
  Vetoed removals report cancellation; successful removals report completion with the original
  actor, block state, and block entity.
 

@@ -29,6 +29,11 @@ final class CommonProtectionQueries {
         return CommonProtection.canPlaceBlock(level, pos, actor.getGameProfile(), actor);
     }
 
+    /** Whether the installed providers let {@code actor} remove a block at {@code pos}. */
+    static boolean mayBreak(ServerPlayer actor, ServerLevel level, BlockPos pos) {
+        return CommonProtection.canBreakBlock(level, pos, actor.getGameProfile(), actor);
+    }
+
     /** Whether the installed providers let {@code player} use the block at {@code pos}. */
     static boolean mayInteract(ServerPlayer player, BlockPos pos) {
         return CommonProtection.canInteractBlock(

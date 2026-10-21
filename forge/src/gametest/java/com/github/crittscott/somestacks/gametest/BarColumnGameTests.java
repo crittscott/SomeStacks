@@ -239,6 +239,24 @@ public final class BarColumnGameTests {
     }
 
     /**
+     * Loader entry point for {@link BarColumnChecks#breakingFullColumnDropsWithBlockDropsDisabled};
+     * see that method for the scenario and manual check.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void breakingFullColumnDropsWithBlockDropsDisabled(GameTestHelper helper) {
+        BarColumnChecks.breakingFullColumnDropsWithBlockDropsDisabled(helper);
+    }
+
+    /**
+     * Loader entry point for {@link BarColumnChecks#playerCascadeDropsWithBlockDropsDisabled};
+     * see that method for the scenario and manual check.
+     */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void playerCascadeDropsWithBlockDropsDisabled(GameTestHelper helper) {
+        BarColumnChecks.playerCascadeDropsWithBlockDropsDisabled(helper);
+    }
+
+    /**
      * Loader entry point for {@link BarColumnChecks#playerCascadeConsolidatesAcrossBlocks}; see
      * that method for
      * the scenario, manual check, and any internal-only assertions.

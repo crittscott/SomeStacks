@@ -4,12 +4,10 @@ import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.util.SlotAccess;
 import com.github.crittscott.somestacks.util.StorageCubeIdx;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -32,9 +30,7 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
 
         if (be.getLevel() == null) return;
 
-        BlockPos bePos = be.getBlockPos();
         int rotation = be.getRotation();
-        int cubeLight = LevelRenderer.getLightColor(be.getLevel(), bePos);
 
         for (int idx = 0; idx < StorageStackBE.SLOTS; idx++) {
             ItemStack stack = handler.getStackInSlot(idx);
@@ -49,13 +45,8 @@ public class StorageStackBER implements BlockEntityRenderer<StorageStackBE> {
             pose.translate(sx, sy, sz);
             pose.scale(CubeRenderHelper.STORAGE_CELL_RENDER_SCALE, CubeRenderHelper.STORAGE_CELL_RENDER_SCALE,
                     CubeRenderHelper.STORAGE_CELL_RENDER_SCALE);
-            CubeRenderHelper.renderItemInCube(stack, pose, buffers, cubeLight, blockRenderer, be.getLevel());
+            CubeRenderHelper.renderItemInCube(stack, pose, buffers, light, blockRenderer, be.getLevel());
             pose.popPose();
         }
-    }
-
-    @Override
-    public boolean shouldRenderOffScreen(StorageStackBE be) {
-        return false;
     }
 }

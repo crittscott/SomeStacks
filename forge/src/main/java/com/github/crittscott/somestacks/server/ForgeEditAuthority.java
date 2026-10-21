@@ -29,6 +29,9 @@ import net.minecraftforge.eventbus.api.Event;
 public final class ForgeEditAuthority implements EditAuthority {
     @Override
     public boolean mayUseAdjacent(ServerPlayer player, BlockPos pos) {
+        // Forge has no general permission-query event, so this deliberately probes destination
+        // protection with RightClickBlock. The WorldEdits guard suppresses our own gestures;
+        // foreign listeners still receive the event and may perform gameplay actions.
         PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(
                 player, InteractionHand.MAIN_HAND, pos, WorldEdits.adjacentHit(player, pos));
         return !event.isCanceled() && event.getUseBlock() != Event.Result.DENY

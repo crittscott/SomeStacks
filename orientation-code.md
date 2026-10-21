@@ -64,6 +64,8 @@ Entities do not tick. Mutations schedule base publication and Storage settlement
 - `SinglesColumn` inserts into one empty supported cell. Extraction shifts one visual column down across rotated seams, carrying item rotation. Cleanup trims empty tops; breaking leaves the column above.
 - `BarColumn` uses positional overlap support and alternating axes. Player extraction/removal cascades unsupported bars; automation backfills from the topmost bar. Insertion names an empty supported position.
 
+Contents drop through `Containers.dropItemStack` regardless of `doTileDrops`. `BarDropBatch` groups exact identities per originating block; the helper may split packed stacks into several entities.
+
 `StackItemStorage` persists local inventory in block-entity NBT stamped with `DataVersion`:
 
 | Type | Saved data |
@@ -74,7 +76,7 @@ Entities do not tick. Mutations schedule base publication and Storage settlement
 
 Unreadable, out-of-range, or duplicate-slot entries stay verbatim in `Items.SetAside`, retried each load and logged per location (`ServerLifecycle.reportSavedItems`).
 
-Storage permanence propagates from the base during settlement. Storage/Singles use `horizontal_facing` for structure rotation/mirroring; Storage growth copies it. Singles gravity preserves item rotation.
+Settlement propagates Storage permanence from the base. Storage/Singles use `horizontal_facing` for structure transforms; Storage growth copies it. Singles gravity preserves item rotation.
 
 Client `load` calls `loadClientUpdate`, which applies an update only if wholly valid: current `DataVersion`, no server-only fields, well-formed slots/items/rotations. Update tags strip `Permanent` and `SetAside`.
 
@@ -84,11 +86,11 @@ Storage accepts ordinary nonempty items. Bar accepts members of the `somestacks:
 
 Forge `RunItemHandler` uses `LazyOptional` invalidation. Fabric caches adapters per entity through `FabricStorageOwner`; all sides/blocks share the base ledger. Singles/Bar permit one extraction position per transaction. Views include headroom below maximum height. Fabric sweeps resolve one run/ledger; retained views resolve on access. Growth checks last one insertion sweep: Storage reuses obstruction; Singles/Bar check each candidate shape. Commit re-resolves and validates each mutation. `RunEdit` refuses reentrant automation.
 
-`WorldEdits` gates growth/cleanup on height, replaceability, completed-shape obstruction, border, and spawn; `canGrow` also asks `EditAuthority.mayPlace`. Automation acts as `AutomationActor.PROFILE` through each loader's fake player. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
+`WorldEdits` checks height, replaceability, final-shape obstruction, border, and spawn for growth/cleanup; `canGrow` asks `EditAuthority.mayPlace`. Automation uses `AutomationActor.PROFILE` through loader fake players. Forge uses place/break events, snapshot rollback, and `onPlace`/`markAndNotifyBlock` publication, refusing reentrancy and foreign capture.
 
-Fabric removal fires `PlayerBlockBreakEvents`. Lacking a placement event, Fabric `mayPlace` ANDs the mod-gated `CommonProtectionQueries`, `FtbChunksProtection`, and `OpacProtection`, checked before `setBlock`; adjacent deposits also ask `canInteractBlock`.
+Fabric removal asks Common Protection API, then `PlayerBlockBreakEvents`. Fabric `mayPlace` ANDs the mod-gated `CommonProtectionQueries`, `FtbChunksProtection`, and `OpacProtection` before `setBlock`; adjacent deposits also ask `canInteractBlock`.
 
-Checked placement/removal emits `BLOCK_PLACE`/`BLOCK_DESTROY` only on success. Removal uses `removeBlock` (fluid stays) with one actor, old state, and entity; Fabric sends `CANCELED` on a `BEFORE` veto, `AFTER` on success. Cleanup from one player's extraction or toggle uses that player (Storage via `noteCleanupActor` until settlement); otherwise automation. `StackInteractions` emits `BLOCK_CHANGE` after successful gestures unless extraction removed the block.
+Checked edits emit `BLOCK_PLACE`/`BLOCK_DESTROY` only on success. Removal uses `removeBlock` (fluid stays) with the original actor/state/entity; Fabric sends `CANCELED` on query/event veto, `AFTER` on success. Cleanup from one player's extraction or toggle uses that player (Storage via `noteCleanupActor` until settlement); otherwise automation. `StackInteractions` emits `BLOCK_CHANGE` after successful gestures unless extraction removed the block.
 
 ## Player interaction and networking
 
@@ -96,9 +98,9 @@ Existing stacks handle permanence, deposits/top placement, and extraction throug
 
 Vanilla checks reach and loaded chunks; `StackInteractions` validates hand, spectator, prerequisites, admission, support, and permissions, and traces cells along `ViewRays.through` (eye through the received hit point). First placement/deposit is atomic.
 
-Client SUCCESS consumes use but still sends the packet. Stack blocks consume every server use; sneaking/off-hand use does not mutate stacks. Forge item-only denial does not block existing-stack gestures. Adjacent deposits consult both positions, guarding recursion.
+Client SUCCESS still sends the packet. Stack blocks consume every server use; sneaking/off-hand use does not mutate stacks. Forge item-only denial allows existing-stack gestures. Adjacent deposits check both positions, guarding recursion.
 
-`ConfigSyncPkt` is one byte-bounded chunk of a generation (flags, `gen_mods`, `disable_mods`); decoding rejects bad counts/namespaces. `ClientRenderPacketSink` publishes to `StackState`/`ClientRenderToolState` only at a complete last chunk; bad sequences throw and clear staging, as does disconnect.
+`ConfigSyncPkt` carries byte-bounded generation chunks (flags, `gen_mods`, `disable_mods`), rejecting invalid counts/namespaces. `ClientRenderPacketSink` publishes complete generations to `StackState`/`ClientRenderToolState`; invalid sequences throw and clear staging, also cleared on disconnect.
 
 ## Configuration and presentation
 
@@ -113,9 +115,9 @@ Resources (`common/src/main/resources`):
 - `assets/<namespace>/item_render_overrides/*.json` defines Storage/Singles profiles.
 - `assets/<namespace>/textures/bars/*.json` defines Bar textures/tints.
 
-`CubeGrid` caches rotations/geometry; `BarCubeIdx` shares cached boxes/shapes across rendering and targeting. Singles/Bar unions optimize once per rebuild. Storage/Singles use `CubeRenderHelper`. Bar caches sprites/UVs, transforms scalar vertices/normals, and resolves textures/tints per item; resource reload clears client caches. Profiles use immutable `RenderOffset`; precedence is user -> resource pack -> measurement. A `2d` model that throws while its art is gathered (before drawing) joins `FLAT_CAPTURE_FAILURES` and draws `stack_cube_error` until reload, logged once. Derived Bar tints multiply the first GUI quad's sprite by its tint. `ItemRenderOverrides` caches profiles until edits or corpus/model reload.
+`CubeGrid` caches rotations/geometry; `BarCubeIdx` shares cached boxes/shapes across rendering and targeting. Singles/Bar unions optimize once per rebuild. All three renderers use the dispatcher's supplied packed light. Storage/Singles use `CubeRenderHelper`. Bar caches sprites/UVs, transforms scalar vertices/normals, and resolves textures/tints per item; resource reload clears client caches. Profiles use immutable `RenderOffset`; precedence is user -> resource pack -> measurement. A `2d` model that throws while its art is gathered (before drawing) joins `FLAT_CAPTURE_FAILURES` and draws `stack_cube_error` until reload, logged once. Derived Bar tints multiply the first GUI quad's sprite by its tint. `ItemRenderOverrides` caches profiles until edits or corpus/model reload.
 
-Flat models use 2-D; others 3-D. Forge measures passes/custom vertices; custom output uses 3-D. Fabric measures quads, falling back to 3-D ItemRenderer.
+Flat models use 2-D; others 3-D. Forge measures passes/custom vertices; custom output uses 3-D. Fabric measures quads with a 3-D ItemRenderer fallback.
 
 `measured_cache.json` keys by format, packs, and mod versions; mismatch/reload invalidates it. Client-local `/ss item` edits memory; `/ss write changed` saves; namespace forms write output-only profiles.
 
@@ -123,8 +125,6 @@ Flat models use 2-D; others 3-D. Forge measures passes/custom vertices; custom o
 
 `somestacks_gametest` combines shared/loader scenarios with Base64-generated fixtures.
 
-Shared checks cover batching, caches, shape unions, same-tick growth, movement, persistence/recovery, client updates, rotation, comparators, native gestures, admission, and policy. Forge adds TOML saves/reloads; Fabric covers Transfer transactions/capacity, partial-first insertion, and retained views after base removal. Protection tests cover adjacent denial, partial shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
+Shared checks cover batching, caches, shapes, growth, movement, persistence/recovery, client updates, rotation, comparators, gestures, admission, policy, and Bar break/cascade drops with block drops disabled. Forge adds TOML saves/reloads; Fabric covers Transfer transactions/capacity, partial-first insertion, and retained views after base removal. Protection checks cover adjacent denial, partial shapes, rollback/reentrancy, and break context; `-PwithCommonProtectionApi=true` selects provider-backed checks.
 
-`WorldEditChecks` covers events, actors, and cleanup; `RenderGalleryChecks` covers command gates and saved deny edits.
-
-`runGameTestServer` runs loader scenarios; Fabric clears `fabric/run/world` first. `runClientGameTests` loads the test mod; `/ssclienttest` checks local callback consumption.
+`WorldEditChecks`: events, actors, cleanup; `RenderGalleryChecks`: command gates, saved deny edits.

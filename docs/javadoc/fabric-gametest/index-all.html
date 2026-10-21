@@ -70,6 +70,11 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: allow the chosen ingot for Bar, then use a machine that walks positions
  bottom-up to insert ten identical ingots.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#automationCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationCleanupConsultsProtectionApi(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
+<dd>
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for [SomeStacks].</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#automationGrowthConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationGrowthConsultsProtectionApi(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
 <dd>
 <div class="block">To reproduce in-game: deny [SomeStacks] placement in a claim managed through Common
@@ -150,6 +155,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loader entry point for <a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.breakingFullColumnConsolidatesDrops(net.minecraft.gametest.framework.GameTestHelper)</code></a>; see that method for
  the scenario, manual check, and any internal-only assertions.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#breakingFullColumnDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnDropsWithBlockDropsDisabled(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
+<dd>
+<div class="block">To reproduce: set /gamerule doTileDrops false, fill two contiguous Bar blocks with accepted
+ ingots, then break the lower block.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#breakingFullColumnDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingFullColumnDropsWithBlockDropsDisabled(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
+<dd>
+<div class="block">Loader entry point for <a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#breakingFullColumnDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.breakingFullColumnDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)</code></a>;
+ see that method for the scenario and manual check.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#breakingLowerBlockCollapsesDependentUpperBlock(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">breakingLowerBlockCollapsesDependentUpperBlock(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
 <dd>
@@ -1025,6 +1040,16 @@ loadScripts(document, 'script');</script>
  that method for
  the scenario, manual check, and any internal-only assertions.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeDropsWithBlockDropsDisabled(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnChecks</a></dt>
+<dd>
+<div class="block">To reproduce: set /gamerule doTileDrops false and build a chain of one supported bar in each
+ layer of two Bar blocks.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html#playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCascadeDropsWithBlockDropsDisabled(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/BarColumnGameTests.html" title="class in com.github.crittscott.somestacks.gametest">BarColumnGameTests</a></dt>
+<dd>
+<div class="block">Loader entry point for <a href="com/github/crittscott/somestacks/gametest/BarColumnChecks.html#playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)"><code>BarColumnChecks.playerCascadeDropsWithBlockDropsDisabled(net.minecraft.gametest.framework.GameTestHelper)</code></a>;
+ see that method for the scenario and manual check.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerCausedCleanupCarriesThePlayer(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCausedCleanupCarriesThePlayer(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>
 <div class="block">Loader entry point for <a href="com/github/crittscott/somestacks/gametest/WorldEditChecks.html#playerCausedCleanupCarriesThePlayer(net.minecraft.gametest.framework.GameTestHelper,net.minecraft.server.level.ServerPlayer)"><code>WorldEditChecks.playerCausedCleanupCarriesThePlayer(net.minecraft.gametest.framework.GameTestHelper, net.minecraft.server.level.ServerPlayer)</code></a>.</div>
@@ -1034,6 +1059,11 @@ loadScripts(document, 'script');</script>
 <div class="block">To reproduce: in a claim that admits a player but denies [SomeStacks], extract the last item
  from a temporary Storage, Singles, and Bar Stack, and toggle an empty permanent Storage pile
  back to temporary.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html#playerCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCleanupConsultsProtectionApi(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionApiGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionApiGameTests</a></dt>
+<dd>
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for your player.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html#playerCleanupReachesBreakCallbacksAsThePlayer(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCleanupReachesBreakCallbacksAsThePlayer(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/ProtectionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">ProtectionGameTests</a></dt>
 <dd>

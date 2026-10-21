@@ -17,9 +17,8 @@ import javax.annotation.Nullable;
 
 /**
  * Fabric's {@link EditAuthority}: the automation actor is Fabric API's native {@link FakePlayer}
- * with the shared {@link AutomationActor} profile, and
- * removal answers to Fabric API's block-break event, the counterpart to Forge's block-break event,
- * so claim and protection mods can veto automation-driven removal the same way they can on Forge.
+ * with the shared {@link AutomationActor} profile. Removal answers to Common Protection API and
+ * Fabric API's block-break event, so claim and protection mods can veto cleanup.
  * Vetoed removals report cancellation; successful removals report completion with the original
  * actor, block state, and block entity.
  *
@@ -57,6 +56,9 @@ public final class FabricEditAuthority implements EditAuthority {
         if (CommonProtectionQueries.isLoaded() && !CommonProtectionQueries.mayInteract(player, pos)) {
             return false;
         }
+        // A deliberate destination probe preserves protection from callback-only mods. The
+        // WorldEdits guard suppresses our own gestures; foreign listeners still see this use and
+        // may act on it. Only PASS permits the deposit, so a handled use is not deposited into.
         return UseBlockCallback.EVENT.invoker().interact(player, player.level(),
                 InteractionHand.MAIN_HAND, WorldEdits.adjacentHit(player, pos)) == InteractionResult.PASS;
     }
@@ -64,7 +66,9 @@ public final class FabricEditAuthority implements EditAuthority {
     @Override
     public boolean vetoesRemoval(ServerLevel level, ServerPlayer actor, BlockPos pos,
                                  BlockState state, @Nullable BlockEntity blockEntity) {
-        if (PlayerBlockBreakEvents.BEFORE.invoker()
+        boolean queryAllowed = !CommonProtectionQueries.isLoaded()
+                || CommonProtectionQueries.mayBreak(actor, level, pos);
+        if (queryAllowed && PlayerBlockBreakEvents.BEFORE.invoker()
                 .beforeBlockBreak(level, actor, pos, state, blockEntity)) return false;
         PlayerBlockBreakEvents.CANCELED.invoker()
                 .onBlockBreakCanceled(level, actor, pos, state, blockEntity);

@@ -128,16 +128,28 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
  it from outside.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationGrowthConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationGrowthConsultsProtectionApi</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationCleanupConsultsProtectionApi</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for [SomeStacks].</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#automationGrowthConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">automationGrowthConsultsProtectionApi</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">To reproduce in-game: deny [SomeStacks] placement in a claim managed through Common
  Protection API, then pipe items into a full Storage pile whose top sits under the claim.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placementConsultsProtectionApiBeforePlacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementConsultsProtectionApiBeforePlacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placementConsultsProtectionApiBeforePlacing(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">placementConsultsProtectionApiBeforePlacing</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">To reproduce in-game: stand outside a claim managed through Common Protection API and
  place a stack against a block whose face points into it.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">playerCleanupConsultsProtectionApi</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for your player.</div>
 </div>
 </div>
 </div>
@@ -197,6 +209,28 @@ implements net.fabricmc.fabric.api.gametest.v1.FabricGameTest</span></div>
 <div class="block">To reproduce in-game: deny interaction at a Singles Stack inside a claim managed through
  Common Protection API, then hold the modifier and right-click the neighboring block toward
  it from outside. Nothing is deposited.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="automationCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>automationCleanupConsultsProtectionApi</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">automationCleanupConsultsProtectionApi</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for [SomeStacks]. Empty a temporary Storage Stack through a hopper; its empty block
+ remains. Next allow the API query but deny breaking through a Fabric event listener; it
+ still remains. Allow both and empty it again; cleanup removes it and emits destruction.
+ The test verifies one cancellation on either denial and the original actor/state/entity.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerCleanupConsultsProtectionApi(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>playerCleanupConsultsProtectionApi</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playerCleanupConsultsProtectionApi</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce: allow placement and interaction in a Common Protection API claim, but deny
+ breaking for your player. Extract the last item from a temporary Storage Stack; its empty
+ block remains. Repeat with the API allowing breaks and a Fabric listener denying them;
+ it still remains. Allow both and empty it again; cleanup removes it as your player.
+ The test checks callback context and destruction vibrations for all three cases.</div>
 </section>
 </li>
 </ul>

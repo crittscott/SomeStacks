@@ -6,14 +6,12 @@ import com.github.crittscott.somestacks.util.SlotAccess;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
@@ -52,9 +50,6 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
 
         if (be.getLevel() == null) return;
 
-        BlockPos bePos = be.getBlockPos();
-        int barLight = LevelRenderer.getLightColor(be.getLevel(), bePos);
-
         VertexConsumer vc = buffers.getBuffer(RenderType.solid());
 
         for (int idx = 0; idx < BarStackBE.SLOTS; idx++) {
@@ -71,7 +66,7 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
             pose.scale((float) (box.maxX - box.minX), (float) (box.maxY - box.minY),
                     (float) (box.maxZ - box.minZ));
 
-            emitBar(pose, vc, sprite, barLight, idx / BarCubeIdx.LAYER_SIZE, textureData);
+            emitBar(pose, vc, sprite, light, idx / BarCubeIdx.LAYER_SIZE, textureData);
 
             pose.popPose();
         }
@@ -163,10 +158,5 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                         m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
                 .color(r, g, b, a).uv(u, v).overlayCoords(overlay).uv2(light)
                 .normal(nx, ny, nz).endVertex();
-    }
-
-    @Override
-    public boolean shouldRenderOffScreen(BarStackBE be) {
-        return false;
     }
 }

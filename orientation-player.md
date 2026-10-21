@@ -6,7 +6,7 @@
 
 Structure: `orientation-code.md`.
 
-Some Stacks turns held items into visible storage using three blocks without block items, recipes, creative-tab entries, or screens. Depositing creates a stack; emptying it normally removes it.
+Some Stacks turns held items into visible storage. Depositing creates a stack; emptying it normally removes it. No block items, recipes, creative-tab entries, or screens.
 
 Requires Minecraft 1.20.1 and matching client/server loader builds: Forge 47.4.10 or later within 47.x, or Fabric Loader 0.19.3 with Fabric API 0.92.7+1.20.1.
 
@@ -50,7 +50,7 @@ Deposits are rejected when the server has disabled the item's mod or exact item 
 
 ## Extracting
 
-Plain right-click targets the nearest rendered item along the line from the eye through the point the client clicked, so lag does not shift the target.
+Plain right-click targets the nearest rendered item along the eye ray through the client's clicked point, preserving targeting under lag.
 
 - Storage: as much of the targeted stack as the hand can hold.
 - Singles: one item.
@@ -60,13 +60,15 @@ The main hand must be empty or hold matching item/damage/NBT with room. Plain st
 
 Breaking or replacing any stack block drops that block's local contents; no stack block item drops. Storage runs above and below the gap settle independently in place. Singles leaves separated runs standing. Removing a Bar Stack removes the support seam beneath the Bars above it, so unsupported bars collapse and drop.
 
+Contents and collapsed bars drop with `doTileDrops` false.
+
 ## Per-type behavior
 
 ### Storage
 
 27 ordinary stacks shown as a 3 x 3 x 3 grid; a slot holding one item and a full slot show the same item model. A contiguous pile is one inventory: deposits merge compatible partial stacks first, fill from the base up, and grow upward when full and allowed. Settlement merges exact item/damage/NBT identities, sorts, packs down, and removes empty top blocks. Extraction removes from the aimed cell first; the following scheduled block tick settles the pile.
 
-Storage is the only type with permanence. A permanent pile retains empty blocks; a temporary pile trims empty top blocks and disappears when emptied. The setting belongs to the whole pile and shows above the hotbar when toggled. A redstone torch rotates one block's visible layout, not the pile.
+Only Storage has permanence. A permanent pile retains empty blocks; a temporary pile trims empty tops and disappears when emptied. The setting belongs to the whole pile and shows above the hotbar when toggled. A redstone torch rotates one block's visible layout, not the pile.
 
 ### Singles
 
@@ -183,6 +185,6 @@ Bar appearance is separate: resource packs map item ids to textures and optional
 
 Player placement, deposit, extraction, and rotation honor build limits, obstruction, border, and spawn protection. Forge uses its interaction/place/break events; Fabric uses `UseBlockCallback` and `PlayerBlockBreakEvents`. Adjacent deposits validate the clicked block and destination. Automatic growth/removal acts as `[SomeStacks]`; cleanup caused only by one player's extraction or permanence toggle acts as that player. Fabric placement and growth also consult Common Protection API, FTB Chunks, and Open Parties and Claims when installed, before space is offered to automation; adjacent deposits also ask Common Protection API.
 
-Fabric stack removal reports cancellation or completion with the original actor, state, and block entity.
+Fabric removal asks Common Protection API and reports cancellation/completion with the original actor, state, and entity.
 
 Block-use clicks use synchronized mode/modifier state. Existing-stack gestures are block use, so a Forge rule denying only item use does not stop them. Vanilla checks reach and loaded chunks; the server validates player status, hand, items, adjacency, support, enablement, height, and protection. Forge restores denied placement state/NBT and publishes neighbor updates after acceptance.

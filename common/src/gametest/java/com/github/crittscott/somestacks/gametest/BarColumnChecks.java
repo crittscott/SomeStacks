@@ -10,6 +10,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -188,8 +189,8 @@ public final class BarColumnChecks {
     /**
      * To reproduce: fill two contiguous Bar blocks with 128 identical accepted ingots, then break
      * the lower block. Both blocks disappear and all 128 ingots drop. The automated check asserts
-     * two item entities of 64 at the originating blocks; later vanilla item-entity merging is
-     * outside this check.
+     * 64 ingots at each originating block, allowing the container drop helper to split stacks;
+     * later vanilla item-entity merging is outside this check.
      */
     public static void breakingFullColumnConsolidatesDrops(GameTestHelper helper) {
         BarStackBE lower = placeBar(helper, ORIGIN);
@@ -213,12 +214,45 @@ public final class BarColumnChecks {
         List<ItemEntity> drops = droppedInColumn(helper, lowerPos, upperPos).stream()
                 .filter(entity -> entity.getItem().is(barItem))
                 .toList();
-        checkEquals(2, drops.size(), "Consolidated item-entity count");
         checkEquals(128, drops.stream().mapToInt(entity -> entity.getItem().getCount()).sum(),
                 "Consolidated item count");
-        check(drops.stream().allMatch(entity -> entity.getItem().getCount() == 64),
-                "A full block's bars were not packed into one full stack");
+        checkEquals(64, drops.stream().filter(entity -> entity.blockPosition().equals(lowerPos))
+                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Broken block's drop count at its position");
+        checkEquals(64, drops.stream().filter(entity -> entity.blockPosition().equals(upperPos))
+                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Collapsed block's drop count at its position");
         helper.succeed();
+    }
+
+    /**
+     * To reproduce: set /gamerule doTileDrops false, fill two contiguous Bar blocks with accepted
+     * ingots, then break the lower block. All 128 ingots drop from their originating blocks and
+     * both blocks disappear. Restore the gamerule afterward.
+     */
+    public static void breakingFullColumnDropsWithBlockDropsDisabled(GameTestHelper helper) {
+        withBlockDropsDisabled(helper, () -> breakingFullColumnConsolidatesDrops(helper));
+    }
+
+    /**
+     * To reproduce: set /gamerule doTileDrops false and build a chain of one supported bar in each
+     * layer of two Bar blocks. Extract the lowest bar with an empty hand. One ingot enters the
+     * hand, fifteen drop from their originating blocks, and both blocks disappear. Restore the
+     * gamerule afterward.
+     */
+    public static void playerCascadeDropsWithBlockDropsDisabled(GameTestHelper helper) {
+        withBlockDropsDisabled(helper, () -> playerCascadeConsolidatesAcrossBlocks(helper));
+    }
+
+    private static void withBlockDropsDisabled(GameTestHelper helper, Runnable scenario) {
+        GameRules.BooleanValue blockDrops = helper.getLevel().getGameRules().getRule(GameRules.RULE_DOBLOCKDROPS);
+        boolean previous = blockDrops.get();
+        try {
+            blockDrops.set(false, helper.getLevel().getServer());
+            scenario.run();
+        } finally {
+            blockDrops.set(previous, helper.getLevel().getServer());
+        }
     }
 
     /**
@@ -266,6 +300,12 @@ public final class BarColumnChecks {
         int[] counts = drops.stream().mapToInt(entity -> entity.getItem().getCount()).sorted().toArray();
         check(Arrays.equals(new int[]{7, 8}, counts),
                 "Drops were not packed at their originating blocks: " + Arrays.toString(counts));
+        checkEquals(7, drops.stream().filter(entity -> entity.blockPosition().equals(lowerPos))
+                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Lower cascade drop count at its position");
+        checkEquals(8, drops.stream().filter(entity -> entity.blockPosition().equals(upperPos))
+                        .mapToInt(entity -> entity.getItem().getCount()).sum(),
+                "Upper cascade drop count at its position");
         helper.succeed();
     }
 

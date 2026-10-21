@@ -2,9 +2,9 @@ package com.github.crittscott.somestacks.block;
 
 import com.github.crittscott.somestacks.util.SlotAccess;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,8 +44,9 @@ final class BarDropBatch {
                 while (remaining > 0) {
                     ItemStack drop = group.model.copy();
                     drop.setCount(Math.min(remaining, drop.getMaxStackSize()));
-                    Block.popResource(level, position.getKey(), drop);
                     remaining -= drop.getCount();
+                    BlockPos pos = position.getKey();
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), drop);
                 }
             }
         }
