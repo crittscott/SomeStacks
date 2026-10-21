@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -85,11 +86,11 @@ public class BarStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, BarCubeIdx.shapeFor(i));
+                shape = Shapes.joinUnoptimized(shape, BarCubeIdx.shapeFor(i), BooleanOp.OR);
             }
         }
 
-        return shape;
+        return shape.optimize();
     }
 
     /**
@@ -144,15 +145,8 @@ public class BarStackBE extends StackBlockEntity {
     }
 
     /**
-     * The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
-     * takes a different path — see {@link BarColumn#extract}, which backfills instead.
-     */
-    public ItemStack extractAt(int index) {
-        return extractAt(index, null);
-    }
-
-    /**
-     * Player-facing extraction variant that preserves the actor through cascade cleanup.
+     * Takes one bar and cascades unsupported bars, preserving the actor through cleanup.
+     * Automation uses {@link BarColumn#extract}, which backfills instead.
      *
      * @param actor the player responsible for any block the cascade empties away, or null for
      *              automation

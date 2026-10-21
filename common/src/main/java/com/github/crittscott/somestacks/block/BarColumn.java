@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * A maximal contiguous vertical run of Bar Stacks, addressed as one inventory by automation.
@@ -142,7 +143,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)) {
             return 0;
         }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot)) {
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !positionAccepts(flatSlot, null)) {
             return 0;
         }
         if (simulate) {
@@ -157,6 +158,16 @@ public final class BarColumn extends StackRun<BarStackBE> {
         return handlerOf(flatSlot).insertItem(localSlot(flatSlot), one, false).isEmpty() ? 1 : 0;
     }
 
+    @Override
+    public InsertionTest insertionTest() {
+        BooleanSupplier growth = oncePerSweep(this::canGrowSpace);
+        return (slot, stack) -> {
+            if (stack.isEmpty() || !BarStackBE.isValidBarItem(stack)
+                    || slot < 0 || slot >= advertisedSlots()) return 0;
+            return positionAccepts(slot, growth) ? 1 : 0;
+        };
+    }
+
     /**
      * Whether {@code flatSlot} could take a bar as the column stands: the position must be empty and
      * its footprint must overlap an occupied bar in the layer beneath it, which for a bottom layer
@@ -167,7 +178,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * checks in {@link #canGrow(VoxelShape)}. A simulation therefore cannot promise a position the
      * commit would refuse.
      */
-    private boolean positionAccepts(int flatSlot) {
+    private boolean positionAccepts(int flatSlot, @Nullable BooleanSupplier growth) {
         int blockIndex = flatSlot / BarStackBE.SLOTS;
         int slot = localSlot(flatSlot);
 
@@ -183,7 +194,8 @@ public final class BarColumn extends StackRun<BarStackBE> {
         }
 
         return slot < BarCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot)
-                && canGrow(BarCubeIdx.shapeFor(slot));
+                && (growth == null ? canGrowSpace() : growth.getAsBoolean())
+                && WorldEdits.isUnobstructed(level, topPos().above(), BarCubeIdx.shapeFor(slot));
     }
 
     /**
@@ -204,6 +216,11 @@ public final class BarColumn extends StackRun<BarStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
+        return canGrowSpace() && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
+    }
+
+    /** Slot-independent automation eligibility, evaluated fresh outside an insertion sweep. */
+    private boolean canGrowSpace() {
         if (blocks.size() >= maxHeight() || !ServerConfig.enableBarStackBlock()) {
             return false;
         }
@@ -211,8 +228,7 @@ public final class BarColumn extends StackRun<BarStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return WorldEdits.mayPlace(level, above);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

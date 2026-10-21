@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * A maximal contiguous vertical run of Singles Stacks, addressed as one inventory by automation.
@@ -122,7 +123,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)) {
             return 0;
         }
-        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot)) {
+        if (flatSlot < 0 || flatSlot >= advertisedSlots() || !cellAccepts(flatSlot, null)) {
             return 0;
         }
         if (simulate) {
@@ -137,6 +138,16 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         return handlerOf(flatSlot).insertItem(localSlot(flatSlot), one, false).isEmpty() ? 1 : 0;
     }
 
+    @Override
+    public InsertionTest insertionTest() {
+        BooleanSupplier growth = oncePerSweep(this::canGrowSpace);
+        return (slot, stack) -> {
+            if (stack.isEmpty() || !SinglesStackBE.isValidSinglesItem(stack)
+                    || slot < 0 || slot >= advertisedSlots()) return 0;
+            return cellAccepts(slot, growth) ? 1 : 0;
+        };
+    }
+
     /**
      * Whether {@code flatSlot} could take an item as the column stands: the cell must be empty and
      * the cell beneath it occupied, which for a bottom layer means the seam with the Singles Stack
@@ -147,7 +158,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * and against the side-effect-free checks in {@link #canGrow(VoxelShape)}. A simulation therefore
      * cannot promise a cell the commit would refuse.
      */
-    private boolean cellAccepts(int flatSlot) {
+    private boolean cellAccepts(int flatSlot, @Nullable BooleanSupplier growth) {
         int blockIndex = flatSlot / SinglesStackBE.SLOTS;
         int slot = localSlot(flatSlot);
 
@@ -163,7 +174,8 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         }
 
         return slot < SinglesCubeIdx.LAYER_SIZE && seamSupports(blockIndex, slot, 0)
-                && canGrow(SinglesCubeIdx.shapeFor(slot, 0));
+                && (growth == null ? canGrowSpace() : growth.getAsBoolean())
+                && WorldEdits.isUnobstructed(level, topPos().above(), SinglesCubeIdx.shapeFor(slot, 0));
     }
 
     /**
@@ -186,6 +198,11 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
      * is checked against the level's automation actor, which is never exempt from spawn protection.
      */
     private boolean canGrow(VoxelShape finalCollision) {
+        return canGrowSpace() && WorldEdits.isUnobstructed(level, topPos().above(), finalCollision);
+    }
+
+    /** Slot-independent automation eligibility, evaluated fresh outside an insertion sweep. */
+    private boolean canGrowSpace() {
         if (blocks.size() >= maxHeight() || !ServerConfig.enableSinglesStackBlock()) {
             return false;
         }
@@ -193,8 +210,7 @@ public final class SinglesColumn extends StackRun<SinglesStackBE> {
         if (level.isOutsideBuildHeight(above) || !level.getBlockState(above).canBeReplaced()) {
             return false;
         }
-        return WorldEdits.mayPlace(level, above)
-                && WorldEdits.isUnobstructed(level, above, finalCollision);
+        return WorldEdits.mayPlace(level, above);
     }
 
     /** Adds one block on top, attributing the automated placement to the level's automation actor. */

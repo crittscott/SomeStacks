@@ -72,6 +72,23 @@ public final class BarCubeIdx {
     /** Slots in one block, and therefore slots in one {@link BarStackBE}. */
     public static final int CELLS = LAYER_SIZE * LAYERS;
 
+    private static final AABB[] LOCAL_BOXES = new AABB[CELLS];
+    private static final VoxelShape[] LOCAL_SHAPES = new VoxelShape[CELLS];
+
+    static {
+        for (int index = 0; index < CELLS; index++) {
+            int[] xyz = xyzFromIndex(index);
+            double minX = startPixelX(xyz[0], xyz[1]) / 16.0;
+            double minY = startPixelY(xyz[1]) / 16.0;
+            double minZ = startPixelZ(xyz[2], xyz[1]) / 16.0;
+            double maxX = minX + barWidth(xyz[1]) / 16.0;
+            double maxY = minY + barHeight(xyz[1]) / 16.0;
+            double maxZ = minZ + barDepth(xyz[1]) / 16.0;
+            LOCAL_BOXES[index] = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+            LOCAL_SHAPES[index] = Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
+        }
+    }
+
     private static final int[][] SUPPORTING_SLOTS = buildSupportingSlots();
 
     private static int[][] buildSupportingSlots() {
@@ -103,17 +120,13 @@ public final class BarCubeIdx {
         return index < LAYER_SIZE && (seamBelow == null || seamSupports(index, seamBelow));
     }
 
+    /** Cached block-local bounds shared by rendering, targeting, and collision. */
+    public static AABB localBox(int index) {
+        return LOCAL_BOXES[index];
+    }
+
     private static AABB getBarBox(int index, BlockPos blockPos) {
-        int[] xyz = xyzFromIndex(index);
-
-        double minX = blockPos.getX() + startPixelX(xyz[0], xyz[1]) / 16.0;
-        double minY = blockPos.getY() + startPixelY(xyz[1]) / 16.0;
-        double minZ = blockPos.getZ() + startPixelZ(xyz[2], xyz[1]) / 16.0;
-        double maxX = minX + barWidth(xyz[1]) / 16.0;
-        double maxY = minY + barHeight(xyz[1]) / 16.0;
-        double maxZ = minZ + barDepth(xyz[1]) / 16.0;
-
-        return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+        return localBox(index).move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     private static AABB getBarFootprint(int x, int y, int z) {
@@ -183,17 +196,7 @@ public final class BarCubeIdx {
 
     /** Returns the block-local collision shape of one bar slot. */
     public static VoxelShape shapeFor(int index) {
-        int[] xyz = xyzFromIndex(index);
-        double minX = startPixelX(xyz[0], xyz[1]) / 16.0;
-        double minY = startPixelY(xyz[1]) / 16.0;
-        double minZ = startPixelZ(xyz[2], xyz[1]) / 16.0;
-        return Shapes.box(
-                minX,
-                minY,
-                minZ,
-                minX + barWidth(xyz[1]) / 16.0,
-                minY + barHeight(xyz[1]) / 16.0,
-                minZ + barDepth(xyz[1]) / 16.0);
+        return LOCAL_SHAPES[index];
     }
 
     /**

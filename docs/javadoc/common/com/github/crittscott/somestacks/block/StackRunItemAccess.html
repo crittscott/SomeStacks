@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -81,6 +81,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Interface</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="StackRunItemAccess.InsertionTest.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -117,9 +132,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns how many items the named advertised position accepts.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#insertionTest()" class="member-name-link">insertionTest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">A short-lived insertion simulation for one read-only sweep.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#markDirty()" class="member-name-link">markDirty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Schedules the run's deferred publication or settlement pass.</div>
 </div>
 </div>
@@ -160,6 +180,14 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;simulate)</span></div>
 <div class="block">Returns how many items the named advertised position accepts. When <code>simulate</code> is true,
  reports the same answer without changing the run or growing it.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="insertionTest()">
+<h3>insertionTest</h3>
+<div class="member-signature"><span class="return-type"><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></span>&nbsp;<span class="element-name">insertionTest</span>()</div>
+<div class="block">A short-lived insertion simulation for one read-only sweep. Discard it before any world,
+ policy, permission, or live inventory mutation; commits always use fresh checks through insertAt.</div>
 </section>
 </li>
 <li>

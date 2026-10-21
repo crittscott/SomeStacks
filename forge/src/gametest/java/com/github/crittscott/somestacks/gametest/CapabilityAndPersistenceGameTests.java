@@ -22,7 +22,9 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.items.IItemHandler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -239,6 +241,12 @@ public final class CapabilityAndPersistenceGameTests {
         StackFoundationChecks.runContractPreservesTypeSpecificMutations(helper);
     }
 
+    /** See {@link StackFoundationChecks#cachedGeometryPreservesOccupiedUnions}. */
+    @GameTest(template = GameTestSupport.TEMPLATE)
+    public static void cachedGeometryPreservesOccupiedUnions(GameTestHelper helper) {
+        StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(helper);
+    }
+
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
      * see that method for
@@ -291,7 +299,9 @@ public final class CapabilityAndPersistenceGameTests {
      * server runs; /ss gen mod list reflects Forge's reload without restart. The fixture edits
      * the file directly in its own batch and waits for native publication using a wall-clock
      * deadline, since accelerated GameTest ticks do not measure file-watcher latency. File,
-     * native value, and common policy are restored on completion or failure.
+     * native value, and common policy are restored on completion or failure. The edit overwrites
+     * without truncation to avoid coalescing truncate/write notifications, which NightConfig's
+     * watcher skips when their event count exceeds one.
      */
     @GameTest(template = GameTestSupport.TEMPLATE, batch = "somestacks_native_reload",
             timeoutTicks = CONFIG_RELOAD_TIMEOUT_TICKS)
@@ -312,8 +322,12 @@ public final class CapabilityAndPersistenceGameTests {
         check(entry.find(), "Native TOML has no single-line gen_mods entry");
         String edited = original.substring(0, entry.start()) + entry.group(1)
                 + "[\"" + marker + "\"]" + entry.group(2) + original.substring(entry.end());
-        long deadline = System.nanoTime() + CONFIG_RELOAD_TIMEOUT_NANOS;
-        Files.writeString(file, edited);
+        int padding = original.getBytes(StandardCharsets.UTF_8).length
+                - edited.getBytes(StandardCharsets.UTF_8).length;
+        if (padding > 0) edited += " ".repeat(padding);
+        long startedAt = System.nanoTime();
+        long deadline = startedAt + CONFIG_RELOAD_TIMEOUT_NANOS;
+        Files.writeString(file, edited, StandardOpenOption.WRITE);
         helper.onEachTick(new Runnable() {
             private boolean finished;
 
@@ -326,6 +340,11 @@ public final class CapabilityAndPersistenceGameTests {
                     return;
                 }
                 finished = true;
+                boolean nativeLoaded = nativeValue.get().equals(List.of(marker));
+                String timeoutDetail = " (native value loaded edit: " + nativeLoaded
+                        + ", elapsed milliseconds: "
+                        + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt)
+                        + ", test tick: " + helper.getTick() + ")";
                 try {
                     nativeValue.set(before);
                     Files.writeString(file, original);
@@ -338,7 +357,8 @@ public final class CapabilityAndPersistenceGameTests {
                 if (published) {
                     helper.succeed();
                 } else {
-                    helper.fail("Native Forge file reload did not publish policy before its wall-clock or tick limit");
+                    helper.fail("Native Forge file reload did not publish policy before its wall-clock or tick limit"
+                            + timeoutDetail);
                 }
             }
         });

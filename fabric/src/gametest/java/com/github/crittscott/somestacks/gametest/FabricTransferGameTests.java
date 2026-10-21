@@ -15,6 +15,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.ORIGIN;
 import static com.github.crittscott.somestacks.gametest.GameTestScaffold.check;
@@ -175,6 +177,79 @@ public final class FabricTransferGameTests implements FabricGameTest {
                 placeSingles(helper, ORIGIN.above()), Items.STICK);
         checkStructuralLedger(helper, placeBar(helper, ORIGIN.east(3)),
                 placeBar(helper, ORIGIN.east(3).above()), Items.IRON_INGOT);
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce with automation: leave empty lower slots and a compatible partial stack in an
+     * upper Storage block. A whole-run insertion fills that partial before using an empty slot.
+     * Transaction-visible reads through both block adapters must agree before commit.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void wholeRunInsertionFillsUpperPartialsBeforeLowerEmpties(GameTestHelper helper) {
+        StorageStackBE base = placeStorage(helper, ORIGIN);
+        StorageStackBE top = placeStorage(helper, ORIGIN.above());
+        top.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 60));
+        SlottedStorage<ItemVariant> below = FabricGameTestSupport.capability(base);
+        SlottedStorage<ItemVariant> above = FabricGameTestSupport.capability(top);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(5L, above.insert(ItemVariant.of(Items.STONE), 5, transaction), "Whole-run insertion");
+            checkEquals(64L, below.getSlot(StorageStackBE.SLOTS).getAmount(), "Upper partial was not filled first");
+            checkEquals(1L, below.getSlot(0).getAmount(), "Remainder did not use first empty position");
+            checkEquals(60, top.getItems().getStackInSlot(0).getCount(), "Staging mutated live partial");
+            transaction.commit();
+        }
+        checkEquals(64, top.getItems().getStackInSlot(0).getCount(), "Committed upper stack");
+        checkEquals(1, base.getItems().getStackInSlot(0).getCount(), "Committed lower remainder");
+        helper.succeed();
+    }
+
+    /**
+     * No direct player reproduction applies to retained Transfer API views. Acquire an upper
+     * block's slot view, remove the base, then use the same view; it must address the upper block's
+     * new run and ledger rather than the removed base's inventory.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void retainedSlotViewResolvesTheNewBaseAfterRemoval(GameTestHelper helper) {
+        StorageStackBE base = placeStorage(helper, ORIGIN);
+        StorageStackBE top = placeStorage(helper, ORIGIN.above());
+        base.getItems().setStackInSlot(0, new ItemStack(Items.STONE, 4));
+        top.getItems().setStackInSlot(0, new ItemStack(Items.DIRT, 3));
+        var view = FabricGameTestSupport.capability(top).getSlot(0);
+        checkEquals(ItemVariant.of(Items.STONE), view.getResource(), "Initial base resource");
+        helper.getLevel().setBlock(base.getBlockPos(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        checkEquals(ItemVariant.of(Items.DIRT), view.getResource(), "Retained view kept removed base");
+        checkEquals(3L, view.getAmount(), "Retained view amount after split");
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(1L, view.extract(ItemVariant.of(Items.DIRT), 1, transaction), "Retained view extraction");
+            transaction.commit();
+        }
+        checkEquals(2, top.getItems().getStackInSlot(0).getCount(), "Extraction used wrong ledger");
+        helper.succeed();
+    }
+
+    /**
+     * To reproduce: fill a Storage block, obstruct its growth, and let a machine attempt insertion.
+     * Clear the obstruction and repeat; it can grow immediately. The fixture makes both whole-run
+     * Transfer calls within one tick, with the failed attempt aborted and the successful one committed.
+     */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void wholeRunGrowthRefreshesBetweenCallsInTheSameTick(GameTestHelper helper) {
+        StorageStackBE base = placeStorage(helper, ORIGIN);
+        for (int slot = 0; slot < StorageStackBE.SLOTS; slot++) {
+            base.getItems().setStackInSlot(slot, new ItemStack(Items.STONE, 64));
+        }
+        SlottedStorage<ItemVariant> storage = FabricGameTestSupport.capability(base);
+        helper.getLevel().setBlock(base.getBlockPos().above(), Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(0L, storage.insert(ItemVariant.of(Items.STONE), 1, transaction), "Blocked sweep accepted growth");
+        }
+        helper.getLevel().setBlock(base.getBlockPos().above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        try (Transaction transaction = Transaction.openOuter()) {
+            checkEquals(1L, storage.insert(ItemVariant.of(Items.STONE), 1, transaction), "Fresh sweep retained obstruction");
+            transaction.commit();
+        }
+        checkEquals(1, base.itemRun().getSlot(StorageStackBE.SLOTS).getCount(), "Growth did not commit");
         helper.succeed();
     }
 

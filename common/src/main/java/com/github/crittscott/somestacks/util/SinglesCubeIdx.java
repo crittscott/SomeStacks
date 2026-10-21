@@ -217,15 +217,6 @@ public final class SinglesCubeIdx {
         return y * LAYER_SIZE + storageColumn;
     }
 
-    /** Returns a snapshot of which slots in a block contain items. */
-    public static boolean[] occupancyOf(SlotAccess handler) {
-        boolean[] occupancy = new boolean[SinglesStackBE.SLOTS];
-        for (int i = 0; i < SinglesStackBE.SLOTS; i++) {
-            occupancy[i] = !handler.getStackInSlot(i).isEmpty();
-        }
-        return occupancy;
-    }
-
     /**
      * The visual position of a stored cell under a block rotation. A rotation is that many quarter
      * turns counterclockwise seen from above, matching the direction of per-item rotation.

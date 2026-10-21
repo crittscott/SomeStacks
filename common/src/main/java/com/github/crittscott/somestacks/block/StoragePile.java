@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 /**
  * A maximal contiguous vertical run of Storage Stacks, treated as one inventory.
@@ -213,7 +214,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         }
 
         if (simulate) {
-            return Math.min(stack.getCount(), roomAt(flatSlot, stack));
+            return Math.min(stack.getCount(), roomAt(flatSlot, stack, null));
         }
 
         int moved;
@@ -240,15 +241,25 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         return moved;
     }
 
+    @Override
+    public InsertionTest insertionTest() {
+        BooleanSupplier growth = oncePerSweep(() -> canGrow(null));
+        return (slot, stack) -> {
+            if (stack.isEmpty() || !StorageStackBE.isValidStorageItem(stack)
+                    || slot < 0 || slot >= advertisedSlots()) return 0;
+            return Math.min(stack.getCount(), roomAt(slot, stack, growth));
+        };
+    }
+
     /**
      * How much of {@code stack} the one slot at {@code flatSlot} has room for. A slot in the block
      * above the pile is empty, so it has room for a whole stack — but only where growth would
      * actually be permitted, which {@link #canGrow} evaluates without side effects, so a simulation
      * cannot promise a slot the commit would refuse.
      */
-    private int roomAt(int flatSlot, ItemStack stack) {
+    private int roomAt(int flatSlot, ItemStack stack, @Nullable BooleanSupplier growth) {
         if (flatSlot >= totalSlots()) {
-            return canGrow(null) ? stack.getMaxStackSize() : 0;
+            return (growth == null ? canGrow(null) : growth.getAsBoolean()) ? stack.getMaxStackSize() : 0;
         }
 
         ItemStack inSlot = getSlot(flatSlot);
@@ -361,7 +372,7 @@ public final class StoragePile extends StackRun<StorageStackBE> {
         for (int i = 0; i < totalSlots(); i++) {
             ItemStack stack = getSlot(i);
             if (!stack.isEmpty()) {
-                contents.add(stack.copy());
+                contents.add(stack);
             }
         }
 
@@ -431,24 +442,23 @@ public final class StoragePile extends StackRun<StorageStackBE> {
      * stacks always merge, wherever they sat in the pile.
      */
     private static List<ItemStack> consolidate(List<ItemStack> stacks) {
-        Map<StackKey, ItemStack> models = new LinkedHashMap<>();
-        Map<StackKey, Integer> totals = new LinkedHashMap<>();
+        Map<StackKey, SettlementGroup> groups = new LinkedHashMap<>();
 
         for (ItemStack stack : stacks) {
             if (stack.isEmpty()) continue;
 
             StackKey key = StackKey.of(stack);
-            models.putIfAbsent(key, stack);
-            totals.merge(key, stack.getCount(), Integer::sum);
+            SettlementGroup group = groups.computeIfAbsent(key, ignored -> new SettlementGroup(stack));
+            group.count += stack.getCount();
         }
 
         List<SortedPiece> pieces = new ArrayList<>();
 
-        for (Map.Entry<StackKey, Integer> entry : totals.entrySet()) {
-            ItemStack model = models.get(entry.getKey());
+        for (SettlementGroup group : groups.values()) {
+            ItemStack model = group.model;
             StackSort.SortKey sortKey = StackSort.key(model);
             int max = Math.max(1, model.getMaxStackSize());
-            int remaining = entry.getValue();
+            int remaining = group.count;
 
             while (remaining > 0) {
                 ItemStack piece = model.copy();
@@ -458,15 +468,22 @@ public final class StoragePile extends StackRun<StorageStackBE> {
             }
         }
 
-        pieces.sort((a, b) -> {
-            int order = a.key.compareTo(b.key);
-            return order != 0 ? order : Integer.compare(b.stack.getCount(), a.stack.getCount());
-        });
+        pieces.sort((a, b) -> StackSort.comparePieces(
+                a.key, a.stack.getCount(), b.key, b.stack.getCount()));
         List<ItemStack> out = new ArrayList<>(pieces.size());
         for (SortedPiece piece : pieces) {
             out.add(piece.stack);
         }
         return out;
+    }
+
+    private static final class SettlementGroup {
+        private final ItemStack model;
+        private int count;
+
+        private SettlementGroup(ItemStack model) {
+            this.model = model;
+        }
     }
 
     private record SortedPiece(ItemStack stack, StackSort.SortKey key) {}

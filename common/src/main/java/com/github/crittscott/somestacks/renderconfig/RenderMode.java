@@ -2,7 +2,7 @@ package com.github.crittscott.somestacks.renderconfig;
 
 /**
  * How a stored item is drawn inside its cell. The string ids are the stable form: they appear in
- * override JSON, in {@code ss item} commands, and on the wire, so they outrank the constant names.
+ * override JSON and in {@code ss item} commands, so they outrank the constant names.
  */
 public enum RenderMode {
     TWO_D("2d"),

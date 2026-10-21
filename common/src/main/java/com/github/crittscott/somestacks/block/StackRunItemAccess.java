@@ -21,6 +21,17 @@ public interface StackRunItemAccess {
     int insertAt(int slot, ItemStack stack, boolean simulate);
 
     /**
+     * A short-lived insertion simulation for one read-only sweep. Discard it before any world,
+     * policy, permission, or live inventory mutation; commits always use fresh checks through insertAt.
+     */
+    InsertionTest insertionTest();
+
+    @FunctionalInterface
+    interface InsertionTest {
+        int test(int slot, ItemStack stack);
+    }
+
+    /**
      * Extracts up to {@code amount} from the named current position, or only reports the result
      * when {@code simulate} is true. Structural runs perform their normal gravity or backfill on a
      * committed extraction.

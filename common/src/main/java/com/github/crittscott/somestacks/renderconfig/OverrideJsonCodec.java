@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * Parses and serializes the item render override schema shared by bundled resources, the client
- * override file, the measured cache, and the server override directory.
+ * override file, and the measured cache.
  *
  * <p>A document is a JSON object keyed by item id; each value contains optional {@code mode},
  * {@code scale}, and {@code offset} fields. Malformed entries and fields are logged and skipped.
@@ -24,8 +24,7 @@ public final class OverrideJsonCodec {
     private OverrideJsonCodec() {}
 
     /**
-     * Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
-     * measurement.
+     * Inclusive scale bounds shared by authored overrides and automatic measurement.
      */
     public static final float MIN_SCALE = 0.01f;
     public static final float MAX_SCALE = 20.0f;
@@ -37,26 +36,6 @@ public final class OverrideJsonCodec {
     /** Whether a value is finite and within the inclusive bounds. */
     public static boolean inRange(float value, float min, float max) {
         return Float.isFinite(value) && value >= min && value <= max;
-    }
-
-    /**
-     * Applies the file-format bounds to a synchronized override, dropping invalid fields. Network
-     * overrides bypass {@link #parse}, so they require the same validation at the packet boundary.
-     */
-    public static ItemRenderConfig sanitize(ItemRenderConfig config) {
-        Float scale = config.scale();
-        if (scale != null && !inRange(scale, MIN_SCALE, MAX_SCALE)) {
-            SomeStacksCommon.LOGGER.warn("Dropping out of range scale {} from a synchronized override", scale);
-            scale = null;
-        }
-
-        RenderOffset offset = config.offset();
-        if (offset != null && !offset.isValid()) {
-            SomeStacksCommon.LOGGER.warn("Dropping out of range offset from a synchronized override");
-            offset = null;
-        }
-
-        return new ItemRenderConfig(config.mode(), scale, offset);
     }
 
     /** Parses every valid item entry, logging and skipping malformed entries or fields. */

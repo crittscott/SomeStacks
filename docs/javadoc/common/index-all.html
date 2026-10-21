@@ -419,13 +419,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loader-neutral access to the registered blocks, block entity types, and sound events.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/util/StackSort.html#COMPARATOR" class="member-name-link">COMPARATOR</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackSort.html" title="class in com.github.crittscott.somestacks.util">StackSort</a></dt>
-<dd>
-<div class="block">Orders stacks by item id, damage, tags, and descending count, with empty stacks last.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/StackRun.html#comparatorSignal()" class="member-name-link">comparatorSignal()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
 <dd>
 <div class="block">Vanilla-style run-wide comparator strength: zero when empty, otherwise floor(fill * 14) + 1.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/util/StackSort.html#comparePieces(com.github.crittscott.somestacks.util.StackSort.SortKey,int,com.github.crittscott.somestacks.util.StackSort.SortKey,int)" class="member-name-link">comparePieces(StackSort.SortKey, int, StackSort.SortKey, int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackSort.html" title="class in com.github.crittscott.somestacks.util">StackSort</a></dt>
+<dd>
+<div class="block">Orders nonempty pieces by cached item id, damage, tags, and descending count.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackSort.SortKey.html#compareTo(com.github.crittscott.somestacks.util.StackSort.SortKey)" class="member-name-link">compareTo(StackSort.SortKey)</a> - Method in record class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackSort.SortKey.html" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a></dt>
 <dd>&nbsp;</dd>
@@ -731,10 +731,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Extracts from one pile slot and schedules the settle that packs the rest down over it.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
-<dd>
-<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int)" class="member-name-link">extractAt(int)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
 <div class="block">Takes the item out of the named cell and settles the visual column above it downward, drawing
@@ -751,7 +747,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
-<div class="block">Player-facing extraction variant that preserves the actor through cascade cleanup.</div>
+<div class="block">Takes one bar and cascades unsupported bars, preserving the actor through cleanup.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBE.html#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt(int, ServerPlayer)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBE.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBE</a></dt>
 <dd>
@@ -1169,6 +1165,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Inserts into only the named flat slot, leaving the caller's stack unchanged.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/BarColumn.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarColumn.html" title="class in com.github.crittscott.somestacks.block">BarColumn</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/SinglesColumn.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesColumn.html" title="class in com.github.crittscott.somestacks.block">SinglesColumn</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></dt>
+<dd>
+<div class="block">A short-lived insertion simulation for one read-only sweep.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StoragePile.html#insertionTest()" class="member-name-link">insertionTest()</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StoragePile.html" title="class in com.github.crittscott.somestacks.block">StoragePile</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/SlotAccess.html#insertItem(int,net.minecraft.world.item.ItemStack,boolean)" class="member-name-link">insertItem(int, ItemStack, boolean)</a> - Method in interface com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SlotAccess.html" title="interface in com.github.crittscott.somestacks.util">SlotAccess</a></dt>
 <dd>
 <div class="block">Inserts as much of <code>stack</code> into <code>slot</code> as <a href="com/github/crittscott/somestacks/util/SlotAccess.html#isItemValid(int,net.minecraft.world.item.ItemStack)"><code>SlotAccess.isItemValid(int, net.minecraft.world.item.ItemStack)</code></a> and
@@ -1328,8 +1334,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Vanilla's placement obstruction test for a block-local collision shape.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html#isValid()" class="member-name-link">isValid()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderOffset.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderOffset</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/block/BarStackBE.html#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem(ItemStack)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/BarStackBE.html" title="class in com.github.crittscott.somestacks.block">BarStackBE</a></dt>
 <dd>
 <div class="block">Whether a Bar Stack accepts this item, the single decision point every deposit, column
@@ -1465,6 +1469,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/StorageStackBE.html#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData(CompoundTag)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StorageStackBE.html" title="class in com.github.crittscott.somestacks.block">StorageStackBE</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/util/BarCubeIdx.html#localBox(int)" class="member-name-link">localBox(int)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BarCubeIdx.html" title="class in com.github.crittscott.somestacks.util">BarCubeIdx</a></dt>
+<dd>
+<div class="block">Cached block-local bounds shared by rendering, targeting, and collision.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/util/CubeGrid.html#localBox(int,int)" class="member-name-link">localBox(int, int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/CubeGrid.html" title="class in com.github.crittscott.somestacks.util">CubeGrid</a></dt>
 <dd>
 <div class="block">Returns the cached block-local bounds for one stored cell at the given layout rotation.</div>
@@ -1614,8 +1622,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#MIN_SCALE" class="member-name-link">MIN_SCALE</a> - Static variable in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
 <dd>
-<div class="block">Inclusive scale bounds shared by authored overrides, synchronized overrides, and automatic
- measurement.</div>
+<div class="block">Inclusive scale bounds shared by authored overrides and automatic measurement.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html#mirror(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.Mirror)" class="member-name-link">mirror(BlockState, Mirror)</a> - Method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/SinglesStackBlock.html" title="class in com.github.crittscott.somestacks.block">SinglesStackBlock</a></dt>
 <dd>&nbsp;</dd>
@@ -1699,10 +1706,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a snapshot of which slots in a block contain bars.</div>
 </dd>
-<dt><a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html#occupancyOf(com.github.crittscott.somestacks.util.SlotAccess)" class="member-name-link">occupancyOf(SlotAccess)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/SinglesCubeIdx.html" title="class in com.github.crittscott.somestacks.util">SinglesCubeIdx</a></dt>
-<dd>
-<div class="block">Returns a snapshot of which slots in a block contain items.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/util/ViewRays.html#of(net.minecraft.world.entity.player.Player)" class="member-name-link">of(Player)</a> - Static method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/ViewRays.html" title="class in com.github.crittscott.somestacks.util">ViewRays</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/BlockType.html#of(net.minecraft.world.level.block.Block)" class="member-name-link">of(Block)</a> - Static method in enum class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/BlockType.html" title="enum class in com.github.crittscott.somestacks.util">BlockType</a></dt>
@@ -1716,6 +1719,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html#offset()" class="member-name-link">offset()</a> - Method in record class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/RenderProfile.html" title="class in com.github.crittscott.somestacks.renderconfig">RenderProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>offset</code> record component.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackRun.html#oncePerSweep(java.util.function.BooleanSupplier)" class="member-name-link">oncePerSweep(BooleanSupplier)</a> - Static method in class com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a></dt>
+<dd>
+<div class="block">Lazily shares a predicate result only within the caller's read-only insertion sweep.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#onContentsChanged(int)" class="member-name-link">onContentsChanged(int)</a> - Method in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>
@@ -1768,7 +1775,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" class="type-name-link" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a> - Class in <a href="com/github/crittscott/somestacks/renderconfig/package-summary.html">com.github.crittscott.somestacks.renderconfig</a></dt>
 <dd>
 <div class="block">Parses and serializes the item render override schema shared by bundled resources, the client
- override file, the measured cache, and the server override directory.</div>
+ override file, and the measured cache.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
@@ -2039,10 +2046,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html#sanitize(com.github.crittscott.somestacks.renderconfig.ItemRenderConfig)" class="member-name-link">sanitize(ItemRenderConfig)</a> - Static method in class com.github.crittscott.somestacks.renderconfig.<a href="com/github/crittscott/somestacks/renderconfig/OverrideJsonCodec.html" title="class in com.github.crittscott.somestacks.renderconfig">OverrideJsonCodec</a></dt>
-<dd>
-<div class="block">Applies the file-format bounds to a synchronized override, dropping invalid fields.</div>
-</dd>
 <dt><a href="com/github/crittscott/somestacks/ServerConfig.html#save()" class="member-name-link">save()</a> - Static method in class com.github.crittscott.somestacks.<a href="com/github/crittscott/somestacks/ServerConfig.html" title="class in com.github.crittscott.somestacks">ServerConfig</a></dt>
 <dd>
 <div class="block">Writes command edits through the current world's loader.</div>
@@ -2320,9 +2323,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Positional whole-run operations exposed to loader-native automation adapters.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html" class="type-name-link" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a> - Interface in <a href="com/github/crittscott/somestacks/block/package-summary.html">com.github.crittscott.somestacks.block</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackSort.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackSort</a> - Class in <a href="com/github/crittscott/somestacks/util/package-summary.html">com.github.crittscott.somestacks.util</a></dt>
 <dd>
-<div class="block">Comparator used to lay out the contents of a settled Storage pile.</div>
+<div class="block">Ordering used to lay out the contents of a settled Storage pile.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackSort.SortKey.html" class="type-name-link" title="class in com.github.crittscott.somestacks.util">StackSort.SortKey</a> - Record Class in <a href="com/github/crittscott/somestacks/util/package-summary.html">com.github.crittscott.somestacks.util</a></dt>
 <dd>&nbsp;</dd>
@@ -2482,6 +2487,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#TAG_SET_ASIDE" class="member-name-link">TAG_SET_ASIDE</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/util/StackItemStorage.html#TAG_SLOT" class="member-name-link">TAG_SLOT</a> - Static variable in class com.github.crittscott.somestacks.util.<a href="com/github/crittscott/somestacks/util/StackItemStorage.html" title="class in com.github.crittscott.somestacks.util">StackItemStorage</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html#test(int,net.minecraft.world.item.ItemStack)" class="member-name-link">test(int, ItemStack)</a> - Method in interface com.github.crittscott.somestacks.block.<a href="com/github/crittscott/somestacks/block/StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html#texture()" class="member-name-link">texture()</a> - Method in record class com.github.crittscott.somestacks.client.<a href="com/github/crittscott/somestacks/client/BarTextureStore.BarTextureData.html" title="class in com.github.crittscott.somestacks.client">BarTextureStore.BarTextureData</a></dt>
 <dd>

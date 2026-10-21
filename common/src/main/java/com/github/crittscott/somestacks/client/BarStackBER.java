@@ -14,9 +14,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import org.joml.Matrix4f;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -31,9 +35,12 @@ import java.util.Map;
 public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
     private static final Map<TextureAtlasSprite, UvRegion[]> SPRITE_REGIONS = new IdentityHashMap<>();
 
+    private static final Map<ResourceLocation, TextureAtlasSprite> SPRITES = new HashMap<>();
+
     /** Releases atlas coordinates and sprites when resource textures change. */
     public static void onResourceReload() {
         SPRITE_REGIONS.clear();
+        SPRITES.clear();
     }
 
     public BarStackBER(BlockEntityRendererProvider.Context ctx) {
@@ -55,24 +62,16 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
             if (stack.isEmpty()) continue;
 
             BarTextureStore.BarTextureData textureData = BarTextureStore.getTexture(stack);
-            TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                    .apply(textureData.texture());
-
-            int[] xyz = BarCubeIdx.xyzFromIndex(idx);
-
-            float sx = (float) (BarCubeIdx.startPixelX(xyz[0], xyz[1]) / 16.0);
-            float sy = (float) (BarCubeIdx.startPixelY(xyz[1]) / 16.0);
-            float sz = (float) (BarCubeIdx.startPixelZ(xyz[2], xyz[1]) / 16.0);
-            float width = (float) (BarCubeIdx.barWidth(xyz[1]) / 16.0);
-            float height = (float) (BarCubeIdx.barHeight(xyz[1]) / 16.0);
-            float depth = (float) (BarCubeIdx.barDepth(xyz[1]) / 16.0);
+            TextureAtlasSprite sprite = SPRITES.computeIfAbsent(textureData.texture(), texture ->
+                    Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(texture));
+            AABB box = BarCubeIdx.localBox(idx);
 
             pose.pushPose();
-            pose.translate(sx, sy, sz);
-            pose.scale(width, height, depth);
+            pose.translate(box.minX, box.minY, box.minZ);
+            pose.scale((float) (box.maxX - box.minX), (float) (box.maxY - box.minY),
+                    (float) (box.maxZ - box.minZ));
 
-            emitBar(pose, vc, sprite, barLight, xyz[1], textureData);
+            emitBar(pose, vc, sprite, barLight, idx / BarCubeIdx.LAYER_SIZE, textureData);
 
             pose.popPose();
         }
@@ -146,10 +145,24 @@ public class BarStackBER implements BlockEntityRenderer<BarStackBE> {
                              int r, int g, int b, int a) {
         var m = pose.last().pose();
         var n = pose.last().normal();
-        vc.vertex(m, x1,y1,z1).color(r,g,b,a).uv(u0,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x2,y2,z2).color(r,g,b,a).uv(u1,v0).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x3,y3,z3).color(r,g,b,a).uv(u1,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
-        vc.vertex(m, x4,y4,z4).color(r,g,b,a).uv(u0,v1).overlayCoords(overlay).uv2(light).normal(n, nx,ny,nz).endVertex();
+        float normalX = n.m00() * nx + n.m10() * ny + n.m20() * nz;
+        float normalY = n.m01() * nx + n.m11() * ny + n.m21() * nz;
+        float normalZ = n.m02() * nx + n.m12() * ny + n.m22() * nz;
+        vertex(vc, m, x1,y1,z1, u0,v0, light,overlay, normalX,normalY,normalZ, r,g,b,a);
+        vertex(vc, m, x2,y2,z2, u1,v0, light,overlay, normalX,normalY,normalZ, r,g,b,a);
+        vertex(vc, m, x3,y3,z3, u1,v1, light,overlay, normalX,normalY,normalZ, r,g,b,a);
+        vertex(vc, m, x4,y4,z4, u0,v1, light,overlay, normalX,normalY,normalZ, r,g,b,a);
+    }
+
+    /** Transforms scalar coordinates without allocating temporary position or normal vectors. */
+    private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z,
+                               float u, float v, int light, int overlay,
+                               float nx, float ny, float nz, int r, int g, int b, int a) {
+        vc.vertex(m.m00() * x + m.m10() * y + m.m20() * z + m.m30(),
+                        m.m01() * x + m.m11() * y + m.m21() * z + m.m31(),
+                        m.m02() * x + m.m12() * y + m.m22() * z + m.m32())
+                .color(r, g, b, a).uv(u, v).overlayCoords(overlay).uv2(light)
+                .normal(nx, ny, nz).endVertex();
     }
 
     @Override

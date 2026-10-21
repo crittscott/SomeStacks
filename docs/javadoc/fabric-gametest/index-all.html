@@ -163,6 +163,14 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedGeometryPreservesOccupiedUnions(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)"><code>StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedGeometryPreservesOccupiedUnions(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackFoundationChecks</a></dt>
+<dd>
+<div class="block">To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Internal cache check: query empty Singles and Bar shapes, directly insert into bottom slot 0,
@@ -350,8 +358,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html#comparatorOrdersEveryIdentityComponent(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorOrdersEveryIdentityComponent(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></dt>
 <dd>
-<div class="block">Internal ordering check with no direct manual reproduction: compare registry ids, empty
- stacks, damage, absent versus present NBT, NBT variants, and descending count ties; assert
+<div class="block">Internal ordering check with no direct manual reproduction: compare registry ids, damage,
+ absent versus present NBT, NBT variants, and descending count ties; assert
  that sort-key snapshots survive source NBT mutation and exclude stack count.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html#comparatorOrdersEveryIdentityComponent(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorOrdersEveryIdentityComponent(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></dt>
@@ -1108,6 +1116,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates an instance of a <code>Result</code> record class.</div>
 </dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#retainedSlotViewResolvesTheNewBaseAfterRemoval(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">retainedSlotViewResolvesTheNewBaseAfterRemoval(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">No direct player reproduction applies to retained Transfer API views.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html#rotationTargetsAimedItemAndConsumesMiss(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">rotationTargetsAimedItemAndConsumesMiss(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/InteractionGameTests.html" title="class in com.github.crittscott.somestacks.gametest">InteractionGameTests</a></dt>
 <dd>
 <div class="block">Loader entry point for <a href="com/github/crittscott/somestacks/gametest/InteractionChecks.html#rotationTargetsAimedItemAndConsumesMiss(net.minecraft.gametest.framework.GameTestHelper,java.util.function.Function,com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)"><code>InteractionChecks.rotationTargetsAimedItemAndConsumesMiss(net.minecraft.gametest.framework.GameTestHelper, java.util.function.Function&lt;net.minecraft.world.item.ItemStack, net.minecraft.server.level.ServerPlayer&gt;, com.github.crittscott.somestacks.gametest.InteractionChecks.LoaderClick)</code></a>; see
@@ -1154,7 +1166,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
 <dd>
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, then settle.</div>
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
+ pickaxes with different damage.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
 <dd>
@@ -1412,6 +1425,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:W">W</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#wholeRunGrowthRefreshesBetweenCallsInTheSameTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">wholeRunGrowthRefreshesBetweenCallsInTheSameTick(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">To reproduce: fill a Storage block, obstruct its growth, and let a machine attempt insertion.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#wholeRunInsertionFillsUpperPartialsBeforeLowerEmpties(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">wholeRunInsertionFillsUpperPartialsBeforeLowerEmpties(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
+<dd>
+<div class="block">To reproduce with automation: leave empty lower slots and a compatible partial stack in an
+ upper Storage block.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html#wholeStorageInsertExtractAndNestedRollbackAreAtomic(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">wholeStorageInsertExtractAndNestedRollbackAreAtomic(GameTestHelper)</a> - Method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/FabricTransferGameTests.html" title="class in com.github.crittscott.somestacks.gametest">FabricTransferGameTests</a></dt>
 <dd>
 <div class="block">No in-game reproduction applies: this verifies whole-storage Fabric transactions, including

@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -104,11 +105,11 @@ public class SinglesStackBE extends StackBlockEntity {
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stack = items.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                shape = Shapes.or(shape, SinglesCubeIdx.shapeFor(i, blockRotation));
+                shape = Shapes.joinUnoptimized(shape, SinglesCubeIdx.shapeFor(i, blockRotation), BooleanOp.OR);
             }
         }
 
-        return shape;
+        return shape.optimize();
     }
 
     /**

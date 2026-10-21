@@ -146,6 +146,14 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedGeometryPreservesOccupiedUnions(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceGameTests.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceGameTests</a></dt>
+<dd>
+<div class="block">See <a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)"><code>StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)</code></a>.</div>
+</dd>
+<dt><a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedGeometryPreservesOccupiedUnions(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackFoundationChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackFoundationChecks</a></dt>
+<dd>
+<div class="block">To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.</div>
+</dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html#cachedShapesInvalidateWhenContentsChange(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedShapesInvalidateWhenContentsChange(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/CapabilityAndPersistenceChecks.html" title="class in com.github.crittscott.somestacks.gametest">CapabilityAndPersistenceChecks</a></dt>
 <dd>
 <div class="block">Internal cache check: query empty Singles and Bar shapes, directly insert into bottom slot 0,
@@ -335,8 +343,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html#comparatorOrdersEveryIdentityComponent(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorOrdersEveryIdentityComponent(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackSortChecks.html" title="class in com.github.crittscott.somestacks.gametest">StackSortChecks</a></dt>
 <dd>
-<div class="block">Internal ordering check with no direct manual reproduction: compare registry ids, empty
- stacks, damage, absent versus present NBT, NBT variants, and descending count ties; assert
+<div class="block">Internal ordering check with no direct manual reproduction: compare registry ids, damage,
+ absent versus present NBT, NBT variants, and descending count ties; assert
  that sort-key snapshots survive source NBT mutation and exclude stack count.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html#comparatorOrdersEveryIdentityComponent(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">comparatorOrdersEveryIdentityComponent(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StackSortGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StackSortGameTests</a></dt>
@@ -1098,7 +1106,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileChecks.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileChecks</a></dt>
 <dd>
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, then settle.</div>
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
+ pickaxes with different damage.</div>
 </dd>
 <dt><a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown(GameTestHelper)</a> - Static method in class com.github.crittscott.somestacks.gametest.<a href="com/github/crittscott/somestacks/gametest/StoragePileGameTests.html" title="class in com.github.crittscott.somestacks.gametest">StoragePileGameTests</a></dt>
 <dd>

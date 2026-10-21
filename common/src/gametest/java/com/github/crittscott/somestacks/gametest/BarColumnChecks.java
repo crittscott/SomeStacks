@@ -105,7 +105,7 @@ public final class BarColumnChecks {
         bars.depositAt(0, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        ItemStack extracted = bars.extractAt(0);
+        ItemStack extracted = bars.extractAt(0, null);
 
         checkEquals(barItem, extracted.getItem(), "Extracted item");
         checkEquals(1, extracted.getCount(), "Extracted count");
@@ -131,7 +131,7 @@ public final class BarColumnChecks {
         bars.depositAt(survivingSupport, new ItemStack(barItem));
         bars.depositAt(upper, new ItemStack(barItem));
 
-        bars.extractAt(removedSupport);
+        bars.extractAt(removedSupport, null);
 
         checkEquals(barItem, bars.getItems().getStackInSlot(upper).getItem(),
                 "Still-supported upper bar was removed");
@@ -248,7 +248,7 @@ public final class BarColumnChecks {
             seedSlot(upper.getItems(), slot, new ItemStack(barItem));
         }
 
-        ItemStack extracted = lower.extractAt(0);
+        ItemStack extracted = lower.extractAt(0, null);
 
         checkEquals(barItem, extracted.getItem(), "Extracted support item");
         checkEquals(1, extracted.getCount(), "Extracted support count");
@@ -290,7 +290,7 @@ public final class BarColumnChecks {
         seedSlot(bars.getItems(), upper[0], first);
         seedSlot(bars.getItems(), upper[1], second);
 
-        bars.extractAt(0);
+        bars.extractAt(0, null);
 
         List<ItemEntity> drops = droppedInColumn(helper, pos, pos).stream()
                 .filter(entity -> entity.getItem().is(barItem))

@@ -175,12 +175,15 @@ public final class StoragePileChecks {
 
     /**
      * Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
-     * stacks of five with {variant:2} in separated slots, then settle. Slots 0-2 contain 64, 6, and
-     * 10, preserving the two tag identities.
+     * stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
+     * pickaxes with different damage. Settlement orders dirt, untagged stone, tagged stone stacks
+     * of 64, 6, and 10, then the pickaxes in ascending damage order.
      *
      * <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
-     * After settlement, matching tags merge into legal stacks, distinct tags stay separate, and
-     * occupied cells pack toward the base. The test's initial gaps require direct fixture writes.
+     * Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After settlement,
+     * matching tags merge into legal stacks, distinct tags stay separate, and occupied cells pack
+     * toward the base in that order. The test's initial gaps require direct fixture writes; source
+     * counts and independent output NBT are internal ownership checks.
      */
     public static void settleConsolidatesExactIdentityAndPacksDown(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -199,17 +202,36 @@ public final class StoragePileChecks {
         storage.getItems().insertItem(10, first, false);
         storage.getItems().insertItem(20, compatible, false);
         storage.getItems().insertItem(25, distinct, false);
+        ItemStack undamaged = new ItemStack(Items.WOODEN_PICKAXE);
+        ItemStack damaged = new ItemStack(Items.WOODEN_PICKAXE);
+        damaged.setDamageValue(1);
+        storage.getItems().insertItem(1, damaged, false);
+        storage.getItems().insertItem(2, new ItemStack(Items.STONE), false);
+        storage.getItems().insertItem(3, undamaged, false);
+        storage.getItems().insertItem(4, new ItemStack(Items.DIRT), false);
 
         StoragePile pile = storage.pile();
         check(pile != null, "Pile did not resolve");
         pile.settle();
 
-        checkEquals(64, pile.getSlot(0).getCount(), "Consolidated full stack");
-        checkEquals(6, pile.getSlot(1).getCount(), "Consolidated partial stack");
-        checkEquals(10, pile.getSlot(2).getCount(), "Distinct tagged stack");
-        check(pile.getSlot(3).isEmpty(), "Packed contents left a gap");
-        checkEquals(firstTag, pile.getSlot(0).getTag(), "First tag identity");
-        checkEquals(secondTag, pile.getSlot(2).getTag(), "Distinct tag identity");
+        checkEquals(Items.DIRT, pile.getSlot(0).getItem(), "Registry item id ordering");
+        checkEquals(Items.STONE, pile.getSlot(1).getItem(), "Untagged stone item");
+        check(pile.getSlot(1).getTag() == null, "Untagged stone did not precede tagged stone");
+        checkEquals(64, pile.getSlot(2).getCount(), "Consolidated full stack");
+        checkEquals(6, pile.getSlot(3).getCount(), "Consolidated partial stack");
+        checkEquals(10, pile.getSlot(4).getCount(), "Distinct tagged stack");
+        checkEquals(firstTag, pile.getSlot(2).getTag(), "First tag identity");
+        checkEquals(firstTag, pile.getSlot(3).getTag(), "Partial stack tag identity");
+        checkEquals(secondTag, pile.getSlot(4).getTag(), "Distinct tag identity");
+        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(5).getItem(), "First pickaxe item");
+        checkEquals(Items.WOODEN_PICKAXE, pile.getSlot(6).getItem(), "Second pickaxe item");
+        checkEquals(0, pile.getSlot(5).getDamageValue(), "Undamaged pickaxe ordering");
+        checkEquals(1, pile.getSlot(6).getDamageValue(), "Damaged pickaxe ordering");
+        check(pile.getSlot(7).isEmpty(), "Packed contents left a gap");
+        checkEquals(40, first.getCount(), "Settlement mutated its first source stack");
+        checkEquals(30, compatible.getCount(), "Settlement mutated its second source stack");
+        check(pile.getSlot(2).getTag() != pile.getSlot(3).getTag(),
+                "Consolidated pieces share mutable NBT");
         helper.succeed();
     }
 

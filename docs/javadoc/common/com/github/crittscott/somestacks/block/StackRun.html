@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -91,6 +91,15 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.github.crittscott.somestacks.block.StackRunItemAccess">Nested classes/interfaces inherited from interface&nbsp;com.github.crittscott.somestacks.block.<a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></h2>
+<code><a href="StackRunItemAccess.InsertionTest.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess.InsertionTest</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -216,38 +225,43 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Resolves and schedules a run's deferred pass; a null resolution, including client use, does nothing.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#oncePerSweep(java.util.function.BooleanSupplier)" class="member-name-link">oncePerSweep</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a>&nbsp;check)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Lazily shares a predicate result only within the caller's read-only insertion sweep.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;R extends <a href="StackRun.html" title="class in com.github.crittscott.somestacks.block">StackRun</a>&lt;?&gt;&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#publishAround(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,java.util.function.BiFunction)" class="member-name-link">publishAround</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;net.minecraft.world.level.Level,<wbr>net.minecraft.core.BlockPos,<wbr>R&gt;&nbsp;resolver)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Publishes comparator changes for runs at and beside a structural edit after cache invalidation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPending()" class="member-name-link">publishPending</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Publishes deferred local changes and then the run-wide comparator signal.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPendingBlocks()" class="member-name-link">publishPendingBlocks</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#publishPendingBlocks()" class="member-name-link">publishPendingBlocks</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Publishes changed local contents and derived light, returning whether anything changed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;BE&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">resolveBlocks</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static &lt;BE extends <a href="StackBlockEntity.html" title="class in com.github.crittscott.somestacks.block">StackBlockEntity</a>&gt;<br><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;BE&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,java.lang.Class)" class="member-name-link">resolveBlocks</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;BE&gt;&nbsp;blockEntityClass)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Walks the maximal run containing <code>pos</code>, from its bottom block upward.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final net.minecraft.core.BlockPos</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#topPos()" class="member-name-link">topPos</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final net.minecraft.core.BlockPos</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#topPos()" class="member-name-link">topPos</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Top existing block position, excluding advertised headroom.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalSlots()" class="member-name-link">totalSlots</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Existing slot count; valid stored flat slots satisfy <code>0 &lt;= slot &lt; totalSlots()</code>.</div>
 </div>
 </div>
@@ -258,7 +272,7 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.crittscott.somestacks.block.StackRunItemAccess">Methods inherited from interface&nbsp;com.github.crittscott.somestacks.block.<a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></h3>
-<code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a>, <a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a></code></div>
+<code><a href="StackRunItemAccess.html#extract(int,int,boolean)">extract</a>, <a href="StackRunItemAccess.html#insertAt(int,net.minecraft.world.item.ItemStack,boolean)">insertAt</a>, <a href="StackRunItemAccess.html#insertionTest()">insertionTest</a></code></div>
 </section>
 </li>
 </ul>
@@ -308,6 +322,13 @@ implements <a href="StackRunItemAccess.html" title="interface in com.github.crit
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="oncePerSweep(java.util.function.BooleanSupplier)">
+<h3>oncePerSweep</h3>
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a></span>&nbsp;<span class="element-name">oncePerSweep</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BooleanSupplier.html" title="class or interface in java.util.function" class="external-link">BooleanSupplier</a>&nbsp;check)</span></div>
+<div class="block">Lazily shares a predicate result only within the caller's read-only insertion sweep.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="cacheOnBlocks()">
 <h3>cacheOnBlocks</h3>

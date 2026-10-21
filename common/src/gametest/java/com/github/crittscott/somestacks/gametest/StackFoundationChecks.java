@@ -10,6 +10,7 @@ import com.github.crittscott.somestacks.block.StackRunItemAccess;
 import com.github.crittscott.somestacks.block.StorageStackBE;
 import com.github.crittscott.somestacks.block.StorageStackBlock;
 import com.github.crittscott.somestacks.util.SinglesCubeIdx;
+import com.github.crittscott.somestacks.util.BarCubeIdx;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -172,6 +177,9 @@ public final class StackFoundationChecks {
     /**
      * To reproduce in-game: automate insertion and extraction in each type. Storage accepts normal
      * stacks and settles; Singles shifts the selected column; Bar backfills from its top position.
+     * Blocking and clearing the space above must change growth acceptance immediately. The fixture
+     * changes that space within one tick, creates fresh insertion sweeps, and checks commit refusal
+     * after a successful preview is obstructed.
      */
     public static void runContractPreservesTypeSpecificMutations(GameTestHelper helper) {
         StorageStackBE storage = placeStorage(helper, ORIGIN);
@@ -230,6 +238,16 @@ public final class StackFoundationChecks {
             }
         }
         StackRun<?> initial = (StackRun<?>) bottom.itemRun();
+        BlockPos above = bottom.getBlockPos().above();
+        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        StackRunItemAccess.InsertionTest blocked = initial.insertionTest();
+        checkEquals(0, blocked.test(slots, item), "Blocked insertion sweep");
+        checkEquals(0, blocked.test(slots + 1, item), "Second blocked headroom position");
+        helper.getLevel().setBlock(above, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        checkEquals(1, initial.insertionTest().test(slots, item), "Sweep retained same-tick obstruction");
+        helper.getLevel().setBlock(above, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        checkEquals(0, initial.insertAt(slots, item, false), "Commit reused a successful growth preview");
+        helper.getLevel().setBlock(above, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         checkEquals(1, initial.insertAt(slots, item, true), "Simulated growth insertion");
         checkEquals(1, initial.height(), "Simulation grew the run");
         checkEquals(1, initial.insertAt(slots, item, false), "Growth insertion");
@@ -238,6 +256,47 @@ public final class StackFoundationChecks {
         checkEquals(2, grown.height(), "Grown run bounds");
         check(grown == bottom.itemRun(), "Growth members did not share their cache");
         checkEquals(item.getItem(), grown.getSlot(slots).getItem(), "Grown contents");
+    }
+
+    /**
+     * To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.
+     * Their occupied collision/outline regions stay aligned with the visible items at every Singles
+     * block rotation. The fixture compares these unions with individually optimized shape merges
+     * and checks fixed bounds in both orientations of the Bar layout.
+     */
+    public static void cachedGeometryPreservesOccupiedUnions(GameTestHelper helper) {
+        checkEquals(new AABB(1.0 / 16, 0, 0.5 / 16, 7.0 / 16, 2.0 / 16, 3.5 / 16),
+                BarCubeIdx.localBox(0), "Bottom east-west bar bounds");
+        checkEquals(new AABB(0.5 / 16, 2.0 / 16, 1.0 / 16, 3.5 / 16, 4.0 / 16, 7.0 / 16),
+                BarCubeIdx.localBox(8), "First north-south bar bounds");
+        checkEquals(new AABB(12.5 / 16, 14.0 / 16, 9.0 / 16, 15.5 / 16, 1, 15.0 / 16),
+                BarCubeIdx.localBox(63), "Last bar bounds");
+        BarStackBE bars = placeBar(helper, ORIGIN);
+        SinglesStackBE singles = placeSingles(helper, ORIGIN.east(3));
+        var barItem = firstBarItem();
+        for (int stride : new int[]{1, 2}) {
+            VoxelShape expectedBars = Shapes.empty();
+            for (int slot = 0; slot < BarStackBE.SLOTS; slot++) {
+                boolean occupied = slot % stride == 0;
+                bars.getItems().setStackInSlot(slot,
+                        occupied ? new ItemStack(barItem) : ItemStack.EMPTY);
+                singles.getItems().setStackInSlot(slot,
+                        occupied ? new ItemStack(Items.STICK) : ItemStack.EMPTY);
+                if (occupied) expectedBars = Shapes.or(expectedBars, BarCubeIdx.shapeFor(slot));
+            }
+            check(!Shapes.joinIsNotEmpty(expectedBars, bars.getCachedShape(), BooleanOp.NOT_SAME),
+                    "Bar union changed occupied regions");
+            for (int rotation = 0; rotation < 4; rotation++) {
+                singles.setRotation(rotation);
+                VoxelShape expectedSingles = Shapes.empty();
+                for (int slot = 0; slot < SinglesStackBE.SLOTS; slot += stride) {
+                    expectedSingles = Shapes.or(expectedSingles, SinglesCubeIdx.shapeFor(slot, rotation));
+                }
+                check(!Shapes.joinIsNotEmpty(expectedSingles, singles.getCachedShape(), BooleanOp.NOT_SAME),
+                        "Singles union changed occupied regions at rotation " + rotation);
+            }
+        }
+        helper.succeed();
     }
 
     private static void checkLocalFill(StackBlockEntity block, double expected) {

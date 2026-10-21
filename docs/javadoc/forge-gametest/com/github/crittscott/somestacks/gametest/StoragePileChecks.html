@@ -150,7 +150,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#settleConsolidatesExactIdentityAndPacksDown(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">settleConsolidatesExactIdentityAndPacksDown</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, then settle.</div>
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
+ pickaxes with different damage.</div>
 </div>
 </div>
 </div>
@@ -220,12 +221,15 @@ loadScripts(document, 'script');</script>
 <h3>settleConsolidatesExactIdentityAndPacksDown</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">settleConsolidatesExactIdentityAndPacksDown</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">Internal settlement fixture: directly seed stone stacks of 40 and 30 with {variant:1} and two
- stacks of five with {variant:2} in separated slots, then settle. Slots 0-2 contain 64, 6, and
- 10, preserving the two tag identities.
+ stacks of five with {variant:2} in separated slots, plus dirt, untagged stone, and two wooden
+ pickaxes with different damage. Settlement orders dirt, untagged stone, tagged stone stacks
+ of 64, 6, and 10, then the pickaxes in ascending damage order.
 
  <p>For a visible check, /give stone with those tags and deposit the same totals into Storage.
- After settlement, matching tags merge into legal stacks, distinct tags stay separate, and
- occupied cells pack toward the base. The test's initial gaps require direct fixture writes.</div>
+ Also deposit dirt, untagged stone, and wooden pickaxes with different damage. After settlement,
+ matching tags merge into legal stacks, distinct tags stay separate, and occupied cells pack
+ toward the base in that order. The test's initial gaps require direct fixture writes; source
+ counts and independent output NBT are internal ownership checks.</div>
 </section>
 </li>
 <li>

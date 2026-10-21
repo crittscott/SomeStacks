@@ -5,27 +5,21 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Comparator;
-
-/** Comparator used to lay out the contents of a settled Storage pile. */
+/** Ordering used to lay out the contents of a settled Storage pile. */
 public final class StackSort {
     private StackSort(){}
 
     /**
-     * Orders stacks by item id, damage, tags, and descending count, with empty stacks last. This
+     * Orders nonempty pieces by cached item id, damage, tags, and descending count. This
      * gives identical piles the same layout and leaves a group's partial stack at its end.
      */
-    public static final Comparator<ItemStack> COMPARATOR = (a, b) -> {
-        if (a.isEmpty() && b.isEmpty()) return 0;
-        if (a.isEmpty()) return 1;
-        if (b.isEmpty()) return -1;
-
-        int c = key(a).compareTo(key(b));
+    public static int comparePieces(SortKey a, int aCount, SortKey b, int bCount) {
+        int c = a.compareTo(b);
         if (c != 0) return c;
 
         // Fullest first leaves a group's partial stack at its end.
-        return Integer.compare(b.getCount(), a.getCount());
-    };
+        return Integer.compare(bCount, aCount);
+    }
 
     /** Computes the expensive sortable fields once for an exact settlement identity. */
     public static SortKey key(ItemStack stack) {

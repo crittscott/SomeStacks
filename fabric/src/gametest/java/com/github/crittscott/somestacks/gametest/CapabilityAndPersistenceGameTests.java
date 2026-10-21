@@ -224,6 +224,12 @@ public final class CapabilityAndPersistenceGameTests implements FabricGameTest {
         StackFoundationChecks.runContractPreservesTypeSpecificMutations(helper);
     }
 
+    /** See {@link StackFoundationChecks#cachedGeometryPreservesOccupiedUnions}. */
+    @GameTest(template = FabricGameTestSupport.TEMPLATE)
+    public void cachedGeometryPreservesOccupiedUnions(GameTestHelper helper) {
+        StackFoundationChecks.cachedGeometryPreservesOccupiedUnions(helper);
+    }
+
     /**
      * Loader entry point for {@link ServiceAndConfigChecks#installedServicesAndLogoutResetPacing};
      * see that method for

@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ import java.util.Map;
 public class BarTextureStore extends SimplePreparableReloadListener<Map<ResourceLocation, BarTextureStore.BarTextureData>> {
     private static final Gson GSON = new Gson();
     private static final Map<ResourceLocation, BarTextureData> textureMap = new HashMap<>();
-    /** Auto-tints for items no mapping covers, computed on first render and held until the next reload. */
-    private static final Map<ResourceLocation, BarTextureData> unmappedTints = new HashMap<>();
+    /** Resolved mappings and automatic tints, held per item until resource reload. */
+    private static final Map<Item, BarTextureData> resolvedTextures = new IdentityHashMap<>();
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(SomeStacksCommon.MODID, "block/minecraft/base_ingot");
     private static final BarTextureData FALLBACK = BarTextureData.tinted(DEFAULT_TEXTURE, BarTextureData.WHITE);
     private static final float BRIGHTEN_FACTOR = 0.1f;
@@ -147,7 +148,7 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     protected void apply(Map<ResourceLocation, BarTextureData> prepared, ResourceManager resourceManager, ProfilerFiller profiler) {
         BarStackBER.onResourceReload();
         textureMap.clear();
-        unmappedTints.clear();
+        resolvedTextures.clear();
         int autoTinted = 0;
 
         for (Map.Entry<ResourceLocation, BarTextureData> entry : prepared.entrySet()) {
@@ -329,13 +330,15 @@ public class BarTextureStore extends SimplePreparableReloadListener<Map<Resource
     public static BarTextureData getTexture(ItemStack stack) {
         if (stack.isEmpty()) return FALLBACK;
 
-        ResourceLocation itemLoc = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return resolvedTextures.computeIfAbsent(stack.getItem(), BarTextureStore::resolveTexture);
+    }
 
+    private static BarTextureData resolveTexture(Item item) {
+        ResourceLocation itemLoc = BuiltInRegistries.ITEM.getKey(item);
         BarTextureData mapped = textureMap.get(itemLoc);
         if (mapped != null) return mapped;
 
-        return unmappedTints.computeIfAbsent(itemLoc, loc -> BarTextureData.tinted(
-                DEFAULT_TEXTURE,
-                calculateTintFromItemTexture(loc, Minecraft.getInstance().getResourceManager())));
+        return BarTextureData.tinted(DEFAULT_TEXTURE,
+                calculateTintFromItemTexture(itemLoc, Minecraft.getInstance().getResourceManager()));
     }
 }

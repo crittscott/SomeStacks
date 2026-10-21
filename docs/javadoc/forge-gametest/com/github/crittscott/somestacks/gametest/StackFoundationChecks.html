@@ -92,24 +92,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadedContentsRefreshComparatorFillAndShapes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">loadedContentsRefreshComparatorFillAndShapes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">cachedGeometryPreservesOccupiedUnions</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadedContentsRefreshComparatorFillAndShapes(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">loadedContentsRefreshComparatorFillAndShapes</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: save and reload partly filled stacks, including an unstackable Storage
  item.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#nestedBatchesPublishOnlyAfterTheOuterBatch(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">nestedBatchesPublishOnlyAfterTheOuterBatch</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#nestedBatchesPublishOnlyAfterTheOuterBatch(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">nestedBatchesPublishOnlyAfterTheOuterBatch</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Internal publication-order check with no direct manual reproduction.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#runContractPreservesTypeSpecificMutations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">runContractPreservesTypeSpecificMutations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#runContractPreservesTypeSpecificMutations(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">runContractPreservesTypeSpecificMutations</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: automate insertion and extraction in each type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structuralEditsInvalidateRunBoundsWithinTheTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structuralEditsInvalidateRunBoundsWithinTheTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#structuralEditsInvalidateRunBoundsWithinTheTick(net.minecraft.gametest.framework.GameTestHelper)" class="member-name-link">structuralEditsInvalidateRunBoundsWithinTheTick</a><wbr>(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">To reproduce in-game: attach automation at different heights, add and remove stack blocks,
  and split a Storage or Singles run.</div>
 </div>
@@ -157,7 +162,20 @@ loadScripts(document, 'script');</script>
 <h3>runContractPreservesTypeSpecificMutations</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">runContractPreservesTypeSpecificMutations</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
 <div class="block">To reproduce in-game: automate insertion and extraction in each type. Storage accepts normal
- stacks and settles; Singles shifts the selected column; Bar backfills from its top position.</div>
+ stacks and settles; Singles shifts the selected column; Bar backfills from its top position.
+ Blocking and clearing the space above must change growth acceptance immediately. The fixture
+ changes that space within one tick, creates fresh insertion sweeps, and checks commit refusal
+ after a successful preview is obstructed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="cachedGeometryPreservesOccupiedUnions(net.minecraft.gametest.framework.GameTestHelper)">
+<h3>cachedGeometryPreservesOccupiedUnions</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cachedGeometryPreservesOccupiedUnions</span><wbr><span class="parameters">(net.minecraft.gametest.framework.GameTestHelper&nbsp;helper)</span></div>
+<div class="block">To reproduce: fill Singles and Bar blocks completely, then leave only alternating positions.
+ Their occupied collision/outline regions stay aligned with the visible items at every Singles
+ block rotation. The fixture compares these unions with individually optimized shape merges
+ and checks fixed bounds in both orientations of the Bar layout.</div>
 </section>
 </li>
 <li>

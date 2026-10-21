@@ -13,8 +13,8 @@ public final class StackSortChecks {
     private StackSortChecks() {}
 
     /**
-     * Internal ordering check with no direct manual reproduction: compare registry ids, empty
-     * stacks, damage, absent versus present NBT, NBT variants, and descending count ties; assert
+     * Internal ordering check with no direct manual reproduction: compare registry ids, damage,
+     * absent versus present NBT, NBT variants, and descending count ties; assert
      * that sort-key snapshots survive source NBT mutation and exclude stack count.
      *
      * <p>Nearest visible check: deposit dirt, stone, and differently damaged wooden pickaxes into
@@ -24,26 +24,29 @@ public final class StackSortChecks {
     public static void comparatorOrdersEveryIdentityComponent(GameTestHelper helper) {
         ItemStack dirt = new ItemStack(Items.DIRT);
         ItemStack stone = new ItemStack(Items.STONE);
-        check(StackSort.COMPARATOR.compare(dirt, stone) < 0,
+        check(StackSort.comparePieces(StackSort.key(dirt), dirt.getCount(),
+                StackSort.key(stone), stone.getCount()) < 0,
                 "Registry item id did not lead ordering");
-        check(StackSort.COMPARATOR.compare(stone, ItemStack.EMPTY) < 0,
-                "Empty stack did not sort last");
 
         ItemStack undamaged = new ItemStack(Items.WOODEN_PICKAXE);
         ItemStack damaged = new ItemStack(Items.WOODEN_PICKAXE);
         damaged.setDamageValue(1);
-        check(StackSort.COMPARATOR.compare(undamaged, damaged) < 0,
+        check(StackSort.comparePieces(StackSort.key(undamaged), undamaged.getCount(),
+                StackSort.key(damaged), damaged.getCount()) < 0,
                 "Damage did not lead variant ordering");
 
         ItemStack untagged = new ItemStack(Items.STONE);
         ItemStack tagOneFull = taggedStone(1, 64);
         ItemStack tagOnePartial = taggedStone(1, 3);
         ItemStack tagTwo = taggedStone(2, 64);
-        check(StackSort.COMPARATOR.compare(untagged, tagOneFull) < 0,
+        check(StackSort.comparePieces(StackSort.key(untagged), untagged.getCount(),
+                StackSort.key(tagOneFull), tagOneFull.getCount()) < 0,
                 "Untagged stack did not sort before tagged stack");
-        check(StackSort.COMPARATOR.compare(tagOneFull, tagTwo) < 0,
+        check(StackSort.comparePieces(StackSort.key(tagOneFull), tagOneFull.getCount(),
+                StackSort.key(tagTwo), tagTwo.getCount()) < 0,
                 "Tag identity was not ordered stably");
-        check(StackSort.COMPARATOR.compare(tagOneFull, tagOnePartial) < 0,
+        check(StackSort.comparePieces(StackSort.key(tagOneFull), tagOneFull.getCount(),
+                StackSort.key(tagOnePartial), tagOnePartial.getCount()) < 0,
                 "Full stack did not sort before compatible partial");
         check(StackSort.key(tagOneFull).equals(StackSort.key(tagOnePartial)),
                 "Precomputed identity fields depended on stack count");

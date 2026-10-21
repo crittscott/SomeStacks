@@ -9,10 +9,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.BooleanSupplier;
 
 /**
  * Mechanics shared by every maximal vertical run of one stack type. Concrete runs retain their
@@ -33,6 +35,19 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
         this.block = block;
     }
 
+    /** Lazily shares a predicate result only within the caller's read-only insertion sweep. */
+    protected static BooleanSupplier oncePerSweep(BooleanSupplier check) {
+        return new BooleanSupplier() {
+            private Boolean result;
+
+            @Override
+            public boolean getAsBoolean() {
+                if (result == null) result = check.getAsBoolean();
+                return result;
+            }
+        };
+    }
+
     /** Shares a fully resolved run among its members for the current tick. */
     protected final void cacheOnBlocks() {
         long tick = level.getGameTime();
@@ -51,8 +66,9 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
 
         List<BE> blocks = new ArrayList<>();
         BlockPos current = base;
-        while (blockEntityClass.isInstance(level.getBlockEntity(current))) {
-            blocks.add(blockEntityClass.cast(level.getBlockEntity(current)));
+        BlockEntity candidate;
+        while (blockEntityClass.isInstance(candidate = level.getBlockEntity(current))) {
+            blocks.add(blockEntityClass.cast(candidate));
             current = current.above();
         }
         return blocks;
@@ -69,8 +85,9 @@ public abstract class StackRun<BE extends StackBlockEntity> implements StackRunI
     private static <BE extends StackBlockEntity> void invalidateRun(
             Level level, BlockPos from, Direction direction, Class<BE> blockEntityClass) {
         BlockPos current = from;
-        while (blockEntityClass.isInstance(level.getBlockEntity(current))) {
-            blockEntityClass.cast(level.getBlockEntity(current)).invalidateRunCache();
+        BlockEntity candidate;
+        while (blockEntityClass.isInstance(candidate = level.getBlockEntity(current))) {
+            blockEntityClass.cast(candidate).invalidateRunCache();
             current = current.relative(direction);
         }
     }

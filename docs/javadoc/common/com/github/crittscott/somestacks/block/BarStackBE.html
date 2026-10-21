@@ -164,50 +164,45 @@ loadScripts(document, 'script');</script>
  and overlapping a bar below.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.item.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extractAt(int,net.minecraft.server.level.ServerPlayer)" class="member-name-link">extractAt</a><wbr>(int&nbsp;index,
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Player-facing extraction variant that preserves the actor through cascade cleanup.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCachedShape()" class="member-name-link">getCachedShape</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Takes one bar and cascades unsupported bars, preserving the actor through cleanup.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.shapes.VoxelShape</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCachedShape()" class="member-name-link">getCachedShape</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the occupied-bar shape, rebuilding it only after contents invalidate the cache.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStoredItemValid(net.minecraft.world.item.ItemStack)" class="member-name-link">isStoredItemValid</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Admission for new items; saved contents and internal moves bypass this check.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isValidBarItem(net.minecraft.world.item.ItemStack)" class="member-name-link">isValidBarItem</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether a Bar Stack accepts this item, the single decision point every deposit, column
  insertion and capability path consults.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadStackData(net.minecraft.nbt.CompoundTag)" class="member-name-link">loadStackData</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Loads subtype metadata and derived state after inventory replacement, without publication.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#localSlotLimit()" class="member-name-link">localSlotLimit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Capacity before the item's own stack limit.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLocalContentsChanged(int)" class="member-name-link">onLocalContentsChanged</a><wbr>(int&nbsp;slot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Refreshes subtype-derived state after a local slot changes, including inside a batch.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="StackRunItemAccess.html" title="interface in com.github.crittscott.somestacks.block">StackRunItemAccess</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveRun(net.minecraft.server.level.ServerLevel)" class="member-name-link">resolveRun</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;serverLevel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resolves the server run without consulting this entity's per-tick cache.</div>
 </div>
 </div>
@@ -319,20 +314,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="extractAt(int)">
-<h3>extractAt</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
-<div class="block">The player's extraction: takes one bar and lets go of whatever it was holding up. Automation
- takes a different path â€” see <a href="BarColumn.html#extract(int,int,boolean)"><code>BarColumn.extract(int, int, boolean)</code></a>, which backfills instead.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="extractAt(int,net.minecraft.server.level.ServerPlayer)">
 <h3>extractAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">extractAt</span><wbr><span class="parameters">(int&nbsp;index,
  @Nullable
  net.minecraft.server.level.ServerPlayer&nbsp;actor)</span></div>
-<div class="block">Player-facing extraction variant that preserves the actor through cascade cleanup.</div>
+<div class="block">Takes one bar and cascades unsupported bars, preserving the actor through cleanup.
+ Automation uses <a href="BarColumn.html#extract(int,int,boolean)"><code>BarColumn.extract(int, int, boolean)</code></a>, which backfills instead.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>actor</code> - the player responsible for any block the cascade empties away, or null for
